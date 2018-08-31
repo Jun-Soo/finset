@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.scrap.dao.ScrapMapper">
+
+	<select id="getFcLinkInfo" parameterType="com.koscom.scrap.model.FcLinkInfoVO" resultType="com.koscom.scrap.model.FcLinkInfoVO">
+		/* com.koscom.scrap.dao.ScrapMapper.getFcLinkInfo */
+		SELECT NO_PERSON
+			, CD_AGENCY
+			, CD_FC
+			, TYPE_LOGIN
+			, CN
+			, BIZ_LICENCE
+			, CD_LINK_STAT
+			, YN_LINK
+			, LINK_DATE
+		FROM FC_LINK_INFO
+		WHERE NO_PERSON = #{NO_PERSON, jdbcType=VARCHAR}
+			AND CD_AGENCY= #{CD_AGENCY, jdbcType=VARCHAR} 
+			AND YN_LINK = 'Y'
+	</select>
+	
+	<insert id="insertScrRsltScrap" parameterType="com.koscom.scrap.model.ScrRsltScrapVO">
+		<selectKey keyProperty="seq_scraping_result" resultType="integer" order="BEFORE">
+		    SELECT SEQ_SCRAPING_RESULT.NEXTVAL FROM DUAL
+		</selectKey>
+		/* com.koscom.scrap.dao.ScrapMapper.insertScrRsltScrap */
+		INSERT INTO SCR_RSLT_SCRAP
+			(
+			  	 NO_PERSON
+			  	, SEQ_SCRAPING_RESULT
+			  	, CD_SCRAP
+				, RSLT_SCRAPING
+				, NO_BIZ_COMP
+				, DT_FRT
+			) VALUES (
+				  #{no_person, jdbcType=VARCHAR}
+				  , #{seq_scraping_result, jdbcType=NUMERIC}
+				  , #{cd_scrap, jdbcType=NUMERIC}
+				  , #{rslt_scraping, jdbcType=NUMERIC}
+				  , #{no_biz_comp, jdbcType=NUMERIC}
+				  , SYSDATE
+			)
+	</insert>
+	
+	<select id="getScrReqBank" parameterType="com.koscom.scrap.model.ScrReqBankVO" resultType="com.koscom.scrap.model.ScrReqBankVO">
+		/* com.koscom.scrap.dao.ScrapMapper.getScrReqBank */
+		SELECT NO_PERSON
+			, SEQ_SCRAPING_RESULT
+			, CD_FC
+			, CD_ACCOUNT
+			, NO_ACCOUNT
+			, YMD_STT
+			, YMD_END
+			, ERROR_CD
+			, ERROR_MSG
+			, DT_FRT
+		FROM SCR_REQ_BANK
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC= #{cd_fc, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getScrReqCard" parameterType="com.koscom.scrap.model.ScrReqCardVO" resultType="com.koscom.scrap.model.ScrReqCardVO">
+		/* com.koscom.scrap.dao.ScrapMapper.getScrReqCard */
+		SELECT NO_PERSON
+			, SEQ_SCRAPING_RESULT
+			, CD_FC
+			, YMD_STT
+			, YMD_END
+			, ERROR_CD
+			, ERROR_MSG
+			, DT_FRT
+		FROM SCR_REQ_CARD
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC= #{cd_fc, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getScrReqCertification" parameterType="com.koscom.scrap.model.ScrReqCertificationVO" resultType="com.koscom.scrap.model.ScrReqCertificationVO">
+		/* com.koscom.scrap.dao.ScrapMapper.getScrReqCertification */
+		SELECT NO_PERSON
+			,SEQ_SCRAPING_RESULT
+			,CD_TYPE
+			,BIZ_LICENCE
+			,HP
+			,RCPT_START_MONTH
+			,RCPT_END_MONTH
+			,TAXATION_START_MONTH
+			,TAXATION_END_MONTH
+			,TAXATION_YEAR
+			,CD_INCOME
+			,CERT_DIVISION
+			,YMD_HOPE_OPEN
+			,CD_OPEN_YN
+			,NO_RECEPTION
+			,NO_PBLS
+			,NM_ISSUED_AGENCY
+			,DEPARTMENT
+			,MANAGER
+			,TEL_MANAGER
+			,ERROR_CD
+			,ERROR_MSG
+			,DT_FRT
+		FROM SCR_REQ_CERTIFICATION A, (SELECT MAX(SEQ_SCRAPING_RESULT) MAX_SEQ FROM SCR_REQ_CERTIFICATION
+			WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}) B
+		WHERE A.SEQ_SCRAPING_RESULT = B.MAX_SEQ
+	</select>
+	
+</mapper>

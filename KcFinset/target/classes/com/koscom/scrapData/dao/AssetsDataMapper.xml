@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.koscom.scrapData.dao.AssetsDataMapper">
+
+    <!-- 금융사 계좌정보 스크래핑 조회 -->
+	<select id="listScrBankApiAnInfo" parameterType="com.koscom.scrapData.model.AssetsDataForm" resultType="com.koscom.scrapData.model.AssetsInfoDataVO">
+		SELECT
+			NO_PERSON,
+			AN,
+			CD_FC,
+			TYPE_AN,
+			NM_AN,
+			CD_CURRENCY,
+			PRINCIPAL,
+			AMT_AVAILABLE,
+			CURRENT_BALANCE,
+			LOAN_BALANCE,
+			LOAN_CEILING,
+			DT_NEW,
+			DT_END,
+			INTEREST_RATE,
+			PROFIT_RATE,
+			FEW_DAYS,
+			INTEREST_DATE,
+			YN_USE,
+			DT_FRT
+		FROM
+			SCR_BANK_API_AN_INFO
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</select>
+
+	<insert id="mergeAssetsInfo" parameterType="com.koscom.scrapData.model.AssetsInfoDataVO">
+		MERGE INTO ASSETS_INFO
+		USING DUAL
+        ON (
+        	NO_PERSON = #{no_person, jdbcType=VARCHAR}
+        	AND NO_ACCOUNT = #{no_account, jdbcType=VARCHAR}
+        	)
+		WHEN MATCHED THEN
+		UPDATE SET
+			CD_ASSETS_CLASS = #{cd_assets_class, jdbcType=VARCHAR},
+			CD_FC = #{cd_fc, jdbcType=VARCHAR},
+			NM_ACCOUNT = #{nm_account, jdbcType=VARCHAR},
+			DT_OPEN = #{dt_open, jdbcType=VARCHAR},
+			DT_EXPIRE = #{dt_expire, jdbcType=VARCHAR},
+			AMT_BALANCE = #{amt_balance, jdbcType=VARCHAR},
+			AMT_EVALUATION = #{amt_evaluation, jdbcType=VARCHAR},
+			INTEREST = #{interest, jdbcType=VARCHAR},
+			RATE_RETURN = #{rate_return, jdbcType=VARCHAR},
+			YN_PERSON_REGIST = #{yn_person_regist, jdbcType=VARCHAR},
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHEN NOT MATCHED THEN
+		INSERT
+			(
+				NO_PERSON,
+				CD_ASSETS_CLASS,
+				CD_FC,
+				NO_ACCOUNT,
+				NM_ACCOUNT,
+				DT_OPEN,
+				DT_EXPIRE,
+				AMT_BALANCE,
+				AMT_EVALUATION,
+				INTEREST,
+				RATE_RETURN,
+				YN_PERSON_REGIST,
+				ID_FRT,
+				DT_FRT,
+				ID_LST,
+				DT_LST
+			) VALUES (
+				#{no_person, jdbcType=VARCHAR},
+				#{cd_assets_class, jdbcType=VARCHAR},
+				#{cd_fc, jdbcType=VARCHAR},
+				#{no_account, jdbcType=VARCHAR},
+				#{nm_account, jdbcType=VARCHAR},
+				#{dt_open, jdbcType=VARCHAR},
+				#{dt_expire, jdbcType=VARCHAR},
+				#{amt_balance, jdbcType=VARCHAR},
+				#{amt_evaluation, jdbcType=VARCHAR},
+				#{interest, jdbcType=VARCHAR},
+				#{rate_return, jdbcType=VARCHAR},
+				#{yn_person_regist, jdbcType=VARCHAR},
+				#{id_frt, jdbcType=VARCHAR},
+				SYSDATE,
+				#{id_lst, jdbcType=VARCHAR},
+				SYSDATE
+		)
+	</insert>
+</mapper>

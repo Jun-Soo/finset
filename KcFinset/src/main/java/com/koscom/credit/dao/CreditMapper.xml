@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.credit.dao.CreditMapper">
+	
+	<select id="getCreditMainBaseInfo" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+	    /* com.koscom.credit.dao.CreditMapper.getCreditMainBaseInfo */
+	    SELECT
+			TB.REQ_YYYYMM,
+			TB.RATING_CREDIT,
+			TB.GRADE_CREDIT,
+			TB.PERCENTAGE,
+			(
+				TB.RATING_CREDIT - TB.RATING_LAST_CREDIT
+			) AS RATING_DIFF
+		FROM
+			(
+				SELECT
+					A.NO_PERSON,
+					A.REQ_YYYYMM,
+					A.RATING_CREDIT,
+					A.GRADE_CREDIT,
+					A.PERCENTAGE,
+					(
+						SELECT
+							B.RATING_CREDIT
+						FROM
+							KCB_CREDIT_LIST B
+						WHERE
+							A.NO_PERSON = B.NO_PERSON
+							AND B.REQ_YYYYMM = TO_CHAR(ADD_MONTHS(SYSDATE,-1), 'YYYYMM')
+					) AS RATING_LAST_CREDIT
+				FROM
+					KCB_CREDIT_LIST A
+				WHERE
+					A.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					AND A.REQ_YYYYMM =  TO_CHAR(SYSDATE,'YYYYMM')
+			) TB
+	</select>
+	
+	<select id="getCreditMainCntInfo" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+	    /* com.koscom.credit.dao.CreditMapper.getCreditMainCntInfo */
+	    SELECT
+			A.CNT_CREDIT_REF_1Y,
+			A.CNT_CREDIT_CHANGE,
+			A.CNT_NORMAL_INFO,
+			A.CNT_OVERDUE_INFO,
+			(SELECT COUNT(DEBT.NO_MANAGE_INFO)
+			   FROM DEBT_PERSONAL_INFO DEBT
+			  WHERE DEBT.NO_PERSON = A.NO_PERSON
+			    AND DEBT.YMD_CANCEL IS NULL
+			    AND DEBT.DISPLAY_YN = 'Y' /*부채 삭제 처리 추가 20180619 김휘경*/) AS CNT_LOAN,
+			A.CNT_CARD,
+			A.CNT_OVERDUE,
+			A.CNT_GUARANTEE
+		FROM
+			KCB_CREDIT_INFO A
+		WHERE
+			A.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</select>
+	
+	<select id="getCreditDetailGradeChartList" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+	<![CDATA[
+		/* com.koscom.credit.dao.CreditMapper.getCreditDetailGradeChartList */
+	    SELECT
+			A.YYYYMM AS REQ_YYYYMM,
+			DECODE(SUBSTR(A.YYYYMM,5,5),'01',SUBSTR(A.YYYYMM,1,4) || '년 ','')
+			|| DECODE(SUBSTR(A.YYYYMM,5,5),'01','1','02','2','03','3','04','4','05','5'
+						,'06','6','07','7','08','8','09','9',SUBSTR(A.YYYYMM,5,5)) || '월' AS CHART_TITLE,
+			SUBSTR(A.YYYYMM,1,4) || '-' || SUBSTR(A.YYYYMM,5,5) AS CHART_LIST_PARAM,
+			NVL( B.RATING_CREDIT, '0' ) AS RATING_CREDIT,
+			NVL( B.GRADE_CREDIT, '0' ) AS GRADE_CREDIT
+		FROM
+			(
+				WITH BASE_TABLE AS(
+					SELECT
+						TO_CHAR( SYSDATE, 'YYYYMM' ) AS SYS_YYYYMM,
+						TO_CHAR( ADD_MONTHS( SYSDATE,- 14 ), 'YYYYMM' ) AS START_YYYYMM,
+						TO_CHAR( ADD_MONTHS( SYSDATE, 2 ), 'YYYYMM' ) AS LAST_YYYYMM
+					FROM
+						DUAL
+				) SELECT
+					LEVEL,
+					TO_CHAR( ADD_MONTHS( TO_DATE( A.START_YYYYMM, 'YYYYMM' ), LEVEL - 1 ), 'YYYYMM' ) AS YYYYMM
+				FROM
+					BASE_TABLE A
+				CONNECT BY
+					TO_CHAR( ADD_MONTHS( TO_DATE( A.START_YYYYMM, 'YYYYMM' ), LEVEL - 1 ), 'YYYYMM' ) <= A.LAST_YYYYMM
+			) A
+		LEFT JOIN (
+				SELECT
+					REQ_YYYYMM,
+					RATING_CREDIT,
+					GRADE_CREDIT
+				FROM
+					KCB_CREDIT_LIST
+				WHERE
+					NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			) B
+		ON A.YYYYMM = B.REQ_YYYYMM
+		ORDER BY
+			A.YYYYMM
+	]]>
+	</select>
+
+	<select id="getCreditDetailGradeInquiryList" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+		/* com.koscom.credit.dao.CreditMapper.getCreditDetailGradeInquiryList */
+		SELECT
+			TO_CHAR(DT_INFO,'YYYY-MM-DD') AS DT_INFO,
+			CD_FC,
+			NM_FC,
+			CHANGE_CONTENTS,
+			SUM(
+				CASE WHEN TO_CHAR(DT_INFO,'YYYY-MM') >= TO_CHAR(ADD_MONTHS(SYSDATE,-1), 'YYYY-MM')
+				THEN 1 ELSE 0 END
+				)
+			OVER(PARTITION BY NO_PERSON) AS MM_CNT,
+			COUNT(*) OVER(PARTITION BY NO_PERSON) AS YEAR_CNT
+		FROM
+			CREDIT_INQUIRY_LIST
+		WHERE
+        	TO_CHAR(dt_info,'YYYY-MM') >= TO_CHAR(ADD_MONTHS(SYSDATE,-12), 'YYYY-MM')
+			AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		ORDER BY
+			DT_INFO DESC
+	</select>
+
+	<select id="getCreditDetailGradeChangeList" parameterType="com.koscom.domain.CreditInfo" resultType="com.koscom.domain.CreditInfo">
+		/* com.koscom.credit.dao.CreditMapper.getCreditDetailGradeChangeList */
+		SELECT
+			TO_CHAR(DT_INFO,'YYYY-MM-DD') AS DT_INFO,
+			CD_FC,
+			NM_FC,
+			CHANGE_CONTENTS,
+			COLLECTOR,
+			SUM(
+				CASE WHEN TO_CHAR(DT_INFO,'YYYY-MM') >= TO_CHAR(ADD_MONTHS(SYSDATE,-1), 'YYYY-MM')
+				THEN 1 ELSE 0 END
+				)
+			OVER(PARTITION BY NO_PERSON, CD_CHANGE_INFO) AS MM_CNT,
+			COUNT(*) OVER(PARTITION BY NO_PERSON, CD_CHANGE_INFO) AS YEAR_CNT
+		FROM
+			CREDIT_CHANGE_LIST
+		WHERE
+			TO_CHAR(DT_INFO,'YYYY-MM') >= TO_CHAR(ADD_MONTHS(SYSDATE,-12), 'YYYY-MM')
+			AND NO_PERSON = #{noPerson, jdbcType=VARCHAR}
+			AND CD_CHANGE_INFO = #{cdChangeInfo, jdbcType=VARCHAR} <!-- 01대출/카드 02연체 -->
+		ORDER BY
+			DT_INFO DESC
+	</select>
+	
+	<!-- kcb전문 송수신 이력조회 -->	
+	<resultMap id="result_lob_map" type="java.util.HashMap">
+		<result property="seq" column="seq" javaType="java.lang.String" />
+		<result property="dt_frt" column="dt_frt" javaType="java.lang.String" />
+		<result property="msg_response" column="msg_response" jdbcType="CLOB" javaType="java.lang.String" />
+ 	</resultMap>
+	<select id="getKcbInfoCLOB" resultMap="result_lob_map" parameterType="map">
+		/* com.koscom.credit.dao.CreditMapper.getKcbInfoCLOB */
+	    SELECT SEQ, DT_FRT, MSG_RESPONSE FROM (
+			SELECT SEQ, DT_FRT, MSG_RESPONSE, CD_CB_RESPONSE, NM_IF
+			  FROM CREDIT_INFO
+			 WHERE NO_PERSON = #{sch_no_person, jdbcType=VARCHAR}
+			   AND MSG_RESPONSE IS NOT NULL
+			   AND (CD_CB_RESPONSE = '0000' OR CD_CB_RESPONSE = '0012')
+			   AND NM_IF = #{nm_if, jdbcType=VARCHAR}
+			  <if test="nm_if_sub == '210' or nm_if_sub == '230'">
+			      AND NM_IF_SUB = #{nm_if_sub, jdbcType=VARCHAR}
+			      AND TO_CHAR(dt_frt,'YYYYMMDD') <![CDATA[ > ]]> TO_CHAR(SYSDATE-#{sch_time, jdbcType=VARCHAR},'YYYYMMDD')
+			  </if>
+			ORDER BY SEQ DESC
+		) RESULT
+		WHERE ROWNUM = 1
+	</select>
+	
+</mapper>

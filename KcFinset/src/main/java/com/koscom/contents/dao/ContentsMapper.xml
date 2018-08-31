@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.koscom.contents.dao.ContentsMapper">
+
+	<!-- 뉴스관리 -->
+     <sql id="listNewsManagePg_WHERE">
+     	<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
+            AND TO_CHAR(ANR.DT_FRT,'yyyyMMdd') <![CDATA[>=]]> #{txt_dt_from}
+        </if>
+        <if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_to)">
+        	AND TO_CHAR(ANR.DT_FRT,'yyyyMMdd') <![CDATA[<=]]> #{txt_dt_to}
+        </if>
+        <if test="@com.koscom.util.MybatisUtil@isNotEmpty(news_status)">
+        	AND ANR.NEWS_STATUS = #{news_status}
+        </if>
+    </sql>
+	<select id="listNewsManagePg" parameterType="com.koscom.contents.model.ContentsForm" resultType="com.koscom.contents.model.ContentsVO">
+	    	/*com.koscom.contents.dao.ContentsMapper.listNewsManagePg*/
+	    SELECT
+	        *
+	    FROM
+	        (SELECT
+	        	  	ROWNUM RNUM,
+	              	LST.SEQ_NEWS,
+				  	LST.SEQ_SEARCH,
+					LST.TITLE,
+					LST.LINK,
+					LST.DESCRIPTION,
+					LST.PUB_DATE,
+					LST.NEWS_COMPANY,
+					LST.LOCAL_LINK_TEXT,
+					LST.LOCAL_LINK,
+					LST.CONTENTS,
+					LST.NEWS_STATUS,
+					LST.KEYWORD,
+					LST.YN_USE,
+					LST.DT_WRT,
+					LST.DT_FRT,
+					LST.SEARCH_QUERY
+	         FROM
+	            (
+	            SELECT
+					ANR.SEQ_NEWS,
+					ANR.SEQ_SEARCH,
+					ANR.TITLE,
+					ANR.LINK,
+					ANR.DESCRIPTION,
+					TO_CHAR(ANR.PUB_DATE,'YYYY-MM-DD HH24:MM') AS PUB_DATE,
+					ANR.NEWS_COMPANY,
+					ANR.LOCAL_LINK_TEXT,
+					ANR.LOCAL_LINK,
+					ANR.CONTENTS,
+					ANR.NEWS_STATUS,
+					ANR.KEYWORD,
+					ANR.YN_USE,
+					TO_CHAR(ANR.DT_WRT,'YYYY-MM-DD HH24:MM') AS DT_WRT,
+					TO_CHAR(ANR.DT_FRT,'YYYY-MM-DD HH24:MM') AS DT_FRT,
+					AN.SEARCH_QUERY
+	             FROM
+	             	API_NEWS_RESULT ANR
+	             INNER JOIN API_NEWS AN
+				 ON ANR.SEQ_SEARCH = AN.SEQ_SEARCH
+	             WHERE 1=1
+				 	<include refid="listNewsManagePg_WHERE"/>
+				 ORDER BY ANR.DT_FRT DESC, ANR.PUB_DATE DESC, ANR.SEQ_SEARCH
+	             ) LST
+	        WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	        )
+	    WHERE RNUM >= #{startPosition, jdbcType=NUMERIC}
+	</select>
+
+    <select id="listNewsManageCount"  parameterType="com.koscom.contents.model.ContentsForm" resultType="int">
+        	/*com.koscom.contents.dao.ContentsMapper.listContentsCount*/
+		SELECT
+			COUNT(*) AS recordCount
+		FROM
+			API_NEWS_RESULT ANR
+		INNER JOIN API_NEWS AN
+		ON ANR.SEQ_SEARCH = AN.SEQ_SEARCH
+		WHERE   1=1
+         <include refid="listNewsManagePg_WHERE"/>
+    </select>
+
+    <resultMap id="apiNewsImgMap" type="hashMap">
+	    <result column="img_files" property="img_files" jdbcType="BLOB" javaType="[B"></result>
+	    <result column="nm_img_files" property="nm_img_files" jdbcType="VARCHAR" javaType="String"></result>
+	</resultMap>
+	<select id="getApiNewsImgInfo" parameterType="com.koscom.contents.model.ContentsVO" resultMap="apiNewsImgMap">
+		SELECT tb.img_files, tb.nm_img_files
+		FROM (
+	    	SELECT
+				img_files, nm_img_files
+				, ROW_NUMBER() OVER(ORDER BY dt_frt DESC) AS rnum
+			FROM API_NEWS_FILE_INFO
+			WHERE SEQ_NEWS = #{seq_news, jdbcType=NUMERIC}
+				AND FILE_TYPE = #{file_type, jdbcType=VARCHAR}
+			) tb
+		WHERE tb.rnum = 1
+	</select>
+
+    <select id="getNewsManageInfo"  parameterType="com.koscom.contents.model.ContentsVO" resultType="com.koscom.contents.model.ContentsVO">
+        	/*com.koscom.contents.dao.ContentsMapper.getNewsManageInfo*/
+		SELECT
+	        ANR.SEQ_NEWS,
+			ANR.SEQ_SEARCH,
+			ANR.TITLE,
+			ANR.LINK,
+			ANR.DESCRIPTION,
+			TO_CHAR(ANR.PUB_DATE,'YYYY-MM-DD HH24:MM') AS PUB_DATE,
+			ANR.NEWS_COMPANY,
+			ANR.LOCAL_LINK_TEXT,
+			ANR.LOCAL_LINK,
+			ANR.CONTENTS,
+			ANR.NEWS_STATUS,
+			ANR.KEYWORD,
+			ANR.YN_USE,
+			TO_CHAR(ANR.DT_WRT,'YYYY-MM-DD HH24:MM') AS DT_WRT,
+			ANR.DT_FRT,
+			AN.SEARCH_QUERY,
+			(SELECT SEQ_FILE FROM API_NEWS_FILE_INFO ANFI WHERE ANFI.SEQ_NEWS = ANR.SEQ_NEWS AND FILE_TYPE='01') AS SEQ_THUM_FILE
+	     FROM API_NEWS_RESULT ANR
+	     INNER JOIN API_NEWS AN
+		 ON ANR.SEQ_SEARCH = AN.SEQ_SEARCH
+	     WHERE ANR.SEQ_NEWS = #{seq_news, jdbcType=NUMERIC}
+    </select>
+
+    <insert id="createApiNewsFileInfo" parameterType="com.koscom.contents.model.ContentsVO">
+        /*com.koscom.contents.dao.ContentsMapper.createApiNewsFileInfo*/
+	    <selectKey keyProperty="seq_file" resultType="Integer" order="BEFORE">
+            (SELECT NVL(MAX(seq_file),0)+1 FROM API_NEWS_FILE_INFO WHERE SEQ_NEWS = #{seq_news})
+        </selectKey>
+
+		INSERT INTO API_NEWS_FILE_INFO(
+			SEQ_NEWS,
+			SEQ_FILE,
+			FILE_TYPE,
+			IMG_FILES,
+			NM_IMG_FILES,
+			ID_FRT,
+			DT_FRT,
+			ID_LST,
+			DT_LST
+		) VALUES (
+			#{seq_news, jdbcType=NUMERIC},
+			#{seq_file},
+			#{file_type, jdbcType=VARCHAR},
+			#{img_files, jdbcType=BLOB},
+			#{nm_img_files, jdbcType=VARCHAR},
+			#{id_frt, jdbcType=VARCHAR},
+			SYSDATE,
+			#{id_lst, jdbcType=VARCHAR},
+			SYSDATE
+	)
+	</insert>
+
+	<update id="modifyApiNewsFileInfo" parameterType="com.koscom.contents.model.ContentsVO">
+	     /*com.koscom.contents.dao.ContentsMapper.modifyApiNewsFileInfo*/
+		 UPDATE
+		 	API_NEWS_FILE_INFO
+		 SET
+			IMG_FILES = #{img_files, jdbcType=BLOB},
+			NM_IMG_FILES = #{nm_img_files, jdbcType=VARCHAR},
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHERE
+			SEQ_NEWS = #{seq_news, jdbcType=NUMERIC}
+			AND SEQ_FILE = #{seq_file, jdbcType=NUMERIC}
+			AND FILE_TYPE = #{file_type, jdbcType=VARCHAR}
+	</update>
+
+    <update id="modifyNewsManage"  parameterType="com.koscom.contents.model.ContentsVO">
+        	/*com.koscom.contents.dao.ContentsMapper.modifyNewsManage*/
+		UPDATE
+			API_NEWS_RESULT
+		SET
+			TITLE = #{title, jdbcType=VARCHAR},
+			NEWS_COMPANY = #{news_company, jdbcType=VARCHAR},
+			LOCAL_LINK_TEXT = #{local_link_text, jdbcType=VARCHAR},
+			LOCAL_LINK = #{local_link, jdbcType=VARCHAR},
+			CONTENTS = #{contents, jdbcType=VARCHAR},
+			NEWS_STATUS = #{news_status, jdbcType=VARCHAR},
+			KEYWORD = #{keyword, jdbcType=VARCHAR},
+			YN_USE = #{yn_use, jdbcType=VARCHAR},
+			DT_WRT = SYSDATE
+		WHERE
+			SEQ_NEWS = #{seq_news, jdbcType=NUMERIC}
+    </update>
+
+    <delete id="delApiNewsFileInfo"  parameterType="com.koscom.contents.model.ContentsVO">
+        	/*com.koscom.contents.dao.ContentsMapper.delNewsManage*/
+		 DELETE
+	     FROM API_NEWS_FILE_INFO
+	     WHERE SEQ_NEWS = #{seq_news, jdbcType=NUMERIC}
+    </delete>
+
+    <delete id="delNewsManage"  parameterType="com.koscom.contents.model.ContentsVO">
+        	/*com.koscom.contents.dao.ContentsMapper.delNewsManage*/
+		 DELETE
+	     FROM API_NEWS_RESULT
+	     WHERE SEQ_NEWS = #{seq_news, jdbcType=NUMERIC}
+    </delete>
+
+    <!-- 소비분류관리 -->
+    <select id="listConsumeSchCdClass" parameterType="com.koscom.contents.model.ContentsForm" resultType="com.koscom.contents.model.ContentsVO">
+ 	    SELECT
+			CD_CLASS,
+			NM_CLASS
+		FROM
+			CONSUME_CLASS_INFO
+		WHERE 1=1
+		  AND YN_USE = 'Y'
+        GROUP BY CD_CLASS, NM_CLASS
+        ORDER BY CD_CLASS
+	</select>
+    <!-- 지출항목관리 -->
+    <select id="listConsumeSpendMng" parameterType="com.koscom.contents.model.ContentsForm" resultType="com.koscom.contents.model.ContentsVO">
+ 	    SELECT
+			CD_CONSUME_CLASS,
+			CD_CLASS,
+			NM_CLASS,
+			CD_TYPE,
+			NM_TYPE,
+			YN_USE,
+			ID_FRT,
+			DT_FRT,
+			ID_LST,
+			DT_LST
+		FROM
+			CONSUME_CLASS_INFO
+		WHERE 1=1
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_cd_class)">
+        		AND CD_CLASS = #{sel_cd_class, jdbcType=VARCHAR}
+        	</if>
+        ORDER BY CD_CONSUME_CLASS
+	</select>
+	<select id="getConsumeSpendMng" parameterType="com.koscom.contents.model.ContentsVO" resultType="com.koscom.contents.model.ContentsVO">
+ 	    SELECT
+			CD_CONSUME_CLASS,
+			CD_CLASS,
+			NM_CLASS,
+			CD_TYPE,
+			NM_TYPE,
+			YN_USE,
+			ID_FRT,
+			DT_FRT,
+			ID_LST,
+			DT_LST
+		FROM
+			CONSUME_CLASS_INFO
+		WHERE
+			CD_CONSUME_CLASS = #{cd_consume_class, jdbcType=VARCHAR}
+	</select>
+	<update id="procConsumeSpendMng" parameterType="com.koscom.contents.model.ContentsVO">
+		MERGE INTO CONSUME_CLASS_INFO
+	  	USING DUAL
+	   	ON (CD_CONSUME_CLASS = #{cd_consume_class, jdbcType=VARCHAR})
+	   	WHEN MATCHED THEN
+	    UPDATE SET
+	    	NM_CLASS = #{nm_class, jdbcType=VARCHAR},
+			NM_TYPE = #{nm_type, jdbcType=VARCHAR},
+			YN_USE = #{yn_use, jdbcType=VARCHAR},
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHEN NOT MATCHED THEN
+		INSERT
+			(
+				CD_CONSUME_CLASS,
+				CD_CLASS,
+				NM_CLASS,
+				CD_TYPE,
+				NM_TYPE,
+				YN_USE,
+				ID_FRT,
+				DT_FRT,
+				ID_LST,
+				DT_LST
+			) VALUES (
+				#{cd_consume_class, jdbcType=VARCHAR},
+				#{cd_class, jdbcType=VARCHAR},
+				#{nm_class, jdbcType=VARCHAR},
+				#{cd_type, jdbcType=VARCHAR},
+				#{nm_type, jdbcType=VARCHAR},
+				#{yn_use, jdbcType=VARCHAR},
+				#{id_frt, jdbcType=VARCHAR},
+				SYSDATE,
+				#{id_lst, jdbcType=VARCHAR},
+				SYSDATE
+			)
+	</update>
+	<delete id="delConsumeSpendMng" parameterType="com.koscom.contents.model.ContentsVO">
+		DELETE
+		FROM
+			CONSUME_CLASS_INFO
+		WHERE
+			CD_CONSUME_CLASS = #{cd_consume_class, jdbcType=VARCHAR}
+	</delete>
+	<update id="updateInitConsumeCardCd" parameterType="com.koscom.contents.model.ContentsVO">
+		UPDATE
+			BUSINESS_TYPE_INFO
+		SET
+			CD_CONSUME_CLASS = null
+		WHERE
+			CD_CONSUME_CLASS = #{cd_consume_class, jdbcType=VARCHAR}
+	</update>
+
+	<!-- 카드업종관리 -->
+	<select id="listConsumeCardFcInfo" resultType="com.koscom.contents.model.ContentsVO">
+		SELECT
+			CD_FC,
+			NM_FC
+		FROM
+			FC_INFO
+		WHERE
+			CD_FIN = 'D'
+			AND YN_SCRAP = 'Y'
+		ORDER BY CD_FC
+	</select>
+    <select id="listConsumeCardMng" parameterType="com.koscom.contents.model.ContentsForm" resultType="com.koscom.contents.model.ContentsVO">
+ 	    SELECT
+			BTI.CD_FC,
+			(SELECT NM_FC FROM FC_INFO FI WHERE BTI.CD_FC = FI.CD_FC) AS NM_FC,
+			BTI.CD_BUSINESS,
+			BTI.NM_BUSINESS,
+			BTI.CD_CONSUME_CLASS,
+			BTI.ID_FRT,
+			BTI.DT_FRT,
+			BTI.ID_LST,
+			BTI.DT_LST,
+			CCI.CD_CLASS,
+			CCI.NM_CLASS,
+			CCI.CD_TYPE,
+			CCI.NM_TYPE
+		FROM
+			BUSINESS_TYPE_INFO BTI
+		LEFT JOIN CONSUME_CLASS_INFO CCI
+		ON BTI.CD_CONSUME_CLASS = CCI.CD_CONSUME_CLASS
+		WHERE 1=1
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_cd_fc)">
+        		AND BTI.CD_FC = #{sel_cd_fc, jdbcType=VARCHAR}
+        	</if>
+        	<if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_cd_class)">
+        	    <choose>
+        	        <when test='"none".equals(sel_cd_class)'>
+        	            AND (CCI.CD_CLASS IS NULL OR CCI.CD_CLASS = '')
+        	        </when>
+        	        <otherwise>
+						AND CCI.CD_CLASS = #{sel_cd_class, jdbcType=VARCHAR}
+        	        </otherwise>
+        	    </choose>
+        	</if>
+        ORDER BY BTI.CD_FC, BTI.CD_BUSINESS
+	</select>
+	<select id="getConsumeCardMng" parameterType="com.koscom.contents.model.ContentsVO" resultType="com.koscom.contents.model.ContentsVO">
+ 	    SELECT
+			BTI.CD_FC,
+			BTI.CD_BUSINESS,
+			BTI.NM_BUSINESS,
+			BTI.CD_CONSUME_CLASS,
+			BTI.ID_FRT,
+			BTI.DT_FRT,
+			BTI.ID_LST,
+			BTI.DT_LST,
+			CCI.CD_CLASS,
+			CCI.NM_CLASS,
+			CCI.CD_TYPE,
+			CCI.NM_TYPE
+		FROM
+			BUSINESS_TYPE_INFO BTI
+		LEFT JOIN CONSUME_CLASS_INFO CCI
+		ON BTI.CD_CONSUME_CLASS = CCI.CD_CONSUME_CLASS
+		WHERE
+			BTI.CD_FC = #{cd_fc, jdbcType=VARCHAR}
+			AND BTI.CD_BUSINESS = #{cd_business, jdbcType=VARCHAR}
+	</select>
+	<update id="procConsumeCardMng" parameterType="com.koscom.contents.model.ContentsVO">
+		MERGE INTO BUSINESS_TYPE_INFO
+	  	USING DUAL
+	   	ON (
+	   		CD_FC = #{cd_fc, jdbcType=VARCHAR}
+	   		AND CD_BUSINESS = #{cd_business, jdbcType=VARCHAR}
+	   		)
+	   	WHEN MATCHED THEN
+	    UPDATE SET
+	    	NM_BUSINESS = #{nm_business, jdbcType=VARCHAR},
+			CD_CONSUME_CLASS = #{cd_consume_class, jdbcType=VARCHAR},
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHEN NOT MATCHED THEN
+		INSERT
+			(
+				CD_FC,
+				CD_BUSINESS,
+				NM_BUSINESS,
+				CD_CONSUME_CLASS,
+				ID_FRT,
+				DT_FRT,
+				ID_LST,
+				DT_LST
+			) VALUES (
+				#{cd_fc, jdbcType=VARCHAR},
+				#{cd_business, jdbcType=VARCHAR},
+				#{nm_business, jdbcType=VARCHAR},
+				#{cd_consume_class, jdbcType=VARCHAR},
+				#{id_frt, jdbcType=VARCHAR},
+				SYSDATE,
+				#{id_lst, jdbcType=VARCHAR},
+				SYSDATE
+			)
+	</update>
+	<delete id="delConsumeCardMng" parameterType="com.koscom.contents.model.ContentsVO">
+		DELETE
+		FROM
+			BUSINESS_TYPE_INFO
+		WHERE
+			CD_FC = #{cd_fc, jdbcType=VARCHAR}
+			AND CD_BUSINESS = #{cd_business, jdbcType=VARCHAR}
+	</delete>
+
+</mapper>

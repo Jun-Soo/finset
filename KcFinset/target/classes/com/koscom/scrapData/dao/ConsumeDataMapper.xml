@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- VITCOM  SYSTEM MANAGEMENT  KHK  20180724 ~ 0822 -->
+<mapper namespace="com.koscom.scrapData.dao.ConsumeDataMapper">
+<!-- 소비지출 테이블(CONSUME_INFO)에 데이터를 쌓기 위해 카드 승인 내역(SCR_CARD_APPROVAL_INFO)에서 데이터를 가져옴 -->
+	<select id="getTmFromConsumeInfo" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT TO_CHAR(MAX(TO_NUMBER(DT_TRD||TM_TRD))) FROM CONSUME_INFO WHERE NO_PERSON = #{no_person}
+	</select>
+	<select id="listScrCardApprovalInfo" parameterType="com.koscom.scrapData.model.ConsumeDataForm" resultType="hashmap">
+		SELECT
+			 NO_PERSON
+			,CD_FC
+			,DT_APPROVAL
+			,TM_APPROVAL
+			,NO_APPROVAL
+			,TYPE_CARD
+			,NO_CARD
+			,NM_MEMBER
+			,TYPE_SALES
+			,PERIOD_INSTALLMENT
+			,AMT_APPROVAL
+			,YMD_CANCEL
+			,DT_PAYMENT_DUE
+			,NO_BIZ_MEMBER
+			,CD_BIZ_MEMBER
+			,TYPE_BIZ_MEMBER
+			,CD_CURRENCY
+			,CD_IN_OUT
+			,DT_FRT
+				FROM SCR_CARD_APPROVAL_INFO
+		WHERE
+				NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND TO_NUMBER(CONCAT(TO_CHAR(DT_APPROVAL),TO_CHAR(TM_APPROVAL))) <![CDATA[>]]> TO_NUMBER(#{tm_from, jdbcType=VARCHAR})
+			AND TO_NUMBER(CONCAT(TO_CHAR(DT_APPROVAL),TO_CHAR(TM_APPROVAL))) <![CDATA[<=]]> TO_NUMBER(TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'))
+			AND TO_NUMBER(TYPE_SALES) <![CDATA[<=]]> 2
+			AND TO_NUMBER(TYPE_SALES) <![CDATA[>=]]> 1
+	</select>
+<!-- 소비지출 테이블(CONSUME_INFO)에 데이터를 쌓기 위해 현금영수증 사용내역(SCR_RESP_CASH_RECEIPT)에서 데이터를 가져옴 -->
+	<select id="listScrRespCashReceipt" parameterType="com.koscom.scrapData.model.ConsumeDataForm"  resultType="hashmap">
+		SELECT
+			 NO_PERSON
+			,YMD_DEAL
+			,TIME_DEAL
+			,NM_AFFILIATE
+			,AMT_USE
+			,NO_APPROVAL
+			,TYPE_ID_CHECK
+			,TYPE_DEAL
+			,YN_DEDUCTION
+			,TYPE_ISSUE
+			,DT_FRT
+				FROM SCR_RESP_CASH_RECEIPT
+		WHERE
+				NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND TO_NUMBER(CONCAT(TO_CHAR(YMD_DEAL),TO_CHAR(TIME_DEAL))) <![CDATA[>]]> TO_NUMBER(#{tm_from, jdbcType=VARCHAR})
+			AND TO_NUMBER(CONCAT(TO_CHAR(YMD_DEAL),TO_CHAR(TIME_DEAL))) <![CDATA[<=]]> TO_NUMBER(TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'))
+	</select>
+	
+<!-- 업종명으로 소비항목코드를 가져옴 -->
+	<select id="getCdConsumeClass" parameterType="hashmap" resultType="java.lang.String">
+		SELECT CD_CONSUME_CLASS
+			FROM BUSINESS_TYPE_INFO
+		WHERE 
+				CD_FC 			= #{cd_fc			, jdbcType=VARCHAR}
+			AND NM_BUSINESS 	= #{nm_business		, jdbcType=VARCHAR}
+	</select>
+<!-- 	소비항목코드로 cd_class와 cd_type을 조회 -->
+	<select id="getCodeByCdConsumeClass" parameterType="java.lang.String" resultType="com.koscom.contents.model.ContentsVO">
+		SELECT
+			 CD_CLASS
+			,CD_TYPE
+				FROM CONSUME_CLASS_INFO
+		WHERE CD_CONSUME_CLASS = #{cd_consume_class, jdbcType=VARCHAR}
+	</select>
+	
+<!-- 	소비지출 데이터 insert -->
+	<insert id="createConsumeInfo" parameterType="com.koscom.scrapData.model.ConsumeDataVO">
+		<selectKey keyProperty="seq_consume" resultType="java.lang.Integer" order="BEFORE">
+			(SELECT NVL(MAX(SEQ_CONSUME),0)+1 FROM CONSUME_INFO)
+		</selectKey>
+			INSERT INTO CONSUME_INFO(
+				 NO_PERSON
+				,SEQ_CONSUME
+				,TYPE_IN_OUT
+				,MEANS_CONSUME
+				,CD_FC
+				,NM_CARD
+				,NO_CARD
+				,TYPE_CARD
+				,DT_TRD
+				,TM_TRD
+				,NO_BIZ
+				,NM_BIZ
+				,CD_CLASS
+				,CD_TYPE
+				,CONTENTS
+				,MEMO
+				,GRADE
+				,AMT_IN_OUT
+				,NO_APPROVAL
+				,MON_INSTALLMENT
+				,MON_REMAINING
+				,YN_PAY_INSTALLMENT
+				,YN_CANCEL
+				,YN_AUTO
+				,YN_BUDGET_EXCEPT
+				,ID_FRT
+				,DT_FRT
+				,ID_LST
+				,DT_LST
+			) 
+	            SELECT
+	              #{no_person				, jdbcType=VARCHAR} AS NO_PERSON
+	             ,#{seq_consume} 								AS SEQ_CONSUME
+	             ,#{type_in_out				, jdbcType=VARCHAR} AS TYPE_IN_OUT
+	             ,#{means_consume			, jdbcType=VARCHAR} AS MEANS_CONSUME
+	             ,#{cd_fc					, jdbcType=VARCHAR} AS CD_FC
+	             ,NM_CARD										AS NM_CARD
+	             ,#{no_card					, jdbcType=VARCHAR} AS NO_CARD
+	             ,#{type_card				, jdbcType=VARCHAR} AS TYPE_CARD
+	             ,#{dt_trd					, jdbcType=VARCHAR} AS DT_TRD
+	             ,#{tm_trd					, jdbcType=VARCHAR} AS TM_TRD
+	             ,#{no_biz					, jdbcType=VARCHAR} AS NO_BIZ
+	             ,#{nm_biz					, jdbcType=VARCHAR} AS NM_BIZ
+	             ,SUBSTR(CD_CONSUME_CLASS,0,2) 					AS CD_CLASS
+	             ,SUBSTR(CD_CONSUME_CLASS,-3) 					AS CD_TYPE
+	             ,#{contents				, jdbcType=VARCHAR} AS CONTENTS
+	             ,#{memo					, jdbcType=VARCHAR} AS MEMO
+	             ,#{grade					, jdbcType=VARCHAR} AS GRADE
+	             ,#{amt_in_out				, jdbcType=VARCHAR} AS AMT_IN_OUT
+	             ,#{no_approval				, jdbcType=VARCHAR} AS NO_APPROVAL
+	             ,#{mon_installment			, jdbcType=VARCHAR} AS MON_INSTALLMENT
+	             ,#{mon_remaining			, jdbcType=VARCHAR} AS MON_REMAINING
+	             ,#{yn_pay_installment		, jdbcType=VARCHAR} AS YN_PAY_INSTALLMENT
+	             ,#{yn_cancel				, jdbcType=VARCHAR} AS YN_CANCEL
+	             ,#{yn_auto					, jdbcType=VARCHAR} AS YN_AUTO
+	             ,#{yn_budget_except		, jdbcType=VARCHAR} AS YN_BUDGET_EXCEPT
+	             ,#{id_frt					, jdbcType=VARCHAR} AS ID_FRT
+	             ,SYSDATE 										AS DT_FRT
+	             ,#{id_lst					, jdbcType=VARCHAR} AS ID_LST
+	             ,SYSDATE 										AS DT_LST
+	                FROM DUAL, 
+	                	(SELECT FN_CD_CONSUME_CLASS(
+	                		 #{no_person			, jdbcType=VARCHAR}
+	                		,#{cd_fc				, jdbcType=VARCHAR}
+	                		,#{nm_biz				, jdbcType=VARCHAR}
+	                		) AS CD_CONSUME_CLASS
+	                			FROM DUAL),
+	                	 (SELECT 
+	                	 	NM_CARD AS NM_CARD,
+	                	 	CASE
+	                	 		WHEN #{no_card, jdbcType=VARCHAR} IS NOT NULL THEN
+	                	 			CASE
+	                	 				WHEN NM_CARD LIKE '%체크%' 	THEN '02'
+	                	 				ELSE 							 '01'
+	                	 			END
+	                	 	ELSE NULL
+	                	 	END AS TYPE_CARD
+	                	 		FROM SCR_CARD_INFO
+	                	  WHERE 	NO_PERSON 			= 		 #{no_person	, jdbcType=VARCHAR}
+	                	  		AND CD_FC 				= 		 #{cd_fc		, jdbcType=VARCHAR}
+	                	  		AND SUBSTR(NO_CARD,-3) 	= SUBSTR(#{no_card		, jdbcType=VARCHAR},-3)
+	                	  )
+	</insert>
+	<select id="getNtsCode" resultType="java.lang.String">
+		SELECT CD_FC FROM FC_INFO WHERE NM_FC LIKE '%국세청%'
+	</select>
+</mapper>

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.debt.dao.DebtMapper">
+
+	<resultMap id="myMap" type="hashmap">
+    </resultMap>
+
+	<select id="listDebtInfo" parameterType="java.lang.String" resultType="hashmap">
+	    /* com.koscom.debt.dao.DebtMapper.listDebtInfo */
+		SELECT A.NO_PERSON		AS "no_person"
+		      ,A.NO_MANAGE_INFO AS "no_manage_info"
+		  FROM DEBT_PERSONAL_INFO A
+		 WHERE A.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		   AND A.YMD_LOANEND > TO_CHAR(SYSDATE, 'YYYYMMDD')
+		   AND A.YMD_LOAN > NVL(A.YMD_CANCEL, '0')
+		   AND A.AMT_REMAIN > 0
+	</select>
+	
+	<!-- 회원 부채 정보 금리 추정 처리 -->
+	<select id="debtInterestEtmPdoc" statementType="CALLABLE" parameterType="hashmap">
+		{ call PKG_LOAN_INTEREST_ETM.P_START(
+			#{no_person, mode=IN, jdbcType=VARCHAR},
+			#{no_manage_info, mode=IN, jdbcType=VARCHAR},
+			#{p_rtn_cd, mode=OUT, jdbcType=VARCHAR, resultMap=myMap},
+			#{p_rtn_msg, mode=OUT, jdbcType=VARCHAR, resultMap=myMap}) }
+	</select>
+	
+</mapper>

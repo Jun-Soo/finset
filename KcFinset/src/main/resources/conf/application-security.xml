@@ -19,10 +19,6 @@
 	</beans:bean>
 	
 	<!-- 패턴정의 -->
-	<http pattern="/index.html" security="none"/>
-	<http pattern="/static/**" security="none"/>
-	
-	
 	<http pattern="/ckeditor/**" security="none"/>
 	<http pattern="/fonts/**" security="none"/>
 	<http pattern="/img/**" security="none"/>

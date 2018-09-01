@@ -1,0 +1,288 @@
+<!-- css link -->
+<link rel="stylesheet" href="<c:url value="/style/bs/bootstrap-datepicker-customize.css"/>" />
+<link rel="stylesheet" href="<c:url value="/style/bs/bootstrap.customize.css"/>" />
+<link rel="stylesheet" href="<c:url value="/style/bs/bootstrap-select.css"/>" />
+<link rel="stylesheet" href="<c:url value="/style/slick/slick.css"/>" />
+<link rel="stylesheet" href="<c:url value="/style/swiper/swiper.css"/>" />
+<link rel="stylesheet" href="<c:url value="/style/jquery.toast.css"/>" />
+<link rel="stylesheet" href="<c:url value="/style/mobile.css"/>" />
+
+<!-- script link -->
+<script src="<c:url value="/script/jquery/jquery.min.js"/>"></script>
+<script src="<c:url value="/script/jquery/jquery-ui.min.js"/>"></script>
+<script src="<c:url value="/script/jquery/jquery.animateNumber.min.js"/>"></script>
+<script src="<c:url value="/script/bs/bootstrap-datepicker-customize.js"/>"></script>
+<script src="<c:url value="/script/bs/bootstrap.min.js"/>"></script>
+<script src="<c:url value="/script/bs/bootstrap-select.min.js"/>"></script>
+<script src="<c:url value="/script/slick/slick.crz.js"/>"></script>
+<script src="<c:url value="/script/swiper/swiper.js"/>"></script>
+<script src="<c:url value="/script/XE_validate.js"/>"></script>
+<script src="<c:url value="/script/jquery/jquery.toast.js"/>"></script>
+<script src="<c:url value="/script/mobile.js"/>"></script>
+<script src="<c:url value="/script/comm.js"/>"></script>
+<script src="<c:url value="/script/jockey.js"/>"></script>
+<script src="<c:url value="/script/fastclick.js"/>"></script>
+
+<script type="text/javascript">
+
+// $(function() {
+// 	FastClick.attach(document.body);
+// });
+
+	$(document).ready(function () {
+		
+		//FastClick.attach(document.body);
+		//var path = $(location).attr('pathname');
+		var data = {"nm_dir":$(location).attr('pathname')};
+		$.ajax({
+			url : "<c:url value='/m/person/insertActiveHist.json'/>",
+			data : data,
+			async: true,
+			contentType : "application/x-www-form-urlencoded; charset=UTF-8",
+			type : "POST",
+			success : function (result) {
+			},
+			error : function (e) {
+			}
+		});
+		
+		/*****************/
+		if(userAgent == "Android" || userAgent == "iOS") {
+			
+			$("#updateMsg .btn-lg").each(function () {
+				$(this).on("click", function() {
+					if("Y" == $(this).attr("data-val")) {
+						if(userAgent == 'Android') {
+							
+							window.Android.updateApp();
+							window.Android.exitApp(); //앱종료
+						} else if(userAgent == 'iOS' ) {
+							
+							Jockey.send("updateApp" , {
+								app_id : "1385967472"
+							});
+						}
+					}
+		        });
+			});
+			
+			var chkVersion = "";
+			if(userAgent == "Android") {
+				chkVersion = window.Android.checkAppVersion();
+			} else if(userAgent == "iOS") {
+				
+				//앱버전 조회결과 콜백
+				Jockey.on("receiveAppVersion" , function (param) {
+					chkVersion = param.appVersion;
+				});
+				//앱버전 조회 네이티브 호출
+				Jockey.send("checkAppVersion");
+			}	
+			
+			data = {"app_version" : chkVersion, "user_agent" : userAgent};
+			$.ajax({
+				url : "<c:url value='/m/login/appVersionCheck.json'/>",
+				data : data,
+				async: true,
+				contentType : "application/x-www-form-urlencoded; charset=UTF-8",
+				type : "POST",
+				success : function (result) {
+					if(result.result == 'update') {
+						updateMsg('핀셋이 업데이트 되었습니다. 새버전으로 업데이트 하셔야 서비스를 정상적으로 이용하실 수 있습니다.');
+					} else {
+						
+					}
+				},
+				error : function (e) {
+					
+				}
+			});
+		}
+		/**********************/
+		
+		if(userAgent == "Android") {
+			try {
+                window.Android.setBackKeyUse('Y');
+                window.Android.setEndApp('N');
+            } catch (e) {
+            }
+		}
+		
+	});
+	
+	function updateApp() {
+		if(userAgent == 'Android') {
+			window.Android.updateApp();
+		}
+		else if(userAgent == 'iOS' ) {
+			Jockey.send("updateApp" , {
+				app_id : ""
+			});
+		}
+	}
+	
+	function toastMsg(message){
+		$.toast({
+		    text: message, // Text that is to be shown in the toast
+
+		    showHideTransition: 'slide', // fade, slide or plain
+		    allowToastClose: false, // Boolean value true or false
+		    hideAfter: 2000, // false to make it sticky or number representing the miliseconds as time after which toast needs to be hidden
+		    stack: false, // false if there should be only one toast at a time or a number representing the maximum number of toasts to be shown at a time
+		    position: 'mid-center', // bottom-left or bottom-right or bottom-center or top-left or top-right or top-center or mid-center or an object representing the left, right, top, bottom values
+		    
+		    bgColor: 'rgba(116, 116, 116, 0.7)',  // Background color of the toast
+		    textColor: '#ffffff',  // Text color of the toast
+		    textAlign: 'center',  // Text alignment i.e. left, right or center
+		    loader: false,  // Whether to show loader or not. True by default
+//			    loaderBg: '#9EC600',  // Background color of the toast loader
+		});
+	}
+
+    /**
+     * 에러메세지 처리
+     * @param e
+     */
+	function errMsg(e){
+	    <c:if test="${site eq 'LOCAL'}">
+            toastMsg("서비스오류입니다.e="+e.message);
+        </c:if>
+        <c:if test="${site ne 'LOCAL'}">
+	        toastMsg("서비스오류입니다.");
+        </c:if>
+        if(userAgent == "Android") {
+            window.Android.loding('N');
+        }
+        else if (userAgent == "iOS") {
+        	Jockey.send("stopLoading");
+        }
+    }
+    function setCookie(cookie_name, value, days) {
+	    if(days == undefined) {
+	        days = 1;
+        }
+        // 설정 일수만큼 현재시간에 만료값으로 지정
+
+        var cookie_string = cookie_name + "=" + escape ( value );
+            cookie_string += "; path=" + escape ( "/");
+        // var expires = new Date ();
+        // cookie_string += "; expires=" + expires.toUTCString();
+
+        document.cookie = cookie_string;
+
+    }
+    function getCookie(cookie_name) {
+        var x, y;
+        var val = document.cookie.split(';');
+
+        for (var i = 0; i < val.length; i++) {
+            x = val[i].substr(0, val[i].indexOf('='));
+            y = val[i].substr(val[i].indexOf('=') + 1);
+            x = x.replace(/^\s+|\s+$/g, ''); // 앞과 뒤의 공백 제거하기
+            if (x == cookie_name) {
+                return unescape(y); // unescape로 디코딩 후 값 리턴
+            }
+        }
+        return "";
+    }
+    // 탭 활성화 표시 모션
+    function addPseudoBar(cookeyCurTab) {
+        var actWidth    = $("#li"+cookeyCurTab).innerWidth(),
+            actPosition = $("#li"+cookeyCurTab).position();
+
+        if(actWidth != null) {
+            $(".tabs").append("<div class='pseudo-bar'></div>");
+
+            $(".pseudo-bar").css({
+                "width": actWidth,
+                "left": actPosition.left
+            });
+
+            $(".tabs a").click(function() {
+                var width = $(this).innerWidth(),
+                    position = $(this).position();
+
+                $(".pseudo-bar").css({
+                    "width": width,
+                    "left": position.left
+                });
+            });
+        }
+    }
+    var toggleSelect = function(id) {
+        setTimeout(function(){
+            $('#'+id).selectpicker('toggle');
+        },100);
+    }
+    var IS_START = "IS_START";
+    var LOANWORKER_CUR_TAB = "LOANWORKER_CUR_TAB";
+    var LOANSELF_CUR_TAB   = "LOANSELF_CUR_TAB";
+    var LOAN_MORTGAGE_CUR_TAB   = "LOAN_MORTGAGE_CUR_TAB";
+
+    var debug = function(log){
+        alert(log);
+    }
+    var startLoading = function(){
+        if(userAgent == "Android") {
+            window.Android.loding('Y');
+        }
+        else if(userAgent == "iOS") {
+            Jockey.send("showLoading");
+        }
+
+    }
+    var stopLoading = function(){
+        if(userAgent == "Android") {
+            window.Android.loding('N');
+        }
+        else if(userAgent == "iOS") {
+            Jockey.send("stopLoading");
+        }
+    }
+    var autoScrapResult = function(isSucccess)	{
+    	var push_msg;
+    	var no_person = "<%=(String)session.getAttribute("no_person")%>"
+    	if(isSucccess == "true")	{
+    		push_msg = '자동 스크래핑이 완료되었습니다.';
+    	}
+    	else	{
+    		push_msg = '자동 스크래핑이 실패하였습니다.';
+    	}
+    	
+    	var data = "no_person="+no_person+"&push_msg="+push_msg;
+		$.ajax({
+			url : "<c:url value='/m/scrap/sendPushMsg.json'/>",
+			data : data,
+			contentType : "application/x-www-form-urlencoded; charset=UTF-8",
+			type : "POST",
+			async : false,
+			success : function (result) {
+				if(result.result == '00') {
+					//toastMsg('푸쉬전송이 완료되었습니다.');
+				}
+			},
+			error : function (e) {
+                errMsg(e);
+			}
+		});
+    }
+    
+	var saveScrapData = function(){
+		
+		var no_person = "<%=(String)session.getAttribute("no_person")%>"
+		var data = "no_person="+no_person;
+		$.ajax({
+			url : "<c:url value='/m/scrapData/saveScrapData.json'/>",
+			data : data,
+			contentType : "application/x-www-form-urlencoded; charset=UTF-8",
+			type : "POST",
+			async : false,
+			success : function (result) {
+				if(result.cd_err == '00') {
+				}
+			},
+			error : function (e) {
+			}
+		});
+	}
+</script>

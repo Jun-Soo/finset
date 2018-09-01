@@ -4,6 +4,42 @@
 
 <mapper namespace="com.koscom.credit.dao.CreditMapper">
 	
+	<select id="getCreditInfoNextSeq" resultType="java.lang.String">
+		/* com.koscom.credit.dao.CreditMapper.getCreditInfoNextSeq */
+		SELECT SEQ_CREDIT_INFO.NEXTVAL AS SEQ_ FROM DUAL
+	</select>
+	
+	<select id="selectResDt" parameterType="java.lang.String" resultType="java.lang.String">
+		/* com.koscom.credit.dao.CreditMapper.getCreditInfoNextSeq */
+		SELECT TO_CHAR(MAX(DT_FRT), 'YYYYMMDD')
+		  FROM CREDIT_INFO
+		 WHERE NO_PERSON = #{noPerson}
+		   AND NM_IF = '300'
+	</select>
+	
+	<insert id="saveCredit" parameterType="com.koscom.domain.CreditInfo">
+		/* com.koscom.credit.dao.CreditMapper.saveCredit */
+		INSERT INTO CREDIT_INFO
+			( SEQ, NO_PERSON, NM_CUST, CD_CB_COMP, NM_IF, NM_IF_SUB
+			, CD_CB_CAUSE, CD_AGREE_CAUSE, CD_CB_RESPONSE, MSG_REQUEST, MSG_RESPONSE
+			, NO_INQ_KEY, ID_FRT, DT_FRT) VALUES (
+				  SEQ_CREDIT_INFO.NEXTVAL
+				, #{noPerson, 		jdbcType=VARCHAR}
+				, #{nmCust, 		jdbcType=VARCHAR}
+				, #{cdCbComp,		jdbcType=VARCHAR}
+				, #{nmIf,			jdbcType=VARCHAR}
+				, #{nmIfSub,		jdbcType=VARCHAR}
+				, #{cdCbCause,		jdbcType=VARCHAR}
+				, #{cdAgreeCause,	jdbcType=VARCHAR}
+				, #{cdCbResponse,	jdbcType=VARCHAR}
+				, #{msgRequest,		jdbcType=VARCHAR}
+				, #{msgResponse,	jdbcType=VARCHAR}
+				, #{noInqKey,		jdbcType=VARCHAR}
+				, #{idFrt,			jdbcType=VARCHAR}
+				, SYSDATE
+			)
+	</insert>
+	
 	<select id="getCreditMainBaseInfo" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
 	    /* com.koscom.credit.dao.CreditMapper.getCreditMainBaseInfo */
 	    SELECT
@@ -174,4 +210,11 @@
 		WHERE ROWNUM = 1
 	</select>
 	
+	<update id="deleteKcbCb" parameterType="java.lang.String">
+	    /* com.koscom.credit.dao.CreditMapper */
+	    DELETE FROM CREDIT_INFO
+		 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		   AND TO_CHAR(dt_frt,'YYYYMMDD') = TO_CHAR(SYSDATE,'YYYYMMDD')
+		   AND NM_IF = '600420' AND (NM_IF_SUB = '210' OR NM_IF_SUB = '230')
+	</update>
 </mapper>

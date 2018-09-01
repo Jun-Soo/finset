@@ -8,6 +8,13 @@ import com.koscom.domain.CreditInfo;
 public interface CreditManager {
 
 	/**
+	 * Method Desc : 전문SEQ 조회
+	 * 2017.12.28
+	 * @return String SEQ
+	 */
+	String getCreditInfoNextSeq();
+	
+	/**
 	 * 신용관리 메인_기본정보
 	 * @param no_person
 	 * @return CreditInfo

@@ -49,4 +49,14 @@ public class LogUtil {
         }
         return sb.toString();
     }
+    /**
+     * 에러 로그 내용앞뒤줄에  ====== 에 추가
+     * @param logger
+     * @param th
+     */
+    public static void error(Logger logger,Object log){
+        logger.error("====================================");
+        logger.error(log.toString());
+        logger.error("====================================");
+    }
 }

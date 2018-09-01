@@ -1,7 +1,6 @@
 package com.koscom.login.service;
 
 import java.io.IOException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -31,13 +30,18 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 
 import com.koscom.credit.service.CreditManager;
+import com.koscom.domain.PersonShareMessageInfo;
 import com.koscom.env.service.CodeManager;
+import com.koscom.kcb.service.KcbManager;
+import com.koscom.person.model.PersonShareInfoVO;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
 import com.koscom.util.Constant;
+import com.koscom.util.FcmUtil;
+import com.koscom.util.FinsetException;
+import com.koscom.util.LogUtil;
 import com.koscom.util.ResUtil;
 import com.koscom.util.ReturnClass;
-import com.koscom.util.SessionUtil;
 import com.koscom.util.StringUtil;
 
 public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler implements UserDetailsService,AuthenticationSuccessHandler,AuthenticationFailureHandler {
@@ -53,6 +57,9 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 	
 	@Autowired
 	private CreditManager creditManager;
+	
+	@Autowired
+	private KcbManager kcbManager;
 	
 	private static final Logger logger = LoggerFactory.getLogger(LoginManager.class);
 	
@@ -71,7 +78,10 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 	}
 	
 	@Override
-	public void onAuthenticationFailure(HttpServletRequest request, HttpServletResponse response, AuthenticationException authenticationException) throws IOException, ServletException {
+	public void onAuthenticationFailure(
+			HttpServletRequest request, 
+			HttpServletResponse response, 
+			AuthenticationException authenticationException) throws IOException, ServletException {
 		
 		HttpSession session = request.getSession(false);
 		Authentication authentication = authenticationException.getAuthentication();
@@ -97,12 +107,15 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 	}
 
 	@Override
-	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
+	public void onAuthenticationSuccess(
+			HttpServletRequest request, 
+			HttpServletResponse response, 
+			Authentication authentication) throws IOException, ServletException {
 		
 		HttpSession session = request.getSession();
 		
 		String authorities = "";
-		String cd_result = ""; 
+		String cd_result = Constant.LOGIN_SUCCESS;
 		
 		for (GrantedAuthority authority : authentication.getAuthorities()) {
 			logger.debug("authority.toString():" + authority.toString());
@@ -123,39 +136,98 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 			_hp.setMaxAge(30*24*60*60);
 			_hp.setPath("/");
 			response.addCookie(_hp);
+			
+			//당일 크롤링 여부 조회
+			HashMap<String, String> schMap = new HashMap<String, String>();
+			schMap.put("sch_no_person", personVO.getNo_person());
+			schMap.put("nm_if", 		"600420");
+			schMap.put("nm_if_sub", 	"210");
+			schMap.put("sch_time", 		"1");
+			HashMap<String, String> clobMap = creditManager.getKcbInfoCLOB(schMap);
+			
+			try {
+				
+				//01. 크롤링 처리
+				if(clobMap == null) {
+					cd_result = kcbManager.getKcbCrawling(personVO);
+				}
+				
+				//02. 로그인시 로직 처리
+				loginProcess(personVO);
+				
+			} catch (FinsetException e) {
+				cd_result = Constant.FAILED;
+			}
+			
+			String linkUrl = (String)session.getAttribute("linkUrl");
+		    if(!StringUtil.isEmpty(linkUrl)) session.removeAttribute("linkUrl");
+		    
+			// 자동스크래핑 여부 관련 설정
+			session.setAttribute("AutoScrap", "true");
+			response.sendRedirect(ResUtil.getPath(request) + "/index.html?linkUrl="+linkUrl);
 		}
+	}
+	
+	public String loginProcess(PersonVO personVO) {
 		
+		String cd_result = Constant.SUCCESS;
 		
-		// 비밀번호&지문인증 틀린횟수 초기화
-		personVO.setCnt_fail_mode("all");
-		personVO.setNo_person(personVO.getNo_person());
-		personVO.setCnt_fail(0);
-		ReturnClass modifyPwdFailCntReturnClass = personManager.modifyPwdFailCnt((PersonVO)SessionUtil.setUser(personVO, session));
-		logger.info("cd_result : {},  message : {}", modifyPwdFailCntReturnClass.getCd_result(), modifyPwdFailCntReturnClass.getMessage());
-
-		//당일 크롤링 여부 조회
-		HashMap<String, String> schMap = new HashMap<String, String>();
-		schMap.put("sch_no_person", personVO.getNo_person());
-		schMap.put("nm_if", 		"600420");
-		schMap.put("nm_if_sub", 	"210");
-		schMap.put("sch_time", 		"1");
-		HashMap<String, String> clobMap = creditManager.getKcbInfoCLOB(schMap);
+		try {
+			
+			String      no_person   = personVO.getNo_person();
+	        
+	        //최근 접속 이력 업데이트
+	        personManager.modifyLastLogin(no_person);
+	        
+	        //마이페이지 - 공유관리 업데이트요청
+	        PersonShareInfoVO personShareInfoVO = new PersonShareInfoVO();
+	        personShareInfoVO.setOffer_no_person(no_person);
+	        List<PersonShareInfoVO> listPersonShareInfoReqUpdate = personManager.listPersonShareInfoReqUpdate(personShareInfoVO);
+	        
+	        //푸시발송
+	        for(PersonShareInfoVO updateItem : listPersonShareInfoReqUpdate) {
+				logger.info("공유관리 업데이트요청 push발송");
+				
+				 String title = "[공유관리]";
+				 String body = "";
+				 String url = "";
+				 String fcm_token = "";
+				 
+				 //메세지 정보 셋팅
+				 PersonShareMessageInfo personShareMessageInfo = new PersonShareMessageInfo();
+				 personShareMessageInfo.setSeq_share(updateItem.getSeq_share());
+				 personShareMessageInfo.setId_lst(no_person); //최종수정아이디
+				
+				 body = updateItem.getOffer_nm_person()+"님이 공유 정보를 업데이트 하였습니다.";
+				 
+				 personShareMessageInfo.setReq_status("03"); //응답
+			     personShareMessageInfo.setRes_message(body); //응답메세지
+				 
+				 PersonVO recPersonVO = personManager.getPersonInfo(updateItem.getReq_no_person());
+				    
+				 if (recPersonVO != null) {
+				     fcm_token = recPersonVO.getFcm_token();
+				     if (fcm_token != null && !fcm_token.equals("")) {
+				    	 logger.debug("@@@@SendTo())"+fcm_token);
 		
-		cd_result = Constant.LOGIN_SUCCESS;
-		
-		String linkUrl = (String)session.getAttribute("linkUrl");
-			   //linkUrl = StringUtil.isEmpty(linkUrl) ? "/m/credit/frameCreditInfoMain.crz" : linkUrl;
-			   linkUrl = StringUtil.isEmpty(linkUrl) ? "/index.html" : linkUrl;
-		
-	    if(!StringUtil.isEmpty(linkUrl)) session.removeAttribute("linkUrl");
-		if(clobMap == null) {
-			linkUrl = URLEncoder.encode(linkUrl);
-			response.sendRedirect(ResUtil.getPath(request) + "/m/login/frameKcbCrawling.crz?linkUrl="+linkUrl);
-		} else {
-			response.sendRedirect(ResUtil.getPath(request) + linkUrl);
+				         if(FcmUtil.sendFcm(  fcm_token
+				                 , title
+				                 , body
+				                 , url
+				                 , StringUtil.nullToString(recPersonVO.getYn_os(), "1")
+				                 , StringUtil.nullToString(recPersonVO.getCd_push(), ""))){
+				         }
+				         ReturnClass rtnClass = personManager.mergePersonShareInfoMessage(personShareMessageInfo);
+				     }
+				 }
+			}
+			
+		} catch (Exception e) {
+			LogUtil.error(logger, e);
+			cd_result = Constant.FAILED;
 		}
-		// 자동스크래핑 여부 관련 설정
-		session.setAttribute("AutoScrap", "true");
+		return cd_result;
+		
 	}
 	
 	/**

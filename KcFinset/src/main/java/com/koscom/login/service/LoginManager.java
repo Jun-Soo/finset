@@ -144,7 +144,8 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 		cd_result = Constant.LOGIN_SUCCESS;
 		
 		String linkUrl = (String)session.getAttribute("linkUrl");
-			   linkUrl = StringUtil.isEmpty(linkUrl) ? "/m/credit/frameCreditInfoMain.crz" : linkUrl;
+			   //linkUrl = StringUtil.isEmpty(linkUrl) ? "/m/credit/frameCreditInfoMain.crz" : linkUrl;
+			   linkUrl = StringUtil.isEmpty(linkUrl) ? "/index.html" : linkUrl;
 		
 	    if(!StringUtil.isEmpty(linkUrl)) session.removeAttribute("linkUrl");
 		if(clobMap == null) {

@@ -160,6 +160,9 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 				cd_result = Constant.FAILED;
 			}
 			
+			// 자동스크래핑 여부 관련 설정
+			session.setAttribute("AutoScrap", "true");
+						
 			String linkUrl = (String)session.getAttribute("linkUrl");
 			   linkUrl = StringUtil.isEmpty(linkUrl) ? "/m/credit/frameCreditInfoMain.crz" : linkUrl;
 		
@@ -174,8 +177,6 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 			String linkUrl = (String)session.getAttribute("linkUrl");
 		    if(!StringUtil.isEmpty(linkUrl)) session.removeAttribute("linkUrl");
 		    
-			// 자동스크래핑 여부 관련 설정
-			session.setAttribute("AutoScrap", "true");
 			response.sendRedirect(ResUtil.getPath(request) + "/index.html?linkUrl="+linkUrl);
 			*/
 		}

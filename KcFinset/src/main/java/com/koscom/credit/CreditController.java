@@ -125,54 +125,6 @@ public class CreditController {
         String      no_person   = (String)session.getAttribute("no_person");
         String		auto_Scrap	= (String)session.getAttribute("AutoScrap");
         
-        //최근 접속 이력 업데이트
-        personManager.modifyLastLogin(no_person);
-        
-        //마이페이지 - 공유관리 업데이트요청
-        PersonShareInfoVO personShareInfoVO = new PersonShareInfoVO();
-        personShareInfoVO.setOffer_no_person(no_person);
-        List<PersonShareInfoVO> listPersonShareInfoReqUpdate = personManager.listPersonShareInfoReqUpdate(personShareInfoVO);
-        
-        //푸시발송
-        for(PersonShareInfoVO updateItem : listPersonShareInfoReqUpdate) {
-			logger.info("공유관리 업데이트요청 push발송");
-			
-			 String title = "[공유관리]";
-			 String body = "";
-			 String url = "";
-			 String fcm_token = "";
-			 
-			 //메세지 정보 셋팅
-			 PersonShareMessageInfo personShareMessageInfo = new PersonShareMessageInfo();
-			 personShareMessageInfo.setSeq_share(updateItem.getSeq_share());
-			 personShareMessageInfo.setId_lst(no_person); //최종수정아이디
-			
-			 body = updateItem.getOffer_nm_person()+"님이 공유 정보를 업데이트 하였습니다.";
-			 
-			 personShareMessageInfo.setReq_status("03"); //응답
-		     personShareMessageInfo.setRes_message(body); //응답메세지
-			 
-			 PersonVO recPersonVO = personManager.getPersonInfo(updateItem.getReq_no_person());
-			    
-			 if (recPersonVO != null) {
-			     fcm_token = recPersonVO.getFcm_token();
-			     if (fcm_token != null && !fcm_token.equals("")) {
-			    	 logger.debug("@@@@SendTo())"+fcm_token);
-	
-			         if(FcmUtil.sendFcm(  fcm_token
-			                 , title
-			                 , body
-			                 , url
-			                 , StringUtil.nullToString(recPersonVO.getYn_os(), "1")
-			                 , StringUtil.nullToString(recPersonVO.getCd_push(), ""))){
-			         }
-			        
-			         ReturnClass rtnClass = personManager.mergePersonShareInfoMessage(personShareMessageInfo);
-			         model.addAttribute("shareMsgCdResult",rtnClass.getCd_result());
-			     }
-			 }
-		}
-        
         String rtnPage = "";
         
         model.addAttribute("noPerson", no_person);

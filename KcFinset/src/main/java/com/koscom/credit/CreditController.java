@@ -68,64 +68,13 @@ public class CreditController {
      * @param request
      * @return
      */
-    @RequestMapping("/frameCreditInfoMain.crz")
+    @RequestMapping("/CreditInfoMain.json")
     public String frameCreditInfoMain(
     		HttpServletRequest request,
     		HttpSession session, 
     		Model model) throws UnsupportedEncodingException, FinsetException, IOException {
         
         String      no_person   = (String)session.getAttribute("no_person");
-        String		auto_Scrap	= (String)session.getAttribute("AutoScrap");
-        
-        //최근 접속 이력 업데이트
-        personManager.modifyLastLogin(no_person);
-        
-        //마이페이지 - 공유관리 업데이트요청
-        PersonShareInfoVO personShareInfoVO = new PersonShareInfoVO();
-        personShareInfoVO.setOffer_no_person(no_person);
-        List<PersonShareInfoVO> listPersonShareInfoReqUpdate = personManager.listPersonShareInfoReqUpdate(personShareInfoVO);
-        
-        //푸시발송
-        for(PersonShareInfoVO updateItem : listPersonShareInfoReqUpdate) {
-			logger.info("공유관리 업데이트요청 push발송");
-			
-			 String title = "[공유관리]";
-			 String body = "";
-			 String url = "";
-			 String fcm_token = "";
-			 
-			 //메세지 정보 셋팅
-			 PersonShareMessageInfo personShareMessageInfo = new PersonShareMessageInfo();
-			 personShareMessageInfo.setSeq_share(updateItem.getSeq_share());
-			 personShareMessageInfo.setId_lst(no_person); //최종수정아이디
-			
-			 body = updateItem.getOffer_nm_person()+"님이 공유 정보를 업데이트 하였습니다.";
-			 
-			 personShareMessageInfo.setReq_status("03"); //응답
-		     personShareMessageInfo.setRes_message(body); //응답메세지
-			 
-			 PersonVO recPersonVO = personManager.getPersonInfo(updateItem.getReq_no_person());
-			    
-			 if (recPersonVO != null) {
-			     fcm_token = recPersonVO.getFcm_token();
-			     if (fcm_token != null && !fcm_token.equals("")) {
-			    	 logger.debug("@@@@SendTo())"+fcm_token);
-	
-			         if(FcmUtil.sendFcm(  fcm_token
-			                 , title
-			                 , body
-			                 , url
-			                 , StringUtil.nullToString(recPersonVO.getYn_os(), "1")
-			                 , StringUtil.nullToString(recPersonVO.getCd_push(), ""))){
-			         }
-			        
-			         ReturnClass rtnClass = personManager.mergePersonShareInfoMessage(personShareMessageInfo);
-			         model.addAttribute("shareMsgCdResult",rtnClass.getCd_result());
-			     }
-			 }
-		}
-        
-        String rtnPage = "";
         
         model.addAttribute("noPerson", no_person);
         model.addAttribute("baseInfo", creditManager.getCreditMainBaseInfo(no_person));
@@ -158,62 +107,7 @@ public class CreditController {
         model.addAttribute("loanCardCnt", loanCardCnt);
         model.addAttribute("overdueCnt", overdueCnt);
         
-        //자동스크래핑 은행 내역 조회 및 설정 - 로그인 후 한번만 실행
-        if(auto_Scrap.equals("true"))	{
-        	String smsStartDate = null;
-        	String smsInclude = null;
-        	String smsExclude = null;
-        	//마지막 문자내역 시간 체크
-        	smsStartDate = personManager.getLastPersonSmsDt(no_person);
-        	//문자내역이 없을 경우 기본 3달 전으로 셋팅
-        	if(smsStartDate == null || smsStartDate.length() == 0)	{
-        		String toDay = DateUtil.getCurrentDateTime("yyyyMMdd");
-        		smsStartDate = DateUtil.addMonths(toDay, -3);
-        		//시분초 추가
-        		smsStartDate += "000000";
-        	}
-        	String site = (environment != null)?environment.getProperty("service.profile"):"";
-    		model.addAttribute("site", site);
-
-        	// 초기 접속일 경우에만 SMS내역 및 스크래핑 내역 화면에 전송
-        	String      isAutoScrap   = (String)session.getAttribute("AutoScrap");
-        	logger.debug("isAutoScrap : " + isAutoScrap);
-        	
-        	if(isAutoScrap.equals("true") && !site.equals("REAL"))	{
-        		logger.debug("=======================================");
-	        	model.addAttribute("smsStartDate", smsStartDate);
-	        	logger.debug("SMS Start Date : " + smsStartDate);
-	        	smsInclude = codeManager.getCodeName("_CONF_SMS", "INCLUDE");
-	        	model.addAttribute("smsInclude", smsInclude);
-	        	logger.debug("SMS Include : " + smsInclude);
-	        	smsExclude = codeManager.getCodeName("_CONF_SMS", "EXCLUDE");
-	        	model.addAttribute("smsExclude", smsExclude);
-	        	logger.debug("SMS Exclude : " + smsExclude);
-	        	
-	        	String autoScrapInfo = null;
-	        	String cd_agency = codeManager.getCodeId("cd_agency","은행");
-	        	autoScrapInfo = scrapManager.getAutoScrapInfo(cd_agency, no_person);
-	        	logger.debug("Bank autoScrapInfo : " + autoScrapInfo);
-	        	if(autoScrapInfo != null && autoScrapInfo.length() > 0)	{
-	        		model.addAttribute("autoScrapBankInfo", autoScrapInfo);
-	        	}
-	        	cd_agency = codeManager.getCodeId("cd_agency","카드");
-	        	autoScrapInfo = scrapManager.getAutoScrapInfo(cd_agency, no_person);
-	        	logger.debug("Card autoScrapInfo : " + autoScrapInfo);
-	        	if(autoScrapInfo != null && autoScrapInfo.length() > 0)	{
-	        		model.addAttribute("autoScrapCardInfo", autoScrapInfo);
-	        	}
-	        	cd_agency = codeManager.getCodeId("cd_agency","국세청");
-	        	autoScrapInfo = scrapManager.getAutoScrapInfo(cd_agency, no_person);
-	        	logger.debug("NTS autoScrapInfo : " + autoScrapInfo);
-	        	if(autoScrapInfo != null && autoScrapInfo.length() > 0)	{
-	        		model.addAttribute("autoScrapNTSInfo", autoScrapInfo);
-	        	}
-	        	logger.debug("=======================================");
-        	}
-        		
-        }
-        return "/credit/frameCreditInfoOrgMain";
+        return "jsonView";
     }
     
     /**

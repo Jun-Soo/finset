@@ -1,18 +1,25 @@
 package com.koscom.util;
 
+import java.text.DecimalFormat;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.koscom.fincorp.service.FincorpManager;
+
 public class JSTLFunction {
 
-//	private static final Logger logger = LoggerFactory.getLogger(JSTLFunction.class);
-//
-//	/**
-//	 *  ApplicationContext 빈 가져오기
-//	 * @param bean
-//	 * @return
-//	 */
-//	private static Object getBean(String bean)
-//	{
-//		return SpringApplicationContext.getBean(bean);
-//	}
+	private static final Logger logger = LoggerFactory.getLogger(JSTLFunction.class);
+
+	/**
+	 *  ApplicationContext 빈 가져오기
+	 * @param bean
+	 * @return
+	 */
+	private static Object getBean(String bean)
+	{
+		return SpringApplicationContext.getBean(bean);
+	}
 //
 //	/**
 //	 * 코드명을 반환합니다.
@@ -547,24 +554,24 @@ public class JSTLFunction {
 //    	return DateUtil.formatDate(date,DateUtil.DATE_PATTERN_DASH);
 //    }
 //
-//    public static String formatDateDot(String pDate) {
-//		String result = null;
-//		String date = pDate;
-//	    if(date !=null) {
-//	        date = date.trim();
-//        }
-//    	if(date== null || date.equals("") || date.equals("-")) {
-//    	    result = "";
-//        } else {
-//        	if(date.length() == 8)	{
-//        		result = date.substring(0,4)+"."+date.substring(4,6)+"."+date.substring(6,8);
-//        	}
-//        	else if(date.length() == 6)	{
-//        		result = date.substring(0,4)+"."+date.substring(4,6);
-//        	}
-//        }
-//    	return result;
-//    }
+    public static String formatDateDot(String pDate) {
+		String result = null;
+		String date = pDate;
+	    if(date !=null) {
+	        date = date.trim();
+        }
+    	if(date== null || date.equals("") || date.equals("-")) {
+    	    result = "";
+        } else {
+        	if(date.length() == 8)	{
+        		result = date.substring(0,4)+"."+date.substring(4,6)+"."+date.substring(6,8);
+        	}
+        	else if(date.length() == 6)	{
+        		result = date.substring(0,4)+"."+date.substring(4,6);
+        	}
+        }
+    	return result;
+    }
 //
 //    public static String formatShortDate(String date) {
 //    	return DateUtil.formatDate(date,"yy-MM-dd");
@@ -854,10 +861,10 @@ public class JSTLFunction {
 //			return data.toString();
 //		}
 //
-//		public static String getNmFc(String cd_fc){
-//	 		FincorpManager fincorpManager = (FincorpManager)getBean("fincorpManager");
-//			return StringUtil.nullToString(fincorpManager.getNmFc(cd_fc));
-//	 	}
+		public static String getNmFc(String cd_fc){
+	 		FincorpManager fincorpManager = (FincorpManager)getBean("fincorpManager");
+			return StringUtil.nullToString(fincorpManager.getNmFc(cd_fc));
+	 	}
 //
 //		public static String getGoodsEvent(String code_group, String checkValues)
 //		{
@@ -914,23 +921,23 @@ public class JSTLFunction {
 //			return fcPathFile;
 //		}
 //		
-//		public static String formatNumberPattern(String number, String pattern) {
-//	    	
-//			String rtn_num = null;
-//			if("NaN".equals(number)) {
-//				rtn_num = "0";
-//            } else if(!"-".equals(number)) {
-//                try {
-//                    DecimalFormat df = new DecimalFormat(pattern);
-//                    rtn_num = df.format(NumberUtil.stringToDouble(number));
-//                } catch (NumberFormatException e) {
-//                    logger.debug("ERROR==>"+e.toString());
-//                    rtn_num = "0";
-//                }
-//            } else {
-//			    rtn_num = number;
-//            }
-//			
-//	    	return rtn_num;
-//		}
+		public static String formatNumberPattern(String number, String pattern) {
+	    	
+			String rtn_num = null;
+			if("NaN".equals(number)) {
+				rtn_num = "0";
+            } else if(!"-".equals(number)) {
+                try {
+                    DecimalFormat df = new DecimalFormat(pattern);
+                    rtn_num = df.format(NumberUtil.stringToDouble(number));
+                } catch (NumberFormatException e) {
+                    logger.debug("ERROR==>"+e.toString());
+                    rtn_num = "0";
+                }
+            } else {
+			    rtn_num = number;
+            }
+			
+	    	return rtn_num;
+		}
 }

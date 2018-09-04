@@ -34,4 +34,11 @@ public interface GoodsMapper {
 	 * @return
 	 */
 	int listGoodsAllianceBizCount(GoodsForm goodsForm);
+	
+	/**
+	 * 상품정보 조회(즐겨찾기)
+	 * @param goodsInfo
+	 * @return
+	 */
+	GoodsVO getGoodsFavorite(GoodsVO goodsVO);
 }

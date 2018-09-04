@@ -35,4 +35,9 @@ public class GoodsManagerImpl implements GoodsManager {
 	public int listGoodsAllianceBizCount(GoodsForm goodsForm) {
 		return goodsMapper.listGoodsAllianceBizCount(goodsForm);
 	}
+	
+	@Override
+	public GoodsVO getGoodsFavorite(GoodsVO goodsVO) {
+		return goodsMapper.getGoodsFavorite(goodsVO);
+	}
 }

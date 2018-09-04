@@ -317,5 +317,157 @@
                 </when>
             </choose>
         ) LST
-        </select>
+	</select>
+	
+	<select id="getGoodsFavorite" parameterType="com.koscom.goods.model.GoodsVO" resultType="com.koscom.goods.model.GoodsVO">
+         SELECT
+             GI.CD_GOODS,
+			 GI.CD_FC,
+			 GI.NM_GOODS,
+			 GI.YN_USE,
+			 GI.YN_ZERO_RATIO,
+			 GI.CD_GOODS_CLASS_L,
+			 GI.CD_GOODS_CLASS_M,
+			 GI.CD_GOODS_CLASS_S,
+			 GI.CD_GOODS_TYPE,
+			 GI.CD_LOAN_TERM,
+			 GI.CD_TYPE_INTEREST,
+			 GI.RTO_INTEREST_FROM,
+			 GI.RTO_INTEREST_TO,
+			 GI.AMT_LIMIT,
+			 GI.CD_TYPE_PAY,
+			 GI.CD_EVENT,
+			 GI.YN_ONLINE,
+			 GI.YN_PROC_NOPAPERS,
+			 GI.DESC_TRADE_CLAUSE,
+			 GI.DESC_GOODS,
+			 GI.DESC_LOAN,
+			 GI.DESC_LIMIT,
+			 GI.DESC_PAYMETHOD,
+			 GI.DESC_PAPERS,
+			 GI.AGE_LOAN_FROM,
+			 GI.AGE_LOAN_TO,
+			 GI.AMT_APPLY_FROM,
+			 GI.AMT_APPLY_TO,
+			 GI.NO_MONTH_APPLY_FROM,
+			 GI.NO_MONTH_APPLY_TO,
+			 GI.CD_TYPE_INCOME,
+			 GI.CD_EMPLOY_TYPE,
+			 GI.CD_LOAN_USE,
+			 GI.AMT_YEAR_INCOME,
+			 GI.OU_YEAR_INCOME,
+			 GI.AMT_YEAR_SALE,
+			 GI.OU_SALE_INCOME,
+			 GI.YMD_START_COMP,
+			 GI.NO_JOB_YEAR,
+			 GI.CD_LIVE_TYPE,
+			 GI.CD_HOUSE_TYPE,
+			 GI.YN_PROOF_INCOME,
+			 GI.YN_4INSU,
+			 GI.YN_BAD_CREDIT,
+			 GI.YN_DELAY_CURRENT,
+			 GI.DAY_DELAY_6MONTH,
+			 GI.DAY_DELAY_12MONTH,
+			 GI.GRADE_KCB,
+			 GI.GRADE_NICE,
+			 GI.DTI_GRADE1,
+			 GI.DTI_GRADE2,
+			 GI.DTI_GRADE3,
+			 GI.DTI_GRADE4,
+			 GI.DTI_GRADE5,
+			 GI.DTI_GRADE6,
+			 GI.DTI_GRADE7,
+			 GI.DTI_GRADE8,
+			 GI.DTI_GRADE9,
+			 GI.DTI_GRADE10,
+			 GI.CHK_AGE_LOAN,
+			 GI.CHK_AMT_APPLY,
+			 GI.CHK_NO_MONTH_APPLY,
+			 GI.CHK_CD_TYPE_INCOME,
+			 GI.CHK_CD_EMPLOY_TYPE,
+			 GI.CHK_CD_LOAN_USE,
+			 GI.CHK_AMT_YEAR_INCOME,
+			 GI.CHK_AMT_YEAR_SALE,
+			 GI.CHK_YMD_START_COMP,
+			 GI.CHK_NO_JOB_YEAR,
+			 GI.CHK_CD_LIVE_TYPE,
+			 GI.CHK_CD_HOUSE_TYPE,
+			 GI.CHK_YN_PROOF_INCOME,
+			 GI.CHK_YN_4INSU,
+			 GI.CHK_YN_BAD_CREDIT,
+			 GI.CHK_YN_DELAY_CURRENT,
+			 GI.CHK_DAY_DELAY_6MONTH,
+			 GI.CHK_DAY_DELAY_12MONTH,
+			 GI.CHK_GRADE_KCB,
+			 GI.CHK_GRADE_NICE,
+			 GI.CHK_DTI_GRADE,
+			 GI.CHK_GRADE_LTV,
+			 GI.CHK_GRADE_DTI,
+			 GI.GRADE_LTV,
+			 GI.GRADE_DTI,
+			 GI.CD_SEX,
+			 GI.CD_OWNCAR_TYPE,
+			 GI.CD_CAR_TYPE,
+			 GI.CNT_CASH_SERVICE,
+			 GI.AMT_CASH_SERVICE,
+			 GI.AMT_CARPRICE_FROM,
+			 GI.AMT_CARPRICE_TO,
+			 GI.NO_CARYEAR_FROM,
+			 GI.NO_CARYEAR_TO,
+			 GI.CHK_CD_SEX,
+			 GI.CHK_CASH_SERVICE,
+			 GI.CHK_CD_OWNCAR_TYPE,
+			 GI.CHK_CD_CAR_TYPE,
+			 GI.CHK_AMT_CARPRICE,
+			 GI.CHK_NO_CARYEAR,
+			 GI.DESC_REPAYMETHOD,
+			 GI.DESC_COMMISSION,
+			 GI.DESC_INQUIRY,
+			 GI.CONTENT_INTEREST,
+			 GI.PREFER_INTEREST,
+			 GI.CD_APPLY_TYPE,
+			 GI.CD_TRADE_TYPE,
+			 GI.CD_TIME_EXEC,
+			 GI.YN_SEND_DOCU,
+			 GI.YN_VISIT,
+			 GI.YN_ERLY_RPAY_FEE,
+			 GI.YN_SRCH_RATIO_LIMIT,
+			 GI.CD_RATIO_TYPE,
+			 GI.CD_CATEGORY_GOODS,
+			 GI.CD_AREA,
+			 GI.CD_DEFER,
+			 GI.CD_OBJECT,
+			 GI.YN_POST_RANKING,
+			 GI.CD_COLLATERAL_HOUSE_TYPE,
+			 GI.CD_COLLATERAL_LOAN_USE,
+			 GI.DESC_FEATURE,
+			 GI.KEYWORD_LIST,
+			 GI.ID_FRT,
+			 GI.DT_FRT,
+			 GI.ID_LST,
+			 GI.DT_LST
+             , (CASE WHEN (
+                            SELECT COUNT(*)
+                            FROM COOCON_GOODS_FAVORITE_INFO CGFI
+                            WHERE CGFI.CD_FC = GI.CD_FC
+                                AND CGFI.CD_NON_GOODS = GI.CD_GOODS
+                                AND CGFI.YN_ALLIANCE = 'Y'
+                                AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                            ) <![CDATA[>]]> 0 THEN 'Y'
+                ELSE 'N'
+                END ) AS YN_FAVORITE
+             , FI.PATH_FILE1
+             , FI.NM_FC
+         FROM GOODS_INFO GI
+         LEFT OUTER JOIN FC_INFO FI
+         ON GI.CD_FC = FI.CD_FC
+         <where>
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+                GI.CD_FC = #{cd_fc}
+            </if>
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods)'>
+                AND GI.CD_GOODS = #{cd_goods}
+            </if>
+         </where>
+    </select>
 </mapper>      

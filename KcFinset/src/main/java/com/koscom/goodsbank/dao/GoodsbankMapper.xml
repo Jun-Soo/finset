@@ -1397,4 +1397,93 @@
               )
 	</select>
 	
+	<select id="getGoodsBankFavorite" parameterType="com.koscom.goodsbank.model.GoodsbankVO" resultType="com.koscom.goodsbank.model.GoodsbankVO">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.getGoodsBankFavorite */
+	     SELECT GI.CD_NON_GOODS
+			   ,GI.CD_FC
+			   ,GI.CD_GOODS_CLASS_L
+			   ,GI.CD_GOODS_CLASS_M
+			   ,GI.CD_GOODS_CLASS_S
+			   ,GI.CD_GOODS_FC
+			   ,GI.NM_GOODS
+			   ,GI.YN_USE
+			   ,GI.RTO_INTEREST_FROM
+			   ,GI.RTO_INTEREST_TO
+			   ,GI.DESC_MAX_LIMIT
+			   ,GI.MIN_LOAN_TERM
+			   ,GI.MAX_LOAN_TERM
+			   ,GI.RENEW_MAX_TERM
+			   ,GI.RTO_CANCEL
+			   ,GI.YEAR_COMMISSION
+			   ,GI.DESC_FEATURE
+			   ,GI.KEYWORD_LIST
+			   ,GI.CD_APPLY_TYPE
+			   ,GI.CD_TYPE_PAY
+			   ,GI.CD_TRADE_TYPE
+			   ,GI.YN_SEND_DOCU
+			   ,GI.CD_TARGET_CUST
+			   ,GI.CD_RATIO_TYPE
+			   ,GI.CD_COLLATERAL_HOUSE_TYPE
+			   ,GI.CD_COLLATERAL_LOAN_USE
+			   ,GI.CD_AREA
+			   ,GI.CD_DEFER
+			   ,GI.CD_OBJECT
+			   ,GI.YN_POST_RANKING
+			   ,GI.CD_TIME_EXEC
+			   ,GI.DESC_GOODS
+			   ,GI.DESC_LOAN
+			   ,GI.DESC_LIMIT
+			   ,GI.DESC_RATIO
+			   ,GI.DESC_PREFER_YIELD
+			   ,GI.DESC_TERM
+			   ,GI.DESC_REPAYMETHOD
+			   ,GI.DESC_LOAN_COST
+			   ,GI.DESC_PAPERS
+			   ,GI.DESC_OVERDUE_INTEREST
+			   ,GI.DESC_REPAYMENT_FEE
+			   ,GI.DESC_LOAN_PERIOD
+			   ,GI.DESC_LOAN_PROVIDE
+			   ,GI.DESC_CONTACT
+			   ,GI.DESC_COLLATERAL
+			   ,GI.DESC_ETC
+			   ,GI.YN_VISIT
+			   ,GI.YN_ERLY_RPAY_FEE
+			   ,GI.YN_SRCH_RATIO_LIMIT
+			   ,GI.FC_LINK
+			   ,GI.TIME_INTEREST
+			   ,FI.YN_ALLIANCE
+			, (CASE WHEN (
+						SELECT COUNT(*)
+						FROM COOCON_GOODS_FAVORITE_INFO CGFI
+						WHERE CGFI.CD_FC = GI.CD_FC
+							AND CGFI.CD_NON_GOODS = GI.CD_NON_GOODS
+							AND CGFI.YN_ALLIANCE = 'N'
+							AND CGFI.no_person = #{no_person, jdbcType=VARCHAR}
+						) <![CDATA[>]]> 0 THEN 'Y'
+			ELSE 'N'
+			END
+			) AS YN_FAVORITE
+			, FI.PATH_FILE1
+			, FI.NM_FC
+		 FROM GOODSBANK_INFO GI
+		 LEFT OUTER JOIN FC_INFO FI
+		 ON GI.CD_FC = FI.CD_FC
+	     <where>
+	     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+				GI.CD_FC = #{cd_fc}
+			</if>
+	     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods)'>
+				AND GI.CD_NON_GOODS = #{cd_goods}
+			</if>
+	     </where>
+	</select>
+	
+	<update id="addLinkCount" parameterType="com.koscom.goodsbank.model.GoodsbankVO">
+	/* com.koscom.goodsbank.dao.GoodsbankMapper.addLinkCount */
+		UPDATE GOODSBANK_INFO
+		   SET CNT_LINK = NVL(CNT_LINK, 0) + 1
+			  ,ID_LST = #{id_lst, jdbcType=VARCHAR}                 /*	최종수정아이디	*/
+			  ,DT_LST = SYSDATE                                     /*	최종수정시간	*/
+		 WHERE CD_NON_GOODS = #{cd_non_goods , jdbcType=VARCHAR}	/*	상품코드		*/
+	</update>
 </mapper>      

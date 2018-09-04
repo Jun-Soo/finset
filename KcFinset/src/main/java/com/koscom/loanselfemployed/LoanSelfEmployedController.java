@@ -17,8 +17,10 @@ import com.koscom.conditionbiz.model.ConditionbizForm;
 import com.koscom.conditionbiz.service.ConditionbizManager;
 import com.koscom.domain.ConditionbizInfo;
 import com.koscom.goods.model.GoodsForm;
+import com.koscom.goods.model.GoodsVO;
 import com.koscom.goods.service.GoodsManager;
 import com.koscom.goodsbank.model.GoodsbankForm;
+import com.koscom.goodsbank.model.GoodsbankVO;
 import com.koscom.goodsbank.service.GoodsbankManager;
 import com.koscom.util.AuthUtil;
 import com.koscom.util.Constant;
@@ -135,6 +137,65 @@ public class LoanSelfEmployedController implements Constant{
 		Pagination pagedList = (Pagination) goodsbankForm.setPagedList(goodsbankManager.listGoodsNoAllianceBiz(goodsbankForm), goodsbankManager.listGoodsNoAllianceBizCount(goodsbankForm));
 		model.addAttribute("pagedList", pagedList);
 		return "/loanselfemployed/sub/listLoanNoAffiliates";
+	}
+	
+	/**
+	 * 상품상세 (제휴)
+	 * @param goodsForm
+	 * @param model
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/frameLoanSelfEmployedStep2.crz")
+	public String frameLoanSelfEmployedStep2(HttpServletRequest request,Model model, GoodsForm goodsForm, HttpSession session) {
+        /**
+         * 접근제어 : start
+         */
+        boolean isAuth = AuthUtil.isHaveAuth(request,"/frameLoanSelfEmployedStep1.crz",environment);
+        if(isAuth == false) {return NOT_AUTH_PAGE;}
+        /**
+         * 접근제어 : end
+         */
+		String no_person = (String) session.getAttribute("no_person");
+		goodsForm.setNo_person(no_person);
+		GoodsVO goodsInfo = new GoodsVO();
+		GoodsVO goodsVO = new GoodsVO();
+
+		if(goodsForm.getCd_fc() != null && goodsForm.getCd_goods() != null){
+			goodsVO.setCd_fc(goodsForm.getCd_fc());
+			goodsVO.setCd_goods(goodsForm.getCd_goods());
+			goodsVO.setNo_person(no_person);
+			goodsInfo = goodsManager.getGoodsFavorite(goodsVO);
+			logger.info("goodsInfo.toString() : "+goodsInfo.toString());
+			model.addAttribute("goodsInfo", goodsInfo);
+		}
+		return "/loanselfemployed/frameLoanSelfEmployedStep2";
+	}
+	
+	/**
+	 * 상품상세 (비제휴)
+	 * @param goodsbankForm
+	 * @param model
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/frameLoanSelfEmployedStep2Bank.crz")
+	public String frameLoanWorkerStep3Bank(Model model, GoodsbankForm goodsbankForm, HttpSession session) {
+		String no_person = (String) session.getAttribute("no_person");
+		goodsbankForm.setNo_person(no_person);
+		GoodsbankVO goodsInfo = new GoodsbankVO();
+		GoodsbankVO goodsVO = new GoodsbankVO();
+
+		if(goodsbankForm.getCd_fc() != null && goodsbankForm.getCd_goods() != null){
+			goodsVO.setCd_fc(goodsbankForm.getCd_fc());
+			goodsVO.setCd_goods(goodsbankForm.getCd_goods());
+			goodsVO.setNo_person(no_person);
+			goodsInfo = goodsbankManager.getGoodsBankFavorite(goodsVO);
+			logger.info("goodsInfo.toString() : "+goodsInfo.toString());
+			model.addAttribute("goodsInfo", goodsInfo);
+		}
+		return "/loanselfemployed/frameLoanSelfEmployedStep2Bank";
 	}
 	
 	/**

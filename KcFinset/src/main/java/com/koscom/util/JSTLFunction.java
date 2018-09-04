@@ -5,6 +5,8 @@ import java.text.DecimalFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.koscom.env.model.CodeInfo;
+import com.koscom.env.service.CodeManager;
 import com.koscom.fincorp.service.FincorpManager;
 
 public class JSTLFunction {
@@ -21,20 +23,20 @@ public class JSTLFunction {
 		return SpringApplicationContext.getBean(bean);
 	}
 //
-//	/**
-//	 * 코드명을 반환합니다.
-//	 * @param group
-//	 * @param id
-//	 * @return
-//	 */
-//	public static String getCodeName(String group, String id)
-//	{
-//		CodeManager codeManager = (CodeManager)getBean("codeManager");
-//		CodeInfo code = codeManager.getCodeInfo(group, id);
-//
-//		if(code == null) return id;
-//		return code.getNm_code();
-//	}
+	/**
+	 * 코드명을 반환합니다.
+	 * @param group
+	 * @param id
+	 * @return
+	 */
+	public static String getCodeName(String group, String id)
+	{
+		CodeManager codeManager = (CodeManager)getBean("codeManager");
+		CodeInfo code = codeManager.getCodeInfo(group, id);
+
+		if(code == null) return id;
+		return code.getNm_code();
+	}
 //
 //	/**
 //	 * 코드목록을 반환합니다.
@@ -234,20 +236,20 @@ public class JSTLFunction {
 //	public static String makeOptions(String code_group, String defaultText,String selectValue) {
 //		return makeOptions(code_group,defaultText,selectValue,"NM");
 //	}
-//	// 키워드 보여주는 부분
-//	public static String makeKeyWordList(String keyWord) {
-//		String[] arrKeyword = StringUtil.tokenizeToStringArray(keyWord,",");
-//        StringBuilder data = new StringBuilder();
-//        String word = null;
-//		if (arrKeyword != null) {
-//			for(int i=0;i<arrKeyword.length;i++) {
-//                word = arrKeyword[i];
-//                data.append("<span class=\"label\">").append(word).append("</span>");
-//            }
-//		}
-//		String result = data.toString();
-//        return result;
-//	}
+	// 키워드 보여주는 부분
+	public static String makeKeyWordList(String keyWord) {
+		String[] arrKeyword = StringUtil.tokenizeToStringArray(keyWord,",");
+        StringBuilder data = new StringBuilder();
+        String word = null;
+		if (arrKeyword != null) {
+			for(int i=0;i<arrKeyword.length;i++) {
+                word = arrKeyword[i];
+                data.append("<span class=\"label\">").append(word).append("</span>");
+            }
+		}
+		String result = data.toString();
+        return result;
+	}
 //
 //	public static String makeGoodsOptions(String defaultText,String selectValue, String pType) {
 //		GoodsManager goodsManager = (GoodsManager)getBean("goodsManager");

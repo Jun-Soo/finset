@@ -1,6 +1,7 @@
 package com.koscom.util;
 
 import java.text.DecimalFormat;
+import java.text.ParseException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -511,16 +512,16 @@ public class JSTLFunction {
 //		return DateUtil.getDayOfWeek(DateUtil.getCurrentDate());
 //	}
 //
-//    public static String formatNumber(String number) {
-//    	String rtn_num = null;
-//    	try {
-//    		rtn_num = NumberUtil.formatNumber(""+NumberUtil.stringToInt(number),NumberUtil.CURRENCY_NO_DECIMALPOINT);
-//		} catch (ParseException e) {
-//    		logger.debug("JSTLFunction.formatNumber:error-->"+e.toString());
-//			rtn_num = "0";
-//		}
-//    	return rtn_num;
-//	}
+    public static String formatNumber(String number) {
+    	String rtn_num = null;
+    	try {
+    		rtn_num = NumberUtil.formatNumber(""+NumberUtil.stringToInt(number),NumberUtil.CURRENCY_NO_DECIMALPOINT);
+		} catch (ParseException e) {
+    		logger.debug("JSTLFunction.formatNumber:error-->"+e.toString());
+			rtn_num = "0";
+		}
+    	return rtn_num;
+	}
 //
 //    public static String formatNumberMan(String number) {
 //    	String rtn_num = null;

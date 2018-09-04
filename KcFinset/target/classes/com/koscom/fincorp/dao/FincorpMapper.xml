@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.fincorp.dao.FincorpMapper">
+	<resultMap id="resultBlob" type="hashMap">
+	    <result column="img_bi" property="img_bi" jdbcType="BLOB" javaType="[B"></result>
+	</resultMap>
+	<select id="getNmFc" parameterType="String" resultType="String">
+		SELECT
+			NM_FC
+		FROM
+			FC_INFO
+		WHERE
+			CD_FC = #{cd_fc, jdbcType = VARCHAR}
+	</select>
+	
+	<select id="getFcPathFile" parameterType="String" resultType="String">
+		SELECT
+			PATH_FILE1
+		FROM
+			FC_INFO
+		WHERE
+			CD_FC = #{cd_fc, jdbcType = VARCHAR}
+	</select>
+	<select id="getImgBi" parameterType="com.koscom.fincorp.model.FincorpVO" resultMap="resultBlob">
+		SELECT
+			IMG_BI
+		FROM
+			FC_INFO
+		WHERE
+				PATH_FILE1 = #{path_file1, jdbcType = VARCHAR}
+			AND IMG_BI IS NOT NULL
+	</select>
+</mapper>
+

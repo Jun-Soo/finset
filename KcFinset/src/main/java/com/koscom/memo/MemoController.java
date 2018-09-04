@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.koscom.memo.model.MemoVO;
 import com.koscom.memo.service.MemoManager;
+import com.koscom.util.FinsetException;
 import com.koscom.util.ResUtil;
 
 @Controller
@@ -26,7 +27,7 @@ public class MemoController {
 	MemoManager memoManager;
 	
 	@RequestMapping("/frameCreateMemo.crz")
-	public String frameCreateMemo(HttpSession session, String no_manage_info, Model model){
+	public String frameCreateMemo(HttpSession session, String no_manage_info, Model model) throws FinsetException{
 		String no_person = (String) session.getAttribute("no_person");
 		logger.debug("In createMemo, NO_PERSON is" + no_person);
 		MemoVO memoVO = new MemoVO();
@@ -41,7 +42,7 @@ public class MemoController {
 	}
 	
 	@RequestMapping("/createMemo.crz")
-	public String createMemo(HttpServletRequest request, MemoVO memoVO, Model model){
+	public String createMemo(HttpServletRequest request, MemoVO memoVO, Model model) throws FinsetException {
 		
 		//path는 환경에 따라 달라지므로 확인해야 한다.
 		String path = ResUtil.getPath(request);
@@ -58,7 +59,7 @@ public class MemoController {
 	}
 	
 	@RequestMapping("/frameListMemo.crz")
-	public String frameListMemo(HttpSession session ,HttpServletRequest request, Model model){
+	public String frameListMemo(HttpSession session ,HttpServletRequest request, Model model) throws FinsetException {
 		MemoVO memoVO = new MemoVO();
 		String no_person = (String) session.getAttribute("no_person");
 		logger.debug("In listMemo, NO_PERSON is "+ no_person);
@@ -76,14 +77,14 @@ public class MemoController {
 	}
 	
 	@RequestMapping("/frameDetailMemo.crz")
-	public String frameDetailMemo(MemoVO memoVO, Model model){
+	public String frameDetailMemo(MemoVO memoVO, Model model) throws FinsetException {
 		logger.debug("In read, the memoVO is " + memoVO);
 		model.addAttribute("memoVO", memoManager.getMemoDetail(memoVO));
 		return "/memo/frameDetailMemo";
 	}
 	
 	@RequestMapping("/updateMemoText.json")
-	public String updateMemoText(HttpSession session, MemoVO memoVO, Model model) {
+	public String updateMemoText(HttpSession session, MemoVO memoVO, Model model) throws FinsetException {
 		logger.debug("In update text, the memoVO is " + memoVO);
 		String no_person = (String) session.getAttribute("no_person");
 		if(memoVO == null) {
@@ -97,7 +98,7 @@ public class MemoController {
 	}
 	
 	@RequestMapping("/updateMemoAlarm.json")
-	public String updateMemoAlarm(MemoVO memoVO, Model model) {
+	public String updateMemoAlarm(MemoVO memoVO, Model model) throws FinsetException {
 		logger.debug("In update alarm, the memoVO is " + memoVO);
 		if(memoVO == null) {
 			model.addAttribute("code","99");
@@ -109,14 +110,14 @@ public class MemoController {
 	}
 	
 	@RequestMapping("/frameAlarmMemo")
-	public String frameAlarmMemo(MemoVO memoVO, Model model) {
+	public String frameAlarmMemo(MemoVO memoVO, Model model) throws FinsetException {
 		logger.debug("In alarmMemo, the memoVO is " + memoVO);
 		model.addAttribute("memoVO", memoVO);
 		return "/memo/frameAlarmMemo";
 	}
 	
 	@RequestMapping("/delMemo.crz")
-	public String delMemo(HttpServletRequest request, MemoVO memoVO, Model model){
+	public String delMemo(HttpServletRequest request, MemoVO memoVO, Model model) throws FinsetException {
 		String path = ResUtil.getPath(request);
 		logger.debug("In delMemo, the memoVO is" + memoVO);
 		memoManager.delMemo(memoVO);

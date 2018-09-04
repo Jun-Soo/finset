@@ -110,7 +110,7 @@ function cancelAllItems(){
 }
 
 //마이페이지 메인으로 이동
-function goCustomercenterMain(){
+function goCustomerCenterMain(){
 	frmShareInfoMain.action = "/m/customercenter/frameCustomerCenterMain.crz";
 	frmShareInfoMain.submit();
 }

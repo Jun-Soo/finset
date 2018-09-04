@@ -1,28 +1,20 @@
 package com.koscom.customercenter;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.text.ParseException;
-import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.koscom.scrap.service.ScrapManager;
 import com.koscom.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.support.SessionStatus;
 
 import com.koscom.credit.service.CreditManager;
 import com.koscom.debt.model.DebtForm;
@@ -31,12 +23,12 @@ import com.koscom.debt.service.DebtManager;
 import com.koscom.domain.CreditInfo;
 import com.koscom.domain.PersonShareInfo;
 import com.koscom.domain.PersonShareMessageInfo;
-import com.koscom.env.model.CodeInfo;
-import com.koscom.env.service.CodeManager;
 import com.koscom.person.model.PersonShareInfoForm;
 import com.koscom.person.model.PersonShareInfoVO;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
+import com.koscom.pusheach.model.PushEachForm;
+import com.koscom.pusheach.service.PushEachManager;
 
 @Controller
 @RequestMapping("/m/customercenter")
@@ -46,6 +38,9 @@ public class CustomerCenterController{
 
 	@Autowired
 	PersonManager personManager;
+
+	@Autowired
+	PushEachManager pushEachManager;
 
 	@Autowired
 	CreditManager creditManager;
@@ -59,6 +54,7 @@ public class CustomerCenterController{
 	 * @param session
 	 * @param model
 	 * @return String
+	 * @throws FinsetException, IOException
 	 */
 	@RequestMapping("/frameCustomerCenterMain.crz")
 	public String frameCustomerCenterMain(HttpServletRequest request, HttpSession session, Model model) throws FinsetException, IOException {
@@ -69,6 +65,29 @@ public class CustomerCenterController{
 		return "/customercenter/frameCustomerCenterMain";
 	}
 
+	/**
+	 * 마이페이지 알림
+	 * @param request
+	 * @param session
+	 * @param model
+	 * @param pushEachForm
+	 * @return String
+	 * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/frameCustomerNotification.crz")
+	public String frameInDebtDetail(HttpServletRequest request, HttpSession session, Model model, PushEachForm pushEachForm) throws FinsetException, IOException {
+		String no_person = (String) session.getAttribute("no_person");
+		pushEachForm.setNo_person(no_person);
+		pushEachForm.setPage(pushEachForm.getPage());
+		pushEachForm.setPush_divcd("02");
+		Pagination pagedList = (Pagination) pushEachForm.setPagedList(pushEachManager.listPushNotification(pushEachForm), pushEachManager.listPushNotificationCount(pushEachForm));
+		model.addAttribute("pagedList", pagedList);
+		logger.info("pagedList========="+pagedList.toString());
+		model.addAttribute("pushEachForm", pushEachForm);
+
+		return "/customercenter/frameCustomerNotification";
+	}
+
 	//공유관리
 	/**
 	 * 공유관리 summary list
@@ -76,6 +95,7 @@ public class CustomerCenterController{
 	 * @param session
 	 * @param model
 	 * @return String
+	 * @throws FinsetException, IOException
 	 */
 	@RequestMapping("/frameShareInfoSummary.crz")
 	public String frameShareInfoSummary(HttpServletRequest request, HttpSession session, Model model) throws FinsetException, IOException {
@@ -101,6 +121,7 @@ public class CustomerCenterController{
 	 * @param session
 	 * @param model
 	 * @return String
+	 * @throws FinsetException, IOException
 	 */
 	@RequestMapping("/frameShareInfoNewRequest.crz")
 	public String frameShareInfoNewRequest(HttpServletRequest request, HttpSession session, Model model) throws FinsetException, IOException {
@@ -116,6 +137,7 @@ public class CustomerCenterController{
 	 * @param model
 	 * @param personShareInfo
 	 * @return String
+	 * @throws FinsetException, IOException
 	 */
 	@RequestMapping("/createPersonShareInfo.json")
 	public String createPersonShareInfo(HttpServletRequest request, HttpSession session, Model model, PersonShareInfo personShareInfo) throws FinsetException, IOException {
@@ -159,6 +181,7 @@ public class CustomerCenterController{
 	 * @param model
 	 * @param personShareInfoForm
 	 * @return String
+	 * @throws FinsetException, IOException
 	 */
 	@RequestMapping("/frameShareInfoMain.crz")
 	public String frameShareInfoMain(HttpServletRequest request, HttpSession session, Model model, PersonShareInfoForm personShareInfoForm) throws FinsetException, IOException {
@@ -187,6 +210,7 @@ public class CustomerCenterController{
 	 * @param model
 	 * @param personShareInfoForm
 	 * @return String
+	 * @throws FinsetException, IOException
 	 */
 	@RequestMapping("/listShareInfoMain.crz")
 	public String listShareInfoMain(HttpServletRequest request, HttpSession session, Model model, PersonShareInfoForm personShareInfoForm) throws FinsetException, IOException {
@@ -208,6 +232,7 @@ public class CustomerCenterController{
 	 * @param session
 	 * @param model
 	 * @return String
+	 * @throws FinsetException, IOException
 	 */
 	@RequestMapping("/updateShareInfoAllCancel.json")
 	public String updateShareInfoAllCancel(HttpServletRequest request, HttpSession session, Model model) throws FinsetException, IOException {
@@ -260,6 +285,7 @@ public class CustomerCenterController{
 	 * @param model
 	 * @param personShareInfoVO
 	 * @return String
+	 * @throws FinsetException, IOException
 	 */
 	@RequestMapping("/frameShareInfoSetting.crz")
 	public String frameShareInfoSetting(HttpServletRequest request, HttpSession session, Model model, PersonShareInfoVO personShareInfoVO) throws FinsetException, IOException {
@@ -280,6 +306,7 @@ public class CustomerCenterController{
 	 * @param model
 	 * @param personShareInfo
 	 * @return String
+	 * @throws FinsetException, IOException
 	 */
 	@RequestMapping("/updatePersonShareInfoSet01.json")
 	public String updatePersonShareInfoSet01(HttpServletRequest request, HttpSession session, Model model, PersonShareInfo personShareInfo) throws FinsetException, IOException {
@@ -323,6 +350,7 @@ public class CustomerCenterController{
 	 * @param model
 	 * @param personShareInfo
 	 * @return String
+	 * @throws FinsetException, IOException
 	 */
 	@RequestMapping("/updatePersonShareInfoSet02.json")
 	public String updatePersonShareInfoSet02(HttpServletRequest request, HttpSession session, Model model, PersonShareInfo personShareInfo) throws FinsetException, IOException {
@@ -345,6 +373,7 @@ public class CustomerCenterController{
 	 * @param model
 	 * @param personShareInfo
 	 * @return String
+	 * @throws FinsetException, IOException
 	 */
 	@RequestMapping("/updatePersonShareInfoSet03.json")
 	public String updatePersonShareInfoSet03(HttpServletRequest request, HttpSession session, Model model, PersonShareInfo personShareInfo) throws FinsetException, IOException {
@@ -367,6 +396,7 @@ public class CustomerCenterController{
 	 * @param model
 	 * @param personShareInfoVO
 	 * @return String
+	 * @throws FinsetException, IOException
 	 */
 	@RequestMapping("/createPersonShareInfoSms.json")
 	public String sendPersonShareInfoSms(HttpServletRequest request, HttpSession session, Model model, PersonShareInfoVO personShareInfoVO) throws FinsetException, IOException {
@@ -419,6 +449,7 @@ public class CustomerCenterController{
 	 * @param model
 	 * @param personShareInfoVO
 	 * @return String
+	 * @throws FinsetException, IOException
 	 */
 	@RequestMapping("/sendPersonShareInfoPush.json")
 	public String sendPersonShareInfoPush(HttpServletRequest request, HttpSession session, Model model, PersonShareInfoVO personShareInfoVO) throws FinsetException, IOException {
@@ -545,6 +576,7 @@ public class CustomerCenterController{
 	 * @param model
 	 * @param personShareInfoVO
 	 * @return String
+	 * @throws FinsetException, IOException
 	 */
 	@RequestMapping("/frameShareInfoDetail.crz")
 	public String frameShareInfoDetail(HttpServletRequest request, HttpSession session, Model model, PersonShareInfoVO personShareInfoVO) throws FinsetException, IOException {

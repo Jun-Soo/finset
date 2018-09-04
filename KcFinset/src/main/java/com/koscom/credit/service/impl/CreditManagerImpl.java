@@ -26,17 +26,17 @@ public class CreditManagerImpl implements CreditManager {
 	public String getCreditInfoNextSeq() {
 		return creditMapper.getCreditInfoNextSeq();
 	}
-	
+
 	@Override
 	public CreditInfo getCreditMainBaseInfo(String no_person) {
 		return creditMapper.getCreditMainBaseInfo(no_person);
 	}
-	
+
 	@Override
 	public CreditInfo getCreditMainCntInfo(String no_person) {
 		return creditMapper.getCreditMainCntInfo(no_person);
 	}
-	
+
 	@Override
 	public List<CreditInfo> getCreditDetailGradeChartList(String no_person) {
 		return creditMapper.getCreditDetailGradeChartList(no_person);
@@ -49,7 +49,12 @@ public class CreditManagerImpl implements CreditManager {
 	public List<CreditInfo> getCreditDetailGradeChangeList(CreditInfo creditInfo) {
 		return creditMapper.getCreditDetailGradeChangeList(creditInfo);
 	}
-		
+
+	@Override
+	public HashMap<String, String> getCreditDetailJsonInfo(String no_person) {
+		return creditMapper.getCreditDetailJsonInfo(no_person);
+	}
+
 	public HashMap<String, String> getKcbInfoCLOB(HashMap<String, String> searchMap) {
 		return creditMapper.getKcbInfoCLOB(searchMap);
 	}

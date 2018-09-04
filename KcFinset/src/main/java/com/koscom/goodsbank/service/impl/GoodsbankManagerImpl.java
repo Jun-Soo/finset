@@ -9,7 +9,10 @@ import com.koscom.domain.GoodsbankInfo;
 import com.koscom.goods.model.GoodsVO;
 import com.koscom.goodsbank.dao.GoodsbankMapper;
 import com.koscom.goodsbank.model.GoodsbankForm;
+import com.koscom.goodsbank.model.GoodsbankVO;
 import com.koscom.goodsbank.service.GoodsbankManager;
+import com.koscom.util.Constant;
+import com.koscom.util.ReturnClass;
 
 @Service("goodsbankManager")
 public class GoodsbankManagerImpl implements GoodsbankManager {
@@ -44,5 +47,16 @@ public class GoodsbankManagerImpl implements GoodsbankManager {
 	@Override
 	public int listGoodsNoAllianceHouseCount(GoodsbankForm goodsbankForm) {
 		return goodsbankMapper.listGoodsNoAllianceHouseCount(goodsbankForm);
+	}
+	
+	@Override
+	public GoodsbankVO getGoodsBankFavorite(GoodsbankVO goodsbankVO) {
+		return goodsbankMapper.getGoodsBankFavorite(goodsbankVO);
+	}
+	
+	@Override
+	public ReturnClass addLinkCount(GoodsbankVO goodsbankVO) {
+		goodsbankMapper.addLinkCount(goodsbankVO);
+		return new ReturnClass(Constant.SUCCESS, "정상처리 되었습니다.");
 	}
 }

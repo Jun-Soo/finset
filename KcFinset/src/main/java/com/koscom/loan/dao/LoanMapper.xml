@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.loan.dao.LoanMapper">
+
+	<insert id="insertLoanGoodsChoice" >
+		/* com.koscom.loan.dao.LoanMapper.insertLoanGoodsChoice*/
+		INSERT INTO coocon_goods_favorite_info
+			(
+				 no_person
+				, cd_fc
+				, cd_non_goods
+				, yn_alliance
+				, cd_goods_class_l
+				, cd_goods_class_m
+				, id_frt
+				, dt_frt
+				, id_lst
+				, dt_lst
+			) VALUES (
+				  #{no_person			, jdbcType=VARCHAR}
+				, #{cd_fc			    , jdbcType=VARCHAR}
+				, #{cd_non_goods		, jdbcType=VARCHAR}
+				, #{yn_alliance		    , jdbcType=VARCHAR}
+				, #{cd_goods_class_l	, jdbcType=VARCHAR}
+				, #{cd_goods_class_m	, jdbcType=VARCHAR}
+				, #{no_person			, jdbcType=VARCHAR}
+     			, SYSDATE
+				, #{no_person			, jdbcType=VARCHAR}
+     			, SYSDATE
+			)
+	</insert>
+
+	<delete id="deleteLoanGoodsChoice" parameterType="com.koscom.domain.CooconGoodsFavoriteInfo">
+		/* com.koscom.loan.dao.LoanMapper.deleteLoanGoodsChoice*/
+		DELETE from coocon_goods_favorite_info
+		WHERE no_person = #{no_person, jdbcType=VARCHAR}
+		AND cd_fc = #{cd_fc, jdbcType=VARCHAR}
+		AND cd_non_goods = #{cd_non_goods, jdbcType=VARCHAR}
+	</delete>
+
+</mapper>

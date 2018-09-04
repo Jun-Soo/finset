@@ -5,6 +5,8 @@ import java.util.List;
 import com.koscom.domain.GoodsbankInfo;
 import com.koscom.goods.model.GoodsVO;
 import com.koscom.goodsbank.model.GoodsbankForm;
+import com.koscom.goodsbank.model.GoodsbankVO;
+import com.koscom.util.ReturnClass;
 
 public interface GoodsbankManager {
 	
@@ -49,5 +51,19 @@ public interface GoodsbankManager {
 	 * @return
 	 */
 	int listGoodsNoAllianceHouseCount(GoodsbankForm goodsbankForm);
+	
+	/**
+	 * 비제휴사 상품정보 조회(즐겨찾기)
+	 * @param goodsbankVO
+	 * @return
+	 */
+	GoodsbankVO getGoodsBankFavorite(GoodsbankVO goodsbankVO);
+	
+	/**
+	 * 링크 카운트 추가
+	 * @param goodsbankVO
+	 * @return
+	 */
+	ReturnClass addLinkCount(GoodsbankVO goodsbankVO);
 
 }

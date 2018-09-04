@@ -6802,17 +6802,31 @@ li.preparing{
 /* 소비 지출 화면									   */
 /* ------------------------------------------- */
 .consume_title {
-	padding: 30px 10px 25px 10px;
+	padding: 15px 10px 15px 10px;
 	background: #283593;
 }
+.consume_title dl,
 .consume_title .progress-label{
-	color: #fff;
-}
-.consume_title dl{
 	color: #fff;
 }
 .consume_title .col-xs-6:first-child {
 	border-right: 1px solid #6972b4;
+}
+.calendar_head {
+	text-align: center;
+	margin-bottom: 20px;
+}
+.calendar_head input {
+	border: none;
+	background: transparent;
+	color: #fff;
+	text-align: center;
+}
+.calendar_head span {
+	color: #fff;
+}
+.consume_condition {
+	margin-bottom: 20px;
 }
 .consume_info {
 	width: 100%;
@@ -6828,29 +6842,117 @@ li.preparing{
 	text-align: right;
 	padding-right: 5px;
 }
-.consume_list .dt_trd{
+.consume_list > .consume_head> .dt_trd{
 	font-size: 12px;
 	color: #bbb;
 }
-.consume_list .contents{
+.consume_list > .consume_head> .contents{
 	font-size: 16px;
 	margin-left: 20px;
 }
-.consume_list .amt {
+.consume_list > .consume_head> .amt_in_out {
+	width: auto;
 	float: right;
 	font-size: 16px;
 	margin-right: 20px;
 }
-.consume_list .nm_class {
+.consume_list > .consume_tail> .subcontent_left {
 	margin-left: 51px;
 	font-size: 12px;
 	color: #bbb;
 }
-.consume_list .nm_card {
+.consume_list > .consume_tail> .subcontent_right {
+	width: auto;
 	font-size: 12px;
 	color: #bbb;
 	float: right;
 	margin-right: 20px;
+	margin-top: 5px; 
+}
+.dropdown-menu .consume_list:FIRST-CHILD {
+	border-top: none;
+}
+.btn_inquire {
+	right: 0;
+	margin-right: 30px;
+	position: absolute;
+	padding: 5px;
+	top: 10px;
+}
+.trans_detail .inner {
+	max-height: 486px;
+	overflow-y: auto;
+	min-height: 0px;
+}
+.dt_basic{
+	padding-bottom: 20px;
+}
+.category_type,
+.category_class {
+	padding: 5px;
+}
+.category_type .li,
+.category_class .li{
+	margin: 2px;
+	background: #fff;
+	border: 1px solid #ddd;
+	display: block;
+	font-size: 15px;
+	padding: 7px;
+}
+.category_type .ico_sort,
+.category_class .ico_sort{
+	text-align: center;
+	width: 40px;
+}
+.category_type .float_left,
+.category_class .float_left {
+	float: left;
+}
+.category_type .float_right,
+.category_class .float_right {
+	float: right;
+	margin-right: 11px;
+}
+.modal_save {
+	padding-top: 250px;
+}
+.content_save {
+    min-width: 252px;
+    position: relative;
+    background-color: #fff;
+    margin: 0 24px;
+    overflow: hidden;
+    border-radius: 0px;
+    -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 3px 9px rgba(0, 0, 0, 0.2);
+    background-clip: padding-box;
+    outline: 0;
+}
+.body_save {
+	color: #424242;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    word-break: keep-all;
+    line-height: 20px;
+    padding: 24px;
+}
+.text_save {
+	font-size: 18px;
+}
+.btn_save {
+	width: 100%;
+	color: #fff;
+	background-color: #2b43ba;
+	border-color: #2b43ba;
+}
+.btn_save:focus,
+.btn_save:active,
+.btn_save:hover {
+	color: #fff;
+	background-color: #2b43ba;
+	border-color: #2b43ba;
 }
 
 /* ------------------------------------------- */

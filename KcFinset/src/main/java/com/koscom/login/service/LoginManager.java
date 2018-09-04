@@ -167,12 +167,7 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 			   linkUrl = StringUtil.isEmpty(linkUrl) ? "/m/credit/frameCreditInfoMain.crz" : linkUrl;
 		
 		    if(!StringUtil.isEmpty(linkUrl)) session.removeAttribute("linkUrl");
-			if(clobMap == null) {
-				linkUrl = URLEncoder.encode(linkUrl);
-				response.sendRedirect(ResUtil.getPath(request) + "/m/login/frameKcbCrawling.crz?linkUrl="+linkUrl);
-			} else {
-				response.sendRedirect(ResUtil.getPath(request) + linkUrl);
-			}
+		    response.sendRedirect(ResUtil.getPath(request) + linkUrl);
 			
 			/*
 			String linkUrl = (String)session.getAttribute("linkUrl");

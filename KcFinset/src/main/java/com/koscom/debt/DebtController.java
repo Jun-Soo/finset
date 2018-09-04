@@ -19,6 +19,10 @@ import com.koscom.debt.model.DebtForm;
 import com.koscom.debt.model.DebtSummaryVO;
 import com.koscom.debt.model.DebtVO;
 import com.koscom.debt.service.DebtManager;
+import com.koscom.person.model.PersonVO;
+import com.koscom.person.service.PersonManager;
+import com.koscom.util.Constant;
+import com.koscom.util.FinsetException;
 import com.koscom.util.ResUtil;
 
 @Controller
@@ -31,6 +35,9 @@ public class DebtController {
 	@Autowired
 	private DebtManager debtManager;
 	
+	@Autowired
+	private PersonManager personManager;
+	
 	/**
 	 * 부채관리 진입 (풋터에서 호출)
 	 * @param request
@@ -38,7 +45,7 @@ public class DebtController {
 	 * @return
 	 */
 	@RequestMapping("/frameDebt.crz")
-	public String frameDebt(HttpServletRequest request, Model model, HttpSession session) {
+	public String frameDebt(HttpServletRequest request, Model model, HttpSession session) throws FinsetException {
 
 		String no_person = (String) session.getAttribute("no_person");
         logger.debug("no_person : " + no_person);
@@ -64,8 +71,9 @@ public class DebtController {
 				int  newDebtCount = debtManager.newDebtCount(no_person);
 				//등록할 부채가 존재한다면 ->등록 화면으로
 				if(newDebtCount > 0){
-					//부체 등록 페이지로 보내기
-					return "redirect:"+path+"/m/debt/frameInDebtInfo.crz";
+					//부체 등록 페이지로 보내기 - 이제 사용하지 않게 됨
+//					return "redirect:"+path+"/m/debt/frameInDebtInfo.crz";
+					return "redirect:"+path+"/m/debt/frameDebtInfoMain.crz";
 
 				}else{
 					//부채관리 메인 페이지로 보내기
@@ -78,42 +86,6 @@ public class DebtController {
 		}
 		return "redirect:"+path+"/m/debt/frameDebtInfoMain.crz";
 	}
-	
-	/**
-	 * 등록화면 //등록할 부채가 존재함. 등록하시겠습니까?
-	 * @param request
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping("/frameInDebtInfo.crz")
-	public String frameInDebtInfo(HttpServletRequest request, Model model, HttpSession session) {
-		String no_person = (String) session.getAttribute("no_person");
-
-        logger.debug("no_person : " + no_person);
-        
-		/**
-		 * 등록할 부채수
-		 */
-		int  newDebtCount = debtManager.newDebtCount(no_person);
-
-		/**
-		 * 등록된 부채수
-		 */
-		int  debtYCount = debtManager.getDebtYCount(no_person);
-		/**
-		 * 신규인지 확인
-		 */
-
-		if(no_person != null && !no_person.equals("")){
-
-			model.addAttribute("no_person", no_person);
-			model.addAttribute("new_debt_count", newDebtCount);
-			model.addAttribute("debt_y_count", debtYCount);
-
-		}
-		return "/debt/frameInDebtInfo";
-	}
-	
 	/**
 	 * 부채관리 메인
 	 * @param request
@@ -121,7 +93,7 @@ public class DebtController {
 	 * @return
 	 */
 	@RequestMapping("/frameDebtInfoMain.crz")
-	public String frameDebtInfoMain(HttpServletRequest request, Model model, HttpSession session) {
+	public String frameDebtInfoMain(HttpServletRequest request, Model model, HttpSession session) throws FinsetException {
 		String no_person = (String) session.getAttribute("no_person");
         logger.debug("no_person : " + no_person);
 		if(no_person != null && !no_person.equals("")){
@@ -154,7 +126,7 @@ public class DebtController {
 	 * @return
 	 */
 	@RequestMapping("/frameDebtCalendar.crz")
-	public String frameDebtCalendar(HttpServletRequest request, Model model, HttpSession session) {
+	public String frameDebtCalendar(HttpServletRequest request, Model model, HttpSession session) throws FinsetException {
 		return "/debt/frameDebtCalendar";
 	}
 	
@@ -164,7 +136,7 @@ public class DebtController {
 	 * @return
 	 */
 	@RequestMapping(value = "/getDebtListWithMonth.json")
-	public String getDebtListWithMonth(Model model, HttpSession session, String req_yyyymm){
+	public String getDebtListWithMonth(Model model, HttpSession session, String req_yyyymm) throws FinsetException {
 		if(req_yyyymm == null||req_yyyymm.equals("")){
 			model.addAttribute("code","99");
 			return "jsonView";
@@ -191,7 +163,7 @@ public class DebtController {
 	 * @return
 	 */
 	@RequestMapping("/frameInDebtDetail.crz")
-	public String frameInDebtDetail(HttpServletRequest request, Model model, HttpSession session) {
+	public String frameInDebtDetail(HttpServletRequest request, Model model, HttpSession session) throws FinsetException {
 
 		String no_person = (String) session.getAttribute("no_person");
         logger.debug("no_person : " + no_person);
@@ -221,7 +193,7 @@ public class DebtController {
 	 * @return
 	 */
 	@RequestMapping("/frameInDebtUpdate.crz")
-	public String frameInDebtUpdate(HttpSession session,HttpServletRequest request, Model model){
+	public String frameInDebtUpdate(HttpSession session,HttpServletRequest request, Model model) throws FinsetException {
 		String no_person = (String) session.getAttribute("no_person");
 		String interest = request.getParameter("interest");
 		String no_manage_info = request.getParameter("no_manage_info");
@@ -250,7 +222,7 @@ public class DebtController {
 	 * @return
 	 */
 	@RequestMapping("/updateDebtInfo.json")
-	public String updateDebtInfo(HttpServletRequest request,DebtVO debtVO, Model model){
+	public String updateDebtInfo(HttpServletRequest request,DebtVO debtVO, Model model) throws FinsetException {
 		if(debtVO == null){
 			model.addAttribute("code","99");
 		} else {
@@ -268,7 +240,7 @@ public class DebtController {
 	 * @return
 	 */
 	@RequestMapping("/frameInDebtDelete.json")
-	public String frameInDebtDelete(HttpSession session, HttpServletRequest request, Model model){
+	public String frameInDebtDelete(HttpSession session, HttpServletRequest request, Model model) throws FinsetException {
 		String no_person = (String) session.getAttribute("no_person");
         String no_manage_info = (String) request.getParameter("no_manage_info");
         logger.debug("in debt del no_person:"+no_person+"///////no_manage_info:"+no_manage_info);
@@ -289,6 +261,80 @@ public class DebtController {
         	//no_person이나 no_manage_info 가 null 일 떄
         	model.addAttribute("code", "99");
         }
+		return "jsonView";
+	}
+	
+	/**
+	 * 대출정보 없을 시 페이지
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/frameNoDebtInfo.crz")
+	public String frameNoDebtInfo(HttpServletRequest request, Model model, HttpSession session) throws FinsetException {
+		String no_person = (String) session.getAttribute("no_person");
+        logger.debug("no_person : " + no_person);
+		return "/debt/frameNoDebtInfo";
+	}
+	
+	/**
+	 * 부채 삭제 취소 처리 
+	 * @param request
+	 * @param model
+	 * @param session
+	 * @return
+	 * @throws FinsetException
+	 */
+	@RequestMapping("/frameDebtCancelDelete.crz")
+	public String frameDebtCancelDelete(HttpServletRequest request, Model model, HttpSession session) throws FinsetException {
+		String no_person = (String) session.getAttribute("no_person");
+		logger.debug("no_person : "+ no_person);
+		DebtForm debtForm = new DebtForm();
+		debtForm.setNo_person(no_person);
+		List<DebtVO> debtList = debtManager.listDebtPg(debtForm);
+		if(debtList.size()==0){
+			return "/debt/frameNoDebtInfo";
+		}
+		model.addAttribute("debtList",debtList);
+		return "/debt/frameDebtCancelDelete";
+	}
+	
+	@RequestMapping("/updateDebtDisplayList.json")
+	public String updateDebtDisplayList(HttpSession session, DebtForm debtForm, Model model) throws FinsetException {
+		String no_person = (String) session.getAttribute("no_person");
+		logger.debug("no_person : "+ no_person);
+		debtForm.setNo_person(no_person);
+		try{
+			debtManager.updateDebtDisplayList(debtForm);
+			model.addAttribute("code","00");
+		} catch (Exception e){
+			model.addAttribute("code","99");
+		}
+		return "jsonView";
+	}
+	
+	@RequestMapping("/frameDebtSecurityCode.crz")
+	public String frameDebtSecurityCode() throws FinsetException {
+		return "/debt/frameDebtSecurityCode";
+	}
+	
+	@RequestMapping("/debtChkCode.json")
+	public String debtChkCode(HttpSession session, Model model, HttpServletRequest request, PersonVO personVO) {
+		String pass_person 	= "";
+		for(int i=0; i < personVO.getPass_number().size(); i++){
+			pass_person += personVO.getPass_number().get(i);
+		}
+		String no_person = (String) session.getAttribute("no_person");
+		personVO.setNo_person(no_person);
+		personVO.setPass_person(pass_person);
+		int pwdCheck = personManager.checkPersonPass(personVO);
+		
+		if(pwdCheck > 0) {	//암호화 비밀번호 체크
+			model.addAttribute("result", Constant.SUCCESS);
+		} else {
+			model.addAttribute("message", "비밀번호가 일치하지 않습니다.");
+			model.addAttribute("result", Constant.FAILED);
+		}
 		return "jsonView";
 	}
 }

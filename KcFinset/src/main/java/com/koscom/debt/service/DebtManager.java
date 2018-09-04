@@ -97,4 +97,10 @@ public interface DebtManager {
 	 * @param debtForm
 	 */
 	void updateDebtDisplay(DebtForm debtForm);
+	
+	/**
+	 * 부채 다중 삭제, 취소 처리
+	 * @param debtForm
+	 */
+	void updateDebtDisplayList(DebtForm debtForm);
 }

@@ -109,4 +109,14 @@ public class DebtManagerImpl implements DebtManager {
 	public void updateDebtDisplay(DebtForm debtForm) {
 		debtMapper.updateDebtDisplay(debtForm);
 	}
+	
+	@Override
+	public void updateDebtDisplayList(DebtForm debtForm) {
+		String no_person = debtForm.getNo_person();
+		List<DebtForm> list = debtForm.getList();
+		for(DebtForm vo: list) {
+			vo.setNo_person(no_person);
+			debtMapper.updateDebtDisplay(vo);
+		}
+	}
 }

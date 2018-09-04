@@ -12,8 +12,6 @@ public class MybatisUtil {
 	private static final Logger logger = LoggerFactory.getLogger(MybatisUtil.class);
 
 	public static boolean isEmpty(Object obj){
-		logger.debug(obj.toString());
-		
 		if( obj instanceof String ) return obj==null || "".equals(obj.toString().trim());
 		else if( obj instanceof List ) return obj==null || ((List)obj).isEmpty();
 		else if( obj instanceof Map ) return obj==null || ((Map)obj).isEmpty();

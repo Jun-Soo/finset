@@ -24,7 +24,7 @@
 		var data = $("#frmConditioncreditInfo").serialize();
 		if(data == null) return false;
 		$.ajax({
-			url : "<c:url value='/conditioncredit/procConditioncreditInfo.json'/>",
+			url : "<c:url value='/m/loanworker/procConditioncreditInfo.json'/>",
 			data : data,
 			contentType : "application/x-www-form-urlencoded; charset=UTF-8",
 			type : "POST",

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.koscom.conditionhouse.dao.ConditionhouseMapper">
+	<select id="getConditionhouseInfo" parameterType="java.lang.String" resultType="com.koscom.conditionhouse.model.ConditionhouseVO">
+		SELECT * FROM CONDITION_HOUSE_INFO WHERE no_person = #{no_person}
+	</select>
+	<update id="procConditionhouseInfo" parameterType="com.koscom.domain.ConditionhouseInfo">
+		MERGE INTO CONDITION_HOUSE_INFO
+		   USING DUAL
+		   ON (no_person = #{no_person} )
+		   WHEN MATCHED THEN
+		      UPDATE
+		         SET
+					  cd_collateral_house_type_01 = #{cd_collateral_house_type_01, jdbcType=VARCHAR}
+					, cd_collateral_house_type_02 = #{cd_collateral_house_type_02, jdbcType=VARCHAR}
+					, cd_collateral_house_type_03 = #{cd_collateral_house_type_03, jdbcType=VARCHAR}
+					, cd_collateral_loan_use_01 = #{cd_collateral_loan_use_01, jdbcType=VARCHAR}
+					, cd_collateral_loan_use_02 = #{cd_collateral_loan_use_02, jdbcType=VARCHAR}
+					, cd_collateral_loan_use_03 = #{cd_collateral_loan_use_03, jdbcType=VARCHAR}
+					, cd_area_01 = #{cd_area_01, jdbcType=VARCHAR}
+					, cd_area_02 = #{cd_area_02, jdbcType=VARCHAR}
+					, cd_area_03 = #{cd_area_03, jdbcType=VARCHAR}
+					, cd_ratio_type_01 = #{cd_ratio_type_01, jdbcType=VARCHAR}
+					, cd_ratio_type_02 = #{cd_ratio_type_02, jdbcType=VARCHAR}
+					, cd_ratio_type_03 = #{cd_ratio_type_03, jdbcType=VARCHAR}
+					, cd_term_loan_01 = #{cd_term_loan_01, jdbcType=VARCHAR}
+					, cd_term_loan_02 = #{cd_term_loan_02, jdbcType=VARCHAR}
+					, cd_term_loan_03 = #{cd_term_loan_03, jdbcType=VARCHAR}
+					, cd_term_loan_04 = #{cd_term_loan_04, jdbcType=VARCHAR}
+					, cd_type_pay_01 = #{cd_type_pay_01, jdbcType=VARCHAR}
+					, cd_type_pay_02 = #{cd_type_pay_02, jdbcType=VARCHAR}
+					, cd_type_pay_03 = #{cd_type_pay_03, jdbcType=VARCHAR}
+					, cd_defer_01 = #{cd_defer_01, jdbcType=VARCHAR}
+					, cd_defer_02 = #{cd_defer_02, jdbcType=VARCHAR}
+					, cd_object_01 = #{cd_object_01, jdbcType=VARCHAR}
+					, cd_object_02 = #{cd_object_02, jdbcType=VARCHAR}
+					, yn_post_ranking = #{yn_post_ranking, jdbcType=VARCHAR}
+					, id_lst = #{id_lst, jdbcType=VARCHAR}
+					, dt_lst =  SYSDATE
+			WHEN NOT MATCHED THEN
+			  INSERT (
+					  no_person
+					, cd_collateral_house_type_01
+					, cd_collateral_house_type_02
+					, cd_collateral_house_type_03
+					, cd_collateral_loan_use_01
+					, cd_collateral_loan_use_02
+					, cd_collateral_loan_use_03
+					, cd_area_01
+					, cd_area_02
+					, cd_area_03
+					, cd_ratio_type_01
+					, cd_ratio_type_02
+					, cd_ratio_type_03
+					, cd_term_loan_01
+					, cd_term_loan_02
+					, cd_term_loan_03
+					, cd_term_loan_04
+					, cd_type_pay_01
+					, cd_type_pay_02
+					, cd_type_pay_03
+					, cd_defer_01
+					, cd_defer_02
+					, cd_object_01
+					, cd_object_02
+					, yn_post_ranking
+					, id_frt
+					, dt_frt
+					, id_lst
+					, dt_lst
+					 )
+				VALUES(
+					   #{no_person, jdbcType=VARCHAR}
+					,  #{cd_collateral_house_type_01, jdbcType=VARCHAR}
+					,  #{cd_collateral_house_type_02, jdbcType=VARCHAR}
+					,  #{cd_collateral_house_type_03, jdbcType=VARCHAR}
+					,  #{cd_collateral_loan_use_01, jdbcType=VARCHAR}
+					,  #{cd_collateral_loan_use_02, jdbcType=VARCHAR}
+					,  #{cd_collateral_loan_use_03, jdbcType=VARCHAR}
+					,  #{cd_area_01, jdbcType=VARCHAR}
+					,  #{cd_area_02, jdbcType=VARCHAR}
+					,  #{cd_area_03, jdbcType=VARCHAR}
+					,  #{cd_ratio_type_01, jdbcType=VARCHAR}
+					,  #{cd_ratio_type_02, jdbcType=VARCHAR}
+					,  #{cd_ratio_type_03, jdbcType=VARCHAR}
+					,  #{cd_term_loan_01, jdbcType=VARCHAR}
+					,  #{cd_term_loan_02, jdbcType=VARCHAR}
+					,  #{cd_term_loan_03, jdbcType=VARCHAR}
+					,  #{cd_term_loan_04, jdbcType=VARCHAR}
+					,  #{cd_type_pay_01, jdbcType=VARCHAR}
+					,  #{cd_type_pay_02, jdbcType=VARCHAR}
+					,  #{cd_type_pay_03, jdbcType=VARCHAR}
+					,  #{cd_defer_01, jdbcType=VARCHAR}
+					,  #{cd_defer_02, jdbcType=VARCHAR}
+					,  #{cd_object_01, jdbcType=VARCHAR}
+					,  #{cd_object_02, jdbcType=VARCHAR}
+					,  #{yn_post_ranking, jdbcType=VARCHAR}
+					,  #{id_frt, jdbcType=VARCHAR}
+					,  SYSDATE
+					,  #{id_frt, jdbcType=VARCHAR}
+					,  SYSDATE
+				 )
+	</update>
+</mapper>

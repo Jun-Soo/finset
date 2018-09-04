@@ -24,7 +24,7 @@
 		var data = frm.ajaxSubmit();
 		if(data == null) return false;
 		$.ajax({
-			url : "<c:url value='/conditionbiz/procConditionbizInfo.json'/>",
+			url : "<c:url value='/m/loanselfemployed/procConditionbizInfo.json'/>",
 			data : data,
 			contentType : "application/x-www-form-urlencoded; charset=UTF-8",
 			type : "POST",

@@ -23,7 +23,7 @@
 		var data = frm.ajaxSubmit();
 		if(data == null) return false;
 		$.ajax({
-			url : "<c:url value='/conditionhouse/procConditionhouseInfo.json'/>",
+			url : "<c:url value='/m/loanhomemortgage/procConditionhouseInfo.json'/>",
 			data : data,
 			contentType : "application/x-www-form-urlencoded; charset=UTF-8",
 			type : "POST",

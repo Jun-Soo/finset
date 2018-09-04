@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.goods.dao.GoodsMapper">
+
+	<select id="listGoodsAllianceCredit" parameterType="com.koscom.goods.model.GoodsForm" resultType="com.koscom.goods.model.GoodsVO">
+    /* com.koscom.goods.dao.GoodsMapper.listGoodsAllianceCredit  */
+    <![CDATA[
+      SELECT CD_GOODS
+             ,CD_FC
+             ,DESC_FEATURE
+             ,KEYWORD_LIST
+             ,CD_GOODS_CLASS_L
+             ,CD_GOODS_CLASS_M
+             ,NM_GOODS
+             ,CD_TYPE_INTEREST
+             ,RTO_INTEREST_FROM
+             ,RTO_INTEREST_TO
+             ,AMT_LIMIT
+             ,CD_LOAN_TERM
+             ,YN_FAVORITE
+             ,PATH_FILE1
+             ,RNUM
+        FROM(SELECT LST.CD_GOODS
+                    ,LST.CD_FC
+                    ,LST.DESC_FEATURE
+                    ,LST.KEYWORD_LIST
+                    ,LST.CD_GOODS_CLASS_L
+                    ,LST.CD_GOODS_CLASS_M
+                    ,LST.NM_GOODS
+                    ,LST.CD_TYPE_INTEREST
+                    ,LST.RTO_INTEREST_FROM
+                    ,LST.RTO_INTEREST_TO
+                    ,LST.AMT_LIMIT
+                    ,LST.CD_LOAN_TERM
+                    ,LST.YN_FAVORITE
+                    ,LST.PATH_FILE1
+                   ,ROWNUM RNUM
+               FROM (SELECT GI.CD_GOODS
+                            ,GI.CD_FC
+                            ,GI.DESC_FEATURE
+                            ,GI.KEYWORD_LIST
+                            ,GI.CD_GOODS_CLASS_L
+                            ,GI.CD_GOODS_CLASS_M
+                            ,GI.NM_GOODS
+                            ,GI.CD_TYPE_INTEREST
+                            ,GI.RTO_INTEREST_FROM
+                            ,GI.RTO_INTEREST_TO
+                            ,GI.AMT_LIMIT
+                            ,GI.CD_LOAN_TERM
+                           ,(CASE WHEN( SELECT COUNT(*)
+                                          FROM COOCON_GOODS_FAVORITE_INFO CGFI
+                                         WHERE CGFI.CD_FC = GI.CD_FC
+                                           AND CGFI.CD_NON_GOODS = GI.CD_GOODS
+                                           AND CGFI.YN_ALLIANCE = 'Y'
+                                           AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                      )> 0 THEN 'Y'
+                                  ELSE 'N' END) AS YN_FAVORITE
+                            ,FI.PATH_FILE1
+                        FROM (SELECT A.CD_GOODS
+                                    ,A.CD_FC
+                                    ,A.DESC_FEATURE
+                                    ,A.KEYWORD_LIST
+                                    ,A.CD_GOODS_CLASS_L
+                                    ,A.CD_GOODS_CLASS_M
+                                    ,A.NM_GOODS
+                                    ,A.CD_TYPE_INTEREST
+                                    ,A.RTO_INTEREST_FROM
+                                    ,A.RTO_INTEREST_TO
+                                    ,A.AMT_LIMIT
+                                    ,A.CD_LOAN_TERM
+                                FROM GOODS_INFO A
+                               WHERE A.YN_USE = 'Y'
+                            ) GI
+                        LEFT OUTER JOIN FC_INFO FI ON
+                             GI.CD_FC = FI.CD_FC
+                       WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+				         AND GI.CD_GOODS_CLASS_M IN
+				      ]]>
+					  <foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
+			       		#{item, jdbcType=VARCHAR}
+				      </foreach>
+                        ORDER BY  <choose>
+                                      <when test="'01'.equals(orderby)">
+                                          RTO_INTEREST_FROM ASC/*금리낮은순*/,
+                                      </when>
+                                      <when test="'02'.equals(orderby)">
+                                          AMT_LIMIT DESC /*한도높은순*/,
+                                      </when>
+                                      <when test="'03'.equals(orderby)">
+                                          NVL(CD_LOAN_TERM,'-1') DESC/*기간높은순*/,
+                                      </when>
+                                  </choose>
+                                YN_FAVORITE       DESC
+
+        <![CDATA[
+                    ) LST
+                WHERE ROWNUM <= #{endPosition, jdbcType=NUMERIC}
+            )
+        WHERE RNUM >= #{startPosition, jdbcType=NUMERIC}
+        ]]>
+	</select>
+	
+	<select id="listGoodsAllianceCreditCount" parameterType="com.koscom.goods.model.GoodsForm" resultType="int">
+        /* com.koscom.goods.dao.GoodsMapper.listGoodsAllianceCreditCount */
+        SELECT COUNT(*) AS recordCount
+               FROM (SELECT GI.CD_GOODS
+                            ,GI.CD_FC
+                            ,GI.DESC_FEATURE
+                            ,GI.KEYWORD_LIST
+                            ,GI.CD_GOODS_CLASS_L
+                            ,GI.CD_GOODS_CLASS_M
+                            ,GI.NM_GOODS
+                            ,GI.CD_TYPE_INTEREST
+                            ,GI.RTO_INTEREST_FROM
+                            ,GI.RTO_INTEREST_TO
+                            ,GI.AMT_LIMIT
+                            ,GI.CD_LOAN_TERM
+                           ,(CASE WHEN( SELECT COUNT(*)
+                                          FROM COOCON_GOODS_FAVORITE_INFO CGFI
+                                         WHERE CGFI.CD_FC = GI.CD_FC
+                                           AND CGFI.CD_NON_GOODS = GI.CD_GOODS
+                                           AND CGFI.YN_ALLIANCE = 'Y'
+                                           AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                      )> 0 THEN 'Y'
+                                  ELSE 'N' END) AS YN_FAVORITE
+                            ,FI.PATH_FILE1
+                        FROM (SELECT A.CD_GOODS
+                                    ,A.CD_FC
+                                    ,A.DESC_FEATURE
+                                    ,A.KEYWORD_LIST
+                                    ,A.CD_GOODS_CLASS_L
+                                    ,A.CD_GOODS_CLASS_M
+                                    ,A.NM_GOODS
+                                    ,A.CD_TYPE_INTEREST
+                                    ,A.RTO_INTEREST_FROM
+                                    ,A.RTO_INTEREST_TO
+                                    ,A.AMT_LIMIT
+                                    ,A.CD_LOAN_TERM
+                                FROM GOODS_INFO A
+                               WHERE A.YN_USE = 'Y'
+                            ) GI
+                        LEFT OUTER JOIN fc_info FI ON
+                            GI.CD_FC = FI.CD_FC
+		       		   WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+				         AND GI.CD_GOODS_CLASS_M IN
+					  <foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
+			       		#{item, jdbcType=VARCHAR}
+				      </foreach>
+     			) LST
+	</select>
+	
+	<select id="listGoodsAllianceBiz" parameterType="com.koscom.goods.model.GoodsForm" resultType="com.koscom.goods.model.GoodsVO">
+    <![CDATA[
+      /* com.koscom.goods.dao.GoodsMapper.listGoodsAllianceBiz  */
+      SELECT
+      		CD_GOODS
+            ,CD_FC
+            ,DESC_FEATURE
+            ,KEYWORD_LIST
+            ,CD_GOODS_CLASS_L
+            ,CD_GOODS_CLASS_M
+            ,NM_GOODS
+            ,CD_TYPE_INTEREST
+            ,RTO_INTEREST_FROM
+            ,RTO_INTEREST_TO
+            ,AMT_LIMIT
+            ,CD_LOAN_TERM
+            ,YN_FAVORITE
+            ,PATH_FILE1
+            ,RNUM
+        FROM(SELECT LST.CD_GOODS
+                    ,LST.CD_FC
+                    ,LST.DESC_FEATURE
+                    ,LST.KEYWORD_LIST
+                    ,LST.CD_GOODS_CLASS_L
+                    ,LST.CD_GOODS_CLASS_M
+                    ,LST.NM_GOODS
+                    ,LST.CD_TYPE_INTEREST
+                    ,LST.RTO_INTEREST_FROM
+                    ,LST.RTO_INTEREST_TO
+                    ,LST.AMT_LIMIT
+                    ,LST.CD_LOAN_TERM
+                    ,LST.YN_FAVORITE
+                    ,LST.PATH_FILE1
+                   ,ROWNUM RNUM
+               FROM (SELECT GI.CD_GOODS
+                            ,GI.CD_FC
+                            ,GI.DESC_FEATURE
+                            ,GI.KEYWORD_LIST
+                            ,GI.CD_GOODS_CLASS_L
+                            ,GI.CD_GOODS_CLASS_M
+                            ,GI.NM_GOODS
+                            ,GI.CD_TYPE_INTEREST
+                            ,GI.RTO_INTEREST_FROM
+                            ,GI.RTO_INTEREST_TO
+                            ,GI.AMT_LIMIT
+                            ,GI.CD_LOAN_TERM
+                           ,(CASE WHEN( SELECT COUNT(*)
+                                          FROM COOCON_GOODS_FAVORITE_INFO CGFI
+                                         WHERE CGFI.CD_FC = GI.CD_FC
+                                           AND CGFI.CD_NON_GOODS = GI.CD_GOODS
+                                           AND CGFI.YN_ALLIANCE = 'Y'
+                                           AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                      )> 0 THEN 'Y'
+                                  ELSE 'N' END) AS YN_FAVORITE
+                            ,FI.PATH_FILE1
+                        FROM (SELECT
+                        			A.CD_GOODS
+                                     ,A.CD_FC
+                                     ,A.DESC_FEATURE
+                                     ,A.KEYWORD_LIST
+                                     ,A.CD_GOODS_CLASS_L
+                                     ,A.CD_GOODS_CLASS_M
+                                     ,A.NM_GOODS
+                                     ,A.CD_TYPE_INTEREST
+                                     ,A.RTO_INTEREST_FROM
+                                     ,A.RTO_INTEREST_TO
+                                     ,A.AMT_LIMIT
+                                     ,A.CD_LOAN_TERM
+                              FROM
+                              	GOODS_INFO A
+                              WHERE A.YN_USE = 'Y'
+                            ) GI
+                        LEFT OUTER JOIN FC_INFO FI
+                        ON GI.CD_FC = FI.CD_FC
+                        ]]>
+                        <choose>
+                            <when test="cd_goods_class_l.equals('01')">
+                                WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+                                  AND (    GI.CD_GOODS_CLASS_M = #{cd_goods_class_m, jdbcType=VARCHAR}
+                                        OR GI.CD_GOODS_CLASS_M = '03'
+                                      )
+                            </when>
+                            <when test="cd_goods_class_l.equals('02')">
+                                WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+                                  AND GI.CD_GOODS_CLASS_M = #{cd_goods_class_m, jdbcType=VARCHAR}
+                            </when>
+                        </choose>
+            ORDER BY  <choose>
+                            <when test="'01'.equals(orderby)">
+                                RTO_INTEREST_FROM ASC/*금리낮은순*/,
+                            </when>
+                            <when test="'02'.equals(orderby)">
+                                AMT_LIMIT DESC /*한도높은순*/,
+                            </when>
+                            <when test="'03'.equals(orderby)">
+                                NVL(CD_LOAN_TERM,'-1') DESC/*기간높은순*/,
+                            </when>
+                        </choose>
+                        YN_FAVORITE       DESC
+                        <![CDATA[
+                    ) LST
+                WHERE ROWNUM <= #{endPosition, jdbcType=NUMERIC}
+            )
+        WHERE RNUM >= #{startPosition, jdbcType=NUMERIC}
+     ]]>
+    </select>
+
+    <select id="listGoodsAllianceBizCount" parameterType="com.koscom.goods.model.GoodsForm" resultType="int">
+        <![CDATA[
+        /* com.koscom.goods.dao.GoodsMapper.listGoodsAllianceBizCount */
+        SELECT COUNT(*) AS recordCount
+          FROM (SELECT
+          				GI.CD_GOODS
+                        ,GI.CD_FC
+                        ,GI.DESC_FEATURE
+                        ,GI.KEYWORD_LIST
+                        ,GI.CD_GOODS_CLASS_L
+                        ,GI.CD_GOODS_CLASS_M
+                        ,GI.NM_GOODS
+                        ,GI.CD_TYPE_INTEREST
+                        ,GI.RTO_INTEREST_FROM
+                        ,GI.RTO_INTEREST_TO
+                        ,GI.AMT_LIMIT
+                        ,GI.CD_LOAN_TERM
+                        ,(CASE WHEN( SELECT COUNT(*)
+                                          FROM COOCON_GOODS_FAVORITE_INFO CGFI
+                                         WHERE CGFI.CD_FC = GI.CD_FC
+                                           AND CGFI.CD_NON_GOODS = GI.CD_GOODS
+                                           AND CGFI.YN_ALLIANCE = 'Y'
+                                           AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                      )> 0 THEN 'Y'
+                                  ELSE 'N' END) AS YN_FAVORITE
+                         ,FI.PATH_FILE1
+                    FROM (SELECT
+                        		 A.CD_GOODS
+                                 ,A.CD_FC
+                                 ,A.DESC_FEATURE
+                                 ,A.KEYWORD_LIST
+                                 ,A.CD_GOODS_CLASS_L
+                                 ,A.CD_GOODS_CLASS_M
+                                 ,A.NM_GOODS
+                                 ,A.CD_TYPE_INTEREST
+                                 ,A.RTO_INTEREST_FROM
+                                 ,A.RTO_INTEREST_TO
+                                 ,A.AMT_LIMIT
+                                 ,A.CD_LOAN_TERM
+                          	FROM
+                            	GOODS_INFO A
+                            WHERE A.YN_USE = 'Y'
+                            ) GI
+                   LEFT OUTER JOIN FC_INFO FI
+                   ON GI.CD_FC = FI.CD_FC
+                   ]]>
+            <choose>
+                <when test="cd_goods_class_l.equals('01')">
+                    WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+                      AND (    GI.CD_GOODS_CLASS_M = #{cd_goods_class_m, jdbcType=VARCHAR}
+                            OR GI.CD_GOODS_CLASS_M = '03'
+                          )
+                </when>
+                <when test="cd_goods_class_l.equals('02')">
+                    WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+                      AND GI.CD_GOODS_CLASS_M = #{cd_goods_class_m, jdbcType=VARCHAR}
+                </when>
+            </choose>
+        ) LST
+        </select>
+</mapper>      

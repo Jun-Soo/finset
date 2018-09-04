@@ -25,4 +25,10 @@ public class MybatisUtil {
 		return !isEmpty(s);
 	}
 	
+	public static boolean contains(String str, String s){
+		if( s.contains(str) ) {
+			return true;
+		}
+		return false;
+	}
 }

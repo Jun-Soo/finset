@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.koscom.debt.dao.DebtMapper;
+import com.koscom.debt.model.DebtForm;
+import com.koscom.debt.model.DebtSummaryVO;
+import com.koscom.debt.model.DebtVO;
 import com.koscom.debt.service.DebtManager;
 import com.koscom.util.LogUtil;
 
@@ -43,5 +46,35 @@ public class DebtManagerImpl implements DebtManager {
 				logger.error(callParam.get("p_rtn_msg").toString());
 			}
 		}
+	}
+	
+	@Override
+	public String getDebtExistYn(String no_person) {
+		return debtMapper.getDebtExistYn(no_person);
+	}
+	
+	@Override
+	public int newDebtCount(String no_person) {
+		return debtMapper.newDebtCount(no_person);
+	}
+	
+	@Override
+	public int getDebtYCount(String no_person) {
+		return debtMapper.getDebtYCount(no_person);
+	}
+	
+	@Override
+	public void modifySeqNewDeptReg(String no_person) {
+		debtMapper.modifySeqNewDeptReg(no_person);
+	}
+	
+	@Override
+	public DebtSummaryVO getDebtSummary(String no_person) {
+		return debtMapper.getDebtSummary(no_person);
+	}
+	
+	@Override
+	public List<DebtVO> listDebtPg(DebtForm debtForm) {
+		return debtMapper.listDebtPg(debtForm);
 	}
 }

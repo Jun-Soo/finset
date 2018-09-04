@@ -1,6 +1,7 @@
 package com.koscom.login.service;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -159,12 +160,25 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 				cd_result = Constant.FAILED;
 			}
 			
+			// 자동스크래핑 여부 관련 설정
+			session.setAttribute("AutoScrap", "true");
+						
+			String linkUrl = (String)session.getAttribute("linkUrl");
+			   linkUrl = StringUtil.isEmpty(linkUrl) ? "/m/credit/frameCreditInfoMain.crz" : linkUrl;
+		
+		    if(!StringUtil.isEmpty(linkUrl)) session.removeAttribute("linkUrl");
+			if(clobMap == null) {
+				linkUrl = URLEncoder.encode(linkUrl);
+				response.sendRedirect(ResUtil.getPath(request) + "/m/login/frameKcbCrawling.crz?linkUrl="+linkUrl);
+			} else {
+				response.sendRedirect(ResUtil.getPath(request) + linkUrl);
+			}
+			/*
 			String linkUrl = (String)session.getAttribute("linkUrl");
 		    if(!StringUtil.isEmpty(linkUrl)) session.removeAttribute("linkUrl");
 		    
-			// 자동스크래핑 여부 관련 설정
-			session.setAttribute("AutoScrap", "true");
 			response.sendRedirect(ResUtil.getPath(request) + "/index.html?linkUrl="+linkUrl);
+			*/
 		}
 	}
 	

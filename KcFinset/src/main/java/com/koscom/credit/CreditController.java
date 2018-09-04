@@ -405,6 +405,112 @@ public class CreditController {
     }
 
     /**
+     * 신용관리 메인
+     * @param model
+     * @param request
+     * @return
+     */
+    @RequestMapping("/frameCreditInfoMain.crz")
+    public String frameCreditInfoMain(
+    		HttpServletRequest request,
+    		HttpSession session, 
+    		Model model) throws UnsupportedEncodingException, FinsetException, IOException {
+        
+        String      no_person   = (String)session.getAttribute("no_person");
+        String		auto_Scrap	= (String)session.getAttribute("AutoScrap");
+        
+        String rtnPage = "";
+        
+        model.addAttribute("noPerson", no_person);
+        model.addAttribute("baseInfo", creditManager.getCreditMainBaseInfo(no_person));
+        model.addAttribute("cntInfo", creditManager.getCreditMainCntInfo(no_person));
+        
+        //나의신용정보 변동(최근1개월) 건수
+        List<CreditInfo> inquiryList = creditManager.getCreditDetailGradeInquiryList(no_person);
+        
+        CreditInfo creditInfoParam = new CreditInfo();
+        creditInfoParam.setNoPerson(no_person);
+        creditInfoParam.setCdChangeInfo("01");
+        List<CreditInfo> loanCardList = creditManager.getCreditDetailGradeChangeList(creditInfoParam);
+        creditInfoParam.setCdChangeInfo("02");
+        List<CreditInfo> overdueList = creditManager.getCreditDetailGradeChangeList(creditInfoParam);
+        
+        String inquiryCnt = "";
+        String loanCardCnt = "";
+        String overdueCnt = "";
+        if(inquiryList.size() > 0 && inquiryList != null) {
+        	inquiryCnt = inquiryList.get(0).getMm_cnt();
+        }
+        if(loanCardList.size() > 0 && loanCardList != null) {
+        	loanCardCnt = loanCardList.get(0).getMm_cnt();
+        }
+        if(overdueList.size() > 0 && overdueList != null) {
+        	overdueCnt = overdueList.get(0).getMm_cnt();
+        }
+        
+        model.addAttribute("inquiryCnt", inquiryCnt);
+        model.addAttribute("loanCardCnt", loanCardCnt);
+        model.addAttribute("overdueCnt", overdueCnt);
+        
+        //자동스크래핑 은행 내역 조회 및 설정 - 로그인 후 한번만 실행
+        if(auto_Scrap.equals("true"))	{
+        	String smsStartDate = null;
+        	String smsInclude = null;
+        	String smsExclude = null;
+        	//마지막 문자내역 시간 체크
+        	smsStartDate = personManager.getLastPersonSmsDt(no_person);
+        	//문자내역이 없을 경우 기본 3달 전으로 셋팅
+        	if(smsStartDate == null || smsStartDate.length() == 0)	{
+        		String toDay = DateUtil.getCurrentDateTime("yyyyMMdd");
+        		smsStartDate = DateUtil.addMonths(toDay, -3);
+        		//시분초 추가
+        		smsStartDate += "000000";
+        	}
+        	String site = (environment != null)?environment.getProperty("service.profile"):"";
+    		model.addAttribute("site", site);
+
+        	// 초기 접속일 경우에만 SMS내역 및 스크래핑 내역 화면에 전송
+        	String      isAutoScrap   = (String)session.getAttribute("AutoScrap");
+        	logger.debug("isAutoScrap : " + isAutoScrap);
+        	
+        	if(isAutoScrap.equals("true") && !site.equals("REAL"))	{
+        		logger.debug("=======================================");
+	        	model.addAttribute("smsStartDate", smsStartDate);
+	        	logger.debug("SMS Start Date : " + smsStartDate);
+	        	smsInclude = codeManager.getCodeName("_CONF_SMS", "INCLUDE");
+	        	model.addAttribute("smsInclude", smsInclude);
+	        	logger.debug("SMS Include : " + smsInclude);
+	        	smsExclude = codeManager.getCodeName("_CONF_SMS", "EXCLUDE");
+	        	model.addAttribute("smsExclude", smsExclude);
+	        	logger.debug("SMS Exclude : " + smsExclude);
+	        	
+	        	String autoScrapInfo = null;
+	        	String cd_agency = codeManager.getCodeId("cd_agency","은행");
+	        	autoScrapInfo = scrapManager.getAutoScrapInfo(cd_agency, no_person);
+	        	logger.debug("Bank autoScrapInfo : " + autoScrapInfo);
+	        	if(autoScrapInfo != null && autoScrapInfo.length() > 0)	{
+	        		model.addAttribute("autoScrapBankInfo", autoScrapInfo);
+	        	}
+	        	cd_agency = codeManager.getCodeId("cd_agency","카드");
+	        	autoScrapInfo = scrapManager.getAutoScrapInfo(cd_agency, no_person);
+	        	logger.debug("Card autoScrapInfo : " + autoScrapInfo);
+	        	if(autoScrapInfo != null && autoScrapInfo.length() > 0)	{
+	        		model.addAttribute("autoScrapCardInfo", autoScrapInfo);
+	        	}
+	        	cd_agency = codeManager.getCodeId("cd_agency","국세청");
+	        	autoScrapInfo = scrapManager.getAutoScrapInfo(cd_agency, no_person);
+	        	logger.debug("NTS autoScrapInfo : " + autoScrapInfo);
+	        	if(autoScrapInfo != null && autoScrapInfo.length() > 0)	{
+	        		model.addAttribute("autoScrapNTSInfo", autoScrapInfo);
+	        	}
+	        	logger.debug("=======================================");
+        	}
+        		
+        }
+        return "/credit/frameCreditInfoOrgMain";
+    }
+    
+    /**
      * 본인인증 인증번호 요청
      * @param request
      * @param response

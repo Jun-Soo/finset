@@ -162,7 +162,7 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 			
 			// 자동스크래핑 여부 관련 설정
 			session.setAttribute("AutoScrap", "true");
-						
+			/*			
 			String linkUrl = (String)session.getAttribute("linkUrl");
 			   linkUrl = StringUtil.isEmpty(linkUrl) ? "/m/credit/frameCreditInfoMain.crz" : linkUrl;
 		
@@ -173,12 +173,13 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 			} else {
 				response.sendRedirect(ResUtil.getPath(request) + linkUrl);
 			}
-			/*
+			*/
+			
 			String linkUrl = (String)session.getAttribute("linkUrl");
 		    if(!StringUtil.isEmpty(linkUrl)) session.removeAttribute("linkUrl");
 		    
 			response.sendRedirect(ResUtil.getPath(request) + "/index.html?linkUrl="+linkUrl);
-			*/
+			
 		}
 	}
 	

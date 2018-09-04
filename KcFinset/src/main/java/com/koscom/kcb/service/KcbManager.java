@@ -25,7 +25,7 @@ public interface KcbManager {
 	 * @return ReturnClass
 	 * @throws Exception 
 	 */
-	ReturnClass procKcbCb(KcbCreditInfoVO infoVO) throws UnsupportedEncodingException, FinsetException, IOException, Exception;
+	ReturnClass procKcbCb(KcbCreditInfoVO infoVO) throws UnsupportedEncodingException, FinsetException, IOException;
 	
 	/**
 	 * Method Desc : KCB 0600402 메뉴구분 210 대출보고서 크롤링

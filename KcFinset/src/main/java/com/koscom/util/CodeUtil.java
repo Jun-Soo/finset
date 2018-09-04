@@ -56,8 +56,7 @@ public final class CodeUtil {
 	 * @return
 	 * @throws Exception
 	 */
-	public String getCodeName(String codeGroup, String codeValue)
-			throws Exception {
+	public String getCodeName(String codeGroup, String codeValue) {
 		return getCodeInfo(codeGroup, codeValue, "NM");
 	}
 

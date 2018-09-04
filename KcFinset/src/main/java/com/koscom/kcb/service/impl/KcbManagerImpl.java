@@ -127,7 +127,7 @@ public class KcbManagerImpl implements KcbManager {
 	/*
 	 * KCB 전문 관련 START 
 	 */
-	public ReturnClass procKcbCb(KcbCreditInfoVO pInfoVO) throws Exception {
+	public ReturnClass procKcbCb(KcbCreditInfoVO pInfoVO) throws UnsupportedEncodingException, IOException {
 
 		KcbCreditInfoVO infoVO 	= pInfoVO;
 		AbstractKcbInfo kcbInfo = null;
@@ -248,7 +248,7 @@ public class KcbManagerImpl implements KcbManager {
 	 * @return boolean
 	 * @throws Exception 
 	 */
-	private boolean setDefaultCbInfo(KcbCreditInfoVO pInfo) throws Exception {
+	private boolean setDefaultCbInfo(KcbCreditInfoVO pInfo) {
 		
 		KcbCreditInfoVO info = pInfo;
 		CodeUtil code = CodeUtil.getInstance();
@@ -449,8 +449,6 @@ public class KcbManagerImpl implements KcbManager {
 					}
 				}
 			} catch (IOException e) {
-				LogUtil.error(logger,e);
-			} catch (FinsetException e) {
 				LogUtil.error(logger,e);
 			} catch (Exception e) {
 				LogUtil.error(logger,e);

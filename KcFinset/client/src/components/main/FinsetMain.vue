@@ -1,11 +1,7 @@
 <template>
   <div>
     <div id='content'>
-      <div class='block-fill credit-block'>
-        <div class='block-container'>
-          <h1>FINSET</h1>
-        </div>
-      </div>
+      <h1>FINSET MAIN</h1>
     </div>
   </div>
 </template>
@@ -19,8 +15,8 @@ export default {
   },
   component: {
   },
-  computed () {
-  },
+  // computed () {
+  // },
   beforeCreate() {
   },
   created () {
@@ -44,5 +40,5 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
-
+  h1 {text-align: center; color: #666; font-size: 5em}
 </style>

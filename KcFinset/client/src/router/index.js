@@ -14,16 +14,8 @@ export default new Router({
       component: FinsetMain
     },
     {
-      path: '/credit',
-      name: 'CreditMain',
-      component: CreditMain,
-      children: [
-        // {
-        //   path: 'notice',
-        //   alias: '/notice',
-        //   component: Notice
-        // }
-      ]
+      path: '/creditMain',
+      component: CreditMain
     }
   ]
 })

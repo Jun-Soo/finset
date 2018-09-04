@@ -1,13 +1,20 @@
 <template>
   <div id="app">
-    <!-- <MainHeader></MainHeader> -->
+    <FinsetHeader></FinsetHeader>
     <router-view/>
+    <FinsetBottom></FinsetBottom>
   </div>
 </template>
 
 <script>
+import  FinsetHeader  from   './components/common/FinsetHeader'
+import  FinsetBottom  from   './components/common/FinsetBottom'
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    FinsetHeader: FinsetHeader,
+    FinsetBottom: FinsetBottom
+  }
 }
 </script>
 

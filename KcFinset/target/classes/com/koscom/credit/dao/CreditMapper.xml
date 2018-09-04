@@ -3,12 +3,12 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.koscom.credit.dao.CreditMapper">
-	
+
 	<select id="getCreditInfoNextSeq" resultType="java.lang.String">
 		/* com.koscom.credit.dao.CreditMapper.getCreditInfoNextSeq */
 		SELECT SEQ_CREDIT_INFO.NEXTVAL AS SEQ_ FROM DUAL
 	</select>
-	
+
 	<select id="selectResDt" parameterType="java.lang.String" resultType="java.lang.String">
 		/* com.koscom.credit.dao.CreditMapper.getCreditInfoNextSeq */
 		SELECT TO_CHAR(MAX(DT_FRT), 'YYYYMMDD')
@@ -16,7 +16,7 @@
 		 WHERE NO_PERSON = #{noPerson}
 		   AND NM_IF = '300'
 	</select>
-	
+
 	<insert id="saveCredit" parameterType="com.koscom.domain.CreditInfo">
 		/* com.koscom.credit.dao.CreditMapper.saveCredit */
 		INSERT INTO CREDIT_INFO
@@ -39,7 +39,7 @@
 				, SYSDATE
 			)
 	</insert>
-	
+
 	<select id="getCreditMainBaseInfo" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
 	    /* com.koscom.credit.dao.CreditMapper.getCreditMainBaseInfo */
 	    SELECT
@@ -74,7 +74,7 @@
 					AND A.REQ_YYYYMM =  TO_CHAR(SYSDATE,'YYYYMM')
 			) TB
 	</select>
-	
+
 	<select id="getCreditMainCntInfo" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
 	    /* com.koscom.credit.dao.CreditMapper.getCreditMainCntInfo */
 	    SELECT
@@ -95,7 +95,7 @@
 		WHERE
 			A.NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</select>
-	
+
 	<select id="getCreditDetailGradeChartList" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
 	<![CDATA[
 		/* com.koscom.credit.dao.CreditMapper.getCreditDetailGradeChartList */
@@ -185,8 +185,99 @@
 		ORDER BY
 			DT_INFO DESC
 	</select>
-	
-	<!-- kcb전문 송수신 이력조회 -->	
+
+	<resultMap id="result_creditInfo_map" type="java.util.HashMap">
+		<result property="cnt_card_open" column="CNT_CARD_OPEN" javaType="java.lang.String" />
+		<result property="list_card_open" column="LIST_CARD_OPEN" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="list_card_use" column="LIST_CARD_USE" jdbcType="CLOB" javaType="java.lang.String" />
+
+		<result property="list_overdue_info" column="LIST_OVERDUE_INFO" jdbcType="CLOB" javaType="java.lang.String" />
+
+		<result property="cnt_default" column="CNT_DEFAULT" javaType="java.lang.String" />
+		<result property="cnt_public" column="CNT_PUBLIC" javaType="java.lang.String" />
+		<result property="cnt_fin_disorder" column="CNT_FIN_DISORDER" javaType="java.lang.String" />
+		<result property="list_overdue_etc" column="LIST_OVERDUE_ETC" jdbcType="CLOB" javaType="java.lang.String" />
+
+		<result property="amt_guarantee" column="AMT_GUARANTEE" javaType="java.lang.Integer" />
+		<result property="list_guarantee" column="LIST_GUARANTEE" jdbcType="CLOB" javaType="java.lang.String" />
+ 	</resultMap>
+
+	<select id="getCreditDetailJsonInfo" parameterType="java.lang.String" resultMap="result_creditInfo_map">
+	    /* com.koscom.credit.dao.CreditMapper.getCreditDetailJsonInfo */
+		SELECT CNT_CARD_OPEN, LIST_CARD_OPEN, LIST_CARD_USE <!-- 카드현황 -->
+				, LIST_OVERDUE_INFO <!-- 연체현황_연체,대지급 -->
+				, CNT_DEFAULT, CNT_PUBLIC, CNT_FIN_DISORDER, LIST_OVERDUE_ETC <!-- 연체현황_기타 -->
+				, AMT_GUARANTEE, LIST_GUARANTEE <!-- 연대보증현황 -->
+		FROM KCB_CREDIT_INFO
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</select>
+
+	<select id="getCreditDetailDEBTCreditSum" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+		/* com.koscom.credit.dao.CreditMapper.getCreditDetailDEBTCreditSum */
+	    SELECT
+			COUNT( NO_MANAGE_INFO ) AS DEBT_CNT,
+			SUM( AMT_REMAIN ) AS SUM_AMT_REMAIN,
+			SUM( AMT_CONTRACT ) AS SUM_AMT_CONTRACT
+		FROM
+			DEBT_PERSONAL_INFO
+		WHERE
+			YN_CREDIT = 'Y'
+			AND YMD_CANCEL IS NULL
+			AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND DISPLAY_YN = 'Y' /*부채 삭제 처리 추가 20180619 김휘경*/
+	</select>
+	<select id="getCreditDetailDEBTCreditList" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+		/* com.koscom.credit.dao.CreditMapper.getCreditDetailDEBTCreditList */
+	    SELECT
+			CD_FC,
+			(SELECT nm_fc FROM fc_info WHERE CD_FC = A.CD_FC) AS NM_FC,
+			TO_CHAR(TO_DATE(A.YMD_LOAN), 'YYYY.MM.DD') AS YMD_LOAN,
+			A.AMT_REMAIN,
+			A.AMT_CONTRACT
+		FROM
+			DEBT_PERSONAL_INFO A
+		WHERE
+			A.YN_CREDIT = 'Y'
+			AND A.YMD_CANCEL IS NULL
+			AND A.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND A.DISPLAY_YN = 'Y' /*부채 삭제 처리 추가 20180619 김휘경*/
+		ORDER BY
+			TO_NUMBER(A.AMT_CONTRACT) DESC, A.YMD_LOAN DESC
+	</select>
+	<select id="getCreditDetailDEBTLoanSum" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+	    /* com.koscom.credit.dao.CreditMapper.getCreditDetailDEBTLoanSum */
+		SELECT
+			COUNT( NO_MANAGE_INFO ) AS DEBT_CNT,
+			SUM( AMT_REMAIN ) AS SUM_AMT_REMAIN,
+			SUM( AMT_CONTRACT ) AS SUM_AMT_CONTRACT
+		FROM
+			DEBT_PERSONAL_INFO
+		WHERE
+			YN_LOAN = 'Y'
+			AND YMD_CANCEL IS NULL
+			AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND DISPLAY_YN = 'Y' /*부채 삭제 처리 추가 20180619 김휘경*/
+	</select>
+	<select id="getCreditDetailDEBTLoanList" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+		/* com.koscom.credit.dao.CreditMapper.getCreditDetailDEBTLoanList */
+	    SELECT
+			CD_FC,
+			(SELECT nm_fc FROM fc_info WHERE CD_FC = A.CD_FC) AS NM_FC,
+			TO_CHAR(TO_DATE(A.YMD_LOAN), 'YYYY.MM.DD') AS YMD_LOAN,
+			A.AMT_REMAIN,
+			A.AMT_CONTRACT
+		FROM
+			DEBT_PERSONAL_INFO A
+		WHERE
+			A.YN_LOAN = 'Y'
+			AND A.YMD_CANCEL IS NULL
+			AND A.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND A.DISPLAY_YN = 'Y' /*부채 삭제 처리 추가 20180619 김휘경*/
+		ORDER BY
+			TO_NUMBER(A.AMT_CONTRACT) DESC, A.YMD_LOAN DESC
+	</select>
+
+	<!-- kcb전문 송수신 이력조회 -->
 	<resultMap id="result_lob_map" type="java.util.HashMap">
 		<result property="seq" column="seq" javaType="java.lang.String" />
 		<result property="dt_frt" column="dt_frt" javaType="java.lang.String" />
@@ -209,7 +300,7 @@
 		) RESULT
 		WHERE ROWNUM = 1
 	</select>
-	
+
 	<update id="deleteKcbCb" parameterType="java.lang.String">
 	    /* com.koscom.credit.dao.CreditMapper */
 	    DELETE FROM CREDIT_INFO

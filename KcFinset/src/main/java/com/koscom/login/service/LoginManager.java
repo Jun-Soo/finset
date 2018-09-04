@@ -177,8 +177,8 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 			/*
 			String linkUrl = (String)session.getAttribute("linkUrl");
 		    if(!StringUtil.isEmpty(linkUrl)) session.removeAttribute("linkUrl");
-		    */
 			response.sendRedirect(ResUtil.getPath(request) + "/index.html?linkUrl="+linkUrl);
+			*/
 			
 		}
 	}

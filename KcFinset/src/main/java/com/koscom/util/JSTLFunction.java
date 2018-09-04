@@ -522,23 +522,23 @@ public class JSTLFunction {
 		}
     	return rtn_num;
 	}
-//
-//    public static String formatNumberMan(String number) {
-//    	String rtn_num = null;
-//    	int intNumber = NumberUtil.stringToInt(number);
-//    	double dblNumber = 0.0;
-//    	String test;
-//    	try {
-//    	    dblNumber = Math.round(intNumber/1000)/10;
-//    		test = Double.toString(dblNumber);
-//    		rtn_num = NumberUtil.formatNumber(test,NumberUtil.CURRENCY_NO_DECIMALPOINT);
-//		} catch (ParseException e) {
-//			rtn_num = "0";
-//		}
-//
-//    	return rtn_num;
-//	}
-//
+
+    public static String formatNumberMan(String number) {
+    	String rtn_num = null;
+    	int intNumber = NumberUtil.stringToInt(number);
+    	double dblNumber = 0.0;
+    	String test;
+    	try {
+    	    dblNumber = Math.round(intNumber/1000)/10;
+    		test = Double.toString(dblNumber);
+    		rtn_num = NumberUtil.formatNumber(test,NumberUtil.CURRENCY_NO_DECIMALPOINT);
+		} catch (ParseException e) {
+			rtn_num = "0";
+		}
+
+    	return rtn_num;
+	}
+
 //	public static String formatNumberThUint(String pNumber) {
 //    	String rtn_num = null;
 //        String number = pNumber;

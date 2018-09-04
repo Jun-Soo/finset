@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.finset.dao.FinsetMapper">
+    <select id="listSearchGoods" parameterType="com.koscom.finset.model.FinsetForm" resultType="com.koscom.finance.model.TxFcReceiveVO">
+        /* com.koscom.loan.dao.FinsetMapper.listSearchGoods*/
+        WITH TX_FC_R AS
+        (
+            SELECT  TFR.NO_BUNCH      AS NO_BUNCH
+                  , TFR.NO_PERSON     AS NO_PERSON
+                  , TFR.NO_PREPARE    AS NO_PREPARE
+                  , TFR.CD_FC
+                  , TFR.NO_FC_REQ     AS NO_FC_REQ
+                  , TFR.NO_EDOC       AS NO_EDOC
+                  , TFR.CD_GOODS
+                  , TFR.YN_LOAN       AS YN_LOAN
+                  , GI.CD_LOAN_TERM   AS YEAR_TERM
+                  , TFR.RTO_LOAN      AS RTO_LOAN
+                  , TFR.AMT_LIMIT     AS AMT_LIMIT
+                  , TFR.ETC_FIELD     AS ETC_FIELD
+                  , TO_CHAR(TFR.DT_RECEIVE,'YYYYMMDD')     AS DT_RECEIVE
+                  , TFR.YN_RECEIVE    AS YN_RECEIVE
+                  , TFR.HD_CD_PARTNER_CODE AS HD_CD_PARTNER_CODE
+                  , TFR.REASON        AS REASON
+                  , TFR.ID_FRT        AS ID_FRT
+                  , TFR.DT_FRT        AS DT_FRT
+                  , TFR.ID_LST        AS ID_LST
+                  , TFR.DT_LST        AS DT_LST
+                  , PI.CD_GOODS_GUBUN AS CD_GOODS_GUBUN
+                  , FI.NM_FC          AS NM_FC
+                  , GI.NM_GOODS       AS NM_GOODS
+                  , GI.CD_TYPE_INTEREST AS CD_TYPE_INTEREST
+                  , GI.CD_TYPE_PAY    AS CD_TYPE_PAY
+                  , TFR.CD_STATUS     AS CD_STATUS
+              FROM  TX_FC_RECEIVE TFR
+                  , GOODS_INFO   GI
+                  , PREPARE_INFO PI
+                  , FC_INFO      FI
+                  , (SELECT MAX(DT_RECEIVE) DT_RECEIVE
+                           ,TFR.CD_GOODS    CD_GOODS
+                           ,TFR.CD_FC       CD_FC
+                       FROM TX_FC_RECEIVE TFR
+                           ,PREPARE_INFO PI
+                           ,GOODS_INFO GI
+                      WHERE DT_RECEIVE IS NOT NULL
+                        AND TFR.NO_PREPARE = PI.NO_PREPARE
+                        AND TO_CHAR(PI.DT_FRT, 'YYYYMMDD') = TO_CHAR(SYSDATE, 'YYYYMMDD')
+                        <if test="@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods_gubun) and @com.koscom.util.MybatisUtil@isEmpty(cd_goods_gubun2)">
+                        AND PI.CD_GOODS_GUBUN = #{ cd_goods_gubun, jdbcType=VARCHAR } <!-- '01':신용대출(직장인) '02':신용대출(사업자) '03':담보대출(주택)-->
+                        </if>
+                        <if test="@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods_gubun) and @com.koscom.util.MybatisUtil@isNotEmpty(cd_goods_gubun2)">
+                        AND (PI.CD_GOODS_GUBUN = #{ cd_goods_gubun, jdbcType=VARCHAR } or PI.CD_GOODS_GUBUN = #{ cd_goods_gubun2, jdbcType=VARCHAR })
+                        </if>
+                    <if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_bunch)">
+                        AND TFR.NO_BUNCH = #{no_bunch , jdbcType=VARCHAR}
+                    </if>
+                    <if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_person)">
+                        AND TFR.NO_PERSON = #{no_person , jdbcType=VARCHAR}
+                    </if>
+                        AND TFR.CD_FC     = GI.CD_FC
+                        AND TFR.CD_GOODS  = GI.CD_GOODS
+                        AND (    (     TFR.CD_STATUS = '01' /* 정상 */
+                                   AND (     GI.YN_ZERO_RATIO = 'N' /*N인경우 이율이 0일때 화면에 안보여진다.*/
+                                         AND TFR.RTO_LOAN  <![CDATA[>]]>  0
+                                       )
+                                       OR GI.YN_ZERO_RATIO = 'Y' /*N인경우 이율이 0일때 화면에 안보여진다.*/
+                                 )
+                              OR TFR.CD_STATUS  <![CDATA[<>]]>  '01' /* 정상 */
+                              /* 페퍼 '0010471'*/
+                            )
+                        /*AND GI.YN_USE = 'Y'*/
+                      GROUP BY TFR.CD_GOODS,TFR.CD_FC
+                    ) MX
+              WHERE TFR.CD_GOODS   = MX.CD_GOODS
+                AND TFR.DT_RECEIVE = MX.DT_RECEIVE
+                AND TFR.NO_PREPARE = PI.NO_PREPARE
+                AND TFR.CD_GOODS   = GI.CD_GOODS
+                AND TFR.CD_FC      = GI.CD_FC
+                AND TFR.CD_FC      = FI.CD_FC
+           <if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_bunch)">
+               AND TFR.NO_BUNCH = #{no_bunch , jdbcType=VARCHAR}
+           </if>
+           <if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_person)">
+               AND TFR.NO_PERSON = #{no_person , jdbcType=VARCHAR}
+           </if>
+           <if test="@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods_gubun) and @com.koscom.util.MybatisUtil@isEmpty(cd_goods_gubun2)">
+               AND PI.CD_GOODS_GUBUN = #{ cd_goods_gubun, jdbcType=VARCHAR } <!-- '01':신용대출(직장인) '02':신용대출(사업자) '03':담보대출(주택)-->
+           </if>
+           <if test="@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods_gubun) and @com.koscom.util.MybatisUtil@isNotEmpty(cd_goods_gubun2)">
+               AND (PI.CD_GOODS_GUBUN = #{ cd_goods_gubun, jdbcType=VARCHAR } or PI.CD_GOODS_GUBUN = #{ cd_goods_gubun2, jdbcType=VARCHAR })
+           </if>
+        )
+        SELECT
+            *
+        FROM
+            (SELECT
+                LST.NO_BUNCH
+                , LST.NO_PERSON
+                , LST.NO_PREPARE
+                , LST.CD_FC
+                , LST.NO_FC_REQ
+                , LST.NO_EDOC
+                , LST.CD_GOODS
+                , LST.YN_LOAN
+                , LST.YEAR_TERM
+                , LST.RTO_LOAN
+                , LST.AMT_LIMIT
+                , LST.ETC_FIELD
+                , LST.DT_RECEIVE
+                , LST.YN_RECEIVE
+                , LST.HD_CD_PARTNER_CODE
+                , LST.REASON
+                , LST.ID_FRT
+                , LST.DT_FRT
+                , LST.ID_LST
+                , LST.DT_LST
+                , LST.CD_GOODS_GUBUN
+                , LST.NM_FC
+                , LST.NM_GOODS
+                , LST.CD_TYPE_INTEREST
+                , LST.CD_TYPE_PAY
+                , LST.APPLY_CNT
+                , LST.CD_STATUS
+                , ROWNUM RNUM
+             FROM
+                (
+                SELECT AA.NO_BUNCH
+                      , AA.NO_PERSON
+                      , AA.NO_PREPARE
+                      , AA.CD_FC
+                      , AA.NO_FC_REQ
+                      , AA.NO_EDOC
+                      , AA.CD_GOODS
+                      , AA.YN_LOAN
+                      , AA.YEAR_TERM
+                      , AA.RTO_LOAN
+                      , AA.AMT_LIMIT
+                      , AA.ETC_FIELD
+                      , AA.DT_RECEIVE
+                      , AA.YN_RECEIVE
+                      , AA.HD_CD_PARTNER_CODE
+                      , AA.REASON
+                      , AA.ID_FRT
+                      , AA.DT_FRT
+                      , AA.ID_LST
+                      , AA.DT_LST
+                      , AA.CD_GOODS_GUBUN
+                      , AA.NM_FC
+                      , AA.NM_GOODS
+                      , AA.CD_TYPE_INTEREST
+                      , AA.CD_TYPE_PAY
+                      , AA.CD_STATUS
+                      , ( SELECT COUNT(AI.NO_BUNCH)
+                          FROM APPLY_INFO AI
+                          WHERE AI.NO_BUNCH = AA.NO_BUNCH
+                            AND AI.CD_GOODS = AA.CD_GOODS
+                          ) AS APPLY_CNT
+                  FROM (  SELECT * FROM TX_FC_R
+						  UNION ALL
+						  SELECT MAX(TFT.NO_BUNCH)      AS NO_BUNCH
+							   , MAX(TFT.NO_PERSON)     AS NO_PERSON
+							   , ''    AS NO_PREPARE
+							   , GI.CD_FC
+							   , MAX(TFT.NO_FC_REQ)     AS NO_FC_REQ
+							   , ''     AS NO_EDOC
+							   , GI.CD_GOODS
+							   , 'N'      AS YN_LOAN
+							   , MAX(GI.CD_LOAN_TERM)     AS YEAR_TERM
+							   , 0      AS RTO_LOAN
+							   , 0      AS AMT_LIMIT
+							   , ''     AS ETC_FIELD
+							   , ''     AS DT_RECEIVE
+							   , ''     AS YN_RECEIVE
+							   , ''     AS HD_CD_PARTNER_CODE
+							   , ''     AS REASON
+							   , MAX(TFT.ID_FRT)        AS ID_FRT
+							   , MAX(TFT.DT_FRT)        AS DT_FRT
+							   , MAX(TFT.ID_LST)        AS ID_LST
+							   , MAX(TFT.DT_LST)        AS DT_LST
+							   , '' AS CD_GOODS_GUBUN
+							   , MAX(FI.NM_FC)          AS NM_FC
+							   , MAX(GI.NM_GOODS)       AS NM_GOODS
+							   , MAX(GI.CD_TYPE_INTEREST) AS CD_TYPE_INTEREST
+							   , MAX(GI.CD_TYPE_PAY) AS CD_TYPE_PAY
+                               ,'01' CD_STATUS
+						  FROM TX_FC_TRANSMIT TFT
+							  ,TX_FC_GOODS    TFG
+							  ,GOODS_INFO     GI
+							  ,FC_INFO        FI
+						  WHERE GI .CD_GOODS = TFG.CD_GOODS
+							AND TFT.NO_BUNCH = TFG.NO_BUNCH
+							AND GI .CD_FC    = FI.CD_FC
+							AND TO_CHAR( TFT.DT_FRT, 'YYYYMMDD' ) = TO_CHAR( SYSDATE, 'YYYYMMDD' )
+							AND 1 <![CDATA[>]]> (SELECT COUNT(*) FROM TX_FC_R R WHERE R.CD_FC = '0010471') /*페퍼*/
+		                    AND GI.CD_FC = '0010471'/*페퍼*/
+						  GROUP BY GI.CD_FC, GI.CD_GOODS
+		              ) AA
+                 ) LST
+            WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+            )
+        WHERE RNUM >= #{startPosition, jdbcType=NUMERIC}
+    </select>
+
+    <select id="listSearchGoodsCount" parameterType="com.koscom.finset.model.FinsetForm" resultType="int">
+        /* com.koscom.loan.dao.FinsetMapper.listSearchGoodsCount*/
+        WITH TX_FC_R AS
+        (
+            SELECT  TFR.NO_BUNCH      AS NO_BUNCH
+                  , TFR.NO_PERSON     AS NO_PERSON
+                  , TFR.NO_PREPARE    AS NO_PREPARE
+                  , TFR.CD_FC
+                  , TFR.NO_FC_REQ     AS NO_FC_REQ
+                  , TFR.NO_EDOC       AS NO_EDOC
+                  , TFR.CD_GOODS
+                  , TFR.YN_LOAN       AS YN_LOAN
+                  , GI.CD_LOAN_TERM   AS YEAR_TERM
+                  , TFR.RTO_LOAN      AS RTO_LOAN
+                  , TFR.AMT_LIMIT     AS AMT_LIMIT
+                  , TFR.ETC_FIELD     AS ETC_FIELD
+                  , TO_CHAR(TFR.DT_RECEIVE,'YYYYMMDD')     AS DT_RECEIVE
+                  , TFR.YN_RECEIVE    AS YN_RECEIVE
+                  , TFR.HD_CD_PARTNER_CODE AS HD_CD_PARTNER_CODE
+                  , TFR.REASON        AS REASON
+                  , TFR.ID_FRT        AS ID_FRT
+                  , TFR.DT_FRT        AS DT_FRT
+                  , TFR.ID_LST        AS ID_LST
+                  , TFR.DT_LST        AS DT_LST
+                  , PI.CD_GOODS_GUBUN AS CD_GOODS_GUBUN
+                  , FI.NM_FC          AS NM_FC
+                  , GI.NM_GOODS       AS NM_GOODS
+                  , GI.CD_TYPE_INTEREST AS CD_TYPE_INTEREST
+                  , GI.CD_TYPE_PAY    AS CD_TYPE_PAY
+                  , TFR.CD_STATUS     AS CD_STATUS
+              FROM  TX_FC_RECEIVE TFR
+                  , GOODS_INFO   GI
+                  , PREPARE_INFO PI
+                  , FC_INFO      FI
+                  , (SELECT MAX(DT_RECEIVE) DT_RECEIVE
+                           ,TFR.CD_GOODS    CD_GOODS
+                           ,TFR.CD_FC       CD_FC
+                       FROM TX_FC_RECEIVE TFR
+                           ,PREPARE_INFO PI
+                           ,GOODS_INFO GI
+                      WHERE DT_RECEIVE IS NOT NULL
+                        AND TFR.NO_PREPARE = PI.NO_PREPARE
+                        AND TO_CHAR(PI.DT_FRT, 'YYYYMMDD') = TO_CHAR(SYSDATE, 'YYYYMMDD')
+                        <if test="@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods_gubun) and @com.koscom.util.MybatisUtil@isEmpty(cd_goods_gubun2)">
+                        AND PI.CD_GOODS_GUBUN = #{ cd_goods_gubun, jdbcType=VARCHAR } <!-- '01':신용대출(직장인) '02':신용대출(사업자) '03':담보대출(주택)-->
+                        </if>
+                        <if test="@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods_gubun) and @com.koscom.util.MybatisUtil@isNotEmpty(cd_goods_gubun2)">
+                        AND (PI.CD_GOODS_GUBUN = #{ cd_goods_gubun, jdbcType=VARCHAR } or PI.CD_GOODS_GUBUN = #{ cd_goods_gubun2, jdbcType=VARCHAR })
+                        </if>
+                    <if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_bunch)">
+                        AND TFR.NO_BUNCH = #{no_bunch , jdbcType=VARCHAR}
+                    </if>
+                    <if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_person)">
+                        AND TFR.NO_PERSON = #{no_person , jdbcType=VARCHAR}
+                    </if>
+                        AND TFR.CD_FC     = GI.CD_FC
+                        AND TFR.CD_GOODS  = GI.CD_GOODS
+                        AND (    (     TFR.CD_STATUS = '01' /* 정상 */
+                                   AND (     GI.YN_ZERO_RATIO = 'N' /*N인경우 이율이 0일때 화면에 안보여진다.*/
+                                         AND TFR.RTO_LOAN  <![CDATA[>]]>  0
+                                       )
+                                       OR GI.YN_ZERO_RATIO = 'Y' /*N인경우 이율이 0일때 화면에 안보여진다.*/
+                                 )
+                              OR TFR.CD_STATUS  <![CDATA[<>]]>  '01' /* 정상 */
+                              /* 페퍼 '0010471'*/
+                            )
+                        /*AND GI.YN_USE = 'Y'*/
+                      GROUP BY TFR.CD_GOODS,TFR.CD_FC
+                    ) MX
+              WHERE TFR.CD_GOODS   = MX.CD_GOODS
+                AND TFR.DT_RECEIVE = MX.DT_RECEIVE
+                AND TFR.NO_PREPARE = PI.NO_PREPARE
+                AND TFR.CD_GOODS   = GI.CD_GOODS
+                AND TFR.CD_FC      = GI.CD_FC
+                AND TFR.CD_FC      = FI.CD_FC
+           <if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_bunch)">
+               AND TFR.NO_BUNCH = #{no_bunch , jdbcType=VARCHAR}
+           </if>
+           <if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_person)">
+               AND TFR.NO_PERSON = #{no_person , jdbcType=VARCHAR}
+           </if>
+        )
+        SELECT COUNT(*) AS recordCount
+          FROM (
+               SELECT AA.NO_BUNCH
+                 FROM (  SELECT NO_BUNCH FROM TX_FC_R
+						  UNION ALL
+						  SELECT MAX(TFT.NO_BUNCH)      AS NO_BUNCH
+						  FROM TX_FC_TRANSMIT TFT
+							  ,TX_FC_GOODS    TFG
+							  ,GOODS_INFO     GI
+							  ,FC_INFO        FI
+						  WHERE GI .CD_GOODS = TFG.CD_GOODS
+							AND TFT.NO_BUNCH = TFG.NO_BUNCH
+							AND GI .CD_FC    = FI.CD_FC
+							AND TO_CHAR( TFT.DT_FRT, 'YYYYMMDD' ) = TO_CHAR( SYSDATE, 'YYYYMMDD' )
+							AND 1 <![CDATA[>]]> (SELECT COUNT(*) FROM TX_FC_R R WHERE R.CD_FC = '0010471') /*페퍼*/
+		                    AND GI.CD_FC = '0010471'/*페퍼*/
+						  GROUP BY GI.CD_FC, GI.CD_GOODS
+		              ) AA
+               )
+    </select>
+</mapper>

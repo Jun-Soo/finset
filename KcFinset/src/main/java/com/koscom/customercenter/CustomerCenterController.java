@@ -3,6 +3,7 @@ package com.koscom.customercenter;
 import java.io.IOException;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -12,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,8 @@ import com.koscom.debt.service.DebtManager;
 import com.koscom.domain.CreditInfo;
 import com.koscom.domain.PersonShareInfo;
 import com.koscom.domain.PersonShareMessageInfo;
+import com.koscom.finset.model.FinsetForm;
+import com.koscom.finset.service.FinsetManager;
 import com.koscom.person.model.PersonShareInfoForm;
 import com.koscom.person.model.PersonShareInfoVO;
 import com.koscom.person.model.PersonVO;
@@ -47,6 +51,12 @@ public class CustomerCenterController{
 
 	@Autowired
 	DebtManager debtManager;
+	
+	@Autowired
+	FinsetManager finsetManager;
+	
+	@Resource
+	Environment environment;
 
 	/**
 	 * 마이페이지 메인
@@ -619,6 +629,31 @@ public class CustomerCenterController{
 
 		logger.info("공유관리 상세");
 		return "/customercenter/frameShareInfoDetail";
+	}
+	
+	/**
+	 * 마이페이지 조회결과
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/frameCustomerViewResults.crz")
+	public String frameCustomerViewResults(HttpServletRequest request, Model model, HttpSession session, FinsetForm finsetForm) {
+
+		//고객번호 조회
+		String no_person = (String) session.getAttribute("no_person");
+		finsetForm.setNo_person(no_person);
+		finsetForm.setPage(finsetForm.getPage());
+		finsetForm.setCd_goods_gubun("01");//Default 조회 설정
+		finsetForm.setCd_goods_gubun2("02");
+		
+		String site = (environment != null)?environment.getProperty("service.profile"):"";
+		model.addAttribute("site", site);
+
+		Pagination pagedList = (Pagination) finsetForm.setPagedList(finsetManager.listSearchGoods(finsetForm), finsetManager.listSearchGoodsCount(finsetForm));
+		model.addAttribute("pagedList", pagedList);
+
+		return "/customercenter/frameCustomerViewResults";
 	}
 
 }

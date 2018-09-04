@@ -212,6 +212,71 @@
 		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</select>
 
+	<select id="getCreditDetailDEBTCreditSum" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+		/* com.koscom.credit.dao.CreditMapper.getCreditDetailDEBTCreditSum */
+	    SELECT
+			COUNT( NO_MANAGE_INFO ) AS DEBT_CNT,
+			SUM( AMT_REMAIN ) AS SUM_AMT_REMAIN,
+			SUM( AMT_CONTRACT ) AS SUM_AMT_CONTRACT
+		FROM
+			DEBT_PERSONAL_INFO
+		WHERE
+			YN_CREDIT = 'Y'
+			AND YMD_CANCEL IS NULL
+			AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND DISPLAY_YN = 'Y' /*부채 삭제 처리 추가 20180619 김휘경*/
+	</select>
+	<select id="getCreditDetailDEBTCreditList" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+		/* com.koscom.credit.dao.CreditMapper.getCreditDetailDEBTCreditList */
+	    SELECT
+			CD_FC,
+			(SELECT nm_fc FROM fc_info WHERE CD_FC = A.CD_FC) AS NM_FC,
+			TO_CHAR(TO_DATE(A.YMD_LOAN), 'YYYY.MM.DD') AS YMD_LOAN,
+			A.AMT_REMAIN,
+			A.AMT_CONTRACT
+		FROM
+			DEBT_PERSONAL_INFO A
+		WHERE
+			A.YN_CREDIT = 'Y'
+			AND A.YMD_CANCEL IS NULL
+			AND A.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND A.DISPLAY_YN = 'Y' /*부채 삭제 처리 추가 20180619 김휘경*/
+		ORDER BY
+			TO_NUMBER(A.AMT_CONTRACT) DESC, A.YMD_LOAN DESC
+	</select>
+	<select id="getCreditDetailDEBTLoanSum" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+	    /* com.koscom.credit.dao.CreditMapper.getCreditDetailDEBTLoanSum */
+		SELECT
+			COUNT( NO_MANAGE_INFO ) AS DEBT_CNT,
+			SUM( AMT_REMAIN ) AS SUM_AMT_REMAIN,
+			SUM( AMT_CONTRACT ) AS SUM_AMT_CONTRACT
+		FROM
+			DEBT_PERSONAL_INFO
+		WHERE
+			YN_LOAN = 'Y'
+			AND YMD_CANCEL IS NULL
+			AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND DISPLAY_YN = 'Y' /*부채 삭제 처리 추가 20180619 김휘경*/
+	</select>
+	<select id="getCreditDetailDEBTLoanList" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+		/* com.koscom.credit.dao.CreditMapper.getCreditDetailDEBTLoanList */
+	    SELECT
+			CD_FC,
+			(SELECT nm_fc FROM fc_info WHERE CD_FC = A.CD_FC) AS NM_FC,
+			TO_CHAR(TO_DATE(A.YMD_LOAN), 'YYYY.MM.DD') AS YMD_LOAN,
+			A.AMT_REMAIN,
+			A.AMT_CONTRACT
+		FROM
+			DEBT_PERSONAL_INFO A
+		WHERE
+			A.YN_LOAN = 'Y'
+			AND A.YMD_CANCEL IS NULL
+			AND A.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND A.DISPLAY_YN = 'Y' /*부채 삭제 처리 추가 20180619 김휘경*/
+		ORDER BY
+			TO_NUMBER(A.AMT_CONTRACT) DESC, A.YMD_LOAN DESC
+	</select>
+
 	<!-- kcb전문 송수신 이력조회 -->
 	<resultMap id="result_lob_map" type="java.util.HashMap">
 		<result property="seq" column="seq" javaType="java.lang.String" />

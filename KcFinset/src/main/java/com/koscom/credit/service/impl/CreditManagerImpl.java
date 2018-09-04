@@ -55,6 +55,23 @@ public class CreditManagerImpl implements CreditManager {
 		return creditMapper.getCreditDetailJsonInfo(no_person);
 	}
 
+	@Override
+	public CreditInfo getCreditDetailDEBTCreditSum(String no_person) {
+		return creditMapper.getCreditDetailDEBTCreditSum(no_person);
+	}
+	@Override
+	public List<CreditInfo> getCreditDetailDEBTCreditList(String no_person) {
+		return creditMapper.getCreditDetailDEBTCreditList(no_person);
+	}
+	@Override
+	public CreditInfo getCreditDetailDEBTLoanSum(String no_person) {
+		return creditMapper.getCreditDetailDEBTLoanSum(no_person);
+	}
+	@Override
+	public List<CreditInfo> getCreditDetailDEBTLoanList(String no_person) {
+		return creditMapper.getCreditDetailDEBTLoanList(no_person);
+	}
+
 	public HashMap<String, String> getKcbInfoCLOB(HashMap<String, String> searchMap) {
 		return creditMapper.getKcbInfoCLOB(searchMap);
 	}

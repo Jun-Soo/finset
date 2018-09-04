@@ -51,4 +51,14 @@ public interface CreditManager {
 	 * @return HashMap<String, String>
 	 */
 	HashMap<String, String> getCreditDetailJsonInfo(String no_person);
+
+	/**
+	 * 신용관리_대출현황
+	 * @param no_person
+	 * @return
+	 */
+	CreditInfo getCreditDetailDEBTCreditSum(String no_person);
+	List<CreditInfo> getCreditDetailDEBTCreditList(String no_person);
+	CreditInfo getCreditDetailDEBTLoanSum(String no_person);
+	List<CreditInfo> getCreditDetailDEBTLoanList(String no_person);
 }

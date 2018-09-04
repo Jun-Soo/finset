@@ -14,7 +14,6 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.simple.parser.ParseException;
@@ -31,15 +30,15 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.koscom.credit.service.CreditManager;
 import com.koscom.domain.CreditInfo;
-import com.koscom.domain.PersonShareMessageInfo;
 import com.koscom.env.service.CodeManager;
-import com.koscom.person.model.PersonShareInfoVO;
+import com.koscom.kcb.model.KcbCreditInfoVO;
+import com.koscom.kcb.model.Kcb_600420;
+import com.koscom.kcb.service.KcbManager;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
 import com.koscom.scrap.service.ScrapManager;
 import com.koscom.util.Constant;
 import com.koscom.util.DateUtil;
-import com.koscom.util.FcmUtil;
 import com.koscom.util.FinsetException;
 import com.koscom.util.LogUtil;
 import com.koscom.util.ReturnClass;
@@ -61,6 +60,9 @@ public class CreditController {
     CreditManager creditManager;
 
     @Autowired
+    private KcbManager kcbManager;
+
+    @Autowired
     ScrapManager scrapManager;
 
     @Autowired
@@ -70,9 +72,11 @@ public class CreditController {
 
     /**
      * 신용관리 메인
-     * @param model
      * @param request
-     * @return
+     * @param session
+     * @param model
+     * @return String
+     * @throws UnsupportedEncodingException, FinsetException, IOException
      */
     @RequestMapping("/CreditInfoMain.json")
     public String creditInfoMain(
@@ -118,9 +122,11 @@ public class CreditController {
 
     /**
      * 신용관리 메인
-     * @param model
      * @param request
-     * @return
+     * @param session
+     * @param model
+     * @return String
+     * @throws UnsupportedEncodingException, FinsetException, IOException
      */
     @RequestMapping("/frameCreditInfoMain.crz")
     public String frameCreditInfoMain(
@@ -130,8 +136,6 @@ public class CreditController {
 
         String      no_person   = (String)session.getAttribute("no_person");
         String		auto_Scrap	= (String)session.getAttribute("AutoScrap");
-
-        String rtnPage = "";
 
         model.addAttribute("noPerson", no_person);
         model.addAttribute("baseInfo", creditManager.getCreditMainBaseInfo(no_person));
@@ -223,14 +227,75 @@ public class CreditController {
     }
 
     /**
+     * 신용관리 스마트리포트
+     * @param request
+     * @param session
+     * @param model
+     * @return String
+     * @throws UnsupportedEncodingException,FinsetException,IOException
+     */
+    @RequestMapping("/frameCreditSmartReportInfo.crz")
+    public String frameCreditSmartReportInfo(HttpServletRequest request, HttpSession session, Model model) throws UnsupportedEncodingException,FinsetException,IOException {
+
+        String      no_person   = (String)session.getAttribute("no_person");
+        PersonVO    vo          = personManager.getPersonInfo(no_person);
+
+        String rtnPage = "";
+        String profile = environment.getProperty("service.profile");
+
+        if(!"LOCAL".equals(profile)) {
+
+        	//1. 600전문 신용정보 URL 조회 (DEV, REAL)
+    		KcbCreditInfoVO info = new KcbCreditInfoVO();
+
+    		info.setNmIf("600420");
+
+    		info.setCd_regist("09"); // 01 신규, 09 URL
+    		info.setBgn(vo.getBgn()); // 생년월일, 성별
+    		info.setNoPerson(no_person); // 회원번호(TEST)
+    		info.setNmCust(vo.getNm_person()); // 회원명
+    		info.setDi(vo.getKcb_di()); // 회원 KCB DI
+    		info.setHp(vo.getHp()); // 회원 휴대폰번호
+
+    		info.setNmIfSub("220");
+    		info.setReq_menu_code("220"); // 200 신용관리(모바일 제휴 보고서), 210 부채관리(제휴사 가공
+    		info.setReq_view_code("s06158737277"); // s07143331300 신용관리, s02173986405 부채관리, s06158737277 신용리포트
+
+    		logger.info("[KCB ]START == \n" + info);
+
+    		ReturnClass kcbCbData = kcbManager.procKcbCb(info);
+    		if (kcbCbData != null) {
+    			logger.info("[KCB ]Data == \n" + kcbCbData.getReturnObj());
+
+    			if (info.getNmIf() != null && info.getNmIf().equals("600420")) {
+    				Object retObject = kcbCbData.getReturnObj();
+    				if (retObject != null && retObject instanceof Kcb_600420) {
+
+    					Kcb_600420 kcb_600420 = (Kcb_600420) retObject;
+    					model.addAttribute("kcbURI", kcb_600420.getKcbURI());
+    					logger.info("[KCB ]kcbURI == \n" + kcb_600420.getKcbURI());
+    				}
+    			}
+    		} else {
+    			logger.info("[KCB ]Data == \n" + kcbCbData);
+    		}
+        }
+
+		rtnPage = "/credit/frameCreditSmartReportInfo";
+
+        return rtnPage;
+    }
+
+    /**
      * 신용관리 신용등급상세
      * @param request
      * @param session
      * @param model
-     * @return
+     * @return String
+     * @throws FinsetException,IOException
      */
     @RequestMapping("/frameCreditInfoDetail.crz")
-    public String frameCreditInfoDetail(HttpServletRequest request, HttpSession session, Model model) {
+    public String frameCreditInfoDetail(HttpServletRequest request, HttpSession session, Model model) throws FinsetException,IOException {
     	String      no_person   = (String)session.getAttribute("no_person");
 
     	List<CreditInfo> chartList = creditManager.getCreditDetailGradeChartList(no_person);
@@ -293,11 +358,11 @@ public class CreditController {
      * @param request
      * @param session
      * @param model
-     * @return
-     * @throws ParseException
+     * @return String
+     * @throws FinsetException, IOException, ParseException
      */
     @RequestMapping("/frameCreditCardInfo.crz")
-    public String frameCreditCardInfo(HttpServletRequest request, HttpSession session, Model model) throws FinsetException, ParseException {
+    public String frameCreditCardInfo(HttpServletRequest request, HttpSession session, Model model) throws FinsetException, IOException, ParseException {
         String      no_person   = (String)session.getAttribute("no_person");
 
         Gson gson = new Gson();
@@ -402,6 +467,243 @@ public class CreditController {
         model.addAttribute("checkLimitTotal", checkLimitTotal);
 
         return "/credit/frameCreditCardInfo";
+    }
+
+    /**
+     * 신용관리 대출현황
+     * @param request
+     * @param session
+     * @param model
+     * @return String
+     * @throws FinsetException,IOException
+     */
+    @RequestMapping("/frameCreditLoanInfo.crz")
+    public String frameCreditLoanInfo(HttpServletRequest request, HttpSession session, Model model) throws FinsetException,IOException {
+        String      no_person   = (String)session.getAttribute("no_person");
+
+        //신용대출
+        model.addAttribute("creditSum", creditManager.getCreditDetailDEBTCreditSum(no_person));
+        model.addAttribute("creditList", creditManager.getCreditDetailDEBTCreditList(no_person));
+        //담보대출
+        model.addAttribute("loanSum", creditManager.getCreditDetailDEBTLoanSum(no_person));
+        model.addAttribute("loanList", creditManager.getCreditDetailDEBTLoanList(no_person));
+
+        return "/credit/frameCreditLoanInfo";
+    }
+
+    /**
+     * 신용관리 연체현황
+     * @param request
+     * @param session
+     * @param model
+     * @return String
+     * @throws FinsetException,IOException
+     */
+    @RequestMapping("/frameCreditOverdueInfo.crz")
+    public String frameCreditOverdueInfo(HttpServletRequest request, HttpSession session, Model model) throws FinsetException,IOException {
+        String no_person    = (String)session.getAttribute("no_person");
+
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<Map<String, String>>>() {}.getType();
+
+        HashMap<String, String> creditDetailJsonInfoMap = creditManager.getCreditDetailJsonInfo(no_person);
+
+        //연체 / 대지급 List
+        String listOverdueInfoStr = "";
+        ArrayList<Map<String, String>> listOverdueInfoGson = new ArrayList<Map<String, String>>();
+
+        //연체parameter
+        int overdueCnt = 0; //연체 건수
+        ArrayList<Map<String, String>> overdueList = new ArrayList<Map<String, String>>(); //연체list
+        int overAmtDelay = 0; //연체잔액
+
+        //대지급parameter
+        int steadCnt = 0; //대지급 건수
+        ArrayList<Map<String, String>> steadList = new ArrayList<Map<String, String>>(); //대지급list
+        int steadAmtDelay = 0; //대지급잔액
+
+        if(creditDetailJsonInfoMap != null
+        		&& (!("[]".equals(creditDetailJsonInfoMap.get("list_overdue_info"))) && creditDetailJsonInfoMap.get("list_overdue_info") != null)) {
+	        listOverdueInfoStr = creditDetailJsonInfoMap.get("list_overdue_info");
+	        listOverdueInfoGson = gson.fromJson(listOverdueInfoStr, type);
+
+	//        ArrayList<Map<String, String>> bsList = new ArrayList<Map<String, String>>(); //연체list
+	//        ArrayList<Map<String, String>> steadList = new ArrayList<Map<String, String>>(); //대지급list
+	//
+	//        //연체,대지급내역 list분리
+	//        int bsCnt = 0;
+	//        int steadCnt = 0;
+	//        for (int i = 0; i < listOverdueInfoGson.size(); i++) {
+	//            if("01".equals(listOverdueInfoGson.get(i).get("cd_type"))) {
+	//                bsList.add(bsCnt, listOverdueInfoGson.get(i));
+	//                bsCnt++;
+	//            }else{
+	//                steadList.add(steadCnt, listOverdueInfoGson.get(i));
+	//                steadCnt++;
+	//            }
+	//        }
+	//
+	//        model.addAttribute("bsCnt",bsCnt);
+	//        model.addAttribute("bsList",bsList);
+	//        model.addAttribute("steadCnt",steadCnt);
+	//        model.addAttribute("steadList",steadList);
+	//
+	//        //연체 연체잔액, 상환금액 계산
+	//        int bsAmtDelay = 0;
+	//        int bsAmtRepay = 0;
+	//        for (int i = 0; i < bsList.size(); i++) {
+	//            bsAmtDelay += Integer.parseInt(bsList.get(i).get("amt_delay"));
+	//            bsAmtRepay += Integer.parseInt(bsList.get(i).get("amt_repay"));
+	//        }
+	//        model.addAttribute("bsAmtDelay", bsAmtDelay);
+	//        model.addAttribute("bsAmtRepay", bsAmtRepay);
+	//
+	//        //대지급 대지급잔액, 상환금액 계산
+	//        int steadAmtDelay = 0;
+	//        int steadAmtRepay = 0;
+	//        for (int i = 0; i < steadList.size(); i++) {
+	//            steadAmtDelay += Integer.parseInt(steadList.get(i).get("amt_delay"));
+	//            steadAmtRepay += Integer.parseInt(steadList.get(i).get("amt_repay"));
+	//        }
+	//        model.addAttribute("steadAmtDelay", steadAmtDelay);
+	//        model.addAttribute("steadAmtRepay", steadAmtRepay);
+
+
+	      //연체, 대지급내역 날짜 순으로 정렬
+	      MapStringComparator compOverdueList = new MapStringComparator("ymd_delay");
+	      Collections.sort(listOverdueInfoGson, compOverdueList);
+
+		  //연체 / 대지급list분리
+		  for (int i = 0; i < listOverdueInfoGson.size(); i++) {
+			if("01".equals(listOverdueInfoGson.get(i).get("cd_type"))) {
+				overdueList.add(overdueCnt, listOverdueInfoGson.get(i)); //연체list
+				overAmtDelay += Math.round(Double.valueOf(listOverdueInfoGson.get(i).get("amt_delay"))/10000); //연체잔액
+				overdueCnt++; //연체건수
+			}else{
+				steadList.add(steadCnt, listOverdueInfoGson.get(i)); //대지급list
+				steadAmtDelay += Math.round(Double.valueOf(listOverdueInfoGson.get(i).get("amt_delay"))/10000); //대지급잔액
+			    steadCnt++; //대지급건수
+			}
+		  }
+      }
+
+      model.addAttribute("overdueCnt", overdueCnt);
+      model.addAttribute("overdueList", overdueList);
+      model.addAttribute("overAmtDelay", overAmtDelay);
+
+      model.addAttribute("steadCnt", steadCnt);
+      model.addAttribute("steadList", steadList);
+	  model.addAttribute("steadAmtDelay", steadAmtDelay);
+
+	  //기타내역
+      String etcCntDefault = "0"; //채무불이행 건수(DB)
+      String etcCntPublic = "0"; //공공정보 건수(DB)
+      String etcCntFinDisorder = "0"; //금융질서문란 건수(DB)
+
+      String listOverdueEtcStr = "";
+      ArrayList<Map<String, String>> listOverdueEtcGson = new ArrayList<Map<String, String>>();
+
+      //채무불이행parameter
+      int etcDefaultCnt = 0; //채무불이행 건수
+      ArrayList<Map<String, String>> etcDefaultList = new ArrayList<Map<String, String>>(); //채무불이행list
+
+      //공공정보parameter
+      int etcPublicCnt = 0; //공공정보 건수
+      ArrayList<Map<String, String>> etcPublicList = new ArrayList<Map<String, String>>(); //공공정보list
+
+      //금융질서문란parameter
+      int etcFinDisorderCnt = 0; //금융질서문란 건수
+      ArrayList<Map<String, String>> etcFinDisorderList = new ArrayList<Map<String, String>>(); //금융질서문란list
+
+      if(creditDetailJsonInfoMap != null
+    		  && (!("[]".equals(creditDetailJsonInfoMap.get("list_overdue_etc"))) && creditDetailJsonInfoMap.get("list_overdue_etc") != null)) {
+    	  etcCntDefault = creditDetailJsonInfoMap.get("cnt_default"); //채무불이행 건수(DB)
+          etcCntPublic = creditDetailJsonInfoMap.get("cnt_public"); //공공정보 건수(DB)
+          etcCntFinDisorder = creditDetailJsonInfoMap.get("cnt_fin_disorder"); //금융질서문란 건수(DB)
+
+	      listOverdueEtcStr = creditDetailJsonInfoMap.get("list_overdue_etc");
+	      listOverdueEtcGson = gson.fromJson(listOverdueEtcStr, type);
+
+	      //기타내역 날짜 순으로 정렬
+	      MapStringComparator compEtcList = new MapStringComparator("ymd_delay");
+	      Collections.sort(listOverdueEtcGson, compEtcList);
+
+	      //채무불이행 / 공공정보 / 금융질서문란list분리
+	        for (int i = 0; i < listOverdueEtcGson.size(); i++) {
+		        if("01".equals(listOverdueEtcGson.get(i).get("cd_type"))) {
+		        	etcDefaultList.add(etcDefaultCnt, listOverdueEtcGson.get(i));
+		        	etcDefaultCnt++;
+		        }else if("02".equals(listOverdueEtcGson.get(i).get("cd_type"))) {
+		        	etcPublicList.add(etcPublicCnt, listOverdueEtcGson.get(i));
+		        	etcPublicCnt++;
+		        }else{
+		            etcFinDisorderList.add(etcFinDisorderCnt, listOverdueEtcGson.get(i));
+		            etcFinDisorderCnt++;
+		        }
+	        }
+      }
+
+      model.addAttribute("etcCntDefault", etcCntDefault); //채무불이행 건수(DB)
+      model.addAttribute("etcCntPublic", etcCntPublic); //공공정보 건수(DB)
+      model.addAttribute("etcCntFinDisorder", etcCntFinDisorder); //금융질서문란 건수(DB)
+
+      //채무불이행
+      model.addAttribute("etcDefaultCnt", etcDefaultCnt);
+      model.addAttribute("etcDefaultList", etcDefaultList);
+
+      //공공정보
+      model.addAttribute("etcPublicCnt", etcPublicCnt);
+      model.addAttribute("etcPublicList", etcPublicList);
+
+      //금융질서문란
+      model.addAttribute("etcFinDisorderCnt", etcFinDisorderCnt);
+      model.addAttribute("etcFinDisorderList", etcFinDisorderList);
+
+      return "/credit/frameCreditOverdueInfo";
+    }
+
+    /**
+     * 신용관리 연대보증현황
+     * @param request
+     * @param session
+     * @param model
+     * @return String
+     * @throws FinsetException,IOException
+     */
+    @RequestMapping("/frameCreditGuaranteeInfo.crz")
+    public String frameCreditGuaranteeInfo(HttpServletRequest request, HttpSession session, Model model) throws FinsetException,IOException {
+        String no_person    = (String)session.getAttribute("no_person");
+
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<Map<String, String>>>() {}.getType();
+
+        HashMap<String, String> creditDetailJsonInfoMap = creditManager.getCreditDetailJsonInfo(no_person);
+
+        //연대보증내역
+        String listGuaranteeStr = "";
+        ArrayList<Map<String, String>> listGuaranteeGson = new ArrayList<Map<String,String>>();
+
+        //연대보증 - 보증금액sum
+        String amtGuarantee = "0";
+
+        if(creditDetailJsonInfoMap != null
+        	&& (!("[]".equals(creditDetailJsonInfoMap.get("list_guarantee"))) && creditDetailJsonInfoMap.get("list_guarantee") != null)) {
+        	amtGuarantee = creditDetailJsonInfoMap.get("amt_guarantee");
+
+	        listGuaranteeStr = creditDetailJsonInfoMap.get("list_guarantee");
+	        listGuaranteeGson = gson.fromJson(listGuaranteeStr, type);
+
+	        //연대보증내역 날짜 순으로 정렬
+	        MapStringComparator comp = new MapStringComparator("dt_guar_agree");
+	        Collections.sort(listGuaranteeGson, comp);
+        }
+
+        model.addAttribute("amtGuarantee", amtGuarantee);
+
+        model.addAttribute("guaranteeCnt",listGuaranteeGson.size());
+        model.addAttribute("guaranteeList",listGuaranteeGson);
+
+        return "/credit/frameCreditGuaranteeInfo";
     }
 
     /**

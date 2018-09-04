@@ -10,7 +10,7 @@
 <%@ include file="/WEB-INF/include/headComm.jsp"%>
 <script type="text/javascript">
 $(document).ready(function() {
-	
+
 });
 
 //리스트 조회
@@ -22,7 +22,7 @@ function goSearch(type_list) {
 // 페이지 이동
 function jumpPage(page) {
 	$("#page").val(page);
-	
+
 	var data = frmShareInfoMain.ajaxSubmit();
 	if(data == null) return false;
 	if(userAgent == "Android") {
@@ -67,7 +67,7 @@ function vLoad(id,uri,data,sync) {
 
 //공유설정화면 이동
 function goSetting(setting_mode, seq_share){
-	$("#setting_mode").val(setting_mode); 
+	$("#setting_mode").val(setting_mode);
 	$("#seq_share").val(seq_share);
 	frmShareInfoMain.action = "/m/customercenter/frameShareInfoSetting.crz";
 	frmShareInfoMain.submit();
@@ -87,7 +87,7 @@ function createNewRequest(){
 
 //모두 해지하기
 function cancelAllItems(){
-	
+
 	var data = frmShareInfoMain.ajaxSubmit();
 	if(data == null){
 		return false;
@@ -110,7 +110,7 @@ function cancelAllItems(){
 }
 
 //마이페이지 메인으로 이동
-function goCustomercenterMain(){
+function goCustomerCenterMain(){
 	frmShareInfoMain.action = "/m/customercenter/frameCustomerCenterMain.crz";
 	frmShareInfoMain.submit();
 }

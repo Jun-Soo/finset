@@ -552,10 +552,10 @@ public class JSTLFunction {
 //    	return rtn_num;
 //	}
 //
-//    public static String formatDate(String date) {
-//    	return DateUtil.formatDate(date,DateUtil.DATE_PATTERN_DASH);
-//    }
-//
+    public static String formatDate(String date) {
+    	return DateUtil.formatDate(date,DateUtil.DATE_PATTERN_DASH);
+    }
+
     public static String formatDateDot(String pDate) {
 		String result = null;
 		String date = pDate;

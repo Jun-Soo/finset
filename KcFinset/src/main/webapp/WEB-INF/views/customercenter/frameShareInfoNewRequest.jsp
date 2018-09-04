@@ -10,8 +10,8 @@
 <%@ include file="/WEB-INF/include/headComm.jsp"%>
 <script type="text/javascript">
 $(document).ready(function() {
-//test 
-//resultAddress('홍길동','01011112222');
+//test
+//resultAddress('박준수','01026882453');
 });
 
 //사용자 검색
@@ -32,7 +32,7 @@ function srcPerson(){
 function resultAddress(src_nm_person,src_hp){
 	$("#offer_nm_person").val(src_nm_person);
 	$("#offer_hp").val(src_hp);
-	
+
 }
 
 //validate체크
@@ -43,25 +43,25 @@ function validShareInfoNewReq(){
 	var assetItgtMngmChk = $("input:checkbox[id='yn_asset_itgt_mngm']").is(":checked"); //자산 체크여부
 	var consumeItgtMngmChk = $("input:checkbox[id='yn_consume_itgt_mngm']").is(":checked"); //소비 체크여부
 	var debtItgtMngmChk = $("input:checkbox[id='yn_debt_itgt_mngm']").is(":checked"); //부채 체크여부
-	
+
 	if($("#offer_hp").val() == ""){
 		toastMsg("사용자를 검색해 주세요.");
 		return false;
 	}
-	
+
 	if(!creditOfferChk && !debtOfferChk && !incomeOfferChk
 			&& !assetItgtMngmChk && !consumeItgtMngmChk && !debtItgtMngmChk){
 		toastMsg("항목을 선택해 주세요.");
 		return false;
 	}
-	
+
 	return true;
 }
 
 //공유요청
 function createShareInfo(){
 	if(!validShareInfoNewReq()) return false;
-	
+
 	var data = frmShareInfoNewRequest.ajaxSubmit();
 	if(data == null){
 		return false;
@@ -74,9 +74,9 @@ function createShareInfo(){
 		type : "POST",
 		success : function (result) {
 			toastMsg(result.message);
-			if("00" == result.cdResult){ 
-				$("#seq_share").val(result.seq_share); 
-				
+			if("00" == result.cdResult){
+				$("#seq_share").val(result.seq_share);
+
 				sendMsg(result.typeMessage, result.req_nm_person);
 			}
 		},
@@ -85,7 +85,7 @@ function createShareInfo(){
 
 		}
 	});
-	
+
 }
 
 //sms, push메세지 발송
@@ -93,12 +93,12 @@ function sendMsg(typeMessage, req_nm_person){
 	if("sms" == typeMessage){ //sms보내기
 		var offer_hp = $("#offer_hp").val();
 		var msg;
-		
+
 		msg = req_nm_person+"님으로부터 공유요청이 왔습니다. \n"
 		msg += "아래의 링크를 선택하여 FINSET을 \n"
 		msg += "설치하시기 바랍니다. \n"
 		msg += "https://play.google.com/store/apps/details?id=com.app.kc.koscom"
-		
+
 		if(userAgent == "Android") {
 			window.Android.sendSms(offer_hp, msg);
 		}else if(userAgent == "iOS"){
@@ -134,9 +134,9 @@ function sendMsg(typeMessage, req_nm_person){
 
 function resultSendSms(resultVal){
 	if("00000000" == resultVal){
-		
+
 		toastMsg("문자발송에 성공했습니다.");
-		
+
 		var data = frmShareInfoNewRequest.ajaxSubmit();
 		if(data == null){
 			return false;
@@ -161,7 +161,7 @@ function resultSendSms(resultVal){
 
 			}
 		});
-		
+
 		goShareInfoMain();
 	}else{
 		toastMsg("문자발송에 실패했습니다.");
@@ -172,7 +172,7 @@ function resultSendSms(resultVal){
 //공유관리 메인으로 이동
 function goShareInfoMain(){
 	$("#type_list").val('offer');
-		
+
 	frmShareInfoNewRequest.action = "/m/customercenter/frameShareInfoMain.crz";
 	frmShareInfoNewRequest.submit();
 }
@@ -197,7 +197,7 @@ function goShareInfoMain(){
 	<input type="hidden" id="share_status" name="share_status" value="01"/>
 	<input type="hidden" id="seq_share" name="seq_share"/>
 	<input type="hidden" id="type_list" name="type_list"/>
-	
+
 		<div class="visual-banner middle-banner">
 			<p class="msg">공유를 요청할 사용자를 선택해주세요</p>
 		</div>

@@ -2,10 +2,12 @@ package com.koscom.debt.model;
 
 import java.io.Serializable;
 
+import com.koscom.kcb.model.seg.Kcb_Segment030;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
-public class DebtVO implements Serializable{
+public class DebtVO extends Kcb_Segment030 implements Serializable{
 
     private static final long serialVersionUID = 6623460549376754086L;
     /**
@@ -63,21 +65,13 @@ public class DebtVO implements Serializable{
     private String rem_amt_repay_p   ;    /*잔여원금*/
 
     private String display_yn		 ;	  /*화면 표시 여부 20180612 김휘경*/
-
-    //임시
-    private String cd_type_deal		 ;	  /*거래 형태 코드*/
     
-    public String getCd_type_deal() {
-		return cd_type_deal;
-	}
-	public void setCd_type_deal(String cd_type_deal) {
-		this.cd_type_deal = cd_type_deal;
-	}
-	////임시
-	public String getNo_manage_info() {
+    @Override
+    public String getNo_manage_info() {
         return no_manage_info;
     }
-    
+
+    @Override
     public void setNo_manage_info(String no_manage_info) {
         this.no_manage_info = no_manage_info;
     }
@@ -106,15 +100,7 @@ public class DebtVO implements Serializable{
 		this.repay_per_income = repay_per_income;
 	}
 
-    public String getRate_mm_repay_i() {
-		return rate_mm_repay_i;
-	}
-
-	public void setRate_mm_repay_i(String rate_mm_repay_i) {
-		this.rate_mm_repay_i = rate_mm_repay_i;
-	}
-
-    public String getAmt_repay_p() {
+	public String getAmt_repay_p() {
 		return amt_repay_p;
 	}
 
@@ -122,7 +108,14 @@ public class DebtVO implements Serializable{
 		this.amt_repay_p = amt_repay_p;
 	}
 
-	public String getAll_amt_repay() {
+	public String getRate_mm_repay_i() {
+		return rate_mm_repay_i;
+	}
+
+	public void setRate_mm_repay_i(String rate_mm_repay_i) {
+		this.rate_mm_repay_i = rate_mm_repay_i;
+	}
+    public String getAll_amt_repay() {
         return all_amt_repay;
     }
 
@@ -250,18 +243,22 @@ public class DebtVO implements Serializable{
         this.debt_type = debt_type;
     }
 
+    @Override
     public String getYn_credit() {
         return yn_credit;
     }
 
+    @Override
     public void setYn_credit(String yn_credit) {
         this.yn_credit = yn_credit;
     }
 
+    @Override
     public String getYn_loan() {
         return yn_loan;
     }
 
+    @Override
     public void setYn_loan(String yn_loan) {
         this.yn_loan = yn_loan;
     }
@@ -274,10 +271,12 @@ public class DebtVO implements Serializable{
         this.amt_repay = amt_repay;
     }
 
+    @Override
     public String getAmt_remain() {
         return amt_remain;
     }
 
+    @Override
     public void setAmt_remain(String amt_remain) {
         this.amt_remain = amt_remain;
     }
@@ -290,10 +289,12 @@ public class DebtVO implements Serializable{
         this.rate_repay = rate_repay;
     }
 
+    @Override
     public String getYmd_loan() {
         return ymd_loan;
     }
 
+    @Override
     public void setYmd_loan(String ymd_loan) {
         this.ymd_loan = ymd_loan;
     }
@@ -338,10 +339,12 @@ public class DebtVO implements Serializable{
     	this.inter_pay_cycle = inter_pay_cycle;
     }
     
+    @Override
     public String getAmt_contract() {
         return amt_contract;
     }
 
+    @Override
     public void setAmt_contract(String amt_contract) {
         this.amt_contract = amt_contract;
     }
@@ -433,7 +436,7 @@ public class DebtVO implements Serializable{
     public void setModerate_fee(String moderate_fee) {
         this.moderate_fee = moderate_fee;
     }
-
+    
     public String getDisplay_yn() {
         return display_yn;
     }

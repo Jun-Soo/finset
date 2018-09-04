@@ -11,9 +11,11 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.koscom.domain.PersonLoginHistInfo;
+import com.koscom.domain.PersonShareInfo;
 import com.koscom.domain.PersonShareMessageInfo;
 import com.koscom.person.dao.PersonMapper;
 import com.koscom.person.model.PersonActiveHistVO;
+import com.koscom.person.model.PersonShareInfoForm;
 import com.koscom.person.model.PersonShareInfoVO;
 import com.koscom.person.model.PersonSmsListVO;
 import com.koscom.person.model.PersonVO;
@@ -29,7 +31,7 @@ public class PersonManagerImpl implements PersonManager {
 
 	@Autowired
 	private PersonMapper personMapper;
-	
+
 	@Override
 	public PersonVO getPersonInfoHp(String hp) {
 		return personMapper.getPersonInfoHp(hp);
@@ -39,7 +41,7 @@ public class PersonManagerImpl implements PersonManager {
 	public PersonVO getPersonInfo(String no_person) {
 		return personMapper.getPersonInfo(no_person);
 	}
-	
+
 	@Override
 	public ReturnClass modifyPwdFailCnt(PersonVO personVO) {
 		if(1 != personMapper.modifyPwdFailCnt(personVO)) {
@@ -47,12 +49,12 @@ public class PersonManagerImpl implements PersonManager {
 		}
 		return new ReturnClass(Constant.SUCCESS, "정상 처리 하였습니다.");
 	}
-	
+
 	@Override
 	public String getYnAgreeUsingInfo(String no_person) {
 		return personMapper.getYnAgreeUsingInfo(no_person);
 	}
-	
+
 	@Override
 	public String getPwdDB(String pwd) {
 		return personMapper.getPwdDB(pwd);
@@ -86,11 +88,11 @@ public class PersonManagerImpl implements PersonManager {
 	public void modifyLastLogin(String no_person) {
 		personMapper.modifyLastLogin(no_person);
 	}
-	
+
 	@Override
 	public void insertPersonLoginHist(PersonLoginHistInfo personLoginHist) {
 		personMapper.insertPersonLoginHist(personLoginHist);
-		
+
 	}
 
 	@Override
@@ -111,7 +113,7 @@ public class PersonManagerImpl implements PersonManager {
 
 	@Override
 	public ReturnClass modifyPersonEmail(PersonVO personVO) {
-		
+
 		String email = personVO.getEmail();
 
 		String regex = "^[_a-z0-9-]+(.[_a-z0-9-]+)*@(?:\\w+\\.)+\\w+$";
@@ -139,7 +141,7 @@ public class PersonManagerImpl implements PersonManager {
 
 	@Override
 	public ReturnClass modifyPushNoti(PersonVO personVO) {
-		
+
 		int result = 0;
 
 		//person정보 update
@@ -170,10 +172,10 @@ public class PersonManagerImpl implements PersonManager {
 	public String getLastPersonSmsDt(String no_person) {
 		return personMapper.getLastPersonSmsDt(no_person);
 	}
-	
+
 	@Override
 	public ReturnClass createPersonSmsList(List<PersonSmsListVO> list) {
-		
+
 		logger.info("SMS 수신함 이력 저장 시작");
 		int cnt_tot = 0;
 		int cnt_fail = 0;
@@ -189,15 +191,112 @@ public class PersonManagerImpl implements PersonManager {
 
 		return new ReturnClass(Constant.SUCCESS, String.format("정상적으로 처리되었습니다. [ 전체: %1$d 건 / 성공: %2$d 건 / 실패: %3$d 건 ]", cnt_tot, cnt_tot-cnt_fail, cnt_fail));
 	}
-	
+
 	@Override
-	public ReturnClass mergePersonShareInfoMessage(PersonShareMessageInfo personShareMessageInfo) {
-		if(1 != personMapper.mergePersonShareInfoMessage(personShareMessageInfo)) {
+	public List<PersonShareInfoVO> listPersonShareInfoSummary(PersonShareInfoForm personShareInfoForm) {
+		return personMapper.listPersonShareInfoSummary(personShareInfoForm);
+	}
+
+	@Override
+	public List<PersonShareInfoVO> listPersonShareInfoMain(PersonShareInfoForm personShareInfoForm) {
+		return personMapper.listPersonShareInfoMain(personShareInfoForm);
+	}
+	@Override
+	public int listPersonShareInfoMainCount(PersonShareInfoForm personShareInfoForm) {
+		return personMapper.listPersonShareInfoMainCount(personShareInfoForm);
+	}
+
+	@Override
+	public List<PersonShareInfoVO> listShareInfoAllCancel(PersonShareInfoVO personShareInfoVO) {
+		return personMapper.listShareInfoAllCancel(personShareInfoVO);
+	}
+
+	@Override
+	public PersonShareInfoVO getPersonShareInfo(PersonShareInfoVO personShareInfoVO) {
+		return personMapper.getPersonShareInfo(personShareInfoVO);
+	}
+
+	@Override
+	public PersonShareInfoVO getPersonShareEtmInfo(PersonShareInfoVO personShareInfoVO) {
+		return personMapper.getPersonShareEtmInfo(personShareInfoVO);
+	}
+
+	@Override
+	public ReturnClass createPersonShareInfo(PersonShareInfo personShareInfo) {
+		String seq_share = personMapper.getPersonShareInfoSeq();
+
+		personShareInfo.setSeq_share(seq_share);
+		if(1 != personMapper.createPersonShareInfo(personShareInfo)) {
 			return new ReturnClass(Constant.FAILED,"처리에 실패하였습니다.");
 		}
+
+		personMapper.createPersonShareInfoHist(personShareInfo);
+		return new ReturnClass(Constant.SUCCESS,"정상 처리 하였습니다.", (Object) seq_share);
+	}
+
+	@Override
+	public ReturnClass updatePersonShareInfoSet01(PersonShareInfo personShareInfo) {
+		if(1 != personMapper.duplChkPersonShareInfo(personShareInfo)){ //변경할 내용이 있는지 체크
+			if(1 != personMapper.updatePersonShareInfoSet01(personShareInfo)) {
+				return new ReturnClass(Constant.FAILED,"처리에 실패하였습니다.");
+			}
+		}
+
+		return new ReturnClass(Constant.SUCCESS,"공유 재요청 되었습니다.", (Object) personShareInfo.getSeq_share());
+	}
+
+	@Override
+	public ReturnClass updatePersonShareInfoSet02(PersonShareInfo personShareInfo) {
+		String mode_nm = "";
+		if("02".equals(personShareInfo.getShare_status())){
+			mode_nm = "허용";
+		}else if("03".equals(personShareInfo.getShare_status())){
+			mode_nm = "거절";
+		}
+
+		if(1 != personMapper.updatePersonShareInfoSet02(personShareInfo)) {
+			return new ReturnClass(Constant.FAILED,"처리에 실패하였습니다.");
+		}
+
+		personMapper.createPersonShareInfoHist(personShareInfo);
+		return new ReturnClass(Constant.SUCCESS, mode_nm+" 되었습니다.", (Object) personShareInfo.getSeq_share());
+	}
+
+	@Override
+	public ReturnClass updatePersonShareInfoSet03(PersonShareInfo personShareInfo) {
+		String mode_nm = "";
+		if("02".equals(personShareInfo.getShare_status())){
+			mode_nm = "변경";
+		}else if("03".equals(personShareInfo.getShare_status())){
+			mode_nm = "해지";
+		}
+
+		if("02".equals(personShareInfo.getShare_status()) && 1 == personMapper.duplChkPersonShareInfo(personShareInfo)){
+			return new ReturnClass(Constant.FAILED,"변경할 내용이 없습니다.");
+		}else{
+			if(1 != personMapper.updatePersonShareInfoSet03(personShareInfo)) {
+				return new ReturnClass(Constant.FAILED,"처리에 실패하였습니다.");
+			}
+		}
+
+		personMapper.createPersonShareInfoHist(personShareInfo);
+		return new ReturnClass(Constant.SUCCESS, mode_nm+" 되었습니다.", (Object) personShareInfo.getSeq_share());
+	}
+
+	@Override
+	public int chkPersonShareInfoMessageTerm(PersonShareMessageInfo personShareMessageInfo) {
+		return personMapper.chkPersonShareInfoMessageTerm(personShareMessageInfo);
+	}
+
+	@Override
+	public ReturnClass mergePersonShareInfoMessage(PersonShareMessageInfo personShareMessageInfo) {
+			if(1 != personMapper.mergePersonShareInfoMessage(personShareMessageInfo)) {
+				return new ReturnClass(Constant.FAILED,"처리에 실패하였습니다.");
+			}
+
 		return new ReturnClass(Constant.SUCCESS,"정상처리하였습니다.", (Object) personShareMessageInfo.getSeq_share());
 	}
-	
+
 	@Override
 	public List<PersonShareInfoVO> listPersonShareInfoReqUpdate(PersonShareInfoVO personShareInfoVO) {
 		return personMapper.listPersonShareInfoReqUpdate(personShareInfoVO);

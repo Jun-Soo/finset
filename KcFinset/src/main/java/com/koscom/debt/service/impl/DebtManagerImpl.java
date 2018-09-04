@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.koscom.debt.dao.DebtMapper;
+import com.koscom.debt.model.DebtCalendarVO;
+import com.koscom.debt.model.DebtDetail12RepVO;
 import com.koscom.debt.model.DebtForm;
 import com.koscom.debt.model.DebtSummaryVO;
 import com.koscom.debt.model.DebtVO;
@@ -76,5 +78,35 @@ public class DebtManagerImpl implements DebtManager {
 	@Override
 	public List<DebtVO> listDebtPg(DebtForm debtForm) {
 		return debtMapper.listDebtPg(debtForm);
+	}
+	
+	@Override
+	public List<DebtCalendarVO> listDebtCalendar(DebtForm debtForm) {
+		return debtMapper.listDebtCalendar(debtForm);
+	}
+	
+	@Override
+	public DebtVO getDebtInfo(DebtForm debtForm) {
+		return debtMapper.getDebtInfo(debtForm);
+	}
+	
+	@Override
+	public List<DebtDetail12RepVO> listDebtLast12BizDay(DebtForm debtForm) {
+		return debtMapper.listDebtLast12BizDay(debtForm);
+	}
+	
+	@Override
+	public DebtVO getDebtInfoForUpdate(DebtForm debtForm) {
+		return debtMapper.getDebtInfoForUpdate(debtForm);
+	}
+	
+	@Override
+	public void updateDebtInfo(DebtVO debtVO){
+		debtMapper.updateDebtInfo(debtVO);
+	}
+	
+	@Override
+	public void updateDebtDisplay(DebtForm debtForm) {
+		debtMapper.updateDebtDisplay(debtForm);
 	}
 }

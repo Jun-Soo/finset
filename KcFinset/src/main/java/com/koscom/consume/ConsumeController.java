@@ -22,13 +22,9 @@ import com.koscom.util.DateUtil;
 
 @Controller
 @RequestMapping("/m/consume")
-@PropertySource("classpath:prop/webservice.properties")
 public class ConsumeController {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ConsumeController.class);
-	
-    @Resource
-    Environment environment;
 	
     @Autowired
     ConsumeManager consumeManager;

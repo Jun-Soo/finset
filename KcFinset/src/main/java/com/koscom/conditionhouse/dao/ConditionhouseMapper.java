@@ -18,4 +18,11 @@ public interface ConditionhouseMapper {
 	 * @return
 	 */
 	int procConditionhouseInfo(ConditionhouseInfo conditionhouseInfo);
+	
+	/**
+	 * 조건개인 추가
+	 * @param no_person
+	 * @return
+	 */
+	int insertConditionhouseInfo(String no_person);
 }

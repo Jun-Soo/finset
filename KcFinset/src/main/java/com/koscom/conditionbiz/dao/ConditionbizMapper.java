@@ -18,4 +18,11 @@ public interface ConditionbizMapper {
 	 * @return
 	 */
 	int procConditionbizInfo(ConditionbizInfo conditionbizInfo);
+	
+	/**
+	 * 조건사업자 추가
+	 * @param no_person
+	 * @return
+	 */
+	int insertConditionbizInfo(String no_person);
 }

@@ -6,6 +6,7 @@ import com.koscom.domain.PersonLoginHistInfo;
 import com.koscom.domain.PersonShareInfo;
 import com.koscom.domain.PersonShareMessageInfo;
 import com.koscom.person.model.PersonActiveHistVO;
+import com.koscom.person.model.PersonCertificateInfoVO;
 import com.koscom.person.model.PersonShareInfoForm;
 import com.koscom.person.model.PersonShareInfoVO;
 import com.koscom.person.model.PersonSmsListVO;
@@ -248,4 +249,39 @@ public interface PersonMapper {
 	 * @return List<PersonShareInfoVO>
 	 */
 	List<PersonShareInfoVO> listPersonShareInfoReqUpdate(PersonShareInfoVO personShareInfoVO);
+	
+	/**
+	 * 고유 CI번호를 통해 번호가 바뀐 회언인지 확인
+	 * @param kcb_ci - kcb 에서 사용하는 고유 판별 번호
+	 * @return
+	 */
+	String getPersonInfoDupCi(PersonVO personVO);
+	
+	/**
+	 * 핸드폰 번호 업데이트
+	 * @param personVO - hp, no_person 사용
+	 * @return
+	 */
+	int modifyPersonHp(PersonVO personVO);
+	
+	/**
+	 * 고객정보 조회 중복 체크
+	 * @param personVO
+	 * @return
+	 */
+	PersonVO getPersonInfoDup(PersonVO personVO);
+	
+	/**
+	 * 회원가입 insert
+	 * @param personVO
+	 * @return
+	 */
+	int insertPerson(PersonVO personVO);
+	
+	/**
+	 * 사용자 공인인증서 관리
+	 * @param PersonCertificateInfoVO
+	 * @return
+	 */
+	int createPersonCertificateInfo(PersonCertificateInfoVO personCertificateInfoVO);
 }

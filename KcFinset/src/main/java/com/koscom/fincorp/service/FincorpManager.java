@@ -1,5 +1,7 @@
 package com.koscom.fincorp.service;
 
+import java.util.List;
+
 public interface FincorpManager {
 	
 	/**
@@ -22,4 +24,11 @@ public interface FincorpManager {
 	 * @return String
 	 */
 	byte[] getImgBi(String path_file1) throws Exception;
+	
+	/**
+	 * COOCON 금융사 코드(스크래핑 대상)
+	 * @param String
+	 * @return List<String>
+	 */
+	List<String> getCooconFcCd(String type_fc);
 }

@@ -1,5 +1,8 @@
 package com.koscom.person.service.impl;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,17 +13,27 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.koscom.conditionbiz.dao.ConditionbizMapper;
+import com.koscom.conditionbiz.model.ConditionbizVO;
+import com.koscom.conditioncredit.dao.ConditioncreditMapper;
+import com.koscom.conditioncredit.model.ConditioncreditVO;
+import com.koscom.conditionhouse.dao.ConditionhouseMapper;
+import com.koscom.conditionhouse.model.ConditionhouseVO;
 import com.koscom.domain.PersonLoginHistInfo;
 import com.koscom.domain.PersonShareInfo;
 import com.koscom.domain.PersonShareMessageInfo;
+import com.koscom.kcb.model.KcbCreditInfoVO;
+import com.koscom.kcb.service.KcbManager;
 import com.koscom.person.dao.PersonMapper;
 import com.koscom.person.model.PersonActiveHistVO;
+import com.koscom.person.model.PersonCertificateInfoVO;
 import com.koscom.person.model.PersonShareInfoForm;
 import com.koscom.person.model.PersonShareInfoVO;
 import com.koscom.person.model.PersonSmsListVO;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
 import com.koscom.util.Constant;
+import com.koscom.util.FinsetException;
 import com.koscom.util.ReturnClass;
 
 @Service("personManager")
@@ -31,6 +44,19 @@ public class PersonManagerImpl implements PersonManager {
 
 	@Autowired
 	private PersonMapper personMapper;
+	
+	@Autowired
+	private ConditioncreditMapper conditioncreditMapper;
+	
+	@Autowired
+	private ConditionbizMapper conditionbizMapper;
+	
+	@Autowired
+	private ConditionhouseMapper conditionhouseMapper;
+
+	
+	@Autowired
+	KcbManager kcbManager;
 
 	@Override
 	public PersonVO getPersonInfoHp(String hp) {
@@ -300,5 +326,112 @@ public class PersonManagerImpl implements PersonManager {
 	@Override
 	public List<PersonShareInfoVO> listPersonShareInfoReqUpdate(PersonShareInfoVO personShareInfoVO) {
 		return personMapper.listPersonShareInfoReqUpdate(personShareInfoVO);
+	}
+	
+	@Override
+	public String getPersonInfoDupCi(PersonVO personVO){
+		return personMapper.getPersonInfoDupCi(personVO);
+	}
+	
+	@Override
+	public int modifyPersonHp(PersonVO personVO){
+		return personMapper.modifyPersonHp(personVO);
+	}
+	
+	@Override
+	public PersonVO getPersonInfoDup(PersonVO personVO) {
+		return personMapper.getPersonInfoDup(personVO);
+	}
+	
+	@Override
+	public ReturnClass insertPerson(PersonVO personVO) throws UnsupportedEncodingException, FinsetException,IOException {
+
+		if(1 != personMapper.insertPerson(personVO)) {
+			logger.info("회원 가입 처리에 실패하였습니다. 다시 시도해주세요    personVO :" + personVO.toString());
+			return new ReturnClass(Constant.FAILED, "회원가입 처리에 실패하였습니다. 다시 시도해주세요.", personVO);
+		} else {
+
+			//KCB 회원 등록 처리
+			logger.info("personVO === " + personVO);
+			KcbCreditInfoVO info = new KcbCreditInfoVO();
+			//info.setNmIf("600");
+			info.setCd_regist("01");					// 01 신규, 09 URL
+			info.setBgn(personVO.getBgn());				// 생년월일, 성별
+			info.setNoPerson(personVO.getNo_person());	// 회원번호
+			info.setNmCust(personVO.getNm_person());		// 회원명
+			info.setDi(personVO.getKcb_di());				// 회원 KCB DI
+			info.setCp(personVO.getKcb_cp());				// 회원 KCB CP
+			info.setHp(personVO.getHp());					// 회원 휴대폰번호
+			//logger.info("info === " + info.toString());
+			//kcbManager.procKcbCb(info);
+			//logger.info("600 전문 처리 완료");
+
+			info.setNmIf("600420");
+			info.setReq_menu_code("200");
+			info.setReq_view_code("s07143331300");
+			kcbManager.procKcbCb(info);
+
+			logger.info("600420 전문 처리 완료");
+
+			//등록자, 수정자 셋팅
+			personVO.setId_frt(personVO.getNo_person());
+			personVO.setId_lst(personVO.getNo_person());
+
+			//상품 검색조건 셋팅
+			logger.info("상품 검색조건 셋팅 시작");
+			ConditioncreditVO conditioncreditVO = new ConditioncreditVO();
+			ConditionbizVO conditionbizVO 		= new ConditionbizVO();
+			ConditionhouseVO conditionhouseVO 	= new ConditionhouseVO();
+
+			conditioncreditVO = conditioncreditMapper.getConditioncreditInfo(personVO.getNo_person());
+			conditionbizVO = conditionbizMapper.getConditionbizInfo(personVO.getNo_person());
+			conditionhouseVO = conditionhouseMapper.getConditionhouseInfo(personVO.getNo_person());
+
+			if(conditioncreditVO == null){
+				conditioncreditMapper.insertConditioncreditInfo(personVO.getNo_person()); //신용(개인)
+			}
+			if(conditionbizVO == null){
+				conditionbizMapper.insertConditionbizInfo(personVO.getNo_person()); //신용(사업자)
+			}
+			if(conditionhouseVO == null){
+				conditionhouseMapper.insertConditionhouseInfo(personVO.getNo_person()); //주택담보
+			}
+			logger.info("상품 검색조건 셋팅 완료");
+
+			//알림 setting(일반, 신용, 부채, 상품, 이벤트(선택))
+			logger.info("알림 셋팅 시작");
+			List<String> pushItems = new ArrayList<String>();
+
+			//고정 알림값(일반, 신용, 부채, 상품) 셋팅
+			String fixPushItems[] = {"01","02","03","04"};
+			for (int i = 0; i < fixPushItems.length; i++) {
+				pushItems.add(fixPushItems[i]);
+			}
+
+			//이벤트 푸시 수신여부 setting
+			if("Y".equals(personVO.getYn_eventPush())){
+				pushItems.add("05");
+			}
+
+			//person_info의 소리+진동 설정, 푸시 수신여부 default값 셋팅
+			personVO.setType_push("default");
+			personMapper.modifyPushNoti(personVO);
+
+			//push_setting_info insert
+			personVO.setStat_push("Y");
+			for (int i = 0; i < pushItems.size(); i++) {
+				personVO.setItem_push(pushItems.get(i));
+				personMapper.insertCdPush(personVO);
+				personMapper.insertCdPushHist(personVO);
+			}
+			logger.info("알림 셋팅 완료");
+		}
+		logger.info("회원 가입 정상 처리 하였습니다.    personVO :" + personVO.toString());
+		return new ReturnClass(Constant.SUCCESS, "정상 처리 하였습니다.", personVO);
+	}
+	
+	@Override
+	public int createPersonCertificateInfo(PersonCertificateInfoVO personCertificateInfoVO) {
+		return personMapper.createPersonCertificateInfo(personCertificateInfoVO);
 	}
 }

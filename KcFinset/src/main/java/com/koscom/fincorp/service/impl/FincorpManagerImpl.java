@@ -1,5 +1,6 @@
 package com.koscom.fincorp.service.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,5 +34,10 @@ public class FincorpManagerImpl implements FincorpManager{
 		Map resMap = fincorpMapper.getImgBi(vo);
         byte[] imgBi = (resMap != null)?(byte[])resMap.get("img_bi"):null;
 		return imgBi;
+	}
+	
+	@Override
+	public List<String> getCooconFcCd(String type_fc){
+		return fincorpMapper.getCooconFcCd(type_fc);
 	}
 }

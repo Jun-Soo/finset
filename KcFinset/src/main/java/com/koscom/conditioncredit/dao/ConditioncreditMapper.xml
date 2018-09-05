@@ -93,4 +93,64 @@
 					,  SYSDATE
 				 )
 	</update>
+	
+	<insert id="insertConditioncreditInfo" parameterType="java.lang.String">
+		INSERT INTO CONDITION_CREDIT_INFO
+		(
+			  no_person
+			, cd_apply_type_01
+			, cd_apply_type_02
+			, cd_apply_type_03
+			, cd_apply_type_04
+			, cd_trade_type_01
+			, cd_trade_type_02
+			, cd_type_pay_01
+			, cd_type_pay_02
+			, cd_type_pay_03
+			, cd_term_loan_01
+			, cd_term_loan_02
+			, cd_term_loan_03
+			, cd_term_loan_04
+			, cd_time_exec_01
+			, cd_time_exec_02
+			, yn_send_docu
+			, yn_visit
+			, yn_erly_rpay_fee
+			, yn_srch_ratio_limit
+			, cd_ratio_type_01
+			, cd_ratio_type_02
+			, id_frt
+			, dt_frt
+			, id_lst
+			, dt_lst
+		)
+		VALUES(
+		  #{no_person, jdbcType=VARCHAR}
+		 , 'N'
+		 , 'N'
+		 , 'N'
+		 , 'N'
+		 , 'N'
+		 , 'N'
+		 , 'N'
+		 , 'N'
+		 , 'N'
+		 , 'N'
+		 , 'N'
+		 , 'N'
+		 , 'N'
+		 , 'N'
+		 , 'N'
+		 , 'N'
+		 , 'N'
+		 , 'N'
+		 , 'N'
+		 , 'N'
+		 , 'N'
+		 ,  #{id_frt, jdbcType=VARCHAR}
+		 , SYSDATE
+		 ,  #{id_lst, jdbcType=VARCHAR}
+		 , SYSDATE
+		 )
+	</insert>
 </mapper>

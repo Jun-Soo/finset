@@ -1,6 +1,7 @@
 package com.koscom.fincorp.dao;
 
 import java.util.HashMap;
+import java.util.List;
 
 import com.koscom.fincorp.model.FincorpVO;
 import com.koscom.fincorp.model.FincorpfcNminfoForm;
@@ -41,4 +42,11 @@ public interface FincorpMapper {
 	 * @return String
 	 */
 	int createFincorpfcNminfo(FincorpfcNminfoForm fincorpfcNminfoForm);
+	
+	/**
+	 * COOCON 금융사 코드(스크래핑 대상)
+	 * @param String
+	 * @return List<String>
+	 */
+	List<String> getCooconFcCd(String type_fc);	
 }

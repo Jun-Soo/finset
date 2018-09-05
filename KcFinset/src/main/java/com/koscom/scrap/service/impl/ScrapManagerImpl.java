@@ -1,6 +1,7 @@
 package com.koscom.scrap.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -13,13 +14,29 @@ import com.koscom.credit.dao.CreditMapper;
 import com.koscom.env.service.CodeManager;
 import com.koscom.scrap.dao.ScrapMapper;
 import com.koscom.scrap.model.FcLinkInfoVO;
+import com.koscom.scrap.model.LinkedFcInfoVO;
+import com.koscom.scrap.model.ScrBankApiAnInfoVO;
+import com.koscom.scrap.model.ScrCardApprovalInfoVO;
+import com.koscom.scrap.model.ScrCardInfoVO;
 import com.koscom.scrap.model.ScrReqBankVO;
 import com.koscom.scrap.model.ScrReqCardVO;
 import com.koscom.scrap.model.ScrReqCertificationVO;
+import com.koscom.scrap.model.ScrReqHealthVO;
+import com.koscom.scrap.model.ScrReqPensionVO;
+import com.koscom.scrap.model.ScrRespCashReceiptVO;
+import com.koscom.scrap.model.ScrRespHealthPaymentVO;
+import com.koscom.scrap.model.ScrRespHealthPaymentdtlVO;
+import com.koscom.scrap.model.ScrRespIncomeDtlVO;
+import com.koscom.scrap.model.ScrRespPensionPaymentVO;
+import com.koscom.scrap.model.ScrRespPensionPaymentdtlVO;
 import com.koscom.scrap.model.ScrRsltScrapVO;
+import com.koscom.scrap.model.sub.AnAllListHistoryVO;
+import com.koscom.scrap.model.sub.DepositAnListHistoryVO;
 import com.koscom.scrap.service.ScrapManager;
+import com.koscom.util.Constant;
 import com.koscom.util.DateUtil;
-
+import com.koscom.util.LogUtil;
+import com.koscom.util.ReturnClass;
 
 @Service("scrapManager")
 public class ScrapManagerImpl implements ScrapManager {
@@ -35,6 +52,34 @@ public class ScrapManagerImpl implements ScrapManager {
 	@Autowired
 	private CreditMapper creditMapper;
 	
+	/**
+	 * 스크래핑 조회내역 저장
+	 * @param ScrRsltScrapVO
+	 * @return long
+	 */
+	@Override
+	public long insertScrRsltScrap(ScrRsltScrapVO scrRsltScrapVO){
+		
+		scrapMapper.insertScrRsltScrap(scrRsltScrapVO);
+
+		return  scrRsltScrapVO.getSeq_scraping_result();
+	}
+	
+	/**
+	 * 스크래핑 조회내역 수정
+	 * @param ScrRsltScrapVO
+	 * @return int
+	 */
+	@Override
+	public int updateScrRsltScrap(ScrRsltScrapVO scrRsltScrapVO){
+		return scrapMapper.updateScrRsltScrap(scrRsltScrapVO); 
+	}
+	
+	/**
+	 * 자동스크래핑 관련 정보 조회
+	 * @param String
+	 * @return String
+	 */
 	@Override
 	public String getAutoScrapInfo(String cd_agency, String no_person) {
 		
@@ -173,5 +218,328 @@ public class ScrapManagerImpl implements ScrapManager {
 			return jsonRoot.toString();
 		}
 		return "";
+	}
+	
+	@Override
+	public ReturnClass createScrReqBank(List<ScrReqBankVO> list) {
+		LogUtil.debugLn(logger,"LCA createScrReqBank");
+
+		for (ScrReqBankVO ScrReqBankVO : list) {
+			logger.debug("ScrReqBankVO.getNo_person    :" + ScrReqBankVO.getNo_person()  );
+			logger.debug("ScrReqBankVO.getCd_fc        :" + ScrReqBankVO.getCd_fc()      );
+			logger.debug("ScrReqBankVO.getCd_account   :" + ScrReqBankVO.getCd_account() );
+			logger.debug("ScrReqBankVO.getNo_account   :" + ScrReqBankVO.getNo_account() );
+			logger.debug("ScrReqBankVO.getYmd_stt      :" + ScrReqBankVO.getYmd_stt()    );
+			logger.debug("ScrReqBankVO.getYmd_end      :" + ScrReqBankVO.getYmd_end()    );
+			
+			scrapMapper.createScrReqBank(ScrReqBankVO);
+       }
+		logger.info(">>>> 은행 스크래핑 조회 내역 정보 insert");
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+	
+	@Override
+	public ReturnClass insertScrReqBankHist(ScrReqBankVO scrReqBankVO) {
+		LogUtil.debugLn(logger,"LCA insertScrReqBankHist");
+		
+		logger.debug("fcLinkInfoVO.getNo_person    :" + scrReqBankVO.getNo_person()    );
+		logger.debug("fcLinkInfoVO.getCd_fc        :" + scrReqBankVO.getCd_fc()        );
+
+		scrapMapper.insertScrReqBankHist(scrReqBankVO);
+		
+		logger.info(">>>> 은행 스크래핑 요청 내역 history 정보 insert");
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+	
+	@Override
+	public ReturnClass createScrReqCard(ScrReqCardVO scrReqCardVO) {
+		LogUtil.debugLn(logger,"LCA createScrReqCard");
+
+		scrapMapper.createScrReqCard(scrReqCardVO);
+
+		logger.info(">>>> 카드 스크래핑 조회 내역 정보 insert");
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+	
+	@Override
+	public ReturnClass insertScrReqCardHist(ScrReqCardVO scrReqCardVO) {
+		LogUtil.debugLn(logger,"LCA insertScrReqCardHist");
+		
+		scrapMapper.insertScrReqCardHist(scrReqCardVO);
+		
+		logger.info(">>>> 카드 스크래핑 요청 내역 history 정보 insert");
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+	
+	@Override
+	public ScrReqHealthVO getScrReqHealth(ScrReqHealthVO scrReqHealthVO) {
+		LogUtil.debugLn(logger,"LCA getScrReqHealth");
+		
+		return  scrapMapper.getScrReqHealth(scrReqHealthVO);
+	}
+	
+	@Override
+	public ReturnClass createScrReqHealth(ScrReqHealthVO scrReqHealthVO) {
+		LogUtil.debugLn(logger,"LCA createScrReqHealth");
+
+		scrapMapper.createScrReqHealth(scrReqHealthVO);
+
+		logger.info(">>>> 건강보험 스크래핑 조회 내역 정보 insert");
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+	
+	@Override
+	public ScrReqPensionVO getScrReqPension(ScrReqPensionVO scrReqPensionVO) {
+		LogUtil.debugLn(logger,"LCA getScrReqPension");
+		
+		return  scrapMapper.getScrReqPension(scrReqPensionVO);
+	}
+	
+	@Override
+	public ReturnClass createScrReqPension(ScrReqPensionVO scrReqPensionVO) {
+		LogUtil.debugLn(logger,"LCA createScrReqPension");
+
+		scrapMapper.createScrReqPension(scrReqPensionVO);
+
+		logger.info(">>>> 국민연금 스크래핑 조회 내역 정보 insert");
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+
+	
+	@Override
+	public ReturnClass createFcLinkInfo(List<FcLinkInfoVO> list) {
+		LogUtil.debugLn(logger,"LCA createFcLinkInfo");
+
+		for (FcLinkInfoVO fcLinkInfoVO : list) {
+			logger.debug("fcLinkInfoVO.getNO_PERSON    :" + fcLinkInfoVO.getNO_PERSON()    );
+			logger.debug("fcLinkInfoVO.getCN           :" + fcLinkInfoVO.getCN()           );
+			logger.debug("fcLinkInfoVO.getCD_FC        :" + fcLinkInfoVO.getCD_FC()        );
+			logger.debug("fcLinkInfoVO.getCD_LINK_STAT :" + fcLinkInfoVO.getCD_LINK_STAT() );
+			logger.debug("fcLinkInfoVO.getYN_LINK      :" + fcLinkInfoVO.getYN_LINK()      );
+			logger.debug("fcLinkInfoVO.getTYPE_LOGIN   :" + fcLinkInfoVO.getTYPE_LOGIN()   );
+			
+			scrapMapper.createFcLinkInfo(fcLinkInfoVO);
+       }
+		logger.info(">>>> 스크래핑 연동 정보 insert");
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+	
+	@Override
+	public ReturnClass updateFcLinkInfo(FcLinkInfoVO fcLinkInfoVO) {
+		LogUtil.debugLn(logger,"LCA updateFcLinkInfo");
+
+		scrapMapper.updateFcLinkInfo(fcLinkInfoVO);
+
+		logger.info(">>>> 스크래핑 연동 정보 update");
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+	
+	@Override
+	public int getLinkedFcCount(String no_person){
+		return scrapMapper.getLinkedFcCount(no_person); 
+	}
+	
+	@Override
+	public List<LinkedFcInfoVO> getLinkedFcInfo(LinkedFcInfoVO linkedFcInfo){
+		return scrapMapper.getLinkedFcInfo(linkedFcInfo); 
+	}
+	
+	@Override
+	public List<LinkedFcInfoVO> getLinkFcInfo(LinkedFcInfoVO linkFcInfo){
+		return scrapMapper.getLinkFcInfo(linkFcInfo); 
+	}
+	
+	@Override
+	public ReturnClass createFcLinkInfoHist(FcLinkInfoVO fcLinkInfoVO) {
+		LogUtil.debugLn(logger,"LCA createFcLinkInfoHist");
+		
+		logger.debug("fcLinkInfoVO.getNO_PERSON    :" + fcLinkInfoVO.getNO_PERSON()    );
+		logger.debug("fcLinkInfoVO.getCN           :" + fcLinkInfoVO.getCN()           );
+
+		scrapMapper.createFcLinkInfoHist(fcLinkInfoVO);
+		
+		logger.info(">>>> 스크래핑 연동 정보 history insert");
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+	
+	@Override
+	public ReturnClass createScrBankApiAnInfo(List<ScrBankApiAnInfoVO> list) {
+		LogUtil.debugLn(logger,"LCA createScrBankApiAnInfo");
+
+		for (ScrBankApiAnInfoVO scrBankApiAnInfo : list) {
+			
+			scrapMapper.createScrBankApiAnInfo(scrBankApiAnInfo);
+				
+			//대출 계좌의 경우 은행금리 수정
+            //scrapMapper.updateBankInterestByLoanAnInfo(bankApiAnInfo);
+			if (scrBankApiAnInfo.getType_an().equals(codeManager.getCodeName("cd_account_type","대출계좌")))	{
+				logger.debug("대출 계좌 은행 금리 내역 저장 : " + scrBankApiAnInfo.getAn());
+				//scrapMapper.updateBankInterestByLoanAnInfo(scrBankApiAnInfo);
+			}
+
+        }
+		logger.info(">>>> 스크래핑 insert");
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+	
+	@Override
+	public ReturnClass createScrReqCertification(ScrReqCertificationVO scrReqCertification)	{
+		scrapMapper.createScrReqCertification(scrReqCertification);
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+	
+	@Override
+	public ScrReqCertificationVO getScrReqCertification(ScrReqCertificationVO scrReqCertification)	{
+		return scrapMapper.getScrReqCertification(scrReqCertification);
+	}
+	
+	@Override
+	public ReturnClass createScrRespCashReceipt(List<ScrRespCashReceiptVO> list) {
+		LogUtil.debugLn(logger,"LCA createScrRespCashReceipt");
+
+		for (ScrRespCashReceiptVO scrRespCashReceipt : list) {
+				scrapMapper.createScrRespCashReceipt(scrRespCashReceipt);
+        }
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+	
+	@Override
+	public ReturnClass createScrCardInfo(List<ScrCardInfoVO> list) {
+		LogUtil.debugLn(logger,"LCA createScrCardInfo");
+
+		for (ScrCardInfoVO scrCardInfo : list) {
+			scrapMapper.createScrCardInfo(scrCardInfo);
+        }
+		logger.info(">>>> 스크래핑 insert");
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+	
+	@Override
+	public ReturnClass createScrCardApprovalInfo(List<ScrCardApprovalInfoVO> list) {
+		LogUtil.debugLn(logger,"LCA createScrCardInfo");
+
+		for (ScrCardApprovalInfoVO scrCardApprovalInfo : list) {
+			scrapMapper.createScrCardApprovalInfo(scrCardApprovalInfo);
+        }
+		logger.info(">>>> 스크래핑 insert");
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+	
+	@Override
+	public String getMaxDateScrCardApprovalInfo(Map<String, Object> parmMap)	{
+		return scrapMapper.getMaxDateScrCardApprovalInfo(parmMap);
+	}
+	
+	@Override
+	public String getMaxDateSrcTransactionDetail(ScrBankApiAnInfoVO scrBankApiAnInfo)	{
+		return scrapMapper.getMaxDateSrcTransactionDetail(scrBankApiAnInfo);
+	}
+	
+	@Override
+	public ReturnClass createScrTransactionDetail(List<AnAllListHistoryVO> list) {
+		LogUtil.debugLn(logger,"LCA createScrTransactionDetail");
+
+		for (AnAllListHistoryVO anAllListHistoryVO : list) {
+				scrapMapper.createScrTransactionDetail(anAllListHistoryVO);
+        }
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+	
+	@Override
+	public String getMaxDateScrSvngSvninDetail(ScrBankApiAnInfoVO scrBankApiAnInfo)	{
+		return scrapMapper.getMaxDateScrSvngSvninDetail(scrBankApiAnInfo);
+	}
+	
+	@Override
+	public ReturnClass createScrSvngSvninDetail(List<DepositAnListHistoryVO> list) {
+		LogUtil.debugLn(logger,"LCA createScrSvngSvninDetail");
+
+		for (DepositAnListHistoryVO depositAnListHistoryVO : list) {
+				scrapMapper.createScrSvngSvninDetail(depositAnListHistoryVO);
+        }
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+	
+	@Override
+	public String getMaxDateScrRespCashReceipt(String no_person)	{
+		return scrapMapper.getMaxDateScrRespCashReceipt(no_person);
+	}
+	
+	@Override
+	public ReturnClass createScrRespHealthPayment(List<ScrRespHealthPaymentVO> list) {
+		LogUtil.debugLn(logger,"LCA createScrRespHealthPayment");
+
+		for (ScrRespHealthPaymentVO scrRespHealthPaymentVO : list) {
+				scrapMapper.createScrRespHealthPayment(scrRespHealthPaymentVO);
+        }
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+	
+	@Override
+	public ReturnClass createScrRespHealthPaymentdtl(List<ScrRespHealthPaymentdtlVO> list) {
+		LogUtil.debugLn(logger,"LCA createScrRespHealthPaymentdtl");
+
+		for (ScrRespHealthPaymentdtlVO scrRespHealthPaymentdtlVO : list) {
+				scrapMapper.createScrRespHealthPaymentdtl(scrRespHealthPaymentdtlVO);
+        }
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+	
+	@Override
+	public  List<ScrRespHealthPaymentdtlVO> getScrRespHealthPaymentdtl(ScrRespHealthPaymentdtlVO scrRespHealthPaymentdtlVO) {
+		LogUtil.debugLn(logger,"LCA getScrRespHealthPaymentdtl");
+		
+		return  scrapMapper.getScrRespHealthPaymentdtl(scrRespHealthPaymentdtlVO);
+	}
+	
+	@Override
+	public ReturnClass createScrRespPensionPayment(ScrRespPensionPaymentVO scrRespPensionPaymentVO) {
+		LogUtil.debugLn(logger,"LCA createScrRespPensionPayment");
+
+		
+		scrapMapper.createScrRespPensionPayment(scrRespPensionPaymentVO);
+        
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+	
+	@Override
+	public  ScrRespPensionPaymentVO getScrRespPensionPayment(ScrRespPensionPaymentVO scrRespPensionPaymentVO) {
+		LogUtil.debugLn(logger,"LCA getScrRespPensionPayment");
+		
+		return  scrapMapper.getScrRespPensionPayment(scrRespPensionPaymentVO);
+	}
+	
+	@Override
+	public ReturnClass createScrRespPensionPaymentdtl(List<ScrRespPensionPaymentdtlVO> list) {
+		LogUtil.debugLn(logger,"LCA createScrRespPensionPaymentdtl");
+
+		for (ScrRespPensionPaymentdtlVO scrRespPensionPaymentdtlVO : list) {
+				scrapMapper.createScrRespPensionPaymentdtl(scrRespPensionPaymentdtlVO);
+        }
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+	
+	@Override
+	public  List<ScrRespPensionPaymentdtlVO> getScrRespPensionPaymentdtl(ScrRespPensionPaymentdtlVO scrRespPensionPaymentdtlVO) {
+		LogUtil.debugLn(logger,"LCA getScrRespPensionPaymentdtl");
+		
+		return  scrapMapper.getScrRespPensionPaymentdtl(scrRespPensionPaymentdtlVO);
+	}
+	
+	@Override
+	public ReturnClass createScrRespIncomeDtl(List<ScrRespIncomeDtlVO> list) {
+		LogUtil.debugLn(logger,"LCA createScrRespIncomeDtl");
+
+		for (ScrRespIncomeDtlVO scrRespIncomeDtlVO : list) {
+				scrapMapper.createScrRespIncomeDtl(scrRespIncomeDtlVO);
+        }
+		return  new ReturnClass(Constant.SUCCESS);
+	}
+	
+	@Override
+	public  List<ScrRespIncomeDtlVO> getScrRespIncomeDtl(ScrRespIncomeDtlVO scrRespIncomeDtlVO) {
+		LogUtil.debugLn(logger,"LCA getScrRespIncomeDtl");
+		
+		return  scrapMapper.getScrRespIncomeDtl(scrRespIncomeDtlVO);
 	}
 }

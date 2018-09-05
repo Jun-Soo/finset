@@ -1,15 +1,19 @@
 package com.koscom.person.service;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import com.koscom.domain.PersonLoginHistInfo;
 import com.koscom.domain.PersonShareInfo;
 import com.koscom.domain.PersonShareMessageInfo;
 import com.koscom.person.model.PersonActiveHistVO;
+import com.koscom.person.model.PersonCertificateInfoVO;
 import com.koscom.person.model.PersonShareInfoForm;
 import com.koscom.person.model.PersonShareInfoVO;
 import com.koscom.person.model.PersonSmsListVO;
 import com.koscom.person.model.PersonVO;
+import com.koscom.util.FinsetException;
 import com.koscom.util.ReturnClass;
 
 public interface PersonManager {
@@ -222,4 +226,39 @@ public interface PersonManager {
 	 * @return List<PersonShareInfoVO>
 	 */
 	List<PersonShareInfoVO> listPersonShareInfoReqUpdate(PersonShareInfoVO personShareInfoVO);
+	
+	/**
+	 * 고유 CI번호를 통해 번호가 바뀐 회언인지 확인
+	 * @param kcb_ci - kcb 에서 사용하는 고유 판별 번호
+	 * @return
+	 */
+	String getPersonInfoDupCi(PersonVO personVO);
+	
+	/**
+	 * 핸드폰 번호만 업데이트
+	 * @param personVO - hp, no_person 사용
+	 * @return
+	 */
+	int modifyPersonHp(PersonVO personVO);
+	
+	/**
+	 * 회원가입 시 중복체크
+	 * @param personVO
+	 * @return
+	 */
+	PersonVO getPersonInfoDup(PersonVO personVO);
+	
+	/**
+	 * 회원가입 insert
+	 * @param personVO
+	 * @return
+	 */
+	ReturnClass insertPerson(PersonVO personVO) throws UnsupportedEncodingException, FinsetException,IOException;
+	
+	/**
+	 * 사용자 공인인증서 관리
+	 * @param PersonCertificateInfoVO
+	 * @return
+	 */
+	int createPersonCertificateInfo(PersonCertificateInfoVO personCertificateInfoVO);
 }

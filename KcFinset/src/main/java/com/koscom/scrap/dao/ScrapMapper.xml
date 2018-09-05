@@ -4,28 +4,11 @@
 
 <mapper namespace="com.koscom.scrap.dao.ScrapMapper">
 
-	<select id="getFcLinkInfo" parameterType="com.koscom.scrap.model.FcLinkInfoVO" resultType="com.koscom.scrap.model.FcLinkInfoVO">
-		/* com.koscom.scrap.dao.ScrapMapper.getFcLinkInfo */
-		SELECT NO_PERSON
-			, CD_AGENCY
-			, CD_FC
-			, TYPE_LOGIN
-			, CN
-			, BIZ_LICENCE
-			, CD_LINK_STAT
-			, YN_LINK
-			, LINK_DATE
-		FROM FC_LINK_INFO
-		WHERE NO_PERSON = #{NO_PERSON, jdbcType=VARCHAR}
-			AND CD_AGENCY= #{CD_AGENCY, jdbcType=VARCHAR} 
-			AND YN_LINK = 'Y'
-	</select>
-	
 	<insert id="insertScrRsltScrap" parameterType="com.koscom.scrap.model.ScrRsltScrapVO">
 		<selectKey keyProperty="seq_scraping_result" resultType="integer" order="BEFORE">
 		    SELECT SEQ_SCRAPING_RESULT.NEXTVAL FROM DUAL
 		</selectKey>
-		/* com.koscom.scrap.dao.ScrapMapper.insertScrRsltScrap */
+
 		INSERT INTO SCR_RSLT_SCRAP
 			(
 			  	 NO_PERSON
@@ -44,8 +27,30 @@
 			)
 	</insert>
 	
+	<update id="updateScrRsltScrap" parameterType="com.koscom.scrap.model.ScrRsltScrapVO">
+		UPDATE SCR_RSLT_SCRAP
+			SET RSLT_SCRAPING = #{rslt_scraping, jdbcType=VARCHAR}
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND SEQ_SCRAPING_RESULT = #{seq_scraping_result, jdbcType=NUMERIC}
+	</update>
+	
+	<select id="getFcLinkInfo" parameterType="com.koscom.scrap.model.FcLinkInfoVO" resultType="com.koscom.scrap.model.FcLinkInfoVO">
+		SELECT NO_PERSON
+			, CD_AGENCY
+			, CD_FC
+			, TYPE_LOGIN
+			, CN
+			, BIZ_LICENCE
+			, CD_LINK_STAT
+			, YN_LINK
+			, LINK_DATE
+		FROM FC_LINK_INFO
+		WHERE NO_PERSON = #{NO_PERSON, jdbcType=VARCHAR}
+			AND CD_AGENCY= #{CD_AGENCY, jdbcType=VARCHAR} 
+			AND YN_LINK = 'Y'
+	</select>
+	
 	<select id="getScrReqBank" parameterType="com.koscom.scrap.model.ScrReqBankVO" resultType="com.koscom.scrap.model.ScrReqBankVO">
-		/* com.koscom.scrap.dao.ScrapMapper.getScrReqBank */
 		SELECT NO_PERSON
 			, SEQ_SCRAPING_RESULT
 			, CD_FC
@@ -61,8 +66,80 @@
 			AND CD_FC= #{cd_fc, jdbcType=VARCHAR}
 	</select>
 	
+	<insert id="createScrReqBank" parameterType="com.koscom.scrap.model.ScrReqBankVO">
+		MERGE INTO SCR_REQ_BANK
+		USING DUAL
+		ON ( NO_PERSON		= #{no_person	,jdbcType=VARCHAR}
+			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR} 
+			AND CD_ACCOUNT	= #{cd_account	,jdbcType=VARCHAR} 
+			AND NO_ACCOUNT	= #{no_account	,jdbcType=VARCHAR} )
+		WHEN MATCHED THEN
+		UPDATE
+		 SET
+		  	SEQ_SCRAPING_RESULT	= #{seq_scraping_result	,jdbcType=VARCHAR}
+		    ,YMD_STT			= #{ymd_stt				,jdbcType=VARCHAR}
+		 	,YMD_END			= #{ymd_end				,jdbcType=VARCHAR}
+		 	,ERROR_CD			= #{error_cd			,jdbcType=VARCHAR}
+			,ERROR_MSG			= #{error_msg			,jdbcType=VARCHAR}
+			,DT_FRT				= SYSDATE
+		WHEN NOT MATCHED THEN
+        INSERT
+        (
+			 NO_PERSON
+			,SEQ_SCRAPING_RESULT
+			,CD_FC
+			,CD_ACCOUNT
+			,NO_ACCOUNT
+			,YMD_STT
+			,YMD_END
+			,ERROR_CD
+			,ERROR_MSG
+			,DT_FRT
+		) VALUES (
+			 #{no_person			,jdbcType=VARCHAR}
+			,#{seq_scraping_result	,jdbcType=VARCHAR}
+			,#{cd_fc				,jdbcType=VARCHAR}
+			,#{cd_account			,jdbcType=VARCHAR}
+			,#{no_account			,jdbcType=VARCHAR}
+			,#{ymd_stt				,jdbcType=VARCHAR}
+			,#{ymd_end				,jdbcType=VARCHAR}
+			,#{error_cd				,jdbcType=VARCHAR}
+			,#{error_msg			,jdbcType=VARCHAR}
+			,SYSDATE
+		)
+	</insert>
+	
+	<insert id="insertScrReqBankHist" parameterType="com.koscom.scrap.model.ScrReqBankVO">
+		INSERT INTO SCR_REQ_BANK_HIST
+        (
+			 NO_PERSON
+			, SEQ_SCRAPING_RESULT
+			, CD_FC
+			, CD_ACCOUNT
+			, NO_ACCOUNT
+			, YMD_STT
+			, YMD_END
+			, ERROR_CD
+			, ERROR_MSG
+			, DT_FRT
+		)
+		SELECT NO_PERSON
+			, SEQ_SCRAPING_RESULT
+			, CD_FC
+			, CD_ACCOUNT
+			, NO_ACCOUNT
+			, YMD_STT
+			, YMD_END
+			, ERROR_CD
+			, ERROR_MSG
+			, DT_FRT
+		FROM SCR_REQ_BANK
+		WHERE NO_PERSON		= #{no_person	,jdbcType=VARCHAR}
+			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR}
+			AND CD_ACCOUNT	= #{cd_account	,jdbcType=VARCHAR}
+	</insert>
+	
 	<select id="getScrReqCard" parameterType="com.koscom.scrap.model.ScrReqCardVO" resultType="com.koscom.scrap.model.ScrReqCardVO">
-		/* com.koscom.scrap.dao.ScrapMapper.getScrReqCard */
 		SELECT NO_PERSON
 			, SEQ_SCRAPING_RESULT
 			, CD_FC
@@ -76,8 +153,519 @@
 			AND CD_FC= #{cd_fc, jdbcType=VARCHAR}
 	</select>
 	
+	<insert id="createScrReqCard" parameterType="com.koscom.scrap.model.ScrReqCardVO">
+		MERGE INTO SCR_REQ_CARD
+		USING DUAL
+		ON ( NO_PERSON		= #{no_person	,jdbcType=VARCHAR}
+			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR} )
+		WHEN MATCHED THEN
+		UPDATE
+		 SET
+		  	SEQ_SCRAPING_RESULT	= #{seq_scraping_result	,jdbcType=VARCHAR}
+		    ,YMD_STT			= #{ymd_stt				,jdbcType=VARCHAR}
+		 	,YMD_END			= #{ymd_end				,jdbcType=VARCHAR}
+		 	,ERROR_CD			= #{error_cd			,jdbcType=VARCHAR}
+			,ERROR_MSG			= #{error_msg			,jdbcType=VARCHAR}
+			,DT_FRT				= SYSDATE
+		WHEN NOT MATCHED THEN
+        INSERT
+        (
+			 NO_PERSON
+			,SEQ_SCRAPING_RESULT
+			,CD_FC
+			,YMD_STT
+			,YMD_END
+			,ERROR_CD
+			,ERROR_MSG
+			,DT_FRT
+		) VALUES (
+			 #{no_person			,jdbcType=VARCHAR}
+			,#{seq_scraping_result	,jdbcType=VARCHAR}
+			,#{cd_fc				,jdbcType=VARCHAR}
+			,#{ymd_stt				,jdbcType=VARCHAR}
+			,#{ymd_end				,jdbcType=VARCHAR}
+			,#{error_cd				,jdbcType=VARCHAR}
+			,#{error_msg			,jdbcType=VARCHAR}
+			,SYSDATE
+		)
+	</insert>
+	
+	<insert id="insertScrReqCardHist" parameterType="com.koscom.scrap.model.ScrReqCardVO">
+		INSERT INTO SCR_REQ_CARD_HIST
+        (
+			 NO_PERSON
+			, SEQ_SCRAPING_RESULT
+			, CD_FC
+			, YMD_STT
+			, YMD_END
+			, ERROR_CD
+			, ERROR_MSG
+			, DT_FRT
+		)
+		SELECT NO_PERSON
+			, SEQ_SCRAPING_RESULT
+			, CD_FC
+			, YMD_STT
+			, YMD_END
+			, ERROR_CD
+			, ERROR_MSG
+			, DT_FRT
+		FROM SCR_REQ_CARD
+		WHERE NO_PERSON		= #{no_person	,jdbcType=VARCHAR}
+			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR}
+	</insert>
+	
+	<select id="getScrReqHealth" parameterType="com.koscom.scrap.model.ScrReqHealthVO" resultType="com.koscom.scrap.model.ScrReqHealthVO">
+		SELECT NO_PERSON
+			, SEQ_SCRAPING_RESULT
+			, CD_CONFIRM
+			, INQUIRY_START_YEARMONTH
+			, INQUIRY_END_YEARMONTH
+			, NO_PBLS
+			, ERROR_CD
+			, ERROR_MSG
+			, DT_FRT
+		FROM SCR_REQ_HEALTH
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="createScrReqHealth" parameterType="com.koscom.scrap.model.ScrReqHealthVO">
+		MERGE INTO SCR_REQ_HEALTH
+		USING DUAL
+		ON ( NO_PERSON		= #{no_person	,jdbcType=VARCHAR} )
+		WHEN MATCHED THEN
+		UPDATE
+		 SET
+		  	SEQ_SCRAPING_RESULT		= #{seq_scraping_result		,jdbcType=VARCHAR}
+		  	,CD_CONFIRM				= #{cd_confirm				,jdbcType=VARCHAR}
+		    ,INQUIRY_START_YEARMONTH= #{inquiry_start_yearmonth	,jdbcType=VARCHAR}
+		 	,INQUIRY_END_YEARMONTH	= #{inquiry_end_yearmonth	,jdbcType=VARCHAR}
+		 	,NO_PBLS				= #{no_pbls					,jdbcType=VARCHAR}
+		 	,ERROR_CD				= #{error_cd				,jdbcType=VARCHAR}
+			,ERROR_MSG				= #{error_msg				,jdbcType=VARCHAR}
+			,DT_FRT					= SYSDATE
+		WHEN NOT MATCHED THEN
+        INSERT
+        (
+			 NO_PERSON
+			,SEQ_SCRAPING_RESULT
+			,CD_CONFIRM
+			,INQUIRY_START_YEARMONTH
+			,INQUIRY_END_YEARMONTH
+			,NO_PBLS
+			,ERROR_CD
+			,ERROR_MSG
+			,DT_FRT
+		) VALUES (
+			 #{no_person				,jdbcType=VARCHAR}
+			,#{seq_scraping_result		,jdbcType=VARCHAR}
+			,#{cd_confirm				,jdbcType=VARCHAR}
+			,#{inquiry_start_yearmonth	,jdbcType=VARCHAR}
+			,#{inquiry_end_yearmonth	,jdbcType=VARCHAR}
+			,#{no_pbls					,jdbcType=VARCHAR}
+			,#{error_cd					,jdbcType=VARCHAR}
+			,#{error_msg				,jdbcType=VARCHAR}
+			,SYSDATE
+		)
+	</insert>
+	
+	<select id="getScrReqPension" parameterType="com.koscom.scrap.model.ScrReqPensionVO" resultType="com.koscom.scrap.model.ScrReqPensionVO">
+		SELECT NO_PERSON
+			, SEQ_SCRAPING_RESULT
+			, CD_CONFIRM
+			, INQUIRY_START_YEARMONTH
+			, INQUIRY_END_YEARMONTH
+			, ERROR_CD
+			, ERROR_MSG
+			, DT_FRT
+		FROM SCR_REQ_PENSION
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="createScrReqPension" parameterType="com.koscom.scrap.model.ScrReqPensionVO">
+		MERGE INTO SCR_REQ_PENSION
+		USING DUAL
+		ON ( NO_PERSON		= #{no_person	,jdbcType=VARCHAR} )
+		WHEN MATCHED THEN
+		UPDATE
+		 SET
+		  	SEQ_SCRAPING_RESULT		= #{seq_scraping_result		,jdbcType=VARCHAR}
+		  	,CD_CONFIRM				= #{cd_confirm				,jdbcType=VARCHAR}
+		    ,INQUIRY_START_YEARMONTH= #{inquiry_start_yearmonth	,jdbcType=VARCHAR}
+		 	,INQUIRY_END_YEARMONTH	= #{inquiry_end_yearmonth	,jdbcType=VARCHAR}
+		 	,ERROR_CD				= #{error_cd				,jdbcType=VARCHAR}
+			,ERROR_MSG				= #{error_msg				,jdbcType=VARCHAR}
+			,DT_FRT					= SYSDATE
+		WHEN NOT MATCHED THEN
+        INSERT
+        (
+			 NO_PERSON
+			,SEQ_SCRAPING_RESULT
+			,CD_CONFIRM
+			,INQUIRY_START_YEARMONTH
+			,INQUIRY_END_YEARMONTH
+			,ERROR_CD
+			,ERROR_MSG
+			,DT_FRT
+		) VALUES (
+			 #{no_person				,jdbcType=VARCHAR}
+			,#{seq_scraping_result		,jdbcType=VARCHAR}
+			,#{cd_confirm				,jdbcType=VARCHAR}
+			,#{inquiry_start_yearmonth	,jdbcType=VARCHAR}
+			,#{inquiry_end_yearmonth	,jdbcType=VARCHAR}
+			,#{error_cd					,jdbcType=VARCHAR}
+			,#{error_msg				,jdbcType=VARCHAR}
+			,SYSDATE
+		)
+	</insert>
+	
+	<insert id="createFcLinkInfo" parameterType="com.koscom.scrap.model.FcLinkInfoVO">
+		MERGE INTO FC_LINK_INFO
+		USING DUAL
+		ON ( NO_PERSON = #{NO_PERSON, jdbcType=VARCHAR}
+			AND CD_FC = #{CD_FC, jdbcType=VARCHAR} )
+		WHEN MATCHED THEN
+		UPDATE
+		 SET
+		  	CN					= #{CN            ,jdbcType=VARCHAR}
+		    ,CD_LINK_STAT		= #{CD_LINK_STAT  ,jdbcType=VARCHAR}
+		 	,YN_LINK			= #{YN_LINK       ,jdbcType=VARCHAR}
+		 	,TYPE_LOGIN			= #{TYPE_LOGIN    ,jdbcType=VARCHAR}
+			,LINK_DATE			= TO_CHAR(SYSDATE , 'YYYYMMDD')
+			,RSN_LINK_MESSAGE	= #{RSN_LINK_MESSAGE    ,jdbcType=VARCHAR}
+			,ID_LST				= #{ID_LST        ,jdbcType=VARCHAR}
+			,DT_LST				= SYSDATE
+		WHEN NOT MATCHED THEN
+        INSERT
+        (
+			 NO_PERSON
+			,CD_FC
+			,CD_AGENCY
+			,CN
+			,CD_LINK_STAT
+			,YN_LINK
+			,TYPE_LOGIN
+			,LINK_DATE
+			,RSN_LINK_MESSAGE
+			,ID_FRT
+			,DT_FRT
+			,ID_LST
+			,DT_LST
+		) VALUES (
+			 #{NO_PERSON	,jdbcType=VARCHAR}
+			,#{CD_FC		,jdbcType=VARCHAR}
+			,#{CD_AGENCY	,jdbcType=VARCHAR}
+			,#{CN			,jdbcType=VARCHAR}
+			,#{CD_LINK_STAT	,jdbcType=VARCHAR}
+			,#{YN_LINK		,jdbcType=VARCHAR}
+			,#{TYPE_LOGIN	,jdbcType=VARCHAR}
+			,TO_CHAR(SYSDATE, 'YYYYMMDD')
+			,#{RSN_LINK_MESSAGE	,jdbcType=VARCHAR}
+			,#{ID_FRT		,jdbcType=VARCHAR}
+			,SYSDATE
+			,#{ID_LST		,jdbcType=VARCHAR}
+			,SYSDATE
+		)
+	</insert>
+	
+	<update id="updateFcLinkInfo" parameterType="com.koscom.scrap.model.FcLinkInfoVO">
+		UPDATE FC_LINK_INFO
+		SET
+			CD_LINK_STAT = #{CD_LINK_STAT, jdbcType=VARCHAR}
+			, RSN_LINK_MESSAGE = #{RSN_LINK_MESSAGE, jdbcType=VARCHAR}
+		WHERE NO_PERSON = #{NO_PERSON, jdbcType=VARCHAR}
+			AND CD_FC = #{CD_FC, jdbcType=NUMERIC}
+	</update>
+	
+	<select id="getLinkedFcCount" parameterType="java.lang.String" resultType="int">
+		SELECT COUNT(1)
+		FROM FC_LINK_INFO
+		WHERE NO_PERSON = #{NO_PERSON, jdbcType=VARCHAR}
+			AND YN_LINK = 'Y'
+	</select>
+	
+	<select id="getLinkedFcInfo" parameterType="com.koscom.scrap.model.LinkedFcInfoVO" resultType="com.koscom.scrap.model.LinkedFcInfoVO">
+		SELECT LK.NO_PERSON
+			, LK.CD_AGENCY
+			, LK.CD_FC
+			, LK.CN
+			, FC.NM_FC
+			, FC.CD_FIN
+			, CD.NM_CODE
+			, LK.CD_LINK_STAT
+			, LK.YN_LINK
+			, LK.TYPE_LOGIN
+		FROM FC_LINK_INFO LK, FC_INFO FC, COMM_CD CD
+		WHERE NO_PERSON = #{NO_PERSON, jdbcType=VARCHAR} 
+			AND CN = #{CN, jdbcType=VARCHAR}
+			AND LK.YN_LINK = 'Y'  AND LK.CD_FC = FC.CD_FC AND CD.CODE_GROUP = 'cd_fin' AND CD.CODE_VALUE = FC.CD_FIN
+		ORDER BY CD_FIN, NM_FC
+	</select>
+	
+	<select id="getLinkFcInfo" parameterType="com.koscom.scrap.model.LinkedFcInfoVO" resultType="com.koscom.scrap.model.LinkedFcInfoVO">
+		SELECT LK.NO_PERSON
+			, LK.CN
+			, LK.CD_AGENCY
+			, FC.CD_FC
+			, FC.NM_FC
+			, (SELECT NM_CODE FROM COMM_CD WHERE CODE_GROUP = 'cd_fin' AND CODE_VALUE = FC.CD_FIN) NM_CODE
+			, CD.NM_CODE CD_COOCON
+			, NVL(LK.YN_LINK, 'N') YN_LINK
+			, LK.CD_LINK_STAT
+			, LK.RSN_LINK_MESSAGE
+			, (SELECT NM_CODE FROM COMM_CD WHERE CODE_GROUP = 'type_login' AND CODE_VALUE = LK.TYPE_LOGIN) TYPE_LOGIN
+		FROM FC_INFO 
+			FC LEFT OUTER JOIN
+			(SELECT * FROM FC_LINK_INFO WHERE NO_PERSON = #{NO_PERSON, jdbcType=VARCHAR}) LK  
+			ON LK.CD_FC = FC.CD_FC
+			, COMM_CD CD
+		WHERE FC.YN_SCRAP = 'Y'
+			AND CD.CODE_GROUP = 'cd_coocon_fc'
+			AND CD.CODE_VALUE = FC.CD_FC
+		ORDER BY CD_FIN, YN_LINK DESC, NM_FC
+	</select>
+	
+	<insert id="createFcLinkInfoHist" parameterType="com.koscom.scrap.model.FcLinkInfoVO">
+		INSERT INTO FC_LINK_HIST
+        (
+			 NO_PERSON
+			,CD_AGENCY
+			,CD_FC
+			,CN
+			,CD_LINK_STAT
+			,YN_LINK
+			,TYPE_LOGIN
+			,LINK_DATE
+			,RSN_LINK_MESSAGE
+			,ID_FRT
+			,DT_FRT
+		)
+		SELECT
+		  	NO_PERSON
+		  	,CD_AGENCY
+			,CD_FC
+			,CN
+			,CD_LINK_STAT
+			,YN_LINK
+			,TYPE_LOGIN
+			,LINK_DATE
+			,RSN_LINK_MESSAGE
+			,ID_LST
+			,SYSDATE
+		FROM FC_LINK_INFO
+		WHERE NO_PERSON = #{NO_PERSON, jdbcType=VARCHAR} 
+			AND CN = #{CN, jdbcType=VARCHAR}
+		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(CD_FC)">
+			AND CD_FC = #{CD_FC, jdbcType=VARCHAR}
+		</if>
+	</insert>
+	
+	<insert id="createScrBankApiAnInfo" parameterType="com.koscom.scrap.model.ScrBankApiAnInfoVO">
+		MERGE INTO SCR_BANK_API_AN_INFO
+		USING DUAL
+		ON (no_person = #{no_person, jdbcType=VARCHAR}
+			AND an = XX1.ENC_VARCHAR2_INS(#{an, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SCR_BANK_API_AN_INFO', 'AN'))
+		WHEN MATCHED THEN
+		UPDATE
+		 SET
+		    TYPE_AN		    = #{type_an        ,jdbcType=VARCHAR}
+		    ,NM_AN 			= #{nm_an          ,jdbcType=VARCHAR}
+		    ,CD_CURRENCY	= #{cd_currency    ,jdbcType=VARCHAR}
+		 	,PRINCIPAL		= #{principal      ,jdbcType=VARCHAR}
+		 	,AMT_AVAILABLE	= #{amt_available  ,jdbcType=VARCHAR}
+		 	,CURRENT_BALANCE= #{current_balance,jdbcType=VARCHAR}
+			,LOAN_BALANCE	= #{loan_balance   ,jdbcType=VARCHAR}
+			,LOAN_CEILING	= #{loan_ceiling   ,jdbcType=VARCHAR}
+			,DT_NEW 		= #{dt_new         ,jdbcType=VARCHAR}
+			,DT_END 		= #{dt_end         ,jdbcType=VARCHAR}
+			,INTEREST_RATE	= #{interest_rate  ,jdbcType=VARCHAR}
+			,PROFIT_RATE	= #{profit_rate    ,jdbcType=VARCHAR}
+			,FEW_DAYS		= #{few_days       ,jdbcType=VARCHAR}
+			,INTEREST_DATE	= #{interest_date  ,jdbcType=VARCHAR}
+			,YN_USE			= #{yn_use         ,jdbcType=VARCHAR}
+		WHEN NOT MATCHED THEN
+        INSERT
+        (
+			 NO_PERSON
+			,AN
+			,CD_FC
+			,TYPE_AN
+			,NM_AN
+			,CD_CURRENCY
+			,PRINCIPAL
+			,AMT_AVAILABLE
+			,CURRENT_BALANCE
+			,LOAN_BALANCE
+			,LOAN_CEILING
+			,DT_NEW
+			,DT_END
+			,INTEREST_RATE
+			,PROFIT_RATE
+			,FEW_DAYS
+			,INTEREST_DATE
+			,YN_USE
+			,DT_FRT
+		) VALUES (
+			 #{no_person , jdbcType=VARCHAR}
+			,XX1.ENC_VARCHAR2_INS(#{an, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SCR_BANK_API_AN_INFOZ ', 'AN')
+			,#{cd_fc		  ,jdbcType=VARCHAR}
+			,#{type_an		  ,jdbcType=VARCHAR}
+			,#{nm_an		  ,jdbcType=VARCHAR}
+			,#{cd_currency	  ,jdbcType=VARCHAR}
+			,#{principal	  ,jdbcType=VARCHAR}
+			,#{amt_available  ,jdbcType=VARCHAR}
+			,#{current_balance,jdbcType=VARCHAR}
+			,#{loan_balance	  ,jdbcType=VARCHAR}
+			,#{loan_ceiling	  ,jdbcType=VARCHAR}
+			,#{dt_new		  ,jdbcType=VARCHAR}
+			,#{dt_end		  ,jdbcType=VARCHAR}
+			,#{interest_rate  ,jdbcType=VARCHAR}
+			,#{profit_rate    ,jdbcType=VARCHAR}
+			,#{few_days		  ,jdbcType=VARCHAR}
+			,#{interest_date  ,jdbcType=VARCHAR}
+			,#{yn_use		  ,jdbcType=VARCHAR}
+			,SYSDATE
+		)
+	</insert>
+	
+	<insert id="createScrCardInfo" parameterType="com.koscom.scrap.model.ScrCardInfoVO">
+		MERGE INTO SCR_CARD_INFO
+		USING DUAL
+		ON (no_person = #{no_person, jdbcType=VARCHAR}
+			AND no_card = #{no_card, jdbcType=VARCHAR} )
+		WHEN MATCHED THEN
+		UPDATE
+		 SET
+		    NM_CARD		    = #{nm_card        ,jdbcType=VARCHAR}
+		    ,DT_PAYMENT 	= #{dt_payment     ,jdbcType=VARCHAR}
+		    ,AMT_PAYMENT	= #{amt_payment    ,jdbcType=VARCHAR}
+		 	,FC_MEMBER		= #{fc_member      ,jdbcType=VARCHAR}
+		WHEN NOT MATCHED THEN
+        INSERT
+        (
+			 NO_PERSON
+			,CD_FC
+			,NO_CARD
+			,NM_CARD
+			,DT_PAYMENT
+			,AMT_PAYMENT
+			,FC_MEMBER
+		) VALUES (
+			 #{no_person      ,jdbcType=VARCHAR}
+			,#{cd_fc		  ,jdbcType=VARCHAR}
+			,#{no_card		  ,jdbcType=VARCHAR}
+			,#{nm_card		  ,jdbcType=VARCHAR}
+			,#{dt_payment	  ,jdbcType=VARCHAR}
+			,#{amt_payment	  ,jdbcType=VARCHAR}
+			,#{fc_member      ,jdbcType=VARCHAR}
+		)
+	</insert>
+	
+	<insert id="createScrCardApprovalInfo" parameterType="com.koscom.scrap.model.ScrCardApprovalInfoVO">
+		INSERT INTO SCR_CARD_APPROVAL_INFO(
+			 NO_PERSON
+			,CD_FC
+			,DT_APPROVAL
+			,TM_APPROVAL
+			,NO_APPROVAL
+			,TYPE_CARD
+			,NO_CARD
+			,NM_MEMBER
+			,TYPE_SALES
+			,PERIOD_INSTALLMENT
+			,AMT_APPROVAL
+			,YMD_CANCEL
+			,DT_PAYMENT_DUE
+			,NO_BIZ_MEMBER
+			,CD_BIZ_MEMBER
+			,TYPE_BIZ_MEMBER
+			,CD_CURRENCY
+			,CD_IN_OUT
+			,DT_FRT
+
+		) VALUES (
+			 #{no_person         ,jdbcType=VARCHAR}
+			,#{cd_fc             ,jdbcType=VARCHAR}
+			,#{dt_approval       ,jdbcType=VARCHAR}
+			,#{tm_approval       ,jdbcType=VARCHAR}
+			,#{no_approval       ,jdbcType=VARCHAR}
+			,#{type_card         ,jdbcType=VARCHAR}
+			,#{no_card           ,jdbcType=VARCHAR}
+			,#{nm_member         ,jdbcType=VARCHAR}
+			,#{type_sales        ,jdbcType=VARCHAR}
+			,#{period_installment,jdbcType=VARCHAR}
+			,#{amt_approval      ,jdbcType=VARCHAR}
+			,#{ymd_cancel        ,jdbcType=VARCHAR}
+			,TRIM(#{dt_payment_due    ,jdbcType=VARCHAR})
+			,#{no_biz_member     ,jdbcType=VARCHAR}
+			,#{cd_biz_member     ,jdbcType=VARCHAR}
+			,#{type_biz_member   ,jdbcType=VARCHAR}
+			,#{cd_currency       ,jdbcType=VARCHAR}
+			,#{cd_in_out         ,jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<select id="getMaxDateScrCardApprovalInfo" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT MAX(DT_APPROVAL||TM_APPROVAL) MAX_DT_TRD FROM SCR_CARD_APPROVAL_INFO
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+		GROUP BY NO_PERSON, CD_FC
+	</select >
+	
+	<insert id="createScrReqCertification" parameterType="com.koscom.scrap.model.ScrReqCertificationVO">
+		INSERT INTO SCR_REQ_CERTIFICATION(
+			 NO_PERSON
+			,SEQ_SCRAPING_RESULT
+			,CD_TYPE
+			,BIZ_LICENCE
+			,HP
+			,RCPT_START_MONTH
+			,RCPT_END_MONTH
+			,TAXATION_START_MONTH
+			,TAXATION_END_MONTH
+			,TAXATION_YEAR
+			,CD_INCOME
+			,CERT_DIVISION
+			,YMD_HOPE_OPEN
+			,CD_OPEN_YN
+			,NO_RECEPTION
+			,NO_PBLS
+			,NM_ISSUED_AGENCY
+			,DEPARTMENT
+			,MANAGER
+			,TEL_MANAGER
+			,ERROR_CD
+			,ERROR_MSG
+			,DT_FRT
+		) VALUES (
+			 #{no_person , jdbcType=VARCHAR}
+			,#{seq_scraping_result, jdbcType=NUMERIC}
+			,#{cd_type, jdbcType=VARCHAR}
+			,#{biz_licence, jdbcType=VARCHAR}
+			,#{hp, jdbcType=VARCHAR}
+			,#{rcpt_start_month, jdbcType=VARCHAR}
+			,#{rcpt_end_month, jdbcType=VARCHAR}
+			,#{taxation_start_month, jdbcType=VARCHAR}
+			,#{taxation_end_month, jdbcType=VARCHAR}
+			,#{taxation_year, jdbcType=VARCHAR}
+			,#{cd_income, jdbcType=VARCHAR}
+			,#{cert_division  , jdbcType=VARCHAR}
+			,#{ymd_hope_open  , jdbcType=VARCHAR}
+			,#{cd_open_yn  , jdbcType=VARCHAR}
+			,#{no_reception, jdbcType=VARCHAR}
+			,#{no_pbls, jdbcType=VARCHAR}
+			,#{nm_issued_agency , jdbcType=VARCHAR}
+			,#{department , jdbcType=VARCHAR}
+			,#{manager , jdbcType=VARCHAR}
+			,#{tel_manager , jdbcType=VARCHAR}
+			,#{error_cd , jdbcType=VARCHAR}
+			,#{error_msg , jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
 	<select id="getScrReqCertification" parameterType="com.koscom.scrap.model.ScrReqCertificationVO" resultType="com.koscom.scrap.model.ScrReqCertificationVO">
-		/* com.koscom.scrap.dao.ScrapMapper.getScrReqCertification */
 		SELECT NO_PERSON
 			,SEQ_SCRAPING_RESULT
 			,CD_TYPE
@@ -106,4 +694,480 @@
 		WHERE A.SEQ_SCRAPING_RESULT = B.MAX_SEQ
 	</select>
 	
+	<insert id="createScrRespCashReceipt" parameterType="com.koscom.scrap.model.ScrRespCashReceiptVO">
+		INSERT INTO SCR_RESP_CASH_RECEIPT(
+			 NO_PERSON
+			,YMD_DEAL
+			,TIME_DEAL
+			,NM_AFFILIATE
+			,AMT_USE
+			,NO_APPROVAL
+			,TYPE_ID_CHECK
+			,TYPE_DEAL
+			,YN_DEDUCTION
+			,TYPE_ISSUE
+			,DT_FRT
+		) VALUES (
+			 #{no_person , jdbcType=VARCHAR}
+			,#{ymd_deal, jdbcType=VARCHAR}
+			,#{time_deal, jdbcType=VARCHAR}
+			,#{nm_affiliate, jdbcType=VARCHAR}
+			,#{amt_use, jdbcType=VARCHAR}
+			,#{no_approval, jdbcType=VARCHAR}
+			,#{type_id_check, jdbcType=VARCHAR}
+			,#{type_deal, jdbcType=VARCHAR}
+			,#{yn_deduction, jdbcType=VARCHAR}
+			,#{type_issue, jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<select id="getMaxDateScrRespCashReceipt" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT MAX(YMD_DEAL||TIME_DEAL) MAX_DT_TRD FROM SCR_RESP_CASH_RECEIPT
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		GROUP BY NO_PERSON
+	</select >
+	
+	<select id="getMaxDateSrcTransactionDetail" parameterType="com.koscom.scrap.model.ScrBankApiAnInfoVO" resultType="java.lang.String">
+		SELECT MAX(DT_TRD||TM_TRD) MAX_DT_TRD FROM SCR_TRANSACTION_DETAIL
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND AN = #{an, jdbcType=VARCHAR}
+		GROUP BY NO_PERSON, AN
+	</select >
+	
+	<insert id="createScrTransactionDetail" parameterType="com.koscom.scrap.model.sub.AnAllListHistoryVO">
+		INSERT INTO SCR_TRANSACTION_DETAIL
+		(
+			  NO_PERSON
+			, AN
+			, DT_TRD
+			, TM_TRD
+			, CD_CRNCY
+			, AMT_WDRL
+			, AMT_DEP
+			, BALANCE
+			, DOC1
+			, DOC2
+			, DEALWAY1
+			, DEALWAY2
+			, DT_FRT
+		) VALUES (
+			#{NO_PERSON, jdbcType=VARCHAR}
+			, XX1.ENC_VARCHAR2_INS(#{AN, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'BANK_API_DEPWDRL_DTL', 'AN')
+			, #{DATE, jdbcType=VARCHAR}
+			, #{TIME, jdbcType=VARCHAR}
+			, #{CODE, jdbcType=VARCHAR}
+			, #{OUT_PAYMENT, jdbcType=VARCHAR}
+			, #{IN_PAYMENT, jdbcType=VARCHAR}
+			, #{BALANCE, jdbcType=VARCHAR}
+			, #{DOC1, jdbcType=VARCHAR}
+			, #{DOC2, jdbcType=VARCHAR}
+			, #{DEALWAY1, jdbcType=VARCHAR}
+			, #{DEALWAY2, jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<select id="getMaxDateScrSvngSvninDetail" parameterType="com.koscom.scrap.model.ScrBankApiAnInfoVO" resultType="java.lang.String">
+		SELECT MAX(DT_TRD||TM_TRD) MAX_DT_TRD FROM SCR_SVNG_SVNIN_DETAIL
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND AN = #{an, jdbcType=VARCHAR}
+		GROUP BY NO_PERSON, AN
+	</select >
+		
+	<insert id="createScrSvngSvninDetail" parameterType="com.koscom.scrap.model.sub.DepositAnListHistoryVO">
+		INSERT INTO SCR_SVNG_SVNIN_DETAIL
+		(
+			  NO_PERSON
+			, AN
+			, DT_TRD
+			, TM_TRD
+			, RND_TRD
+			, AMT_TRD_MTH
+			, AMT_DEP
+			, AMT_WDRL
+			, BALANCE
+			, ABSTRACT
+			, BRN_DEAL
+			, DT_FRT
+		) VALUES (
+			#{NO_PERSON		, jdbcType=VARCHAR}
+			, XX1.ENC_VARCHAR2_INS(#{AN, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'BANK_API_DEPWDRL_DTL', 'AN')
+			, #{DATE		, jdbcType=VARCHAR}
+			, #{TIME		, jdbcType=VARCHAR}
+			, #{BATCH		, jdbcType=VARCHAR}
+			, #{MONTH		, jdbcType=VARCHAR}
+			, #{IN_PAYMENT	, jdbcType=VARCHAR}
+			, #{OUT_PAYMENT	, jdbcType=VARCHAR}
+			, #{BALANCE		, jdbcType=VARCHAR}
+			, #{DESCRIPTION	, jdbcType=VARCHAR}
+			, #{DISTRIBUTOR	, jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<insert id="createScrRespHealthPayment" parameterType="com.koscom.scrap.model.ScrRespHealthPaymentVO">
+		MERGE INTO SCR_RESP_HEALTH_PAYMENT
+		USING DUAL
+		ON (NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND NO_PAYER = #{no_payer, jdbcType=VARCHAR})
+		WHEN MATCHED THEN
+		UPDATE
+		 SET
+		    NO_PBLS		    = #{no_pbls          ,jdbcType=VARCHAR}
+		 	,MEMBER_DIVISION= #{member_division  ,jdbcType=VARCHAR}
+		 	,NM_COMP		= #{nm_comp          ,jdbcType=VARCHAR}
+		 	,YMD_GAIN		= #{ymd_gain         ,jdbcType=VARCHAR}
+			,YMD_LOSS		= #{ymd_loss         ,jdbcType=VARCHAR}
+			,BELONG_BRANCH	= #{belong_branch    ,jdbcType=VARCHAR}
+			,NM_MEMBER 		= #{nm_member        ,jdbcType=VARCHAR}
+			,BGN 			= #{bgn              ,jdbcType=VARCHAR}
+			,DT_FRT			= SYSDATE
+		WHEN NOT MATCHED THEN
+        INSERT
+        (
+			  NO_PERSON
+			, NO_PAYER
+			, NO_PBLS
+			, MEMBER_DIVISION
+			, NM_COMP
+			, YMD_GAIN
+			, YMD_LOSS
+			, BELONG_BRANCH
+			, NM_MEMBER
+			, BGN
+			, DT_FRT
+		) VALUES (
+			 #{no_person		, jdbcType=VARCHAR}
+			, #{no_payer		, jdbcType=VARCHAR}
+			, #{no_pbls			, jdbcType=VARCHAR}
+			, #{member_division	, jdbcType=VARCHAR}
+			, #{nm_comp			, jdbcType=VARCHAR}
+			, #{ymd_gain		, jdbcType=VARCHAR}
+			, #{ymd_loss		, jdbcType=VARCHAR}
+			, #{belong_branch	, jdbcType=VARCHAR}
+			, #{nm_member		, jdbcType=VARCHAR}
+			, #{bgn				, jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<insert id="createScrRespHealthPaymentdtl" parameterType="com.koscom.scrap.model.ScrRespHealthPaymentdtlVO">
+		INSERT INTO SCR_RESP_HEALTH_PAYMENTDTL
+		(
+			  NO_PERSON
+			, NO_PAYER
+			, PAY_YYYYMM
+			, AMT_NT_HEALTH_INSU
+			, AMT_NT_LNGTRM_CR_INS
+			, AMT_PAY_HEALTH_INSU
+			, AMT_PAY_LONGTERM_CARE_INSU
+			, AMT_ICNT_HEALTH_INSU
+			, AMT_ICNT_LNGTRM_CR_INS
+			, AMT_ICPAY_HEALTH_INSU
+			, AMT_ICPAY_LONGTERM_CARE_INSU
+			, DT_FRT
+		) VALUES (
+			#{no_person							, jdbcType=VARCHAR}
+			, #{no_payer						, jdbcType=VARCHAR}
+			, #{pay_yyyymm						, jdbcType=VARCHAR}
+			, #{amt_nt_health_insu				, jdbcType=VARCHAR}
+			, #{amt_nt_lngtrm_cr_ins			, jdbcType=VARCHAR}
+			, #{amt_pay_health_insu				, jdbcType=VARCHAR}
+			, #{amt_pay_longterm_care_insu		, jdbcType=VARCHAR}
+			, #{amt_icnt_health_insu			, jdbcType=VARCHAR}
+			, #{amt_icnt_lngtrm_cr_ins			, jdbcType=VARCHAR}
+			, #{amt_icpay_health_insu			, jdbcType=VARCHAR}
+			, #{amt_icpay_longterm_care_insu	, jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<select id="getScrRespHealthPaymentdtl" parameterType="com.koscom.scrap.model.ScrRespHealthPaymentdtlVO" resultType="com.koscom.scrap.model.ScrRespHealthPaymentdtlVO">
+		SELECT NO_PERSON
+			, NO_PAYER
+			, PAY_YYYYMM
+			, AMT_NT_HEALTH_INSU
+			, AMT_NT_LNGTRM_CR_INS
+			, AMT_PAY_HEALTH_INSU
+			, AMT_PAY_LONGTERM_CARE_INSU
+			, AMT_ICNT_HEALTH_INSU
+			, AMT_ICNT_LNGTRM_CR_INS
+			, AMT_ICPAY_HEALTH_INSU
+			, AMT_ICPAY_LONGTERM_CARE_INSU
+			, DT_FRT 
+		FROM SCR_RESP_HEALTH_PAYMENTDTL
+		WHERE  NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND PAY_YYYYMM >= #{pay_yyyymm, jdbcType=VARCHAR}
+		ORDER BY PAY_YYYYMM DESC
+	</select>
+	
+	<insert id="createScrRespIncomeDtl" parameterType="com.koscom.scrap.model.ScrRespIncomeDtlVO">
+		MERGE INTO SCR_RESP_INCOME_DTL
+		USING DUAL
+		ON (NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CERT_DIVISION = #{cert_division, jdbcType=VARCHAR}
+			AND REVERSION_YEAR = #{reversion_year, jdbcType=VARCHAR})
+		WHEN MATCHED THEN
+		UPDATE
+		 SET
+		    NO_PBLS		    		= #{no_pbls               ,jdbcType=VARCHAR}
+		 	,BIZ_LICENCE			= #{biz_licence           ,jdbcType=VARCHAR}
+		 	,INCOME_DIVISION		= #{income_division       ,jdbcType=VARCHAR}
+		 	,CORP_NM				= #{corp_nm               ,jdbcType=VARCHAR}
+			,AMT_INCOME				= #{amt_income            ,jdbcType=VARCHAR}
+			,AMT_TOTAL_DECISION_TAX	= #{amt_total_decision_tax,jdbcType=VARCHAR}
+			,DT_FRT					= SYSDATE
+		WHEN NOT MATCHED THEN
+        INSERT
+        (
+			  NO_PERSON
+			, CERT_DIVISION
+			, NO_PBLS
+			, REVERSION_YEAR
+			, BIZ_LICENCE
+			, INCOME_DIVISION
+			, CORP_NM
+			, AMT_INCOME
+			, AMT_TOTAL_DECISION_TAX
+			, DT_FRT
+		) VALUES (
+			 #{no_person				, jdbcType=VARCHAR}
+			, #{cert_division			, jdbcType=VARCHAR}
+			, #{no_pbls					, jdbcType=VARCHAR}
+			, #{reversion_year			, jdbcType=VARCHAR}
+			, #{biz_licence				, jdbcType=VARCHAR}
+			, #{income_division			, jdbcType=VARCHAR}
+			, #{corp_nm					, jdbcType=VARCHAR}
+			, #{amt_income				, jdbcType=VARCHAR}
+			, #{amt_total_decision_tax	, jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<select id="getScrRespIncomeDtl" parameterType="com.koscom.scrap.model.ScrRespIncomeDtlVO" resultType="com.koscom.scrap.model.ScrRespIncomeDtlVO">
+		SELECT NO_PERSON
+			, CERT_DIVISION
+			, NO_PBLS
+			, REVERSION_YEAR
+			, BIZ_LICENCE
+			, INCOME_DIVISION
+			, CORP_NM
+			, AMT_INCOME
+			, AMT_TOTAL_DECISION_TAX
+			, DT_FRT
+		FROM SCR_RESP_INCOME_DTL A, (SELECT TAXATION_YEAR YEAR FROM SCR_REQ_CERTIFICATION
+									WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+									AND CD_TYPE = '02' /* 소득금액증명 */
+									AND ROWNUM = 1
+									ORDER BY SEQ_SCRAPING_RESULT DESC) B
+		WHERE  NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		AND A.REVERSION_YEAR = B.YEAR
+	</select>
+	
+	<insert id="createScrRespPensionPayment" parameterType="com.koscom.scrap.model.ScrRespPensionPaymentVO">
+		MERGE INTO SCR_RESP_PENSION_PAYMENT
+		USING DUAL
+		ON (NO_PERSON = #{no_person, jdbcType=VARCHAR})
+		WHEN MATCHED THEN
+		UPDATE
+		 SET
+		    CNT_MONTH_PAY   		= #{cnt_month_pay        ,jdbcType=VARCHAR}
+		 	,AMT_PAY				= #{amt_pay              ,jdbcType=VARCHAR}
+		 	,CNT_MONTH_NOT_PAY		= #{cnt_month_not_pay    ,jdbcType=VARCHAR}
+		 	,AMT_NOT_PAY			= #{amt_not_pay          ,jdbcType=VARCHAR}
+			,CNT_MONTH_CANNOT_PAY	= #{cnt_month_cannot_pay ,jdbcType=VARCHAR}
+			,AMT_CANNOT_PAY			= #{amt_cannot_pay       ,jdbcType=VARCHAR}
+			,AMT_PAY_RETURN 		= #{amt_pay_return       ,jdbcType=VARCHAR}
+			,AMT_PAY_PRIMIUM 		= #{amt_pay_primium      ,jdbcType=VARCHAR}
+			,AMT_EST_PNS_MONTH 		= #{amt_est_pns_month    ,jdbcType=VARCHAR}
+			,AMT_EST_PNS_YEAR 		= #{amt_est_pns_year     ,jdbcType=VARCHAR}
+			,START_RECEIPT_YYYYMM 	= #{start_receipt_yyyymm ,jdbcType=VARCHAR}
+			,EST_START_MBR_YYYYMM 	= #{est_start_mbr_yyyymm ,jdbcType=VARCHAR}
+			,EST_END_MBR_YYYYMM 	= #{est_end_mbr_yyyymm   ,jdbcType=VARCHAR}
+			,CNT_MONTH_EST_MBR 		= #{cnt_month_est_mbr    ,jdbcType=VARCHAR}
+			,AMT_EST_PNS_PAY 		= #{amt_est_pns_pay      ,jdbcType=VARCHAR}
+			,DT_FRT					= SYSDATE
+		WHEN NOT MATCHED THEN
+        INSERT
+        (
+			  NO_PERSON
+			, CNT_MONTH_PAY
+			, AMT_PAY
+			, CNT_MONTH_NOT_PAY
+			, AMT_NOT_PAY
+			, CNT_MONTH_CANNOT_PAY
+			, AMT_CANNOT_PAY
+			, AMT_PAY_RETURN
+			, AMT_PAY_PRIMIUM
+			, AMT_EST_PNS_MONTH
+			, AMT_EST_PNS_YEAR
+			, START_RECEIPT_YYYYMM
+			, EST_START_MBR_YYYYMM
+			, EST_END_MBR_YYYYMM
+			, CNT_MONTH_EST_MBR
+			, AMT_EST_PNS_PAY
+			, DT_FRT
+		) VALUES (
+			 #{no_person		, jdbcType=VARCHAR}
+			, #{cnt_month_pay        ,jdbcType=VARCHAR}
+		 	, #{amt_pay              ,jdbcType=VARCHAR}
+		 	, #{cnt_month_not_pay    ,jdbcType=VARCHAR}
+		 	, #{amt_not_pay          ,jdbcType=VARCHAR}
+			, #{cnt_month_cannot_pay ,jdbcType=VARCHAR}
+			, #{amt_cannot_pay       ,jdbcType=VARCHAR}
+			, #{amt_pay_return       ,jdbcType=VARCHAR}
+			, #{amt_pay_primium      ,jdbcType=VARCHAR}
+			, #{amt_est_pns_month    ,jdbcType=VARCHAR}
+			, #{amt_est_pns_year     ,jdbcType=VARCHAR}
+			, #{start_receipt_yyyymm ,jdbcType=VARCHAR}
+			, #{est_start_mbr_yyyymm ,jdbcType=VARCHAR}
+			, #{est_end_mbr_yyyymm   ,jdbcType=VARCHAR}
+			, #{cnt_month_est_mbr    ,jdbcType=VARCHAR}
+			, #{amt_est_pns_pay      ,jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<select id="getScrRespPensionPayment" parameterType="com.koscom.scrap.model.ScrRespPensionPaymentVO" resultType="com.koscom.scrap.model.ScrRespPensionPaymentVO">
+		SELECT NO_PERSON
+			, CNT_MONTH_PAY
+			, AMT_PAY
+			, CNT_MONTH_NOT_PAY
+			, AMT_NOT_PAY
+			, CNT_MONTH_CANNOT_PAY
+			, AMT_CANNOT_PAY
+			, AMT_PAY_RETURN
+			, AMT_PAY_PRIMIUM
+			, AMT_EST_PNS_MONTH
+			, AMT_EST_PNS_YEAR
+			, START_RECEIPT_YYYYMM
+			, EST_START_MBR_YYYYMM
+			, EST_END_MBR_YYYYMM
+			, CNT_MONTH_EST_MBR
+			, AMT_EST_PNS_PAY
+			, DT_FRT
+		FROM SCR_RESP_PENSION_PAYMENT
+		WHERE  NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="createScrRespPensionPaymentdtl" parameterType="com.koscom.scrap.model.ScrRespPensionPaymentdtlVO">
+		INSERT INTO SCR_RESP_PENSION_PAYMENTDTL
+		(
+			  NO_PERSON
+			, START_YYYYMM
+			, END_YYYYMM
+			, AMT_BASE_INCOME_MONTH
+			, CNT_MONTH_PAY
+			, AMT_PAY
+			, CNT_MONTH_NOT_PAY
+			, AMT_NOT_PAY
+			, TYPE
+			, ETC
+			, DT_FRT
+		) VALUES (
+			#{no_person					, jdbcType=VARCHAR}
+			, #{start_yyyymm			, jdbcType=VARCHAR}
+			, #{end_yyyymm				, jdbcType=VARCHAR}
+			, #{amt_base_income_month	, jdbcType=VARCHAR}
+			, #{cnt_month_pay			, jdbcType=VARCHAR}
+			, #{amt_pay					, jdbcType=VARCHAR}
+			, #{cnt_month_not_pay		, jdbcType=VARCHAR}
+			, #{amt_not_pay				, jdbcType=VARCHAR}
+			, #{type					, jdbcType=VARCHAR}
+			, #{etc						, jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<select id="getScrRespPensionPaymentdtl" parameterType="com.koscom.scrap.model.ScrRespPensionPaymentdtlVO" resultType="com.koscom.scrap.model.ScrRespPensionPaymentdtlVO">
+		SELECT NO_PERSON
+			, START_YYYYMM
+			, END_YYYYMM
+			, AMT_BASE_INCOME_MONTH
+			, CNT_MONTH_PAY
+			, AMT_PAY
+			, CNT_MONTH_NOT_PAY
+			, AMT_NOT_PAY
+			, TYPE
+			, ETC
+			, DT_FRT
+		FROM SCR_RESP_PENSION_PAYMENTDTL
+		WHERE  NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND START_YYYYMM >= #{start_yyyymm, jdbcType=VARCHAR}
+			AND END_YYYYMM <![CDATA[<=]]>  #{end_yyyymm, jdbcType=VARCHAR}
+		ORDER BY START_YYYYMM DESC
+	</select>
+	
+	<insert id="createKcbReqNonfiInfo" parameterType="com.koscom.kcb.model.KcbReqNonfiInfoVO">
+		<selectKey keyProperty="seq_kcb_reg" resultType="integer" order="BEFORE">
+		    SELECT SEQ_KCB_REG.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO KCB_REQ_NONFI_INFO
+		(
+			  SEQ_KCB_REG
+			, CD_REQ
+			, NO_PERSON
+			, SEQ_SCRAPING_RESULT
+			, STATUS
+			, DT_REG
+			, DT_REQ
+			, DT_SEND
+			, CD_ERR
+			, BIT_ERR
+			, ID_FRT
+			, DT_FRT
+		) VALUES (
+			#{seq_kcb_reg			, jdbcType=NUMERIC}
+			, #{cd_req				, jdbcType=VARCHAR}
+			, #{no_person			, jdbcType=VARCHAR}
+			, #{seq_scraping_result	, jdbcType=NUMERIC}
+			, #{status				, jdbcType=VARCHAR}
+			, #{dt_reg				, jdbcType=VARCHAR}
+			, #{dt_req				, jdbcType=VARCHAR}
+			, #{dt_send				, jdbcType=VARCHAR}
+			, #{cd_err				, jdbcType=VARCHAR}
+			, #{bit_err				, jdbcType=VARCHAR}
+			, #{id_frt				, jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<select id="getKcbReqNonfiInfo" parameterType="com.koscom.kcb.model.KcbReqNonfiInfoVO" resultType="com.koscom.kcb.model.KcbReqNonfiInfoVO">
+		SELECT SEQ_KCB_REG
+			, CD_REQ
+			, NO_PERSON
+			, SEQ_SCRAPING_RESULT
+			, STATUS
+			, DT_REG
+			, DT_REQ
+			, DT_SEND
+			, CD_ERR
+			, BIT_ERR
+			, ID_FRT
+			, DT_FRT 
+		FROM KCB_REQ_NONFI_INFO A,
+			(SELECT MAX(SEQ_KCB_REG) MAXSEQ 
+			FROM KCB_REQ_NONFI_INFO 
+			WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			GROUP BY CD_REQ) B 
+		WHERE  A.SEQ_KCB_REG = B.MAXSEQ
+	</select>
+	
+	<update id="updateKcbReqNonfiInfo" parameterType="com.koscom.kcb.model.KcbReqNonfiInfoVO">
+		UPDATE KCB_REQ_NONFI_INFO
+		   SET STATUS = #{status, jdbcType=VARCHAR}
+		   <if test="@com.koscom.util.MybatisUtil@isNotEmpty(dt_req)">
+		      ,DT_REQ = #{dt_req, jdbcType=VARCHAR}
+		   </if>
+		   <if test="@com.koscom.util.MybatisUtil@isNotEmpty(dt_send)">
+		      ,DT_SEND = #{dt_send, jdbcType=VARCHAR}
+		   </if>
+		      ,ID_LST = #{no_person, jdbcType=VARCHAR}
+		      ,DT_LST = SYSDATE
+		 WHERE SEQ_KCB_REG = (SELECT MAX(SEQ_KCB_REG) MAXSEQ 
+								FROM KCB_REQ_NONFI_INFO 
+								WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+								AND CD_REQ = #{cd_req, jdbcType=VARCHAR})
+	</update>
 </mapper>

@@ -18,4 +18,11 @@ public interface ConditioncreditMapper {
 	 * @return
 	 */
 	int procConditioncreditInfo(ConditioncreditInfo conditioncreditInfo);
+	
+	/**
+	 * 조건개인 추가
+	 * @param no_person
+	 * @return
+	 */
+	int insertConditioncreditInfo(String no_person);
 }

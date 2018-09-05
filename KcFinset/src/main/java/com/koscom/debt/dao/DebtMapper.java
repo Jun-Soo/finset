@@ -2,7 +2,10 @@ package com.koscom.debt.dao;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import com.koscom.debt.model.CrawlingLoanDtlVO;
+import com.koscom.debt.model.CrawlingLoanVO;
 import com.koscom.debt.model.DebtCalendarVO;
 import com.koscom.debt.model.DebtDetail12RepVO;
 import com.koscom.debt.model.DebtForm;
@@ -11,6 +14,38 @@ import com.koscom.debt.model.DebtVO;
 
 public interface DebtMapper {
 
+	/**
+	 * 정보관리번호 조회(KcbManagerImpl)
+	 * @param loanVO
+	 * @return
+	 */
+	String selectKcbNoManage(CrawlingLoanVO loanVO);
+	
+	/**
+	 * 부채 추가(KcbManagerImpl)
+	 * @param loanVO
+	 */
+	void insertKcbDebt(CrawlingLoanVO loanVO);
+	
+	/**
+	 * 부채 상세 내역 MERGE(KcbManagerImpl)
+	 * @param crawlingLoanDtlVO
+	 */
+	void updateKcbDtlDebt(CrawlingLoanDtlVO crawlingLoanDtlVO);
+	
+	/**
+	 * 부채 해지 UPDATE(KcbManagerImpl)
+	 * @param paramMap
+	 * @return
+	 */
+	int updateKcbDebtCancel(Map<String, Object> paramMap);
+	
+	/**
+	 * 부채 수정 (KcbManagerImpl)
+	 * @param paramMap
+	 */
+	void updateKcbDebt(Map<String, Object> paramMap);
+	
 	/**
 	 * 부채 내역 조회(회원별 상환중 부채)
 	 * @param String no_person

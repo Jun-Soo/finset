@@ -4307,4 +4307,24 @@ public class StringUtil {
 		else
 			return String.valueOf(Integer.parseInt(str));
 	}
+	
+	/**
+	 * ( 시작괄호 이후값은 제거
+	 * @param str
+	 * @return ex) (XXX) 패턴이 포함되어 있을경우 제거
+	 */
+	public static String stringRtnNmFc(String str) {
+
+		String rtnStr	= str;
+		
+		if(rtnStr.indexOf("(주)") > -1) {
+			rtnStr = rtnStr.replace("(주)", "");
+		}
+		
+		if(rtnStr.indexOf("(") > -1) {
+			rtnStr = rtnStr.substring(0, rtnStr.indexOf("("));
+		}
+
+		return rtnStr;
+	}
 }

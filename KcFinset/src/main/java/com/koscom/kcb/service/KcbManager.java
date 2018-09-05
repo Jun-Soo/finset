@@ -2,8 +2,10 @@ package com.koscom.kcb.service;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.List;
 
 import com.koscom.kcb.model.KcbCreditInfoVO;
+import com.koscom.kcb.model.KcbReqNonfiInfoVO;
 import com.koscom.person.model.PersonVO;
 import com.koscom.util.FinsetException;
 import com.koscom.util.ReturnClass;
@@ -44,7 +46,7 @@ public interface KcbManager {
 	 * @return
 	 * @throws SQLException
 	 */
-	//ReturnClass parseCrawling(KcbCreditInfoVO info) throws FinsetException;
+	ReturnClass parseCrawling(KcbCreditInfoVO info) throws FinsetException;
 
 	/**
 	 * 전문 처리 및 크롤링 실패시 데이터 삭제
@@ -53,4 +55,24 @@ public interface KcbManager {
 	 */
 	ReturnClass deleteKcbCb(String noPerson);
 	
+	/**
+	 * KCB 비금융정보 요청내역 insert
+	 * @param String noPerson
+	 * @return
+	 */
+	ReturnClass createKcbReqNonfiInfo(KcbReqNonfiInfoVO kcbReqNonfiInfoVO);
+	
+	/**
+	 * KCB 비금융정보 요청내역 조회
+	 * @param KcbReqNonfiInfoVO
+	 * @return KcbReqNonfiInfoVO
+	 */
+	List<KcbReqNonfiInfoVO> getKcbReqNonfiInfo(KcbReqNonfiInfoVO kcbReqNonfiInfoVO);
+	
+	/**
+	 * KCB 비금융정보 요청내역 update
+	 * @param KcbReqNonfiInfoVO
+	 * @return
+	 */
+	int updateKcbReqNonfiInfo(KcbReqNonfiInfoVO kcbReqNonfiInfoVO);
 }

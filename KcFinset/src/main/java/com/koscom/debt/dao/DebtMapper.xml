@@ -59,6 +59,58 @@
 		)
 	</insert>
 	
+	<update id="updateKcbDtlDebt" parameterType="com.koscom.debt.model.CrawlingLoanDtlVO">
+	    /* com.koscom.debt.dao.DebtMapper.updateKcbDtlDebt */
+		MERGE INTO DEBT_PERSONAL_REPAY_LIST
+		  USING DUAL
+		  ON (		NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		  		AND NO_MANAGE_INFO = #{no_manage_info, jdbcType=VARCHAR}
+		  		AND REQ_YYYYMM = #{req_yyyymm, jdbcType=VARCHAR})
+			WHEN MATCHED THEN
+		     UPDATE
+			  SET YN_KCB 		= 'Y'
+			     ,CD_ETM_BASIC	= NULL
+			     ,CD_ACCOUNT 	= (SELECT CODE_VALUE FROM COMM_CD A WHERE A.CODE_GROUP = 'cd_account' AND A.NM_CODE LIKE TRIM(#{nm_account, jdbcType=VARCHAR}))
+			 	 ,NM_ACCOUNT 	= #{nm_account, jdbcType=VARCHAR}
+			 	 ,AMT_REPAY		= #{amt_repay, jdbcType=VARCHAR}
+			 	 ,AMT_REMAIN	= #{amt_remain, jdbcType=VARCHAR}
+			 	 ,AMT_DELAY 	= #{amt_due, jdbcType=VARCHAR}
+				 ,ID_LST    	= #{no_person, jdbcType=VARCHAR}
+				 ,DT_LST    	= SYSDATE
+			WHEN NOT MATCHED THEN
+			  INSERT
+			(
+				NO_PERSON,
+				NO_MANAGE_INFO,
+				REQ_YYYYMM,
+				YN_KCB,
+				CD_ACCOUNT,
+				NM_ACCOUNT,
+				AMT_REPAY,
+				AMT_REMAIN,
+				AMT_DELAY,
+				ID_FRT,
+				DT_FRT,
+				ID_LST,
+				DT_LST
+			)
+			VALUES(
+				 #{no_person, jdbcType=VARCHAR}
+				,#{no_manage_info, jdbcType=VARCHAR}
+				,#{req_yyyymm, jdbcType=VARCHAR}
+				,'Y'
+				,(SELECT CODE_VALUE FROM COMM_CD A WHERE A.CODE_GROUP = 'cd_account' AND A.NM_CODE LIKE TRIM(#{nm_account, jdbcType=VARCHAR}))
+				,#{nm_account, jdbcType=VARCHAR}
+				,#{amt_repay, jdbcType=VARCHAR}
+				,#{amt_remain, jdbcType=VARCHAR}
+				,#{amt_due, jdbcType=VARCHAR}
+				,#{no_person, jdbcType=VARCHAR}
+				,SYSDATE
+				,#{no_person, jdbcType=VARCHAR}
+				,SYSDATE
+			)
+	</update>
+	
 	<update id="updateKcbDebtCancel" parameterType="hashmap">
 	    /* com.koscom.debt.dao.DebtMapper.updateKcbDebtCancel */
 		UPDATE DEBT_PERSONAL_INFO

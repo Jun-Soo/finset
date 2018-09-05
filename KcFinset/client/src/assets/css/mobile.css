@@ -24,10 +24,10 @@ a{
 }
 
 /* 인풋 요소의 표현, none으로 하면 그림자 등이 깨끗하게 */
--webkit-appearance:none;
--webkit-appearance:text;
--webkit-appearance:radio;
--webkit-appearance:checkbox;
+-webkit-appearance:none
+-webkit-appearance:text
+-webkit-appearance:radio
+-webkit-appearance:checkbox
 
 .clearfix:before, 
 .clearfix:after {
@@ -76,7 +76,7 @@ label{
     position: absolute;
     top: 0px;
     left: 0;
-    background: url('/images/iconset_label.png') no-repeat;
+    background: url('../images/iconset_label.png') no-repeat;
     background-size: 150px 150px;
      background-position: -2px 0px;
     -webkit-appearance: none;
@@ -154,7 +154,7 @@ select.form-control{
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
-	background: url('/images/ico_select_arr.png') 100% 50% no-repeat;
+	background: url('../images/ico_select_arr.png') 100% 50% no-repeat;
 	background-size: 32px;
 }
 .form-control{
@@ -270,7 +270,7 @@ select.form-control{
 	height: 100%;
 	/* height: auto; */
     padding-top: 56px;
-    /*margin-bottom: 160px;*/
+    margin-bottom: 62px;
 	-webkit-transition:all .3s ease;
 	transition:all .3s ease;
 }
@@ -336,7 +336,7 @@ select.form-control{
 .g-menu .ico{
 	width: 24px;
     height: 24px;
-	background:url('/images/iconset_aside.png') no-repeat;
+	background:url('../images/iconset_aside.png') no-repeat;
     -webkit-background-size: 150px 150px;
     background-size: 150px 150px;
     color: transparent;
@@ -393,7 +393,7 @@ select.form-control{
     overflow: hidden;
     color: transparent;
     white-space: nowrap;
-    background: url('/images/iconset_aside.png') no-repeat;
+    background: url('../images/iconset_aside.png') no-repeat;
     -webkit-background-size: 150px 150px;
     background-size: 150px 150px;
 }
@@ -454,7 +454,7 @@ select.form-control{
 }
 */
 #header h1.logo{
-	background: url('/images/logo.png') no-repeat center;
+	background: url('../images/logo.png') no-repeat center;
 	background-size: 100px;
 	overflow: hidden;
 	text-indent: -9999px;
@@ -521,10 +521,10 @@ select.form-control{
 	background-color: rgba(0,0,0,.05);
 }
 .nav-back{
-	background-image: url('/images/ico_back.png');
+	background-image: url('../images/ico_back.png');
 }
 .nav-close{
-	background-image: url('/images/ico_close.png');
+	background-image: url('../images/ico_close.png');
 	position: absolute;
     right: 10px;
     top: 50%;
@@ -566,7 +566,7 @@ select.form-control{
     height: 16px;
     display: inline-block;
     white-space: nowrap;
-    background:url('/images/iconset_aside.png') no-repeat;
+    background:url('../images/iconset_aside.png') no-repeat;
     -webkit-background-size: 150px 150px;
     background-size: 150px 150px;
     color: transparent;
@@ -637,7 +637,7 @@ select.form-control{
     overflow: hidden;
     display: inline-block;
     vertical-align: top;
-    background: url('/images/iconset_aside.png') no-repeat;
+    background: url('../images/iconset_aside.png') no-repeat;
     -webkit-background-size: 150px 150px;
     background-size: 150px 150px;
     color: transparent;
@@ -657,9 +657,9 @@ select.form-control{
     background-color: #f9f9f9;
     border-top: 1px solid #eee;
 }
-#menu-fixed-bottom .arr_left{
+/* #menu-fixed-bottom .arr_left{
 	position: absolute;
-	background: url('/images/ico_arr_left.png') no-repeat;
+	background: url('../images/ico_arr_left.png') no-repeat;
 	background-size: 12px 44px;
 	opacity: 0.3;
 	top: 4px;
@@ -670,7 +670,7 @@ select.form-control{
 }
 #menu-fixed-bottom .arr_right{
 	position: absolute;
-	background: url('/images/ico_arr_right.png') no-repeat;
+	background: url('../images/ico_arr_right.png') no-repeat;
 	background-size: 12px 44px;
 	opacity: 0.3;
 	top: 4px;
@@ -678,7 +678,7 @@ select.form-control{
 	width: 12px;
 	height: 44px;
 	z-index: 0;
-}
+} */
 .menu-list{
 	font-size: 0;
 	text-align: center;
@@ -709,7 +709,7 @@ select.form-control{
 	width: 24px;
 	height: 24px;
 	margin: 0 auto 3px;
-	background: url('/images/iconset_menu.png') no-repeat 0 0;
+	background: url('../images/iconset_menu.png') no-repeat 0 0;
 	background-size: 150px;
 }
 .menu-list > li > .menu-credit::before{
@@ -806,7 +806,7 @@ select.form-control{
 	height:15px;
 	margin-right:5px;
 	vertical-align:top;
-	background:url('/images/ico_bullet.png') no-repeat center;
+	background:url('../images/ico_bullet.png') no-repeat center;
 	background-size:contain;
 }*/
 .page-header .text-primary{
@@ -932,7 +932,7 @@ select.form-control{
 	width: 24px;
 	height: 14px;
 	display: inline-block;
-	background: url('/images/iconset_label.png') no-repeat;
+	background: url('../images/iconset_label.png') no-repeat;
 	background-position: -36px -4px;
 	background-size: 150px 150px;
 	position: relative;
@@ -1140,7 +1140,7 @@ select.form-control{
 	content: "";
 	width: 26px;
 	height: 26px;
-	background:url('/images/ico_search2.png') no-repeat center;
+	background:url('../images/ico_search2.png') no-repeat center;
 	background-size:contain;
 }
 .search-block .form-control:active{
@@ -1157,7 +1157,7 @@ select.form-control{
 	content: "";
 	width: 26px;
 	height: 26px;
-	background:url('/images/ico_search2.png') no-repeat center;
+	background:url('../images/ico_search2.png') no-repeat center;
 	background-size:contain;
 	/* margin: 5px; */
 	padding: 12px;
@@ -1206,7 +1206,7 @@ select.form-control{
 	width: 30px;
 	height: 30px;
 	text-indent:-9999px;
-	background:url('/images/ico_search.png') no-repeat center;
+	background:url('../images/ico_search.png') no-repeat center;
 	background-size:contain;
 	/* margin: 5px; */
 	padding: 15px;
@@ -1222,7 +1222,7 @@ select.form-control{
     width: 30px;
     height: 30px;
     text-indent: -9999px;
-    background: url(/images/ico_search.png) no-repeat center;
+    background: url(../images/ico_search.png) no-repeat center;
     background-size: contain;
     padding: 15px;
     position: absolute;
@@ -1463,7 +1463,7 @@ select.form-control{
 .ico-close{
     width: 18px;
     height: 18px;
-	background:url('/images/iconset_aside.png') no-repeat;
+	background:url('../images/iconset_aside.png') no-repeat;
     -webkit-background-size: 150px 150px;
     background-size: 150px 150px;
     color: transparent;
@@ -1478,7 +1478,7 @@ select.form-control{
 	display: inline-block;
 	width: 40px;
 	height: 40px;
-	background: url('/images/iconset_thumb.png') no-repeat 0 0px;
+	background: url('../images/iconset_thumb.png') no-repeat 0 0px;
 	background-size: 150px 150px;
 	float: left;
 	border-radius: 50%;
@@ -1768,7 +1768,7 @@ table thead{
     height: 44px;
     margin: 0 auto;
     margin-bottom: 20px;
-    background: url(/images/iconset_msg.png) no-repeat 0px -80px;
+    background: url(../images/iconset_msg.png) no-repeat 0px -80px;
     background-size: 400px 400px;
 }
 .alert-desc{
@@ -1821,7 +1821,7 @@ table thead{
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
-	background: url('/images/ico_select_arr.png') #fff 100% 50% no-repeat;
+	background: url('../images/ico_select_arr.png') #fff 100% 50% no-repeat;
 	background-size: 32px;
 }
 .bootstrap-select.btn-group .dropdown-menu{
@@ -1875,7 +1875,7 @@ table thead{
 .caret{
 	width: 24px;
 	height: 24px;
-	background: url('/images/ico_select_arr.png') #fff 100% 50% no-repeat;
+	background: url('../images/ico_select_arr.png') #fff 100% 50% no-repeat;
 	background-size: 24px;
 	border: 0;
 }
@@ -1932,7 +1932,7 @@ table thead{
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background: url('/images/ico_select_sort.png') 100% 50% no-repeat;
+    background: url('../images/ico_select_sort.png') 100% 50% no-repeat;
     background-size: 32px;
 }
 
@@ -2271,7 +2271,7 @@ small{
 	height: 60px;
 	margin: 0 auto;
 	margin-bottom: 20px;
-	background: url('/images/iconset_msg.png') no-repeat;
+	background: url('../images/iconset_msg.png') no-repeat;
 }
 .msg-block .msg-img.msg-complete::before,
 .msg-block .msg-img.quit-complete::before,
@@ -2291,7 +2291,7 @@ small{
 	content: "";
 	display: block;
 	margin: 60px auto;
-	background: url('/images/iconset_msg.png') no-repeat 0 0px;
+	background: url('../images/iconset_msg.png') no-repeat 0 0px;
 	background-size: 400px 400px;
 }
 .msg-block.page-scraping::before{
@@ -2300,7 +2300,7 @@ small{
 	width: 90px;
 	height: 90px;
 	margin: 60px auto;
-	background: url('/images/iconset_msg.png') no-repeat 0 0px;
+	background: url('../images/iconset_msg.png') no-repeat 0 0px;
 	background-size: 400px 400px;
 }
 /* .list-group-item span{
@@ -2323,7 +2323,7 @@ small{
 	width: 60px;
 	height: 60px;
 	margin: 10px auto;
-	background: url('/images/ico_app.png') no-repeat 0 0px;
+	background: url('../images/ico_app.png') no-repeat 0 0px;
 	background-size: contain;
 }
 .ver-info .btn-area{
@@ -2427,7 +2427,7 @@ small{
 	-webkit-appearance: none;
 	-moz-appearance: none;
 	appearance: none;
-	background: url('/images/ico_select_arr.png') 100% 50% no-repeat;
+	background: url('../images/ico_select_arr.png') 100% 50% no-repeat;
 	background-size: 32px;
 }
 .form-input-block-confrim span > select.form-control{
@@ -2506,7 +2506,7 @@ small{
 	content:"";
     width: 32px;
     height: 32px;
-    background: url('/images/ico_select_arr.png') #fff 100% 50% no-repeat;
+    background: url('../images/ico_select_arr.png') #fff 100% 50% no-repeat;
     background-size: 32px;
     border: 0;
     position: absolute;
@@ -2598,7 +2598,7 @@ small{
 	color: #303843;
 	text-align: center;
 	padding: 110px 0px 66px;
-	background: url('/images/security_code_bg.png') no-repeat;
+	background: url('../images/security_code_bg.png') no-repeat;
 	background-size: cover;
 }
 .modal-body .security-code-block{
@@ -2723,7 +2723,7 @@ small{
 	height: 110px;
 	margin: 40px auto;
 	opacity: 0.9;
-	background: url('/images/img_finger.png') no-repeat 0 0px;
+	background: url('../images/img_finger.png') no-repeat 0 0px;
 	background-size: 100px;
 }
 .security-code-wrap .btn-area{
@@ -3005,7 +3005,7 @@ small{
 .ico-submenu{
     width: 48px;
     height: 48px;
-	background:url('/images/ico_submenu.png') no-repeat;
+	background:url('../images/ico_submenu.png') no-repeat;
 	background-size: 30px 30px;
 	background-position: right;
     color: transparent;
@@ -3073,7 +3073,7 @@ small{
 	float: right;
 	bottom: 68px;
 	right: 10px;
-	background: url('/images/ico_plus.png') no-repeat;
+	background: url('../images/ico_plus.png') no-repeat;
 	background-size: 40px 40px;
 	width: 40px;
 	height: 40px;
@@ -3147,7 +3147,7 @@ small{
 	margin-top: 7px;
 	width: 40px;
 	height: 40px;
-	background: url('/images/iconset_memo.png') no-repeat;
+	background: url('../images/iconset_memo.png') no-repeat;
 	background-size: 120px 120px;
 	color: transparent;
 	position: relative;
@@ -3408,7 +3408,7 @@ small{
     color: #303843;
     text-align: center;
     padding: 65px 0 20px;
-    background: url('/images/security_code_bg.png') no-repeat;
+    background: url('../images/security_code_bg.png') no-repeat;
     background-size: cover;
 }
 .credit-mgt-box{
@@ -3521,7 +3521,7 @@ small{
 	width: 40px;
 	height: 28px;
 	display: inline-block;
-	background: url('/images/iconset_banner.png') no-repeat 0 -80px;
+	background: url('../images/iconset_banner.png') no-repeat 0 -80px;
 	background-size: 300px;
 	position: absolute;
     top: 50%;
@@ -3608,7 +3608,7 @@ small{
 */
 .btn-backspace,
 .btn-backspace:active{
-	background: url('/images/ico_key_del.png') no-repeat center !important;
+	background: url('../images/ico_key_del.png') no-repeat center !important;
 	background-size: 30px !important;
 	overflow: hidden;
 	text-indent: -9999px;
@@ -3616,7 +3616,7 @@ small{
 }
 .btn-fingerfrt,
 .btn-fingerfrt:active{
-	background: url('/images/ico_fingerfnt.png') no-repeat center !important;
+	background: url('../images/ico_fingerfnt.png') no-repeat center !important;
 	background-size: 30px !important;
 	overflow: hidden;
 	text-indent: -9999px;
@@ -3821,7 +3821,7 @@ p.date{
 	height: 44px;
 	margin: 0 auto;
 	margin-bottom: 20px;
-	background: url('/images/iconset_msg.png') no-repeat 0px -80px;
+	background: url('../images/iconset_msg.png') no-repeat 0px -80px;
 	background-size: 400px 400px;
 }
 .data-none .btn-outline{
@@ -3877,7 +3877,7 @@ p.date{
     width: 25px;
     height: 25px;
     visibility: visible;
-    background: url(/images/iconset_label.png) no-repeat -56px 0;
+    background: url(../images/iconset_label.png) no-repeat -56px 0;
     background-size: 300px;
     position: absolute;
     top: 50%;
@@ -3910,7 +3910,7 @@ p.date{
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size: contain;
-	background-image: url('/images/ico_alliance.png');
+	background-image: url('../images/ico_alliance.png');
 }
 .prd-loan > .text-primary{
 	font-size: 12px;
@@ -4296,7 +4296,7 @@ h3 .label-badge{
 	vertical-align: middle;
 	width: 30px;
 	height: 30px;
-	background: url('/images/ico_choice_off.png') no-repeat center;
+	background: url('../images/ico_choice_off.png') no-repeat center;
 	background-size: contain;
 }
 */
@@ -4307,28 +4307,28 @@ h3 .label-badge{
 	vertical-align: middle;
 	width: 30px;
 	height: 30px;
-	background: url('/images/iconset_label.png') no-repeat;
+	background: url('../images/iconset_label.png') no-repeat;
 	background-size: 150px 150px;
 	/* -webkit-transition: all .1s ease;
 	transition: all .3s ease; */
 }
 .ico-choice input[type="checkbox"] + label:before {
-	background: url('/images/iconset_label.png') no-repeat;
+	background: url('../images/iconset_label.png') no-repeat;
 	background-size: 150px 150px;
 	background-position: 2px -30px;
 }
 .ico-choice input[type="checkbox"]:checked + label:before {
-	background: url('/images/iconset_label.png') no-repeat;
+	background: url('../images/iconset_label.png') no-repeat;
 	background-size: 150px 150px;
 	background-position: -34px -30px;
 }
 .ico-zzim input[type="checkbox"] + label:before {
-	background: url('/images/iconset_label.png') no-repeat;
+	background: url('../images/iconset_label.png') no-repeat;
 	background-size: 150px 150px;
 	background-position: -69px -34px;
 }
 .ico-zzim input[type="checkbox"]:checked + label:before {
-	background: url('/images/iconset_label.png') no-repeat;
+	background: url('../images/iconset_label.png') no-repeat;
 	background-size: 150px 150px;
 	background-position: -102px -34px;
 }
@@ -4342,7 +4342,7 @@ h3 .label-badge{
 	display: block;
 	padding: 24px;
 	/*
-	background: url('/images/bnr_service_bg.png') no-repeat center;
+	background: url('../images/bnr_service_bg.png') no-repeat center;
 	background-size: cover;*/
 	background: #fff;
 }
@@ -4372,7 +4372,7 @@ h3 .label-badge{
 	height: 14px;
 	display: inline-block;
 	margin-left: 7px;
-	background: url('/images/iconset_arr.png') no-repeat -45px -79px;
+	background: url('../images/iconset_arr.png') no-repeat -45px -79px;
 	background-size: 300px;
 	position: relative;
 	top: 5px;
@@ -4404,7 +4404,7 @@ h3 .label-badge{
     height: 12px;
     padding: 14px;
     margin: 0 auto;
-    background: url('/images/iconset_arr.png') no-repeat -12px -17px;
+    background: url('../images/iconset_arr.png') no-repeat -12px -17px;
     background-size: 150px 150px;
     position: absolute;
     top: 50%;
@@ -4435,7 +4435,7 @@ h3 .label-badge{
     width: 28px;
     height: 28px;
     margin: 0 auto 2px;
-    background: url('/images/iconset_banner.png') no-repeat 0 0;
+    background: url('../images/iconset_banner.png') no-repeat 0 0;
     background-size: 300px;
     position: absolute;
     top: 50%;
@@ -4454,7 +4454,7 @@ h3 .label-badge{
 	width: 19px;
 	height: 11px;
 	display: inline-block;
-	background: url('/images/iconset_arr.png') no-repeat -25px -25px;
+	background: url('../images/iconset_arr.png') no-repeat -25px -25px;
 	background-size: 300px;
 	position: absolute;
     top: 50%;
@@ -4512,7 +4512,7 @@ h3 .label-badge{
 	width: 11px;
 	height: 7px;
 	display: inline-block;
-	background: url('/images/iconset_arr.png') no-repeat -20px 0;
+	background: url('../images/iconset_arr.png') no-repeat -20px 0;
 	background-size: 300px;
 	position: absolute;
     top: 50%;
@@ -4558,7 +4558,7 @@ h3 .label-badge{
 	width: 11px;
 	height: 7px;
 	display: inline-block;
-	background: url('/images/iconset_arr.png') no-repeat -20px 0;
+	background: url('../images/iconset_arr.png') no-repeat -20px 0;
 	background-size: 300px;
 	position: absolute;
     top: 50%;
@@ -4574,7 +4574,7 @@ h3 .label-badge{
 	border: 0;
 	/* overflow: hidden; */
 	text-indent: -9999px;
-	background: url('/images/iconset_arr.png') no-repeat 14px -20px;
+	background: url('../images/iconset_arr.png') no-repeat 14px -20px;
 	background-size: 150px 150px;
 	position: absolute;
     top: 50%;
@@ -4635,7 +4635,7 @@ a.list-group-item{
     width: 6px;
     height: 12px;
     margin: 0 auto;
-    background:url('/images/iconset_arr.png') no-repeat 12px -16px;
+    background:url('../images/iconset_arr.png') no-repeat 12px -16px;
     background-size: 150px 150px;
     position: absolute;
     top: 50%;
@@ -4699,7 +4699,7 @@ button.list-group-item:active{
     width: 28px;
     height: 28px;
     margin: 0 auto 2px;
-    background: url('/images/iconset_arr.png') no-repeat -50px 8px;
+    background: url('../images/iconset_arr.png') no-repeat -50px 8px;
     background-size: 300px;
     position: absolute;
     top: 50%;
@@ -4712,7 +4712,7 @@ button.list-group-item:active{
 	width: 28px;
 	height: 28px;
 	display: inline-block;
-	background: url('/images/iconset_arr.png') no-repeat -50px 8px;
+	background: url('../images/iconset_arr.png') no-repeat -50px 8px;
 	background-size: 300px;
 	position: absolute;
     top: 50%;
@@ -4762,7 +4762,7 @@ button.list-group-item:active{
 	display: block;
 	width: 131px;
 	height: 140px;
-	background: url('/images/iconset_msg.png') no-repeat 0 -406px;
+	background: url('../images/iconset_msg.png') no-repeat 0 -406px;
     background-size: 300px;
     position: relative;
     top: 14px;
@@ -4780,7 +4780,7 @@ button.list-group-item:active{
 	width: 10px;
 	height: 18px;
 	display: inline-block;
-	background: url('/images/iconset_arr.png') no-repeat 0 -50px;
+	background: url('../images/iconset_arr.png') no-repeat 0 -50px;
 	background-size: 300px;
 	position: absolute;
     top: 50%;
@@ -4841,7 +4841,7 @@ button.list-group-item:active{
     display: block;
     margin: 0 auto;
     margin-bottom: 10px;
-    background: url('/images/iconset_favo.png') no-repeat center;
+    background: url('../images/iconset_favo.png') no-repeat center;
     background-size: 150px 150px;
     position: relative;
     top: 0px;
@@ -4894,7 +4894,7 @@ button.list-group-item:active{
     width: 6px;
     height: 12px;
     margin: 0 auto;
-    background: url('/images/iconset_arr.png') no-repeat -8px -16px;
+    background: url('../images/iconset_arr.png') no-repeat -8px -16px;
     background-size: 150px 150px;
     position: absolute;
     top: 50%;
@@ -5024,7 +5024,7 @@ p.link-txt{
     height: 40px;
     margin: 0 auto;
     margin-bottom: 6px;
-    background: url('/images/iconset_arr.png') no-repeat 0px -18px;
+    background: url('../images/iconset_arr.png') no-repeat 0px -18px;
     background-size: 150px 150px;
     position: relative;
     top: 0px;
@@ -5043,17 +5043,17 @@ p.link-txt{
 	line-height: 1;
     padding: 28px 22px 28px 50px;
 }
-.bnr-list > li > a::before{
+/* .bnr-list > li > a::before{
 	content: "";
 	width: 24px;
 	height: 24px;
 	display: inline-block;
-	background: url('/images/iconset_banner.png') no-repeat 0 -40px;
+	background: url('../images/iconset_banner.png') no-repeat 0 -40px;
 	background-size: 300px;
 	position: absolute;
     top: 28px;
     left: 18px;
-}
+} */
 .bnr-list > li:nth-of-type(1) > a::before{
 	background-position: 0 -40px;
 }
@@ -5068,7 +5068,7 @@ p.link-txt{
 	width: 10px;
 	height: 18px;
 	display: inline-block;
-	background: url('/images/iconset_arr.png') no-repeat 0 -50px;
+	background: url('../images/iconset_arr.png') no-repeat 0 -50px;
 	background-size: 150px 150px;
 	position: absolute;
     top: 50%;
@@ -5119,7 +5119,7 @@ p.link-txt{
 	width: 20px;
 	height: 18px;
 	display: inline-block;
-	background: url('/images/iconset_arr.png') no-repeat 4px -56px;
+	background: url('../images/iconset_arr.png') no-repeat 4px -56px;
 	background-size: 150px;
 	position: absolute;
     top: 50%;
@@ -5211,7 +5211,7 @@ p.link-txt{
 	height: 100%;
 }
 .splash .splash-logo {
-    background: url('/images/logo.png') no-repeat center;
+    background: url('../images/logo.png') no-repeat center;
     background-size: 128px;
     overflow: hidden;
     text-indent: -9999px;
@@ -5357,12 +5357,12 @@ p.link-txt{
 	line-height: 1;
     padding: 15px 22px 15px 80px;
 }
-.cert-list > li > a::before{
+/* .cert-list > li > a::before{
     content: "";
     display: inline-block;
     width: 44px;
     height: 44px;
-    background:#98756c url('/images/iconset_banner.png') no-repeat 0 -150px;
+    background:#98756c url('../images/iconset_banner.png') no-repeat 0 -150px;
     background-size: 300px;
     border-radius:50%;
     position:absolute;
@@ -5370,7 +5370,7 @@ p.link-txt{
     left:22px;
 	-webkit-transform:translateY(-50%);
 	transform:translateY(-50%);
-}
+} */
 .cert-list > li.cert-expiration > a::before{
 	background-color:#efefef;
 	background-position-x:-50px;
@@ -5384,7 +5384,7 @@ p.link-txt{
 	border:0;
 	overflow:hidden;
 	text-indent:-9999px;
-	background:url('/images/iconset_arr.png') no-repeat -50px 8px;
+	background:url('../images/iconset_arr.png') no-repeat -50px 8px;
 	background-size:300px;
 	position:absolute;
     top:50%;
@@ -5467,12 +5467,12 @@ p.link-txt{
 	margin-bottom: 7px;
 }
 .cert-cnt .cert-copy-pc::before{
-	background: url('/images/iconset_msg.png') no-repeat 0px -400px;
+	background: url('../images/iconset_msg.png') no-repeat 0px -400px;
 	background-size: 400px 400px;
 	
 }
 .cert-cnt .cert-copy-mobile::before{
-	background: url('/images/iconset_msg.png') no-repeat -100px -400px;
+	background: url('../images/iconset_msg.png') no-repeat -100px -400px;
 	background-size: 400px 400px;
 }
 .app-ver-msg{
@@ -5613,7 +5613,7 @@ p.link-txt{
     display: block;
     margin: 0 auto;
     margin-bottom: 6px;
-    background: url('/images/iconset_thumb.png') no-repeat;
+    background: url('../images/iconset_thumb.png') no-repeat;
     background-size: 150px;
     position: relative;
     top: 0px;
@@ -5651,13 +5651,13 @@ p.link-txt{
 	vertical-align: middle;
 	width: 62px;
 	height: 38px;
-	background: url('/images/ico_switch_off.png') no-repeat center;
+	background: url('../images/ico_switch_off.png') no-repeat center;
 	background-size: contain;
 	-webkit-transition: all .1s ease;
 	transition: all .3s ease;
 }
 .ui-switch input[type="checkbox"]:checked + label:before{
-	background: url('/images/ico_switch_on.png') no-repeat center;
+	background: url('../images/ico_switch_on.png') no-repeat center;
 	background-size: contain;
 }
 label[data-form-control=toggle] input[type=checkbox]:checked+[data-form-decorator=before]{
@@ -5776,7 +5776,7 @@ label[data-form-control=toggle] input[type=checkbox]:checked+[data-form-decorato
     width: 20px;
     height: 18px;
     display: block;
-    background: url(/images/iconset_arr.png) no-repeat;
+    background: url(../images/iconset_arr.png) no-repeat;
     background-size: 150px 150px;
     background-position: 4px -56px;
     margin: 0 auto;
@@ -5862,7 +5862,7 @@ label[data-form-control=toggle] input[type=checkbox]:checked+[data-form-decorato
 	width:21px;
 	height:17px;
 	margin-right: 3px;
-	background: url('/images/iconset_thumb.png') no-repeat center;
+	background: url('../images/iconset_thumb.png') no-repeat center;
 	background-size:150px 150px;
 	-webkit-transition: all .1s ease;
 }
@@ -5909,7 +5909,7 @@ label[data-form-control=toggle] input[type=checkbox]:checked+[data-form-decorato
 	content:"";
 	width:10px;
 	height:18px;
-	background:url('/images/iconset_arr.png') no-repeat;
+	background:url('../images/iconset_arr.png') no-repeat;
 	background-size:150px 150px;
 	background-position: -92px -22px;
 	padding:0px 10px;
@@ -5925,7 +5925,7 @@ label[data-form-control=toggle] input[type=checkbox]:checked+[data-form-decorato
     display: inline-block;
     width: 16px;
     height: 16px;
-    background: url(/images/iconset_msg.png) no-repeat -88px -85px;
+    background: url(../images/iconset_msg.png) no-repeat -88px -85px;
     background-size: 400px 400px;
     display: inline-block;
     margin-right: 6px;
@@ -6049,7 +6049,7 @@ label[data-form-control=toggle] input[type=checkbox]:checked+[data-form-decorato
 	content: "";
 	width: 20px;
 	height: 30px;
-	background: url('/images/iconset_arr.png') no-repeat;
+	background: url('../images/iconset_arr.png') no-repeat;
 	background-size: 150px 150px;
 	background-position: -42px -18px;
 	padding: 5px 10px;
@@ -6076,7 +6076,7 @@ label[data-form-control=toggle] input[type=checkbox]:checked+[data-form-decorato
 	content: "";
 	width: 20px;
 	height: 30px;
-	background: url('/images/iconset_arr.png') no-repeat;
+	background: url('../images/iconset_arr.png') no-repeat;
 	background-size: 150px 150px;
 	background-position: -90px -16px;
 	padding: 7px 10px;
@@ -6115,7 +6115,7 @@ label[data-form-control=toggle] input[type=checkbox]:checked+[data-form-decorato
     width: 6px;
     height: 12px;
     margin: 0 auto;
-    background: url(/images/iconset_arr.png) no-repeat -6px -16px;
+    background: url(../images/iconset_arr.png) no-repeat -6px -16px;
     background-size: 150px 150px;
     position: absolute;
     top: 50%;
@@ -6154,7 +6154,7 @@ label[data-form-control=toggle] input[type=checkbox]:checked+[data-form-decorato
     display: inline-block;
     width: 40px;
     height: 40px;
-	background: url('/images/iconset_side.png') no-repeat;
+	background: url('../images/iconset_side.png') no-repeat;
     background-size: 150px 150px;
     /* background-color: #fafafa; */
     border-radius: 50%;
@@ -6192,7 +6192,7 @@ label[data-form-control=toggle] input[type=checkbox]:checked+[data-form-decorato
     display: inline-block;
     width: 10px;
     height: 18px;
-    background: url('/images/iconset_arr.png') no-repeat -86px -21px;
+    background: url('../images/iconset_arr.png') no-repeat -86px -21px;
     background-size: 150px;
     position: absolute;
     top: 50%;
@@ -6516,7 +6516,7 @@ h3{text-align:center;}
 	width: 6px;
 	height: 11px;
 	margin-left: 5px;
-	background: url('/images/iconset_arr.png') no-repeat -75px -25px;
+	background: url('../images/iconset_arr.png') no-repeat -75px -25px;
     background-size: 150px;
 }
 .status-list{
@@ -6562,7 +6562,7 @@ h3{text-align:center;}
 	height: 40px;
     line-height: 30px;
 	margin: 0 auto;
-	background: #fff url('/images/iconset_status.png') no-repeat;
+	background: #fff url('../images/iconset_status.png') no-repeat;
 	background-size: 150px 150px;
 	background-color: #4a6ee5;
     border-radius: 50%;
@@ -6603,7 +6603,7 @@ h3{text-align:center;}
     display: inline-block;
     width: 20px;
     height: 10px;
-    background: url('/images/iconset_arr.png') no-repeat -27px 0px;
+    background: url('../images/iconset_arr.png') no-repeat -27px 0px;
     background-size: 150px;
     position: absolute;
     top: 50%;
@@ -6669,7 +6669,7 @@ h3{text-align:center;}
 	height: 40px;
     line-height: 30px;
 	margin: 0 auto 6px;
-	background: #fff url('/images/iconset_status.png') no-repeat;
+	background: #fff url('../images/iconset_status.png') no-repeat;
 	background-size: 150px 150px;
 	border: 1px solid #4a6ee5;
 	border-radius: 50%;
@@ -6790,7 +6790,7 @@ li.preparing{
 .ico-submenu-black {
 	width: 25px;
 	height: 25px;
-	background: url("/images/ico_submenu_black.png") no-repeat;
+	background: url("../images/ico_submenu_black.png") no-repeat;
 	background-size: 25px 25px;
 	border: none;
 	outline: 0;
@@ -6885,7 +6885,7 @@ li.preparing{
 }
 
 .person_req {
-	background: url("/images/ico_req.png") no-repeat;
+	background: url("../images/ico_req.png") no-repeat;
 	background-color: transparent;
 	background-position: 97% 50%;
 	background-repeat: no-repeat;

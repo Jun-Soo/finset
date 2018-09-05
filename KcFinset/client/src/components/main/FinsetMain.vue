@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id='wrapper'>
     <div id='content'>
       <h1>FINSET MAIN</h1>
     </div>

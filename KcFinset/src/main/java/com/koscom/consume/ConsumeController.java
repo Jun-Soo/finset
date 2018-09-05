@@ -87,24 +87,24 @@ public class ConsumeController {
     	
     	return "jsonView";
     }
-//    
-//    @RequestMapping("/listPersonTransDetail.json")
-//    public String listTransDetail(Model model, String ym, HttpSession session) {
-//    	logger.debug("listTransDetail");
-//    	String no_person = (String) session.getAttribute("no_person");
-//    	
-//    	//DateUtil에서 yyyymmdd를 요구
-//    	String dt_from = DateUtil.getFirstDateOfMonth(ym+"01");
-//    	String dt_to = DateUtil.getLastDateOfMonth(ym+"01");
-//    	
-//    	ConsumeForm consumeForm = new ConsumeForm();
-//    	consumeForm.setNo_person(no_person);
-//    	consumeForm.setDt_from(dt_from);
-//    	consumeForm.setDt_to(dt_to);
-//    	
-//    	model.addAttribute("listPersonTransDetail",consumeManager.listPersonTransDetail(consumeForm));
-//    	return "jsonView";
-//    }
+    
+    @RequestMapping("/listPersonTransDetail.json")
+    public String listTransDetail(Model model, String ym, HttpSession session) {
+    	logger.debug("listTransDetail");
+    	String no_person = (String) session.getAttribute("no_person");
+    	
+    	//DateUtil에서 yyyymmdd를 요구
+    	String dt_from = DateUtil.getFirstDateOfMonth(ym+"01");
+    	String dt_to = DateUtil.getLastDateOfMonth(ym+"01");
+    	
+    	ConsumeForm consumeForm = new ConsumeForm();
+    	consumeForm.setNo_person(no_person);
+    	consumeForm.setDt_from(dt_from);
+    	consumeForm.setDt_to(dt_to);
+    	
+    	model.addAttribute("listPersonTransDetail",consumeManager.listPersonTransDetail(consumeForm));
+    	return "jsonView";
+    }
 //    
 //    @RequestMapping("/frameStatsConsume.crz")
 //    public String frameConsumeStats() {
@@ -150,31 +150,31 @@ public class ConsumeController {
     	model.addAttribute("personSetInfoVO",consumeManager.getPersonSetInfo(no_person));
     	return "/consume/frameConsumeSetting";
     }
-//    
-//    @RequestMapping("/frameConsumeBudget.crz")
-//    public String frameConsumeBudget(Model model) {
-//    	logger.debug("frameConsumeBudget");
-//    	return "/consume/frameConsumeBudget";
-//    }
-//    
-//    @RequestMapping("/frameConsumeCategory.crz")
-//    public String frameConsumeCategory(Model model, HttpSession session) {
-//    	logger.debug("frameConsumeCategory");
-//    	String no_person = (String) session.getAttribute("no_person");
-//    	model.addAttribute("list",consumeManager.listPersonConsumeClassInfo(no_person));
-//    	return "/consume/frameConsumeCategory";
-//    }
-//    
-//    @RequestMapping("/modifyPersonSetInfo.json")
-//    public String modifyPersonSetInfo(HttpSession session ,PersonSetInfoVO personSetInfoVO){
-//    	logger.debug("modifyPersonDtBasic");
-//    	String no_person = (String) session.getAttribute("no_person");
-//    	personSetInfoVO.setNo_person(no_person);
-//    	personSetInfoVO.setId_frt(no_person);
-//    	personSetInfoVO.setId_lst(no_person);
-//    	consumeManager.modifyPersonSetInfo(personSetInfoVO);
-//    	return "jsonView";
-//    }
+    
+    @RequestMapping("/frameConsumeBudget.crz")
+    public String frameConsumeBudget(Model model) {
+    	logger.debug("frameConsumeBudget");
+    	return "/consume/frameConsumeBudget";
+    }
+    
+    @RequestMapping("/frameConsumeCategory.crz")
+    public String frameConsumeCategory(Model model, HttpSession session) {
+    	logger.debug("frameConsumeCategory");
+    	String no_person = (String) session.getAttribute("no_person");
+    	model.addAttribute("list",consumeManager.listPersonConsumeClassInfo(no_person));
+    	return "/consume/frameConsumeCategory";
+    }
+    
+    @RequestMapping("/modifyPersonSetInfo.json")
+    public String modifyPersonSetInfo(HttpSession session ,PersonSetInfoVO personSetInfoVO){
+    	logger.debug("modifyPersonDtBasic");
+    	String no_person = (String) session.getAttribute("no_person");
+    	personSetInfoVO.setNo_person(no_person);
+    	personSetInfoVO.setId_frt(no_person);
+    	personSetInfoVO.setId_lst(no_person);
+    	consumeManager.modifyPersonSetInfo(personSetInfoVO);
+    	return "jsonView";
+    }
 //    
 //    @RequestMapping("/createCategory.json")
 //    public String createCategory(HttpSession session ,PersonConsumeClassVO personConsumeClassVO){

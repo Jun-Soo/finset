@@ -32,11 +32,13 @@ $(document).ready(function(){
 });
 
 var goBudget = function(){
+	$("#dt_basic").attr("disabled",true);
 	frmConsumeSetting.action = "<c:url value='/m/consume/frameConsumeBudget.crz'/>";
 	frmConsumeSetting.submit();
 }
 
 var goCategory = function(){
+	$("#dt_basic").attr("disabled",true);
 	frmConsumeSetting.action = "<c:url value='/m/consume/frameConsumeCategory.crz'/>";
 	frmConsumeSetting.submit();
 }
@@ -72,7 +74,7 @@ var modifyPersonSetInfo = function(){
 		</header>
 		<!-- Content -->
 		<section id="content">
-			<form name="frmConsumeSetting" id="frmConsumeSetting">
+			<form name="frmConsumeSetting" id="frmConsumeSetting" method="post">
 				<div class="container dt_basic">
 					<div class="head form-group">
 						<label for="dt_basic">기준일</label>

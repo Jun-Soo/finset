@@ -52,20 +52,20 @@ public interface ConsumeManager {
 //	 */
 //	int delConsumeInfo(ConsumeVO consumeVO);
 //	
-//	/**
-//	 * 개인 계좌 입출금내역 조회
-//	 * @param person
-//	 * @return
-//	 */
-//	List<PersonTransDetailVO> listPersonTransDetail(ConsumeForm consumeForm);
-//	
-//	/**
-//	 * 소비 분류, 항목 기본생성
-//	 * @param no_person
-//	 * @return
-//	 */
-//	int createDefaultConsumeClassInfo(String no_person);
-//	
+	/**
+	 * 개인 계좌 입출금내역 조회
+	 * @param person
+	 * @return
+	 */
+	List<PersonTransDetailVO> listPersonTransDetail(ConsumeForm consumeForm);
+	
+	/**
+	 * 소비 분류, 항목 기본생성
+	 * @param no_person
+	 * @return
+	 */
+	int createDefaultConsumeClassInfo(String no_person);
+	
 	/**
 	 * 소비 분류 리스트 조회
 	 * @param no_person
@@ -135,17 +135,17 @@ public interface ConsumeManager {
 //	 */
 //	int createConsumeInfoByScrTransDt(ConsumeVO consumeVO);
 //	
-//	/**
-//	 * 개인 설정 조회
-//	 * @param no_person
-//	 * @return
-//	 */
-//	PersonSetInfoVO getPersonSetInfo(String no_person);
-//	
-//	/**
-//	 * 개인 설정 변경
-//	 * @param personSetInfoVO
-//	 * @return
-//	 */
-//	int modifyPersonSetInfo(PersonSetInfoVO personSetInfoVO);
+	/**
+	 * 개인 설정 조회
+	 * @param no_person
+	 * @return
+	 */
+	PersonSetInfoVO getPersonSetInfo(String no_person);
+	
+	/**
+	 * 개인 설정 변경
+	 * @param personSetInfoVO
+	 * @return
+	 */
+	int modifyPersonSetInfo(PersonSetInfoVO personSetInfoVO);
 }

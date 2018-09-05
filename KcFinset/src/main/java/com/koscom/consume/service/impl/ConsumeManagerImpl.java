@@ -38,22 +38,12 @@ public class ConsumeManagerImpl implements ConsumeManager {
 //		return consumeMapper.createConsumeInfo(consumeVO);
 //	}
 //
-	/**
-	 * 조회 기간 전체의 수입이나 지출의 합을 조회
-	 * @param consumeForm
-	 * @return
-	 */
 	@Override
 	public int getConsumeInfoAmt(ConsumeForm consumeForm) {
 		logger.debug("getConsumeInfoAmt");
 		return consumeMapper.getConsumeInfoAmt(consumeForm);
 	}
 	
-	/**
-	 * 조건 (일자)와 회원 관리번호의 조건 내에서 해당하는 소비지출 데이터 조회
-	 * @param consumeForm
-	 * @return
-	 */
 	@Override
 	public List<ConsumeVO> listConsumeInfo(ConsumeForm consumeForm) {
 		logger.debug("listConsumeInfo");
@@ -92,34 +82,29 @@ public class ConsumeManagerImpl implements ConsumeManager {
 //		logger.debug("delConsumeInfo");
 //		return consumeMapper.delConsumeInfo(consumeVO);
 //	}
-//	
-//	/**
-//	 * 개인 계좌 입출금내역 조회
-//	 * @param person
-//	 * @return
-//	 */
-//	@Override
-//	public List<PersonTransDetailVO> listPersonTransDetail(ConsumeForm consumeForm) {
-//		logger.debug("listPersonTransDetail");
-//		return consumeMapper.listPersonTransDetail(consumeForm);
-//	}
+	
+	/**
+	 * 개인 계좌 입출금내역 조회
+	 * @param person
+	 * @return
+	 */
+	@Override
+	public List<PersonTransDetailVO> listPersonTransDetail(ConsumeForm consumeForm) {
+		logger.debug("listPersonTransDetail");
+		return consumeMapper.listPersonTransDetail(consumeForm);
+	}
 	
 	/**
 	 * 소비 분류, 항목 기본생성
 	 * @param no_person
 	 * @return
 	 */
-//	@Override
-//	public int createDefaultConsumeClassInfo(String no_person) {
-//		logger.debug("createDefaultConsumeClassInfo");
-//		return consumeMapper.createDefaultConsumeClassInfo(no_person);
-//	}
+	@Override
+	public int createDefaultConsumeClassInfo(String no_person) {
+		logger.debug("createDefaultConsumeClassInfo");
+		return consumeMapper.createDefaultConsumeClassInfo(no_person);
+	}
 	
-	/**
-	 * 소비 분류 리스트 조회
-	 * @param no_person
-	 * @return
-	 */
 	@Override
 	public List<List<PersonConsumeClassVO>> listPersonConsumeClassInfo(String no_person) {
 		logger.debug("listPersonConsumeClassInfo");
@@ -309,24 +294,14 @@ public class ConsumeManagerImpl implements ConsumeManager {
 //		return consumeMapper.createConsumeInfoByScrTransDt(consumeVO);
 //	}
 //	
-//	/**
-//	 * 개인 설정 조회
-//	 * @param no_person
-//	 * @return
-//	 */
-//	public PersonSetInfoVO getPersonSetInfo(String no_person) {
-//		logger.debug("getPersonSetInfo");
-//		return consumeMapper.getPersonSetInfo(no_person);
-//	}
-//	
-//	/**
-//	 * 기준일 변경
-//	 * @param personSetInfoVO
-//	 * @return
-//	 */
-//	@Override
-//	public int modifyPersonSetInfo(PersonSetInfoVO personSetInfoVO) {
-//		logger.debug("modifyPersonSetInfo");
-//		return consumeMapper.modifyPersonSetInfo(personSetInfoVO);
-//	}
+	public PersonSetInfoVO getPersonSetInfo(String no_person) {
+		logger.debug("getPersonSetInfo");
+		return consumeMapper.getPersonSetInfo(no_person);
+	}
+	
+	@Override
+	public int modifyPersonSetInfo(PersonSetInfoVO personSetInfoVO) {
+		logger.debug("modifyPersonSetInfo");
+		return consumeMapper.modifyPersonSetInfo(personSetInfoVO);
+	}
 }

@@ -3,12 +3,15 @@ package com.koscom.goods.service.impl;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import com.koscom.domain.GoodsInfo;
 import com.koscom.goods.dao.GoodsMapper;
 import com.koscom.goods.model.GoodsForm;
 import com.koscom.goods.model.GoodsVO;
 import com.koscom.goods.service.GoodsManager;
+import com.koscom.util.StringUtil;
 
 @Service("goodsManager")
 public class GoodsManagerImpl implements GoodsManager {
@@ -39,5 +42,15 @@ public class GoodsManagerImpl implements GoodsManager {
 	@Override
 	public GoodsVO getGoodsFavorite(GoodsVO goodsVO) {
 		return goodsMapper.getGoodsFavorite(goodsVO);
+	}
+	
+	@Override
+	@Cacheable(value="CacheGoods" , key="#goodsInfo.cd_goods")
+	public GoodsVO getGoodsInfo(GoodsInfo goodsInfo) {
+
+		if(goodsInfo == null || StringUtil.isEmpty(goodsInfo.getCd_goods()))
+			return null;
+
+		return goodsMapper.getGoodsInfo(goodsInfo);
 	}
 }

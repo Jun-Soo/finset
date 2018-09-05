@@ -26,7 +26,11 @@ import com.koscom.domain.CreditInfo;
 import com.koscom.domain.PersonShareInfo;
 import com.koscom.domain.PersonShareMessageInfo;
 import com.koscom.finset.model.FinsetForm;
+import com.koscom.finset.model.FinsetVO;
 import com.koscom.finset.service.FinsetManager;
+import com.koscom.goods.model.GoodsForm;
+import com.koscom.goods.model.GoodsVO;
+import com.koscom.goods.service.GoodsManager;
 import com.koscom.person.model.PersonShareInfoForm;
 import com.koscom.person.model.PersonShareInfoVO;
 import com.koscom.person.model.PersonVO;
@@ -36,7 +40,7 @@ import com.koscom.pusheach.service.PushEachManager;
 
 @Controller
 @RequestMapping("/m/customercenter")
-public class CustomerCenterController{
+public class CustomerCenterController implements Constant {
 
 	private static final Logger logger = LoggerFactory.getLogger(CustomerCenterController.class);
 
@@ -54,6 +58,9 @@ public class CustomerCenterController{
 	
 	@Autowired
 	FinsetManager finsetManager;
+	
+	@Autowired
+	GoodsManager goodsManager;
 	
 	@Resource
 	Environment environment;
@@ -654,6 +661,70 @@ public class CustomerCenterController{
 		model.addAttribute("pagedList", pagedList);
 
 		return "/customercenter/frameCustomerViewResults";
+	}
+	
+	/**
+     * 마이페이지 조회결과 리스트 페이징
+     * @param model
+     * @param request
+     * @param finsetForm
+     * @param session
+     * @return
+     */
+	@RequestMapping("/listCustomerViewResults.crz")
+	public String listCustomerViewResults(Model model, HttpServletRequest request, FinsetForm finsetForm, HttpSession session) {
+		String no_person = (String) session.getAttribute("no_person");
+		finsetForm.setNo_person(no_person);
+		
+		finsetForm.setCd_goods_gubun("01");//Default 조회 설정
+		finsetForm.setCd_goods_gubun2("02");//Default 조회 설정
+
+		Pagination pagedList = (Pagination) finsetForm.setPagedList(finsetManager.listSearchGoods(finsetForm), finsetManager.listSearchGoodsCount(finsetForm));
+
+		logger.info("list Result : " + pagedList.toString());
+		model.addAttribute("pagedList", pagedList);
+
+		return "/customercenter/sub/listCustomerViewResults";
+	}
+	
+	/**
+     * 마이페이지 조회결과 리스트 페이징
+     * @param model
+     * @param request
+     * @param vo
+     * @param session
+     * @return
+     */
+	@RequestMapping("/getIsSearching.crz")
+	public String getIsSearching(Model model, HttpServletRequest request, FinsetVO vo, HttpSession session) {
+		String no_person = (String) session.getAttribute("no_person");
+		vo.setNo_person(no_person);
+		int count = finsetManager.countLoading(vo);
+		model.addAttribute("count", count);
+		return JSON_VIEW;
+	}
+	
+	/**
+	 * 마이페이지 조회결과 상세
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/frameCustomerViewResultsDetail.crz")
+	public String frameCustomerViewResultsDetail(HttpServletRequest request, Model model, GoodsForm goodsForm) {
+
+		GoodsVO goodsInfo = new GoodsVO();
+
+		if(goodsForm.getCd_fc() != null && goodsForm.getCd_goods() != null){
+			goodsInfo.setCd_fc(goodsForm.getCd_fc());
+			goodsInfo.setCd_goods(goodsForm.getCd_goods());
+
+			GoodsVO goodsVO = goodsManager.getGoodsInfo(goodsInfo);
+			logger.info(goodsVO.toString());
+			model.addAttribute("goodsVO", goodsVO);
+		}
+
+		return "/customercenter/frameCustomerViewResultsDetail";
 	}
 
 }

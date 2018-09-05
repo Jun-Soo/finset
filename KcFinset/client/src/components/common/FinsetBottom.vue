@@ -1,7 +1,7 @@
 <template>
   <div id="menu-fixed-bottom">
     <ul class="menu-list">
-      <li id="footer_credit" class=""><router-link to='/creditMain'>신용관리</router-link></li>
+      <li id="footer_credit" class=""><router-link to='/credit/main'>신용관리</router-link></li>
       <li id="footer_debt"><a class="menu-debt">부채관리</a></li>
       <li id="footer_loan" class=""><a class="menu-loan">상품조회</a></li>
       <li id="footer_mypage"><a class="menu-mypage">마이페이지</a></li>

@@ -1,5 +1,4 @@
 <template>
-  <div id='wrapper'>
     <!-- Header -->
     <header id='header'>
       <div class='input-group'>
@@ -13,7 +12,6 @@
         </div>
       </div>
     </header>
-  </div>
 </template>
 
 <script>

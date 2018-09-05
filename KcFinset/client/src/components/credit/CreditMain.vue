@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id='wrapper'>
     <div id='content'>
       <div class='block-fill credit-block'>
         <div class='block-container'>
@@ -96,13 +96,13 @@
             <dl>
               <a>
                 <h4>나의 신용상태가 궁금하다면?</h4>
-                <a class="btn">나의 신용 통계분석</a>
+                <span class="btn">나의 신용 통계분석</span>
               </a>
             </dl>
             <dl>
               <a>
                 <h4>나의 신용점수를 올리려면?</h4>
-                <a class="btn">신용 점수 올리기</a>
+                <span class="btn">신용 점수 올리기</span>
               </a>
             </dl>
           </div>
@@ -171,12 +171,11 @@ export default {
   beforeCreate() {
   },
   created () {
-    this.toDate = '2018.09.04'
+    this.getCreditInfoMain()
   },
   beforeMount() {
   },
   mounted () {
-    this.getCreditInfoMain()
   },
   beforeUpdate() {
   },
@@ -212,8 +211,8 @@ export default {
       var progress = leng * dasharray
 
       gauge.css({
-        'stroke-dasharray': this.leng,
-        'stroke-dashoffset': this.leng * 2
+        'stroke-dasharray': leng,
+        'stroke-dashoffset': leng * 2
       })
 
       if (n !== '1') {

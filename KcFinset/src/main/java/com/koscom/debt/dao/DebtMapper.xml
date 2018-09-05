@@ -5,6 +5,7 @@
 <mapper namespace="com.koscom.debt.dao.DebtMapper">
 	<resultMap id="myMap" type="hashmap">
     </resultMap>
+    
 	<select id="selectKcbNoManage" parameterType="com.koscom.debt.model.CrawlingLoanVO" resultType="java.lang.String">
 		SELECT
 			   DISTINCT A.NO_MANAGE_INFO
@@ -13,6 +14,7 @@
 		   AND A.YMD_LOAN 		= #{ymd_loan, jdbcType=VARCHAR}
 		   AND A.AMT_CONTRACT 	= #{amt_contract, jdbcType=VARCHAR}
 	</select>
+	
 	<insert id="insertKcbDebt" parameterType="com.koscom.debt.model.CrawlingLoanVO">
 		<selectKey keyProperty="no_manage_info" resultType="string" order="BEFORE">
 			(SELECT TO_CHAR(SEQ_DEBT_PERSONAL_INFO.NEXTVAL) FROM DUAL)
@@ -56,6 +58,7 @@
 			,SYSDATE
 		)
 	</insert>
+	
 	<update id="updateKcbDebtCancel" parameterType="hashmap">
 	    /* com.koscom.debt.dao.DebtMapper.updateKcbDebtCancel */
 		UPDATE DEBT_PERSONAL_INFO
@@ -74,6 +77,7 @@
 		   AND AMT_CONTRACT = #{amt_contract, jdbcType=VARCHAR}
 		 </if>
 	</update>
+	
 	<update id="updateKcbDebt" parameterType="hashmap">
 	    /* com.koscom.debt.dao.DebtMapper.updateKcbDebt */
 		UPDATE DEBT_PERSONAL_INFO
@@ -86,6 +90,7 @@
 		   AND YMD_LOAN 	= #{ymd_loan, jdbcType=VARCHAR}
 		   AND AMT_CONTRACT = #{amt_contract, jdbcType=VARCHAR}
 	</update>
+	
 	<select id="listDebtInfo" parameterType="java.lang.String" resultType="hashmap">
 	    /* com.koscom.debt.dao.DebtMapper.listDebtInfo */
 		SELECT A.NO_PERSON		AS "no_person"
@@ -97,7 +102,6 @@
 		   AND A.AMT_REMAIN > 0
 	</select>
 	
-	<!-- 회원 부채 정보 금리 추정 처리 -->
 	<select id="debtInterestEtmPdoc" statementType="CALLABLE" parameterType="hashmap">
 		{ call PKG_LOAN_INTEREST_ETM.P_START(
 			#{no_person, mode=IN, jdbcType=VARCHAR},
@@ -105,6 +109,7 @@
 			#{p_rtn_cd, mode=OUT, jdbcType=VARCHAR, resultMap=myMap},
 			#{p_rtn_msg, mode=OUT, jdbcType=VARCHAR, resultMap=myMap}) }
 	</select>
+	
     <select id="getDebtExistYn" parameterType="java.lang.String" resultType="java.lang.String">
 		SELECT
 			DECODE( COUNT( 1 ), 0, 'N', 'Y' ) AS DEPT_YN
@@ -115,6 +120,7 @@
 			AND DISPLAY_YN = 'Y'
 			AND YMD_CANCEL IS NULL
     </select>
+    
 	<select id="newDebtCount" parameterType="java.lang.String" resultType="int">
 		SELECT
 			COUNT( 1 ) AS CNT_DEPT
@@ -124,6 +130,7 @@
 				NO_PERSON = #{no_person, jdbcType = VARCHAR}
 			AND DEBT_YN = 'Y'
 	</select>
+	
 	<select id="getDebtYCount" parameterType="java.lang.String" resultType="int">
 		SELECT
 			COUNT( 1 ) AS CNT_DEPT
@@ -133,6 +140,7 @@
 				NO_PERSON = #{no_person, jdbcType = VARCHAR}
 			AND DEBT_YN = 'Y'
 	</select>
+	
 	<select id="getDebtSummary" parameterType="java.lang.String" resultType="com.koscom.debt.model.DebtSummaryVO">
 	    /* com.koscom.debt.dao.DebtMapper.getDebtSummary : 대출 메인 요약 */
 	    SELECT    A.DT_STD               /* 기준일자 */
@@ -236,6 +244,7 @@
 	          ,A.SUM_AMT_CONTRACT
 	          ,A.CNT
 	</select>
+	
 	<select id="listDebtPg" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtVO">
 	    /* com.koscom.debt.dao.DebtMapper.listDebtPg: 부채메인 리스트 */
 	    SELECT    A.NO_MANAGE_INFO
@@ -349,6 +358,7 @@
 	            ,(CASE WHEN A.AMT_REMAIN = '-' THEN 0
 	                ELSE TO_NUMBER(A.AMT_REMAIN) END) DESC
 	</select>
+	
 	<select id="listDebtCalendar" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtCalendarVO">
         /* com.koscom.debt.dao.DebtMapper.listDebtCalendar: 부채달력 */
         SELECT   A.NO_PERSON
@@ -405,6 +415,7 @@
 		        ,B.INTEREST_YMD
 		        ,A.NO_MANAGE_INFO
 	</select>
+	
 	<select id="getDebtInfo" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtVO">
         /* com.koscom.debt.dao.DebtMapper.getDebtInfo : 대출 상세정보 */
 		SELECT   A.NO_PERSON
@@ -504,6 +515,7 @@
 		WHERE   A.NO_PERSON         =   #{no_person , jdbcType=VARCHAR}
 		AND     A.NO_MANAGE_INFO    =   #{no_manage_info , jdbcType=VARCHAR}
 	</select>
+	
 	<select id="listDebtLast12BizDay" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtDetail12RepVO">
         /* com.koscom.debt.dao.DebtMapper.listDebtLast12BizDay : 최근 12개월 상환내역 */
         SELECT no_manage_info
@@ -538,6 +550,7 @@
               )
          ORDER BY dt_st
 	</select>
+	
 	<select id="getDebtInfoForUpdate" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtVO">
 		SELECT
 			REPAYMENT AS rep_method,
@@ -550,6 +563,7 @@
 			NO_PERSON = #{no_person, jdbcType = VARCHAR}
 			AND NO_MANAGE_INFO = #{no_manage_info, jdbcType = VARCHAR}
 	</select>
+	
 	<update id="updateDebtInfo" parameterType="com.koscom.debt.model.DebtVO">
 		UPDATE
 			DEBT_PERSONAL_INFO
@@ -564,6 +578,7 @@
 				NO_PERSON		 = #{no_person		, jdbcType = VARCHAR}
 			AND NO_MANAGE_INFO	 = #{no_manage_info	, jdbcType = VARCHAR}
 	</update>
+	
 	<update id="updateDebtDisplay" parameterType="com.koscom.debt.model.DebtForm">
 		UPDATE
 			DEBT_PERSONAL_INFO
@@ -573,4 +588,14 @@
 				NO_PERSON		 = #{no_person		, jdbcType = VARCHAR}
 			AND NO_MANAGE_INFO	 = #{no_manage_info	, jdbcType = VARCHAR}
 	</update>
+	
+	<select id="getDebtCount" parameterType="java.lang.String" resultType="int">
+        /* com.koscom.debt.dao.DebtMapper.getDebtYCount : 등록된 부채수 */
+        SELECT COUNT(1) as CNT_DEPT
+          FROM DEBT_PERSONAL_INFO /* KCB 회원 계좌별 대출정보(KCB+추정DATA) */
+         WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+         AND DISPLAY_YN = 'Y' /* 삭제를 하지 않은 부채 수를 가져오기 위해 조건 추가 - 김휘경 */
+         AND YMD_CANCEL IS NULL /* YMD_CANCEL 반영 - 김휘경 */
+         
+    </select>
 </mapper>

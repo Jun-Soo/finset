@@ -119,4 +119,9 @@ public class DebtManagerImpl implements DebtManager {
 			debtMapper.updateDebtDisplay(vo);
 		}
 	}
+	
+	@Override
+	public int getDebtCount(String no_person) {
+		return debtMapper.getDebtCount(no_person);
+	}
 }

@@ -139,4 +139,11 @@ public interface DebtMapper {
 	 * @param debtForm
 	 */
 	void updateDebtDisplay(DebtForm debtForm);
+	
+	/**
+	 * 전체 대출 건수
+	 * @param no_person
+	 * @return
+	 */
+	int getDebtCount(String no_person);
 }

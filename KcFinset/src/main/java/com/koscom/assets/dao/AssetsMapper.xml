@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.assets.dao.AssetsMapper">
+
+    <!-- 자산요약 -->
+	<select id="getSummaryTotalAmt" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+		SELECT
+			FN_AMT_VIEW( SUM( AMT_BALANCE ) ) AS TOTAL_BALANCE
+		FROM
+			ASSETS_INFO
+		WHERE
+			NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</select>
+
+	<select id="listSummaryClassTotalAmt" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+		SELECT
+			COMM.CODE_VALUE AS CD_ASSETS_CLASS,
+			COMM.NM_CODE AS NM_ASSETS_CLASS,
+			NVL( AI.CNT_ACCOUNT, '0' ) AS CNT_ACCOUNT,
+			NVL( AI.TOTAL_BALANCE, '0' ) AS TOTAL_BALANCE
+		FROM
+			(
+				SELECT
+					CODE_VALUE,
+					NM_CODE
+				FROM
+					COMM_CD
+				WHERE
+					CODE_GROUP = 'cd_assets_class'
+					AND CODE_VALUE != ' '
+			) COMM
+		LEFT JOIN(
+				SELECT
+					CD_ASSETS_CLASS,
+					COUNT( NO_ACCOUNT ) AS CNT_ACCOUNT,
+					SUM( AMT_BALANCE ) AS TOTAL_BALANCE
+				FROM
+					ASSETS_INFO
+				WHERE
+					NO_PERSON = #{no_person, jdbcType=VARCHAR}
+				GROUP BY
+					CD_ASSETS_CLASS
+			) AI
+		ON
+			COMM.CODE_VALUE = AI.CD_ASSETS_CLASS
+		ORDER BY
+			COMM.CODE_VALUE,
+			COMM.NM_CODE
+	</select>
+
+	<!-- 계좌현황 -->
+	<select id="listAccountStatTotalAmt" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+		SELECT
+			CD_ASSETS_CLASS,
+			SUM( AMT_BALANCE ) AS TOTAL_BALANCE
+		FROM
+			ASSETS_INFO
+		WHERE
+			CD_ASSETS_CLASS IN('01','02','03')	<!-- 은행일경우 -->
+			AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		GROUP BY
+			CD_ASSETS_CLASS
+	</select>
+
+	<select id="listAccountStatContents" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+		SELECT
+			CD_ASSETS_CLASS,
+			CD_FC,
+			NM_ACCOUNT,
+			NO_ACCOUNT,
+			AMT_BALANCE
+		FROM
+			ASSETS_INFO
+		WHERE
+			NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</select>
+
+	<!-- 입출금 -->
+	<select id="getDepWdrlTotalAmt" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+		SELECT
+			SUBSTR( DT_TRD, 0, 6 ) AS DT_TRD,
+			SUM( AMT_DEP ) AS TOTAL_DEP,
+			SUM( AMT_WDRL ) AS TOTAL_WDRL
+		FROM
+			SCR_TRANSACTION_DETAIL
+		WHERE
+			NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND SUBSTR( DT_TRD, 0, 6 )= #{yyyymm_trd, jdbcType=VARCHAR}
+		GROUP BY
+			SUBSTR( DT_TRD, 0, 6 )
+	</select>
+
+	<select id="listDepWdrlContents" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+		SELECT
+			A.DT_TRD,
+			A.AN,
+			B.NM_AN,
+			B.CD_FC,
+			A.AMT_DEP,
+			A.AMT_WDRL,
+			A.BALANCE
+		FROM
+			SCR_TRANSACTION_DETAIL A
+		INNER JOIN
+			SCR_BANK_API_AN_INFO B
+		ON
+			A.NO_PERSON = B.NO_PERSON
+			AND A.AN = B.AN
+		WHERE
+			A.NO_PERSON = 'P000000109'
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(type_list)">
+			<choose>
+			    <when test="'dep'.equals(type_list)">	<!-- 입금내역 -->
+					AND A.A.AMT_WDRL = '0'
+				</when>
+				<when test="'wdrl'.equals(type_list)">	<!-- 출금내역 -->
+					AND A.AMT_DEP = '0'
+				</when>
+			</choose>
+			</if>
+	</select>
+
+</mapper>

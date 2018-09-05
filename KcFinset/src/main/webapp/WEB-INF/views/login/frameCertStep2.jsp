@@ -238,7 +238,6 @@
 	* 회원가입
 	*/
 	function joinSuccess(noPerson) {
-
 		if(userAgent == "iOS") {
 // 			location.href = "call://setNoPerson//"+noPerson;
 			Jockey.send("setNoPerson",{
@@ -251,6 +250,7 @@
 		
 		//submit 전 disable 풀어줘야 넘어감
 		$('#telComCd').removeAttr("disabled");
+
 		frmCertifyStep.action = "<c:url value='/m/base/frameSecurityCode.crz'/>";
 		frmCertifyStep.submit();
 	}

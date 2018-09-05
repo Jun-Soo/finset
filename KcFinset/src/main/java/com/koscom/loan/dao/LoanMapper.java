@@ -3,6 +3,7 @@ package com.koscom.loan.dao;
 import java.util.List;
 
 import com.koscom.domain.CooconGoodsFavoriteInfo;
+import com.koscom.finance.model.TxFcTransmitVO;
 
 public interface LoanMapper {
 
@@ -19,4 +20,11 @@ public interface LoanMapper {
 	 * @return
 	 */
 	int deleteLoanGoodsChoice(CooconGoodsFavoriteInfo cooconGoodsFavoriteInfo);
+	
+	/**
+	 * tx_fc_transmit 정보 select
+	 * @param String
+	 * @return TxFcTransmitVO
+	 */
+	TxFcTransmitVO getTxFcTransmitInfoForMsg(String no_bunch);
 }

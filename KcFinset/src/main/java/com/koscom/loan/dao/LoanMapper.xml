@@ -6,18 +6,18 @@
 
 	<insert id="insertLoanGoodsChoice" >
 		/* com.koscom.loan.dao.LoanMapper.insertLoanGoodsChoice*/
-		INSERT INTO coocon_goods_favorite_info
+		INSERT INTO COOCON_GOODS_FAVORITE_INFO
 			(
-				 no_person
-				, cd_fc
-				, cd_non_goods
-				, yn_alliance
-				, cd_goods_class_l
-				, cd_goods_class_m
-				, id_frt
-				, dt_frt
-				, id_lst
-				, dt_lst
+				 NO_PERSON
+				, CD_FC
+				, CD_NON_GOODS
+				, YN_ALLIANCE
+				, CD_GOODS_CLASS_L
+				, CD_GOODS_CLASS_M
+				, ID_FRT
+				, DT_FRT
+				, ID_LST
+				, DT_LST
 			) VALUES (
 				  #{no_person			, jdbcType=VARCHAR}
 				, #{cd_fc			    , jdbcType=VARCHAR}
@@ -34,10 +34,118 @@
 
 	<delete id="deleteLoanGoodsChoice" parameterType="com.koscom.domain.CooconGoodsFavoriteInfo">
 		/* com.koscom.loan.dao.LoanMapper.deleteLoanGoodsChoice*/
-		DELETE from coocon_goods_favorite_info
-		WHERE no_person = #{no_person, jdbcType=VARCHAR}
-		AND cd_fc = #{cd_fc, jdbcType=VARCHAR}
-		AND cd_non_goods = #{cd_non_goods, jdbcType=VARCHAR}
+		DELETE FROM COOCON_GOODS_FAVORITE_INFO
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+		AND CD_NON_GOODS = #{cd_non_goods, jdbcType=VARCHAR}
 	</delete>
-
+	
+	<select id="getTxFcTransmitInfoForMsg" parameterType="java.lang.String" resultType="com.koscom.finance.model.TxFcTransmitVO">
+		/* com.koscom.loan.dao.LoanMapper.getTxFcTransmitInfoForMsg*/
+		SELECT
+			NO_BUNCH,
+			DT_SEND,
+			CD_ONOFF,
+			XX1.DEC_VARCHAR2_SEL(SSN_PERSON, '10','FS_ARIA','TX_FC_TRANSMIT','SSN_PERSON') AS SSN_PERSON,
+			NM_PERSON,
+			CD_GOODS,
+			CD_LOAN_USE,
+			AMT_WANTED,
+			CD_SEX,
+			EMAIL,
+			PH1_HOME,
+			PH2_HOME,
+			PH3_HOME,
+			CD_LIVE_AREA,
+			POST_HOME,
+			ADDR1_HOME,
+			ADDR2_HOME,
+			NO_MANAGE_HOME,
+			HP1,
+			HP2,
+			HP3,
+			CD_MARRY,
+			YMD_BIRTH,
+			YN_DUALWORK,
+			YMD_HOUSE_HOME,
+			CNT_HOUSE_HOME,
+			CD_HOUSE_TYPE,
+			CD_LIVE_TYPE_HOME,
+			AMT_RENT_MONTHLY_HOME,
+			AMT_YEAR_INCOME,
+			CD_DUTY_COMP,
+			NM_COMP,
+			YMD_START_COMP,
+			JOB_TERM_MONTH,
+			CD_JOB_COMP,
+			CD_EMPLOYEE_TYPE,
+			CD_JOB_PROOF,
+			CD_INCOME_PROOF,
+			CD_HP_CO,
+			CD_ARMY,
+			CD_JOB_CLASS_L,
+			CD_JOB_CLASS_M,
+			CD_JOB_CLASS_S,
+			NO_BIZ_COMP,
+			NO_COMP_SEQ,
+			KCB_DI,
+			CD_CERTIFY_PERSON,
+			NO_FC_REQ,
+			PH1_COMP,
+			PH2_COMP,
+			PH3_COMP,
+			ETC_FIELD1,
+			CD_LOAN_TERM,
+			NM_FC,
+			YMD_START_BIZ,
+			AMT_YEAR_INCOME_BIZ,
+			CD_MEDI_INSU_COMP,
+			YN_4INSU,
+			ID_FRT,
+			DT_FRT,
+			ID_LST,
+			DT_LST,
+			CD_CAR_MAKER_COMP,
+			CD_CAR_MODEL,
+			CD_CAR_MODEL2,
+			DT_CAR_PURCHASE,
+			CAR_NO,
+			CD_CAR_OWN,
+			CD_CAR,
+			CD_CAR_USE,
+			CD_CAR_TRANSMISSION,
+			YN_CAR_SEIZURE,
+			YN_CAR_WET,
+			AMT_CAR_SELF_INSURED,
+			YN_CAR_INSU,
+			YN_CAR_DIRECT_IMPORT,
+			NO_ELAPSED_YEAR,
+			NO_CAR_DISTANCE_DRIVEN,
+			REGION_1,
+			REGION_2,
+			REGION_3,
+			BUILDING_NO,
+			ROOM_NO,
+			SECURITY_ADDR,
+			SECURITY_FLOOR,
+			SECURITY_EXCLUSIVE_AREA,
+			JB_DT_JOIN,
+			JB_TP_COMPPRIV,
+			JB_TP_LISTING,
+			JB_TP_EPRMDY,
+			JB_TP_COMPSIZE,
+			JB_TP_ETLIPC,
+			JB_TP_COMPCHULJA,
+			JB_TP_MEDIINSURE,
+			CD_LOAN_MOUNT,
+			CD_TYPE_PAY,
+			AMT_YEAR_SALE,
+			YN_LOAN_MOUNT,
+			LOAN_CODE,
+			YN_LOAN_ALREADY,
+			YN_USER_END,
+			NO_PERSON
+		FROM TX_FC_TRANSMIT
+		 WHERE NO_BUNCH = #{no_bunch, jdbcType=VARCHAR}
+	</select>
 </mapper>

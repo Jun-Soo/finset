@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.koscom.domain.CooconGoodsFavoriteInfo;
+import com.koscom.finance.model.TxFcTransmitVO;
 import com.koscom.loan.dao.LoanMapper;
 import com.koscom.loan.service.LoanManager;
 import com.koscom.util.Constant;
@@ -34,5 +35,10 @@ public class LoanManagerImpl implements LoanManager{
 			new ReturnClass(Constant.FAILED, "처리 실패하였습니다.");
 		}
 		return new ReturnClass(Constant.SUCCESS, "처리 성공하였습니다", cooconGoodsFavoriteInfo);
+	}
+	
+	@Override
+	public TxFcTransmitVO getTxFcTransmitInfoForMsg(String no_bunch) {
+		return loanMapper.getTxFcTransmitInfoForMsg(no_bunch);
 	}
 }

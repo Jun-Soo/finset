@@ -2,6 +2,7 @@ package com.koscom.goods.dao;
 
 import java.util.List;
 
+import com.koscom.domain.GoodsInfo;
 import com.koscom.goods.model.GoodsForm;
 import com.koscom.goods.model.GoodsVO;
 
@@ -41,4 +42,11 @@ public interface GoodsMapper {
 	 * @return
 	 */
 	GoodsVO getGoodsFavorite(GoodsVO goodsVO);
+	
+	/**
+	 * 상품정보 조회
+	 * @param goodsInfo
+	 * @return
+	 */
+	GoodsVO getGoodsInfo(GoodsInfo goodsInfo);
 }

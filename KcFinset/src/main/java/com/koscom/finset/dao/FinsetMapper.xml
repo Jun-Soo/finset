@@ -304,4 +304,12 @@
 		              ) AA
                )
     </select>
+    
+    <select id="countLoading" parameterType="com.koscom.finset.model.FinsetVO" resultType="int">
+        /* com.koscom.loan.dao.FinsetMapper.countLoading*/
+          SELECT COUNT(*)
+            FROM  TX_FC_RECEIVE TFR
+           WHERE TFR.NO_PERSON = #{no_person , jdbcType=VARCHAR}
+             AND TFR.CD_STATUS = '04'
+    </select>
 </mapper>

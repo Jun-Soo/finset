@@ -74,5 +74,4 @@ public class LoanController implements Constant {
 
 		return "jsonView";
 	}
-
 }

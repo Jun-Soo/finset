@@ -53,4 +53,29 @@ public class GoodsManagerImpl implements GoodsManager {
 
 		return goodsMapper.getGoodsInfo(goodsInfo);
 	}
+	
+	@Override
+	public List<GoodsVO> listGoodsFavoriteAlliance(GoodsForm goodsForm) {
+		return goodsMapper.listGoodsFavoriteAlliance(goodsForm);
+	}
+
+	@Override
+	public int getGoodsFavoriteAllianceCount(GoodsForm goodsForm) {
+		return goodsMapper.getGoodsFavoriteAllianceCount(goodsForm);
+	}
+
+	@Override
+	public List<GoodsVO> listGoodsFavoriteNoAlliance(GoodsForm goodsForm) {
+		return goodsMapper.listGoodsFavoriteNoAlliance(goodsForm);
+	}
+
+	@Override
+	public int getGoodsFavoriteNoAllianceCount(GoodsForm goodsForm) {
+		return goodsMapper.getGoodsFavoriteNoAllianceCount(goodsForm);
+	}
+	
+	@Override
+	public GoodsVO getCooconGoodsFavorite(GoodsVO goodsVO) {
+		return goodsMapper.getCooconGoodsFavorite(goodsVO);
+	}
 }

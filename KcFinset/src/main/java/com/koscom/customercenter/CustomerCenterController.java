@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.koscom.scrap.service.ScrapManager;
 import com.koscom.util.*;
 
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +19,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.koscom.board.model.BoardForm;
+import com.koscom.board.model.BoardInfoVO;
+import com.koscom.board.service.BoardManager;
+import com.koscom.cache.service.CacheManager;
 import com.koscom.credit.service.CreditManager;
 import com.koscom.debt.model.DebtForm;
 import com.koscom.debt.model.DebtVO;
@@ -25,6 +30,8 @@ import com.koscom.debt.service.DebtManager;
 import com.koscom.domain.CreditInfo;
 import com.koscom.domain.PersonShareInfo;
 import com.koscom.domain.PersonShareMessageInfo;
+import com.koscom.env.model.CodeInfo;
+import com.koscom.env.service.CodeManager;
 import com.koscom.finset.model.FinsetForm;
 import com.koscom.finset.model.FinsetVO;
 import com.koscom.finset.service.FinsetManager;
@@ -61,6 +68,18 @@ public class CustomerCenterController implements Constant {
 	
 	@Autowired
 	GoodsManager goodsManager;
+	
+	@Autowired
+	ScrapManager scrapManager;
+	
+	@Autowired
+	BoardManager boardManager;
+	
+	@Autowired
+	CodeManager codeManager;
+	
+	@Autowired
+	CacheManager cacheManager;
 	
 	@Resource
 	Environment environment;
@@ -727,4 +746,421 @@ public class CustomerCenterController implements Constant {
 		return "/customercenter/frameCustomerViewResultsDetail";
 	}
 
+	/**
+	 * 마이페이지 내정보
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/frameCustomerMyInfo.crz")
+	public String frameCustomerMyInfo(HttpSession session, HttpServletRequest request, Model model) {
+		String no_person = (String) session.getAttribute("no_person");
+		PersonVO personVO = personManager.getPersonInfo(no_person);
+		personVO.setBirthday(personVO.getYmd_birth());
+		personVO.setSex(personVO.getC1_gender());
+		model.addAttribute("resultPerson", personVO);
+		
+		String site = (environment != null)?environment.getProperty("service.profile"):"";
+		model.addAttribute("site", site);
+		
+		int debtCount = debtManager.getDebtCount(no_person);
+		model.addAttribute("debtCount", debtCount);
+		
+		int linkedFcCount = scrapManager.getLinkedFcCount(no_person);
+		model.addAttribute("linkedFcCount", linkedFcCount);
+		
+		logger.info("resultPerson==========" + personVO.toString());
+		return "/customercenter/frameCustomerMyInfo";
+	}
+	
+	/**
+	 * 마이페이지 공지사항/이벤트
+	 * @param boardForm
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/frameCustomerNotice.crz")
+	public String frameCustomerNotice(HttpServletRequest request, Model model, BoardForm boardForm) {
+		//Default 설정 - 공지사항게시판
+		if( StringUtil.isEmpty(boardForm.getId_board()) ) boardForm.setId_board("notice");
+		boardForm.setPage(1);
+		Pagination pagedList = (Pagination) boardForm.setPagedList(boardManager.listBoardInfo(boardForm), boardManager.listBoardInfoCount(boardForm));
+
+		logger.info(pagedList.toString());
+		model.addAttribute("pagedList", pagedList);
+		model.addAttribute("boardForm", boardForm);
+		if(pagedList.getSource() != null) {
+			if(pagedList.getSource().size() > 0) {
+				pagedList.getSource().get(0);
+				BoardInfoVO boardInfoVO = (BoardInfoVO) pagedList.getSource().get(0);
+				model.addAttribute("seq", boardInfoVO.getSeq());
+			}
+		}
+		return "/customercenter/frameCustomerNotice";
+	}
+	
+	/**
+	 * 마이페이지 공지사항/이벤트 list
+	 * @param boardForm
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/listCustomerNotice.crz")
+	public String listCustomerNotice(Model model, HttpServletRequest request, BoardForm boardForm) {		
+		boardForm.setPage(1);
+		Pagination pagedList = (Pagination) boardForm.setPagedList(boardManager.listBoardInfo(boardForm), boardManager.listBoardInfoCount(boardForm));
+	
+		logger.info(pagedList.toString());
+		model.addAttribute("pagedList", pagedList);
+		model.addAttribute("boardForm", boardForm);
+		if(pagedList.getSource() != null) {
+			if(pagedList.getSource().size() > 0) {
+				BoardInfoVO boardInfoVO = (BoardInfoVO) pagedList.getSource().get(0);
+				model.addAttribute("seq", boardInfoVO.getSeq());
+			}
+		}
+				
+		return "/customercenter/sub/listNotice";
+	}
+	
+	/**
+	 * 마이페이지 공지사항/이벤트 상세
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/frameCustomerNoticeDetail.crz")
+	public String frameCustomerNoticeDetail(HttpServletRequest request, Model model, BoardForm boardForm) {
+		logger.info(boardForm.toString());
+
+			BoardInfoVO boardInfo = new BoardInfoVO();
+			BoardInfoVO boardInfoVO = new BoardInfoVO();
+
+			if(boardForm.getSeq() != null && boardForm.getId_board() != null){
+				boardInfoVO.setSeq(boardForm.getSeq() );
+				boardInfoVO.setId_board(boardForm.getId_board());
+
+				//이미지 정보
+				if("event".equals(boardForm.getId_board())) {
+					boardInfoVO.setFile_type("02");
+					BoardInfoVO boardImgInfo = boardManager.getBoardFileInfo(boardInfoVO);
+					model.addAttribute("boardImgInfo", boardImgInfo);
+				}
+				
+				boardInfo = boardManager.getBoardInfo(boardInfoVO);
+				logger.info(boardInfo.toString());
+				model.addAttribute("boardInfo", boardInfo);
+			}
+
+		return "/customercenter/frameCustomerNoticeDetail";
+	}
+	
+	/**
+	 * 마이페이지 알림설정
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/frameCustomerNotificationSetting.crz")
+	public String frameCustomerNotificationSetting(HttpServletRequest request, Model model, HttpSession session) {
+
+		String no_person = (String) session.getAttribute("no_person");
+
+		PersonVO personVO = new PersonVO();
+		personVO = personManager.getPersonInfo(no_person);
+		model.addAttribute("personVO", personVO);
+
+		model.addAttribute("listCdPush", codeManager.listCodeInfo("cd_push"));
+
+		model.addAttribute("listPushSetting", personManager.getPushSettingInfo(no_person));
+		
+		return "/customercenter/frameCustomerNotificationSetting";
+	}
+	
+	/**
+	 * 마이페이지 인증/보안
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/frameCustomerAuthenticationSecurity.crz")
+	public String frameCustomerAuthenticationSecurity(HttpServletRequest request, Model model, HttpSession session) {
+
+		String no_person = (String) session.getAttribute("no_person");
+
+		PersonVO personVO = new PersonVO();
+		personVO = personManager.getPersonInfo(no_person);
+		model.addAttribute("personVO", personVO);
+
+		return "/customercenter/frameCustomerAuthenticationSecurity";
+	}
+	
+	/**
+	 * 마이페이지 비밀번호 변경 본인인증
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/frameChnagePwdCert.crz")
+	public String frameChnagePwdCert(Model model, HttpServletRequest request, HttpSession session) {
+		String no_person = (String) session.getAttribute("no_person");
+		PersonVO personVO = personManager.getPersonInfo(no_person);
+
+		model.addAttribute("personHp", personVO.getHp());
+		logger.info("personHP");
+		logger.info("personHP");
+		logger.info("personHP");
+		logger.info("personHP");
+		logger.info("personHP");
+		logger.info(personVO.getHp());
+		return "/customercenter/frameChnagePwdCert";
+	}
+	
+	/**
+	 * 마이페이지 관심상품
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/frameCustomerGoodsFavorite.crz")
+	public String frameCustomerGoodsFavorite(HttpServletRequest request, Model model, HttpSession session, GoodsForm goodsForm) {
+
+		String no_person = (String) session.getAttribute("no_person");
+		goodsForm.setNo_person(no_person);
+		goodsForm.setPage(goodsForm.getPage());
+
+		//Default 설정
+		if( StringUtil.isEmpty(goodsForm.getCd_goods_alliance()) ) goodsForm.setCd_goods_alliance("01");
+		if( StringUtil.isEmpty(goodsForm.getCd_goods_class()) ) goodsForm.setCd_goods_class("01");
+		
+		Pagination pagedList = null;
+		if( "01".equals(goodsForm.getCd_goods_alliance()) ){//일반상품
+			pagedList = (Pagination) goodsForm.setPagedList(goodsManager.listGoodsFavoriteNoAlliance(goodsForm), goodsManager.getGoodsFavoriteNoAllianceCount(goodsForm));
+		}else if( "02".equals(goodsForm.getCd_goods_alliance()) ){//제휴상품
+			pagedList = (Pagination) goodsForm.setPagedList(goodsManager.listGoodsFavoriteAlliance(goodsForm), goodsManager.getGoodsFavoriteAllianceCount(goodsForm));
+		}
+
+		if(pagedList != null){
+			logger.info(pagedList.toString());
+		}
+		model.addAttribute("pagedList", pagedList);
+		model.addAttribute("cd_goods_alliance",goodsForm.getCd_goods_alliance());
+		model.addAttribute("cd_goods_class",goodsForm.getCd_goods_class());
+		
+		return "/customercenter/frameCustomerGoodsFavorite";
+	}
+	
+	/**
+	 * 마이페이지 관심상품 리스트 페이징
+	 * @param goodsForm
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/listLoanAffiliates.crz")
+	public String listLoanAffiliates(Model model, HttpServletRequest request, GoodsForm goodsForm, HttpSession session) {
+
+		String no_person = (String) session.getAttribute("no_person");
+		goodsForm.setNo_person(no_person);
+
+		Pagination pagedList = null;
+		if( "01".equals(goodsForm.getCd_goods_alliance()) ){//일반상품
+			pagedList = (Pagination) goodsForm.setPagedList(goodsManager.listGoodsFavoriteNoAlliance(goodsForm), goodsManager.getGoodsFavoriteNoAllianceCount(goodsForm));
+		}else if( "02".equals(goodsForm.getCd_goods_alliance()) ){//제휴상품
+			pagedList = (Pagination) goodsForm.setPagedList(goodsManager.listGoodsFavoriteAlliance(goodsForm), goodsManager.getGoodsFavoriteAllianceCount(goodsForm));
+		}
+		if(pagedList != null){
+			logger.info(pagedList.toString());
+		}
+		model.addAttribute("pagedList", pagedList);
+		model.addAttribute("cd_goods_alliance",goodsForm.getCd_goods_alliance());
+		
+		return "/customercenter/sub/listLoanAffiliates";
+	}
+
+
+	/**
+	 * 마이페이지 관심상품 상세
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/frameCustomerGoodsFavoriteDetail.crz")
+	public String frameCustomerGoodsFavoriteDetail(HttpServletRequest request, Model model, HttpSession session, GoodsForm goodsForm) {
+		String no_person = (String) session.getAttribute("no_person");
+		goodsForm.setNo_person(no_person);
+		GoodsVO goodsInfo = new GoodsVO();
+		GoodsVO goodsVO = new GoodsVO();
+
+		if(goodsForm.getCd_fc() != null && goodsForm.getCd_goods() != null){
+			goodsVO.setCd_fc(goodsForm.getCd_fc());
+			goodsVO.setCd_goods(goodsForm.getCd_goods());
+			goodsVO.setNo_person(no_person);
+
+			if( "N".equals(goodsForm.getYn_alliance()) ){ //일반상품
+				goodsInfo = goodsManager.getCooconGoodsFavorite(goodsVO);
+			}else if( "Y".equals(goodsForm.getYn_alliance()) ){ //제휴상품
+				goodsInfo = goodsManager.getGoodsFavorite(goodsVO);
+			}
+			model.addAttribute("goodsInfo", goodsInfo);
+			model.addAttribute("yn_alliance",goodsForm.getYn_alliance());
+		}
+
+		return "/customercenter/frameCustomerGoodsFavoriteDetail";
+	}
+	
+	/**
+	 * 마이페이지 자주묻는질문
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/frameCustomerFAQ.crz")
+	public String frameCustomerFAQ(HttpServletRequest request, Model model) {
+		return "/customercenter/frameCustomerFAQ";
+	}
+	
+	/**
+	 * 마이페이지 자주묻는질문 검색
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/frameCustomerFAQSearch.crz")
+	public String frameCustomerFAQSearch(HttpServletRequest request, Model model, BoardForm boardForm) {
+		logger.info(boardForm.toString());
+		Pagination pagedList = (Pagination) boardForm.setPagedList(boardManager.SearchBoard(boardForm), boardManager.SearchBoardCount(boardForm));
+		
+		model.addAttribute("pagedList", pagedList);
+		model.addAttribute("boardForm", boardForm);
+		
+		return "/customercenter/frameCustomerFAQSearch";
+	}
+
+	/**
+	 * 마이페이지 자주묻는질문 검색 리스트
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/listFaqSearch.crz")
+	public String listFaqSearch(HttpServletRequest request, Model model, BoardForm boardForm) {
+		logger.info(boardForm.toString());
+		
+		Pagination pagedList = (Pagination) boardForm.setPagedList(boardManager.SearchBoard(boardForm), boardManager.SearchBoardCount(boardForm));
+		
+		model.addAttribute("pagedList", pagedList);
+		
+		return "/customercenter/sub/listFaqSearch";
+	}
+
+	/**
+	 * 마이페이지 자주묻는질문
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/frameCustomerFAQDetail.crz")
+	public String frameCustomerFAQCredit(HttpServletRequest request, Model model, BoardForm boardForm) {
+		//공지사항 게시판
+				logger.info(boardForm.toString());
+				
+				model.addAttribute("nm_board", boardManager.getBoardNm(boardForm.getId_board()));
+				boardForm.setPage(1);
+				
+				
+				Pagination pagedList = (Pagination) boardForm.setPagedList(boardManager.listBoardInfo(boardForm), boardManager.listBoardInfoCount(boardForm));
+
+				logger.info(pagedList.toString());
+				model.addAttribute("pagedList", pagedList);
+				model.addAttribute("boardForm", boardForm);
+				if(pagedList.getSource() != null) {
+					if(pagedList.getSource().size() > 0) {
+						pagedList.getSource().get(0);
+						BoardInfoVO boardInfoVO = (BoardInfoVO) pagedList.getSource().get(0);
+						model.addAttribute("seq", boardInfoVO.getSeq());
+					}
+				}
+				
+		return "/customercenter/frameCustomerFAQDetail";
+	}
+	
+	/**
+	 * 자주묻는질문 리스트
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/listFaq.crz")
+	public String listFaq(Model model, HttpServletRequest request, PushEachForm pushEachForm, BoardForm boardForm) {
+		Pagination pagedList = (Pagination) boardForm.setPagedList(boardManager.listBoardInfo(boardForm), boardManager.listBoardInfoCount(boardForm));
+		logger.info(pagedList.toString());
+		model.addAttribute("pagedList", pagedList);
+		
+		return "/customercenter/sub/listFaq";
+	}
+
+	/**
+	 * 마이페이지 고객센터
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/frameCustomerServiceCenter.crz")
+	public String frameCustomerServiceCenter(HttpServletRequest request, Model model, HttpSession session) {
+
+		String no_person = (String) session.getAttribute("no_person");
+		ReturnClass rc = cacheManager.clearCacheCode();
+		PersonVO personVO = new PersonVO();
+		personVO = personManager.getPersonInfo(no_person);
+
+		personVO.setEmail(personVO.getEmail());
+
+		model.addAttribute("personVO", personVO);
+		logger.info("personVO========="+personVO.toString());
+
+		CodeInfo codeInfo = new CodeInfo();
+		if(!"1".equals(personVO.getYn_os())) {
+			codeInfo = codeManager.getCodeInfo("_CONF_SYSTEM", "IOS_VERSION");
+		} else {
+			codeInfo = codeManager.getCodeInfo("_CONF_SYSTEM", "ANDROID_VERSION");
+		}
+			
+		logger.info(codeInfo.getNm_code());
+		model.addAttribute("newest_version", codeInfo.getNm_code());
+
+		return "/customercenter/frameCustomerServiceCenter";
+	}
+	
+	/**
+	 * 마이페이지 이용약관및정책
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/frameCustomerTerms.crz")
+	public String frameCustomerTerms(HttpServletRequest request, Model model) {
+		return "/customercenter/frameCustomerTerms";
+	}
+	
+	/**
+	 * 마이페이지 핀셋 이용약관
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/frameCustomerFinsetTerms.crz")
+	public String frameCustomerFinsetTerms(HttpServletRequest request, Model model) {
+		return "/customercenter/frameCustomerFinsetTerms";
+	}
+
+	/**
+	 * 마이페이지 개인정보 처리방침
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/frameCustomerPrivacyPolicy.crz")
+	public String frameCustomerPrivacyPolicy(HttpServletRequest request, Model model) {
+		return "/customercenter/frameCustomerPrivacyPolicy";
+	}
 }

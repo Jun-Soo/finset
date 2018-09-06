@@ -1020,4 +1020,13 @@
         , SYSDATE
         )
 	</insert>
+	
+	<select id="getPushSettingInfo" parameterType="java.lang.String" resultType="com.koscom.person.model.PersonVO">
+        SELECT
+            CD_PUSH AS ITEM_PUSH
+            , YN_PUSH
+        FROM PUSH_SETTING_INFO
+        WHERE
+            NO_PERSON = #{no_person, jdbcType=VARCHAR}
+    </select>
 </mapper>

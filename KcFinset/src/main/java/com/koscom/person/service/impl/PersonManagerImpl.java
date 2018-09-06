@@ -434,4 +434,9 @@ public class PersonManagerImpl implements PersonManager {
 	public int createPersonCertificateInfo(PersonCertificateInfoVO personCertificateInfoVO) {
 		return personMapper.createPersonCertificateInfo(personCertificateInfoVO);
 	}
+	
+	@Override
+	public List<PersonVO> getPushSettingInfo(String no_person) {
+		return personMapper.getPushSettingInfo(no_person);
+	}
 }

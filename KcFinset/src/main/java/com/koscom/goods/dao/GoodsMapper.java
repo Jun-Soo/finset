@@ -49,4 +49,39 @@ public interface GoodsMapper {
 	 * @return
 	 */
 	GoodsVO getGoodsInfo(GoodsInfo goodsInfo);
+	
+	/**
+	 * 관심상품 조회(제휴상품)
+	 * @param goodsForm
+	 * @return List<GoodsVO>
+	 */
+	List<GoodsVO> listGoodsFavoriteAlliance(GoodsForm goodsForm);
+
+	/**
+	 * 관심상품 건수(제휴상품)
+	 * @param goodsForm
+	 * @return int
+	 */
+	int getGoodsFavoriteAllianceCount(GoodsForm goodsForm);
+
+	/**
+	 * 관심상품 조회(비제휴상품)
+	 * @param goodsForm
+	 * @return List<GoodsVO>
+	 */
+	List<GoodsVO> listGoodsFavoriteNoAlliance(GoodsForm goodsForm);
+
+	/**
+	 * 관심상품 건수(비제휴상품)
+	 * @param goodsForm
+	 * @return int
+	 */
+	int getGoodsFavoriteNoAllianceCount(GoodsForm goodsForm);
+	
+	/**
+	 * 상품정보 조회(즐겨찾기)
+	 * @param GoodsVO
+	 * @return
+	 */
+	GoodsVO getCooconGoodsFavorite(GoodsVO goodsVO);
 }

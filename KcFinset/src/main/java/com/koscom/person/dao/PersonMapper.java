@@ -284,4 +284,11 @@ public interface PersonMapper {
 	 * @return
 	 */
 	int createPersonCertificateInfo(PersonCertificateInfoVO personCertificateInfoVO);
+	
+	/**
+	 * 마이페이지 알람 설정정보 list조회
+	 * @param String
+	 * @return PersonVO
+	 */
+	List<PersonVO> getPushSettingInfo(String no_person);
 }

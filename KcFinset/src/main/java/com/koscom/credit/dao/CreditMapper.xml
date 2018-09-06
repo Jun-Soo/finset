@@ -1086,4 +1086,25 @@
 		) RESULT
 		WHERE ROWNUM = 1
 	</select>
+	
+	<select id="getCreditInfoByNmIf" parameterType="com.koscom.domain.CreditInfo" resultType="com.koscom.domain.CreditInfo">
+		SELECT	SEQ
+				,NO_PERSON
+				,CD_AGREE_CAUSE
+				,CD_CB_CAUSE
+				,CD_CB_COMP
+				,CD_CB_RESPONSE
+				,MSG_REQUEST
+				,MSG_RESPONSE
+				,NM_CUST
+				,NM_IF
+				,NM_IF_SUB
+				,NO_INQ_KEY
+				,SEQ_GROUP
+				,ID_FRT
+				,DT_FRT
+		FROM CREDIT_INFO
+		WHERE NO_PERSON = #{noPerson}
+			AND  NM_IF = #{nmIf}
+	</select>
 </mapper>

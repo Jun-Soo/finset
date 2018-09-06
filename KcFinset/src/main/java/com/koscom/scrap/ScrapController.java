@@ -1239,20 +1239,6 @@ public class ScrapController {
         	String taxation_year = "";
         	String cd_income = "";
         	
-        	//국세청 스크래핑 조회 내역 저장
-        	ScrReqCertificationVO scrReqCertificationVO = new ScrReqCertificationVO();
-            scrReqCertificationVO.setNo_person(no_person);
-            scrReqCertificationVO.setSeq_scraping_result(seq_scrap);
-            scrReqCertificationVO.setCd_type("02"); //01 현금영수증 사용내역, 02 소득금액증명, 03 사업자등록증명, 04 사업자등록상태, 05 부가가치세 과세표준증명원, 06 표준재무제표증명, 07 납세사실증명
-            scrReqCertificationVO.setTaxation_start_month(USER_NTS_OUTPUT.getTAXATION_START_MONTH());
-            scrReqCertificationVO.setTaxation_end_month(USER_NTS_OUTPUT.getTAXATION_END_MONTH());
-            scrReqCertificationVO.setCert_division(USER_NTS_OUTPUT.getCERT_DIVISION());
-            scrReqCertificationVO.setTaxation_year(taxation_year);
-            scrReqCertificationVO.setCd_income(cd_income);
-            scrReqCertificationVO.setError_cd(USER_NTS_OUTPUT.getERROR_CODE());
-            scrReqCertificationVO.setError_msg(USER_NTS_OUTPUT.getERROR_MESSAGE());
-            scrapManager.createScrReqCertification(scrReqCertificationVO);
-            
             //정상 조회 시에만  조회 내역 insert
             if(USER_NTS_OUTPUT.getERROR_CODE().equals("00000000"))	{
             	List<ScrRespIncomeDtlVO> scrRespIncomeDtlVO = USER_NTS_OUTPUT.getINCOME();
@@ -1304,6 +1290,19 @@ public class ScrapController {
             	kcbReqNonfiInfoVO.setId_frt(no_person);
             	kcbManager.createKcbReqNonfiInfo(kcbReqNonfiInfoVO);
         	}
+            //국세청 스크래핑 조회 내역 저장
+            ScrReqCertificationVO scrReqCertificationVO = new ScrReqCertificationVO();
+            scrReqCertificationVO.setNo_person(no_person);
+            scrReqCertificationVO.setSeq_scraping_result(seq_scrap);
+            scrReqCertificationVO.setCd_type("02"); //01 현금영수증 사용내역, 02 소득금액증명, 03 사업자등록증명, 04 사업자등록상태, 05 부가가치세 과세표준증명원, 06 표준재무제표증명, 07 납세사실증명
+            scrReqCertificationVO.setTaxation_start_month(USER_NTS_OUTPUT.getTAXATION_START_MONTH());
+            scrReqCertificationVO.setTaxation_end_month(USER_NTS_OUTPUT.getTAXATION_END_MONTH());
+            scrReqCertificationVO.setCert_division(USER_NTS_OUTPUT.getCERT_DIVISION());
+            scrReqCertificationVO.setTaxation_year(taxation_year);
+            scrReqCertificationVO.setCd_income(cd_income);
+            scrReqCertificationVO.setError_cd(USER_NTS_OUTPUT.getERROR_CODE());
+            scrReqCertificationVO.setError_msg(USER_NTS_OUTPUT.getERROR_MESSAGE());
+            scrapManager.createScrReqCertification(scrReqCertificationVO);
         }
 		ReturnClass returnClass = new ReturnClass(Constant.SUCCESS);
 

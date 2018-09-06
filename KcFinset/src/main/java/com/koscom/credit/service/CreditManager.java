@@ -8,8 +8,7 @@ import com.koscom.domain.CreditInfo;
 public interface CreditManager {
 
 	/**
-	 * Method Desc : 전문SEQ 조회
-	 * 2017.12.28
+	 * 전문SEQ 조회
 	 * @return String SEQ
 	 */
 	String getCreditInfoNextSeq();
@@ -29,8 +28,7 @@ public interface CreditManager {
 	CreditInfo getCreditMainCntInfo(String no_person);
 
 	/**
-	 * Method Desc : kcb전문 송수신 이력조회
-	 * 2018.08.31
+	 * kcb전문 송수신 이력조회
 	 * @param	HashMap<String, String> searchMap
 	 * @return	HashMap<String, String>
 	 */
@@ -61,4 +59,11 @@ public interface CreditManager {
 	List<CreditInfo> getCreditDetailDEBTCreditList(String no_person);
 	CreditInfo getCreditDetailDEBTLoanSum(String no_person);
 	List<CreditInfo> getCreditDetailDEBTLoanList(String no_person);
+	
+	/**
+	 * 개인번호 & 전문명으로 조회이력 가져오기
+	 * @param info
+	 * @return
+	 */
+	List<CreditInfo> getCreditInfoByNmIf(CreditInfo info);
 }

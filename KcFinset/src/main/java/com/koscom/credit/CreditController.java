@@ -32,15 +32,23 @@ import com.koscom.credit.service.CreditManager;
 import com.koscom.domain.CreditInfo;
 import com.koscom.env.service.CodeManager;
 import com.koscom.kcb.model.KcbCreditInfoVO;
+import com.koscom.kcb.model.KcbReqNonfiInfoVO;
 import com.koscom.kcb.model.Kcb_600420;
 import com.koscom.kcb.service.KcbManager;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
+import com.koscom.scrap.model.ScrReqHealthVO;
+import com.koscom.scrap.model.ScrReqPensionVO;
+import com.koscom.scrap.model.ScrRespHealthPaymentdtlVO;
+import com.koscom.scrap.model.ScrRespIncomeDtlVO;
+import com.koscom.scrap.model.ScrRespPensionPaymentVO;
+import com.koscom.scrap.model.ScrRespPensionPaymentdtlVO;
 import com.koscom.scrap.service.ScrapManager;
 import com.koscom.util.Constant;
 import com.koscom.util.DateUtil;
 import com.koscom.util.FinsetException;
 import com.koscom.util.LogUtil;
+import com.koscom.util.NumberUtil;
 import com.koscom.util.ReturnClass;
 import com.koscom.util.SkipLoginCheck;
 import com.koscom.util.StringUtil;
@@ -1134,7 +1142,331 @@ public class CreditController {
     public String frameAcceptTerms10() {
         return "/base/sub/frameAcceptTerms10";
     }
+    
+    /**
+     * 신용등급 올리기
+     * @param model
+     * @param request
+     * @return
+     */
+    @RequestMapping("/frameCreditRaise.crz")
+    public String frameCreditRaise(HttpSession session, Model model, HttpServletRequest request) {
+        String no_person    = (String)session.getAttribute("no_person");
+        logger.info("frameCreditRaise");
+        KcbReqNonfiInfoVO kcbReqNonfiInfoVO = new KcbReqNonfiInfoVO();
+        kcbReqNonfiInfoVO.setNo_person(no_person);
+        
+        List<KcbReqNonfiInfoVO> kcbReqNonfiInfoList = kcbManager.getKcbReqNonfiInfo(kcbReqNonfiInfoVO);
+        if(kcbReqNonfiInfoList != null){
+        	logger.info("kcbReqNonfiInfoList.size() : " + kcbReqNonfiInfoList.size());
+        	for (KcbReqNonfiInfoVO kcbReqNonfiInfo : kcbReqNonfiInfoList) {
+        		String cd_req = kcbReqNonfiInfo.getCd_req();
+        		int status = Integer.parseInt(kcbReqNonfiInfo.getStatus());
+        		String type = "";
+        		String statusText = "";
+        		String dateText = "";
+        		if(cd_req.equals("01"))	{ //01: 소득금액증명정보, 02:  건강보험납부정보, 03: 국민연금납부정보
+        			type = "nts";
+        		}
+        		else if(cd_req.equals("02"))	{
+        			type = "nhis";
+        		}
+        		else if(cd_req.equals("03"))	{
+        			type = "nps";
+        		}
+        		
+    			switch(status)	{//01: 대기, 02: 요청, 03: 전송성공, 04: 전송실패
+    			case 1: //대기
+    				statusText = "대기";
+    				dateText = kcbReqNonfiInfo.getDt_reg();
+    				break;
+    			case 2:	//요청
+    				statusText = "요청";
+    				dateText = kcbReqNonfiInfo.getDt_req();
+    				break;
+    			case 3:	//전송성공
+    				statusText = "전송성공";
+    				dateText = kcbReqNonfiInfo.getDt_send();
+    				break;
+    			case 4:	//전송실패
+    				statusText = "전송실패";
+    				dateText = kcbReqNonfiInfo.getDt_send();
+    				break;
+    			}
+    			if(DateUtil.getCurrentDate().substring(0,6).equals(dateText.substring(0,6)))	{
+    				model.addAttribute(type+"_button", "false");
+    			}
+    				
+    			model.addAttribute(type+"_status", statusText);
+    			model.addAttribute(type+"_date", dateText);
+        	}
+        	
+        	
+        }
+        model.addAttribute("no_person", no_person);
+ 
+        return "/credit/frameCreditRaise";
+    }
+    
+    /**
+     * 신용등급 올리기 상세
+     * @param model
+     * @param request
+     * @return
+     */
+    @RequestMapping("/frameCreditRaiseDetail.crz")
+    public String frameCreditRaiseDetail(HttpSession session, Model model, HttpServletRequest request) {
+    	return "/credit/frameCreditRaiseDetail";
+    }
+    
+    /**
+     * 신용등급 올리기 결과
+     * @param model
+     * @param request
+     * @return
+     */
+    @RequestMapping("/frameCreditRaiseResult.crz")
+    public String frameCreditRaiseResult(HttpSession session, Model model, HttpServletRequest request) {
+    	
+    	logger.debug("frameCreditRaiseResult : " + request.getParameter("result"));
+    	model.addAttribute("result", request.getParameter("result"));
+    	return "/credit/frameCreditRaiseResult";
+    }
+    
+    /**
+     * 신용등급 올리기 조회 실패(조회내역이 없음_
+     * @param model
+     * @param request
+     * @return
+     */
+    @RequestMapping("/frameCreditRaiseEmpty.crz")
+    public String frameCreditRaiseEmpty(HttpSession session, Model model, HttpServletRequest request) {
+    	logger.debug("frameCreditRaiseEmpty" );
+    	return "/credit/frameCreditRaiseEmpty";
+    }
+    
+    /**
+     * 국민건강보험 주민번호
+     * @param model
+     * @param request
+     * @return
+     */
+    @RequestMapping("/frameCreditSsnInfo.crz")
+    public String frameCreditNhisSsn(HttpSession session, Model model, HttpServletRequest request) {
+		String no_person = (String) session.getAttribute("no_person");
+        logger.debug("no_person : " + no_person);
 
+		if(no_person != null && !no_person.equals("")){
+			PersonVO personVO = personManager.getPersonInfo(no_person);
+			personVO.setSsn_person(personVO.getBgn().substring(2, 8));
+			model.addAttribute("personVO", personVO);
+			
+			String currentDate = DateUtil.getCurrentDate();
+			
+			String nhisStartYm = DateUtil.getFirstDateOfPrevMonth(currentDate,12).substring(0,6);
+			String nhisEndYm = DateUtil.getFirstDateOfPrevMonth(currentDate,1).substring(0,6);
+			
+			String npsStartYm = DateUtil.getFirstDateOfPrevMonth(currentDate,12).substring(0,6);
+			String npsEndYm = DateUtil.getFirstDateOfPrevMonth(currentDate,1).substring(0,6);
+			
+			//  1월~2월 : 직직전년(*), 직직전년-1
+		    //  3월~12월 : 직전년(*), 직전년-1 
+			List<String> inquiryYears = new ArrayList<String>();
+
+			if( Integer.parseInt(currentDate.substring(4,6)) < 03)	{
+				inquiryYears.add(DateUtil.addYears(currentDate, -2).substring(0,4));
+				inquiryYears.add(DateUtil.addYears(currentDate, -3).substring(0,4));
+			}
+			else	{
+				inquiryYears.add(DateUtil.addYears(currentDate, -1).substring(0,4));
+				inquiryYears.add(DateUtil.addYears(currentDate, -2).substring(0,4));
+			}
+			
+			ScrReqHealthVO scrReqHealthVO  = new ScrReqHealthVO();
+			String nhisLastYm = null;
+			scrReqHealthVO.setNo_person(no_person);
+			ScrReqHealthVO scrReqHealth = scrapManager.getScrReqHealth(scrReqHealthVO);
+			if(scrReqHealth != null && "00000000".equals(scrReqHealth.getError_cd()))	{
+				nhisLastYm = scrReqHealth.getInquiry_end_yearmonth();
+			}
+			if(nhisLastYm != null && nhisLastYm.length() == 6   && Integer.parseInt(nhisLastYm) > Integer.parseInt(nhisStartYm))	{
+				nhisStartYm = DateUtil.getFirstDateOfPrevMonth(nhisLastYm+"01", -1).substring(0,6);
+				
+			}
+			
+			ScrReqPensionVO scrReqPensionVO  = new ScrReqPensionVO();
+			String npsLastYm = null;
+			scrReqPensionVO.setNo_person(no_person);
+			ScrReqPensionVO scrReqPension = scrapManager.getScrReqPension(scrReqPensionVO);
+			if(scrReqPension != null && "00000000".equals(scrReqPension.getError_cd()))	{
+				npsLastYm = scrReqPension.getInquiry_end_yearmonth();
+			}
+			
+			if(npsLastYm != null && npsLastYm.length() == 6 && Integer.parseInt(npsLastYm) > Integer.parseInt(npsStartYm))	{
+				npsStartYm = DateUtil.getFirstDateOfPrevMonth(npsLastYm+"01", -1).substring(0,6);
+				
+			}
+			logger.debug("nhisStartYm : " + nhisStartYm);
+			logger.debug("nhisEndYm   : " + nhisEndYm);
+			logger.debug("npsStartYm : " + npsStartYm);
+			logger.debug("npsEndYm   : " + npsEndYm);
+			model.addAttribute("nhis_start_ym", nhisStartYm);
+			model.addAttribute("nhis_end_ym", nhisEndYm);
+			
+			model.addAttribute("nps_start_ym", npsStartYm);
+			model.addAttribute("nps_end_ym", npsEndYm);
+			
+			model.addAttribute("inquiry_years", inquiryYears);
+			model.addAttribute("scrap_code", request.getParameter("scrap_code"));
+		}
+		return "/credit/frameCreditSsnInfo";
+    }
+    
+    /**
+     * 건강보험 납부내역 조회
+     * @param model
+     * @param request
+     * @return
+     */
+    @RequestMapping("/frameCreditRaiseNhis.crz")
+    public String frameCreditRaiseNhis(HttpSession session, Model model, HttpServletRequest request) {
+    	String no_person = (String) session.getAttribute("no_person");
+
+        PersonVO personVO = personManager.getPersonInfo(no_person);
+		
+		logger.info("no_person : "+no_person);
+		logger.info("personVO.getNm_person() : "+personVO.getNm_person());
+        
+        ScrRespHealthPaymentdtlVO scrRespHealthPaymentdtlVO = new ScrRespHealthPaymentdtlVO();
+        scrRespHealthPaymentdtlVO.setNo_person(no_person);
+        scrRespHealthPaymentdtlVO.setPay_yyyymm(DateUtil.getFirstDateOfPrevMonth(DateUtil.getCurrentDate(),12).substring(0,6));
+        
+        List<ScrRespHealthPaymentdtlVO> scrRespHealthPaymentdtlList = scrapManager.getScrRespHealthPaymentdtl(scrRespHealthPaymentdtlVO);
+        if(scrRespHealthPaymentdtlList != null)	{
+        	String   loan_code = "01";//대출 구분 코드 // 01 : 직장인 신용대출 02 : 자영업자 신용대출
+        	int	nAveCnt = 0;
+        	long lTotPayment = 0;
+        	long lAmtYearIncome = 0;
+        	double insuRate = NumberUtil.stringToDouble(codeManager.getCodeName("cd_premium_rate", "NHIS_PREMIUM_RATE"), 0); // 건강보험보험료율
+        	/*
+            	직장인인 경우         : 보험료율 / 100 / 2
+            	개인사업자의 경우 : 보험료율 / 100
+            */
+            double dInsuRate = "01".equals(loan_code) ? (insuRate / 100 / 2) : (insuRate / 100);
+            nAveCnt = scrRespHealthPaymentdtlList.size();
+            //내역 건수가 3건 이상 인 경우 최신 3건으로 설정
+            if( nAveCnt >= 3 ) {
+                nAveCnt = 3;
+            } 
+        	
+        	for(int i = 0; i < scrRespHealthPaymentdtlList.size(); i++)	{
+        		ScrRespHealthPaymentdtlVO scrRespHealthPaymentdtl = scrRespHealthPaymentdtlList.get(i);
+        	
+        		lTotPayment += Integer.parseInt(scrRespHealthPaymentdtl.getAmt_pay_health_insu());
+        		if(i+1 == nAveCnt)	{
+        			lAmtYearIncome = (long)(((double)((lTotPayment/nAveCnt) / dInsuRate)) * (double)12);
+        		}
+
+        	}
+        	model.addAttribute("name", personVO.getNm_person());
+        	model.addAttribute("amt_year_income", lAmtYearIncome / 10000);
+        	model.addAttribute("total_payment", lTotPayment / 10000);
+        	model.addAttribute("payment_size", scrRespHealthPaymentdtlList.size());
+        	model.addAttribute("payment", scrRespHealthPaymentdtlList);
+        }
+      	return "/credit/frameCreditRaiseNhis";
+    }
+    
+    /**
+     * 국세청 소득금액 증명 조회
+     * @param model
+     * @param request
+     * @return
+     */
+    @RequestMapping("/frameCreditRaiseNts.crz")
+    public String frameCreditRaiseNts(HttpSession session, Model model, HttpServletRequest request) {
+    	String no_person = (String) session.getAttribute("no_person");
+
+        PersonVO personVO = personManager.getPersonInfo(no_person);
+		
+		logger.info("no_person : "+no_person);
+		logger.info("personVO.getNm_person() : "+personVO.getNm_person());
+		
+		ScrRespIncomeDtlVO scrRespIncomeDtlVO = new ScrRespIncomeDtlVO();
+		scrRespIncomeDtlVO.setNo_person(no_person);
+        
+        List<ScrRespIncomeDtlVO> scrRespIncomeDtlList = scrapManager.getScrRespIncomeDtl(scrRespIncomeDtlVO);
+        if(scrRespIncomeDtlList != null)	{
+        	ScrRespIncomeDtlVO scrRespIncomeDtl = scrRespIncomeDtlList.get(0);
+        	model.addAttribute("year", scrRespIncomeDtl.getReversion_year());
+        	model.addAttribute("income_div", Integer.parseInt(scrRespIncomeDtl.getAmt_income())/10000);
+        	model.addAttribute("income", scrRespIncomeDtl.getAmt_income());
+        	String incomeDivision = scrRespIncomeDtl.getIncome_division();
+        	if(incomeDivision.equals("01"))	{
+        		model.addAttribute("income_division", "근로소득 연말정산");
+        	}
+        	else if(incomeDivision.equals("08"))	{
+        		model.addAttribute("income_division", "근로소득 연말정산");
+        	}
+        	else if(incomeDivision.equals("08"))	{
+        		model.addAttribute("income_division", "사업소득 연말정산");
+        	}
+        	else if(incomeDivision.equals("04"))	{
+        		model.addAttribute("income_division", "일용근로소득");
+        	}
+        	else if(incomeDivision.equals("03"))	{
+        		model.addAttribute("income_division", "종합소득세");
+        	}
+        	else if(incomeDivision.equals("99"))	{
+        		model.addAttribute("income_division", "기타");
+        	}
+        	model.addAttribute("corp_name", scrRespIncomeDtl.getCorp_nm());
+        }
+       
+		model.addAttribute("name", personVO.getNm_person());
+      	return "/credit/frameCreditRaiseNts";
+    }
+    
+    /**
+     * 국민연금 납부내역 조회
+     * @param model
+     * @param request
+     * @return
+     */
+    @RequestMapping("/frameCreditRaiseNps.crz")
+    public String frameCreditRaiseNps(HttpSession session, Model model, HttpServletRequest request) {
+    	String no_person = (String) session.getAttribute("no_person");
+
+        PersonVO personVO = personManager.getPersonInfo(no_person);
+		
+		logger.info("no_person : "+no_person);
+		logger.info("personVO.getNm_person() : "+personVO.getNm_person());
+		
+		model.addAttribute("name", personVO.getNm_person());
+		
+		ScrRespPensionPaymentVO scrRespPensionPaymentVO = new ScrRespPensionPaymentVO();
+        scrRespPensionPaymentVO.setNo_person(no_person);
+        ScrRespPensionPaymentVO scrRespPensionPayment = scrapManager.getScrRespPensionPayment(scrRespPensionPaymentVO);
+        if(scrRespPensionPayment != null)	{
+        	model.addAttribute("amt_pay", Integer.parseInt(scrRespPensionPayment.getAmt_pay())/10000);
+        	model.addAttribute("cnt_month_pay", scrRespPensionPayment.getCnt_month_pay());
+        	model.addAttribute("start_year", scrRespPensionPayment.getStart_receipt_yyyymm().substring(0, 4));
+        	model.addAttribute("start_month", scrRespPensionPayment.getStart_receipt_yyyymm().substring(4, 6));
+        	model.addAttribute("amt_est_pns_month", Integer.parseInt(scrRespPensionPayment.getAmt_est_pns_month())/10000);
+        }
+        
+        ScrRespPensionPaymentdtlVO scrRespPensionPaymentdtlVO = new ScrRespPensionPaymentdtlVO();
+        scrRespPensionPaymentdtlVO.setNo_person(no_person);
+        scrRespPensionPaymentdtlVO.setStart_yyyymm(DateUtil.getFirstDateOfPrevMonth(DateUtil.getCurrentDate(),12).substring(0,6));
+        scrRespPensionPaymentdtlVO.setEnd_yyyymm(DateUtil.getFirstDateOfPrevMonth(DateUtil.getCurrentDate(),1).substring(0,6));
+        
+        List<ScrRespPensionPaymentdtlVO> scrRespPensionPaymentdtlList = scrapManager.getScrRespPensionPaymentdtl(scrRespPensionPaymentdtlVO);
+        if(scrRespPensionPaymentdtlList != null)	{
+        	model.addAttribute("payment", scrRespPensionPaymentdtlList);
+        }
+        
+      	return "/credit/frameCreditRaiseNps";
+    }
 }
 
 

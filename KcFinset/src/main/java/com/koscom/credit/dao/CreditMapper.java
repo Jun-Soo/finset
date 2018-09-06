@@ -236,4 +236,11 @@ public interface CreditMapper {
 	 * @return HashMap
 	 */
 	HashMap<String, String> getKcbJoinInfo(HashMap<String, String> schMap);
+	
+	/**
+	 * 개인번호 & 전문명으로 조회이력 가져오기
+	 * @param CreditInfo
+	 * @return CreditInfo
+	 */
+	List<CreditInfo> getCreditInfoByNmIf(CreditInfo info);
 }

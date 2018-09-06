@@ -11,11 +11,6 @@
 <script type="text/javascript">
 function appQuit(){
 	var frm = document.frmQuitComp;
-	
-	frm.action = "<c:url value='/logOut'/>"
-	frm.method="post"; 
-	frm.submit();
-	
 	window.Android.exitApp(); //앱종료
 }
 </script>

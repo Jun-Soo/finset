@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 import com.koscom.domain.CreditInfo;
 
-public class KcbCreditInfoVO extends CreditInfo {
+public class KcbCreditInfoVO extends CreditInfo implements Cloneable{
 
 	private static final long serialVersionUID = 6192197545025546983L;
 	public static final int crawPageCnt = 2;

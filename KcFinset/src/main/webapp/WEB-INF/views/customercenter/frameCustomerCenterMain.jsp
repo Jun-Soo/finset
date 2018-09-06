@@ -112,6 +112,9 @@
 						<a href="<c:url value='/m/customercenter/frameCustomerCreditAdviceMain.crz'/>" class="ico-credit-consult">신용상담<span>(준비중)</span></a>
 						<%-- 임시주석: 삭제금지 <a href="<c:url value='/m/customercenter/frameCustomerCreditAdviceMain.crz'/>" class="ico-credit-consult">신용상담</a> --%>
 					</li>
+					<li>
+						<a href="<c:url value='/m/credit/frameCreditRaise.crz'/>" class="ico-serv-center">신용등급올리기</a>
+					</li>
 				</ul>
 			</div>
 		</div>

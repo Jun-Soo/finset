@@ -3,6 +3,7 @@ package com.koscom.person.service.impl;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,6 +20,7 @@ import com.koscom.conditioncredit.dao.ConditioncreditMapper;
 import com.koscom.conditioncredit.model.ConditioncreditVO;
 import com.koscom.conditionhouse.dao.ConditionhouseMapper;
 import com.koscom.conditionhouse.model.ConditionhouseVO;
+import com.koscom.credit.dao.CreditMapper;
 import com.koscom.domain.PersonLoginHistInfo;
 import com.koscom.domain.PersonShareInfo;
 import com.koscom.domain.PersonShareMessageInfo;
@@ -46,6 +48,9 @@ public class PersonManagerImpl implements PersonManager {
 	private PersonMapper personMapper;
 	
 	@Autowired
+	private CreditMapper creditMapper;
+	
+	@Autowired
 	private ConditioncreditMapper conditioncreditMapper;
 	
 	@Autowired
@@ -54,7 +59,6 @@ public class PersonManagerImpl implements PersonManager {
 	@Autowired
 	private ConditionhouseMapper conditionhouseMapper;
 
-	
 	@Autowired
 	KcbManager kcbManager;
 
@@ -439,4 +443,70 @@ public class PersonManagerImpl implements PersonManager {
 	public List<PersonVO> getPushSettingInfo(String no_person) {
 		return personMapper.getPushSettingInfo(no_person);
 	}
+	
+	/**
+	 * 회원 탈퇴 및 데이터 삭제
+	 * @param no_person
+	 * @return
+	 * @throws IOException
+	 * @throws FinsetException
+	 * @throws UnsupportedEncodingException
+	 */
+	@Override
+	public ReturnClass procPersonInfoDelQuit(String no_person) throws UnsupportedEncodingException, FinsetException, IOException {
+
+		try {
+			PersonVO personVO = new PersonVO();
+			personVO = personMapper.getPersonInfo(no_person);
+			logger.info(personVO.toString());
+
+			//KCB 회원 삭제 처리
+			logger.info("personVO === " + personVO);
+			KcbCreditInfoVO info = new KcbCreditInfoVO();
+			
+			//등록전문 정상여부 체크
+			HashMap<String, String> schMap = new HashMap<String, String>();
+			schMap.put("sch_no_person", personVO.getNo_person());
+			schMap.put("nm_if", "600420");
+			HashMap<String, String> clobMap = creditMapper.getKcbJoinInfo(schMap);
+			
+			if (clobMap != null) {
+				info.setBgn(personVO.getBgn());				// 생년월일, 성별
+				info.setNoPerson(personVO.getNo_person());	// 회원번호
+				info.setNmCust(personVO.getNm_person());	// 회원명
+				info.setDi(personVO.getKcb_di());			// 회원 KCB DI
+				info.setCp(personVO.getKcb_cp());			// 회원 KCB CP
+				info.setHp(personVO.getHp());				// 회원 휴대폰번호
+				info.setNmIf("600420");
+				info.setCd_regist("03");					// 01 신규, 03 해지, 09 URL
+				info.setReq_menu_code("200");
+				info.setReq_view_code("s07143331300");
+				logger.info("info === " + info.toString());
+				ReturnClass returnClass = kcbManager.procKcbCb(info);
+				logger.error(returnClass.getCd_result() + " ::: " + returnClass.getMessage() + " ::: " + returnClass.getReturnObj().toString());
+				logger.error("600420 전문 처리 완료");
+			}
+			
+			schMap.put("nm_if", "600");
+			clobMap = creditMapper.getKcbJoinInfo(schMap);
+			if (clobMap != null) {
+				info.setNmIf("600");
+				info.setCd_regist("05");					// 01 신규, 05 해지
+				logger.info("info === " + info.toString());
+				kcbManager.procKcbCb(info);
+				logger.error("600 전문 처리 완료");
+			}
+
+			personVO.setId_frt(personVO.getNo_person());
+			personMapper.createPersonQuit(personVO);
+			personMapper.procPersonInfoDelQuit(no_person);
+			
+		} catch (FinsetException e) {
+			
+			logger.error("600420 전문 처리 완료");
+			return new ReturnClass(Constant.FAILED, "탈퇴처리시 오류가 발생하였습니다.");
+		}
+		
+		return new ReturnClass(Constant.SUCCESS,"탈퇴가 완료되었습니다.");
+		}
 }

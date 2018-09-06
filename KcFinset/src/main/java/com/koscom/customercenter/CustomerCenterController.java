@@ -1,6 +1,7 @@
 package com.koscom.customercenter;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -1162,5 +1163,34 @@ public class CustomerCenterController implements Constant {
 	@RequestMapping("/frameCustomerPrivacyPolicy.crz")
 	public String frameCustomerPrivacyPolicy(HttpServletRequest request, Model model) {
 		return "/customercenter/frameCustomerPrivacyPolicy";
+	}
+	
+	/**
+	 * 마이페이지 회원탈퇴
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/frameCustomerQuit.crz")
+	public String frameCustomerQuit(HttpServletRequest request, Model model) {
+		return "/customercenter/frameCustomerQuit";
+	}
+	
+	/**
+	 * 회원탈퇴(no_person 기준 데이터 삭제)
+	 * @param session
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/frameCustomerQuitComp.crz")
+	public String frameCustomerQuitComp(HttpSession session, HttpServletRequest request, Model model) throws UnsupportedEncodingException, FinsetException, IOException {
+		String no_person = (String) session.getAttribute("no_person");
+
+		ReturnClass rc = personManager.procPersonInfoDelQuit(no_person); 
+		model.addAttribute("result", Constant.SUCCESS);
+		model.addAttribute("message", rc.getMessage());
+
+		return "/customercenter/frameCustomerQuitComp";
 	}
 }

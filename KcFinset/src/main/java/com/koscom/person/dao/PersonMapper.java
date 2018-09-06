@@ -291,4 +291,18 @@ public interface PersonMapper {
 	 * @return PersonVO
 	 */
 	List<PersonVO> getPushSettingInfo(String no_person);
+	
+	/**
+	 * 회원탈퇴 및 데이터 삭제
+	 * @param String
+	 * @return
+	 */
+	int procPersonInfoDelQuit(String no_person);
+	
+	/**
+	 * 회원탈퇴 내역 저장
+	 * @param PersonVO
+	 * @return
+	 */
+	void createPersonQuit(PersonVO personVO);
 }

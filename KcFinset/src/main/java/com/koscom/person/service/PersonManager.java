@@ -268,4 +268,11 @@ public interface PersonManager {
 	 * @return PersonVO
 	 */
 	List<PersonVO> getPushSettingInfo(String no_person);
+	
+	/**
+	 * 회원 탈퇴 및 데이터 삭제
+	 * @param no_person
+	 * @return
+	 */
+	ReturnClass procPersonInfoDelQuit(String no_person) throws UnsupportedEncodingException, FinsetException, IOException;
 }

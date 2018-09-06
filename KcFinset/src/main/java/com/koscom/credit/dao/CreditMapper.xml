@@ -1071,4 +1071,19 @@
 				,SYSDATE
 			)
 	</update>
+	
+	<select id="getKcbJoinInfo" resultMap="result_lob_map" parameterType="map">
+		/* com.koscom.credit.dao.CreditMapper.getKcbInfoCLOB */
+	    SELECT SEQ, DT_FRT, MSG_RESPONSE FROM (
+			SELECT SEQ, DT_FRT, MSG_RESPONSE, CD_CB_RESPONSE, NM_IF
+			  FROM CREDIT_INFO
+			 WHERE NO_PERSON = #{sch_no_person, jdbcType=VARCHAR}
+			   AND MSG_RESPONSE IS NOT NULL
+			   AND (CD_CB_RESPONSE = '0000' OR CD_CB_RESPONSE = '0012')
+			   AND NM_IF = #{nm_if, jdbcType=VARCHAR}
+		       AND NM_IF_SUB IS NULL
+			ORDER BY SEQ DESC
+		) RESULT
+		WHERE ROWNUM = 1
+	</select>
 </mapper>

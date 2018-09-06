@@ -190,7 +190,6 @@ public interface CreditMapper {
 	/**
 	 * KCB 크롤링 정보 조회 (KcbManagerImpl)
 	 * @param no_person
-	 * @return
 	 */
 	int selectKcbCreditInfo(String no_person);
 	
@@ -209,6 +208,7 @@ public interface CreditMapper {
 	/**
 	 * 주소 정보 저장 (KcbManagerImpl)
 	 * @param kcbAddrInfo
+	 * @return
 	 */
 	void saveKcbAddrInfo(KcbAddrInfo kcbAddrInfo);
 	
@@ -229,4 +229,11 @@ public interface CreditMapper {
 	 * @param kcbContactInfo
 	 */
 	void saveKcbContactInfo(KcbContactInfo kcbContactInfo);
+	
+	/**
+	 * KCB 가입정보 조회
+	 * @param HashMap
+	 * @return HashMap
+	 */
+	HashMap<String, String> getKcbJoinInfo(HashMap<String, String> schMap);
 }

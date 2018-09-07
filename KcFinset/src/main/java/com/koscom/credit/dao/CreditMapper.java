@@ -152,10 +152,22 @@ public interface CreditMapper {
 	void saveKcbCardDtlList(KcbCardDtlList kcbCardDtlList);
 	
 	/**
+	 * 연체정보 만료일자 오늘로 세팅 (KcbManagerImpl)
+	 * @param no_person
+	 */
+	void updateDtDeleteOverdueInfo(String no_person);
+	
+	/**
 	 * 연체 정보 저장 (KcbManagerImpl)
 	 * @param kcbOverdueInfo
 	 */
 	void saveKcbOverdueInfo(KcbOverdueInfo kcbOverdueInfo);
+	
+	/**
+	 * 대지급정보 만료일자 오늘로 세팅 (KcbManagerImpl)
+	 * @param no_person
+	 */
+	void updateDtDeleteOverdueSteadpayInfo(String no_person);
 	
 	/**
 	 * 대지급 정보 저장 (KcbManageImpl)
@@ -164,10 +176,22 @@ public interface CreditMapper {
 	void saveKcbOverdueSteadpayInfo(KcbOverdueSteadpayInfo kcbOverdueSteadpayInfo);
 	
 	/**
+	 * 채무불이행정보 만료일자 오늘로 세팅 (KcbManagerImpl)
+	 * @param no_person
+	 */
+	void updateDtDeleteOverdueDefaultInfo(String no_person);
+	
+	/**
 	 * 채무 불이행 정보 저장 (KcbManagerImpl)
 	 * @param kcbOverdueDefaultInfo
 	 */
 	void saveKcbOverdueDefaultInfo(KcbOverdueDefaultInfo kcbOverdueDefaultInfo);
+	
+	/**
+	 * 공공정보 만료일자 오늘로 세팅 (KcbManagerImpl)
+	 * @param no_person
+	 */
+	void updateDtDeleteOverduePublicInfo(String no_person);
 	
 	/**
 	 * 공공 정보 저장 (KcbManagerImpl)
@@ -180,6 +204,12 @@ public interface CreditMapper {
 	 * @param logMap
 	 */
 	void insertCrawlingLog(Map<String, Object> logMap);
+	
+	/**
+	 * 연대보증정보 만료일자 오늘로 세팅 (KcbManagerImpl)
+	 * @param no_person
+	 */
+	void updateDtDeleteGuaranteeInfo(String no_person);
 	
 	/**
 	 * 연대 보증 정보 저장 (KcbManagerImpl)

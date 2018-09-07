@@ -579,6 +579,16 @@
 			)
 	</update>
 	
+	<update id="updateDtDeleteOverdueInfo" parameterType="java.lang.String">
+		/* com.koscom.credit.dao.CreditMapper.updateDtDeleteOverdueInfo */
+		UPDATE
+			KCB_OVERDUE_INFO
+		SET
+			DT_DELETE = TO_CHAR( SYSDATE, 'yyyyMMdd' )
+		WHERE
+			NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</update>
+	
 	<update id="saveKcbOverdueInfo" parameterType="com.koscom.kcb.model.KcbOverdueInfo">
 	    /* com.koscom.credit.dao.CreditMapper.saveKcbOverdueInfo */
 		MERGE INTO KCB_OVERDUE_INFO
@@ -591,6 +601,7 @@
 		     UPDATE
 			    SET AMT_REMAIN 		= #{amt_remain,			jdbcType=VARCHAR}
 			       ,AMT_REPAY		= #{amt_repay,			jdbcType=VARCHAR}
+			       ,DT_DELETE		= (null)
 			       ,ID_FRT			= #{no_person, 			jdbcType=VARCHAR}
 			       ,DT_FRT      	= SYSDATE
 			WHEN NOT MATCHED THEN
@@ -602,6 +613,7 @@
 				,AMT_FRT_DELAY
 				,AMT_REMAIN
 				,AMT_REPAY
+				,DT_DELETE
 				,ID_FRT
 				,DT_FRT
 			)
@@ -612,9 +624,20 @@
 				,#{amt_frt_delay,		jdbcType=VARCHAR}
 				,#{amt_remain,			jdbcType=VARCHAR}
 				,#{amt_repay,			jdbcType=VARCHAR}
+				,(null)
 				,#{no_person,    		jdbcType=VARCHAR}
 				,SYSDATE
 			)
+	</update>
+	
+	<update id="updateDtDeleteOverdueSteadpayInfo" parameterType="java.lang.String">
+		/* com.koscom.credit.dao.CreditMapper.updateDtDeleteOverdueInfo */
+		UPDATE
+			KCB_OVERDUE_STEADPAY_INFO
+		SET
+			DT_DELETE = TO_CHAR( SYSDATE, 'yyyyMMdd' )
+		WHERE
+			NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</update>
 	
 	<update id="saveKcbOverdueSteadpayInfo" parameterType="com.koscom.kcb.model.KcbOverdueSteadpayInfo">
@@ -629,6 +652,7 @@
 		     UPDATE
 			    SET YMD_STEAD_REPAY		= #{ymd_stead_repay,	jdbcType=VARCHAR}
 			       ,AMT_REPAY			= #{amt_repay,			jdbcType=VARCHAR}
+			       ,DT_DELETE			= (null)
 			       ,ID_FRT				= #{no_person, 			jdbcType=VARCHAR}
 			       ,DT_FRT				= SYSDATE
 			WHEN NOT MATCHED THEN
@@ -640,6 +664,7 @@
 				,AMT_STEAD_PAY
 				,YMD_STEAD_REPAY
 				,AMT_REPAY
+				,DT_DELETE
 				,ID_FRT
 				,DT_FRT
 			)
@@ -650,9 +675,20 @@
 				,#{amt_stead_pay,		jdbcType=VARCHAR}
 				,#{ymd_stead_repay,		jdbcType=VARCHAR}
 				,#{amt_repay,			jdbcType=VARCHAR}
+				,(null)
 				,#{no_person,    		jdbcType=VARCHAR}
 				,SYSDATE
 			)
+	</update>
+	
+	<update id="updateDtDeleteOverdueDefaultInfo" parameterType="java.lang.String">
+		/* com.koscom.credit.dao.CreditMapper.updateDtDeleteOverdueInfo */
+		UPDATE
+			KCB_OVERDUE_DEFAULT_INFO
+		SET
+			DT_DELETE = TO_CHAR( SYSDATE, 'yyyyMMdd' )
+		WHERE
+			NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</update>
 	
 	<update id="saveKcbOverdueDefaultInfo" parameterType="com.koscom.kcb.model.KcbOverdueDefaultInfo">
@@ -669,6 +705,7 @@
 			       ,AMT_DELAY       = #{amt_delay,	 jdbcType=VARCHAR}
 			       ,YMD_REPAY       = #{ymd_repay,	 jdbcType=VARCHAR}
 			       ,AMT_REPAY       = #{amt_repay,	 jdbcType=VARCHAR}
+			       ,DT_DELETE		= (null)
 			       ,ID_FRT			= #{no_person, 	 jdbcType=VARCHAR}
 			       ,DT_FRT      	= SYSDATE
 			WHEN NOT MATCHED THEN
@@ -682,6 +719,7 @@
 				,AMT_DELAY
 				,YMD_REPAY
 				,AMT_REPAY
+				,DT_DELETE
 				,ID_FRT
 				,DT_FRT
 			)
@@ -694,9 +732,20 @@
 				,#{amt_delay,			jdbcType=VARCHAR}
 				,#{ymd_repay,			jdbcType=VARCHAR}
 				,#{amt_repay,			jdbcType=VARCHAR}
+				,(null)
 				,#{no_person,			jdbcType=VARCHAR}
 				,SYSDATE
 			)
+	</update>
+	
+	<update id="updateDtDeleteOverduePublicInfo" parameterType="java.lang.String">
+		/* com.koscom.credit.dao.CreditMapper.updateDtDeleteOverdueInfo */
+		UPDATE
+			KCB_OVERDUE_PUBLIC_INFO
+		SET
+			DT_DELETE = TO_CHAR( SYSDATE, 'yyyyMMdd' )
+		WHERE
+			NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</update>
 	
 	<update id="saveKcbOverduePublicInfo" parameterType="com.koscom.kcb.model.KcbOverduePublicInfo">
@@ -712,6 +761,7 @@
 			    SET NM_AGENCY       = #{nm_agency,	 jdbcType=VARCHAR}
 			       ,CD_DEFAULT      = #{cd_default,	 jdbcType=VARCHAR}
 			       ,NO_CASE       	= #{no_case,	 jdbcType=VARCHAR}
+			       ,DT_DELETE		= (null)
 			       ,ID_FRT			= #{no_person, 	 jdbcType=VARCHAR}
 			       ,DT_FRT      	= SYSDATE
 			WHEN NOT MATCHED THEN
@@ -724,6 +774,7 @@
 				,YMD_DEFAULT
 				,AMT_REGIST
 				,NO_CASE
+				,DT_DELETE
 				,ID_FRT
 				,DT_FRT
 			)
@@ -735,6 +786,7 @@
 				,#{ymd_default,			jdbcType=VARCHAR}
 				,#{amt_regist,			jdbcType=VARCHAR}
 				,#{no_case,				jdbcType=VARCHAR}
+				,(null)
 				,#{no_person,			jdbcType=VARCHAR}
 				,SYSDATE
 			)
@@ -761,6 +813,16 @@
 		)
 	</update>
 	
+	<update id="updateDtDeleteGuaranteeInfo" parameterType="java.lang.String">
+		/* com.koscom.credit.dao.CreditMapper.updateDtDeleteOverdueInfo */
+		UPDATE
+			KCB_GUARANTEE_INFO
+		SET
+			DT_DELETE = TO_CHAR( SYSDATE, 'yyyyMMdd' )
+		WHERE
+			NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</update>
+	
 	<update id="saveKcbGuaranteeInfo" parameterType="com.koscom.kcb.model.KcbGuaranteeInfo">
 	    /* com.koscom.credit.dao.CreditMapper.saveKcbGuaranteeInfo */
 		MERGE INTO KCB_GUARANTEE_INFO
@@ -768,12 +830,12 @@
 		  ON (		NO_PERSON 		= #{no_person,			jdbcType=VARCHAR}
 		  		AND CD_FC			= #{cd_fc,				jdbcType=VARCHAR}
 		  		AND CD_GUARANTEE	= #{cd_guarantee,		jdbcType=VARCHAR} 
-		  		AND DT_GUAR_AGREE	= #{dt_guar_agree,		jdbcType=VARCHAR}
+		  		AND DT_GUAR_AGREE	= #{dt_guar_agree,		jdbcType=VARCHAR})
 			WHEN MATCHED THEN
 		     UPDATE
 			    SET AMT_GUAR_LIMIT  = #{amt_guar_limit,		jdbcType=VARCHAR}
 			       ,AMT_GUAR_OBJECT	= #{amt_guar_object,	jdbcType=VARCHAR}
-			       ,NO_CASE       	= #{no_case,	 jdbcType=VARCHAR}
+			       ,DT_DELETE		= (null)
 			       ,ID_FRT			= #{no_person, 	 jdbcType=VARCHAR}
 			       ,DT_FRT      	= SYSDATE
 			WHEN NOT MATCHED THEN
@@ -785,6 +847,7 @@
 				,DT_GUAR_AGREE
 				,AMT_GUAR_LIMIT
 				,AMT_GUAR_OBJECT
+				,DT_DELETE
 				,ID_FRT
 				,DT_FRT
 			)
@@ -795,6 +858,7 @@
 				,#{dt_guar_agree,		jdbcType=VARCHAR}
 				,#{amt_guar_limit,		jdbcType=VARCHAR}
 				,#{amt_guar_object,		jdbcType=VARCHAR}
+				,(null)
 				,#{no_person,			jdbcType=VARCHAR}
 				,SYSDATE
 			)

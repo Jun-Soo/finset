@@ -116,19 +116,19 @@ public class KcbManagerImpl implements KcbManager {
 
         if("LOCAL".equals(profile)) {
 			logger.error("continue");
-			info.setYn_craw_test("Y");
-			info.setNoPerson(person.getNo_person());
-			info.setNmCust(person.getNm_person());
-			info.setNmIf("600420");
-			info.setCd_regist("09");	//01 신규, 09 URL
-			info.setBgn(person.getBgn());
-			info.setDi(person.getKcb_di());
-			info.setHp(person.getHp());
-			ReturnClass returnClass = urlCrawling(info);
-			info.setYn_craw_test("Y");
-			returnClass = parseCrawling(info);
-			debtManager.debtPdocRun(person.getNo_person());
-			cd_result = returnClass.getCd_result();
+//			info.setYn_craw_test("Y");
+//			info.setNoPerson(person.getNo_person());
+//			info.setNmCust(person.getNm_person());
+//			info.setNmIf("600420");
+//			info.setCd_regist("09");	//01 신규, 09 URL
+//			info.setBgn(person.getBgn());
+//			info.setDi(person.getKcb_di());
+//			info.setHp(person.getHp());
+//			ReturnClass returnClass = urlCrawling(info);
+//			info.setYn_craw_test("Y");
+//			returnClass = parseCrawling(info);
+//			debtManager.debtPdocRun(person.getNo_person());
+//			cd_result = returnClass.getCd_result();
 		} else {
 			
 			try {
@@ -1106,6 +1106,11 @@ public class KcbManagerImpl implements KcbManager {
 			vo.setBal_pay(StringUtil.addMAmt(divSumLoan.get(1).text()));		//대지급잔액
 	
 			divDtl = divPrdBlock.get(8).select("div[class=container-fluid]"); 	//(8) 연체정보
+			
+			//DT_DELETE 업데이트
+			creditMapper.updateDtDeleteOverdueInfo(info.getNoPerson());
+			creditMapper.updateDtDeleteOverdueSteadpayInfo(info.getNoPerson());
+			
 			for(int i=0; i < divDtl.size(); i++) {
 				JSONObject kcbOverdueInfo = new JSONObject();
 	
@@ -1183,6 +1188,11 @@ public class KcbManagerImpl implements KcbManager {
 			vo.setCnt_fin_disorder(StringUtil.regExpFindNum(divSumLoan.get(2).text()));	//금융질서문란
 	
 			divDtl = divPrdBlock.get(9).select("div[class=container-fluid]"); 	//(9) 기타연체
+			
+			//DT_DELETE 업데이트
+			creditMapper.updateDtDeleteOverdueDefaultInfo(info.getNoPerson());
+			creditMapper.updateDtDeleteOverduePublicInfo(info.getNoPerson());
+			
 			for(int i=0; i < divDtl.size(); i++) {
 	
 				JSONObject kcbOverdueEctInfo = new JSONObject();
@@ -1306,6 +1316,10 @@ public class KcbManagerImpl implements KcbManager {
 			vo.setAmt_guarantee(StringUtil.addAmt(divSumLoan.get(1).text()));			//보증금액
 	
 			divDtl = divPrdBlock.get(10).select("div[class=container-fluid]"); 	//(10) 연대보증상세
+			
+			//DT_DELETE 업데이트
+			creditMapper.updateDtDeleteGuaranteeInfo(info.getNoPerson());
+			
 			for(int i=0; i < divDtl.size(); i++) {
 	
 				JSONObject kcbGuaranteeInfo = new JSONObject();

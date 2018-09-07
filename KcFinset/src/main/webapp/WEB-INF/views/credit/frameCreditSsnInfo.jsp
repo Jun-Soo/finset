@@ -100,16 +100,18 @@
 		var noPerson = $('#no_person').val();	
 		var nmPerson = $('#nm_person').val();
 		var ssnPerson = "";
-		var nhisStartRcptYm = "";
+		var nhisStartYm = "";
 		var nhisEndYm = "";
 		var certDivision = "";
 		var ntsStartIncomeY = "";
 		var ntsEndIncomeY = "";
+		var npsStartYm = "";
+		var npsEndYm = "";
 		
 		switch(scrapCode){
 		case "nhis":
 			ssnPerson = $('#ssn1').val() + $('#ssn2').val();
-			nhisStartRcptYm = $('#nhis_start_ym').val();
+			nhisStartYm = $('#nhis_start_ym').val();
 			nhisEndYm = $('#nhis_end_ym').val();	
 		break;
 		case "nts":
@@ -119,6 +121,8 @@
 		break;
 		case "nps":
 			ssnPerson = $('#ssn1').val() + $('#ssn2').val();
+			npsStartYm = $('#nps_start_ym').val();
+			npsEndYm = $('#nps_end_ym').val();
 		break;
 		}
 		
@@ -151,14 +155,16 @@
 				noPerson : noPerson,
 				nmPerson : nmPerson,
 				ssnPerson : ssnPerson,
-				nhisStartRcptYm : nhisStartRcptYm,
+				nhisStartYm : nhisStartYm,
 				nhisEndYm : nhisEndYm,
 				certDivision : certDivision, 
 				ntsStartIncomeY : ntsStartIncomeY,
-				ntsEndIncomeY : ntsEndIncomeY
+				ntsEndIncomeY : ntsEndIncomeY,
+				npsStartYm : npsStartYm,
+				npsEndYm : npsEndYm
 			});
 		} else if(userAgent == "Android") {
-			window.Android.creditRatingUpgrade(scrapCode, noPerson, nmPerson, ssnPerson, nhisStartRcptYm, nhisEndYm, certDivision, ntsStartIncomeY, ntsEndIncomeY);
+			window.Android.creditRatingUpgrade(scrapCode, noPerson, nmPerson, ssnPerson, nhisStartYm, nhisEndYm, certDivision, ntsStartIncomeY, ntsEndIncomeY, npsStartYm, npsEndYm);
 		}
 	}
 	
@@ -182,6 +188,9 @@
 				   frmCreditSsnInfo.action = "<c:url value='/m/credit/frameCreditRaiseNps.crz'/>";
 				 break;
 		    }
+		}
+		else if(result == "empty")	{
+			frmCreditSsnInfo.action = "<c:url value='/m/credit/frameCreditRaiseEmpty.crz'/>";
 		}
 		frmCreditSsnInfo.submit();
 	}
@@ -257,6 +266,8 @@
 			<input type="hidden" name="ssn1" id="ssn1" value="${personVO.ssn_person}"/>
 			<input type="hidden" name="nhis_start_ym" id="nhis_start_ym" value="${nhis_start_ym}" />
 			<input type="hidden" name="nhis_end_ym" id="nhis_end_ym" value="${nhis_end_ym}" />
+			<input type="hidden" name="nhis_start_ym" id="nps_start_ym" value="${nps_start_ym}" />
+			<input type="hidden" name="nhis_end_ym" id="nps_end_ym" value="${nps_end_ym}" />
 				
 			<div class="form-block">
 				<div class="form-group">

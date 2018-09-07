@@ -1,7 +1,5 @@
 package com.koscom.board.service.impl;
 
-import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,13 +13,6 @@ import com.koscom.board.model.BoardForm;
 import com.koscom.board.model.BoardInfoVO;
 import com.koscom.board.service.BoardManager;
 import com.koscom.domain.BoardInfo;
-//import com.koscom.domain.BoardComment;
-//import com.koscom.domain.BoardInfo;
-//import com.koscom.domain.BoardManage;
-import com.koscom.util.Constant;
-//import com.koscom.util.FileUpload;
-import com.koscom.util.FinsetException;
-import com.koscom.util.ReturnClass;
 
 @Service("boardManager")
 public class BoardManagerImpl implements BoardManager {
@@ -63,13 +54,11 @@ public class BoardManagerImpl implements BoardManager {
 
 	@Override
 	public BoardInfoVO getBoardFileInfo(BoardInfoVO boardInfoVO){
-		// TODO Auto-generated method stub
 		return boardMapper.getBoardFileInfo(boardInfoVO);
 	}
 
 	@Override
 	public Map<String, Object> getBoardImg(BoardInfoVO boardInfoVO){
-		// TODO Auto-generated method stub
 		return boardMapper.getBoardImg(boardInfoVO);
 	}
 }

@@ -231,6 +231,7 @@
 		var noPerson = $('#no_person').val();	
 		var bankCode = $('#bank_code').val();
 		var cardCode = $('#card_code').val();
+		var nm_person = $('#nm_person').val();
 		
 		if(userAgent == "iOS") {
 			Jockey.on("frmFcListNextFromMobile" , function(param) {
@@ -242,7 +243,7 @@
 				bankCode : bankCode
 			});
 		} else if(userAgent == "Android") {
-			window.Android.checkAvaliableScrapList(noPerson, bankCode, cardCode);
+			window.Android.checkAvaliableScrapList(noPerson, bankCode, cardCode, nm_person);
 		}
 	}
 	

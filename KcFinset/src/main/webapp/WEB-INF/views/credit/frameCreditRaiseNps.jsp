@@ -15,7 +15,7 @@ $(document).ready(function() {
 	}
 });
 function send() {
-	var data = {"scrap_code":"nhis"};
+	var data = {"scrap_code":"nps"};
 	$.ajax({
 		url : "<c:url value='/kcb/updateKcbReqNonfiInfo.json'/>",
 		data : data,
@@ -27,8 +27,8 @@ function send() {
 			if(result.returnData == '00') {
 				returnData = "SUCCESS"		
 			}
-			frmCreditRaiseNhis.action = "<c:url value='/m/credit/frameCreditRaiseResult.crz?result="+returnData+"'/>";
-			frmCreditRaiseNhis.submit();
+			frmCreditRaiseNps.action = "<c:url value='/m/credit/frameCreditRaiseResult.crz?result="+returnData+"'/>";
+			frmCreditRaiseNps.submit();
 		},
 		error : function (e) {
 			errMsg(e);
@@ -49,15 +49,16 @@ function send() {
 		</div>
 	</header>
 	<section id="content">
-		<form name="frmCreditRaiseNhis" method="post">
-		</form>
 		<div class="container ">
+		<form name="frmCreditRaiseNps" method="post">
+		</form>
 			<div class="list-block">
 				<div class="list-info">
 					<div class="credit_title">
 						<p>${name} 님의</p>
-						<p>1년간 납입금액은 ${ufn:formatNumber(total_payment)}만원 ( ${payment_size}개월) 이며</p>
-						<p>추정소득은 <strong> ${ufn:formatNumber(amt_year_income)}</strong> 만원 입니다.</p>
+						<p>총 납입금액은 ${ufn:formatNumber(amt_pay)}만원(${cnt_month_pay}개월)입니다</p>
+						<p>${start_year}년 ${start_month}월부터 매월 ${amt_est_pns_month}만원(현재기준)</p>
+						<p>지급 예상됩니다.</p>
 						<br/>
 						<p>해당 정보를 신용평가사로 전송하시겠습니까?</p>
 					</div>
@@ -69,18 +70,10 @@ function send() {
 			<dl>
 				<dt>납부내역</dt>
 				<c:forEach var="paymentVO" items="${payment}" varStatus="status">
-					<dd>&nbsp;<div class="pull-left">${ufn:formatDateDot(paymentVO.pay_yyyymm)} | ${ufn:formatNumber(paymentVO.amt_nt_health_insu)} 원</div>
-						<c:choose>
-						<c:when test="${paymentVO.amt_pay_health_insu eq  paymentVO.amt_nt_health_insu}">
-							<div class="pull-right">납부</div>
-						</c:when>
-						<c:otherwise>
-							<div class="pull-right">미납</div>
-						</c:otherwise>
-						</c:choose>
+					<dd>&nbsp;<div class="pull-left">${ufn:formatDateDot(paymentVO.start_yyyymm)} ~ ${ufn:formatDateDot(paymentVO.end_yyyymm)}</div><div class="pull-right">${paymentVO.etc}</div>
+					<dd>&nbsp;<div class="pull-left">납부  | </div><div class="pull-right">${ufn:formatNumber(paymentVO.amt_pay)} 원(${paymentVO.cnt_month_pay}개월)</div>
+					<dd>&nbsp;<div class="pull-left">미납  | </div><div class="pull-right">${ufn:formatNumber(paymentVO.amt_not_pay)} 원(${paymentVO.cnt_month_not_pay}개월)</div>
 					</dd>
-					
-
 				</c:forEach>
 			</dl>
 		</div>

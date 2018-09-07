@@ -20,33 +20,35 @@ function onClick(code){
 	
 	switch(code){
 	   case "nhis":
-		   staus = "<c:out value="${nhis_status}" escapeXml="false"/>";
+		   status = "<c:out value="${nhis_status}" escapeXml="false"/>";
 		   button = "<c:out value="${nhis_button}" escapeXml="false"/>";
 		   url = "<c:url value='/m/credit/frameCreditRaiseNhis.crz'/>";
 	     break;
 	   case "nts":
-		   staus = "<c:out value="${nts_status}" escapeXml="false"/>";
+		   status = "<c:out value="${nts_status}" escapeXml="false"/>";
 		   button = "<c:out value="${nts_button}" escapeXml="false"/>";
 		   url = "<c:url value='/m/credit/frameCreditRaiseNts.crz'/>";
 		 break;
 	   case "nps":
-		   staus = "<c:out value="${nps_status}" escapeXml="false"/>";
+		   status = "<c:out value="${nps_status}" escapeXml="false"/>";
 		   button = "<c:out value="${nps_button}" escapeXml="false"/>";
 		   url = "<c:url value='/m/credit/frameCreditRaiseNps.crz'/>";
 		 break;
  	}
-	if(staus == '대기')	{
+
+	if(status == '대기')	{
 		frmCreditRaise.action = url;
 		frmCreditRaise.submit();
 	}
 	
-	if(button == 'false')	{
+	else if(button == 'false')	{
 		//do nothing
 		return;
 	}
-	
-	frmCreditRaise.action = "<c:url value='/m/credit/frameCreditSsnInfo.crz?scrap_code="+code+"'/>";
-	frmCreditRaise.submit();
+	else {
+		frmCreditRaise.action = "<c:url value='/m/credit/frameCreditSsnInfo.crz?scrap_code="+code+"'/>";
+		frmCreditRaise.submit();
+	}
 }
 function onClickDetail(){
 	frmCreditRaise.action = "<c:url value='/m/credit/frameCreditRaiseDetail.crz'/>";

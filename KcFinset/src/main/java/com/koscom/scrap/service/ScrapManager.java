@@ -25,107 +25,83 @@ import com.koscom.scrap.model.sub.DepositAnListHistoryVO;
 import com.koscom.util.ReturnClass;
 
 public interface ScrapManager {
-	
+
 	/**
-	 * 스크래핑 조회내역 저장
-	 * @param ScrRsltScrapVO
-	 */
-	long insertScrRsltScrap(ScrRsltScrapVO scrRsltScrapVO);
-	
-	/**
-	 * 스크래핑 조회내역 수정
-	 * @param ScrRsltScrapVO
-	 */
-	int updateScrRsltScrap(ScrRsltScrapVO scrRsltScrapVO);
-	
-	/**
-	 * 자동스크래핑 관련 정보 조회
+	 * 금융사 스크랩핑 연동 정보 여부 insert
 	 * @param String
 	 * @return String
 	 */
-	String getAutoScrapInfo(String cd_agency, String no_person);
+	String createScrapFcList(String data);
 	
 	/**
-	 * 은행스크래핑 조회 내역 insert
-	 * @param ScrReqBankVO
-	 * @return 
-	 */
-	ReturnClass createScrReqBank(List<ScrReqBankVO> list);
-	
-	/**
-	 * 은행스크래핑 조회 내역  history 정보 insert
-	 * @param FcLinkInfoVO
-	 * @return 
-	 */
-	ReturnClass insertScrReqBankHist(ScrReqBankVO scrReqBankVO);
-	
-	/**
-	 * 카드스크래핑 조회 내역 insert
-	 * @param ScrReqBankVO
-	 * @return 
-	 */
-	ReturnClass createScrReqCard(ScrReqCardVO scrReqCardVO);
-	
-	/**
-	 * 카드스크래핑 조회 내역  history 정보 insert
-	 * @param FcLinkInfoVO
-	 * @return 
-	 */
-	ReturnClass insertScrReqCardHist(ScrReqCardVO scrReqCardVO);
-	
-	/**
-	 * 건강보험 스크래핑 조회 내역 조회
-	 * @param ScrReqHealthVO
-	 */
-	ScrReqHealthVO getScrReqHealth(ScrReqHealthVO scrReqHealthVO);
-	
-	/**
-	 * 건강보험 스크래핑 조회 내역 insert
-	 * @param ScrReqHealthVO
-	 * @return 
-	 */
-	ReturnClass createScrReqHealth(ScrReqHealthVO scrReqHealthVO);
-	
-	/**
-	 * 국민연금 스크래핑 조회 내역 조회
-	 * @param ScrReqPensionVO
-	 */
-	ScrReqPensionVO getScrReqPension(ScrReqPensionVO scrReqPensionVO);
-	
-	/**
-	 * 국민연금 스크래핑 조회 내역 insert
-	 * @param ScrReqPensionVO
-	 * @return 
-	 */
-	ReturnClass createScrReqPension(ScrReqPensionVO scrReqPensionVO);
-	
-	/**
-	 * 금융사 스크랩핑 연동 정보 insert
-	 * @param FcLinkInfoVO
-	 * @return
-	 */
-	ReturnClass createFcLinkInfo(List<FcLinkInfoVO> list);
-	
-	/**
-	 * 금융사 스크랩핑 연동 상태 update
-	 * @param FcLinkInfoVO
-	 * @return
-	 */
-	ReturnClass updateFcLinkInfo(FcLinkInfoVO fcLinkInfoVO);
-	
-	/**
-	 * 금융사 스크랩핑 연동 건수
+	 * 금융사 스크랩핑 연동 정보 여부 update
 	 * @param String
-	 * @return int
+	 * @return String
 	 */
-	int getLinkedFcCount(String no_person);
+	String updateScrapFcList(String data);
 	
 	/**
-	 * 금융사 스크랩핑 연동 정보 select
-	 * @param LinkedFcInfoVO
-	 * @return LinkedFcInfo
+	 * 스크래핑 연동 금융사 해지
+	 * @param String
+	 * @return ReturnClass
 	 */
-	List<LinkedFcInfoVO> getLinkedFcInfo(LinkedFcInfoVO linkedFcInfo);
+	ReturnClass unlinkScrapFc(String no_person, String cd_fc);
+	
+	/**
+	 * 스크래핑 연동 금융사 조회 화면
+	 * @param String
+	 * @return LinkedFcInfoVO
+	 */
+	List<LinkedFcInfoVO> frameFcLinkList(String no_person, String cn);
+	
+	/**
+	 * 스크래핑 연동 금융사 수정
+	 * @param FcLinkInfoVO
+	 * @return ReturnClass
+	 */
+	ReturnClass updateFcLinkInfoList(FcLinkInfoVO linkedFcInfoList);
+	
+	/**
+	 * 은행 자동 스크래핑 내역 저장 
+	 * @param String
+	 * @return ReturnClass
+	 */
+	ReturnClass createAutoBankScrap(String data);
+	
+	/**
+	 * 카드 자동 스크래핑 내역 저장 
+	 * @param String
+	 * @return ReturnClass
+	 */
+	ReturnClass createAutoCardScrap(String data);
+	
+	/**
+	 * 국세청 자동 스크래핑 내역 저장 
+	 * @param String
+	 * @return ReturnClass
+	 */
+	ReturnClass createAutoNTSScrap(String data);
+	
+	/**
+	 * 건강보험 스크래핑 내역 저장 
+	 * @param String
+	 * @return ReturnClass
+	 */
+	ReturnClass createNHISScrap(String data);
+	
+	/**
+	 * 국세청 스크래핑 내역 저장(소득금액증명)
+	 * @param String
+	 * @return ReturnClass
+	 */
+	ReturnClass createNTSScrap(String data);
+	
+	/**
+	 * 국민연금 스크래핑 내역 저장 
+	 * @param String
+	 * @return ReturnClass
+	 */
+	ReturnClass createNPSScrap(String data);
 	
 	/**
 	 * 금융사 스크랩핑 연동 정보 select(전체 정보)
@@ -135,109 +111,24 @@ public interface ScrapManager {
 	List<LinkedFcInfoVO> getLinkFcInfo(LinkedFcInfoVO linkFcInfo);
 	
 	/**
-	 * 금융사 스크랩핑 연동 history 정보 insert
-	 * @param FcLinkInfoVO
-	 * @return
+	 * 금융사 스크랩핑 연동 건수
+	 * @param String
+	 * @return int
 	 */
-	ReturnClass createFcLinkInfoHist(FcLinkInfoVO fcLinkInfoVO);
+	int getLinkedFcCount(String no_person);
 	
 	/**
-	 * 국세청민원증명통합조회 내역 insert
-	 * @param ScrReqCertificationVO
-	 * @return 
-	 */
-	ReturnClass createScrReqCertification(ScrReqCertificationVO scrReqCertification);
-	
-	/**
-	 * 국세청민원증명통합조회 내역 select
-	 * @param ScrReqCertificationVO
-	 * @return ScrReqCertificationVO
-	 */
-	ScrReqCertificationVO getScrReqCertification(ScrReqCertificationVO scrReqCertification);
-	
-	/**
-	 * 현금영수증  사용내역 insert
-	 * @param ScrReqCertificationVO
-	 * @return 
-	 */
-	ReturnClass createScrRespCashReceipt(List<ScrRespCashReceiptVO> scrRespCashReceipt);
-	
-	/**
-	 * 현금영수증  사용내역 마지막 조회 일자/시간 조회
+	 * 자동스크래핑 관련  정보 조회
 	 * @param String
 	 * @return String
 	 */
-	String getMaxDateScrRespCashReceipt(String no_pserson);
+	String getAutoScrapInfo(String cd_agency, String no_person);
 	
 	/**
-	 * 계좌 내역 insert
-	 * @param ScrBankApiAnInfoVO
-	 * @return
+	 * 건강보험 스크래핑 조회 내역 조회
+	 * @param ScrReqHealthVO
 	 */
-	ReturnClass createScrBankApiAnInfo(List<ScrBankApiAnInfoVO> list);
-	
-	/**
-	 * 입출금 계좌 상세 내역 마지막 조회 일자/시간 조회
-	 * @param ScrBankApiAnInfoVO
-	 * @return String
-	 */
-	String getMaxDateSrcTransactionDetail(ScrBankApiAnInfoVO scrBankApiAnInfo);
-	
-	/**
-	 * 입출금 계좌 상세 내역 insert
-	 * @param AnAllListHistoryVO
-	 * @return 
-	 */
-	ReturnClass createScrTransactionDetail(List<AnAllListHistoryVO> list);
-	
-	/**
-	 * 예적금 계좌 상세 내역 마지막 조회 일자/시간 조회
-	 * @param no_person
-	 * @return String
-	 */
-	String getMaxDateScrSvngSvninDetail(ScrBankApiAnInfoVO scrBankApiAnInfo);
-	
-	/**
-	 * 예적금 계좌 상새 내역 insert(입출금 내역)
-	 * @param DepositAnListHistoryVO
-	 * @return
-	 */
-	ReturnClass createScrSvngSvninDetail(List<DepositAnListHistoryVO> list);
-	
-	/**
-	 * 카드 내역 insert
-	 * @param ScrCardInfoVO
-	 * @return
-	 */
-	ReturnClass createScrCardInfo(List<ScrCardInfoVO> list);
-	
-	/**
-	 * 카드승인 내역 insert
-	 * @param ScrCardApprovalInfoVO
-	 * @return
-	 */
-	ReturnClass createScrCardApprovalInfo(List<ScrCardApprovalInfoVO> list);
-	
-	/**
-	 * 카드승인 내역 마지막 조회 일자/시간 조회
-	 * @param String
-	 * @return String
-	 */
-	String getMaxDateScrCardApprovalInfo(Map<String, Object> parmMap);
-	
-	/**
-	 * 건강보험 납부 내역 insert
-	 * @param ScrRespHealthPaymentdtlVO
-	 * @return 
-	 */
-	ReturnClass createScrRespHealthPayment(List<ScrRespHealthPaymentVO> list);
-	
-	/**
-	 * 건강보험 납부 상세 내역 insert
-	 * @param ScrRespHealthPaymentdtlVO
-	 * @return 
-	 */
-	ReturnClass createScrRespHealthPaymentdtl(List<ScrRespHealthPaymentdtlVO> list);
+	ScrReqHealthVO getScrReqHealth(ScrReqHealthVO scrReqHealthVO);
 	
 	/**
 	 * 건강보험 납부 상세 내역 조회
@@ -247,25 +138,10 @@ public interface ScrapManager {
 	List<ScrRespHealthPaymentdtlVO> getScrRespHealthPaymentdtl(ScrRespHealthPaymentdtlVO scrRespHealthPaymentdtlVO);
 	
 	/**
-	 * 소득증명 상세 내역 insert
-	 * @param ScrRespIncomeDtlVO
-	 * @return 
+	 * 국민연금 스크래핑 조회 내역 조회
+	 * @param ScrReqPensionVO
 	 */
-	ReturnClass createScrRespIncomeDtl(List<ScrRespIncomeDtlVO> list);
-	
-	/**
-	 * 소득증명 상세 내역 조회
-	 * @param ScrRespIncomeDtlVO
-	 * @return 
-	 */
-	List<ScrRespIncomeDtlVO> getScrRespIncomeDtl(ScrRespIncomeDtlVO scrRespIncomeDtlVO);
-	
-	/**
-	 * 국민연금 납부 내역 insert
-	 * @param ScrRespPensionPaymentVO
-	 * @return 
-	 */
-	ReturnClass createScrRespPensionPayment(ScrRespPensionPaymentVO scrRespPensionPaymentVO);
+	ScrReqPensionVO getScrReqPension(ScrReqPensionVO scrReqPensionVO);
 	
 	/**
 	 * 국민연금 납부 내역 조회
@@ -275,16 +151,16 @@ public interface ScrapManager {
 	ScrRespPensionPaymentVO getScrRespPensionPayment(ScrRespPensionPaymentVO scrRespPensionPaymentVO);
 	
 	/**
-	 * 국민연금 납부 상세 내역 insert
-	 * @param ScrRespPensionPaymentdtlVO
-	 * @return 
-	 */
-	ReturnClass createScrRespPensionPaymentdtl(List<ScrRespPensionPaymentdtlVO> scrRespPensionPaymentdtlVO);
-	
-	/**
 	 * 국민연금 납부 상세 내역 조회
 	 * @param ScrRespHealthPaymentdtlVO
 	 * @return 
 	 */
 	List<ScrRespPensionPaymentdtlVO> getScrRespPensionPaymentdtl(ScrRespPensionPaymentdtlVO scrRespPensionPaymentdtlVO);
+	
+	/**
+	 * 소득증명 상세 내역 조회
+	 * @param ScrRespIncomeDtlVO
+	 * @return 
+	 */
+	List<ScrRespIncomeDtlVO> getScrRespIncomeDtl(ScrRespIncomeDtlVO scrRespIncomeDtlVO);
 }

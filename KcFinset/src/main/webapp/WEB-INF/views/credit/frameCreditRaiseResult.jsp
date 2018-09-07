@@ -52,17 +52,17 @@ function countercheck() {
 }
 
 function goHome() {
-	frmCreditRaiseResult.action = "<c:url value='/m/credit/frameCreditInfoMain.crz'/>";
+	frmCreditRaiseResult.action = "<c:url value='/m/credit/frameCreditRaise.crz'/>";
 	frmCreditRaiseResult.submit();
 }
 
 </script>
 </head>
 <body class="bg-white">
-<form name="frmCreditRaiseResult" method="post">
-</form>
 <div id="div_success" class="credit_result div_hidden">
 	<div class="container">
+	<form name="frmCreditRaiseResult" method="post">
+	</form>
 		<div class="lead">
 			<p>정상적으로 접수되었습니다.</p>
 			<br/>

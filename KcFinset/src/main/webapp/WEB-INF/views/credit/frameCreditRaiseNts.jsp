@@ -10,6 +10,9 @@
 <%@ include file="/WEB-INF/include/headComm.jsp"%>
 <script type="text/javascript">
 $(document).ready(function() {
+	if(userAgent == "Android") {
+		window.Android.backKeySendUrl("/m/credit/frameCreditRaise.crz");
+	}
 });
 function send() {
 	var data = {"scrap_code":"nts"};

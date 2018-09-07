@@ -68,7 +68,7 @@ public class CreditController {
     CreditManager creditManager;
 
     @Autowired
-    private KcbManager kcbManager;
+    KcbManager kcbManager;
 
     @Autowired
     ScrapManager scrapManager;

@@ -6,6 +6,7 @@
 	<resultMap id="resultBlob" type="hashMap">
 	    <result column="img_bi" property="img_bi" jdbcType="BLOB" javaType="[B"></result>
 	</resultMap>
+	
 	<select id="getNmFc" parameterType="String" resultType="String">
 		SELECT
 			NM_FC
@@ -23,6 +24,7 @@
 		WHERE
 			CD_FC = #{cd_fc, jdbcType = VARCHAR}
 	</select>
+	
 	<select id="getImgBi" parameterType="com.koscom.fincorp.model.FincorpVO" resultMap="resultBlob">
 		SELECT
 			IMG_BI
@@ -32,5 +34,118 @@
 				PATH_FILE1 = #{path_file1, jdbcType = VARCHAR}
 			AND IMG_BI IS NOT NULL
 	</select>
+	
+	<insert id="createFincorp" parameterType="com.koscom.fincorp.model.FincorpVO" useGeneratedKeys="true" keyProperty="cdFc">
+		<selectKey keyProperty="cdFc" resultType="string" order="BEFORE">
+			(SELECT '20'||LPAD(NVL(SUBSTR(MAX(TRIM(A.CD_FC)),3,5),0)+1,5,'0') FROM FC_INFO A WHERE A.CD_FC LIKE '20%')
+		</selectKey>
+		INSERT INTO fc_info
+			(
+				cd_fc
+				,cd_fc_coocon
+				,cd_fin
+				,no_biz_comp
+				,nm_fc
+				,nm_ceo
+				,yn_use
+				,yn_alliance
+				,yn_scrap
+				,cd_addr_fc
+				,post_fc
+				,addr1_fc
+				,addr2_fc
+				,tel
+				,home_page
+				 <if test="@com.koscom.util.MybatisUtil@isNotEmpty(path_file1)">
+				,path_file1
+				,img_bi
+				,nm_file1
+				</if>
+				,id_frt
+				,dt_frt
+				, id_lst
+				, dt_lst
+				) VALUES (
+				 <if test="@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)">
+					  #{cd_fc, jdbcType=VARCHAR}
+				</if>
+				 <if test="@com.koscom.util.MybatisUtil@isEmpty(cd_fc)">
+					  #{cdFc}
+				</if>
+					 ,#{cd_fc_coocon, jdbcType=VARCHAR}
+					 ,#{cd_fin, jdbcType=VARCHAR}
+					 ,#{no_biz_comp, jdbcType=VARCHAR}
+					 ,#{nm_fc, jdbcType=VARCHAR}
+					 ,#{nm_ceo, jdbcType=VARCHAR}
+					 ,#{yn_use, jdbcType=VARCHAR}
+					 ,#{yn_alliance, jdbcType=VARCHAR}
+					 ,#{yn_scrap, jdbcType=VARCHAR}
+					 ,#{cd_addr_fc, jdbcType=VARCHAR}
+					 ,#{post_fc, jdbcType=VARCHAR}
+					 ,#{addr1_fc, jdbcType=VARCHAR}
+					 ,#{addr2_fc, jdbcType=VARCHAR}
+					 ,#{tel, jdbcType=VARCHAR}
+					 ,#{home_page, jdbcType=VARCHAR}
+					  <if test="@com.koscom.util.MybatisUtil@isNotEmpty(path_file1)">
+					 ,#{path_file1, jdbcType=VARCHAR}
+					 ,#{img_bi, jdbcType=BLOB}
+					 ,#{nm_file1, jdbcType=VARCHAR}
+					 </if>
+					, #{id_frt, jdbcType=VARCHAR}
+					, SYSDATE
+					, #{id_frt, jdbcType=VARCHAR}
+					, SYSDATE
+				)
+	</insert>
+	
+ 	<update id="createFincorpfcNminfo" parameterType="com.koscom.fincorp.model.FincorpfcNminfoForm">
+ 	    /* com.koscom.fincorp.dao.FincorpMapper.createFincorpfcNminfo */
+		MERGE INTO FC_NM_INFO
+		  USING DUAL
+		  ON (		CD_FC = #{cd_fc, jdbcType=VARCHAR}
+		  		AND NM_FC = #{nm_nm_fc, jdbcType=VARCHAR}
+		  	 )
+			WHEN MATCHED THEN
+		     UPDATE
+			    SET ID_LST	= #{id_lst,	jdbcType=VARCHAR}
+				   ,DT_LST	= SYSDATE
+			WHEN NOT MATCHED THEN
+			INSERT
+			(
+				 CD_FC
+				,SEQ
+				,NM_FC
+				,YN_USE
+				,ID_FRT
+				,DT_FRT
+				,ID_LST
+				,DT_LST
+			)
+			VALUES(
+				 #{cd_fc, jdbcType=VARCHAR}
+				<if test="cd_fc == '9999999'">
+				,SEQ_FC_NM.NEXTVAL
+				</if>
+				<if test="cd_fc != '9999999'">
+				,(SELECT NVL(MAX(SEQ)+1,1) FROM FC_NM_INFO WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR})
+				</if>
+				,#{nm_nm_fc, jdbcType=VARCHAR}
+				,#{nm_yn_use, jdbcType=VARCHAR}
+				,#{id_frt, jdbcType=VARCHAR}
+				,SYSDATE
+				,#{id_lst, jdbcType=VARCHAR}
+				,SYSDATE
+			)
+
+ 	</update>
+ 	
+ 	<select id="getCooconFcCd" parameterType="String" resultType="String">
+ 		SELECT CD.NM_CODE
+		FROM COMM_CD CD, FC_INFO FC
+		WHERE CD.CODE_GROUP = 'cd_coocon_fc'
+			AND FC.CD_FIN = #{type_fc, jdbcType=VARCHAR}
+      		AND CD.YN_USE = 'Y' AND FC.YN_SCRAP = 'Y'
+      		AND CD.CODE_VALUE = FC.CD_FC
+ 	</select>
 </mapper>
 

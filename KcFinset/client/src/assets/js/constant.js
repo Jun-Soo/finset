@@ -1,0 +1,6 @@
+/*
+ * constant
+ */
+export default {
+  userAgent: ''
+}

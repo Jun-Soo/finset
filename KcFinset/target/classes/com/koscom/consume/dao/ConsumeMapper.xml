@@ -76,4 +76,109 @@
 				AND YN_USE 		= 'Y'
 		ORDER BY CD_CLASS ASC, CD_TYPE ASC
 	</select>
+	<select id="getPersonSetInfo" parameterType="java.lang.String" resultType="com.koscom.consume.model.PersonSetInfoVO">
+		SELECT
+			 NO_PERSON
+			,DT_BASIC
+			,YN_INSTALLMENT
+			,ID_FRT
+			,DT_FRT
+			,ID_LST
+			,DT_LST
+		FROM
+			PERSON_SET_INFO
+		WHERE
+			NO_PERSON = #{no_person, jdbcType = VARCHAR} 
+	</select>
+	<update id="modifyPersonSetInfo" parameterType="com.koscom.consume.model.PersonSetInfoVO">
+		MERGE INTO
+			PERSON_SET_INFO
+				USING DUAL ON
+					(
+						NO_PERSON = #{no_person, jdbcType = VARCHAR}
+					)
+			WHEN MATCHED THEN
+				UPDATE
+					SET
+						 DT_BASIC			= #{dt_basic		, jdbcType = VARCHAR}
+						,YN_INSTALLMENT		= #{yn_installment	, jdbcType = VARCHAR}
+						,ID_LST				= #{id_lst			, jdbcType = VARCHAR}
+						,DT_LST				= SYSDATE
+			WHEN NOT MATCHED THEN
+				INSERT
+					(
+						 NO_PERSON
+						,DT_BASIC
+						,YN_INSTALLMENT
+						,ID_FRT
+						,DT_FRT
+						,ID_LST
+						,DT_LST
+					)
+				VALUES
+					(
+						 #{no_person		, jdbcType = VARCHAR}
+						,#{dt_basic			, jdbcType = VARCHAR}
+						,#{yn_installment	, jdbcType = VARCHAR}
+						,#{id_frt			, jdbcType = VARCHAR}
+						,SYSDATE
+						,#{id_lst			, jdbcType = VARCHAR}
+						,SYSDATE
+					)
+	</update>
+	<select id="listPersonTransDetail" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.PersonTransDetailVO">
+		SELECT
+			STD.AN
+			,STD.DT_TRD
+			,STD.TM_TRD
+			,STD.AMT_WDRL
+			,STD.AMT_DEP
+			,STD.DOC1
+			,STD.DOC2
+			,SBAAI.CD_FC
+			,FI.NM_FC
+    			FROM 	 SCR_TRANSACTION_DETAIL STD
+    					,SCR_BANK_API_AN_INFO SBAAI
+    					,FC_INFO FI
+		WHERE 		STD.NO_PERSON = 					 #{no_person, jdbcType=VARCHAR}
+        		AND STD.NO_PERSON = 					 SBAAI.NO_PERSON
+        		AND TO_NUMBER(STD.DT_TRD) <![CDATA[>=]]> #{dt_from	, jdbcType=VARCHAR}
+        		AND TO_NUMBER(STD.DT_TRD) <![CDATA[<=]]> #{dt_to	, jdbcType=VARCHAR}
+        		AND SBAAI.CD_FC = 						 FI.CD_FC
+        		AND STD.AN = 							 SBAAI.AN
+            		ORDER BY STD.DT_TRD DESC
+	</select>
+	<insert id="createDefaultConsumeClassInfo" parameterType="java.lang.String">
+		INSERT INTO PERSON_CONSUME_CLASS_INFO
+		(
+			 NO_PERSON
+			,CD_CONSUME_CLASS
+			,CD_CLASS
+			,NM_CLASS
+			,CD_TYPE
+			,NM_TYPE
+			,YN_DEFAULT
+			,YN_USE
+			,ID_FRT
+			,DT_FRT
+			,ID_LST
+			,DT_LST
+		)
+		(
+		SELECT
+			 #{no_person, jdbcType=VARCHAR}
+			,CD_CONSUME_CLASS
+			,CD_CLASS
+			,NM_CLASS
+			,CD_TYPE
+			,NM_TYPE
+			,'Y'
+			,YN_USE
+			,#{no_person, jdbcType=VARCHAR}
+			,SYSDATE
+			,#{no_person, jdbcType=VARCHAR}
+			,SYSDATE
+				FROM CONSUME_CLASS_INFO
+		)
+	</insert>
 </mapper>

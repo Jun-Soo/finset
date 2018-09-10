@@ -915,4 +915,144 @@
 			AND SMI.REQ_STATUS = '01'
 			AND SI.OFFER_NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
 	</select>
+	
+	<select id="getPersonInfoDupCi" parameterType="com.koscom.person.model.PersonVO" resultType="java.lang.String">
+		SELECT NO_PERSON
+			FROM PERSON_INFO
+		WHERE
+				KCB_CI = #{kcb_ci, jdbcType=VARCHAR}
+		  AND	YN_USE = 'Y'
+	</select>
+	
+	<update id="modifyPersonHp" parameterType="com.koscom.person.model.PersonVO">
+		UPDATE PERSON_INFO SET
+			HP = #{hp, jdbcType=VARCHAR}
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</update>
+	
+	<select id="getPersonInfoDup" parameterType="com.koscom.person.model.PersonVO" resultType="com.koscom.person.model.PersonVO">
+        SELECT
+        	NO_PERSON
+			, YN_USE
+        FROM PERSON_INFO
+         WHERE NO_PERSON = #{nm_person, jdbcType=VARCHAR} AND HP = #{hp, jdbcType=VARCHAR}
+    </select>
+    
+    <insert id="insertPerson">
+        <selectKey keyProperty="no_person" resultType="string" order="BEFORE">
+            (SELECT 'P'||LPAD(SEQ_PERSON_NO.NEXTVAL,9,'0') FROM DUAL)
+        </selectKey>
+        INSERT INTO person_info
+            (     no_person
+                , nm_person
+                , bgn
+                , cd_tel
+                , hp
+                , yn_use
+                , yn_agree_using
+                , dt_agree_using
+                , yn_push
+                , kcb_ci
+                , kcb_di
+                , kcb_cp
+                , cnt_fail_pwd
+                , cnt_fail_finger
+                , id_frt
+                , dt_frt
+                , id_lst
+                , dt_lst
+            ) VALUES (
+                  #{no_person}
+                , #{nm_person, jdbcType=VARCHAR}
+                , #{bgn, jdbcType=VARCHAR}
+                , #{telComCd, jdbcType=VARCHAR}
+                , #{hp, jdbcType=VARCHAR}
+                , 'Y'
+                , 'Y'
+                , SYSDATE
+                , 'Y'
+                , #{kcb_ci, jdbcType=VARCHAR}
+                , #{kcb_di, jdbcType=VARCHAR}
+                , #{kcb_cp, jdbcType=VARCHAR}
+                , 0
+                , 0
+                , #{no_person}
+                , SYSDATE
+                , #{no_person}
+                , SYSDATE
+            )
+    </insert>
+    
+    <insert id="createPersonCertificateInfo" parameterType="com.koscom.person.model.PersonCertificateInfoVO">
+		MERGE INTO PERSON_CERTIFICATE_INFO
+        USING DUAL
+        ON (no_person = #{no_person, jdbcType=VARCHAR}
+        	AND CN = #{cn, jdbcType=VARCHAR})
+        WHEN MATCHED THEN
+        UPDATE
+         SET
+          CERTIFICATE_AGENCY  = #{certificate_agency,jdbcType=VARCHAR}
+        , DT_EXPIRE           = #{dt_expire         ,jdbcType=VARCHAR}
+        , YN_USE              = #{yn_use            ,jdbcType=VARCHAR}
+        , ID_FRT              = #{id_frt            ,jdbcType=VARCHAR}
+        , DT_FRT              = SYSDATE
+        WHEN NOT MATCHED THEN
+        INSERT
+        (
+         NO_PERSON
+        ,SEQ
+        ,CN
+        ,CERTIFICATE_AGENCY
+        ,DT_EXPIRE
+        ,YN_USE
+        ,ID_FRT
+        ,DT_FRT
+        )
+        VALUES(
+          #{no_person     ,jdbcType=VARCHAR}
+        , (SELECT NVL(MAX(SEQ),0)+1 FROM PERSON_CERTIFICATE_INFO
+			WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR})
+        , #{cn                ,jdbcType=VARCHAR}
+        , #{certificate_agency,jdbcType=VARCHAR}
+        , #{dt_expire         ,jdbcType=VARCHAR}
+        , #{yn_use            ,jdbcType=VARCHAR}
+        , #{id_frt            ,jdbcType=VARCHAR}
+        , SYSDATE
+        )
+	</insert>
+	
+	<select id="getPushSettingInfo" parameterType="java.lang.String" resultType="com.koscom.person.model.PersonVO">
+        SELECT
+            CD_PUSH AS ITEM_PUSH
+            , YN_PUSH
+        FROM PUSH_SETTING_INFO
+        WHERE
+            NO_PERSON = #{no_person, jdbcType=VARCHAR}
+    </select>
+    
+    <select id="procPersonInfoDelQuit" parameterType="String" resultType="int">
+        SELECT FN_PERSON_QUIT( #{no_person, jdbcType=VARCHAR} ) FROM DUAL
+    </select>
+    
+    <insert id="createPersonQuit">
+        INSERT INTO person_quit_hist
+            (
+                    no_person
+                    , nm_person
+                    , bgn
+                    , hp
+                    , dt_quit
+                    , id_frt
+                    , dt_frt
+            )
+            VALUES (
+                    #{no_person, jdbcType=VARCHAR}
+                    , #{nm_person, jdbcType=VARCHAR}
+                    , #{bgn, jdbcType=VARCHAR}
+                    , #{hp, jdbcType=VARCHAR}
+                    , SYSDATE
+                    , #{id_frt, jdbcType=VARCHAR}
+                    , SYSDATE
+            )
+    </insert>
 </mapper>

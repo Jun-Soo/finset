@@ -16,10 +16,13 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.koscom.domain.MsgInfo;
+import com.koscom.env.model.CodeInfo;
 import com.koscom.env.service.CodeManager;
 import com.koscom.fincorp.service.FincorpManager;
+import com.koscom.person.model.PersonForm;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
+import com.koscom.util.Constant;
 import com.koscom.util.ReturnClass;
 import com.koscom.util.StringUtil;
 
@@ -46,23 +49,77 @@ public class BaseController {
 	
 	/**
 	 * 앱 메인 화면
-	 * 세션이 있을경우 메인화면으로 이동, if not 약관 화면으로 이동 한다
+	 * 전하번호 체크하여 페이지이동
+	 * 비회원 -> 서비스안내
+	 * 회원 -> 로그인
 	 * @param model
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/frameBase.crz")
-	public String frameBase(Model model, HttpServletRequest request, HttpSession session, HttpServletResponse response) {
-		logger.info("접속 ip : "+request.getRemoteAddr());
-		String noPerson = (String) session.getAttribute("no_person");
-		logger.info("세션 no_person : "+noPerson);
-			//최근 접속 이력 업데이트
-		personManager.modifyLastLogin(noPerson);
-		logger.info(request.getHeader("user-agent"));
-		logger.info(request.getRemoteAddr()); 
+	@RequestMapping("/frameBase.json")
+	public String frameBase(
+			HttpServletResponse response,
+			HttpServletRequest request, 
+			HttpSession session, 
+			Model model,
+			PersonForm personForm) {
+
+		logger.debug("접속 IP			: " + request.getRemoteAddr());
+		logger.debug("받은 핸드폰 번호 	: " + personForm.getHp());
 		
-		model.addAttribute("securityResult", "Y");
-		return "/base/frameBase";
+		String rtnUrl 	= "";
+		PersonVO personVO = new PersonVO();
+		
+		// 1.전화번호 조회
+		personVO = personManager.getPersonInfoHp(personForm.getHp());
+		
+		if(personVO != null) {
+			
+			//사용여부 N:회원가입, Y:로그인화면
+			if(personVO.getYn_use().equals("N")) {
+				rtnUrl = "/login/frameCertStep1";
+			} else {
+				
+				if(StringUtil.isEmpty(personVO.getPass_person())) {
+					session.setAttribute("cert_result_value", Constant.SUCCESS);
+					rtnUrl = "/login/frameSecurityCode";
+				} else if(Integer.parseInt(StringUtil.NVL(personVO.getCnt_fail_pwd(), "0")) > 4) { //비밀번호 실패건수
+					model.addAttribute("personHp", personVO.getHp());
+					rtnUrl = "/person/frameFindPwdStep1";
+				} else if("Y".equals(personVO.getYn_fingerprint()) && Integer.parseInt(StringUtil.NVL(personVO.getCnt_fail_finger(), "0")) < 5) {
+					rtnUrl = "/login/frameFingerConfirm";
+				}else {
+					rtnUrl = "/login/frameSecurityCodeConfirm";
+				}
+			}
+			
+			//지문 활성화 일 경우 체크 Y일때만 지문 활성화 N or 빈값 일 경우 비활성화
+			model.addAttribute("yn_fingerprint", 	personVO.getYn_fingerprint());
+			model.addAttribute("cd_push", 			personVO.getCd_push());
+			model.addAttribute("yn_push", 			personVO.getYn_push());
+			model.addAttribute("cnt_fail_pwd", 		personVO.getCnt_fail_pwd());
+			model.addAttribute("cnt_fail_finger", 	personVO.getCnt_fail_finger());
+			
+			logger.debug(request.getHeader("user-agent"));
+			logger.debug(personVO.toString());
+			logger.debug(request.getRemoteAddr());
+
+			model.addAttribute("securityResult", "Y");
+
+			//App Version Check
+			CodeInfo codeInfo = new CodeInfo();
+			if(!"1".equals(StringUtil.NVL(personVO.getYn_os(), "1"))) {
+				codeInfo = codeManager.getCodeInfo("_CONF_SYSTEM", "IOS_VERSION");
+			} else {
+				codeInfo = codeManager.getCodeInfo("_CONF_SYSTEM", "ANDROID_VERSION");
+			}
+			model.addAttribute("app_version", 	codeInfo.getNm_code());	
+			
+		} else {
+			rtnUrl = "intro";
+		}
+		model.addAttribute("rtnPath", rtnUrl);
+		return "jsonView";
 	}
 	
 	

@@ -3,10 +3,146 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.koscom.debt.dao.DebtMapper">
-
 	<resultMap id="myMap" type="hashmap">
     </resultMap>
-
+    
+	<select id="selectKcbNoManage" parameterType="com.koscom.debt.model.CrawlingLoanVO" resultType="java.lang.String">
+		SELECT
+			   DISTINCT A.NO_MANAGE_INFO
+		  FROM DEBT_PERSONAL_INFO A
+		 WHERE A.NO_PERSON 		= #{no_person, jdbcType=VARCHAR}
+		   AND A.YMD_LOAN 		= #{ymd_loan, jdbcType=VARCHAR}
+		   AND A.AMT_CONTRACT 	= #{amt_contract, jdbcType=VARCHAR}
+	</select>
+	
+	<insert id="insertKcbDebt" parameterType="com.koscom.debt.model.CrawlingLoanVO">
+		<selectKey keyProperty="no_manage_info" resultType="string" order="BEFORE">
+			(SELECT TO_CHAR(SEQ_DEBT_PERSONAL_INFO.NEXTVAL) FROM DUAL)
+		</selectKey>
+		/* com.koscom.debt.dao.DebtMapper.insertKcbDebt */
+		INSERT INTO DEBT_PERSONAL_INFO
+		   ( NO_MANAGE_INFO
+			,NO_PERSON
+			,CD_FC
+			,NM_BIZ
+			,YMD_LOAN
+			,YMD_LOANEND
+			,INTER_PAY_DAY
+			,AMT_CONTRACT
+			,AMT_REMAIN
+			,CD_TYPE_DEAL
+			,YN_CREDIT
+			,YN_LOAN
+			,YN_GUARANTOR
+			,ID_FRT
+			,DT_FRT
+			,ID_LST
+			,DT_LST
+		) VALUES (
+			 #{no_manage_info, 	jdbcType=VARCHAR}
+			,#{no_person, 		jdbcType=VARCHAR}
+			,#{cd_fc,			jdbcType=VARCHAR}
+			,#{nm_biz, 			jdbcType=VARCHAR}
+			,#{ymd_loan, 		jdbcType=VARCHAR}
+			,#{ymd_loanend, 	jdbcType=VARCHAR}
+			,SUBSTR(#{ymd_loanend, jdbcType=VARCHAR}, 7, 2)
+			,#{amt_contract, 	jdbcType=VARCHAR}
+			,#{amt_remain,		jdbcType=VARCHAR}
+			,(SELECT CODE_VALUE FROM COMM_CD A WHERE A.CODE_GROUP = 'cd_type_deal' AND TRIM(A.NM_CODE) = TRIM(#{cd_type_deal, jdbcType=VARCHAR}))
+			,#{yn_credit, 		jdbcType=VARCHAR}
+			,#{yn_loan, 		jdbcType=VARCHAR}
+			,#{yn_guarantor, 	jdbcType=VARCHAR}
+			,#{id_frt, 			jdbcType=VARCHAR}
+			,SYSDATE
+			,#{id_lst, 			jdbcType=VARCHAR}
+			,SYSDATE
+		)
+	</insert>
+	
+	<update id="updateKcbDtlDebt" parameterType="com.koscom.debt.model.CrawlingLoanDtlVO">
+	    /* com.koscom.debt.dao.DebtMapper.updateKcbDtlDebt */
+		MERGE INTO DEBT_PERSONAL_REPAY_LIST
+		  USING DUAL
+		  ON (		NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		  		AND NO_MANAGE_INFO = #{no_manage_info, jdbcType=VARCHAR}
+		  		AND REQ_YYYYMM = #{req_yyyymm, jdbcType=VARCHAR})
+			WHEN MATCHED THEN
+		     UPDATE
+			  SET YN_KCB 		= 'Y'
+			     ,CD_ETM_BASIC	= NULL
+			     ,CD_ACCOUNT 	= (SELECT CODE_VALUE FROM COMM_CD A WHERE A.CODE_GROUP = 'cd_account' AND A.NM_CODE LIKE TRIM(#{nm_account, jdbcType=VARCHAR}))
+			 	 ,NM_ACCOUNT 	= #{nm_account, jdbcType=VARCHAR}
+			 	 ,AMT_REPAY		= #{amt_repay, jdbcType=VARCHAR}
+			 	 ,AMT_REMAIN	= #{amt_remain, jdbcType=VARCHAR}
+			 	 ,AMT_DELAY 	= #{amt_due, jdbcType=VARCHAR}
+				 ,ID_LST    	= #{no_person, jdbcType=VARCHAR}
+				 ,DT_LST    	= SYSDATE
+			WHEN NOT MATCHED THEN
+			  INSERT
+			(
+				NO_PERSON,
+				NO_MANAGE_INFO,
+				REQ_YYYYMM,
+				YN_KCB,
+				CD_ACCOUNT,
+				NM_ACCOUNT,
+				AMT_REPAY,
+				AMT_REMAIN,
+				AMT_DELAY,
+				ID_FRT,
+				DT_FRT,
+				ID_LST,
+				DT_LST
+			)
+			VALUES(
+				 #{no_person, jdbcType=VARCHAR}
+				,#{no_manage_info, jdbcType=VARCHAR}
+				,#{req_yyyymm, jdbcType=VARCHAR}
+				,'Y'
+				,(SELECT CODE_VALUE FROM COMM_CD A WHERE A.CODE_GROUP = 'cd_account' AND A.NM_CODE LIKE TRIM(#{nm_account, jdbcType=VARCHAR}))
+				,#{nm_account, jdbcType=VARCHAR}
+				,#{amt_repay, jdbcType=VARCHAR}
+				,#{amt_remain, jdbcType=VARCHAR}
+				,#{amt_due, jdbcType=VARCHAR}
+				,#{no_person, jdbcType=VARCHAR}
+				,SYSDATE
+				,#{no_person, jdbcType=VARCHAR}
+				,SYSDATE
+			)
+	</update>
+	
+	<update id="updateKcbDebtCancel" parameterType="hashmap">
+	    /* com.koscom.debt.dao.DebtMapper.updateKcbDebtCancel */
+		UPDATE DEBT_PERSONAL_INFO
+		   SET ID_LST 		= #{no_person, jdbcType=VARCHAR}
+			  ,DT_LST 		= SYSDATE
+			  <if test="@com.koscom.util.MybatisUtil@isEmpty(cd_fc)">
+			  ,YMD_CANCEL 	= TO_CHAR(SYSDATE, 'YYYYMMDD')
+			  </if>
+			  <if test="@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)">
+			  ,YMD_CANCEL 	= NULL
+			  </if>
+		 WHERE NO_PERSON 		= #{no_person, jdbcType=VARCHAR}
+		 <if test="@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)">
+		   AND CD_FC 		= #{cd_fc, jdbcType=VARCHAR}
+		   AND YMD_LOAN 	= #{ymd_loan, jdbcType=VARCHAR}
+		   AND AMT_CONTRACT = #{amt_contract, jdbcType=VARCHAR}
+		 </if>
+	</update>
+	
+	<update id="updateKcbDebt" parameterType="hashmap">
+	    /* com.koscom.debt.dao.DebtMapper.updateKcbDebt */
+		UPDATE DEBT_PERSONAL_INFO
+		   SET AMT_REMAIN 	= #{amt_remain, jdbcType=VARCHAR}
+		      ,YMD_LOANEND 	= #{ymd_loanend, jdbcType=VARCHAR}
+		      ,ID_LST 		= #{id_lst, jdbcType=VARCHAR}
+			  ,DT_LST 		= SYSDATE
+		 WHERE NO_PERSON 	= #{no_person, jdbcType=VARCHAR}
+		   AND CD_FC 		= #{cd_fc, jdbcType=VARCHAR}
+		   AND YMD_LOAN 	= #{ymd_loan, jdbcType=VARCHAR}
+		   AND AMT_CONTRACT = #{amt_contract, jdbcType=VARCHAR}
+	</update>
+	
 	<select id="listDebtInfo" parameterType="java.lang.String" resultType="hashmap">
 	    /* com.koscom.debt.dao.DebtMapper.listDebtInfo */
 		SELECT A.NO_PERSON		AS "no_person"
@@ -18,7 +154,6 @@
 		   AND A.AMT_REMAIN > 0
 	</select>
 	
-	<!-- 회원 부채 정보 금리 추정 처리 -->
 	<select id="debtInterestEtmPdoc" statementType="CALLABLE" parameterType="hashmap">
 		{ call PKG_LOAN_INTEREST_ETM.P_START(
 			#{no_person, mode=IN, jdbcType=VARCHAR},
@@ -26,6 +161,7 @@
 			#{p_rtn_cd, mode=OUT, jdbcType=VARCHAR, resultMap=myMap},
 			#{p_rtn_msg, mode=OUT, jdbcType=VARCHAR, resultMap=myMap}) }
 	</select>
+	
     <select id="getDebtExistYn" parameterType="java.lang.String" resultType="java.lang.String">
 		SELECT
 			DECODE( COUNT( 1 ), 0, 'N', 'Y' ) AS DEPT_YN
@@ -36,6 +172,7 @@
 			AND DISPLAY_YN = 'Y'
 			AND YMD_CANCEL IS NULL
     </select>
+    
 	<select id="newDebtCount" parameterType="java.lang.String" resultType="int">
 		SELECT
 			COUNT( 1 ) AS CNT_DEPT
@@ -45,6 +182,7 @@
 				NO_PERSON = #{no_person, jdbcType = VARCHAR}
 			AND DEBT_YN = 'Y'
 	</select>
+	
 	<select id="getDebtYCount" parameterType="java.lang.String" resultType="int">
 		SELECT
 			COUNT( 1 ) AS CNT_DEPT
@@ -54,6 +192,7 @@
 				NO_PERSON = #{no_person, jdbcType = VARCHAR}
 			AND DEBT_YN = 'Y'
 	</select>
+	
 	<select id="getDebtSummary" parameterType="java.lang.String" resultType="com.koscom.debt.model.DebtSummaryVO">
 	    /* com.koscom.debt.dao.DebtMapper.getDebtSummary : 대출 메인 요약 */
 	    SELECT    A.DT_STD               /* 기준일자 */
@@ -157,6 +296,7 @@
 	          ,A.SUM_AMT_CONTRACT
 	          ,A.CNT
 	</select>
+	
 	<select id="listDebtPg" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtVO">
 	    /* com.koscom.debt.dao.DebtMapper.listDebtPg: 부채메인 리스트 */
 	    SELECT    A.NO_MANAGE_INFO
@@ -270,6 +410,7 @@
 	            ,(CASE WHEN A.AMT_REMAIN = '-' THEN 0
 	                ELSE TO_NUMBER(A.AMT_REMAIN) END) DESC
 	</select>
+	
 	<select id="listDebtCalendar" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtCalendarVO">
         /* com.koscom.debt.dao.DebtMapper.listDebtCalendar: 부채달력 */
         SELECT   A.NO_PERSON
@@ -326,6 +467,7 @@
 		        ,B.INTEREST_YMD
 		        ,A.NO_MANAGE_INFO
 	</select>
+	
 	<select id="getDebtInfo" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtVO">
         /* com.koscom.debt.dao.DebtMapper.getDebtInfo : 대출 상세정보 */
 		SELECT   A.NO_PERSON
@@ -425,6 +567,7 @@
 		WHERE   A.NO_PERSON         =   #{no_person , jdbcType=VARCHAR}
 		AND     A.NO_MANAGE_INFO    =   #{no_manage_info , jdbcType=VARCHAR}
 	</select>
+	
 	<select id="listDebtLast12BizDay" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtDetail12RepVO">
         /* com.koscom.debt.dao.DebtMapper.listDebtLast12BizDay : 최근 12개월 상환내역 */
         SELECT no_manage_info
@@ -459,6 +602,7 @@
               )
          ORDER BY dt_st
 	</select>
+	
 	<select id="getDebtInfoForUpdate" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtVO">
 		SELECT
 			REPAYMENT AS rep_method,
@@ -471,6 +615,7 @@
 			NO_PERSON = #{no_person, jdbcType = VARCHAR}
 			AND NO_MANAGE_INFO = #{no_manage_info, jdbcType = VARCHAR}
 	</select>
+	
 	<update id="updateDebtInfo" parameterType="com.koscom.debt.model.DebtVO">
 		UPDATE
 			DEBT_PERSONAL_INFO
@@ -485,6 +630,7 @@
 				NO_PERSON		 = #{no_person		, jdbcType = VARCHAR}
 			AND NO_MANAGE_INFO	 = #{no_manage_info	, jdbcType = VARCHAR}
 	</update>
+	
 	<update id="updateDebtDisplay" parameterType="com.koscom.debt.model.DebtForm">
 		UPDATE
 			DEBT_PERSONAL_INFO
@@ -494,4 +640,14 @@
 				NO_PERSON		 = #{no_person		, jdbcType = VARCHAR}
 			AND NO_MANAGE_INFO	 = #{no_manage_info	, jdbcType = VARCHAR}
 	</update>
+	
+	<select id="getDebtCount" parameterType="java.lang.String" resultType="int">
+        /* com.koscom.debt.dao.DebtMapper.getDebtYCount : 등록된 부채수 */
+        SELECT COUNT(1) as CNT_DEPT
+          FROM DEBT_PERSONAL_INFO /* KCB 회원 계좌별 대출정보(KCB+추정DATA) */
+         WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+         AND DISPLAY_YN = 'Y' /* 삭제를 하지 않은 부채 수를 가져오기 위해 조건 추가 - 김휘경 */
+         AND YMD_CANCEL IS NULL /* YMD_CANCEL 반영 - 김휘경 */
+         
+    </select>
 </mapper>

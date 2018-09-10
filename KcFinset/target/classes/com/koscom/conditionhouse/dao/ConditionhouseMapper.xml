@@ -102,4 +102,70 @@
 					,  SYSDATE
 				 )
 	</update>
+	
+	<insert id="insertConditionhouseInfo" parameterType="java.lang.String">
+		INSERT INTO CONDITION_HOUSE_INFO
+		(
+			  no_person
+			, cd_collateral_house_type_01
+			, cd_collateral_house_type_02
+			, cd_collateral_house_type_03
+			, cd_collateral_loan_use_01
+			, cd_collateral_loan_use_02
+			, cd_collateral_loan_use_03
+			, cd_area_01
+			, cd_area_02
+			, cd_area_03
+			, cd_ratio_type_01
+			, cd_ratio_type_02
+			, cd_ratio_type_03
+			, cd_term_loan_01
+			, cd_term_loan_02
+			, cd_term_loan_03
+			, cd_term_loan_04
+			, cd_type_pay_01
+			, cd_type_pay_02
+			, cd_type_pay_03
+			, cd_defer_01
+			, cd_defer_02
+			, cd_object_01
+			, cd_object_02
+			, yn_post_ranking
+			, id_frt
+			, dt_frt
+			, id_lst
+			, dt_lst
+		)
+		VALUES(
+		  #{no_person, jdbcType=VARCHAR}
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , 'Y'
+		 , #{id_frt, jdbcType=VARCHAR}
+		 , SYSDATE
+		 , #{id_lst, jdbcType=VARCHAR}
+		 , SYSDATE
+		 )
+	</insert>
 </mapper>

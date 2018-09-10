@@ -36,8 +36,6 @@ $(document).ready(function() {
 		var means_consume = $(this).find(".means_consume").val();
 		var contents = $(this).find(".contents").text();
 		var dt_trd = formatDate($(this).find(".full_dt_trd").val(),true);
-// 		var nm_card = $(this).find(".nm_card").text();
-// 		var amt_in_out = formatAmt($(this).find(".amt").text().replace(/[^0-9]/g,""),false);
 		var amt_in_out = $(this).find(".amt_in_out").text().replace(/[^0-9]/g,"");
 		var cd_class = $(this).find(".cd_class").val();
 		var nm_class = $(this).find(".subcontent_left").text();
@@ -47,7 +45,6 @@ $(document).ready(function() {
 		$("#consume_detail").find("#contents").val(contents);
 		$("#consume_detail").find("#dt_trd").val(dt_trd);
 		$("#consume_detail").find("#amt_in_out").val(amt_in_out);
-// 		$("#consume_detail").find("#category").val(cd_class).attr("selected",true);
 		$("#consume_detail").find("#category").selectpicker("val",cd_class);
 		$("#consume_detail").find("#nm_class").val(nm_class);
 		$("#consume_detail").find("#memo").val(memo);
@@ -58,14 +55,15 @@ $(document).ready(function() {
 		$("#consume_detail").show();
 	});
 	
-	$("#header").click(function(){
-		$("#consume_detail").hide();
-		$(".g-menu #setting").show();
-		$(".g-menu #delete").hide();
-		$(".g-menu #save").hide();
-		$("#consume_list").show();
-		$(window).scrollTop(scrollTop);
-	});
+	//뒤로가기 임시 삭제
+// 	$("#header").click(function(){
+// 		$("#consume_detail").hide();
+// 		$(".g-menu #setting").show();
+// 		$(".g-menu #delete").hide();
+// 		$(".g-menu #save").hide();
+// 		$("#consume_list").show();
+// 		$(window).scrollTop(scrollTop);
+// 	});
 
 	$(".btn-check").off("click").on("click",function(){
 		if($(this).attr("class").indexOf("active")>-1){
@@ -116,6 +114,23 @@ $(document).ready(function() {
 		$("#consume_detail").find("#amt_in_out").val(amt_in_out);
 		$("#consume_detail").find("#category").selectpicker("val",cd_class);
 		$("#consume_detail").find("#nm_class").val(nm_class);
+	});
+	
+	$("#save").on("click",function(){
+		var data = $("#frmConsumeInfo").serialize();
+		$.ajax({
+			url : "<c:url value='/m/consume/modifyConsumeInfo.json'/>",
+			data : data,
+			contentType : "application/x-www-form-urlencoded; charset=UTF-8",
+			type : "POST",
+			async : false,
+			success : function(result) {
+				toastMsg('저장에 성공했습니다.');
+			},
+			error : function(e) {
+				toastMsg('정보 조회 중 오류가 발생했습니다. 관리자에게 연락 바랍니다.');
+			}
+		});
 	});
 });
 
@@ -203,6 +218,7 @@ var makeProgressBar = function(result) {
 var makeConsumeInfoList = function(result) {
 	$(".list-group").html("");
 	var list = result.listConsumeInfo;
+	
 	for(var i=0;i<list.length;i++){
 		var amt_in_out = list[i].type_in_out=="01"?formatAmt(list[i].amt_in_out,false):formatAmt(list[i].amt_in_out,true);
 		var tags =
@@ -385,46 +401,48 @@ var makeBtnInquire = function() {
 		</div>
 		<div id="consume_detail" class="div_hidden">
 			<div class="container">
-				<div class="form-inline">
-	                <div class="form-group">
-	                    <label for="means_consume" class="label_means_consume">결제 수단</label>
-	                    <select class="selectpicker" data-header="결제 수단" name="means_consume" id="means_consume">
-	                    	<option value="03">입출금 계좌</option>
-	                    	<option value="01">카드</option>
-	                    	<option value="02">현금</option>
-	                    </select>
-	                    <input type="hidden" class="form-control" name="an" id="an" autocomplete="off"/>
-	                </div>
-	                <div class="form-group">
-	                    <label for="amt_in_out">금액</label>
-	                    <input type="number" class="form-control" name="amt_in_out" id="amt_in_out" autocomplete="off"/>
-	                    <span class="form-control-feedback" aria-hidden="true">원</span>
-	                </div>
-	                <div class="form-group">
-	                    <label for="contents">결제처</label>
-	                    <input type="text" class="form-control" name="contents" id="contents" autocomplete="off"/>
-	                </div>
-	                <div class="form-group">
-	                    <label for="category">카테고리</label>
-	                    <select class="selectpicker" data-header="카테고리" name="category" id="category">
-							<c:forEach var="subList" items="${listPersonConsumeClassInfo}">
-								<c:forEach var="vo" items="${subList }" varStatus="myIndex">
-									<c:if test="${myIndex.index eq 0}">
-										<option value="${vo.cd_class}">${vo.nm_class}</option>
-									</c:if>
+				<form id="frmConsumeInfo" name="frmConsumeInfo" method="post">
+					<div class="form-inline">
+		                <div class="form-group">
+		                    <label for="means_consume" class="label_means_consume">결제 수단</label>
+		                    <select class="selectpicker" data-header="결제 수단" name="means_consume" id="means_consume">
+		                    	<option value="03">입출금 계좌</option>
+		                    	<option value="01">카드</option>
+		                    	<option value="02">현금</option>
+		                    </select>
+		                    <input type="hidden" class="form-control" name="an" id="an" autocomplete="off"/>
+		                </div>
+		                <div class="form-group">
+		                    <label for="amt_in_out">금액</label>
+		                    <input type="number" class="form-control" name="amt_in_out" id="amt_in_out" autocomplete="off"/>
+		                    <span class="form-control-feedback" aria-hidden="true">원</span>
+		                </div>
+		                <div class="form-group">
+		                    <label for="contents">결제처</label>
+		                    <input type="text" class="form-control" name="contents" id="contents" autocomplete="off"/>
+		                </div>
+		                <div class="form-group">
+		                    <label for="category">카테고리</label>
+		                    <select class="selectpicker" data-header="카테고리" name="category" id="category">
+								<c:forEach var="subList" items="${listPersonConsumeClassInfo}">
+									<c:forEach var="vo" items="${subList }" varStatus="myIndex">
+										<c:if test="${myIndex.index eq 0}">
+											<option value="${vo.cd_class}">${vo.nm_class}</option>
+										</c:if>
+									</c:forEach>
+									</div>
 								</c:forEach>
-								</div>
-							</c:forEach>
-	                    </select>
-	                </div>
-  	                <div class="form-group">
-	                    <label for="dt_trd">날짜</label>
-	                    <input type="text" class="form-control" name="dt_trd" id="dt_trd" autocomplete="off"/>
-	                </div>
-  	                <div class="form-group">
-	                    <label for="memo">메모</label>
-	                    <input type="text" class="form-control" name="memo" id="memo" autocomplete="off"/>
-	                </div>
+		                    </select>
+		                </div>
+	  	                <div class="form-group">
+		                    <label for="dt_trd">날짜</label>
+		                    <input type="text" class="form-control" name="dt_trd" id="dt_trd" autocomplete="off"/>
+		                </div>
+	  	                <div class="form-group">
+		                    <label for="memo">메모</label>
+		                    <input type="text" class="form-control" name="memo" id="memo" autocomplete="off"/>
+		                </div>
+		        	</form>
 				</div>
 <!-- 				<div class="btn-group bootstrap-select open trans_detail"> -->
 				<div class="btn-group bootstrap-select trans_detail">

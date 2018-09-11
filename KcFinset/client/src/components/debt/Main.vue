@@ -2,10 +2,12 @@
 <div id="wrapper">
     <div class="list-block" v-for="oneDebt in debtListData" :key="oneDebt.index">
         <div class="container-fluid">
-            <a href="/debt/detail?no_manage_info">
+            <!-- <a href="/debt/detail?no_manage_info={{oneDebt.no_manage_info}}"> -->
+            <a :href="oneDebt.href">
                 <div class="list-heading">
                     <li class="bank-title">
-                        <span class="thumb-logo" style="background-image:url('<c:url value='/fincorp/getFinCorpIcon.crz'/>?cd_fc=${oneDebt.cd_fc}');"></span>{{oneDebt.nm_fc}}
+                        <!-- <span class="thumb-logo" style="background-image:url('<c:url value='/fincorp/getFinCorpIcon.crz'/>?cd_fc=${oneDebt.cd_fc}');"></span>{{oneDebt.nm_fc}} -->
+                        <span class="thumb-logo" :style="oneDebt.style"></span>{{oneDebt.nm_fc}}
                     </li>
                     <label class="label-type">{{oneDebt.debt_type}}</label>
                 </div>
@@ -13,8 +15,6 @@
                     <dl>
                         <dt>상환금액(당월)</dt>
                         <dd>{{oneDebt.amt_repay}}</dd>
-
-                      
                     </dl>
                     <dl>
                         <dt>대출잔액</dt>
@@ -92,8 +92,7 @@ export default {
       this.$http.get('/api/debt/getDebtSummary.json', {
         params: {}
       }).then(function (response) {
-        var debtSummaryData = response.data.debtSummaryData
-        console.log(JSON.stringify(debtSummaryData));
+        var debtSummaryData = response.data.debtSummaryData;
         thisObj.setDebtSummary(debtSummaryData);
       })
     },
@@ -147,8 +146,12 @@ export default {
       this.$http.get('/api/debt/listDebtPg.json', {
         params: {}
       }).then(function (response) {
-        thisObj.debtListData = response.data.debtListData
-        console.log(JSON.stringify(thisObj.debtListData));
+        var list = response.data.debtListData;
+        for(var i=0; i<list.length; i++) {
+            list[i].href = "/debt/detail?no_manage_info="+list[i].no_manage_info;
+            list[i].style = "background-image:url('/api/fincorp/getFinCorpIcon.crz?cd_fc="+list[i].cd_fc+"')";
+        }
+        thisObj.debtListData = response.data.debtListData;
       })
     }
   }

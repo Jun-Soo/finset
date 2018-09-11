@@ -22,7 +22,7 @@ import com.koscom.util.LogUtil;
 import com.koscom.util.StringUtil;
 
 @Controller
-@RequestMapping("/fincorp")
+@RequestMapping("/m/fincorp")
 public class FincorpController {
 	
     private static final Logger logger = LoggerFactory.getLogger(FincorpController.class);

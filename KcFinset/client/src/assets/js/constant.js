@@ -2,5 +2,6 @@
  * constant
  */
 export default {
-  userAgent: ''
+  userAgent: '',
+  params: {}
 }

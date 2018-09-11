@@ -129,6 +129,8 @@ export default {
   name: "certStep1",
   data() {
     return {
+      errors: [],
+      errMsg: '',
       checked: "",
       chkAll: false,
       chkBox1: false,

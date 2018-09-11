@@ -7,9 +7,11 @@
 // import Common from './../../assets/js/common.js'
 
 export default {
-  name: 'HelloWorld',
-  data () {
+  name: 'helloWorld',
+  data() {
     return {
+      errors: [],
+      errMsg: ''
     }
   },
   component: {
@@ -18,17 +20,17 @@ export default {
   // },
   beforeCreate() {
   },
-  created () {
+  created() {
   },
   beforeMount() {
   },
-  mounted () {
+  mounted() {
   },
   beforeUpdate() {
   },
   updated() {
   },
-  beforeDestroy () {
+  beforeDestroy() {
   },
   destroyed() {
   },

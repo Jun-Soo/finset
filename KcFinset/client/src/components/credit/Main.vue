@@ -157,8 +157,10 @@
 <script>
 export default {
   name: 'FinsetMain',
-  data () {
+  data() {
     return {
+      errors: [],
+      errMsg: '',
       toDate: '',
       ratingCredit: '',
       list: []
@@ -170,18 +172,18 @@ export default {
   // },
   beforeCreate() {
   },
-  created () {
+  created() {
     this.getCreditInfoMain()
   },
   beforeMount() {
   },
-  mounted () {
+  mounted() {
   },
   beforeUpdate() {
   },
   updated() {
   },
-  beforeDestroy () {
+  beforeDestroy() {
   },
   destroyed() {
   },
@@ -189,15 +191,17 @@ export default {
 
     // 신용정보 조회
     getCreditInfoMain () {
-      var vm = this
+      var _this = this
       this.$http.get('/api/credit/CreditInfoMain.json', {
         params: {}
-      }).then(function (response) {
+      }).then(response => {
         var baseInfo = response.data.baseInfo
         console.log(JSON.stringify(baseInfo));
 
-        vm.creditGrade(baseInfo.grade_credit);
-        vm.ratingCredit = baseInfo.rating_credit
+        _this.creditGrade(baseInfo.grade_credit);
+        _this.ratingCredit = baseInfo.rating_credit
+      }).catch(e => {
+        _this.errors.push(e)
       })
     },
     creditGrade (n) {

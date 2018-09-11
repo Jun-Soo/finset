@@ -17,7 +17,10 @@ import FinsetBottom from "./../common/FinsetBottom";
 export default {
   name: "FinsetMain",
   data() {
-    return {};
+    return {
+      errors: [],
+      errMsg: ''
+    };
   },
   components: {
     FinsetHeader: FinsetHeader,

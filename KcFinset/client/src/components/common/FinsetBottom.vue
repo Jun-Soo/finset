@@ -12,7 +12,7 @@
 <script>
 export default {
   name: 'FinsetBottom',
-  data () {
+  data() {
     return {
       creditActive: false,
       debtActive: false,
@@ -26,17 +26,17 @@ export default {
   // },
   beforeCreate() {
   },
-  created () {
+  created() {
   },
   beforeMount() {
   },
-  mounted () {
+  mounted() {
   },
   beforeUpdate() {
   },
   updated() {
   },
-  beforeDestroy () {
+  beforeDestroy() {
   },
   destroyed() {
   },

@@ -8,6 +8,7 @@ import FinsetMain from '@/components/main/FinsetMain'
 import MemberHome from '@/components/member/Home'
 import CertStep1 from '@/components/member/CertStep1'
 import CertStep2 from '@/components/member/CertStep2'
+import CertCodeConfirm from '@/components/member/CertCodeConfirm'
 
 import CreditHome from '@/components/credit/Home'
 import CreditMain from '@/components/credit/Main'
@@ -16,7 +17,7 @@ Vue.use(Router)
 
 export const routes = [
   {
-    path: '/',
+    path: '/home',
     name: 'home',
     component: Home
   },
@@ -44,6 +45,11 @@ export const routes = [
         path: 'certStep2',
         alias: '/certStep2',
         component: CertStep2
+      },
+      {
+        path: 'certCodeConfirm',
+        alias: '/certCodeConfirm',
+        component: CertCodeConfirm
       }
     ]
   },

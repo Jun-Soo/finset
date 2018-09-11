@@ -17,7 +17,7 @@
 <script>
 export default {
   name: 'FinsetHeader',
-  data () {
+  data() {
     return {
     }
   },
@@ -27,11 +27,11 @@ export default {
   // },
   beforeCreate() {
   },
-  created () {
+  created() {
   },
   beforeMount() {
   },
-  mounted () {
+  mounted() {
   },
   beforeUpdate() {
   },

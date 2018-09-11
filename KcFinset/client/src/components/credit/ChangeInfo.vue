@@ -205,8 +205,10 @@
 <script>
 export default {
   name: 'HelloWorld',
-  data () {
+  data() {
     return {
+      errors: [],
+      errMsg: ''
     }
   },
   component: {
@@ -215,17 +217,17 @@ export default {
   // },
   beforeCreate() {
   },
-  created () {
+  created() {
   },
   beforeMount() {
   },
-  mounted () {
+  mounted() {
   },
   beforeUpdate() {
   },
   updated() {
   },
-  beforeDestroy () {
+  beforeDestroy() {
   },
   destroyed() {
   },

@@ -10,8 +10,12 @@ const store = new Vuex.Store({
     user: {
       noPerson: '',
       hp: '',
+      cntFailPwd: 0,
+      cntFailFinger: 0,
+      ynFingerprint: '',
       isEventPush: false
     },
+    returnUrl: '',
     accesToken: '',
     isLoggedIn: !!localStorage.getItem('lbUser')
   },

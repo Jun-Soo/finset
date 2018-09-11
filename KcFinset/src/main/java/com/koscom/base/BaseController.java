@@ -87,13 +87,14 @@ public class BaseController {
 					model.addAttribute("personHp", personVO.getHp());
 					rtnUrl = "/person/frameFindPwdStep1";
 				} else if("Y".equals(personVO.getYn_fingerprint()) && Integer.parseInt(StringUtil.NVL(personVO.getCnt_fail_finger(), "0")) < 5) {
-					rtnUrl = "/login/frameFingerConfirm";
+					rtnUrl = "/member/certCodeConfirm";
 				}else {
-					rtnUrl = "/login/frameSecurityCodeConfirm";
+					rtnUrl = "/member/certCodeConfirm";
 				}
 			}
 			
 			//지문 활성화 일 경우 체크 Y일때만 지문 활성화 N or 빈값 일 경우 비활성화
+			model.addAttribute("no_person", 		personVO.getNo_person());
 			model.addAttribute("yn_fingerprint", 	personVO.getYn_fingerprint());
 			model.addAttribute("cd_push", 			personVO.getCd_push());
 			model.addAttribute("yn_push", 			personVO.getYn_push());

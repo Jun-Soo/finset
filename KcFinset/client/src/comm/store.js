@@ -16,10 +16,19 @@ const store = new Vuex.Store({
       isEventPush: false
     },
     returnUrl: '',
-    accesToken: '',
-    isLoggedIn: !!localStorage.getItem('lbUser')
+    accessToken: '',
+    isLoggedIn: false
   },
   mutations: {
+    LOGIN (state, accessToken) {
+      localStorage.setItem('accessToken', accessToken)
+      state.accessToken = accessToken
+      state.isLoggedIn = true
+    },
+    LOGOUT (state) {
+      state.accessToken = null
+      state.isLoggedIn = false
+    }
   }
 })
 

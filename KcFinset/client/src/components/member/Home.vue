@@ -1,5 +1,5 @@
 <template>
-  <main>
+  <main class="MemberMain">
     <FinsetHeader></FinsetHeader>
     <router-view/>
   </main>
@@ -15,3 +15,7 @@ export default {
   }
 }
 </script>
+
+<style>
+  .MemberMain {background-color: #283593;}
+</style>

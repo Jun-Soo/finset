@@ -15,6 +15,7 @@
 
       // hp
       this.$store.state.user.hp = Constant.params.hp
+      localStorage.setItem('hp', Constant.params.hp)
 
       // page call
       this.getUserPage()
@@ -28,14 +29,14 @@
           hp: Constant.params.hp
         };
   
-        this.$http.get('/api/base/frameBase.json', {
+        this.$http.get('/api/m/base/frameBase.json', {
           params: data
         }).then(response => {
           console.log(JSON.stringify(response.data));
   
           _this.$store.state.user.noPerson = response.data.no_person
-          _this.$store.state.user.cntFailPwd = response.data.cnt_fail_pwd
-          _this.$store.state.user.cntFailFinger = response.data.cnt_fail_finger
+          _this.$store.state.user.cntFailPwd = Number(response.data.cnt_fail_pwd)
+          _this.$store.state.user.cntFailFinger = Number(response.data.cnt_fail_finger)
           _this.$store.state.user.ynFingerprint = response.data.yn_fingerprint
   
           if (Constant.userAgent == "Android") {
@@ -73,5 +74,4 @@
 </script>
 
 <style>
-  
 </style>

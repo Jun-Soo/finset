@@ -1,5 +1,5 @@
 <template>
-  <div id="wrapper" class="full-body">
+  <div id="wrapper">
     <!-- Content -->
     <section id="content">
       <div class="container security-code">
@@ -55,26 +55,20 @@
         <p class="link-txt"><a href="/m/person/frameFindPwdStep1.crz"><u>비밀번호를 재설정 하시겠습니까?</u></a></p>
       </div>
     </section>
-    <!--
-  	<form name="frmLogin" action="<c:url value='/j_spring_security_check'/>" method="POST">
-  		<input type="hidden" id="j_username" name="j_username" class="form-control" value="${SPRING_SECURITY_LAST_USERNAME}"/>
-  		<input type="hidden" id="j_password" name="j_password" class="form-control" value="" autocomplete="off"/>
-  	</form>
-    -->    
   	<!-- //Content -->
   </div>
 </template>
 
 <script>
-import Common from './../../assets/js/common.js'
-import Constant from './../../assets/js/constant.js'
+import Common from "./../../assets/js/common.js";
+import Constant from "./../../assets/js/constant.js";
 
 export default {
   name: "certCodeConfirm",
   data() {
     return {
       errors: [],
-      errMsg: '',
+      errMsg: "",
       cntFailPwd: this.$store.state.user.cntFailPwd,
       cntFailFinger: this.$store.state.user.cntFailFinger,
       ynFingerprint: this.$store.state.user.ynFingerprint,
@@ -92,14 +86,14 @@ export default {
   // },
   beforeCreate() {},
   created() {
-
-    if(Constant.userAgent == "Android") {
-      window.Android.setEndApp('Y')
+    if (Constant.userAgent == "Android") {
+      window.Android.setEndApp("Y");
     }
   },
   beforeMount() {},
   mounted() {
-    _this.errMsg = '비밀번호를 '+_this.cntFailPwd+'회 실패한 이력이 있습니다.';
+    this.errMsg =
+      "비밀번호를 " + this.cntFailPwd + "회 실패한 이력이 있습니다.";
   },
   beforeUpdate() {},
   updated() {},
@@ -107,75 +101,129 @@ export default {
   destroyed() {},
   methods: {
     initClassPass: function() {
-      var _this = this
-      _this.classPass1 = ''
-      _this.classPass2 = ''
-      _this.classPass3 = ''
-      _this.classPass4 = ''
+      var _this = this;
+      _this.classPass1 = "";
+      _this.classPass2 = "";
+      _this.classPass3 = "";
+      _this.classPass4 = "";
     },
     btnClick: function(val) {
+      var _this = this;
+      _this.j_password += val;
+      console.log(_this.j_password);
+      if (_this.j_password.length > 0) _this.classPass1 = "active";
+      if (_this.j_password.length > 1) _this.classPass2 = "active";
+      if (_this.j_password.length > 2) _this.classPass3 = "active";
+      if (_this.j_password.length > 3) {
+        _this.classPass4 = "active";
 
-      var _this = this
-      _this.j_password += val
-      console.log(_this.j_password)
-      if(_this.j_password.length > 0 ) _this.classPass1 = 'active'
-      if(_this.j_password.length > 1 ) _this.classPass2 = 'active'
-      if(_this.j_password.length > 2 ) _this.classPass3 = 'active'
-      if(_this.j_password.length > 3 ) {
-        _this.classPass4 = 'active'
+        _this.login();
       }
     },
     backClick: function() {
-
-      var _this = this
-      this.initClassPass()
-      _this.j_password = _this.j_password.substr(0, _this.j_password.length-1)
-      if(_this.j_password.length > 0 ) _this.classPass1 = 'active'
-      if(_this.j_password.length > 1 ) _this.classPass2 = 'active'
-      if(_this.j_password.length > 2 ) _this.classPass3 = 'active'
-      if(_this.j_password.length > 3 ) _this.classPass4 = 'active'
+      var _this = this;
+      this.initClassPass();
+      _this.j_password = _this.j_password.substr(
+        0,
+        _this.j_password.length - 1
+      );
+      if (_this.j_password.length > 0) _this.classPass1 = "active";
+      if (_this.j_password.length > 1) _this.classPass2 = "active";
+      if (_this.j_password.length > 2) _this.classPass3 = "active";
+      if (_this.j_password.length > 3) _this.classPass4 = "active";
+    },
+    login: function() {
+      var _this = this;
+      var params = Common.getParams();
+      var querystring = require('querystring')
+      var data = querystring.stringify({
+        j_username: _this.j_username,
+        j_password: _this.j_password
+      });
+      this.$http
+        .post("/api/j_spring_security_check", data
+        ,{
+          headers: {
+            "Content-type": "application/x-www-form-urlencoded"
+          }
+         }
+        )
+        .then(response => {
+          console.log(response);
+          if (response.data.result == "10") {
+            if (Constant.userAgent == "Android") {
+              // 스플래시 ON
+              //TODO 앱 정상배포시 try-catch 제거하고 스크립트만 호출해야함
+              try {
+                window.Android.splash("Y");
+                if (params.yn_reload == "Y") {
+                  window.Android.closeWebView();
+                  return false;
+                }
+              } catch (e) {
+                console.log(e);
+              }
+            } else if (Constant.userAgent == "iOS") {
+              Jockey.send("splashView", {
+                yn_splash: "Y"
+              });
+            }
+            //정상
+            _this.$store.commit('LOGIN', response.data.userToken)
+            _this.$router.push("/main");
+          } else {
+            this.initClassPass();
+            _this.j_password = "";
+            _this.cntFailPwd += 1;
+            _this.errMsg = "다시 시도해 주세요. (" + _this.cntFailPwd + "/5)";
+            if (response.data.result == "21") {
+              //ID오류
+            } else if (response.data.result == "22") {
+              //PASSWD오류
+            }
+          }
+        })
+        .catch(e => {
+          _this.errors.push(e);
+        });
     }
   },
-  resultFingerPrint: function (result) {
-    var _this = this
-    var params = Common.getParams()
-    if(result == true || result == 1){ //지문인식 성공
-      if(Common.userAgent == "Android") {
+  resultFingerPrint: function(result) {
+    var _this = this;
+    if (result == true || result == 1) {
+      //지문인식 성공
+      if (Common.userAgent == "Android") {
         window.Android.closeFingerPrint();
-        if(params.yn_reload == 'Y'){
-          window.Android.closeWebView();
-          return false;
-        }
       }
-      // $("#j_username").val("${no_person}");
-      // $("#j_password").val("${no_token}");
-      // frmLogin.submit();
+      _this.login();
     } else {
       //지문 틀린 누적횟수 증가
       _this.cntFailFinger += 1;
       modifyPwdFailCnt("finger", _this.cntFailFinger);
 
-      if(_this.cntFailFinger < 5) {
-        _this.errMsg = '다시 시도해 주세요. ('+ _this.cntFailFinger +'/5)';
+      if (_this.cntFailFinger < 5) {
+        _this.errMsg = "다시 시도해 주세요. (" + _this.cntFailFinger + "/5)";
       }
-      if(chk_finger == 5) { //지문인식 5번 모두 틀린 경우
-
-        _this.errMsg = '지문이 비활성화 됩니다.';
+      if (chk_finger == 5) {
+        //지문인식 5번 모두 틀린 경우
+        _this.errMsg = "지문이 비활성화 됩니다.";
         this.$toast.center(_this.errMsg);
-        setTimeout(function(){
-          _this.errMsg = '비밀번호를 입력하세요.';
+        setTimeout(function() {
+          _this.errMsg = "비밀번호를 입력하세요.";
         }, 1000);
-        if(userAgent == "Android") {
+        if (userAgent == "Android") {
           window.Android.closeFingerPrint();
         }
 
-        var data = {"yn_fingerprint" : 'N'};
-        this.$http.get('/api/person/modifyFingerPrint.json', {
-          params: data
-        }).then(response => {
-        }).catch(e => {
-          _this.errors.push(e)
-        })
+        var data = { yn_fingerprint: "N", no_person: _this.j_username };
+        this.$http
+          .get("/api/m/person/modifyFingerPrint.json", data)
+          .then(response => {
+            this.$store.state.user.ynFingerprint = "N";
+          })
+          .catch(e => {
+            _this.errors.push(e);
+          });
 
         // $.ajax({
         //   url : "<c:url value='/m/person/modifyFingerPrint.json'/>",
@@ -198,4 +246,5 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
+
 </style>

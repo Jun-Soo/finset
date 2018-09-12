@@ -29,7 +29,8 @@ export const routes = [
   {
     path: '/main',
     name: 'main',
-    component: FinsetMain
+    component: FinsetMain,
+    meta: { requiresAuth: true }
   },
   {
     path: '/member',
@@ -60,7 +61,8 @@ export const routes = [
       {
         path: 'main',
         alias: '/main',
-        component: CreditMain
+        component: CreditMain,
+        meta: { requiresAuth: true }
       }
     ]
   }
@@ -68,18 +70,18 @@ export const routes = [
 
 const router = new Router({routes, mode: 'history'})
 
-// router.beforeEach((to, from, next) => {
-//   if (to.meta.requiresAuth) {
-//     const authUser = JSON.parse(window.localStorage.getItem('lbUser'))
-//     if (!authUser || !authUser.token) {
-//       next({name: 'login'})
-//     } else {
-//       console.log('Im in admin')
-//       next('/admin')
-//     }
-//   } else {
-//     next()
-//   }
-// })
+router.beforeEach((to, from, next) => {
+  if (to.meta.requiresAuth) {
+    const accessToken = localStorage.getItem('accessToken')
+    if (!accessToken) {
+      const hp = localStorage.getItem('hp')
+      next('/home?hp=' + hp)
+    } else {
+      next()
+    }
+  } else {
+    next()
+  }
+})
 
 export default router

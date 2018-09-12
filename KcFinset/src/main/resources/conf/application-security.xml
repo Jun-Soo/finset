@@ -43,9 +43,9 @@
 		<access-denied-handler error-page="/login/403.crz"/>
 		<custom-filter ref="securityReqFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
 		<intercept-url pattern="/**" access="ROLE_USER, ROLE_ADMIN" />
-		<form-login login-page="/m/login/frameSecurityCodeConfirm.crz"
+		<form-login login-page="/home"
 					always-use-default-target="true"
-					default-target-url="/"
+					default-target-url="/home"
 					authentication-success-handler-ref="loginManager"
 					authentication-failure-handler-ref="loginManager"
 					/>

@@ -1,7 +1,7 @@
 package com.koscom.login.service;
 
 import java.io.IOException;
-import java.net.URLEncoder;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -44,6 +44,8 @@ import com.koscom.util.LogUtil;
 import com.koscom.util.ResUtil;
 import com.koscom.util.ReturnClass;
 import com.koscom.util.StringUtil;
+
+import net.sf.json.JSONObject;
 
 public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler implements UserDetailsService,AuthenticationSuccessHandler,AuthenticationFailureHandler {
 
@@ -103,8 +105,12 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 		}
 				
 		//로그인실패 메시지 나오도록 리다이렉트
-		response.sendRedirect(ResUtil.getPath(request) + "/m/login/frameSecurityCodeConfirm.crz?denied="+cd_result);
+		//response.sendRedirect(ResUtil.getPath(request) + "/m/login/frameSecurityCodeConfirm.crz?denied="+cd_result);
 		
+		PrintWriter out = response.getWriter(); 
+		out.print(cd_result); 
+		out.flush(); 
+		out.close();
 	}
 
 	@Override
@@ -154,26 +160,35 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 				}
 				
 				//02. 로그인시 로직 처리
-				loginProcess(personVO);
+				cd_result = loginProcess(personVO);
 				
+				if(Constant.SUCCESS.equals(cd_result)) cd_result = Constant.LOGIN_SUCCESS;
 			} catch (FinsetException e) {
 				cd_result = Constant.FAILED;
 			}
 			
 			// 자동스크래핑 여부 관련 설정
 			session.setAttribute("AutoScrap", "true");
-						
+			/*			
 			String linkUrl = (String)session.getAttribute("linkUrl");
 			   linkUrl = StringUtil.isEmpty(linkUrl) ? "/m/credit/frameCreditInfoMain.crz" : linkUrl;
 		
 		    if(!StringUtil.isEmpty(linkUrl)) session.removeAttribute("linkUrl");
 		    response.sendRedirect(ResUtil.getPath(request) + linkUrl);
 			
-			/*
+			
 			String linkUrl = (String)session.getAttribute("linkUrl");
 		    if(!StringUtil.isEmpty(linkUrl)) session.removeAttribute("linkUrl");
 			response.sendRedirect(ResUtil.getPath(request) + "/index.html?linkUrl="+linkUrl);
 			*/
+			
+		    PrintWriter out 	= response.getWriter();
+		    JSONObject	result	= new JSONObject();
+		    result.put("result", cd_result);
+		    result.put("userToken", session.getId());
+			out.print(result); 
+			out.flush(); 
+			out.close();
 			
 		}
 	}

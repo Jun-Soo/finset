@@ -6,6 +6,8 @@ import Constant from './constant.js'
 export default {
 
   init: function () {
+    localStorage.setItem('accessToken', '')
+
     Constant.userAgent = this.getMobileOperatingSystem()
     Constant.params = this.getParams()
 

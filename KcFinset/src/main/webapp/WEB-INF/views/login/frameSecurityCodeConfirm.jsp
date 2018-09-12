@@ -273,6 +273,7 @@ function fingerConfirm(){
 	<input type="hidden" name="chk_finger" id="chk_finger" value="${cnt_fail_finger}" />
 	<input type="hidden" name="returnUrl" value="<c:out value="${returnUrl}"/>">
 	<input type="hidden" name="yn_fingerprint" id="yn_fingerprint" />
+	<input type="hidden" name="no_person" value="<c:out value="${no_person}"/>">
 	
 		<section id="content">
 			<div class="container security-code">

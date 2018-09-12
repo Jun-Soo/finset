@@ -196,22 +196,19 @@ public class PersonController {
 			PersonVO personVO,
 			Model model) {
 
-		String noPerson 	= (String) session.getAttribute("no_person");
-		String pass_person 	= "";
-
+		String noPerson 	= personVO.getNo_person();
+		String pass_person	= "";
+		for(int i=0; i < personVO.getPass_number().size(); i++){
+			pass_person += personVO.getPass_number().get(i);
+		}
+		personVO.setPass_person(pass_person);
+		
 		logger.info("------------로그인체크---------------");
 		logger.info("접속 ip 		: "+request.getRemoteAddr());
 		logger.info("user-agent 	: "+request.getHeader("user-agent"));
 		logger.info("세션 no_person : "+noPerson);
 		logger.info(personVO.toString());
 
-		for(int i=0; i < personVO.getPass_number().size(); i++){
-			pass_person += personVO.getPass_number().get(i);
-		}
-
-		String no_person = (String) session.getAttribute("no_person");
-		personVO.setNo_person(no_person);
-		personVO.setPass_person(pass_person);
 		int pwdCheck = personManager.checkPersonPass(personVO);
 		
 		if(pwdCheck > 0) {	//암호화 비밀번호 체크
@@ -241,7 +238,7 @@ public class PersonController {
 			model.addAttribute("message", "비밀번호가 일치하지 않습니다.");
 			model.addAttribute("result", Constant.FAILED);
 		}
-		model.addAttribute("no_person", no_person);
+		model.addAttribute("no_person", noPerson);
 		
 		return "jsonView";
 	}

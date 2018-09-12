@@ -46,5 +46,5 @@ h1 {
   text-align: center;
   color: #666;
   font-size: 5em;
-}
+} 
 </style>

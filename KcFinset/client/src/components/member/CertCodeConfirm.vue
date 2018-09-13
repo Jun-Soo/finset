@@ -141,7 +141,7 @@ export default {
         j_password: _this.j_password
       });
       this.$http
-        .post("/api/j_spring_security_check", data
+        .post("/check/j_spring_security_check", data
         ,{
           headers: {
             "Content-type": "application/x-www-form-urlencoded"
@@ -169,7 +169,7 @@ export default {
               });
             }
             //정상
-            _this.$store.commit('LOGIN', response.data.userToken)
+            _this.$store.commit('LOGIN', response.data)
             _this.$router.push("/main");
           } else {
             this.initClassPass();
@@ -217,7 +217,7 @@ export default {
 
         var data = { yn_fingerprint: "N", no_person: _this.j_username };
         this.$http
-          .get("/api/m/person/modifyFingerPrint.json", data)
+          .get("/m//person/modifyFingerPrint.json", data)
           .then(response => {
             this.$store.state.user.ynFingerprint = "N";
           })

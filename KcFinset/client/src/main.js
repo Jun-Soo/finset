@@ -7,6 +7,7 @@ import axios from 'axios'
 import router from './comm/router'
 import store from './comm/store'
 import 'bootstrap'
+import 'jquery'
 
 import toast from 'vue2-toast'
 import swiper from 'vue2-swiper'

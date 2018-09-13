@@ -29,7 +29,7 @@
           hp: Constant.params.hp
         };
   
-        this.$http.get('/api/m/base/frameBase.json', {
+        this.$http.get('/m//base/frameBase.json', {
           params: data
         }).then(response => {
           console.log(JSON.stringify(response.data));

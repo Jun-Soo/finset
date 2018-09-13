@@ -43,6 +43,7 @@ export default {
   beforeCreate() {
   },
   created() {
+    _this.$store.commit('LOGOUT')
     if(Constant.userAgent == "Android") {
       window.Android.setEndApp('Y');
     }

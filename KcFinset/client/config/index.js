@@ -11,11 +11,18 @@ module.exports = {
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      '/api': {
+      '/m': {
         target: 'http://localhost:8080',
         changeOrigin: true,
         pathRewrite: {
-          '^/api':'/'
+          '^/m':'/m'
+        }
+      },
+      '/check': {
+        target: 'http://localhost:8080',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/check':'/'
         }
       }
     },
@@ -53,10 +60,10 @@ module.exports = {
 
   build: {
     // Template for index.html
-    index: path.resolve(__dirname, './../dist/static/index.html'),
+    index: path.resolve(__dirname, '../../src/main/webapp/index.html'),
     
     // Paths
-    assetsRoot: path.resolve(__dirname, './../dist'),
+    assetsRoot: path.resolve(__dirname, '../../src/main/webapp'),
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
 

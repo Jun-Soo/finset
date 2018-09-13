@@ -9,6 +9,7 @@ const store = new Vuex.Store({
     title: 'FINSET',
     user: {
       noPerson: '',
+      nmPerson: '',
       hp: '',
       cntFailPwd: 0,
       cntFailFinger: 0,
@@ -20,9 +21,10 @@ const store = new Vuex.Store({
     isLoggedIn: false
   },
   mutations: {
-    LOGIN (state, accessToken) {
-      localStorage.setItem('accessToken', accessToken)
-      state.accessToken = accessToken
+    LOGIN (state, data) {
+      localStorage.setItem('accessToken', data.accessToken)
+      state.accessToken = data.accessToken
+      state.nmPerson = data.nmPerson
       state.isLoggedIn = true
     },
     LOGOUT (state) {

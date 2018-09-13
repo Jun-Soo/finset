@@ -29,6 +29,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
+import org.springframework.web.util.UrlPathHelper;
 
 import com.koscom.credit.service.CreditManager;
 import com.koscom.domain.PersonShareMessageInfo;
@@ -105,12 +106,22 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 		}
 				
 		//로그인실패 메시지 나오도록 리다이렉트
-		//response.sendRedirect(ResUtil.getPath(request) + "/m/login/frameSecurityCodeConfirm.crz?denied="+cd_result);
+		UrlPathHelper urlPathHelper = new UrlPathHelper();
+		String requestUri = urlPathHelper.getRequestUri(request);
+		if(requestUri.indexOf(".crz") > -1) {
+			
+			response.sendRedirect(ResUtil.getPath(request) + "/m/login/frameSecurityCodeConfirm.crz?denied="+cd_result);
+		} else {
+			
+			PrintWriter out 	= response.getWriter();
+		    JSONObject	result	= new JSONObject();
+		    result.put("result", cd_result);
+			out.print(result); 
+			out.flush(); 
+			out.close();
+		}
 		
-		PrintWriter out = response.getWriter(); 
-		out.print(cd_result); 
-		out.flush(); 
-		out.close();
+		
 	}
 
 	@Override
@@ -169,27 +180,26 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 			
 			// 자동스크래핑 여부 관련 설정
 			session.setAttribute("AutoScrap", "true");
-			/*			
-			String linkUrl = (String)session.getAttribute("linkUrl");
-			   linkUrl = StringUtil.isEmpty(linkUrl) ? "/m/credit/frameCreditInfoMain.crz" : linkUrl;
-		
-		    if(!StringUtil.isEmpty(linkUrl)) session.removeAttribute("linkUrl");
-		    response.sendRedirect(ResUtil.getPath(request) + linkUrl);
 			
-			
-			String linkUrl = (String)session.getAttribute("linkUrl");
-		    if(!StringUtil.isEmpty(linkUrl)) session.removeAttribute("linkUrl");
-			response.sendRedirect(ResUtil.getPath(request) + "/index.html?linkUrl="+linkUrl);
-			*/
-			
-		    PrintWriter out 	= response.getWriter();
-		    JSONObject	result	= new JSONObject();
-		    result.put("result", cd_result);
-		    result.put("userToken", session.getId());
-			out.print(result); 
-			out.flush(); 
-			out.close();
-			
+			UrlPathHelper urlPathHelper = new UrlPathHelper();
+			String requestUri = urlPathHelper.getRequestUri(request);
+			if(requestUri.indexOf(".crz") > -1) {
+				
+				String linkUrl = (String)session.getAttribute("linkUrl");
+				if(!StringUtil.isEmpty(linkUrl)) session.removeAttribute("linkUrl");
+				linkUrl = StringUtil.isEmpty(linkUrl) ? "/m/credit/frameCreditInfoMain.crz" : linkUrl;
+			    
+				response.sendRedirect(ResUtil.getPath(request) + "/index.html?linkUrl="+linkUrl);
+			} else {
+				
+				PrintWriter out 	= response.getWriter();
+			    JSONObject	result	= new JSONObject();
+			    result.put("result", cd_result);
+			    result.put("userToken", session.getId());
+				out.print(result); 
+				out.flush(); 
+				out.close();
+			}
 		}
 	}
 	

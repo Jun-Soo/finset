@@ -40,7 +40,7 @@
 	<http pattern="/m/scrap/**" security="none"/>
 	
 	<http auto-config="true">
-		<access-denied-handler error-page="/login/403.crz"/>
+		<access-denied-handler error-page="/error/403"/>
 		<custom-filter ref="securityReqFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
 		<intercept-url pattern="/**" access="ROLE_USER, ROLE_ADMIN" />
 		<form-login login-page="/home"
@@ -50,12 +50,10 @@
 					authentication-failure-handler-ref="loginManager"
 					/>
 		<!-- 중복로그인 -->
-		<session-management invalid-session-url="/m/person/framePersonLogout.crz">
-			<concurrency-control max-sessions="1" expired-url="/m/login/frameSecurityCodeConfirm.crz?denied=92" />
+		<session-management invalid-session-url="/logout">
+			<concurrency-control max-sessions="1" expired-url="/home?denied=92" />
 		</session-management>
-		
 		<logout invalidate-session="true" />
-				
 	</http>
 	
 	<beans:bean id="loggerListener" class="org.springframework.security.authentication.event.LoggerListener"/>

@@ -59,7 +59,7 @@
               resultFingerPrint(param.result);
             });
   
-            if ("${yn_fingerprint}" == 'Y') {
+            if (response.data.yn_fingerprint == 'Y') {
               Jockey.send("initFingerPrint");
             }
           }

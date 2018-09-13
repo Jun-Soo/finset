@@ -26,6 +26,7 @@ const store = new Vuex.Store({
       state.isLoggedIn = true
     },
     LOGOUT (state) {
+      localStorage.removeItem('accessToken')
       state.accessToken = null
       state.isLoggedIn = false
     }

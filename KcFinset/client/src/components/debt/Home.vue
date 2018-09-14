@@ -2,22 +2,27 @@
   <main>
     <FinsetHeader></FinsetHeader>
     <router-view/>
-    <FinsetBottom></FinsetBottom>
+    <FinsetBottom v-if="isBottom"></FinsetBottom>
   </main>
 </template>
 
 <script>
-import  FinsetHeader  from   './../common/FinsetHeader'
-import  FinsetBottom  from   './../common/FinsetBottom'
-import './../../assets/js/common.js'
+import FinsetHeader from "./../common/FinsetHeader";
+import FinsetBottom from "./../common/FinsetBottom";
+import "./../../assets/js/common.js";
 
 export default {
-  name: 'debtMain',
+  name: "debtMain",
+  data() {
+    return {
+      isBottom: true
+    };
+  },
   components: {
     FinsetHeader: FinsetHeader,
     FinsetBottom: FinsetBottom
   }
-}
+};
 </script>
 
 <style>

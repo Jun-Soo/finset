@@ -4,6 +4,8 @@
         <Component_test v-if="isTest"/>
         <Component_main v-else/>
     </div>
+
+    
 </template>
 
 <script>
@@ -15,7 +17,7 @@ export default {
   name: "DebtMain",
   data() {
     return {
-        isTest: true
+      isTest: true
     };
   },
   components: {
@@ -25,8 +27,7 @@ export default {
   // computed () {
   // },
   beforeCreate() {},
-  created() {
-  },
+  created() {},
   beforeMount() {},
   mounted() {},
   beforeUpdate() {},
@@ -34,13 +35,13 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-      toggleTest() {
-          if(this.isTest==true) {
-              this.isTest = false;
-          } else {
-              this.isTest = true;
-          }
+    toggleTest() {
+      if (this.isTest == true) {
+        this.isTest = false;
+      } else {
+        this.isTest = true;
       }
+    }
   }
 };
 </script>
@@ -48,9 +49,9 @@ export default {
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
 #toggle {
-    position:fixed;
-    top:0px;
-    right:0px;
-    z-index:99;
+  position: fixed;
+  top: 0px;
+  right: 0px;
+  z-index: 99;
 }
 </style>

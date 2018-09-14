@@ -64,7 +64,7 @@ export default {
     listMemo() {
       var thisObj = this;
       this.$http
-        .get("/api/memo/listMemo.json", {
+        .get("/m/memo/listMemo.json", {
           params: { no_manage_info: thisObj.$route.params.no_manage_info }
         })
         .then(function(response) {
@@ -73,6 +73,7 @@ export default {
     },
     updateMemo() {
       console.log("구현해야됨");
+      router.go(-1);
     },
     createMemo() {
       router.push("/memo/create");

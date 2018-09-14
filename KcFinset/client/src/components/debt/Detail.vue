@@ -184,6 +184,7 @@ export default {
   beforeCreate() {},
   created() {
     this.getDebtInfo();
+    this.$parent.isBottom = false;
   },
   beforeMount() {},
   mounted() {},
@@ -195,13 +196,13 @@ export default {
     getDebtInfo() {
       var thisObj = this;
       this.$http
-        .get("/api/debt/getDebtInfo.json", {
-          params: { no_manage_info: thisObj.$route.params.no_manage_info }
+        .get("/m/debt/getDebtInfo.json", {
+          params: { no_manage_info: thisObj.$store.state.no_manage_info }
         })
         .then(function(response) {
           var vo = response.data.debtVO;
           vo.style =
-            "background-image:url('/api/fincorp/getFinCorpIcon.crz?cd_fc=" +
+            "background-image:url('/m/fincorp/getFinCorpIcon.crz?cd_fc=" +
             vo.cd_fc +
             "')";
           thisObj.debtVO = vo;
@@ -222,8 +223,9 @@ export default {
       var thisObj = this;
 
       this.$http
-        .get("/api/debt/deleteDebt.json", {
-          params: { no_manage_info: thisObj.$route.params.no_manage_info }
+        .get("/m/debt/deleteDebt.json", {
+          // params: { no_manage_info: thisObj.$route.params.no_manage_info }
+          params: { no_manage_info: thisObj.$store.state.no_manage_info }
         })
         .then(function(response) {
           var code = response.data.code;

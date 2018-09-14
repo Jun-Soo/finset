@@ -140,6 +140,16 @@ export default {
         j_username: _this.j_username,
         j_password: _this.j_password
       });
+
+      if (Constant.userAgent == "Android") {
+        // 스플래시 ON
+          window.Android.splash("Y");
+      } else if (Constant.userAgent == "iOS") {
+        Jockey.send("splashView", {
+          yn_splash: "Y"
+        });
+      }
+
       this.$http
         .post("/check/j_spring_security_check", data
         ,{
@@ -151,23 +161,6 @@ export default {
         .then(response => {
           console.log(response);
           if (response.data.result == "10") {
-            if (Constant.userAgent == "Android") {
-              // 스플래시 ON
-              //TODO 앱 정상배포시 try-catch 제거하고 스크립트만 호출해야함
-              try {
-                window.Android.splash("Y");
-                if (params.yn_reload == "Y") {
-                  window.Android.closeWebView();
-                  return false;
-                }
-              } catch (e) {
-                console.log(e);
-              }
-            } else if (Constant.userAgent == "iOS") {
-              Jockey.send("splashView", {
-                yn_splash: "Y"
-              });
-            }
             //정상
             _this.$store.commit('LOGIN', response.data)
             _this.$router.push("/main");
@@ -195,6 +188,13 @@ export default {
       if (Common.userAgent == "Android") {
         window.Android.closeFingerPrint();
       }
+      this.$http.get('/m/base/frameBase.json', {
+          params: data
+        }).then(response => {
+
+        }).catch(e => {
+          _this.errors.push(e)
+        })
       _this.login();
     } else {
       //지문 틀린 누적횟수 증가
@@ -217,7 +217,7 @@ export default {
 
         var data = { yn_fingerprint: "N", no_person: _this.j_username };
         this.$http
-          .get("/m//person/modifyFingerPrint.json", data)
+          .get("/m/person/modifyFingerPrint.json", data)
           .then(response => {
             this.$store.state.user.ynFingerprint = "N";
           })

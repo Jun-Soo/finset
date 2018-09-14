@@ -13,6 +13,7 @@
 <script>
 import FinsetHeader from "./../common/FinsetHeader";
 import FinsetBottom from "./../common/FinsetBottom";
+import Constant from "./../../assets/js/constant.js";
 
 export default {
   name: "FinsetMain",
@@ -29,7 +30,16 @@ export default {
   // computed () {
   // },
   beforeCreate() {},
-  created() {},
+  created() {
+    if (Constant.userAgent == "Android") {
+      // 스플래시 ON
+        window.Android.splash("N");
+    } else if (Constant.userAgent == "iOS") {
+      Jockey.send("splashView", {
+        yn_splash: "N"
+      });
+    }
+  },
   beforeMount() {},
   mounted() {},
   beforeUpdate() {},

@@ -17,7 +17,6 @@
 			</div>	
 			<form name="frmUpdateDebtInfo" id="frmUpdateDebtInfo" method="post">
 				<div class="form-inline">
-					<input type="hidden" name="no_person" :value="debtVO.no_person"/>
 					<input type="hidden" id ="no_manage_info" name="no_manage_info" :value="debtVO.no_manage_info"/>
 					<div class="form-group">
 						<label for="interest">금 리</label>
@@ -157,6 +156,24 @@ export default {
       var thisObj = this;
       var form = document.getElementById("frmUpdateDebtInfo");
       var formData = new FormData(form);
+
+      var vals = formData.keys();
+
+      for (var a of vals) {
+        console.log(a + "////////" + formData.get(a));
+        if (formData.get(a) == "") {
+          if (a == "interest") a = "int_interest";
+          alert(
+            $("#" + a)
+              .prev()
+              .text()
+              .replace(" ", "") + "를 입력하세요"
+          );
+          $("#" + a).focus();
+          return;
+        }
+      }
+
       this.$http
         .post("/m/debt/updateDebtInfo.json", formData)
         .then(function(response) {

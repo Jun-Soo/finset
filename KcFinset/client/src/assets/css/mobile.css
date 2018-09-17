@@ -4,7 +4,7 @@
 /* ---------------------------------------------------------------------- */
 #app {height:100%;}
 html, body{ font-size: 12px; height:100%;}
-main {height:100%; background-color: transparent;}
+main {background-color: transparent;}
 /* body{ background-color:#f1f1f2; font-family: 'roboto', 'Nanum Barun Gothic', sans-serif;} */
 body{ font-size: 16px; background-color:#f2f3f7; font-family: 'roboto', sans-serif; }
 ol,ul,li{ list-style:none; padding:0; margin:0; }
@@ -7060,10 +7060,23 @@ li.preparing{
 .credit_detail dd {
 	margin-top: 5px;
 }
-.credit_cert_title {
-	
+.credit_cert_title {	
 }
 .credit_result {
 	text-align: center;
 	padding-top: 50%;
+}
+
+
+span.error {
+  color: #9F3A38;
+  font-size: 13px;
+  font-weight: 600;
+  padding-left: 20px;
+}
+span.error::before{
+	content: "※";
+	position: absolute;
+  margin-left: -15px;
+  margin-top: 3px;
 }

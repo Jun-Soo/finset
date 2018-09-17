@@ -1,7 +1,7 @@
 <template>
-  <main>
+  <div id="mainHome">
     <router-view/>
-  </main>
+  </div>
 </template>
 
 <script>
@@ -9,6 +9,7 @@
   import Constant from './../../assets/js/constant.js'
 
   export default {
+    name: 'MainHome',
     created() {
       // mobile 초기화
       Common.init()
@@ -29,7 +30,7 @@
           hp: Constant.params.hp
         };
   
-        this.$http.get('/m/base/frameBase.json', {
+        this.$http.get('/api/base/frameBase.json', {
           params: data
         }).then(response => {
           console.log(JSON.stringify(response.data));
@@ -66,7 +67,7 @@
   
           _this.$router.push(response.data.rtnPath)
         }).catch(e => {
-          _this.errors.push(e)
+          _this.$router.push('/error')
         })
       }
     }

@@ -44,6 +44,7 @@ import com.koscom.util.FinsetException;
 import com.koscom.util.LogUtil;
 import com.koscom.util.ResUtil;
 import com.koscom.util.ReturnClass;
+import com.koscom.util.SessionUtil;
 import com.koscom.util.StringUtil;
 
 import net.sf.json.JSONObject;
@@ -189,13 +190,18 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 				if(!StringUtil.isEmpty(linkUrl)) session.removeAttribute("linkUrl");
 				linkUrl = StringUtil.isEmpty(linkUrl) ? "/m/credit/frameCreditInfoMain.crz" : linkUrl;
 			    
-				response.sendRedirect(ResUtil.getPath(request) + "/index.html?linkUrl="+linkUrl);
+				response.sendRedirect(ResUtil.getPath(request) + linkUrl);
 			} else {
 				
 				PrintWriter out 	= response.getWriter();
 			    JSONObject	result	= new JSONObject();
-			    result.put("result", cd_result);
+			    result.put("result", 	cd_result);
 			    result.put("userToken", session.getId());
+			    //result.put("linkUrl", 	linkUrl);
+			    
+			    //사용자정보
+			    result.put("nmPerson", 	personVO.getNm_person());
+			    
 				out.print(result); 
 				out.flush(); 
 				out.close();
@@ -214,6 +220,13 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 	        //최근 접속 이력 업데이트
 	        personManager.modifyLastLogin(no_person);
 	        
+	        // 비밀번호&지문인증 틀린횟수 초기화
+			personVO.setCnt_fail_mode("all");
+			personVO.setNo_person(personVO.getNo_person());
+			personVO.setCnt_fail(0);
+			ReturnClass modifyPwdFailCntReturnClass = personManager.modifyPwdFailCnt(personVO);
+			logger.info("cd_result : {},  message : {}", modifyPwdFailCntReturnClass.getCd_result(), modifyPwdFailCntReturnClass.getMessage());
+			
 	        //마이페이지 - 공유관리 업데이트요청
 	        PersonShareInfoVO personShareInfoVO = new PersonShareInfoVO();
 	        personShareInfoVO.setOffer_no_person(no_person);

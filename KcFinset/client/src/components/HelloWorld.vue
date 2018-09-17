@@ -16,8 +16,8 @@ export default {
   },
   component: {
   },
-  // computed () {
-  // },
+  computed: {
+  },
   beforeCreate() {
   },
   created() {

@@ -47,7 +47,7 @@ public class BaseController {
 	@Resource
 	Environment environment;
 	
-	/**
+	/** VUE
 	 * 앱 메인 화면
 	 * 전하번호 체크하여 페이지이동
 	 * 비회원 -> 서비스안내
@@ -122,6 +122,14 @@ public class BaseController {
 		model.addAttribute("rtnPath", rtnUrl);
 		return "jsonView";
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	/**

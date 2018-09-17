@@ -1,7 +1,6 @@
 package com.koscom.person;
 import java.util.List;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -43,6 +42,35 @@ public class PersonController {
 
 	@Autowired
 	private LoginManager loginManager;
+	
+	/** VUE
+	 * 지문 업데이트
+	 * @param model
+	 * @param request
+	 * @param fcmVO
+	 * @return
+	 */
+	@RequestMapping("/modifyFingerPrint.json")
+	public String modifyFingerPrint(
+			HttpServletRequest request,
+			HttpSession session, 
+			PersonVO personVO,
+			Model model) {
+		
+		logger.info("modifyFingerPrint.json start");
+		String no_person = (String) session.getAttribute("no_person");
+		logger.info("no_person : "+no_person);
+		personVO.setNo_person(no_person);
+		ReturnClass returnClass = personManager.modifyFingerPrint((PersonVO)SessionUtil.setUser(personVO, session));
+		logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
+		model.addAttribute("result" , returnClass.getCd_result());
+		return "jsonView";
+	}
+	
+	
+	
+	
+	
 	
 	/**
 	 * fcm 토큰 업데이트
@@ -377,30 +405,6 @@ public class PersonController {
 	}
 	
 	/**
-	 * 지문 업데이트
-	 * @param model
-	 * @param request
-	 * @param fcmVO
-	 * @return
-	 */
-	@RequestMapping("/modifyFingerPrint.json")
-	public String modifyFingerPrint(
-			HttpServletRequest request,
-			HttpSession session, 
-			PersonVO personVO,
-			Model model) {
-		
-		logger.info("modifyFingerPrint.json start");
-		String no_person = (String) session.getAttribute("no_person");
-		logger.info("no_person : "+no_person);
-		personVO.setNo_person(no_person);
-		ReturnClass returnClass = personManager.modifyFingerPrint((PersonVO)SessionUtil.setUser(personVO, session));
-		logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
-		model.addAttribute("result" , returnClass.getCd_result());
-		return "jsonView";
-	}
-
-	/**
 	 * 이메일 업데이트
 	 * @param model
 	 * @param request
@@ -430,49 +434,7 @@ public class PersonController {
 		return "jsonView";
 	}
 
-	/**
-	 * 로그아웃 업데이트
-	 * @param model
-	 * @param request
-	 * @param fcmVO
-	 * @return
-	 */
-	@RequestMapping("/framePersonLogout.crz")
-	public String framePersonLogout(
-			HttpServletRequest request,
-			HttpSession session, 
-			PersonVO personVO,
-			Model model) {
-		
-		String no_person = (String) session.getAttribute("no_person");
-		
-		if(!StringUtil.isEmpty(no_person)) {
-			
-			personVO = personManager.getPersonInfo(no_person);
-			
-			logger.info("no_person : "+no_person);
-			personVO.setNo_person(no_person);
-			personVO.setYn_logout("Y");
-			ReturnClass returnClass = personManager.modifyPersonLogout((PersonVO)SessionUtil.setUser(personVO, session));
-			
-			logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
-			model.addAttribute("result" , returnClass.getCd_result());
-			model.addAttribute("message" , returnClass.getMessage());
-			model.addAttribute("hp" , personVO.getHp());
-			
-			session.invalidate();
-		} else {
-			
-			Cookie[] cookies = request.getCookies();
-			String hp = SessionUtil.getCookieValue(cookies, "hp");
-			model.addAttribute("hp" , hp);
-			
-			logger.info("cookies : ", hp);
-			
-		}
-		
-		return "/person/framePersonLogout";
-	}
+	
 	
 	/**
 	 * 푸쉬알림설정 업데이트
@@ -494,33 +456,6 @@ public class PersonController {
 		ReturnClass returnClass = personManager.modifyPushNoti((PersonVO)SessionUtil.setUser(personVO, session));
 		logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
 		model.addAttribute("result" , returnClass.getCd_result());
-		return "jsonView";
-	}
-
-	/**
-	 * 로그아웃 업데이트
-	 * @param model
-	 * @param request
-	 * @param fcmVO
-	 * @return
-	 * TODO 사용여부 확인 필요
-	 */
-	@RequestMapping("/modifyYnUseAndLogout.json")
-	public String modifyYnUseAndLogout(
-			HttpServletRequest request,
-			HttpSession session, 
-			PersonVO personVO,
-			Model model) {
-		
-		String no_person = (String) session.getAttribute("no_person");
-		logger.info("no_person : "+no_person);
-		personVO.setNo_person(no_person);
-		ReturnClass returnClass = personManager.modifyYnUseAndLogout((PersonVO)SessionUtil.setUser(personVO, session));
-		
-		logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
-		model.addAttribute("result" , returnClass.getCd_result());
-		model.addAttribute("message" , returnClass.getMessage());
-		
 		return "jsonView";
 	}
 	

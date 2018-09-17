@@ -52,7 +52,7 @@
             <li><button type="button" class="btn btn-lg btn-block btn-backspace" v-on:click="backClick()">←</button></li>
           </ul>
         </div>
-        <p class="link-txt"><a href="/m/person/frameFindPwdStep1.crz"><u>비밀번호를 재설정 하시겠습니까?</u></a></p>
+        <p class="link-txt"><a href="/api/person/frameFindPwdStep1.crz"><u>비밀번호를 재설정 하시겠습니까?</u></a></p>
       </div>
     </section>
   	<!-- //Content -->
@@ -188,7 +188,7 @@ export default {
       if (Common.userAgent == "Android") {
         window.Android.closeFingerPrint();
       }
-      this.$http.get('/m/base/frameBase.json', {
+      this.$http.get('/api/base/frameBase.json', {
           params: data
         }).then(response => {
 
@@ -217,26 +217,13 @@ export default {
 
         var data = { yn_fingerprint: "N", no_person: _this.j_username };
         this.$http
-          .get("/m/person/modifyFingerPrint.json", data)
+          .get("/api/person/modifyFingerPrint.json", data)
           .then(response => {
             this.$store.state.user.ynFingerprint = "N";
           })
           .catch(e => {
             _this.errors.push(e);
           });
-
-        // $.ajax({
-        //   url : "<c:url value='/m/person/modifyFingerPrint.json'/>",
-        //   data : data,
-        //   contentType : "application/x-www-form-urlencoded; charset=UTF-8",
-        //   type : "POST",
-        //   async : false,
-        //   success : function (result) {
-        //   },
-        //   error : function (e) {
-        //     errMsg(e);
-        //   }
-        // })
       }
       return false;
     }

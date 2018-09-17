@@ -62,7 +62,7 @@ export default {
   },
   methods: {
     reLogin: function() {
-      _this.$router.push("/home?hp="+localStorage.getItem('hp'));
+      this.$router.push("/home?hp="+localStorage.getItem('hp'));
     }
   }
 }

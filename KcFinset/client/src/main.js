@@ -3,6 +3,8 @@
 
 import Vue from 'vue'
 import App from './App'
+import VeeValidate from 'vee-validate'
+import ko from 'vee-validate/dist/locale/ko.js'
 import axios from 'axios'
 import router from './comm/router'
 import store from './comm/store'
@@ -19,11 +21,20 @@ import './assets/css/bootstrap.customize.css'
 import './assets/css/bootstrap-select.css'
 import './assets/css/mobile.css'
 
+import './comm/message.js'
+
+Vue.use(VeeValidate, {
+  locale: 'ko',
+  dictionary: {
+    ko
+  }
+})
+
 Vue.use(toast, {
   type: 'center',
-  duration: 3000,
+  duration: 2000,
   wordWrap: true,
-  width: '150px'
+  width: '250px'
 })
 
 Vue.use(swiper)
@@ -34,7 +45,8 @@ Vue.prototype.$http = axios
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
-  render: h => h(App),
   router,
-  store
+  store,
+  components: { App },
+  template: '<App/>'
 })

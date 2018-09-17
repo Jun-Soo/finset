@@ -1,18 +1,28 @@
 package com.koscom.debt;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
+import net.sf.json.JSONSerializer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
+import com.google.gson.Gson;
 import com.koscom.debt.model.DebtCalendarVO;
 import com.koscom.debt.model.DebtDetail12RepVO;
 import com.koscom.debt.model.DebtForm;
@@ -21,6 +31,7 @@ import com.koscom.debt.model.DebtVO;
 import com.koscom.debt.service.DebtManager;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
+import com.koscom.scrap.model.AppFcLinkInfo;
 import com.koscom.util.Constant;
 import com.koscom.util.FinsetException;
 import com.koscom.util.ResUtil;
@@ -103,6 +114,11 @@ public class DebtController {
 			if(debt_reg_update_yn != null && debt_reg_update_yn.equals("Y")){
 				debtManager.modifySeqNewDeptReg(no_person);
 			}
+		}
+		
+		//test
+        logger.debug("no_person : " + no_person);
+		if(no_person != null && !no_person.equals("")){
 			//부채메인 요약
 			DebtSummaryVO debtSummaryVO = debtManager.getDebtSummary(no_person);
 			model.addAttribute("debtSummaryData", debtSummaryVO);
@@ -116,7 +132,44 @@ public class DebtController {
 
 			model.addAttribute("debtListData", debtList);
 		}
+		//end test
+		
 		return "/debt/frameDebtInfoMain";
+	}
+	
+	/**
+	 * 부채 메인 요약
+	 * @param model
+	 * @param session
+	 * @return
+	 * @throws FinsetException
+	 */
+	@RequestMapping("/getDebtSummary.json")
+	public String getDebtSummary(Model model, HttpSession session) throws FinsetException {
+		String no_person = (String) session.getAttribute("no_person");
+		DebtSummaryVO debtSummaryVO = debtManager.getDebtSummary(no_person);
+		model.addAttribute("debtSummaryData", debtSummaryVO);
+		return "jsonView";
+	}
+	
+	/**
+	 * 부채 메인 리스트
+	 * @param model
+	 * @param session
+	 * @return
+	 * @throws FinsetException
+	 */
+	@RequestMapping("/listDebtPg.json")
+	public String listDebtPg(Model model, HttpSession session) throws FinsetException {
+		String no_person = (String) session.getAttribute("no_person");
+		//부채메인 리스트
+		DebtForm debtForm = new DebtForm();
+		debtForm.setNo_person(no_person);
+		//display_yn 이 Y 인 것만 가져오도록
+		debtForm.setDisplay_yn("Y");
+		List<DebtVO> debtList = debtManager.listDebtPg(debtForm);
+		model.addAttribute("debtListData", debtList);
+		return "jsonView";
 	}
 	
 	/**
@@ -185,6 +238,29 @@ public class DebtController {
 		return "/debt/frameInDebtDetail";
 	}
 	
+	@RequestMapping("/getDebtInfo.json")
+	public String getDebtInfo(HttpSession session, Model model, String no_manage_info) throws FinsetException{
+		String no_person = (String) session.getAttribute("no_person"); 
+		
+		DebtForm debtForm = new DebtForm();
+		debtForm.setNo_person(no_person);
+		debtForm.setNo_manage_info(no_manage_info);
+		model.addAttribute("debtVO", debtManager.getDebtInfo(debtForm));
+		
+		return "jsonView";
+	}
+	
+	@RequestMapping("/getDebtInfoForUpdate.json")
+	public String getDebtInfoForUpdate(HttpSession session, HttpServletRequest request, Model model, String no_manage_info) throws FinsetException{
+		String no_person = (String) session.getAttribute("no_person"); 
+		
+		DebtForm debtForm = new DebtForm();
+		debtForm.setNo_person(no_person);
+		debtForm.setNo_manage_info(no_manage_info);
+		model.addAttribute("debtVO", debtManager.getDebtInfoForUpdate(debtForm));
+		return "jsonView";
+	}
+	
 	/**
 	 * 부채 상세정보 수정
 	 * @param session
@@ -222,10 +298,12 @@ public class DebtController {
 	 * @return
 	 */
 	@RequestMapping("/updateDebtInfo.json")
-	public String updateDebtInfo(HttpServletRequest request,DebtVO debtVO, Model model) throws FinsetException {
+	public String updateDebtInfo(HttpSession session,DebtVO debtVO, Model model) throws FinsetException {
+		String no_person = (String) session.getAttribute("no_person");
 		if(debtVO == null){
 			model.addAttribute("code","99");
 		} else {
+			debtVO.setNo_person(no_person);
 			debtManager.updateDebtInfo(debtVO);
 			model.addAttribute("code","00");
 		}
@@ -239,8 +317,8 @@ public class DebtController {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/frameInDebtDelete.json")
-	public String frameInDebtDelete(HttpSession session, HttpServletRequest request, Model model) throws FinsetException {
+	@RequestMapping("/deleteDebt.json")
+	public String deleteDebt(HttpSession session, HttpServletRequest request, Model model) throws FinsetException {
 		String no_person = (String) session.getAttribute("no_person");
         String no_manage_info = (String) request.getParameter("no_manage_info");
         logger.debug("in debt del no_person:"+no_person+"///////no_manage_info:"+no_manage_info);

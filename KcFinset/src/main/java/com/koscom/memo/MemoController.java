@@ -1,7 +1,5 @@
 package com.koscom.memo;
 
-import java.util.List;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -42,7 +40,7 @@ public class MemoController {
 	}
 	
 	@RequestMapping("/createMemo.crz")
-	public String createMemo(HttpServletRequest request, MemoVO memoVO, Model model) throws FinsetException {
+	public String createMemoRaw(HttpServletRequest request, MemoVO memoVO, Model model) throws FinsetException {
 		
 		//path는 환경에 따라 달라지므로 확인해야 한다.
 		String path = ResUtil.getPath(request);
@@ -58,22 +56,42 @@ public class MemoController {
 		}
 	}
 	
-	@RequestMapping("/frameListMemo.crz")
-	public String frameListMemo(HttpSession session ,HttpServletRequest request, Model model) throws FinsetException {
-		MemoVO memoVO = new MemoVO();
+	@RequestMapping("/createMemo.json")
+	public String createMemo(HttpSession session, Model model, HttpServletRequest request) throws FinsetException {
 		String no_person = (String) session.getAttribute("no_person");
-		logger.debug("In listMemo, NO_PERSON is "+ no_person);
+		String no_manage_info = request.getParameter("no_manage_info");
+		String memo_text = request.getParameter("memo_text");
+		
+		MemoVO memoVO = new MemoVO();
 		memoVO.setNo_person(no_person);
-		String no_manage_info = (String) request.getParameter("no_manage_info");
-		if(no_manage_info != null){
-			if(!no_manage_info.equals("")){
+		if(no_manage_info!=null) {
+			if(!no_manage_info.equals("")) {
 				memoVO.setNo_manage_info(no_manage_info);
-				model.addAttribute("no_manage_info",no_manage_info);
 			}
 		}
-		List<MemoVO> listMemo = memoManager.listMemo(memoVO);
-		model.addAttribute("listMemo", listMemo);
+		memoVO.setMemo_text(memo_text);
+		memoManager.createMemo(memoVO);
+		model.addAttribute("code","00");
+		return "jsonView";
+	}
+	
+	@RequestMapping("/frameListMemo.crz")
+	public String frameListMemo(HttpSession session ,HttpServletRequest request, Model model) throws FinsetException {
 		return "/memo/frameListMemo";
+	}
+	
+	@RequestMapping("/listMemo.json")
+	public String listMemo(HttpSession session, Model model, String no_manage_info) {
+		String no_person = (String) session.getAttribute("no_person");
+		MemoVO memoVO = new MemoVO();
+		memoVO.setNo_person(no_person);
+		if(no_manage_info != null) {
+			if(!no_manage_info.equals("")) {
+				memoVO.setNo_manage_info(no_manage_info);
+			}
+		}
+		model.addAttribute("listMemo",memoManager.listMemo(memoVO));
+		return "jsonView";
 	}
 	
 	@RequestMapping("/frameDetailMemo.crz")

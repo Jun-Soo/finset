@@ -159,7 +159,6 @@ export default {
   name: 'FinsetMain',
   data() {
     return {
-      errors: [],
       errMsg: '',
       toDate: '',
       ratingCredit: '',

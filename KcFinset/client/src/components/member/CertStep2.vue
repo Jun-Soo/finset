@@ -84,8 +84,15 @@ export default {
       sex: "",
       telComCd: "",
       hp: "",
+      kcb_ci: "",
+      kcb_di: "",
+      kcb_cp: "",
+      bgn: "",
       smsCertNo: "",
+      svcTxSeqno: "",
       /* form etc */
+      smsReSndYn: "",
+      nation: "1",
       options: [
         { text: "통신사", value: "" },
         { text: "SKT", value: "01" },
@@ -95,20 +102,12 @@ export default {
         { text: "KT알뜰폰", value: "05" },
         { text: "LG알뜰폰", value: "06" }
       ],
-      smsReSndYn: "",
       timeId: "",
-      nation: "1",
       timerObj: null,
       timer: null,
-      minutes:5,
-      secondes:0,
-      time:0,
-      //
-      kcb_ci: "",
-      kcb_di: "",
-      kcb_cp: "",
-      bgn: "",
-      svcTxSeqno: "",
+      minutes: 5,
+      secondes: 0,
+      time: 0,
       /* class */
       isDisabled: false
     };
@@ -117,7 +116,12 @@ export default {
   computed: {},
   beforeCreate() {},
   created() {
-    this.time = (this.minutes * 60)
+
+    if (Constant.userAgent == "Android") {
+      window.Android.setEndApp("Y");
+    }
+    this.$store.state.title = "본인확인 (2/7)"
+    this.time = this.minutes * 60
   },
   beforeMount() {},
   mounted() {
@@ -171,8 +175,8 @@ export default {
                 //이름 주민번호 앞 뒤 통신사선택 disable
                 _this.isDisabled = true;
 
-                if (!this.timerObj) this.stop()
-                this.start()
+                if (!this.timerObj) this.stop();
+                this.start();
                 $("#req_certification").html("인증번호 재전송");
                 _this.svcTxSeqno = result.svcTxSeqno;
                 frmCertifyStep.smsCertNo.readOnly = false;
@@ -193,26 +197,26 @@ export default {
       });
     },
     setCertNumber: function(number) {
-      number=number+"";
-      if(this.smsCertNo){
-        this.smsCertNo = number
+      number = number + "";
+      if (this.smsCertNo) {
+        this.smsCertNo = number;
         this.smsCertNoChk();
       }
     },
     smsCertNoChk: function() {
-      if(this.smsCertNo){
-        Common.affixBottom('show');
+      if (this.smsCertNo) {
+        Common.affixBottom("show");
       } else {
-        Common.affixBottom('hide');
+        Common.affixBottom("hide");
       }
     },
     confirmedCertify: function() {
-
-      if(this.smsCertNo == '' || this.smsCertNo == 'undefined') return false;
+      var _this = this;
+      if (this.smsCertNo == "" || this.smsCertNo == "undefined") return false;
       var regExp = /^[0-9]+$/;
-      if(!regExp.test(this.smsCertNo)){
-        this.$toast.center('숫자만 입력해주세요.');
-        this.smsCertNo = '';
+      if (!regExp.test(this.smsCertNo)) {
+        this.$toast.center("숫자만 입력해주세요.");
+        this.smsCertNo = "";
         return false;
       }
       var data = {
@@ -221,36 +225,88 @@ export default {
         smsCertNo: _this.smsCertNo
       };
       this.$http
-      .get("/api/login/kcmCertify.json", {
-        params: data
-      })
-      .then(response => {
-        var result = response.data;
-        console.log(result);
-        if (result.result == "00") {
-          frmCertifyStep.kcb_ci.value = result.kcb_ci;
-          frmCertifyStep.kcb_di.value = result.kcb_di;
-          frmCertifyStep.kcb_cp.value = result.kcb_cp;
-          insertPerson();
-        } else {
-          this.$toast.center(result.message);
-          _this.smsCertNo = ''
-          return false;
-        }
-      })
-      .catch(e => {
-        this.$toast.center(ko.messages.error);
-      });
+        .get("/api/login/kcmCertify.json", {
+          params: data
+        })
+        .then(response => {
+          var result = response.data;
+          console.log(result);
+          if (result.result == "00") {
+            _this.kcb_ci = result.kcb_ci;
+            _this.kcb_di = result.kcb_di;
+            _this.kcb_cp = result.kcb_cp;
+            this.insertPerson();
+          } else {
+            this.$toast.center(result.message);
+            _this.smsCertNo = "";
+            return false;
+          }
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+        });
+    },
+    insertPerson: function() {
+      var _this = this;
+      _this.bgn = _this.birthday + _this.sex;
+
+      var data = {
+        nm_person: _this.nm_person,
+        bgn: _this.bgn,
+        birthday: _this.birthday,
+        telComCd: _this.telComCd,
+        hp: _this.hp,
+        kcb_ci: _this.kcb_ci,
+        kcb_di: _this.kcb_di,
+        kcb_cp: _this.kcb_cp,
+        yn_eventPush: (this.$store.state.user.isEventPush ? 'Y' : 'N')
+      };
+
+      this.$http
+        .get("/api/person/insertPerson.json", {
+          params: data
+        })
+        .then(response => {
+          var result = response.data;
+          var noPerson = result.returnData;
+          this.$store.state.user.noPerson = result.returnData;
+          if (result.result == "00") {
+            if(Constant.userAgent == "iOS") {
+              Jockey.send("setNoPerson",{
+                noPerson : noPerson,
+                phNum : this.hp
+              });
+            } else if(Constant.userAgent == "Android") {
+              window.Android.setNoPerson(noPerson, this.hp);
+            }
+            // frmCertifyStep.action = "<c:url value='/m/base/frameSecurityCode.crz'/>";
+            _this.$router.push('/member/certCode')
+
+          } else if (result.result == "11") {
+            if(Constant.userAgent == "iOS") {
+              Jockey.send("setNoPerson",{
+                noPerson : noPerson,
+                phNum : _this.hp
+              });
+            } else if(Constant.userAgent == "Android") {
+              window.Android.setNoPerson(noPerson, _this.hp);
+            }
+            _this.$router.push('/home?hp='+_this.hp)
+          }
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+        });
     },
     start: function() {
       var _this = this;
-      _this.time = (_this.minutes * 60 + _this.secondes)
-      console.log(_this.time)
+      _this.time = _this.minutes * 60 + _this.secondes;
+      console.log(_this.time);
       if (!this.timerObj) {
         this.timerObj = setInterval(() => {
           if (_this.time > 0) {
             _this.time--;
-            _this.timer = this.prettyTime()
+            _this.timer = this.prettyTime();
           } else {
             clearInterval(_this.timerObj);
             _this.reset();
@@ -258,10 +314,10 @@ export default {
         }, 1000);
       }
     },
-    stop () {
-      clearInterval(this.timerObj)
-      this.timerObj = null
-      this.timer = null
+    stop() {
+      clearInterval(this.timerObj);
+      this.timerObj = null;
+      this.timer = null;
     },
     reset: function() {
       this.time = 0;
@@ -275,7 +331,7 @@ export default {
       return this.twoDigits(minute) + ":" + this.twoDigits(seconde);
     },
     twoDigits: function(n) {
-      return (n <= 9 ? "0" + n : n);
+      return n <= 9 ? "0" + n : n;
     }
   }
 };

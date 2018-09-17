@@ -17,7 +17,6 @@ export default {
   name: 'error',
   data() {
     return {
-      errors: [],
       errMsg: ''
     }
   },

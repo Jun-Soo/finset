@@ -10,7 +10,6 @@ export default {
   name: 'helloWorld',
   data() {
     return {
-      errors: [],
       errMsg: ''
     }
   },

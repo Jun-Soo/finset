@@ -1,13 +1,18 @@
 package com.koscom.person;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
@@ -23,6 +28,7 @@ import com.koscom.person.model.PersonSmsListVO;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
 import com.koscom.util.Constant;
+import com.koscom.util.FinsetException;
 import com.koscom.util.LogUtil;
 import com.koscom.util.ReturnClass;
 import com.koscom.util.SessionUtil;
@@ -43,36 +49,10 @@ public class PersonController {
 	@Autowired
 	private LoginManager loginManager;
 	
-	/** VUE
-	 * 지문 업데이트
-	 * @param model
-	 * @param request
-	 * @param fcmVO
-	 * @return
-	 */
-	@RequestMapping("/modifyFingerPrint.json")
-	public String modifyFingerPrint(
-			HttpServletRequest request,
-			HttpSession session, 
-			PersonVO personVO,
-			Model model) {
-		
-		logger.info("modifyFingerPrint.json start");
-		String no_person = (String) session.getAttribute("no_person");
-		logger.info("no_person : "+no_person);
-		personVO.setNo_person(no_person);
-		ReturnClass returnClass = personManager.modifyFingerPrint((PersonVO)SessionUtil.setUser(personVO, session));
-		logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
-		model.addAttribute("result" , returnClass.getCd_result());
-		return "jsonView";
-	}
+	@Resource
+	Environment environment;
 	
-	
-	
-	
-	
-	
-	/**
+	/** APP
 	 * fcm 토큰 업데이트
 	 * @param model
 	 * @param request
@@ -100,6 +80,151 @@ public class PersonController {
 		logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
 		return "jsonView";
 	}
+	
+	/** VUE
+	 * 지문 업데이트
+	 * @param model
+	 * @param request
+	 * @param fcmVO
+	 * @return
+	 */
+	@RequestMapping("/modifyFingerPrint.json")
+	public String modifyFingerPrint(
+			HttpServletRequest request,
+			HttpSession session, 
+			PersonVO personVO,
+			Model model) {
+		
+		logger.info("modifyFingerPrint.json start");
+		String no_person = (String) session.getAttribute("no_person");
+		logger.info("no_person : "+no_person);
+		personVO.setNo_person(no_person);
+		ReturnClass returnClass = personManager.modifyFingerPrint((PersonVO)SessionUtil.setUser(personVO, session));
+		logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
+		model.addAttribute("result" , returnClass.getCd_result());
+		return "jsonView";
+	}
+	
+	/** VUE
+	 * 개인정보 등록
+	 * @param session
+	 * @param response
+	 * @param personVO
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping("/insertPerson.json")
+	public String insertPerson(HttpSession session, 
+			HttpServletResponse response, 
+			PersonVO personVO, 
+			Model model) throws UnsupportedEncodingException, FinsetException, IOException {
+		
+		String profile = environment.getProperty("service.profile");
+		
+		if(!profile.equals("LOCAL")){
+			//KCB_CI를 기준으로 회원을 확인해, 기존 회원의 핸드폰 번호가 변경 된 것이지 확인
+			String no_person = personManager.getPersonInfoDupCi(personVO);
+			//없으면 넘어가도록 한다
+			if(no_person!=null){
+				if(!no_person.equals("")){
+					personVO.setNo_person(no_person);
+					int isUpdated = personManager.modifyPersonHp(personVO);
+					if(isUpdated!=0){
+						ReturnClass returnClass = new ReturnClass(personVO.PERSON_EXIST, "이미 등록된 정보가 있습니다.");
+						model.addAttribute("message", returnClass.getMessage());
+						model.addAttribute("result", returnClass.getCd_result());
+						model.addAttribute("returnData", personVO.getNo_person());
+						logger.debug("기존 회원 KCB_CI 가 있습니다.:"+personVO.getKcb_ci());
+					} else {
+						throw new FinsetException("기존 회원의 hp를 업데이트 하지 못했습니다. 확인해주세요.");
+					}
+				}
+			}
+		}
+		
+		logger.debug("회원가입 시작");
+		//이미 가입된 정보가 있는지 체크
+		PersonVO person = personManager.getPersonInfoDup(personVO);
+		logger.debug("가입 유무 체크  : " + (person != null));
+		
+		if(person != null) {
+			ReturnClass returnClass = new ReturnClass(personVO.PERSON_EXIST, "이미 등록된 정보가 있습니다.");
+			model.addAttribute("message", returnClass.getMessage());
+			model.addAttribute("result", returnClass.getCd_result());
+			model.addAttribute("returnData", person.getNo_person());
+			
+		} else {
+			
+			ReturnClass returnClass = personManager.insertPerson(personVO);
+			model.addAttribute("message", returnClass.getMessage());		
+			model.addAttribute("result", returnClass.getCd_result());
+
+			if(returnClass.getCd_result().equals(Constant.SUCCESS)) {
+				
+				person = (PersonVO) returnClass.getReturnObj();
+				model.addAttribute("returnData", person.getNo_person());
+				logger.debug("회원가입 완료 : " + (person == null));
+            }
+		}
+		return "jsonView";
+	}
+	
+	/** VUE
+	 * 완료화면 (보안코드 찾기)
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/changePwd.json")
+	public String changePwd(
+			HttpSession session, 
+			PersonVO personVO, 
+			Model model) {
+
+		String kcmCertValue = (String) session.getAttribute("cert_result_value");
+		
+		logger.debug("★★★★★ cert_result_value : " + kcmCertValue);
+		
+		if(!Constant.SUCCESS.equals(kcmCertValue)) {
+			model.addAttribute("message", "본인인증 후 진행하시기 </br>바랍니다.");
+			model.addAttribute("result", "99");
+
+			session.removeAttribute("cert_result_value");
+			return "jsonView";
+		} else {
+//			String pass_person = "";
+//			for(int i=0; i < personVO.getPass_number().size(); i++){
+//				pass_person += personVO.getPass_number().get(i);
+//			}
+//			//비밀번호 합쳐서 set
+//			personVO.setPass_person(pass_person);
+//			String no_person = (String) session.getAttribute("no_person");
+//			logger.info("핀 코드 업데이트 no_person : " + no_person);
+			logger.info("핀 코드 업데이트 : " + personVO.getPass_person());
+//			personVO.setNo_person(no_person);
+			ReturnClass returnClass = personManager.modifyPassPerson((PersonVO)SessionUtil.setUser(personVO, session));
+			model.addAttribute("message", returnClass.getMessage());
+			model.addAttribute("result", returnClass.getCd_result());
+			model.addAttribute("no_person", personVO.getNo_person());
+			return "jsonView";
+		}
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 
 	/**
 	 * 본인인증화면 (보안코드 찾기)
@@ -171,46 +296,7 @@ public class PersonController {
 		return "/person/frameSecurityCodeCertify";
 	}
 
-	/**
-	 * 완료화면 (보안코드 찾기)
-	 * @param model
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/changePwd.json")
-	public String changePwd(
-			HttpSession session, 
-			PersonVO personVO, 
-			Model model) {
-
-		String kcmCertValue = (String) session.getAttribute("cert_result_value");
-		
-		logger.debug("★★★★★ cert_result_value : " + kcmCertValue);
-		
-		if(!Constant.SUCCESS.equals(kcmCertValue)) {
-			model.addAttribute("message", "본인인증 후 진행하시기 바랍니다.");
-			model.addAttribute("result", "99");
-
-			session.removeAttribute("cert_result_value");
-			return "jsonView";
-		} else {
-			String pass_person = "";
-			for(int i=0; i < personVO.getPass_number().size(); i++){
-				pass_person += personVO.getPass_number().get(i);
-			}
-			//비밀번호 합쳐서 set
-			personVO.setPass_person(pass_person);
-			String no_person = (String) session.getAttribute("no_person");
-			logger.info("핀 코드 업데이트 no_person : " + no_person);
-			logger.info("핀 코드 업데이트 : " + personVO.getPass_person());
-			personVO.setNo_person(no_person);
-			ReturnClass returnClass = personManager.modifyPassPerson((PersonVO)SessionUtil.setUser(personVO, session));
-			model.addAttribute("message", returnClass.getMessage());
-			model.addAttribute("result", returnClass.getCd_result());
-			model.addAttribute("no_person", no_person);
-			return "jsonView";
-		}
-	}
+	
 	/**
 	 * 비밀번호 확인
 	 * @param model

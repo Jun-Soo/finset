@@ -35,11 +35,14 @@
         }).then(response => {
           console.log(JSON.stringify(response.data));
   
-          _this.$store.state.user.noPerson = response.data.no_person
-          _this.$store.state.user.cntFailPwd = Number(response.data.cnt_fail_pwd)
-          _this.$store.state.user.cntFailFinger = Number(response.data.cnt_fail_finger)
-          _this.$store.state.user.ynFingerprint = response.data.yn_fingerprint
-  
+          this.$store.state.user.noPerson = response.data.no_person
+          this.$store.state.user.cntFailPwd = Number(response.data.cnt_fail_pwd)
+          this.$store.state.user.cntFailFinger = Number(response.data.cnt_fail_finger)
+          this.$store.state.user.ynFingerprint = response.data.yn_fingerprint
+
+          this.$store.state.state.site = response.data.site
+          localStorage.setItem('site', response.data.site)
+
           if (Constant.userAgent == "Android") {
             window.Android.settingPush(response.data.yn_push);
             window.Android.settingPushType(response.data.cd_push);

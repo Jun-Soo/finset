@@ -471,6 +471,16 @@ public class LoginController {
         return "jsonView";
     }
 	
+
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	/**
@@ -941,75 +951,6 @@ public class LoginController {
 		
 		model.addAttribute("yn_eventPush", personVO.getYn_eventPush()); //이벤트푸시 수신여부
 		return "/login/frameCertStep2";
-	}
-	
-	/**
-	 * 개인정보 등록
-	 * @param session
-	 * @param response
-	 * @param personVO
-	 * @param model
-	 * @return
-	 * @throws Exception
-	 */
-	@RequestMapping("/insertPerson.json")
-	public String insertPerson(HttpSession session, 
-			HttpServletResponse response, 
-			PersonVO personVO, 
-			Model model) throws UnsupportedEncodingException, FinsetException, IOException {
-		
-		String profile  = environment.getProperty("service.profile");
-		
-		if(!profile.equals("LOCAL")){
-			//KCB_CI를 기준으로 회원을 확인해, 기존 회원의 핸드폰 번호가 변경 된 것이지 확인
-			String no_person = personManager.getPersonInfoDupCi(personVO);
-			//없으면 넘어가도록 한다
-			if(no_person!=null){
-				if(!no_person.equals("")){
-					personVO.setNo_person(no_person);
-					int isUpdated = personManager.modifyPersonHp(personVO);
-					if(isUpdated!=0){
-						ReturnClass returnClass = new ReturnClass(personVO.PERSON_EXIST, "이미 등록된 정보가 있습니다.");
-						model.addAttribute("message", returnClass.getMessage());
-						model.addAttribute("result", returnClass.getCd_result());
-						model.addAttribute("returnData", personVO.getNo_person());
-						logger.debug("기존 회원 KCB_CI 가 있습니다.:"+personVO.getKcb_ci());
-					} else {
-						throw new FinsetException("기존 회원의 hp를 업데이트 하지 못했습니다. 확인해주세요.");
-					}
-				}
-			}
-		}
-		
-		logger.debug("회원가입 시작");
-		//이미 가입된 정보가 있는지 체크
-		PersonVO person = personManager.getPersonInfoDup(personVO);
-		logger.debug("가입 유무 체크  : " + (person != null));
-		
-		if(person != null) {
-			ReturnClass returnClass = new ReturnClass(personVO.PERSON_EXIST, "이미 등록된 정보가 있습니다.");
-			model.addAttribute("message", returnClass.getMessage());
-			model.addAttribute("result", returnClass.getCd_result());
-			model.addAttribute("returnData", person.getNo_person());
-			setAutoLoginWithCookies(session, response, person.getNo_person());
-			
-		} else {
-			
-			ReturnClass returnClass = personManager.insertPerson(personVO);
-			model.addAttribute("message", returnClass.getMessage());		
-			model.addAttribute("result", returnClass.getCd_result());
-
-			if(returnClass.getCd_result().equals(Constant.SUCCESS)) {
-				
-				person = (PersonVO) returnClass.getReturnObj();
-				model.addAttribute("returnData", person.getNo_person());
-				logger.debug("회원가입 완료 : " + (person == null));
-				
-				setAutoLoginWithCookies(session, response, person.getNo_person());
-				
-            }
-		}
-		return "jsonView";
 	}
 	
 	//쿠키, 세션 값 맺는 메소드

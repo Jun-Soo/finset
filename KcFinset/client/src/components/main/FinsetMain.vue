@@ -19,7 +19,6 @@ export default {
   name: "FinsetMain",
   data() {
     return {
-      errors: [],
       errMsg: ''
     };
   },

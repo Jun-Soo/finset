@@ -81,7 +81,7 @@
 import router from '@/comm/router.js'
 
 export default {
-  name: 'helloWorld',
+  name: 'shareSumMain',
   data() {
     return {
       errors: [],

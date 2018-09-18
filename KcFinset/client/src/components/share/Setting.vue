@@ -8,7 +8,7 @@
 import router from '@/comm/router.js'
 
 export default {
-  name: 'helloWorld',
+  name: 'shareSetting',
   data() {
     return {
       errors: [],

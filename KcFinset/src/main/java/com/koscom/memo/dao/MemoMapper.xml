@@ -32,29 +32,51 @@
 			)
 	</insert>
 	<select id="listMemo" parameterType="com.koscom.memo.model.MemoVO" resultType="com.koscom.memo.model.MemoVO">
-		SELECT 
-			 NO_PERSON
-			,SEQ_MEMO_INFO
-			,NO_MANAGE_INFO
-			,MEMO_TEXT
-			,IMG_BI
-			,ALARM_DATE
-			,ALARM_TIME
-			,ID_FRT
-			,DT_FRT
-			,ID_LST
-			,DT_LST
-		FROM MEMO_INFO
-		<where>
-			<if test="no_person!=null and no_person!=''">
-					NO_PERSON 		= #{no_person, jdbcType=VARCHAR}
-			</if>
-			<if test="no_manage_info!=null and no_manage_info!=''">
-				AND NO_MANAGE_INFO 	= #{no_manage_info, jdbcType=VARCHAR}
-			</if>
-		</where>
-		ORDER BY
-			SEQ_MEMO_INFO DESC
+		SELECT
+			NO_PERSON,
+			SEQ_MEMO_INFO,
+			NO_MANAGE_INFO,
+			MEMO_TEXT,
+			IMG_BI,
+			ALARM_DATE,
+			ALARM_TIME,
+			RNUM
+		FROM
+			(
+				SELECT
+					NO_PERSON,
+					SEQ_MEMO_INFO,
+					NO_MANAGE_INFO,
+					MEMO_TEXT,
+					IMG_BI,
+					ALARM_DATE,
+					ALARM_TIME,
+					ROWNUM RNUM
+				FROM
+					(
+						SELECT
+							NO_PERSON,
+							SEQ_MEMO_INFO,
+							NO_MANAGE_INFO,
+							MEMO_TEXT,
+							IMG_BI,
+							ALARM_DATE,
+							ALARM_TIME
+						FROM
+							MEMO_INFO
+						WHERE
+							NO_PERSON = #{no_person, jdbcType = VARCHAR}
+							<if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_manage_info)">
+								AND NO_MANAGE_INFO = #{no_manage_info, jdbcType = VARCHAR}
+							</if>
+						ORDER BY
+							SEQ_MEMO_INFO DESC
+					)
+				WHERE
+					ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType = NUMERIC}
+			)
+		WHERE
+			RNUM <![CDATA[>=]]> #{startPosition, jdbcType = NUMERIC}
 	</select>
 	<select id="getMemoDetail" parameterType="com.koscom.memo.model.MemoVO" resultType="com.koscom.memo.model.MemoVO">
 		SELECT 

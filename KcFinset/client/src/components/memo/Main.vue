@@ -44,18 +44,21 @@ export default {
   name: "memoMain",
   data() {
     return {
-      list: []
+      list: [],
+      page: 1
     };
   },
   component: {},
   // computed () {
   // },
   beforeCreate() {},
-  created() {
+  created() {},
+  beforeMount() {},
+  mounted() {
+    var thisObj = this;
+    window.addEventListener("scroll", thisObj.handleScroll);
     this.listMemo();
   },
-  beforeMount() {},
-  mounted() {},
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
@@ -64,11 +67,21 @@ export default {
     listMemo() {
       var thisObj = this;
       this.$http
-        .get("/m/memo/listMemo.json", {
-          params: { no_manage_info: thisObj.$route.params.no_manage_info }
+        .get("/api/memo/listMemo.json", {
+          params: { no_manage_info: "", page: thisObj.page }
         })
         .then(function(response) {
-          thisObj.list = response.data.listMemo;
+          var listMemo = response.data.listMemo;
+          if (thisObj.page == 1) {
+            thisObj.list = listMemo;
+          } else {
+            for (var a in listMemo) {
+              thisObj.list.push(listMemo[a]);
+            }
+          }
+          if(listMemo.length > 0) {
+            window.addEventListener("scroll", thisObj.handleScroll);
+          }
         });
     },
     updateMemo() {
@@ -77,6 +90,20 @@ export default {
     },
     createMemo() {
       router.push("/memo/create");
+    },
+    handleScroll() {
+      var thisObj = this;
+      var html = document.documentElement;
+      var docHeight = html.scrollHeight;
+      var viewHeight = html.offsetHeight;
+      var scrollY = window.scrollY;
+      var scrollBottom = docHeight - viewHeight - scrollY;
+      if (scrollBottom < 5) {
+        console.log("remove");
+        window.removeEventListener("scroll", thisObj.handleScroll);
+        ++thisObj.page;
+        thisObj.listMemo();
+      }
     }
   }
 };

@@ -96,10 +96,8 @@ public class PersonController {
 			Model model) {
 		
 		logger.info("modifyFingerPrint.json start");
-		String no_person = (String) session.getAttribute("no_person");
-		logger.info("no_person : "+no_person);
-		personVO.setNo_person(no_person);
-		ReturnClass returnClass = personManager.modifyFingerPrint((PersonVO)SessionUtil.setUser(personVO, session));
+		personVO.setId_lst(personVO.getNo_person());
+		ReturnClass returnClass = personManager.modifyFingerPrint(personVO);
 		logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
 		model.addAttribute("result" , returnClass.getCd_result());
 		return "jsonView";
@@ -193,16 +191,7 @@ public class PersonController {
 			session.removeAttribute("cert_result_value");
 			return "jsonView";
 		} else {
-//			String pass_person = "";
-//			for(int i=0; i < personVO.getPass_number().size(); i++){
-//				pass_person += personVO.getPass_number().get(i);
-//			}
-//			//비밀번호 합쳐서 set
-//			personVO.setPass_person(pass_person);
-//			String no_person = (String) session.getAttribute("no_person");
-//			logger.info("핀 코드 업데이트 no_person : " + no_person);
 			logger.info("핀 코드 업데이트 : " + personVO.getPass_person());
-//			personVO.setNo_person(no_person);
 			ReturnClass returnClass = personManager.modifyPassPerson((PersonVO)SessionUtil.setUser(personVO, session));
 			model.addAttribute("message", returnClass.getMessage());
 			model.addAttribute("result", returnClass.getCd_result());
@@ -211,7 +200,28 @@ public class PersonController {
 		}
 	}
 	
-	
+	/** VUE
+	 * 비밀번호/지문 틀린 횟수 업데이트
+	 * @param model
+	 * @param request
+	 * @param fcmVO
+	 * @return
+	 */
+	@RequestMapping("/modifyPwdFailCnt.json")
+	public String modifyPwdFailCnt(
+			HttpServletRequest request,
+			HttpSession session, 
+			PersonVO personVO,
+			Model model) {
+		
+		logger.info("modifyPwdFailCnt.json start");
+		logger.info("no_person : " + personVO.getNo_person());
+		personVO.setId_frt(personVO.getNo_person());
+		ReturnClass returnClass = personManager.modifyPwdFailCnt(personVO);
+		logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
+		model.addAttribute("result" , returnClass.getCd_result());
+		return "jsonView";
+	}
 	
 	
 	
@@ -285,76 +295,15 @@ public class PersonController {
 			PersonVO personVO,
 			Model model) {
 
-		String pass_person = "";
-		for(int i=0; i < personVO.getPass_number().size(); i++){
-			pass_person += personVO.getPass_number().get(i);
-		}
+//		String pass_person = "";
+//		for(int i=0; i < personVO.getPass_number().size(); i++){
+//			pass_person += personVO.getPass_number().get(i);
+//		}
 		//비밀번호 합쳐서 set
 		model.addAttribute("yn_reload", (String)session.getAttribute("yn_reload"));
-		model.addAttribute("pass_person", pass_person);
+//		model.addAttribute("pass_person", pass_person);
 
 		return "/person/frameSecurityCodeCertify";
-	}
-
-	
-	/**
-	 * 비밀번호 확인
-	 * @param model
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/loginChkCode.json")
-	public String loginChkCode(
-			HttpServletRequest request,
-			HttpSession session, 
-			PersonVO personVO,
-			Model model) {
-
-		String noPerson 	= personVO.getNo_person();
-		String pass_person	= "";
-		for(int i=0; i < personVO.getPass_number().size(); i++){
-			pass_person += personVO.getPass_number().get(i);
-		}
-		personVO.setPass_person(pass_person);
-		
-		logger.info("------------로그인체크---------------");
-		logger.info("접속 ip 		: "+request.getRemoteAddr());
-		logger.info("user-agent 	: "+request.getHeader("user-agent"));
-		logger.info("세션 no_person : "+noPerson);
-		logger.info(personVO.toString());
-
-		int pwdCheck = personManager.checkPersonPass(personVO);
-		
-		if(pwdCheck > 0) {	//암호화 비밀번호 체크
-			
-			model.addAttribute("result", Constant.SUCCESS);
-			
-			//모바일 접속 이력 insert
-			PersonLoginHistInfo personLoginHist = new PersonLoginHistInfo();
-			personLoginHist.setNo_person(noPerson);
-			personLoginHist.setCd_system("10");
-			personLoginHist.setUser_agent(request.getHeader("user-agent"));
-			String ip = request.getHeader("X-FORWARDED-FOR"); 
-		    if (ip == null || ip.length() == 0) {
-		        ip = request.getHeader("Proxy-Client-IP");
-		    }
-		    if (ip == null || ip.length() == 0) {
-		        ip = request.getHeader("WL-Proxy-Client-IP");  // 웹로직
-		    }
-		    if (ip == null || ip.length() == 0) {
-		        ip = request.getRemoteAddr() ;
-		    }
-		    logger.info(ip);
-		    personLoginHist.setIp_client(ip);
-			personManager.insertPersonLoginHist((PersonLoginHistInfo)SessionUtil.setUser(personLoginHist, session));
-
-		} else {
-			model.addAttribute("message", "비밀번호가 일치하지 않습니다.");
-			model.addAttribute("result", Constant.FAILED);
-		}
-		model.addAttribute("no_person", noPerson);
-		
-		return "jsonView";
 	}
 
 	/**
@@ -417,30 +366,6 @@ public class PersonController {
 		}
 		return "jsonView";
 	}
-
-	/**
-	 * 비밀번호/지문 틀린 횟수 업데이트
-	 * @param model
-	 * @param request
-	 * @param fcmVO
-	 * @return
-	 */
-	@RequestMapping("/modifyPwdFailCnt.json")
-	public String modifyPwdFailCnt(
-			HttpServletRequest request,
-			HttpSession session, 
-			PersonVO personVO,
-			Model model) {
-		
-		logger.info("modifyPwdFailCnt.json start");
-		String no_person = (String) session.getAttribute("no_person");
-		logger.info("no_person : "+no_person);
-		personVO.setNo_person(no_person);
-		ReturnClass returnClass = personManager.modifyPwdFailCnt((PersonVO)SessionUtil.setUser(personVO, session));
-		logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
-		model.addAttribute("result" , returnClass.getCd_result());
-		return "jsonView";
-	}
 	
 	/**
 	 * 지문인증설정(비밀번호입력)
@@ -452,44 +377,6 @@ public class PersonController {
 	public String frameSecurityCodeFingerSet() {
 		return "/person/frameSecurityCodeFingerSet";
 	}
-	
-	/**
-	 * 지문인증설정 (비밀번호확인)
-	 * @param model
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/fingerChkCode.json")
-	public String fingerChkCode(
-			HttpServletRequest request,
-			HttpSession session, 
-			PersonVO personVO,
-			Model model) {
-
-		String pass_person 	= "";
-
-		for(int i=0; i < personVO.getPass_number().size(); i++){
-			pass_person += personVO.getPass_number().get(i);
-		}
-
-		String no_person = (String) session.getAttribute("no_person");
-		personVO.setNo_person(no_person);
-		personVO.setPass_person(pass_person);
-		int pwdCheck = personManager.checkPersonPass(personVO);
-		
-		if(pwdCheck > 0) {	//암호화 비밀번호 체크
-			personVO.setYn_fingerprint("Y");
-			ReturnClass returnClass = personManager.modifyFingerPrint((PersonVO)SessionUtil.setUser(personVO, session));
-			logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
-			
-			model.addAttribute("result", Constant.SUCCESS);
-		} else {
-			model.addAttribute("message", "비밀번호가 일치하지 않습니다.");
-			model.addAttribute("result", Constant.FAILED);
-		}
-		return "jsonView";
-	}
-	
 	/**
 	 * 이메일 업데이트
 	 * @param model

@@ -4,7 +4,9 @@
 
 <script>
 
-// import Common from './../../assets/js/common.js'
+import Common from "./../../assets/js/common.js";
+import Constant from "./../../assets/js/constant.js";
+import ko from "vee-validate/dist/locale/ko.js";
 
 export default {
   name: 'helloWorld',

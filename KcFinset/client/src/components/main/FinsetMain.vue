@@ -13,6 +13,8 @@
 <script>
 import FinsetHeader from "./../common/FinsetHeader";
 import FinsetBottom from "./../common/FinsetBottom";
+
+import Common from "./../../assets/js/common.js";
 import Constant from "./../../assets/js/constant.js";
 
 export default {

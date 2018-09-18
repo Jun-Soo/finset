@@ -87,19 +87,33 @@ public class BaseController {
 					model.addAttribute("personHp", personVO.getHp());
 					rtnUrl = "/person/frameFindPwdStep1";
 				} else if("Y".equals(personVO.getYn_fingerprint()) && Integer.parseInt(StringUtil.NVL(personVO.getCnt_fail_finger(), "0")) < 5) {
-					rtnUrl = "/member/certCodeConfirm";
+					model.addAttribute("authToken", personVO.getPass_person());
+					rtnUrl = "/member/certFingerLogin";
 				}else {
-					rtnUrl = "/member/certCodeConfirm";
+					rtnUrl = "/member/certCodeLogin";
 				}
 			}
 			
+			//스크래핑 대상 은행 리스트 가져오기
+			List<String> bankList = fincorpManager.getCooconFcCd(codeManager.getCodeId("cd_fin","은행"));
+			String bankCode = String.join(",", bankList);
+			
+			List<String> cardList = fincorpManager.getCooconFcCd(codeManager.getCodeId("cd_fin","카드"));
+			String cardCode = String.join(",", cardList);
+			
+			model.addAttribute("bank_code", bankCode);
+			model.addAttribute("card_code", cardCode);
+			
 			//지문 활성화 일 경우 체크 Y일때만 지문 활성화 N or 빈값 일 경우 비활성화
 			model.addAttribute("no_person", 		personVO.getNo_person());
+			model.addAttribute("nm_person", 		personVO.getNm_person());
+			
 			model.addAttribute("yn_fingerprint", 	personVO.getYn_fingerprint());
 			model.addAttribute("cd_push", 			personVO.getCd_push());
 			model.addAttribute("yn_push", 			personVO.getYn_push());
 			model.addAttribute("cnt_fail_pwd", 		personVO.getCnt_fail_pwd());
 			model.addAttribute("cnt_fail_finger", 	personVO.getCnt_fail_finger());
+			model.addAttribute("dt_basic", 			personVO.getDt_basic());
 			
 			logger.debug(request.getHeader("user-agent"));
 			logger.debug(personVO.toString());
@@ -135,6 +149,9 @@ public class BaseController {
 	
 	
 	
+	
+	
+	
 	/**
 	 * 보안코드 입력 화면
 	 * @param model
@@ -145,83 +162,6 @@ public class BaseController {
 	public String frameSecurityCode(Model model, HttpServletRequest request, PersonVO personVO) {
 		return "/base/frameSecurityCode";
 	}
-	
-	/**
-	 * 보안코드 재입력 화면
-	 * @param model
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/frameSecurityCodeCertify.crz")
-	public String frameSecurityCodeCertify(HttpSession session, Model model, HttpServletRequest request, PersonVO personVO) {
-		
-		String pass_person = "";
-		logger.info("personVO.getPass_number() : "+personVO.getPass_number());
-		
-		if(personVO.getPass_number() != null){
-			for(int i=0; i < personVO.getPass_number().size(); i++){
-				pass_person += personVO.getPass_number().get(i);
-			}
-			//비밀번호 합쳐서 set
-			model.addAttribute("pass_person", pass_person);
-		}
-		
-		String site = (environment != null)?environment.getProperty("service.profile"):"";
-		model.addAttribute("site", site);
-		
-		String no_person = (String) session.getAttribute("no_person");
-		personVO = personManager.getPersonInfo(no_person);
-		
-		logger.info("no_person : "+no_person);
-		logger.info("personVO.getNm_person() : "+personVO.getNm_person());
-		
-		model.addAttribute("nm_person", personVO.getNm_person());
-				
-		//스크래핑 대상 은행 리스트 가져오기
-		List<String> bankList = fincorpManager.getCooconFcCd(codeManager.getCodeId("cd_fin","은행"));
-		String bankCode = String.join(",", bankList);
-		
-		List<String> cardList = fincorpManager.getCooconFcCd(codeManager.getCodeId("cd_fin","카드"));
-		String cardCode = String.join(",", cardList);
-		
-		logger.debug("bankCode : " + bankCode);
-		logger.debug("cardCode : " + cardCode);
-		
-		model.addAttribute("bank_code", bankCode);
-		model.addAttribute("card_code", cardCode);
-		
-		return "/base/frameSecurityCodeCertify";
-	}
-	
-	/**
-	 * 완료화면
-	 * @param model
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/frameSecurityCodeSuccess.crz")
-	public String frameSecurityCodeSuccess(HttpSession session, Model model, HttpServletRequest request, PersonVO personVO) {
-		
-		String pass_person = "";
-		
-		if(personVO.getPass_number() != null) {
-			for(int i=0; i < personVO.getPass_number().size(); i++){
-				pass_person += personVO.getPass_number().get(i);
-			}
-			//비밀번호 합쳐서 set
-			personVO.setPass_person(pass_person);
-			String no_person = (String) session.getAttribute("no_person");
-			logger.info("핀 코드 업데이트 no_person : " + no_person);
-			logger.info("핀 코드 업데이트 : " + personVO.getPass_person());
-			personVO.setNo_person(no_person);
-			ReturnClass returnClass = personManager.modifyPassPerson(personVO);
-			model.addAttribute("message", returnClass.getMessage());		
-			model.addAttribute("result", returnClass.getCd_result());
-		}
-		
-		return "/base/frameSecurityCodeSuccess"; 
-	}
-
 	
 	/**
 	 * 비밀번호 설정 가이드 팝업

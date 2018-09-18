@@ -23,7 +23,9 @@ public class ConsumeVO implements Serializable{
 	private String	no_biz;						// 업종 번호
 	private String	nm_biz;						// 업종명
 	private String 	cd_class;					// 분류코드
+	private String	nm_class;					// 분류명
 	private String 	cd_type;					// 항목코드
+	private String	nm_type;					// 항목명
 	private String	cd_consume_class;			// 소비항목코드 - 데이터를 집어넣을 때 사용하기 위함
 	private String 	contents;					// 내용
 	private String	memo;						// 메모
@@ -47,9 +49,9 @@ public class ConsumeVO implements Serializable{
 	public ConsumeVO(String no_person, int seq_consume, String type_in_out,
 			String means_consume, String cd_fc, String nm_card, String no_card,
 			String type_card, String dt_trd, String tm_trd, String no_biz,
-			String nm_biz, String cd_class, String cd_type,
-			String cd_consume_class, String contents, String memo,
-			String grade, String amt_in_out, String no_approval,
+			String nm_biz, String cd_class, String nm_class, String cd_type,
+			String nm_type, String cd_consume_class, String contents,
+			String memo, String grade, String amt_in_out, String no_approval,
 			String mon_installment, String mon_remaining,
 			String yn_pay_installment, String yn_cancel, String yn_delete,
 			String yn_auto, String yn_budget_except, String id_frt,
@@ -67,7 +69,9 @@ public class ConsumeVO implements Serializable{
 		this.no_biz = no_biz;
 		this.nm_biz = nm_biz;
 		this.cd_class = cd_class;
+		this.nm_class = nm_class;
 		this.cd_type = cd_type;
+		this.nm_type = nm_type;
 		this.cd_consume_class = cd_consume_class;
 		this.contents = contents;
 		this.memo = memo;
@@ -86,6 +90,7 @@ public class ConsumeVO implements Serializable{
 		this.id_lst = id_lst;
 		this.dt_lst = dt_lst;
 	}
+
 	public String getNo_person() {
 		return no_person;
 	}
@@ -164,11 +169,23 @@ public class ConsumeVO implements Serializable{
 	public void setCd_class(String cd_class) {
 		this.cd_class = cd_class;
 	}
+	public String getNm_class() {
+		return nm_class;
+	}
+	public void setNm_class(String nm_class) {
+		this.nm_class = nm_class;
+	}
 	public String getCd_type() {
 		return cd_type;
 	}
 	public void setCd_type(String cd_type) {
 		this.cd_type = cd_type;
+	}
+	public String getNm_type() {
+		return nm_type;
+	}
+	public void setNm_type(String nm_type) {
+		this.nm_type = nm_type;
 	}
 	public String getCd_consume_class() {
 		return cd_consume_class;

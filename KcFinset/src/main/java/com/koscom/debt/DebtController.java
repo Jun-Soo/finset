@@ -1,28 +1,18 @@
 package com.koscom.debt;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import net.sf.json.JSONSerializer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.google.gson.Gson;
 import com.koscom.debt.model.DebtCalendarVO;
 import com.koscom.debt.model.DebtDetail12RepVO;
 import com.koscom.debt.model.DebtForm;
@@ -31,7 +21,6 @@ import com.koscom.debt.model.DebtVO;
 import com.koscom.debt.service.DebtManager;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
-import com.koscom.scrap.model.AppFcLinkInfo;
 import com.koscom.util.Constant;
 import com.koscom.util.FinsetException;
 import com.koscom.util.ResUtil;
@@ -398,13 +387,9 @@ public class DebtController {
 	
 	@RequestMapping("/debtChkCode.json")
 	public String debtChkCode(HttpSession session, Model model, HttpServletRequest request, PersonVO personVO) {
-		String pass_person 	= "";
-		for(int i=0; i < personVO.getPass_number().size(); i++){
-			pass_person += personVO.getPass_number().get(i);
-		}
+
 		String no_person = (String) session.getAttribute("no_person");
 		personVO.setNo_person(no_person);
-		personVO.setPass_person(pass_person);
 		int pwdCheck = personManager.checkPersonPass(personVO);
 		
 		if(pwdCheck > 0) {	//암호화 비밀번호 체크

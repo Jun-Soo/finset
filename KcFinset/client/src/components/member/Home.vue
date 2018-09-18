@@ -17,5 +17,5 @@ export default {
 </script>
 
 <style>
-  .memberMain {background-color: #283593;}
+  .memberMain {background-color: #283593; }
 </style>

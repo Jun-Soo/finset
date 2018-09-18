@@ -13,10 +13,14 @@ const store = new Vuex.Store({
       hp: '',
       cntFailPwd: 0,
       cntFailFinger: 0,
-      ynFingerprint: '',
-      isEventPush: false
+      ynFingerprint: 'N',
+      dt_basic: '',
+      isEventPush: false,
+      authToken: '',
+      noManageInfo: ''
     },
     returnUrl: '',
+    proxyUrl: '',
     accessToken: null,
     isLoggedIn: false,
     site: null,
@@ -36,6 +40,9 @@ const store = new Vuex.Store({
       state.accessToken = null
       state.isLoggedIn = false
       state.site = null
+    },
+    SET_NO_MANAGE_INFO (state, noManageInfo) {
+      state.user.noManageInfo = noManageInfo
     }
   }
 })

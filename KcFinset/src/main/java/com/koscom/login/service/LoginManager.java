@@ -32,6 +32,7 @@ import org.springframework.security.web.authentication.SavedRequestAwareAuthenti
 import org.springframework.web.util.UrlPathHelper;
 
 import com.koscom.credit.service.CreditManager;
+import com.koscom.domain.PersonLoginHistInfo;
 import com.koscom.domain.PersonShareMessageInfo;
 import com.koscom.env.service.CodeManager;
 import com.koscom.kcb.service.KcbManager;
@@ -172,7 +173,7 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 				}
 				
 				//02. 로그인시 로직 처리
-				cd_result = loginProcess(personVO);
+				cd_result = loginProcess(personVO, request);
 				
 				if(Constant.SUCCESS.equals(cd_result)) cd_result = Constant.LOGIN_SUCCESS;
 			} catch (FinsetException e) {
@@ -209,7 +210,7 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 		}
 	}
 	
-	public String loginProcess(PersonVO personVO) {
+	public String loginProcess(PersonVO personVO, HttpServletRequest request) {
 		
 		String cd_result = Constant.SUCCESS;
 		
@@ -217,6 +218,25 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 			
 			String      no_person   = personVO.getNo_person();
 	        
+			//모바일 접속 이력 insert
+			PersonLoginHistInfo personLoginHist = new PersonLoginHistInfo();
+			personLoginHist.setNo_person(no_person);
+			personLoginHist.setCd_system("10");
+			personLoginHist.setUser_agent(request.getHeader("user-agent"));
+			String ip = request.getHeader("X-FORWARDED-FOR"); 
+		    if (ip == null || ip.length() == 0) {
+		        ip = request.getHeader("Proxy-Client-IP");
+		    }
+		    if (ip == null || ip.length() == 0) {
+		        ip = request.getHeader("WL-Proxy-Client-IP");  // 웹로직
+		    }
+		    if (ip == null || ip.length() == 0) {
+		        ip = request.getRemoteAddr() ;
+		    }
+		    logger.info(ip);
+		    personLoginHist.setIp_client(ip);
+			personManager.insertPersonLoginHist(personLoginHist);
+			
 	        //최근 접속 이력 업데이트
 	        personManager.modifyLastLogin(no_person);
 	        

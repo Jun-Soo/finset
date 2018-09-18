@@ -6,8 +6,9 @@
 
 	<select id="getPersonInfoHp" parameterType="String" resultType="com.koscom.person.model.PersonVO">
 		/* com.koscom.person.dao.PersonMapper.getPersonInfoHp */
-		SELECT *
-		  FROM PERSON_INFO
+		SELECT A.*, B.DT_BASIC, B.YN_INSTALLMENT
+		  FROM PERSON_INFO A LEFT OUTER JOIN PERSON_SET_INFO B ON
+		       A.NO_PERSON = B.NO_PERSON
 		 WHERE HP = #{hp, jdbcType=VARCHAR}
 	</select>
 

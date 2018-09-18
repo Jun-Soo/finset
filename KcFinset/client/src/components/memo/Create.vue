@@ -76,7 +76,7 @@ export default {
     createMemo() {
       var thisObj = this;
       this.$http
-        .get("/m/memo/createMemo.json", {
+        .get("/api/memo/createMemo.json", {
           params: {
             memo_text: thisObj.memo_text,
             no_manage_info: thisObj.$route.params.no_manage_info

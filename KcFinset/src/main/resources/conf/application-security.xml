@@ -32,12 +32,13 @@
 	<http pattern="/m/person/**" security="none"/>
 	<http pattern="/m/credit/kcm*" security="none"/>
 	<http pattern="/m/credit/frameAcceptTerms*" security="none"/>
+	<http pattern="/m/scrap/**" security="none"/>
 	
 	<http pattern="/kcb/**" security="none"/>
 	<http pattern="/logout" security="none"/>
 	<http pattern="/favicon.ico" security="none"/>
 	
-	<http pattern="/m/scrap/**" security="none"/>
+	<http pattern="/index.html" security="none"/>
 	
 	<http auto-config="true">
 		<access-denied-handler error-page="/error/403"/>

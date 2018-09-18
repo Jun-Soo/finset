@@ -85,13 +85,18 @@ export default {
   // },
   beforeCreate() {},
   created() {
+
+    window.resultCheckFingerPrint = this.resultCheckFingerPrint
+    window.resultCheckCert = this.resultCheckCert
+    window.frmFcListNextFromMobile = this.frmFcListNextFromMobile
+
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
       window.Android.checkFingerPrint();
     } else if(Constant.userAgent == "iOS") {
       //지문인식 가능여부 체크 결과 콜백 이벤트
       Jockey.on("resultCheckFingerPrint", function(param) {
-        resultCheckFingerPrint(param.result);
+        this.resultCheckFingerPrint(param.result);
       });
       Jockey.send("checkFingerPrint");
     }
@@ -105,7 +110,6 @@ export default {
       this.$store.state.title = "비밀번호 확인 (4/7)"
       this.certMessage = '비밀번호를 다시 한번 입력해주세요.'
       this.tempPwd = localStorage.getItem('tempPwd')
-      localStorage.removeItem('tempPwd')
     }
   },
   beforeUpdate() {},
@@ -168,7 +172,7 @@ export default {
           pass_person: _this.j_password
         };
         this.$http
-          .get("/api/person/changePwd.json", {
+          .get("/m/person/changePwd.json", {
             params: data
           })
           .then(response => {
@@ -177,7 +181,7 @@ export default {
             if (result.result == "00") {
               if(_this.chkFingerPrint == 'Y') {
                 setTimeout(function(){
-                  this.$router.push("/member/certFinger")
+                  _this.$router.push("/member/certFinger")
                 }, 2000);
               } else {
                 if(Constant.userAgent == "Android" && localStorage.getItem("site") != "REAL") {
@@ -186,7 +190,7 @@ export default {
                   this.login();
                 }
               }
-              toastMsg('비밀번호설정이 완료 되었습니다.');
+              this.$toast.center('비밀번호설정이 완료 되었습니다.')
             } else {
               this.$toast.center(result.message)
               return false;
@@ -215,8 +219,9 @@ export default {
         .then(response => {
           if (response.data.result == "10") {
             //정상
+            localStorage.removeItem('tempPwd')
             _this.$store.commit('LOGIN', response.data)
-            _this.$router.push("/main");
+            _this.$router.push("/main")
           } else {
             this.$toast.center(ko.messages.loginErr)
             return
@@ -225,16 +230,6 @@ export default {
         .catch(e => {
           this.$toast.center(ko.messages.error)
         });
-    },
-    /***
-     * Native Call function
-     **/
-    resultCheckFingerPrint: function(result) {
-      if(result == true || result == 1){
-        this.chkFingerPrint = 'Y'
-      } else {
-        this.chkFingerPrint = 'N'
-      }
     },
     // 공인인증서 유무 체크
     checkExistCert: function() {
@@ -251,21 +246,12 @@ export default {
         window.Android.checkExistCert();
       }
     },
-    //공인인증서 유무 결과 (모바일에서 호출)
-    resultCheckCert: function(isCert) {
-      if(isCert) {  // 공인인증서가 있을 경우
-        this.frmFcCertList();
-      } else {      // 공인인증서가 없을 경우
-        this.$toast.center('공인인증서가 없습니다.');
-        this.login();
-      }
-    },
     //자동스크래핑 가능 금융사 조회
-    rmFcCertList: function() {
-      var noPerson = $('#j_username').val();
-      var nmPerson = $('#nm_person').val();
-      var bankCode = $('#bank_code').val();
-      var cardCode = $('#card_code').val();
+    frmFcCertList: function() {
+      var noPerson = this.$store.state.user.noPerson
+      var nmPerson = this.$store.state.user.nmPerson
+      var bankCode = this.$store.state.bankCode
+      var cardCode = this.$store.state.cardCode
 
       if(userAgent == "iOS") {
         /* Jockey.on("frmFcListNextFromMobile" , function(param) {
@@ -280,6 +266,26 @@ export default {
         window.Android.checkAvaliableScrapList(noPerson, bankCode, cardCode, nmPerson);
       }
     },
+    /***
+     * Native Call function
+     **/
+    resultCheckFingerPrint: function(result) {
+      console.log(result)
+      if(result == true || result == 1){
+        this.chkFingerPrint = 'Y'
+      } else {
+        this.chkFingerPrint = 'N'
+      }
+    },
+    //공인인증서 유무 결과 (모바일에서 호출)
+    resultCheckCert: function(isCert) {
+      if(isCert) {  // 공인인증서가 있을 경우
+        this.frmFcCertList();
+      } else {      // 공인인증서가 없을 경우
+        this.$toast.center('공인인증서가 없습니다.');
+        this.login();
+      }
+    },
     //자동 스크래핑 등록 완료 시 (모바일에서 호출)
     frmFcListNextFromMobile: function() {
       this.login()
@@ -290,5 +296,5 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
-  .memberMain {height: 100%;}
+  .memberMain {background-color: #283593; height: 100%;}
 </style>

@@ -52,7 +52,7 @@
             <li><button type="button" class="btn btn-lg btn-block btn-backspace" v-on:click="backClick()">←</button></li>
           </ul>
         </div>
-        <p class="link-txt"><a href="/api/person/frameFindPwdStep1.crz"><u>비밀번호를 재설정 하시겠습니까?</u></a></p>
+        <p class="link-txt"><a href="/m/person/frameFindPwdStep1.crz"><u>비밀번호를 재설정 하시겠습니까?</u></a></p>
       </div>
     </section>
   	<!-- //Content -->
@@ -87,7 +87,8 @@ export default {
   // },
   beforeCreate() {},
   created() {
-    // alert(Constant.userAgent);
+
+    window.resultFingerPrint = this.resultFingerPrint
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
     }
@@ -112,7 +113,6 @@ export default {
     btnClick: function(val) {
       var _this = this;
       _this.j_password += val;
-      console.log(_this.j_password);
       if (_this.j_password.length > 0) _this.classPass1 = "active";
       if (_this.j_password.length > 1) _this.classPass2 = "active";
       if (_this.j_password.length > 2) _this.classPass3 = "active";
@@ -161,12 +161,15 @@ export default {
         .then(response => {
           if (response.data.result == "10") {
             //정상
+            _this.$store.state.user.authToken = null
             _this.$store.commit('LOGIN', response.data)
             _this.$router.push("/main");
           } else {
             this.initClassPass();
             _this.j_password = "";
+            //비밀번호 틀린 누적횟수 증가
             _this.cntFailPwd += 1;
+            this.modifyPwdFailCnt("pwd", _this.cntFailPwd);
             _this.errMsg = "다시 시도해 주세요. (" + _this.cntFailPwd + "/5)";
             if (response.data.result == "21") {
               //ID오류
@@ -180,6 +183,25 @@ export default {
         });
     }
   },
+  //비밀번호 틀린횟수 변경
+  modifyPwdFailCnt: function(mode, cnt_fail) {
+
+    var data = {"no_person": _this.j_username, "cnt_fail_mode":mode, "cnt_fail":cnt_fail};
+    this.$http
+      .get("/m/person/modifyPwdFailCnt.json", {
+        params: data
+      })
+      .then(response => {
+        var result = response.data;
+        console.log(result);
+      })
+      .catch(e => {
+        this.$toast.center(ko.messages.error)
+      });
+  },
+  /***
+   * Native Call function
+   **/
   resultFingerPrint: function(result) {
     var _this = this;
     if (result == true || result == 1) {
@@ -187,18 +209,11 @@ export default {
       if (Common.userAgent == "Android") {
         window.Android.closeFingerPrint();
       }
-      this.$http.get('/api/base/frameBase.json', {
-          params: data
-        }).then(response => {
-
-        }).catch(e => {
-
-        })
       _this.login();
     } else {
       //지문 틀린 누적횟수 증가
       _this.cntFailFinger += 1;
-      modifyPwdFailCnt("finger", _this.cntFailFinger);
+      this.modifyPwdFailCnt("finger", _this.cntFailFinger)
 
       if (_this.cntFailFinger < 5) {
         _this.errMsg = "다시 시도해 주세요. (" + _this.cntFailFinger + "/5)";
@@ -216,7 +231,7 @@ export default {
 
         var data = { yn_fingerprint: "N", no_person: _this.j_username };
         this.$http
-          .get("/api/person/modifyFingerPrint.json", data)
+          .get("/m/person/modifyFingerPrint.json", data)
           .then(response => {
             this.$store.state.user.ynFingerprint = "N";
           })
@@ -232,5 +247,5 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
-
+  .memberMain {background-color: #283593; height: 100%;}
 </style>

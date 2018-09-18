@@ -23,13 +23,23 @@ public class PersonVO extends PersonInfo implements Serializable {
 	private String smsCertNo;			//
 	private String smsReSndYn;  		//재요청 여부 Y, N
 	private String rqstCausCd;			//인증요청사유코드 (00:회원가입, 01:성인인증, 02:회원정보수정, 03:비밀번호찾기, 04:상품구매, 99:기타)
-	private List<String> pass_number;
 	private String loan_code;			//대출 구분 코드   01 : 직장인 신용대출  02 : 자영업자 신용대출
 	private String job;	
 	private String currentPwd;			//현재비밀번호
 	private String changePwd;			//변경할비밀번호
 	private String ChangePwdConfirm;	//변경할비밀번호 확인
 	private int chk_pwd;
+	
+	private String	seq; 					//push_setting seq값
+	private	String	type_push; 				//push_setting type
+	private String	cnt_fail_mode;			//누적카운트 mode
+	private	int		cnt_fail; 				//비밀번호/지문 틀린횟수 insert parameter
+	private	String	item_push;				//푸쉬 항목명
+	private	String	stat_push; 				//개별 push yn여부
+	
+	private	String	dt_basic;
+	private	String	yn_installment;
+	
 	//for file transformation
 	private byte[] fileArray;
 	private String fileName;
@@ -92,14 +102,6 @@ public class PersonVO extends PersonInfo implements Serializable {
 
 	public void setRqstCausCd(String rqstCausCd) {
 		this.rqstCausCd = rqstCausCd;
-	}
-	
-	public List<String> getPass_number() {
-		return pass_number;
-	}
-
-	public void setPass_number(List<String> pass_number) {
-		this.pass_number = pass_number;
 	}
 
 	public String getLoan_code() {
@@ -216,102 +218,6 @@ public class PersonVO extends PersonInfo implements Serializable {
 		return StringUtil.splitStr(super.email, "@", 2);
 	}
 
-	public String getHp_etc_idx1() {
-		return StringUtil.splitStr(super.hp_etc, "-", 1);
-	}
-
-	public String getHp_etc_idx2() {
-		return StringUtil.splitStr(super.hp_etc, "-", 2);
-	}
-
-	public String getHp_etc_idx3() {
-		return StringUtil.splitStr(super.hp_etc, "-", 3);
-	}
-
-	public String getPh_home_idx1() {
-		return StringUtil.splitStr(super.ph_home, "-", 1);
-	}
-
-	public String getPh_home_idx2() {
-		return StringUtil.splitStr(super.ph_home, "-", 2);
-	}
-
-	public String getPh_home_idx3() {
-		return StringUtil.splitStr(super.ph_home, "-", 3);
-	}
-
-	public String getYm_house_home_idx1() {
-		return StringUtil.splitDate(super.ym_house_home, 1);
-	}
-
-	public String getYm_house_home_idx2() {
-		return StringUtil.splitDate(super.ym_house_home, 2);
-	}
-
-	public String getYm_house_reg_idx1() {
-		return StringUtil.splitDate(super.ym_house_reg, 1);
-	}
-
-	public String getYm_house_reg_idx2() {
-		return StringUtil.splitDate(super.ym_house_reg, 2);
-	}
-
-	public String getYm_start_comp_idx1() {
-		return StringUtil.splitDate(super.ym_start_comp, 1);
-	}
-
-	public String getYm_start_comp_idx2() {
-		return StringUtil.splitDate(super.ym_start_comp, 2);
-	}
-
-	public String getPh_comp_direct_idx1() {
-		return StringUtil.splitStr(super.ph_comp_direct, "-", 1);
-	}
-
-	public String getPh_comp_direct_idx2() {
-		return StringUtil.splitStr(super.ph_comp_direct, "-", 2);
-	}
-
-	public String getPh_comp_direct_idx3() {
-		return StringUtil.splitStr(super.ph_comp_direct, "-", 3);
-	}
-
-	public String getPh_comp_idx1() {
-		return StringUtil.splitStr(super.ph_comp, "-", 1);
-	}
-
-	public String getPh_comp_idx2() {
-		return StringUtil.splitStr(super.ph_comp, "-", 2);
-	}
-
-	public String getPh_comp_idx3() {
-		return StringUtil.splitStr(super.ph_comp, "-", 3);
-	}
-
-	public String getFax_comp_idx1() {
-		return StringUtil.splitStr(super.fax_comp, "-", 1);
-	}
-
-	public String getFax_comp_idx2() {
-		return StringUtil.splitStr(super.fax_comp, "-", 2);
-	}
-
-	public String getFax_comp_idx3() {
-		return StringUtil.splitStr(super.fax_comp, "-", 3);
-	}
-
-	public String getPh_univ_idx1() {
-		return StringUtil.splitStr(super.ph_univ, "-", 1);
-	}
-
-	public String getPh_univ_idx2() {
-		return StringUtil.splitStr(super.ph_univ, "-", 2);
-	}
-
-	public String getPh_univ_idx3() {
-		return StringUtil.splitStr(super.ph_univ, "-", 3);
-	}
-
 	public void setSsn_person_tmp(String[] ssn_person_tmp) {
 		super.ssn_person = StringUtil.addChar(ssn_person_tmp, "");
 	}
@@ -324,62 +230,6 @@ public class PersonVO extends PersonInfo implements Serializable {
 		super.email = StringUtil.addChar(email_tmp, "@");
 	}
 
-	public void setHp_etc_tmp(String[] hp_etc_tmp) {
-		super.hp_etc = StringUtil.addChar(hp_etc_tmp, "-");
-	}
-
-	public void setPh_home_tmp(String[] ph_home_tmp) {
-		super.ph_home = StringUtil.addChar(ph_home_tmp, "-");
-	}
-
-	public void setYm_house_home_tmp(String[] ym_house_home_tmp) {
-		super.ym_house_home = StringUtil.addChar(ym_house_home_tmp, "");
-	}
-
-	public void setYm_house_reg_tmp(String[] ym_house_reg_tmp) {
-		super.ym_house_reg = StringUtil.addChar(ym_house_reg_tmp, "");
-	}
-
-	public void setYm_start_comp_tmp(String[] ym_start_comp_tmp) {
-		super.ym_start_comp = StringUtil.addChar(ym_start_comp_tmp, "");
-	}
-
-	public void setPh_comp_direct_tmp(String[] ph_comp_direct_tmp) {
-		super.ph_comp_direct = StringUtil.addChar(ph_comp_direct_tmp, "-");
-	}
-
-	public void setPh_comp_tmp(String[] ph_comp_tmp) {
-		super.ph_comp = StringUtil.addChar(ph_comp_tmp, "-");
-	}
-
-	public void setFax_comp_tmp(String[] fax_comp_tmp) {
-		super.fax_comp = StringUtil.addChar(fax_comp_tmp, "-");
-	}
-
-	public void setPh_univ_tmp(String[] ph_univ_tmp) {
-		super.ph_univ = StringUtil.addChar(ph_univ_tmp, "-");
-	}
-	
-	public void setPost_home_tmp(String[] post_home_tmp) {
-		super.post_home = StringUtil.addChar(post_home_tmp, ",");
-	}
-	
-	public void setPost_reg_tmp(String[] post_reg_tmp) {
-		super.post_reg = StringUtil.addChar(post_reg_tmp, ",");
-	}
-	
-	public void setPost_etc_tmp(String[] post_etc_tmp) {
-		super.post_etc = StringUtil.addChar(post_etc_tmp, ",");
-	}
-	
-	public void setPost_comp_tmp(String[] post_comp_tmp) {
-		super.post_comp = StringUtil.addChar(post_comp_tmp, ",");
-	}
-	
-	public void setPost_univ_tmp(String[] post_univ_tmp) {
-		super.post_univ = StringUtil.addChar(post_univ_tmp, ",");
-	}
-	
 	public String getZone_home() {
 		return zone_home;
 	}
@@ -420,46 +270,6 @@ public class PersonVO extends PersonInfo implements Serializable {
 		this.zone_univ = zone_univ;
 	}
 	
-	public String getPost6_home() {
-		return StringUtil.splitStr(super.post_home, ",", 1);
-	}
-	
-	public String getPost5_home() {
-		return StringUtil.splitStr(super.post_home, ",", 2);
-	}
-	
-	public String getPost6_reg() {
-		return StringUtil.splitStr(super.post_reg, ",", 1);
-	}
-	
-	public String getPost5_reg() {
-		return StringUtil.splitStr(super.post_reg, ",", 2);
-	}
-	
-	public String getPost6_etc() {
-		return StringUtil.splitStr(super.post_etc, ",", 1);
-	}
-	
-	public String getPost5_etc() {
-		return StringUtil.splitStr(super.post_etc, ",", 2);
-	}
-	
-	public String getPost6_comp() {
-		return StringUtil.splitStr(super.post_comp, ",", 1);
-	}
-	
-	public String getPost5_comp() {
-		return StringUtil.splitStr(super.post_comp, ",", 2);
-	}
-	
-	public String getPost6_univ() {
-		return StringUtil.splitStr(super.post_univ, ",", 1);
-	}
-	
-	public String getPost5_univ() {
-		return StringUtil.splitStr(super.post_univ, ",", 2);
-	}
-
 	public String getYn_grt() {
 		return yn_grt;
 	}
@@ -576,4 +386,69 @@ public class PersonVO extends PersonInfo implements Serializable {
 	public void setYn_eventPush(String yn_eventPush) {
 		this.yn_eventPush = yn_eventPush;
 	}
+
+	public String getSeq() {
+		return seq;
+	}
+
+	public void setSeq(String seq) {
+		this.seq = seq;
+	}
+
+	public String getType_push() {
+		return type_push;
+	}
+
+	public void setType_push(String type_push) {
+		this.type_push = type_push;
+	}
+
+	public String getCnt_fail_mode() {
+		return cnt_fail_mode;
+	}
+
+	public void setCnt_fail_mode(String cnt_fail_mode) {
+		this.cnt_fail_mode = cnt_fail_mode;
+	}
+
+	public int getCnt_fail() {
+		return cnt_fail;
+	}
+
+	public void setCnt_fail(int cnt_fail) {
+		this.cnt_fail = cnt_fail;
+	}
+
+	public String getItem_push() {
+		return item_push;
+	}
+
+	public void setItem_push(String item_push) {
+		this.item_push = item_push;
+	}
+
+	public String getStat_push() {
+		return stat_push;
+	}
+
+	public void setStat_push(String stat_push) {
+		this.stat_push = stat_push;
+	}
+
+	public String getDt_basic() {
+		return dt_basic;
+	}
+
+	public void setDt_basic(String dt_basic) {
+		this.dt_basic = dt_basic;
+	}
+
+	public String getYn_installment() {
+		return yn_installment;
+	}
+
+	public void setYn_installment(String yn_installment) {
+		this.yn_installment = yn_installment;
+	}
+	
 }

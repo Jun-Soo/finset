@@ -398,13 +398,9 @@ public class DebtController {
 	
 	@RequestMapping("/debtChkCode.json")
 	public String debtChkCode(HttpSession session, Model model, HttpServletRequest request, PersonVO personVO) {
-		String pass_person 	= "";
-		for(int i=0; i < personVO.getPass_number().size(); i++){
-			pass_person += personVO.getPass_number().get(i);
-		}
+
 		String no_person = (String) session.getAttribute("no_person");
 		personVO.setNo_person(no_person);
-		personVO.setPass_person(pass_person);
 		int pwdCheck = personManager.checkPersonPass(personVO);
 		
 		if(pwdCheck > 0) {	//암호화 비밀번호 체크

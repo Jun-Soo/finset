@@ -14,7 +14,9 @@ const store = new Vuex.Store({
       cntFailPwd: 0,
       cntFailFinger: 0,
       ynFingerprint: 'N',
-      isEventPush: false
+      dt_basic: '',
+      isEventPush: false,
+      authToken: ''
     },
     returnUrl: '',
     proxyUrl: '',

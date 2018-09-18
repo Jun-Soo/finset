@@ -158,7 +158,7 @@ export default {
             nation: _this.nation
           };
           this.$http
-            .get("/api/login/kcmRequestCertNo.json", {
+            .get("/m/login/kcmRequestCertNo.json", {
               params: data
             })
             .then(response => {
@@ -225,7 +225,7 @@ export default {
         smsCertNo: _this.smsCertNo
       };
       this.$http
-        .get("/api/login/kcmCertify.json", {
+        .get("/m/login/kcmCertify.json", {
           params: data
         })
         .then(response => {
@@ -263,7 +263,7 @@ export default {
       };
 
       this.$http
-        .get("/api/person/insertPerson.json", {
+        .get("/m/person/insertPerson.json", {
           params: data
         })
         .then(response => {

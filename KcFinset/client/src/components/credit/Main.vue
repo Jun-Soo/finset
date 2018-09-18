@@ -155,6 +155,11 @@
 </template>
 
 <script>
+import Common from "./../../assets/js/common.js";
+import Constant from "./../../assets/js/constant.js";
+
+import ko from "vee-validate/dist/locale/ko.js";
+
 export default {
   name: 'FinsetMain',
   data() {
@@ -191,16 +196,16 @@ export default {
     // 신용정보 조회
     getCreditInfoMain () {
       var _this = this
-      this.$http.get('/api/credit/CreditInfoMain.json', {
+      this.$http.get('/m/credit/CreditInfoMain.json', {
         params: {}
       }).then(response => {
         var baseInfo = response.data.baseInfo
-        console.log(JSON.stringify(baseInfo));
+        console.log(JSON.stringify(baseInfo))
 
-        _this.creditGrade(baseInfo.grade_credit);
+        _this.creditGrade(baseInfo.grade_credit)
         _this.ratingCredit = baseInfo.rating_credit
       }).catch(e => {
-        _this.errors.push(e)
+        this.$toast.center(ko.messages.error)
       })
     },
     creditGrade (n) {

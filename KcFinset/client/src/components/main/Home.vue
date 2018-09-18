@@ -34,19 +34,25 @@
           hp: Constant.params.hp
         };
   
-        this.$http.get('/api/base/frameBase.json', {
+        this.$http.get('/m/base/frameBase.json', {
           params: data
         }).then(response => {
-          console.log(JSON.stringify(response.data));
-
           this.$store.state.user.noPerson = response.data.no_person
+          this.$store.state.user.nmPerson = response.data.nm_person
           this.$store.state.user.cntFailPwd = Number(response.data.cnt_fail_pwd)
           this.$store.state.user.cntFailFinger = Number(response.data.cnt_fail_finger)
           this.$store.state.user.ynFingerprint = Common.nvl(response.data.yn_fingerprint, 'N')
+          this.$store.state.user.dt_basic = response.data.dt_basic
 
+          this.$store.state.bankCode = response.data.bank_code
+          this.$store.state.cardCode = response.data.card_code
           this.$store.state.site = response.data.site
+
+          if(response.data.rtnPath == '/member/certFingerLogin') {
+            this.$store.state.user.authToken = response.data.authToken
+          }
           localStorage.setItem('site', response.data.site)
-          alert(Constant.userAgent)
+
           if (Constant.userAgent == "Android") {
             window.Android.settingPush(response.data.yn_push);
             window.Android.settingPushType(response.data.cd_push);
@@ -71,7 +77,6 @@
               Jockey.send("initFingerPrint");
             }
           }
-  
           _this.$router.push(response.data.rtnPath)
         }).catch(e => {
           _this.$router.push('/error')

@@ -9,10 +9,16 @@ import Logout from '@/components/member/Logout'
 import MemberHome from '@/components/member/Home'
 import CertStep1 from '@/components/member/CertStep1'
 import CertStep2 from '@/components/member/CertStep2'
-import CertCodeConfirm from '@/components/member/CertCodeConfirm'
+import CertCode from '@/components/member/CertCode'
+import CertFinger from '@/components/member/CertFinger'
+import CertCodeLogin from '@/components/member/CertCodeLogin'
+import CertFingerLogin from '@/components/member/CertFingerLogin'
 
 import CreditHome from '@/components/credit/Home'
 import CreditMain from '@/components/credit/Main'
+
+import ErrorPage from '@/components/common/Error'
+import ProxyPage from '@/components/common/ProxyPage'
 
 Vue.use(Router)
 
@@ -30,15 +36,27 @@ export const routes = [
     meta: { allowPath: true }
   },
   {
+    path: '/client/logout',
+    name: 'logout',
+    component: Logout,
+    meta: { allowPath: true }
+  },
+  {
+    path: '/error',
+    name: 'error',
+    component: ErrorPage,
+    meta: { allowPath: true }
+  },
+  {
     path: '/main',
     name: 'main',
     component: FinsetMain,
     meta: { allowPath: true, requiresAuth: true }
   },
   {
-    path: '/logout',
-    name: 'logout',
-    component: Logout,
+    path: '/proxy',
+    name: 'proxy',
+    component: ProxyPage,
     meta: { allowPath: true }
   },
   {
@@ -59,9 +77,27 @@ export const routes = [
         meta: { allowPath: true }
       },
       {
-        path: 'certCodeConfirm',
-        alias: '/certCodeConfirm',
-        component: CertCodeConfirm,
+        path: 'certCode',
+        alias: '/certCode',
+        component: CertCode,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'certFinger',
+        alias: '/certFinger',
+        component: CertFinger,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'certCodeLogin',
+        alias: '/certCodeLogin',
+        component: CertCodeLogin,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'certFingerLogin',
+        alias: '/certFingerLogin',
+        component: CertFingerLogin,
         meta: { allowPath: true }
       }
     ]

@@ -226,9 +226,7 @@ export default {
           this.$toast.center(ko.messages.error)
         });
     },
-    /***
-     * Native Call function
-     **/
+    //Native Call function
     resultCheckFingerPrint: function(result) {
       if(result == true || result == 1){
         this.chkFingerPrint = 'Y'
@@ -254,35 +252,11 @@ export default {
     //공인인증서 유무 결과 (모바일에서 호출)
     resultCheckCert: function(isCert) {
       if(isCert) {  // 공인인증서가 있을 경우
-        this.frmFcCertList();
+        frmFcCertList();
       } else {      // 공인인증서가 없을 경우
         this.$toast.center('공인인증서가 없습니다.');
         this.login();
       }
-    },
-    //자동스크래핑 가능 금융사 조회
-    rmFcCertList: function() {
-      var noPerson = $('#j_username').val();
-      var nmPerson = $('#nm_person').val();
-      var bankCode = $('#bank_code').val();
-      var cardCode = $('#card_code').val();
-
-      if(userAgent == "iOS") {
-        /* Jockey.on("frmFcListNextFromMobile" , function(param) {
-          frmFcListNextFromMobile();
-        });
-        Jockey.send("checkAvaliableScrapList" , {
-          noPerson : noPerson,
-          bankCode : bankCode
-        }); */
-        //do nothing
-      } else if(userAgent == "Android") {
-        window.Android.checkAvaliableScrapList(noPerson, bankCode, cardCode, nmPerson);
-      }
-    },
-    //자동 스크래핑 등록 완료 시 (모바일에서 호출)
-    frmFcListNextFromMobile: function() {
-      this.login()
     }
   }
 };

@@ -87,9 +87,9 @@ public class BaseController {
 					model.addAttribute("personHp", personVO.getHp());
 					rtnUrl = "/person/frameFindPwdStep1";
 				} else if("Y".equals(personVO.getYn_fingerprint()) && Integer.parseInt(StringUtil.NVL(personVO.getCnt_fail_finger(), "0")) < 5) {
-					rtnUrl = "/member/certCodeConfirm";
+					rtnUrl = "/member/certFingerLogin";
 				}else {
-					rtnUrl = "/member/certCodeConfirm";
+					rtnUrl = "/member/certCodeLogin";
 				}
 			}
 			

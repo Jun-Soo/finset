@@ -87,6 +87,7 @@ export default {
   // },
   beforeCreate() {},
   created() {
+    // alert(Constant.userAgent);
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
     }

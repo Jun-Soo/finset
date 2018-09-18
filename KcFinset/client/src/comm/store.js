@@ -13,10 +13,11 @@ const store = new Vuex.Store({
       hp: '',
       cntFailPwd: 0,
       cntFailFinger: 0,
-      ynFingerprint: '',
+      ynFingerprint: 'N',
       isEventPush: false
     },
     returnUrl: '',
+    proxyUrl: '',
     accessToken: null,
     isLoggedIn: false,
     site: null,

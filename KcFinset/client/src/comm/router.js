@@ -20,6 +20,19 @@ import CreditMain from '@/components/credit/Main'
 import ErrorPage from '@/components/common/Error'
 import ProxyPage from '@/components/common/ProxyPage'
 
+import DebtHome from '@/components/debt/Home'
+import DebtMain from '@/components/debt/Main'
+import DebtCalendar from '@/components/debt/Calendar'
+import DebtDetail from '@/components/debt/Detail'
+import DebtUpdate from '@/components/debt/Update'
+
+import MemoHome from '@/components/memo/Home'
+import MemoMain from '@/components/memo/Main'
+import MemoCreate from '@/components/memo/Create'
+
+import ConsumeHome from '@/components/consume/Home'
+import ConsumeMain from '@/components/consume/Main'
+
 Vue.use(Router)
 
 export const routes = [
@@ -111,6 +124,68 @@ export const routes = [
         alias: '/main',
         component: CreditMain,
         meta: { allowPath: true, requiresAuth: true }
+      }
+    ]
+  },
+  {
+    path: '/debt',
+    component: DebtHome,
+    children: [
+      {
+        path: 'main',
+        alias: '/main',
+        component: DebtMain,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'calendar',
+        alias: '/calendar',
+        component: DebtCalendar,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'detail',
+        alias: '/detail',
+        name: 'debtDetail',
+        component: DebtDetail,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'update',
+        alias: '/update',
+        name: 'debtUpdate',
+        component: DebtUpdate,
+        meta: { allowPath: true }
+      }
+    ]
+  },
+  {
+    path: '/memo',
+    component: MemoHome,
+    children: [
+      {
+        path: 'main',
+        alias: '/main',
+        component: MemoMain,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'create',
+        alias: '/create',
+        component: MemoCreate,
+        meta: { allowPath: true }
+      }
+    ]
+  },
+  {
+    path: '/consume',
+    component: ConsumeHome,
+    children: [
+      {
+        path: 'main',
+        alias: '/main',
+        component: ConsumeMain,
+        meta: { allowPath: true }
       }
     ]
   }

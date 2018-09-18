@@ -325,13 +325,6 @@ public class Pagination implements Serializable {
 	}
 
 	/**
-	 * Return a sub-list representing the current page.
-	 */
-	public List getPageList() {
-		return getSource().subList(getFirstElementOnPage(), getLastElementOnPage() +1);
-	}
-
-	/**
 	 * Return the first page to which create a link around the current page.
 	 */
 	public int getFirstLinkedPage() {

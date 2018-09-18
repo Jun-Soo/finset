@@ -1,28 +1,18 @@
 package com.koscom.debt;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import net.sf.json.JSONSerializer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import com.google.gson.Gson;
 import com.koscom.debt.model.DebtCalendarVO;
 import com.koscom.debt.model.DebtDetail12RepVO;
 import com.koscom.debt.model.DebtForm;
@@ -31,7 +21,6 @@ import com.koscom.debt.model.DebtVO;
 import com.koscom.debt.service.DebtManager;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
-import com.koscom.scrap.model.AppFcLinkInfo;
 import com.koscom.util.Constant;
 import com.koscom.util.FinsetException;
 import com.koscom.util.ResUtil;

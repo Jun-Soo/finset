@@ -10,9 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.koscom.consume.model.ConsumeForm;
+import com.koscom.consume.model.ConsumeVO;
 import com.koscom.consume.model.PersonSetInfoVO;
 import com.koscom.consume.service.ConsumeManager;
 import com.koscom.util.DateUtil;
+import com.koscom.util.FinsetException;
 
 @Controller
 @RequestMapping("/m/consume")
@@ -24,7 +26,7 @@ public class ConsumeController {
     ConsumeManager consumeManager;
     
     @RequestMapping("/frameConsumeList.crz")
-    public String frameConsumeList(Model model, HttpSession session) {
+    public String frameConsumeList(Model model, HttpSession session) throws FinsetException{
     	
     	logger.debug("frameConsumeList");
     	String no_person = (String) session.getAttribute("no_person");
@@ -54,7 +56,7 @@ public class ConsumeController {
     }
     
     @RequestMapping("/listConsumeInfo.json")
-    public String listConsumeInfo(Model model,String ym, HttpSession session){
+    public String listConsumeInfo(Model model,String ym, HttpSession session) throws FinsetException {
     	logger.debug("listConsumeInfo");
     	
     	String no_person = (String) session.getAttribute("no_person");
@@ -79,7 +81,7 @@ public class ConsumeController {
     }
     
     @RequestMapping("/listPersonTransDetail.json")
-    public String listTransDetail(Model model, String ym, HttpSession session) {
+    public String listTransDetail(Model model, String ym, HttpSession session) throws FinsetException {
     	logger.debug("listTransDetail");
     	String no_person = (String) session.getAttribute("no_person");
     	
@@ -95,46 +97,9 @@ public class ConsumeController {
     	model.addAttribute("listPersonTransDetail",consumeManager.listPersonTransDetail(consumeForm));
     	return "jsonView";
     }
-//    
-//    @RequestMapping("/frameStatsConsume.crz")
-//    public String frameConsumeStats() {
-//    	logger.debug("frameStatsConsume");
-//    	return "/consume/frameStatsConsume";
-//    }
-//    
-//    @RequestMapping("/listStatsConsumeInfo.json")
-//    public String listStatsConsumeInfo(Model model, HttpSession session, String ym_trd) {
-//    	logger.debug("listStatsConsumeInfo");
-//    	
-//    	String no_person = (String) session.getAttribute("no_person");
-//    	
-//    	ConsumeForm consumeForm = new ConsumeForm();
-//    	consumeForm.setNo_person(no_person);
-//    	consumeForm.setYm_trd(ym_trd);
-//    	
-//    	model.addAttribute("listStatsConsumeInfo",consumeManager.listStatsConsumeInfo(consumeForm));
-//    	return "jsonView";
-//    }
-//    
-//    @RequestMapping("/listPeriodConsumeInfo.json")
-//    public String listPeriodConsumeInfo(Model model, HttpSession session, ConsumeForm consumeForm) {
-//    	logger.debug("listPeriodConsumeInfo");
-//    	
-//    	String no_person = (String) session.getAttribute("no_person");
-//    	
-//    	consumeForm.setNo_person(no_person);
-//    	
-//    	List<List<Object>> listPeriodConsumeInfo = consumeManager.listPeriodConsumeInfo(consumeForm);
-//    	List<Object> listColumn = listPeriodConsumeInfo.remove(listPeriodConsumeInfo.size()-1); 
-//    	
-//    	model.addAttribute("listColumn",listColumn);
-//    	model.addAttribute("listPeriodConsumeInfo",listPeriodConsumeInfo);
-//    	
-//    	return "jsonView";
-//    }
-//    
+    
     @RequestMapping("/frameConsumeSetting.crz")
-    public String frameConsumeSetting(Model model, HttpSession session) {
+    public String frameConsumeSetting(Model model, HttpSession session) throws FinsetException {
     	logger.debug("frameConsumeSetting");
     	String no_person = (String) session.getAttribute("no_person");
     	model.addAttribute("personSetInfoVO",consumeManager.getPersonSetInfo(no_person));
@@ -148,7 +113,7 @@ public class ConsumeController {
     }
     
     @RequestMapping("/frameConsumeCategory.crz")
-    public String frameConsumeCategory(Model model, HttpSession session) {
+    public String frameConsumeCategory(Model model, HttpSession session) throws FinsetException {
     	logger.debug("frameConsumeCategory");
     	String no_person = (String) session.getAttribute("no_person");
     	model.addAttribute("list",consumeManager.listPersonConsumeClassInfo(no_person));
@@ -156,8 +121,8 @@ public class ConsumeController {
     }
     
     @RequestMapping("/modifyPersonSetInfo.json")
-    public String modifyPersonSetInfo(HttpSession session ,PersonSetInfoVO personSetInfoVO){
-    	logger.debug("modifyPersonDtBasic");
+    public String modifyPersonSetInfo(HttpSession session ,PersonSetInfoVO personSetInfoVO) throws FinsetException {
+    	logger.debug("modifyPersonSetInfo");
     	String no_person = (String) session.getAttribute("no_person");
     	personSetInfoVO.setNo_person(no_person);
     	personSetInfoVO.setId_frt(no_person);
@@ -165,16 +130,12 @@ public class ConsumeController {
     	consumeManager.modifyPersonSetInfo(personSetInfoVO);
     	return "jsonView";
     }
-//    
-//    @RequestMapping("/createCategory.json")
-//    public String createCategory(HttpSession session ,PersonConsumeClassVO personConsumeClassVO){
-//    	logger.debug("createCategory");
-//    	String no_person = (String) session.getAttribute("no_person");
-//    	personConsumeClassVO.setNo_person(no_person);
-//    	personConsumeClassVO.setYn_default("N");
-//    	personConsumeClassVO.setYn_use("Y");
-//    	personConsumeClassVO.setId_frt(no_person);
-//    	personConsumeClassVO.setId_lst(no_person);
-//    	return "jsonView";
-//    }
+    
+    @RequestMapping("/modifyConsumeInfo.json")
+    public String modifyConsumeInfo(Model model, HttpSession session, ConsumeVO consumeVO) throws FinsetException {
+    	logger.debug("modifyConsumeInfo");
+    	logger.debug("hwi=---->"+consumeVO);
+    	model.addAttribute("result","00");
+    	return "jsonView";
+    }
 }

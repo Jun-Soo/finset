@@ -93,13 +93,13 @@ export default {
     },
     listDebtPg () {
       var thisObj = this;
-      this.$http.get('/m/debt/listDebtPg.json', {
+      this.$http.get('/api/debt/listDebtPg.json', {
         params: {}
       }).then(function (response) {
         var list = response.data.debtListData;
         for(var i=0; i<list.length; i++) {
             list[i].href = "/debt/detail?no_manage_info="+list[i].no_manage_info;
-            list[i].style = "background-image:url('/m/fincorp/getFinCorpIcon.crz?cd_fc="+list[i].cd_fc+"')";
+            list[i].style = "background-image:url('/api/fincorp/getFinCorpIcon.crz?cd_fc="+list[i].cd_fc+"')";
         }
         thisObj.debtListData = response.data.debtListData;
       })

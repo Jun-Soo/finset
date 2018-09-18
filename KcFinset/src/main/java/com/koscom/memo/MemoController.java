@@ -81,15 +81,10 @@ public class MemoController {
 	}
 	
 	@RequestMapping("/listMemo.json")
-	public String listMemo(HttpSession session, Model model, String no_manage_info) {
+	public String listMemo(HttpSession session, Model model, MemoVO memoVO) {
 		String no_person = (String) session.getAttribute("no_person");
-		MemoVO memoVO = new MemoVO();
+		memoVO.setRecordCount(5);
 		memoVO.setNo_person(no_person);
-		if(no_manage_info != null) {
-			if(!no_manage_info.equals("")) {
-				memoVO.setNo_manage_info(no_manage_info);
-			}
-		}
 		model.addAttribute("listMemo",memoManager.listMemo(memoVO));
 		return "jsonView";
 	}

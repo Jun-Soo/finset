@@ -7,7 +7,9 @@ import org.apache.commons.lang.builder.ToStringStyle;
 import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.web.multipart.MultipartFile;
 
-public class MemoVO implements Serializable{
+import com.koscom.util.Pagination;
+
+public class MemoVO extends Pagination implements Serializable{
 	private static final long serialVersionUID = -8912406207356126390L;
 	
 	private String 			no_person; //회원관리번호

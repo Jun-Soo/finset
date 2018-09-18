@@ -37,6 +37,13 @@ import GoodsHome from '@/components/goods/Home'
 import GoodsMain from '@/components/goods/Main'
 import WorkerGoods from '@/components/goods/WorkerGoods'
 
+import ShareHome from '@/components/share/Home'
+import ShareSumMain from '@/components/share/SumMain'
+import ShareSetting from '@/components/share/Setting'
+import ShareDetail from '@/components/share/Detail'
+import ShareNewRequest from '@/components/share/NewRequest'
+import ShareMain from '@/components/share/Main'
+
 Vue.use(Router)
 
 export const routes = [
@@ -208,6 +215,48 @@ export const routes = [
         alias: '/workergoods',
         component: WorkerGoods,
         meta: { allowPath: true }
+      }
+    ]
+  },
+  {
+    path: '/share',
+    name: 'share',
+    component: ShareHome,
+    children: [
+      {
+        path: 'sumMain',
+        alias: '/sumMain',
+        name: 'shareSumMain',
+        component: ShareSumMain,
+        meta: { allowPath: true, requiresAuth: true }
+      },
+      {
+        path: 'setting',
+        alias: '/setting',
+        name: 'shareSetting',
+        component: ShareSetting,
+        meta: { allowPath: true, requiresAuth: true }
+      },
+      {
+        path: 'detail',
+        alias: '/detail',
+        name: 'shareDetail',
+        component: ShareDetail,
+        meta: { allowPath: true, requiresAuth: true }
+      },
+      {
+        path: 'newRequest',
+        alias: '/newRequest',
+        name: 'shareNewRquest',
+        component: ShareNewRequest,
+        meta: { allowPath: true, requiresAuth: true }
+      },
+      {
+        path: 'main',
+        alias: '/main',
+        name: 'shareMain',
+        component: ShareMain,
+        meta: { allowPath: true, requiresAuth: true }
       }
     ]
   }

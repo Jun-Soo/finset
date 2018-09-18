@@ -167,6 +167,33 @@ public class LoanWorkerController extends ComController{
 	}
 	
 	/**
+	 * 상품리스트 (비제휴)
+	 * @param goodsbankForm
+	 * @param model
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/listLoanNoAffiliates.json")
+	public String listLoanNoAffiliatesJson(Model model, HttpServletRequest request, GoodsbankForm goodsbankForm, HttpSession session) {
+		logger.debug("listLoanNoAffiliates.json == start");
+		logger.debug(goodsbankForm.toString());
+		String no_person = (String) session.getAttribute("no_person");
+		
+		goodsbankForm.setNo_person(no_person);
+		if(StringUtil.isEmpty(goodsbankForm.getCd_goods_class_m())) {
+			goodsbankForm.setCd_goods_class_m("01,03,08,09");
+		}
+		goodsbankForm.setCd_goods_array_m(goodsbankForm.getCd_goods_class_m().split(","));
+		
+		int count = goodsbankManager.listGoodsNoAllianceCreditCount(goodsbankForm);
+		Pagination pagedList = goodsbankForm.setPagedList(goodsbankManager.listGoodsNoAllianceCredit(goodsbankForm),count);
+		model.addAttribute("pagedList", pagedList);
+		model.addAttribute("count", count);
+		return "jsonView";
+	}
+	
+	/**
 	 * 상품상세 (제휴)
 	 * @param goodsForm
 	 * @param model

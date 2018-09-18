@@ -33,6 +33,10 @@ import MemoCreate from '@/components/memo/Create'
 import ConsumeHome from '@/components/consume/Home'
 import ConsumeMain from '@/components/consume/Main'
 
+import GoodsHome from '@/components/goods/Home'
+import GoodsMain from '@/components/goods/Main'
+import WorkerGoods from '@/components/goods/WorkerGoods'
+
 Vue.use(Router)
 
 export const routes = [
@@ -185,6 +189,24 @@ export const routes = [
         path: 'main',
         alias: '/main',
         component: ConsumeMain,
+        meta: { allowPath: true }
+      }
+    ]
+  },
+  {
+    path: '/goods',
+    component: GoodsHome,
+    children: [
+      {
+        path: 'main',
+        alias: '/main',
+        component: GoodsMain,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'workergoods',
+        alias: '/workergoods',
+        component: WorkerGoods,
         meta: { allowPath: true }
       }
     ]

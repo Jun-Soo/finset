@@ -159,7 +159,6 @@ export default {
   name: 'FinsetMain',
   data() {
     return {
-      errors: [],
       errMsg: '',
       toDate: '',
       ratingCredit: '',
@@ -192,7 +191,7 @@ export default {
     // 신용정보 조회
     getCreditInfoMain () {
       var _this = this
-      this.$http.get('/m/credit/CreditInfoMain.json', {
+      this.$http.get('/api/credit/CreditInfoMain.json', {
         params: {}
       }).then(response => {
         var baseInfo = response.data.baseInfo

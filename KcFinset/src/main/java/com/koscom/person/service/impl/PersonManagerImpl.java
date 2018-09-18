@@ -8,9 +8,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.annotation.Resource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -62,6 +66,9 @@ public class PersonManagerImpl implements PersonManager {
 	@Autowired
 	KcbManager kcbManager;
 
+	@Value("${service.profile}")
+    private String profile;
+	
 	@Override
 	public PersonVO getPersonInfoHp(String hp) {
 		return personMapper.getPersonInfoHp(hp);
@@ -354,29 +361,32 @@ public class PersonManagerImpl implements PersonManager {
 			logger.info("회원 가입 처리에 실패하였습니다. 다시 시도해주세요    personVO :" + personVO.toString());
 			return new ReturnClass(Constant.FAILED, "회원가입 처리에 실패하였습니다. 다시 시도해주세요.", personVO);
 		} else {
+			
+			if(!profile.equals("LOCAL")){
+				
+				//KCB 회원 등록 처리
+				logger.info("personVO === " + personVO);
+				KcbCreditInfoVO info = new KcbCreditInfoVO();
+				//info.setNmIf("600");
+				info.setCd_regist("01");					// 01 신규, 09 URL
+				info.setBgn(personVO.getBgn());				// 생년월일, 성별
+				info.setNoPerson(personVO.getNo_person());	// 회원번호
+				info.setNmCust(personVO.getNm_person());		// 회원명
+				info.setDi(personVO.getKcb_di());				// 회원 KCB DI
+				info.setCp(personVO.getKcb_cp());				// 회원 KCB CP
+				info.setHp(personVO.getHp());					// 회원 휴대폰번호
+				//logger.info("info === " + info.toString());
+				//kcbManager.procKcbCb(info);
+				//logger.info("600 전문 처리 완료");
 
-			//KCB 회원 등록 처리
-			logger.info("personVO === " + personVO);
-			KcbCreditInfoVO info = new KcbCreditInfoVO();
-			//info.setNmIf("600");
-			info.setCd_regist("01");					// 01 신규, 09 URL
-			info.setBgn(personVO.getBgn());				// 생년월일, 성별
-			info.setNoPerson(personVO.getNo_person());	// 회원번호
-			info.setNmCust(personVO.getNm_person());		// 회원명
-			info.setDi(personVO.getKcb_di());				// 회원 KCB DI
-			info.setCp(personVO.getKcb_cp());				// 회원 KCB CP
-			info.setHp(personVO.getHp());					// 회원 휴대폰번호
-			//logger.info("info === " + info.toString());
-			//kcbManager.procKcbCb(info);
-			//logger.info("600 전문 처리 완료");
+				info.setNmIf("600420");
+				info.setReq_menu_code("200");
+				info.setReq_view_code("s07143331300");
+				kcbManager.procKcbCb(info);
 
-			info.setNmIf("600420");
-			info.setReq_menu_code("200");
-			info.setReq_view_code("s07143331300");
-			kcbManager.procKcbCb(info);
-
-			logger.info("600420 전문 처리 완료");
-
+				logger.info("600420 전문 처리 완료");
+			}
+			
 			//등록자, 수정자 셋팅
 			personVO.setId_frt(personVO.getNo_person());
 			personVO.setId_lst(personVO.getNo_person());

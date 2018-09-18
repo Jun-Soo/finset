@@ -4,7 +4,10 @@
 import Constant from './constant.js'
 
 export default {
-
+  back: function () {
+    console.log('back')
+    this.$route.go(-1)
+  },
   init: function () {
     localStorage.setItem('accessToken', '')
 

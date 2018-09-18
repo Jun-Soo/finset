@@ -47,7 +47,7 @@ public class BaseController {
 	@Resource
 	Environment environment;
 	
-	/**
+	/** VUE
 	 * 앱 메인 화면
 	 * 전하번호 체크하여 페이지이동
 	 * 비회원 -> 서비스안내
@@ -82,7 +82,7 @@ public class BaseController {
 				
 				if(StringUtil.isEmpty(personVO.getPass_person())) {
 					session.setAttribute("cert_result_value", Constant.SUCCESS);
-					rtnUrl = "/login/frameSecurityCode";
+					rtnUrl = "/member/certCode";
 				} else if(Integer.parseInt(StringUtil.NVL(personVO.getCnt_fail_pwd(), "0")) > 4) { //비밀번호 실패건수
 					model.addAttribute("personHp", personVO.getHp());
 					rtnUrl = "/person/frameFindPwdStep1";
@@ -120,8 +120,19 @@ public class BaseController {
 			rtnUrl = "intro";
 		}
 		model.addAttribute("rtnPath", rtnUrl);
+		
+		String site = (environment != null) ? environment.getProperty("service.profile") : "";
+		model.addAttribute("site", site);
 		return "jsonView";
 	}
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	/**

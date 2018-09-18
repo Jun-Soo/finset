@@ -17,8 +17,11 @@ const store = new Vuex.Store({
       isEventPush: false
     },
     returnUrl: '',
-    accessToken: '',
-    isLoggedIn: false
+    accessToken: null,
+    isLoggedIn: false,
+    site: null,
+    bankCode: null,
+    cardCode: null
   },
   mutations: {
     LOGIN (state, data) {
@@ -29,8 +32,10 @@ const store = new Vuex.Store({
     },
     LOGOUT (state) {
       localStorage.removeItem('accessToken')
+      localStorage.removeItem('site')
       state.accessToken = null
       state.isLoggedIn = false
+      state.site = null
     }
   }
 })

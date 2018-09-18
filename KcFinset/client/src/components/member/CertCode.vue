@@ -5,8 +5,7 @@
       <div class="container security-code">
         <div class="security-code-wrap security-passw">
           <p>
-            비밀번호를 입력해주세요.
-            <span id="err_message" v-if="cntFailPwd > 0"> {{ errMsg }} </span>
+            {{ certMessage }}
           </p>
           <div class="code-group clearfix">
             <div class="code form-shake">
@@ -46,13 +45,11 @@
             <li><button type="button" class="btn btn-lg btn-block btn-key" v-on:click="btnClick('7')">7</button></li>
             <li><button type="button" class="btn btn-lg btn-block btn-key" v-on:click="btnClick('8')">8</button></li>
             <li><button type="button" class="btn btn-lg btn-block btn-key" v-on:click="btnClick('9')">9</button></li>
-            <li v-if="ynFingerprint === 'Y'"><button type="button" class="btn btn-lg btn-block btn-fingerfrt" onclick="fingerConfirm();">&nbsp;</button></li>
-            <li class="btn-none" v-if="ynFingerprint === 'N'"><button type="button" class="btn btn-lg btn-block">&nbsp;</button></li>
+            <li class="btn-none"><button type="button" class="btn btn-lg btn-block">&nbsp;</button></li>
             <li><button type="button" class="btn btn-lg btn-block btn-key" data-value="0">0</button></li>
             <li><button type="button" class="btn btn-lg btn-block btn-backspace" v-on:click="backClick()">←</button></li>
           </ul>
         </div>
-        <p class="link-txt"><a href="/m/person/frameFindPwdStep1.crz"><u>비밀번호를 재설정 하시겠습니까?</u></a></p>
       </div>
     </section>
   	<!-- //Content -->
@@ -63,17 +60,19 @@
 import Common from "./../../assets/js/common.js";
 import Constant from "./../../assets/js/constant.js";
 
+import ko from "vee-validate/dist/locale/ko.js";
+
 export default {
-  name: "certCodeConfirm",
+  name: "certCode",
   data() {
     return {
-      errors: [],
       errMsg: "",
-      cntFailPwd: this.$store.state.user.cntFailPwd,
-      cntFailFinger: this.$store.state.user.cntFailFinger,
-      ynFingerprint: this.$store.state.user.ynFingerprint,
-      j_username: this.$store.state.user.noPerson,
+      certMessage: "",
+      noPerson: this.$store.state.user.noPerson,
       j_password: "",
+      tempPwd: "",
+      chkPwd: false,
+      chkFingerPrint: "",
       //class
       classPass1: "",
       classPass2: "",
@@ -88,12 +87,26 @@ export default {
   created() {
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
+      window.Android.checkFingerPrint();
+    } else if(Constant.userAgent == "iOS") {
+      //지문인식 가능여부 체크 결과 콜백 이벤트
+      Jockey.on("resultCheckFingerPrint", function(param) {
+        resultCheckFingerPrint(param.result);
+      });
+      Jockey.send("checkFingerPrint");
     }
   },
   beforeMount() {},
   mounted() {
-    this.errMsg =
-      "비밀번호를 " + this.cntFailPwd + "회 실패한 이력이 있습니다.";
+    if(!localStorage.getItem('tempPwd')) {
+      this.$store.state.title = "비밀번호 설정 (3/7)"
+      this.certMessage = '비밀번호를 입력해주세요.'
+    } else {
+      this.$store.state.title = "비밀번호 확인 (4/7)"
+      this.certMessage = '비밀번호를 다시 한번 입력해주세요.'
+      this.tempPwd = localStorage.getItem('tempPwd')
+      localStorage.removeItem('tempPwd')
+    }
   },
   beforeUpdate() {},
   updated() {},
@@ -108,7 +121,8 @@ export default {
       _this.classPass4 = "";
     },
     btnClick: function(val) {
-      var _this = this;
+      var _this = this
+      var type = 'confirmPage'
       _this.j_password += val;
       console.log(_this.j_password);
       if (_this.j_password.length > 0) _this.classPass1 = "active";
@@ -117,11 +131,22 @@ export default {
       if (_this.j_password.length > 3) {
         _this.classPass4 = "active";
 
-        _this.login();
+        if(!_this.tempPwd) {
+          localStorage.setItem('tempPwd', _this.j_password)
+        } else {
+          if(_this.tempPwd != _this.j_password) {
+            _this.j_password = ''
+            this.$toast.center(ko.messages.notMatchPwd)
+            return
+          } else {
+            type = 'changePwd'
+          }
+        }
+        this.nextPage(type)
       }
     },
     backClick: function() {
-      var _this = this;
+      var _this = this
       this.initClassPass();
       _this.j_password = _this.j_password.substr(
         0,
@@ -132,113 +157,106 @@ export default {
       if (_this.j_password.length > 2) _this.classPass3 = "active";
       if (_this.j_password.length > 3) _this.classPass4 = "active";
     },
+    nextPage: function(type) {
+      var _this = this
+      if(type == 'confirmPage') {
+        this.$router.go(0)
+        return;
+      } else {
+        var data = {
+          no_person: _this.noPerson,
+          pass_number: _this.j_password
+        };
+        this.$http
+          .get("/api/person/changePwd.json", {
+            params: data
+          })
+          .then(response => {
+            var result = response.data;
+            console.log(result);
+            if (result.result == "00") {
+              if(_this.chkFingerPrint == 'Y') {
+                setTimeout(function(){
+                  this.$router.push("/member/certFinger")
+                }, 2000);
+              } else {
+                if(Constant.userAgent == "Android" && localStorage.getItem("site") != "REAL") {
+                  checkExistCert();
+                } else {
+                  this.login();
+                }
+              }
+              toastMsg('비밀번호설정이 완료 되었습니다.');
+            } else {
+              this.$toast.center(result.message)
+              return false;
+            }
+          })
+          .catch(e => {
+            this.$toast.center(ko.messages.error)
+          });
+      }
+    },
     login: function() {
       var _this = this;
-      var params = Common.getParams();
+
       var querystring = require('querystring')
       var data = querystring.stringify({
-        j_username: _this.j_username,
+        j_username: _this.noPerson,
         j_password: _this.j_password
       });
-
-      if (Constant.userAgent == "Android") {
-        // 스플래시 ON
-          window.Android.splash("Y");
-      } else if (Constant.userAgent == "iOS") {
-        Jockey.send("splashView", {
-          yn_splash: "Y"
-        });
-      }
-
       this.$http
         .post("/check/j_spring_security_check", data
         ,{
           headers: {
             "Content-type": "application/x-www-form-urlencoded"
           }
-         }
-        )
+        })
         .then(response => {
-          console.log(response);
           if (response.data.result == "10") {
             //정상
             _this.$store.commit('LOGIN', response.data)
             _this.$router.push("/main");
           } else {
-            this.initClassPass();
-            _this.j_password = "";
-            _this.cntFailPwd += 1;
-            _this.errMsg = "다시 시도해 주세요. (" + _this.cntFailPwd + "/5)";
-            if (response.data.result == "21") {
-              //ID오류
-            } else if (response.data.result == "22") {
-              //PASSWD오류
-            }
+            this.$toast.center(ko.messages.loginErr)
+            return
           }
         })
         .catch(e => {
-          _this.errors.push(e);
+          this.$toast.center(ko.messages.error)
         });
-    }
-  },
-  resultFingerPrint: function(result) {
-    var _this = this;
-    if (result == true || result == 1) {
-      //지문인식 성공
-      if (Common.userAgent == "Android") {
-        window.Android.closeFingerPrint();
+    },
+    //Native Call function
+    resultCheckFingerPrint: function(result) {
+      if(result == true || result == 1){
+        this.chkFingerPrint = 'Y'
+      } else {
+        this.chkFingerPrint = 'N'
       }
-      this.$http.get('/m/base/frameBase.json', {
-          params: data
-        }).then(response => {
-
-        }).catch(e => {
-          _this.errors.push(e)
-        })
-      _this.login();
-    } else {
-      //지문 틀린 누적횟수 증가
-      _this.cntFailFinger += 1;
-      modifyPwdFailCnt("finger", _this.cntFailFinger);
-
-      if (_this.cntFailFinger < 5) {
-        _this.errMsg = "다시 시도해 주세요. (" + _this.cntFailFinger + "/5)";
+    },
+    // 공인인증서 유무 체크
+    checkExistCert: function() {
+      if(Constant.userAgent == "iOS") {
+        //공인인증서 유무 체크 결과 콜백 이벤트
+        Jockey.on("resultCheckCert" , function(param) {
+          var iscert = false;
+          if(param.isCert == 1) iscert = true;
+          resultCheckCert(iscert);
+        });
+        Jockey.send("checkExistCert");
       }
-      if (chk_finger == 5) {
-        //지문인식 5번 모두 틀린 경우
-        _this.errMsg = "지문이 비활성화 됩니다.";
-        this.$toast.center(_this.errMsg);
-        setTimeout(function() {
-          _this.errMsg = "비밀번호를 입력하세요.";
-        }, 1000);
-        if (userAgent == "Android") {
-          window.Android.closeFingerPrint();
-        }
-
-        var data = { yn_fingerprint: "N", no_person: _this.j_username };
-        this.$http
-          .get("/m/person/modifyFingerPrint.json", data)
-          .then(response => {
-            this.$store.state.user.ynFingerprint = "N";
-          })
-          .catch(e => {
-            _this.errors.push(e);
-          });
-
-        // $.ajax({
-        //   url : "<c:url value='/m/person/modifyFingerPrint.json'/>",
-        //   data : data,
-        //   contentType : "application/x-www-form-urlencoded; charset=UTF-8",
-        //   type : "POST",
-        //   async : false,
-        //   success : function (result) {
-        //   },
-        //   error : function (e) {
-        //     errMsg(e);
-        //   }
-        // })
+      else if(Constant.userAgent == "Android") {
+        window.Android.checkExistCert();
       }
-      return false;
+    },
+    //공인인증서 유무 결과 (모바일에서 호출)
+    resultCheckCert: function(isCert) {
+      if(isCert) {  // 공인인증서가 있을 경우
+        frmFcCertList();
+      } else {      // 공인인증서가 없을 경우
+        this.$toast.center('공인인증서가 없습니다.');
+        this.login();
+      }
     }
   }
 };

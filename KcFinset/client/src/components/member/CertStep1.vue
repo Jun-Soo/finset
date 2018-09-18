@@ -129,7 +129,6 @@ export default {
   name: "certStep1",
   data() {
     return {
-      errors: [],
       errMsg: '',
       checked: "",
       chkAll: false,
@@ -148,7 +147,7 @@ export default {
       window.Android.setEndApp("Y");
     }
 
-    this.$store.state.title = "약관동의"
+    this.$store.state.title = "약관동의 (1/7)"
 
   },
   beforeMount() {},

@@ -25,14 +25,13 @@
 
 <script>
 
-import Constant from "./../../assets/js/constant.js";
+import Constant from './../../assets/js/constant.js'
 import Common from './../../assets/js/common.js'
 
 export default {
   name: 'helloWorld',
   data() {
     return {
-      errors: [],
       errMsg: ''
     }
   },
@@ -62,7 +61,7 @@ export default {
   },
   methods: {
     reLogin: function() {
-      _this.$router.push("/home?hp="+localStorage.getItem('hp'));
+      this.$router.push("/home?hp="+localStorage.getItem('hp'));
     }
   }
 }

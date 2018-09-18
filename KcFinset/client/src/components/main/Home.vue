@@ -1,7 +1,7 @@
 <template>
-  <main>
+  <div id="mainHome">
     <router-view/>
-  </main>
+  </div>
 </template>
 
 <script>
@@ -9,6 +9,7 @@
   import Constant from './../../assets/js/constant.js'
 
   export default {
+    name: 'MainHome',
     created() {
       // mobile 초기화
       Common.init()
@@ -29,16 +30,19 @@
           hp: Constant.params.hp
         };
   
-        this.$http.get('/m/base/frameBase.json', {
+        this.$http.get('/api/base/frameBase.json', {
           params: data
         }).then(response => {
           console.log(JSON.stringify(response.data));
   
-          _this.$store.state.user.noPerson = response.data.no_person
-          _this.$store.state.user.cntFailPwd = Number(response.data.cnt_fail_pwd)
-          _this.$store.state.user.cntFailFinger = Number(response.data.cnt_fail_finger)
-          _this.$store.state.user.ynFingerprint = response.data.yn_fingerprint
-  
+          this.$store.state.user.noPerson = response.data.no_person
+          this.$store.state.user.cntFailPwd = Number(response.data.cnt_fail_pwd)
+          this.$store.state.user.cntFailFinger = Number(response.data.cnt_fail_finger)
+          this.$store.state.user.ynFingerprint = response.data.yn_fingerprint
+
+          this.$store.state.state.site = response.data.site
+          localStorage.setItem('site', response.data.site)
+
           if (Constant.userAgent == "Android") {
             window.Android.settingPush(response.data.yn_push);
             window.Android.settingPushType(response.data.cd_push);
@@ -66,7 +70,7 @@
   
           _this.$router.push(response.data.rtnPath)
         }).catch(e => {
-          _this.errors.push(e)
+          _this.$router.push('/error')
         })
       }
     }

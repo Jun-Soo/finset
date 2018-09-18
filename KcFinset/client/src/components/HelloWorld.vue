@@ -10,14 +10,13 @@ export default {
   name: 'helloWorld',
   data() {
     return {
-      errors: [],
       errMsg: ''
     }
   },
   component: {
   },
-  // computed () {
-  // },
+  computed: {
+  },
   beforeCreate() {
   },
   created() {

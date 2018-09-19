@@ -139,7 +139,6 @@ export default {
     },
     orderbyOnChange() {
       this.page = 1;
-      $("#listLoanGoods").html("");
       this.loadGoodsTab(this.curTab);
     },
     loadGoodsTab(type) {

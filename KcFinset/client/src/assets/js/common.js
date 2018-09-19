@@ -216,5 +216,23 @@ export default {
     } else {
       return undefined
     }
+  },
+  getCodeName: function (group, code) {
+    var data = {'group': group, 'code': code}
+    var name = ''
+    $.ajax({
+      url: '/m/comm/getCodeName.json',
+      data: data,
+      contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+      type: 'POST',
+      async: false,
+      success: function (result) {
+        name = result.name
+      },
+      error: function (e) {
+        name = code
+      }
+    })
+    return name
   }
 }

@@ -12,10 +12,9 @@
 						</li>
 						<input type="hidden" name="cd_fc_each" :value="goods.cd_fc"/>
 						<input type="hidden" name="cd_goods_each" :value="goods.cd_non_goods"/>
-						<h2 class="prd-title">{{goods.nm_goods}}</h2>
-						<p>{{goods.desc_feature}}&nbsp;</p>
+						<h2 class="prd-title" v-html=goods.nm_goods></h2>
+						<p v-html=goods.desc_feature>&nbsp;</p>
 						<div class="loan-tag">
-							
 						</div>
 					</div>
 					<div class="list-info">
@@ -23,7 +22,7 @@
 							<dt>대출금리</dt>
 							<dd class="txt-point">
 								<label v-if="goods.ratio_length > 2">변동,고정</label>
-								<label v-else-if="goods.ratio_length == 2">{{goods.cd_ratio_type}}</label>
+								<label v-else-if="goods.ratio_length == 2">{{Common.getCodeName("cd_ratio_type", goods.cd_ratio_type)}}</label>
 								<span v-if="goods.rto_interest_from == null && goods.rto_interest_to == null">-</span>
 								<span v-else-if="goods.rto_interest_from != null && goods.rto_interest_to != null">
 									{{goods.rto_interest_from}}&nbsp;%&nbsp;~&nbsp;{{goods.rto_interest_to}}&nbsp;%
@@ -38,23 +37,14 @@
 						</dl>
 						<dl>
 							<dt>대출한도</dt>
-                            <!-- <c:set var="v_desc_max_limit" value="" />
-                            <c:set var="desc_max_limit" value="${List.desc_max_limit}" />
-							<c:if test="${desc_max_limit eq '0'}">
-								<c:set var="v_desc_max_limit" value="-" />
-							</c:if>
-							<c:if test="${v_desc_max_limit ne '-'}">
-								<c:set var="v_desc_max_limit" value="최대 ${ufn:formatNumberPattern(desc_max_limit,'###,###.##')}만원" />
-							</c:if>
-                            <c:set var="max_loan_term" value="${List.max_loan_term}" />
-                            <c:set var="v_max_loan_term" value="" />
-                            <c:if test="${max_loan_term eq ''}">
-								<c:set var="v_max_loan_term" value="-" />
-							</c:if>
-							<c:if test="${v_max_loan_term ne '-'}">
-								<c:set var="v_max_loan_term" value="${max_loan_term}년" />
-							</c:if>
-							<dd>${v_desc_max_limit} / ${v_max_loan_term}</dd> -->
+							<dd v-if="goods.desc_max_limit == '0' && goods.max_loan_term == '' "> 
+								- / - </dd> 
+							<dd v-else-if="goods.desc_max_limit != '0' && goods.max_loan_term != '' ">
+								{{Common.formatNumber(goods.desc_max_limit)}}만원 / {{goods.max_loan_term}}년 </dd>
+							<dd v-else-if="goods.desc_max_limit == '0' && goods.max_loan_term != '' ">
+								- / {{goods.max_loan_term}}년 </dd>
+							<dd v-else-if="goods.desc_max_limit != '0' && goods.max_loan_term == '' ">
+								{{Common.formatNumber(goods.desc_max_limit)}}만원 / - </dd>
 						</dl>
 					</div>
 					<div class="loan-btn">
@@ -70,11 +60,14 @@
     </div>
 </template>
 <script>
+import Common from "./../../../assets/js/common.js";
+
 export default {
   name: "listLoanNoAffiliates",
   data() {
     return {
-      goodsList: []
+      goodsList: [],
+      Common: Common
     };
   },
   component: {},

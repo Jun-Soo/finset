@@ -171,5 +171,46 @@ export default {
     } else if (flag === 'false') {
       active.disabled()
     }
+  },
+  formatNumber: function (number, isMinus) {
+    var regex = /^[-]?\d+(?:[.]\d+)?$/
+    var formatNum = ''
+    if (!regex.text(number)) {
+      return NaN
+    } else {
+      if (number.match('-')) {
+        number = number.replace('-', '')
+        isMinus = true
+      }
+      formatNum = Number(number).toLocaleString('en').split('.')[0]
+      if (isMinus) {
+        return '-' + formatNum
+      } else {
+        return formatNum
+      }
+    }
+  },
+  formatdate: function (date, pattern) {
+    var yyyy = ''
+    var mm = ''
+    var dd = ''
+    if (typeof date === 'string') {
+      yyyy = date.substring(0, 4)
+      mm = date.substring(4, 6)
+      dd = date.substring(6, 8)
+    } else if (typeof date === 'object') {
+      yyyy = date.getFullYear()
+      mm = date.getMonth() + 1
+      dd = date.getDate()
+    }
+    if (((pattern || '') === '') || pattern === 'yyyymmdd') {
+      return yyyy + '-' + mm + '-' + dd
+    } else if (pattern === 'yyyymm') {
+      return yyyy + '-' + mm
+    } else if (pattern === 'mmdd') {
+      return mm + '-' + dd
+    } else {
+      return undefined
+    }
   }
 }

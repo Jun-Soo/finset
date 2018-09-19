@@ -175,8 +175,12 @@ export default {
   formatNumber: function (number, isMinus) {
     var regex = /^[-]?\d+(?:[.]\d+)?$/
     var formatNum = ''
-    if (!regex.text(number)) {
-      return NaN
+    if (!regex.test(number)) {
+      if (number === '-') {
+        return '-'
+      } else {
+        return NaN
+      }
     } else {
       if (number.match('-')) {
         number = number.replace('-', '')
@@ -190,7 +194,7 @@ export default {
       }
     }
   },
-  formatdate: function (date, pattern) {
+  formatDate: function (date, pattern) {
     var yyyy = ''
     var mm = ''
     var dd = ''

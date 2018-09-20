@@ -47,7 +47,7 @@ export default {
     goBack: function() {
       var historySize = history.length
       if(historySize == undefined || historySize == 0) {
-          if(userAgent == "Android") {
+          if(Constant.userAgent == "Android") {
               window.Android.exitApp();
           }
       } else {

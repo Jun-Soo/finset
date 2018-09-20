@@ -39,6 +39,7 @@ Vue.use(toast, {
 
 Vue.use(swiper)
 
+Vue.config.debug = true
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
 

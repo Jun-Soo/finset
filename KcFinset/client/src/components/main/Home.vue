@@ -15,8 +15,15 @@
       }
     },
     created() {
+
       // mobile 초기화
       Common.init()
+
+      // 중복 로그인
+      if(Constant.params.denied == '92') {
+        this.$toast.center('이미 로그인되어 있습니다. 다시 시도해주세요.')
+        return
+      }
 
       // hp
       this.$store.state.user.hp = Constant.params.hp

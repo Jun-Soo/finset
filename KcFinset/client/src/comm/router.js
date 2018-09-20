@@ -44,6 +44,9 @@ import ShareDetail from '@/components/share/Detail'
 import ShareNewRequest from '@/components/share/NewRequest'
 import ShareMain from '@/components/share/Main'
 
+import MypageHome from '@/components/mypage/Home'
+import CertPerson from '@/components/mypage/CertPerson'
+
 Vue.use(Router)
 
 export const routes = [
@@ -258,6 +261,19 @@ export const routes = [
         component: ShareMain,
         meta: { allowPath: true, requiresAuth: true }
       }
+    ]
+  },
+  {
+    path: '/mypage',
+    name: 'mypage',
+    component: MypageHome,
+    children: [
+      {
+        path: 'certPerson',
+        alias: '/certPerson',
+        component: CertPerson,
+        meta: { allowPath: true, requiresAuth: true }
+      },
     ]
   }
 ]

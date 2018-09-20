@@ -242,8 +242,8 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 	        
 	        // 비밀번호&지문인증 틀린횟수 초기화
 			personVO.setCnt_fail_mode("all");
-			personVO.setNo_person(personVO.getNo_person());
 			personVO.setCnt_fail(0);
+			personVO.setId_lst(no_person);
 			ReturnClass modifyPwdFailCntReturnClass = personManager.modifyPwdFailCnt(personVO);
 			logger.info("cd_result : {},  message : {}", modifyPwdFailCntReturnClass.getCd_result(), modifyPwdFailCntReturnClass.getMessage());
 			

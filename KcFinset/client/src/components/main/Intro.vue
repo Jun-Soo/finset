@@ -4,7 +4,7 @@
     <section id="content">
       <div class="slide-item">
         <div class="slider">
-          <swiper pagination-visible pagination-clickable :speed=1500>
+          <swiper :pagination-visible="true" :loop="true">
             <!-- slide1 -->
             <div class="intro-item intro-01">
               <p class="intro-copy">금융거래에 활용되는<br><strong>신용등급과 신용평점을 확인</strong>하세요.</p>

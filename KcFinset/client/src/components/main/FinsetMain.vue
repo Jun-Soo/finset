@@ -32,14 +32,8 @@ export default {
   // },
   beforeCreate() {},
   created() {
-    if (Constant.userAgent == "Android") {
-      // 스플래시 ON
-        window.Android.splash("N");
-    } else if (Constant.userAgent == "iOS") {
-      Jockey.send("splashView", {
-        yn_splash: "N"
-      });
-    }
+
+    this.$store.state.title = 'Finset'
   },
   beforeMount() {},
   mounted() {},

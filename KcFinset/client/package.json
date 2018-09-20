@@ -25,6 +25,7 @@
     "vue": "^2.5.2",
     "vue-bootstrap-selectpicker": "^1.0.3",
     "vue-router": "^3.0.1",
+    "vue-spinner": "^1.0.3",
     "vue-toast": "^3.1.0",
     "vue2-swiper": "0.0.13",
     "vue2-toast": "^2.0.2",

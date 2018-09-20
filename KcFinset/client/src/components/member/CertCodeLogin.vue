@@ -46,13 +46,13 @@
             <li><button type="button" class="btn btn-lg btn-block btn-key" v-on:click="btnClick('7')">7</button></li>
             <li><button type="button" class="btn btn-lg btn-block btn-key" v-on:click="btnClick('8')">8</button></li>
             <li><button type="button" class="btn btn-lg btn-block btn-key" v-on:click="btnClick('9')">9</button></li>
-            <li v-if="ynFingerprint === 'Y'"><button type="button" class="btn btn-lg btn-block btn-fingerfrt" onclick="fingerConfirm();">&nbsp;</button></li>
+            <li v-if="ynFingerprint === 'Y'"><router-link to="/member/certFingerLogin"><button class="btn btn-lg btn-block btn-fingerfrt">&nbsp;</button></router-link></li>
             <li class="btn-none" v-if="ynFingerprint === 'N'"><button type="button" class="btn btn-lg btn-block">&nbsp;</button></li>
-            <li><button type="button" class="btn btn-lg btn-block btn-key" data-value="0">0</button></li>
+            <li><button type="button" class="btn btn-lg btn-block btn-key" v-on:click="btnClick('0')">0</button></li>
             <li><button type="button" class="btn btn-lg btn-block btn-backspace" v-on:click="backClick()">←</button></li>
           </ul>
         </div>
-        <p class="link-txt"><a href="/m/person/frameFindPwdStep1.crz"><u>비밀번호를 재설정 하시겠습니까?</u></a></p>
+        <p class="link-txt"><a href=""><u>비밀번호를 재설정 하시겠습니까?</u></a></p>
       </div>
     </section>
   	<!-- //Content -->
@@ -88,9 +88,11 @@ export default {
   beforeCreate() {},
   created() {
 
+    this.$store.state.title = '비밀번호 입력'
     window.resultFingerPrint = this.resultFingerPrint
+    // window.resultFingerPrint = this.resultFingerPrint
     if (Constant.userAgent == "Android") {
-      window.Android.setEndApp("Y");
+      window.Android.setEndApp("Y")
     }
   },
   beforeMount() {},
@@ -134,17 +136,26 @@ export default {
       if (_this.j_password.length > 2) _this.classPass3 = "active";
       if (_this.j_password.length > 3) _this.classPass4 = "active";
     },
+    //비밀번호 틀린횟수 변경
+    modifyPwdFailCnt: function(mode) {
+      var _this = this
+      var data = {no_person: _this.j_username,
+                cnt_fail_mode: mode,
+                cnt_fail: _this.cntFailPwd}
+      this.$http
+        .get("/m/person/modifyPwdFailCnt.json", {
+          params: data
+        })
+        .then(response => {
+          var result = response.data;
+          console.log(result);
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error)
+        });
+    },
     login: function() {
       var _this = this;
-
-      if (Constant.userAgent == "Android") {
-        // 스플래시 ON
-          window.Android.splash("Y");
-      } else if (Constant.userAgent == "iOS") {
-        Jockey.send("splashView", {
-          yn_splash: "Y"
-        });
-      }
 
       var querystring = require('querystring')
       var data = querystring.stringify({
@@ -159,45 +170,39 @@ export default {
           }
         })
         .then(response => {
+          console.log(response.data.result)
           if (response.data.result == "10") {
             //정상
             _this.$store.state.user.authToken = null
             _this.$store.commit('LOGIN', response.data)
-            _this.$router.push("/main");
+            _this.$router.push("/main")
           } else {
-            this.initClassPass();
-            _this.j_password = "";
+            this.initClassPass()
+            _this.j_password = ""
             //비밀번호 틀린 누적횟수 증가
-            _this.cntFailPwd += 1;
-            this.modifyPwdFailCnt("pwd", _this.cntFailPwd);
-            _this.errMsg = "다시 시도해 주세요. (" + _this.cntFailPwd + "/5)";
-            if (response.data.result == "21") {
-              //ID오류
-            } else if (response.data.result == "22") {
-              //PASSWD오류
+            _this.cntFailPwd += 1
+            if (_this.cntFailPwd < 5) {
+              _this.errMsg = "비밀번호가 일치하지 않습니다. (" + _this.cntFailPwd + "/5)";
+            } else if (_this.cntFailPwd == 5) {
+              //지문인식 5번 모두 틀린 경우
+              _this.errMsg = "비밀번호 재설정 화면으로 이동합니다.";
+              this.$toast.center(_this.errMsg);
+              setTimeout(function () {
+                _this.$router.push("/mypage/certPerson");
+              }, 1000)
+            }
+            //비밀번호 틀린 누적횟수 증가
+            _this.cntFailPwd += 1
+            _this.errMsg = "비밀번호가 일치하지 않습니다. (" + _this.cntFailPwd + "/5)"
+            if (response.data.result == "21" || response.data.result == "22") {
+              _this.modifyPwdFailCnt("pwd")
             }
           }
         })
         .catch(e => {
           this.$toast.center(ko.messages.error)
-        });
+        })
     }
-  },
-  //비밀번호 틀린횟수 변경
-  modifyPwdFailCnt: function(mode, cnt_fail) {
-
-    var data = {"no_person": _this.j_username, "cnt_fail_mode":mode, "cnt_fail":cnt_fail};
-    this.$http
-      .get("/m/person/modifyPwdFailCnt.json", {
-        params: data
-      })
-      .then(response => {
-        var result = response.data;
-        console.log(result);
-      })
-      .catch(e => {
-        this.$toast.center(ko.messages.error)
-      });
   },
   /***
    * Native Call function
@@ -206,7 +211,7 @@ export default {
     var _this = this;
     if (result == true || result == 1) {
       //지문인식 성공
-      if (Common.userAgent == "Android") {
+      if (Constant.userAgent == "Android") {
         window.Android.closeFingerPrint();
       }
       _this.login();
@@ -216,22 +221,20 @@ export default {
       this.modifyPwdFailCnt("finger", _this.cntFailFinger)
 
       if (_this.cntFailFinger < 5) {
-        _this.errMsg = "다시 시도해 주세요. (" + _this.cntFailFinger + "/5)";
-      }
-      if (chk_finger == 5) {
+        _this.errMsg = "지문이 일치하지 않습니다. (" + _this.cntFailFinger + "/5)";
+      } else if (_this.cntFailFinger == 5) {
         //지문인식 5번 모두 틀린 경우
         _this.errMsg = "지문이 비활성화 됩니다.";
         this.$toast.center(_this.errMsg);
-        setTimeout(function() {
-          _this.errMsg = "비밀번호를 입력하세요.";
-        }, 1000);
-        if (userAgent == "Android") {
+        if (Constant.userAgent == "Android") {
           window.Android.closeFingerPrint();
         }
 
         var data = { yn_fingerprint: "N", no_person: _this.j_username };
         this.$http
-          .get("/m/person/modifyFingerPrint.json", data)
+          .get("/m/person/modifyFingerPrint.json", {
+            params: data
+          })
           .then(response => {
             this.$store.state.user.ynFingerprint = "N";
           })

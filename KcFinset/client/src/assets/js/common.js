@@ -218,7 +218,10 @@ export default {
     }
   },
   getCodeName: function (group, code) {
-    var data = {'group': group, 'code': code}
+    var data = {
+      'group': group,
+      'code': code
+    }
     var name = ''
     $.ajax({
       url: '/m/comm/getCodeName.json',
@@ -234,5 +237,30 @@ export default {
       }
     })
     return name
+  },
+  // pagination 사용법
+  // 필요한 함수를 작성하되, 함수 파라미터로 callback을 선언
+  pagination: function (callback) {
+    Constant._this = this
+    Constant._callback = callback
+    Constant._this.addScroll()
+    Constant._callback(function () {})
+  },
+  handleScroll: function () {
+    var html = document.documentElement
+    var docHeight = html.scrollHeight
+    var viewHeight = html.offsetHeight
+    var scrollY = window.scrollY
+    var scrollBottom = docHeight - viewHeight - scrollY
+    if (scrollBottom < 5) {
+      Constant._this.removeScroll()
+      Constant._callback(Constant._this.addScroll)
+    }
+  },
+  addScroll: function () {
+    window.addEventListener('scroll', Constant._this.handleScroll)
+  },
+  removeScroll: function () {
+    window.removeEventListener('scroll', Constant._this.handleScroll)
   }
 }

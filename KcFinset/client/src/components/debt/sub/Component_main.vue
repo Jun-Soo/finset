@@ -14,7 +14,7 @@
                     <div class="list-info">
                         <dl>
                             <dt>상환금액(당월)</dt>
-                            <dd>{{oneDebt.amt_repay}}</dd>
+                            <dd>{{Common.formatNumber(oneDebt.amt_repay)}}</dd>
                         </dl>
                         <dl>
                             <dt>대출잔액</dt>
@@ -22,7 +22,7 @@
                         </dl>
                         <dl>
                             <dt>???</dt>
-                            <dd>{{oneDebt.amt_contract}}</dd>
+                            <dd>{{Common.formatNumber(oneDebt.amt_contract)}}</dd>
                         </dl>
                         <dl>
                             <dt>???</dt>
@@ -37,12 +37,14 @@
 
 <script>
 import router from '@/comm/router.js'
+import Common from "@/assets/js/common.js";
 
 export default {
   name: 'Component_main',
   data () {
     return {
-        debtListData : []
+        debtListData : [],
+        Common : Common
     }
   },
   component: {
@@ -93,13 +95,13 @@ export default {
     },
     listDebtPg () {
       var thisObj = this;
-      this.$http.get('/api/debt/listDebtPg.json', {
+      this.$http.get('/m/debt/listDebtPg.json', {
         params: {}
       }).then(function (response) {
         var list = response.data.debtListData;
         for(var i=0; i<list.length; i++) {
             list[i].href = "/debt/detail?no_manage_info="+list[i].no_manage_info;
-            list[i].style = "background-image:url('/api/fincorp/getFinCorpIcon.crz?cd_fc="+list[i].cd_fc+"')";
+            list[i].style = "background-image:url('/m/fincorp/getFinCorpIcon.crz?cd_fc="+list[i].cd_fc+"')";
         }
         thisObj.debtListData = response.data.debtListData;
       })

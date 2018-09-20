@@ -31,7 +31,6 @@
 						<input type="hidden" id="seq_memo_info_each" :value=memoVO.seq_memo_info />
 					</div>
 				</div>
-
 		</div>
 	</div>
 </div>
@@ -39,6 +38,7 @@
 
 <script>
 import router from "@/comm/router.js";
+import Common from "@/assets/js/common.js";
 
 export default {
   name: "memoMain",
@@ -56,18 +56,17 @@ export default {
   beforeMount() {},
   mounted() {
     var thisObj = this;
-    window.addEventListener("scroll", thisObj.handleScroll);
-    this.listMemo();
+    Common.pagination(this.listMemo);
   },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    listMemo() {
+    listMemo(callback) {
       var thisObj = this;
       this.$http
-        .get("/api/memo/listMemo.json", {
+        .get("/m/memo/listMemo.json", {
           params: { no_manage_info: "", page: thisObj.page }
         })
         .then(function(response) {
@@ -79,10 +78,11 @@ export default {
               thisObj.list.push(listMemo[a]);
             }
           }
-          if(listMemo.length > 0) {
-            window.addEventListener("scroll", thisObj.handleScroll);
+          if (listMemo.length > 0) {
+            callback();
           }
         });
+      thisObj.page++;
     },
     updateMemo() {
       console.log("구현해야됨");
@@ -90,20 +90,6 @@ export default {
     },
     createMemo() {
       router.push("/memo/create");
-    },
-    handleScroll() {
-      var thisObj = this;
-      var html = document.documentElement;
-      var docHeight = html.scrollHeight;
-      var viewHeight = html.offsetHeight;
-      var scrollY = window.scrollY;
-      var scrollBottom = docHeight - viewHeight - scrollY;
-      if (scrollBottom < 5) {
-        console.log("remove");
-        window.removeEventListener("scroll", thisObj.handleScroll);
-        ++thisObj.page;
-        thisObj.listMemo();
-      }
     }
   }
 };

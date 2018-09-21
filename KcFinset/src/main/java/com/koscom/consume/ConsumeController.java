@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.koscom.consume.model.ConsumeForm;
+import com.koscom.consume.model.ConsumeGoalInfoVO;
 import com.koscom.consume.model.ConsumeVO;
 import com.koscom.consume.model.PersonSetInfoVO;
 import com.koscom.consume.service.ConsumeManager;
@@ -134,8 +135,13 @@ public class ConsumeController {
     @RequestMapping("/modifyConsumeInfo.json")
     public String modifyConsumeInfo(Model model, HttpSession session, ConsumeVO consumeVO) throws FinsetException {
     	logger.debug("modifyConsumeInfo");
-    	logger.debug("hwi=---->"+consumeVO);
     	model.addAttribute("result","00");
+    	return "jsonView";
+    }
+    
+    @RequestMapping("/registerGoal")
+    public String registerGoal(HttpSession session, Model model, ConsumeGoalInfoVO consumeGoalInfoVO) throws FinsetException {
+    	logger.debug("registerGoal");
     	return "jsonView";
     }
 }

@@ -1,5 +1,5 @@
 <template>
-  <main class="memberMain">
+  <main>
     <FinsetHeader></FinsetHeader>
     <router-view/>
   </main>
@@ -9,7 +9,7 @@
 import FinsetHeader   from   './../common/FinsetHeader'
 
 export default {
-  name: 'memberHome',
+  name: 'mypageHome',
   components: {
     FinsetHeader: FinsetHeader
   }
@@ -17,5 +17,4 @@ export default {
 </script>
 
 <style>
-  .memberMain {background-color: #283593; }
 </style>

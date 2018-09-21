@@ -244,7 +244,7 @@ export default {
     Constant._this = this
     Constant._callback = callback
     Constant._this.addScroll()
-    Constant._callback(Constant._this.removeScroll)
+    Constant._callback(function () {})
   },
   handleScroll: function () {
     var html = document.documentElement
@@ -252,8 +252,9 @@ export default {
     var viewHeight = html.offsetHeight
     var scrollY = window.scrollY
     var scrollBottom = docHeight - viewHeight - scrollY
-    if (scrollBottom === 0) {
-      Constant._callback(Constant._this.removeScroll)
+    if (scrollBottom < 5) {
+      Constant._this.removeScroll()
+      Constant._callback(Constant._this.addScroll)
     }
   },
   addScroll: function () {

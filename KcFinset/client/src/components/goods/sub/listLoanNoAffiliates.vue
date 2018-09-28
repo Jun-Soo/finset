@@ -71,7 +71,7 @@ export default {
       Common: Common
     };
   },
-  component: {},
+  components: {},
   beforeCreate() {},
   created() {},
   beforeMount() {},
@@ -87,19 +87,30 @@ export default {
     listGoods(callback) {
       var _this = this;
       var _parent = this.$parent;
+      var formData = new FormData();
+      formData.append("page", _parent.page);
+      formData.append("cd_fin", _parent.cd_fin);
+      formData.append("cd_goods_class_l", _parent.cd_goods_class_l);
+      formData.append("cd_goods_class_m", _parent.cd_goods_class_m);
+      formData.append("orderby", _parent.orderby);
+      this.$store.state.isLoading = true;
       this.$http
-        .get("/m/loanworker/listLoanNoAffiliates.json", {
-          params: {
-            page: _parent.page,
-            cd_fin: _parent.cd_fin,
-            cd_goods_class_l: _parent.cd_goods_class_l,
-            cd_goods_class_m: _parent.cd_goods_class_m,
-            orderby: _parent.orderby
-          }
-        })
+        .post(
+          "/m/loanworker/listLoanNoAffiliates.json",
+          formData
+          // {
+          //   params: {
+          //     page: _parent.page,
+          //     cd_fin: _parent.cd_fin,
+          //     cd_goods_class_l: _parent.cd_goods_class_l,
+          //     cd_goods_class_m: _parent.cd_goods_class_m,
+          //     orderby: _parent.orderby
+          //   }
+          // }
+        )
         .then(function(response) {
           var list = response.data.pagedList.source;
-
+          _this.$store.state.isLoading = false;
           for (var i = 0; i < list.length; i++) {
             list[i].style =
               "background-image:url('/m/fincorp/getFinCorpIcon.crz?cd_fc=" +

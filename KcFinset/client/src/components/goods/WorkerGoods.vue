@@ -185,6 +185,18 @@ export default {
     },
     goCondition() {
       this.$router.push("/goods/frameLoanWorkerStep");
+    },
+    showSpinner: async function() {
+      this.spinnerIsVisible = true; // 시작시 Spinner 보여주기
+
+      this.secondsLeft = 3;
+      var interval = setInterval(() => {
+        this.secondsLeft--;
+        if (this.secondsLeft <= 0) {
+          clearInterval(interval);
+          this.spinnerIsVisible = false; // 0초되면 숨기기
+        }
+      }, 1000);
     }
   }
 };

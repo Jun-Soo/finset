@@ -21,6 +21,7 @@ import './assets/css/bootstrap.customize.css'
 import './assets/css/bootstrap-select.css'
 import './assets/css/mobile.css'
 
+import './assets/js/jockey.js'
 import './comm/message.js'
 
 Vue.use(VeeValidate, {

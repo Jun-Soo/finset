@@ -4,7 +4,7 @@
       <b>Chart</b><br/>
       <a href="http://vue-charts.hchspersonal.tk/" style="cursor:pointer;" target="_blank">vueChartHome</a><br/>
       <a href="/template/chartSingleLine" style="cursor:pointer;" target="_blank">singleLineExample</a><br/>
-      <a href="/template/chartSingleLine2" style="cursor:pointer;" target="_blank">singleLine2Example</a><br/>
+      <a href="/template/chartSingleLine2" style="cursor:pointer;" target="_blank">singleLineExample2</a><br/>
       <a href="/template/chartMultipleBar" style="cursor:pointer;" target="_blank">MultipleBarExample</a><br/>
     </h1>
   </div>

@@ -50,6 +50,12 @@ import ShareMain from '@/components/share/Main'
 
 import Swiper from '@/components/_sample/Swiper'
 
+import TemplateHome from '@/components/template/Home'
+import TemplateMain from '@/components/template/Main'
+import TemplateChartSingleLine from '@/components/template/ChartsingleLine'
+import TemplateChartSingleLine2 from '@/components/template/ChartSingleLine2'
+import TemplateChartMultipleBar from '@/components/template/ChartMultipleBar'
+
 Vue.use(Router)
 
 export const routes = [
@@ -290,6 +296,37 @@ export const routes = [
     name: 'swiper',
     component: Swiper,
     meta: { allowPath: true }
+  },
+  {
+    path: '/template',
+    name: 'template',
+    component: TemplateHome,
+    children: [
+      {
+        path: 'main',
+        alias: '/main',
+        component: TemplateMain,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'chartSingleLine',
+        alias: '/chartSingleLine',
+        component: TemplateChartSingleLine,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'chartSingleLine2',
+        alias: '/chartSingleLine2',
+        component: TemplateChartSingleLine2,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'chartMultipleBar',
+        alias: '/chartMultipleBar',
+        component: TemplateChartMultipleBar,
+        meta: { allowPath: true }
+      }
+    ]
   }
 ]
 

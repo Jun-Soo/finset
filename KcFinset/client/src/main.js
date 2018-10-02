@@ -23,6 +23,9 @@ import './assets/css/mobile.css'
 import './assets/js/jockey.js'
 import './comm/message.js'
 
+import 'chart.js'
+import 'hchs-vue-charts'
+
 Vue.use(VeeValidate, {
   locale: 'ko',
   dictionary: {
@@ -38,6 +41,8 @@ Vue.use(toast, {
 })
 
 Vue.use(swiper)
+
+Vue.use(window.VueCharts)
 
 Vue.config.debug = true
 Vue.config.productionTip = false

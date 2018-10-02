@@ -48,6 +48,8 @@ import ShareMain from '@/components/share/Main'
 // import MypageHome from '@/components/mypage/Home'
 // import CertPerson from '@/components/mypage/CertPerson'
 
+import Swiper from '@/components/_sample/Swiper'
+
 Vue.use(Router)
 
 export const routes = [
@@ -269,7 +271,7 @@ export const routes = [
         meta: { allowPath: true, requiresAuth: true }
       }
     ]
-  }
+  },
   // {
   //   path: '/mypage',
   //   name: 'mypage',
@@ -283,6 +285,12 @@ export const routes = [
   //     },
   //   ]
   // }
+  {
+    path: '/sample/swiper',
+    name: 'swiper',
+    component: Swiper,
+    meta: { allowPath: true }
+  }
 ]
 
 const router = new Router({routes, mode: 'history'})

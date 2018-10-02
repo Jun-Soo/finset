@@ -2,7 +2,9 @@ package com.koscom.consume.dao;
 
 import java.util.List;
 
+import com.koscom.consume.model.ConsumeDetailGoalInfoVO;
 import com.koscom.consume.model.ConsumeForm;
+import com.koscom.consume.model.ConsumeGoalInfoVO;
 import com.koscom.consume.model.ConsumeVO;
 import com.koscom.consume.model.PersonConsumeClassVO;
 import com.koscom.consume.model.PersonSetInfoVO;
@@ -65,4 +67,32 @@ public interface ConsumeMapper {
 	 * @return
 	 */
 	int modifyPersonSetInfo(PersonSetInfoVO personSetInfoVO);
+	
+	/**
+	 * 소비 목표 등록
+	 * @param consumeGoalInfoVO
+	 * @return
+	 */
+	int createGoal(ConsumeGoalInfoVO consumeGoalInfoVO);
+	
+	/**
+	 * 소비 목표 조회
+	 * @param consumeGoalInfoVO
+	 * @return
+	 */
+	ConsumeGoalInfoVO getGoal(ConsumeGoalInfoVO consumeGoalInfoVO);
+	
+	/**
+	 * 소비 상세 목표 등록
+	 * @param consumeDetailGoalInfoVO
+	 * @return
+	 */
+	int createDetailGoal(ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO);
+	
+	/**
+	 * 소비 상세 목표 리스트 조회
+	 * @param consumeDetailGoalInfoVO
+	 * @return
+	 */
+	List<ConsumeDetailGoalInfoVO> listDetailGoal(ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO);
 }

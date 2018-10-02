@@ -36,7 +36,7 @@ export default {
       errMsg: "",
       certMessage: "",
       noPerson: this.$store.state.user.noPerson,
-      j_password: localStorage.getItem('tempPwd'),
+      j_password: localStorage.getItem("tempPwd"),
       tempPwd: "",
       chkPwd: false,
       ynFingerprint: "",
@@ -52,13 +52,11 @@ export default {
   // },
   beforeCreate() {},
   created() {
+    this.$store.state.title = "지문인증 설정 (5/7)";
 
-    this.$store.state.title = "지문인증 설정 (5/7)"
-
-    window.resultFingerPrint = this.resultFingerPrint
+    window.resultFingerPrint = this.resultFingerPrint;
     // window.resultCheckCert = this.resultCheckCert
     // window.frmFcListNextFromMobile = this.frmFcListNextFromMobile
-
   },
   beforeMount() {},
   mounted() {},
@@ -67,21 +65,50 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    login: function() {
+      var _this = this;
+
+      var querystring = require("querystring");
+      var data = querystring.stringify({
+        j_username: _this.noPerson,
+        j_password: _this.j_password
+      });
+      this.$http
+        .post("/check/j_spring_security_check", data, {
+          headers: {
+            "Content-type": "application/x-www-form-urlencoded"
+          }
+        })
+        .then(response => {
+          if (response.data.result == "10") {
+            //정상
+            localStorage.removeItem("tempPwd");
+            _this.$store.commit("LOGIN", response.data);
+            _this.$router.push("/main");
+          } else {
+            this.$toast.center(ko.messages.loginErr);
+            return;
+          }
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+        });
+    },
     chkFinger: function(gubun) {
-      let _this = this
-      if(gubun == 'Y'){
-        this.ynFingerprint = 'Y'
-        if(Constant.userAgent == "Android") {
-          window.Android.initFingerPrint()
-        }else if(userAgent == "iOS") {
+      let _this = this;
+      if (gubun == "Y") {
+        _this.ynFingerprint = "Y";
+        if (Constant.userAgent == "Android") {
+          window.Android.initFingerPrint();
+        } else if (Constant.userAgent == "iOS") {
           //지문인식 결과 콜백 이벤트
-          Jockey.on("resultFingerPrint",function(param) {
+          Jockey.on("resultFingerPrint", function(param) {
             resultFingerPrint(param.result);
           });
-          Jockey.send("initFingerPrint" );
+          Jockey.send("initFingerPrint");
         }
-      } else if(gubun == 'N') {
-        this.ynFingerprint = 'N'
+      } else if (gubun == "N") {
+        _this.ynFingerprint = "N";
       }
 
       var data = {
@@ -93,50 +120,15 @@ export default {
           params: data
         })
         .then(response => {
-          var result = response.data;
-          console.log(result);
+          var result = response.data
           if (result.result == "00") {
-            _this.$toast.center('지문 로그인 설정이 완료되었습니다.')
-            // if(userAgent == "Android" && $('#site').val() != "REAL") {
-            //   checkExistCert();
-            // } else {
-              setTimeout(function(){
-                _this.login()
-              }, 2000);
-            // }
+            this.$toast.center("지문 로그인 설정이 완료되었습니다.");
+            setTimeout(function() {
+              _this.login()
+            }, 2000)
           } else {
-            _this.$toast.center(result.message)
-            return false;
-          }
-        })
-        .catch(e => {
-          _this.$toast.center(ko.messages.error)
-        });
-    },
-    login: function() {
-      var _this = this;
-
-      var querystring = require('querystring')
-      var data = querystring.stringify({
-        j_username: _this.noPerson,
-        j_password: _this.j_password
-      });
-      this.$http
-        .post("/check/j_spring_security_check", data
-        ,{
-          headers: {
-            "Content-type": "application/x-www-form-urlencoded"
-          }
-        })
-        .then(response => {
-          if (response.data.result == "10") {
-            //정상
-            localStorage.removeItem('tempPwd')
-            _this.$store.commit('LOGIN', response.data)
-            _this.$router.push("/main");
-          } else {
-            this.$toast.center(ko.messages.loginErr)
-            return
+            this.$toast.center(result.message)
+            return false
           }
         })
         .catch(e => {
@@ -145,27 +137,26 @@ export default {
     },
     // 공인인증서 유무 체크
     checkExistCert: function() {
-      if(Constant.userAgent == "iOS") {
+      if (Constant.userAgent == "iOS") {
         //공인인증서 유무 체크 결과 콜백 이벤트
-        Jockey.on("resultCheckCert" , function(param) {
+        Jockey.on("resultCheckCert", function(param) {
           var iscert = false;
-          if(param.isCert == 1) iscert = true;
+          if (param.isCert == 1) iscert = true;
           resultCheckCert(iscert);
         });
         Jockey.send("checkExistCert");
-      }
-      else if(Constant.userAgent == "Android") {
+      } else if (Constant.userAgent == "Android") {
         window.Android.checkExistCert();
       }
     },
     //자동스크래핑 가능 금융사 조회
     frmFcCertList: function() {
-      var noPerson = this.$store.state.user.noPerson
-      var nmPerson = this.$store.state.user.nmPerson
-      var bankCode = this.$store.state.bankCode
-      var cardCode = this.$store.state.cardCode
+      var noPerson = this.$store.state.user.noPerson;
+      var nmPerson = this.$store.state.user.nmPerson;
+      var bankCode = this.$store.state.bankCode;
+      var cardCode = this.$store.state.cardCode;
 
-      if(userAgent == "iOS") {
+      if (Constant.userAgent == "iOS") {
         /* Jockey.on("frmFcListNextFromMobile" , function(param) {
           frmFcListNextFromMobile();
         });
@@ -174,35 +165,42 @@ export default {
           bankCode : bankCode
         }); */
         //do nothing
-      } else if(userAgent == "Android") {
-        window.Android.checkAvaliableScrapList(noPerson, bankCode, cardCode, nmPerson);
+      } else if (Constant.userAgent == "Android") {
+        window.Android.checkAvaliableScrapList(
+          noPerson,
+          bankCode,
+          cardCode,
+          nmPerson
+        );
       }
     },
     /***
      * Native Call function
      **/
     resultFingerPrint: function(result) {
-      console.log(result)
-      if(result == true || result == 1){
-        if(Constant.userAgent == "Android") {
-          window.Android.closeFingerPrint()
+      console.log(result);
+      if (result == true || result == 1) {
+        if (Constant.userAgent == "Android") {
+          window.Android.closeFingerPrint();
         }
       } else {
-        return false
+        return false;
       }
     },
     //공인인증서 유무 결과 (모바일에서 호출)
     resultCheckCert: function(isCert) {
-      if(isCert) {  // 공인인증서가 있을 경우
+      if (isCert) {
+        // 공인인증서가 있을 경우
         this.frmFcCertList();
-      } else {      // 공인인증서가 없을 경우
-        this.$toast.center('공인인증서가 없습니다.');
+      } else {
+        // 공인인증서가 없을 경우
+        this.$toast.center("공인인증서가 없습니다.");
         this.login();
       }
     },
     //자동 스크래핑 등록 완료 시 (모바일에서 호출)
     frmFcListNextFromMobile: function() {
-      this.login()
+      this.login();
     }
   }
 };
@@ -210,5 +208,8 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
-  .memberMain {background-color: #283593; height: 100%;}
+.memberMain {
+  background-color: #283593;
+  height: 100%;
+}
 </style>

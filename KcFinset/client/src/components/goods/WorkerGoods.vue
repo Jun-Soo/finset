@@ -55,6 +55,7 @@
 
 <script>
 import listLoanNoAffiliates from "./sub/listLoanNoAffiliates";
+import Common from "./../../assets/js/common.js";
 var pageCnt = 1;
 var curTab = "";
 var isSearching = false;
@@ -82,7 +83,6 @@ export default {
   created() {},
   beforeMount() {},
   mounted() {
-    this.page = 1;
     this.tabOnClick(this.curTab);
   },
   beforeUpdate() {},
@@ -139,7 +139,6 @@ export default {
     },
     orderbyOnChange() {
       this.page = 1;
-      $("#listLoanGoods").html("");
       this.loadGoodsTab(this.curTab);
     },
     loadGoodsTab(type) {
@@ -165,8 +164,7 @@ export default {
       } else if ("card" == type) {
         this.cd_fin = "D";
       }
-
-      this.$children[0].loadData();
+      Common.pagination(this.$children[0].listGoods);
 
       if (this.page == 1) {
         //isSearching = true;
@@ -176,7 +174,6 @@ export default {
     tabOnClick(type) {
       if (this.curTab != type) {
         this.page = 1;
-        //$("#listLoanGoods").html("");
       }
       this.loadGoodsTab(type);
     },
@@ -188,6 +185,18 @@ export default {
     },
     goCondition() {
       this.$router.push("/goods/frameLoanWorkerStep");
+    },
+    showSpinner: async function() {
+      this.spinnerIsVisible = true; // 시작시 Spinner 보여주기
+
+      this.secondsLeft = 3;
+      var interval = setInterval(() => {
+        this.secondsLeft--;
+        if (this.secondsLeft <= 0) {
+          clearInterval(interval);
+          this.spinnerIsVisible = false; // 0초되면 숨기기
+        }
+      }, 1000);
     }
   }
 };

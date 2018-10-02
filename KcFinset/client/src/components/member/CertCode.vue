@@ -253,7 +253,7 @@ export default {
       var bankCode = this.$store.state.bankCode
       var cardCode = this.$store.state.cardCode
 
-      if(userAgent == "iOS") {
+      if(Constant.userAgent == "iOS") {
         /* Jockey.on("frmFcListNextFromMobile" , function(param) {
           frmFcListNextFromMobile();
         });
@@ -262,7 +262,7 @@ export default {
           bankCode : bankCode
         }); */
         //do nothing
-      } else if(userAgent == "Android") {
+      } else if(Constant.userAgent == "Android") {
         window.Android.checkAvaliableScrapList(noPerson, bankCode, cardCode, nmPerson);
       }
     },

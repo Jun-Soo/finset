@@ -12,7 +12,7 @@
 					<p>소득이있는 직장인</p>
 				</a>
 				
-				<a href="javascript:loanApplyStep('EMPLOYED')" class="list-group-item">
+        <a v-on:click="loanApplyStep('EMPLOYED')" class="list-group-item">
 					<h3 class="h3">신용대출(개인사업자)</h3>
 					<p>소득이있는  개인사업자</p>
 				</a>
@@ -49,14 +49,14 @@ export default {
   destroyed() {},
   methods: {
     loanApplyStep(gubun) {
-      var _this=this;
-      var url='';
+      var _this = this;
+      var url = "";
       if (gubun == "WORKER") {
         //직장인 신용대출
         url = "/goods/WorkerGoods";
       } else if (gubun == "EMPLOYED") {
         //자영업자 신용대출
-        url = "/m/loanselfemployed/frameLoanSelfEmployedStep1.crz";
+        url = "/goods/Spinner";
       } else if (gubun == "HOMEMORTGAGE") {
         //부동산 담보대출
         url = "/m/loanhomemortgage/frameLoanHomeMortgageStep1.crz";

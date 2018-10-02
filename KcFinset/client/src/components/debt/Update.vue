@@ -136,13 +136,13 @@ export default {
     getDebtInfoForUpdate() {
       var thisObj = this;
       this.$http
-        .get("/api/debt/getDebtInfoForUpdate.json", {
+        .get("/m/debt/getDebtInfoForUpdate.json", {
           params: { no_manage_info: thisObj.$store.state.no_manage_info }
         })
         .then(function(response) {
           var vo = response.data.debtVO;
           vo.style =
-            "background-image:url('/api/fincorp/getFinCorpIcon.crz?cd_fc=" +
+            "background-image:url('/m/fincorp/getFinCorpIcon.crz?cd_fc=" +
             vo.cd_fc +
             "')";
           thisObj.debtVO = vo;
@@ -176,7 +176,7 @@ export default {
       }
 
       this.$http
-        .post("/api/debt/updateDebtInfo.json", formData)
+        .post("/m/debt/updateDebtInfo.json", formData)
         .then(function(response) {
           if (response.data.code == "00") {
             thisObj.$toast.center("저장에 성공했습니다.");

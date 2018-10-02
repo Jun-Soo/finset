@@ -20,13 +20,13 @@ import Constant from "./../../assets/js/constant.js";
 import ko from "vee-validate/dist/locale/ko.js";
 
 export default {
-  name: 'helloWorld',
+  name: 'certFinger',
   data() {
     return {
       errMsg: '',
       j_username: this.$store.state.user.noPerson,
       j_password: "",
-      cntFailFinger: this.$store.state.user.cntFailFinger,
+      cntFailFinger: this.$store.state.user.cntFailFinger
     }
   },
   component: {
@@ -36,6 +36,7 @@ export default {
   beforeCreate() {
   },
   created() {
+    this.$store.state.title = '지문인증'
 
     window.resultFingerPrint = this.resultFingerPrint
     if(Constant.userAgent == "Android") {
@@ -66,15 +67,6 @@ export default {
   methods: {
     login: function() {
       var _this = this;
-
-      if (Constant.userAgent == "Android") {
-        // 스플래시 ON
-          window.Android.splash("Y");
-      } else if (Constant.userAgent == "iOS") {
-        Jockey.send("splashView", {
-          yn_splash: "Y"
-        });
-      }
 
       var querystring = require('querystring')
       var data = querystring.stringify({
@@ -110,7 +102,7 @@ export default {
     //비밀번호 틀린횟수 변경
     modifyPwdFailCnt: function(mode, cnt_fail) {
 
-      var data = {"no_person": _this.j_username, "cnt_fail_mode":mode, "cnt_fail":cnt_fail};
+      var data = {"no_person": this.j_username, "cnt_fail_mode":mode, "cnt_fail":cnt_fail};
       this.$http
         .get("/m/person/modifyPwdFailCnt.json", {
           params: data
@@ -127,37 +119,37 @@ export default {
      * Native Call function
      **/
     resultFingerPrint: function(result) {
-      var _this = this;
+      var _this = this
       if (result == true || result == 1) {
         //지문인식 성공
-        if (Common.userAgent == "Android") {
+        if (Constant.userAgent == "Android") {
           window.Android.closeFingerPrint();
         }
-        _this.login();
+        this.login();
       } else {
         //지문 틀린 누적횟수 증가
         _this.cntFailFinger += 1;
-        modifyPwdFailCnt("finger", _this.cntFailFinger);
+        this.modifyPwdFailCnt("finger", _this.cntFailFinger);
 
         if (_this.cntFailFinger < 5) {
           _this.errMsg = "다시 시도해 주세요. (" + _this.cntFailFinger + "/5)";
-        }
-        if (chk_finger == 5) {
+          return false;
+        } else if (_this.cntFailFinger == 5) {
           //지문인식 5번 모두 틀린 경우
           _this.errMsg = "지문이 비활성화 됩니다.";
           this.$toast.center(_this.errMsg);
-          setTimeout(function() {
-            _this.errMsg = "비밀번호를 입력하세요.";
-          }, 1000);
-          if (userAgent == "Android") {
+          if (Constant.userAgent == "Android") {
             window.Android.closeFingerPrint();
           }
 
-          var data = { yn_fingerprint: "N", no_person: _this.j_username };
+          var data = {"no_person": _this.j_username, "yn_fingerprint":"N"};
           this.$http
-            .get("/m/person/modifyFingerPrint.json", data)
+            .get("/m/person/modifyFingerPrint.json", {
+              params: data
+            })
             .then(response => {
               this.$store.state.user.ynFingerprint = "N";
+              this.$router.push('/member/certCodeLogin')
             })
             .catch(e => {
               this.$toast.center(ko.messages.error);

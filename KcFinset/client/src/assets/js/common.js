@@ -171,5 +171,95 @@ export default {
     } else if (flag === 'false') {
       active.disabled()
     }
+  },
+  formatNumber: function (number, isMinus) {
+    var regex = /^[-]?\d+(?:[.]\d+)?$/
+    var formatNum = ''
+    if (!regex.test(number)) {
+      if (number === '-') {
+        return '-'
+      } else {
+        return NaN
+      }
+    } else {
+      if (number.match('-')) {
+        number = number.replace('-', '')
+        isMinus = true
+      }
+      formatNum = Number(number).toLocaleString('en').split('.')[0]
+      if (isMinus) {
+        return '-' + formatNum
+      } else {
+        return formatNum
+      }
+    }
+  },
+  formatDate: function (date, pattern) {
+    var yyyy = ''
+    var mm = ''
+    var dd = ''
+    if (typeof date === 'string') {
+      yyyy = date.substring(0, 4)
+      mm = date.substring(4, 6)
+      dd = date.substring(6, 8)
+    } else if (typeof date === 'object') {
+      yyyy = date.getFullYear()
+      mm = date.getMonth() + 1
+      dd = date.getDate()
+    }
+    if (((pattern || '') === '') || pattern === 'yyyymmdd') {
+      return yyyy + '-' + mm + '-' + dd
+    } else if (pattern === 'yyyymm') {
+      return yyyy + '-' + mm
+    } else if (pattern === 'mmdd') {
+      return mm + '-' + dd
+    } else {
+      return undefined
+    }
+  },
+  getCodeName: function (group, code) {
+    var data = {
+      'group': group,
+      'code': code
+    }
+    var name = ''
+    $.ajax({
+      url: '/m/comm/getCodeName.json',
+      data: data,
+      contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+      type: 'POST',
+      async: false,
+      success: function (result) {
+        name = result.name
+      },
+      error: function (e) {
+        name = code
+      }
+    })
+    return name
+  },
+  // pagination 사용법
+  // 필요한 함수를 작성하되, 함수 파라미터로 callback을 선언
+  pagination: function (callback) {
+    Constant._this = this
+    Constant._callback = callback
+    Constant._this.addScroll()
+    Constant._callback(function () {})
+  },
+  handleScroll: function () {
+    var html = document.documentElement
+    var docHeight = html.scrollHeight
+    var viewHeight = html.offsetHeight
+    var scrollY = window.scrollY
+    var scrollBottom = docHeight - viewHeight - scrollY
+    if (scrollBottom === 0) {
+      Constant._callback(Constant._this.removeScroll)
+    }
+  },
+  addScroll: function () {
+    window.addEventListener('scroll', Constant._this.handleScroll)
+  },
+  removeScroll: function () {
+    window.removeEventListener('scroll', Constant._this.handleScroll)
   }
 }

@@ -8,7 +8,6 @@ import ko from 'vee-validate/dist/locale/ko.js'
 import axios from 'axios'
 import router from './comm/router'
 import store from './comm/store'
-import 'bootstrap'
 import 'jquery'
 
 import toast from 'vue2-toast'
@@ -21,6 +20,7 @@ import './assets/css/bootstrap.customize.css'
 import './assets/css/bootstrap-select.css'
 import './assets/css/mobile.css'
 
+import './assets/js/jockey.js'
 import './comm/message.js'
 
 Vue.use(VeeValidate, {
@@ -39,6 +39,7 @@ Vue.use(toast, {
 
 Vue.use(swiper)
 
+Vue.config.debug = true
 Vue.config.productionTip = false
 Vue.prototype.$http = axios
 

@@ -1,5 +1,6 @@
 package com.koscom.loanworker;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -8,11 +9,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.koscom.comm.ComController;
 import com.koscom.conditioncredit.model.ConditioncreditForm;
 import com.koscom.conditioncredit.service.ConditioncreditManager;
 import com.koscom.domain.ConditioncreditInfo;
@@ -23,17 +24,20 @@ import com.koscom.goodsbank.model.GoodsbankForm;
 import com.koscom.goodsbank.model.GoodsbankVO;
 import com.koscom.goodsbank.service.GoodsbankManager;
 import com.koscom.util.AuthUtil;
+import com.koscom.util.Constant;
 import com.koscom.util.Pagination;
 import com.koscom.util.ReturnClass;
 import com.koscom.util.StringUtil;
 
-
 @Controller
 @RequestMapping("/m/loanworker")
 @PropertySource("classpath:prop/webservice.properties")
-public class LoanWorkerController extends ComController{
+public class LoanWorkerController implements Constant{
 	
 	private static final Logger logger = LoggerFactory.getLogger(LoanWorkerController.class);
+	
+	@Resource
+    public Environment environment;
 	
 	@Autowired
 	GoodsManager goodsManager;
@@ -69,7 +73,7 @@ public class LoanWorkerController extends ComController{
          * 접근제어 : start
          */
         boolean isAuth = AuthUtil.isHaveAuth(request,"/frameLoanWorkerStep1.crz", environment);
-        if(isAuth == false) {return NOT_AUTH_PAGE;}
+        if(isAuth == false) {return Constant.NOT_AUTH_PAGE;}
         /**
          * 접근제어 : end
          */

@@ -25,7 +25,8 @@ const store = new Vuex.Store({
     isLoggedIn: false,
     site: null,
     bankCode: null,
-    cardCode: null
+    cardCode: null,
+    isLoading: false
   },
   mutations: {
     LOGIN (state, data) {

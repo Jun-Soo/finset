@@ -216,7 +216,7 @@ public class PersonController {
 		
 		logger.info("modifyPwdFailCnt.json start");
 		logger.info("no_person : " + personVO.getNo_person());
-		personVO.setId_frt(personVO.getNo_person());
+		personVO.setId_lst(personVO.getNo_person());
 		ReturnClass returnClass = personManager.modifyPwdFailCnt(personVO);
 		logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
 		model.addAttribute("result" , returnClass.getCd_result());

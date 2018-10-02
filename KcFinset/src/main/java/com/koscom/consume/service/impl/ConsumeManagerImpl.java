@@ -9,7 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.koscom.consume.dao.ConsumeMapper;
+import com.koscom.consume.model.ConsumeDetailGoalInfoVO;
 import com.koscom.consume.model.ConsumeForm;
+import com.koscom.consume.model.ConsumeGoalInfoVO;
 import com.koscom.consume.model.ConsumeVO;
 import com.koscom.consume.model.PersonConsumeClassVO;
 import com.koscom.consume.model.PersonSetInfoVO;
@@ -86,5 +88,29 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	public int modifyPersonSetInfo(PersonSetInfoVO personSetInfoVO) {
 		logger.debug("modifyPersonSetInfo");
 		return consumeMapper.modifyPersonSetInfo(personSetInfoVO);
+	}
+	
+	@Override
+	public int createGoal(ConsumeGoalInfoVO consumeGoalInfoVO) {
+		logger.debug("createGoal");
+		return consumeMapper.createGoal(consumeGoalInfoVO);
+	}
+	
+	@Override
+	public ConsumeGoalInfoVO getGoal(ConsumeGoalInfoVO consumeGoalInfoVO) {
+		logger.debug("getGoal");
+		return consumeMapper.getGoal(consumeGoalInfoVO);
+	}
+	
+	@Override
+	public int createDetailGoal(ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO) {
+		logger.debug("createDetailGoal");
+		return consumeMapper.createDetailGoal(consumeDetailGoalInfoVO);
+	}
+	
+	@Override
+	public List<ConsumeDetailGoalInfoVO> listDetailGoal(ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO) {
+		logger.debug("listDetailGoal");
+		return consumeMapper.listDetailGoal(consumeDetailGoalInfoVO);
 	}
 }

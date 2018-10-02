@@ -19,6 +19,7 @@ import CreditMain from '@/components/credit/Main'
 
 import ErrorPage from '@/components/common/Error'
 import ProxyPage from '@/components/common/ProxyPage'
+import Spinner from '@/components/common/Spinner'
 
 import DebtHome from '@/components/debt/Home'
 import DebtMain from '@/components/debt/Main'
@@ -43,6 +44,11 @@ import ShareSetting from '@/components/share/Setting'
 import ShareDetail from '@/components/share/Detail'
 import ShareNewRequest from '@/components/share/NewRequest'
 import ShareMain from '@/components/share/Main'
+
+// import MypageHome from '@/components/mypage/Home'
+// import CertPerson from '@/components/mypage/CertPerson'
+
+import Swiper from '@/components/_sample/Swiper'
 
 Vue.use(Router)
 
@@ -81,6 +87,12 @@ export const routes = [
     path: '/proxy',
     name: 'proxy',
     component: ProxyPage,
+    meta: { allowPath: true }
+  },
+  {
+    path: 'spinner',
+    alias: '/spinner',
+    component: Spinner,
     meta: { allowPath: true }
   },
   {
@@ -259,6 +271,25 @@ export const routes = [
         meta: { allowPath: true, requiresAuth: true }
       }
     ]
+  },
+  // {
+  //   path: '/mypage',
+  //   name: 'mypage',
+  //   component: MypageHome,
+  //   children: [
+  //     {
+  //       path: 'certPerson',
+  //       alias: '/certPerson',
+  //       component: CertPerson,
+  //       meta: { allowPath: true, requiresAuth: true }
+  //     },
+  //   ]
+  // }
+  {
+    path: '/sample/swiper',
+    name: 'swiper',
+    component: Swiper,
+    meta: { allowPath: true }
   }
 ]
 

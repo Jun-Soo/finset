@@ -73,7 +73,7 @@ import Constant from "./../../assets/js/constant.js";
 import ko from "vee-validate/dist/locale/ko.js";
 
 export default {
-  name: "certStep2",
+  name: "certPerson",
   data() {
     return {
       errMsg: "",
@@ -116,11 +116,12 @@ export default {
   computed: {},
   beforeCreate() {},
   created() {
+
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
     }
-    this.$store.state.title = "본인확인 (2/7)";
-    this.time = this.minutes * 60;
+    this.$store.state.title = "본인확인 (2/7)"
+    this.time = this.minutes * 60
   },
   beforeMount() {},
   mounted() {
@@ -147,17 +148,19 @@ export default {
           } else {
             _this.birthday = "20" + _this.ssn_birth;
           }
-
-          var formData = new FormData();
-          formData.append("nm_person", _this.nm_person);
-          formData.append("birthday", _this.birthday);
-          formData.append("sex", _this.sex);
-          formData.append("telComCd", _this.telComCd);
-          formData.append("hp", _this.hp);
-          formData.append("smsReSndYn", _this.smsReSndYn);
-          formData.append("nation", _this.nation);
+          var data = {
+            nm_person: _this.nm_person,
+            birthday: _this.birthday,
+            sex: _this.sex,
+            telComCd: _this.telComCd,
+            hp: _this.hp,
+            smsReSndYn: _this.smsReSndYn,
+            nation: _this.nation
+          };
           this.$http
-            .post("/m/login/kcmRequestCertNo.json", formData)
+            .get("/m/login/kcmRequestCertNo.json", {
+              params: data
+            })
             .then(response => {
               var result = response.data;
               console.log(result);
@@ -216,12 +219,15 @@ export default {
         this.smsCertNo = "";
         return false;
       }
-      var formData = new FormData();
-      formData.append("svcTxSeqno", _this.svcTxSeqno);
-      formData.append("hp", _this.hp);
-      formData.append("smsCertNo", _this.smsCertNo);
+      var data = {
+        svcTxSeqno: _this.svcTxSeqno,
+        hp: _this.hp,
+        smsCertNo: _this.smsCertNo
+      };
       this.$http
-        .post("/m/login/kcmCertify.json", formData)
+        .get("/m/login/kcmCertify.json", {
+          params: data
+        })
         .then(response => {
           var result = response.data;
           console.log(result);
@@ -243,47 +249,49 @@ export default {
     insertPerson: function() {
       var _this = this;
       _this.bgn = _this.birthday + _this.sex;
-      var formData = new FormData();
-      formData.append("nm_person", _this.nm_person);
-      formData.append("bgn", _this.bgn);
-      formData.append("birthday", _this.birthday);
-      formData.append("telComCd", _this.telComCd);
-      formData.append("hp", _this.hp);
-      formData.append("kcb_ci", _this.kcb_ci);
-      formData.append("kcb_di", _this.kcb_di);
-      formData.append("kcb_cp", _this.kcb_cp);
-      formData.append(
-        "yn_eventPush",
-        this.$store.state.user.isEventPush ? "Y" : "N"
-      );
+
+      var data = {
+        nm_person: _this.nm_person,
+        bgn: _this.bgn,
+        birthday: _this.birthday,
+        telComCd: _this.telComCd,
+        hp: _this.hp,
+        kcb_ci: _this.kcb_ci,
+        kcb_di: _this.kcb_di,
+        kcb_cp: _this.kcb_cp,
+        yn_eventPush: (this.$store.state.user.isEventPush ? 'Y' : 'N')
+      };
 
       this.$http
-        .post("/m/person/insertPerson.json", formData)
+        .get("/m/person/insertPerson.json", {
+          params: data
+        })
         .then(response => {
           var result = response.data;
           var noPerson = result.returnData;
           this.$store.state.user.noPerson = result.returnData;
           if (result.result == "00") {
-            if (Constant.userAgent == "iOS") {
-              Jockey.send("setNoPerson", {
-                noPerson: noPerson,
-                phNum: this.hp
+            if(Constant.userAgent == "iOS") {
+              Jockey.send("setNoPerson",{
+                noPerson : noPerson,
+                phNum : this.hp
               });
-            } else if (Constant.userAgent == "Android") {
+            } else if(Constant.userAgent == "Android") {
               window.Android.setNoPerson(noPerson, this.hp);
             }
             // frmCertifyStep.action = "<c:url value='/m/base/frameSecurityCode.crz'/>";
-            _this.$router.push("/member/certCode");
+            _this.$router.push('/member/certCode')
+
           } else if (result.result == "11") {
-            if (Constant.userAgent == "iOS") {
-              Jockey.send("setNoPerson", {
-                noPerson: noPerson,
-                phNum: _this.hp
+            if(Constant.userAgent == "iOS") {
+              Jockey.send("setNoPerson",{
+                noPerson : noPerson,
+                phNum : _this.hp
               });
-            } else if (Constant.userAgent == "Android") {
+            } else if(Constant.userAgent == "Android") {
               window.Android.setNoPerson(noPerson, _this.hp);
             }
-            _this.$router.push("/home?hp=" + _this.hp);
+            _this.$router.push('/home?hp='+_this.hp)
           }
         })
         .catch(e => {

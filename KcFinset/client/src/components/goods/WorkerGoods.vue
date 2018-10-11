@@ -43,7 +43,14 @@
 			</div>
 		</div>
 		<div id="listLoanGoods">
+      <!-- <swiper direction="horizontal"
+        :mousewheel-control="true"
+        :performance-mode="false"
+        :pagination-visible="true"
+        :pagination-clickable="true"
+        :loop="true"> -->
       <listLoanNoAffiliates/>
+      <!-- </swiper> -->
 		</div>
 		<div class="btn-fixed-bottom affix-bottom" id="next_div">
 			<a role="button" class="btn btn-lg btn-block btn-disabled" onclick="loanWorkerNextStep();">금리/한도 조회하기</a>

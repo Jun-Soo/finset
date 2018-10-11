@@ -49,6 +49,8 @@ import ShareMain from '@/components/share/Main'
 // import CertPerson from '@/components/mypage/CertPerson'
 
 import Swiper from '@/components/_sample/Swiper'
+import Gauge from '@/components/_sample/Gauge'
+import Progress from '@/components/_sample/Progress'
 
 import TemplateHome from '@/components/template/Home'
 import TemplateMain from '@/components/template/Main'
@@ -295,6 +297,18 @@ export const routes = [
     path: '/sample/swiper',
     name: 'swiper',
     component: Swiper,
+    meta: { allowPath: true }
+  },
+  {
+    path: '/sample/gauge',
+    name: 'gauge',
+    component: Gauge,
+    meta: { allowPath: true }
+  },
+  {
+    path: '/sample/progress',
+    name: 'progress',
+    component: Progress,
     meta: { allowPath: true }
   },
   {

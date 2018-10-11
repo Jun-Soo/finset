@@ -1,5 +1,11 @@
 <template>
 <div v-if="goodsList.length" >
+  <swiper direction="horizontal"
+        :mousewheel-control="true"
+        :performance-mode="false"
+        :pagination-visible="true"
+        :pagination-clickable="true"
+        :loop="true">
  	<div class="list-block" v-for="goods in goodsList" :key="goods.index">
 		<div class="list-block prd-list">
 			<div class="container-fluid prd-loan" id="loan_product">
@@ -55,6 +61,7 @@
 				</div>
 		</div>
 	</div>
+  </swiper>
 </div>
 <div v-else class="data-none">
 	<p>신청 가능한 상품이 없습니다.</p>

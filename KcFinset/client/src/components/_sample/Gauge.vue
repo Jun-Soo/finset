@@ -45,20 +45,26 @@
         :from="rotateFrom"
         :to="rotateTo"
         dur="2s"
-        begin="1s"
+        begin="0s"
         fill="freeze"
+        keySplines="0.1 0.8 0.2 1;"
+        keyTimes="0; 1"
+        calcMode="spline"
       />
       <!-- dataBar point animation -->
       <animateTransform
         ref="dataPointAnimate"
         xlink:href="#dataPoint"
         attributeName="transform"
-        type="rotate"
+        type="rotate"                                     
         :from="rotateFrom"
         :to="rotateTo"
         dur="2s"
-        begin="1s"
+        begin="0s"
         fill="freeze"
+        keySplines="0.1 0.8 0.2 1;"
+        keyTimes="0; 1"
+        calcMode="spline"
       />
     </svg>
   </div>

@@ -55,7 +55,8 @@ export default {
     this.$store.state.title = "지문인증 설정 (5/7)";
 
     window.resultFingerPrint = this.resultFingerPrint;
-    // window.resultCheckCert = this.resultCheckCert
+    window.resultCheckCert = this.resultCheckCert;
+    window.resultCheckPasswordCert = this.resultCheckPasswordCert;
     // window.frmFcListNextFromMobile = this.frmFcListNextFromMobile
   },
   beforeMount() {},
@@ -67,7 +68,6 @@ export default {
   methods: {
     login: function() {
       var _this = this;
-
       var querystring = require("querystring");
       var data = querystring.stringify({
         j_username: _this.noPerson,
@@ -120,19 +120,26 @@ export default {
           params: data
         })
         .then(response => {
-          var result = response.data
+          var result = response.data;
           if (result.result == "00") {
             this.$toast.center("지문 로그인 설정이 완료되었습니다.");
-            setTimeout(function() {
-              _this.login()
-            }, 2000)
+            if (
+              Constant.userAgent == "Android" ||
+              Constant.userAgent == "IOS"
+            ) {
+              _this.checkExistCert();
+            } else {
+              setTimeout(function() {
+                _this.login();
+              }, 2000);
+            }
           } else {
-            this.$toast.center(result.message)
-            return false
+            this.$toast.center(result.message);
+            return false;
           }
         })
         .catch(e => {
-          this.$toast.center(ko.messages.error)
+          this.$toast.center(ko.messages.error);
         });
     },
     // 공인인증서 유무 체크
@@ -191,12 +198,28 @@ export default {
     resultCheckCert: function(isCert) {
       if (isCert) {
         // 공인인증서가 있을 경우
-        this.frmFcCertList();
+        //this.frmFcCertList();
+        if (Constant.userAgent == "iOS") {
+          Jockey.on("checkPasswordCert", function(param) {
+            resultCheckPasswordCert();
+          });
+          Jockey.send("checkPasswordCert", {
+            nmPerson: this.$store.state.user.nmPerson
+          });
+          //do nothing
+        } else if (Constant.userAgent == "Android") {
+          window.Android.checkPasswordCert(this.$store.state.user.nmPerson);
+        }
       } else {
         // 공인인증서가 없을 경우
         this.$toast.center("공인인증서가 없습니다.");
         this.login();
       }
+    },
+    //공인인증서 비밀번호 체크 결과 (모바일에서 호출)
+    resultCheckPasswordCert: function(dn) {
+      // 금융정보제공동의서 확인여부 체크 필요
+      this.$router.push({ path: "/member/certStep3", params: { dn: dn } });
     },
     //자동 스크래핑 등록 완료 시 (모바일에서 호출)
     frmFcListNextFromMobile: function() {

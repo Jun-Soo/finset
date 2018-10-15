@@ -9,6 +9,7 @@ import Logout from '@/components/member/Logout'
 import MemberHome from '@/components/member/Home'
 import CertStep1 from '@/components/member/CertStep1'
 import CertStep2 from '@/components/member/CertStep2'
+import CertStep3 from '@/components/member/CertStep3'
 import CertCode from '@/components/member/CertCode'
 import CertFinger from '@/components/member/CertFinger'
 import CertCodeLogin from '@/components/member/CertCodeLogin'
@@ -119,6 +120,12 @@ export const routes = [
         path: 'certStep2',
         alias: '/certStep2',
         component: CertStep2,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'certStep3',
+        alias: '/certStep3',
+        component: CertStep3,
         meta: { allowPath: true }
       },
       {

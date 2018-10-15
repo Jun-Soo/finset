@@ -262,7 +262,8 @@ export default {
         .then(response => {
           var result = response.data;
           var noPerson = result.returnData;
-          this.$store.state.user.noPerson = result.returnData;
+          this.$store.state.user.noPerson = result.no_person;
+          this.$store.state.user.nmPerson = result.nm_person;
           if (result.result == "00") {
             if (Constant.userAgent == "iOS") {
               Jockey.send("setNoPerson", {

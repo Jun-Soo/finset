@@ -140,14 +140,44 @@ public class BaseController {
 		return "jsonView";
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
+	/** VUE
+	 * 스크래핑 관련 금융사 내역 조회
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getScrapFcList.json")
+	public String getScrapFcList(
+			HttpServletResponse response,
+			HttpServletRequest request, 
+			HttpSession session, 
+			Model model,
+			PersonForm personForm) {
+
+		String no_person = personForm.getNo_person();
+		PersonVO personVO = personManager.getPersonInfo(no_person);
+		
+		logger.info("스크래핑 대상 금융사 조회                            : " + no_person);
+		logger.info("personVO.getNm_person() : " + personVO.getNm_person());
+		
+		model.addAttribute("nm_person", personVO.getNm_person());
+				
+		//스크래핑 대상 은행 리스트 가져오기
+		List<String> bankList = fincorpManager.getCooconFcCd(codeManager.getCodeId("cd_fin","은행"));
+		String bankCode = String.join(",", bankList);
+		
+		List<String> cardList = fincorpManager.getCooconFcCd(codeManager.getCodeId("cd_fin","카드"));
+		String cardCode = String.join(",", cardList);
+		
+		logger.debug("bankCode : " + bankCode);
+		logger.debug("cardCode : " + cardCode);
+		
+		model.addAttribute("bank_code", bankCode);
+		model.addAttribute("card_code", cardCode);
+		
+		return "jsonView";
+	}
+
 	
 	
 	

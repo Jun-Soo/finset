@@ -161,7 +161,8 @@ public class PersonController {
 			if(returnClass.getCd_result().equals(Constant.SUCCESS)) {
 				
 				person = (PersonVO) returnClass.getReturnObj();
-				model.addAttribute("returnData", person.getNo_person());
+				model.addAttribute("no_person", person.getNo_person());
+				model.addAttribute("nm_person", person.getNm_person());
 				logger.debug("회원가입 완료 : " + (person == null));
             }
 		}

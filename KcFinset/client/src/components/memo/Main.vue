@@ -3,7 +3,7 @@
 	<header id="header">
 		<div class="input-group">
 			<div class="input-group-btn">
-				<button type="button" class="ui-nav nav-back" onclick="chkHistory();">뒤로가기</button>
+				<button type="button" class="ui-nav nav-back" @click="goBack()">뒤로가기</button>
 			</div>
 			<h1>메모</h1>
 			<form id="frmMemo" method="post">
@@ -197,6 +197,9 @@ export default {
     },
     createMemo() {
       router.push("/memo/create");
+    },
+    goBack() {
+      router.go(-1);
     }
   }
 };

@@ -2,6 +2,9 @@ package com.koscom.debt.model;
 
 import java.io.Serializable;
 
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
+
 public class DebtCalendarVO implements Serializable{
 	
 	private static final long serialVersionUID = 2222693108938401173L;
@@ -19,6 +22,11 @@ public class DebtCalendarVO implements Serializable{
     private String pay_type          ;    /*납입종류*/
     private String pay_type_nm       ;    /*납입종류명*/
 
+    /*신규*/
+    private String inter_pay_day	 ;	  /*이자 납입일*/
+    private String req_yyyymm		 ;	  /*이자 납입월*/
+    private String req_yyyymmdd		 ;	  /*납입일*/
+    
     public String getNo_manage_info() {
         return no_manage_info;
     }
@@ -108,14 +116,33 @@ public class DebtCalendarVO implements Serializable{
 		this.pay_type_nm = pay_type_nm;
 	}
 
-	@Override
-	public String toString() {
-		return "DebtCalendarVO [no_manage_info=" + no_manage_info + ", cd_fc="
-				+ cd_fc + ", nm_fc=" + nm_fc + ", amt_repay=" + amt_repay
-				+ ", interest_ymd=" + interest_ymd + ", payment_ymd="
-				+ payment_ymd + ", pay_yyyy=" + pay_yyyy + ", pay_mm=" + pay_mm
-				+ ", pay_dd=" + pay_dd + ", pay_type=" + pay_type
-				+ ", pay_type_nm=" + pay_type_nm + "]";
+	public String getInter_pay_day() {
+		return inter_pay_day;
 	}
+
+	public void setInter_pay_day(String inter_pay_day) {
+		this.inter_pay_day = inter_pay_day;
+	}
+
+	public String getReq_yyyymm() {
+		return req_yyyymm;
+	}
+
+	public void setReq_yyyymm(String req_yyyymm) {
+		this.req_yyyymm = req_yyyymm;
+	}
+	
+	public String getReq_yyyymmdd() {
+		return req_yyyymmdd;
+	}
+
+	public void setReq_yyyymmdd(String req_yyyymmdd) {
+		this.req_yyyymmdd = req_yyyymmdd;
+	}
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+    }
 
 }

@@ -173,6 +173,9 @@ export default {
     }
   },
   formatNumber: function (number, isMinus) {
+    if (typeof number === 'number') {
+      number += ''
+    }
     var regex = /^[-]?\d+(?:[.]\d+)?$/
     var formatNum = ''
     if (!regex.test(number)) {
@@ -205,7 +208,13 @@ export default {
     } else if (typeof date === 'object') {
       yyyy = date.getFullYear()
       mm = date.getMonth() + 1
+      if (mm < 10) {
+        mm = '0' + mm
+      }
       dd = date.getDate()
+      if (dd < 10) {
+        dd = '0' + dd
+      }
     }
     if (((pattern || '') === '') || pattern === 'yyyymmdd') {
       return yyyy + '-' + mm + '-' + dd

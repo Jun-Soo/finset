@@ -143,7 +143,6 @@ export default {
         .then(function(response) {
           _this.events = [];
           var data = response.data;
-
           var incomeList = data.incomeList;
           var consumeList = data.consumeList;
           var debtList = data.debtList;

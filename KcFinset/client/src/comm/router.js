@@ -51,6 +51,7 @@ import ShareMain from '@/components/share/Main'
 import Swiper from '@/components/_sample/Swiper'
 import Gauge from '@/components/_sample/Gauge'
 import Progress from '@/components/_sample/Progress'
+import Calendar from '@/components/_sample/Calendar'
 
 import TemplateHome from '@/components/template/Home'
 import TemplateMain from '@/components/template/Main'
@@ -309,6 +310,12 @@ export const routes = [
     path: '/sample/progress',
     name: 'progress',
     component: Progress,
+    meta: { allowPath: true }
+  },
+  {
+    path: '/sample/calendar',
+    name: 'calendar',
+    component: Calendar,
     meta: { allowPath: true }
   },
   {

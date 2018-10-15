@@ -1,8 +1,8 @@
 <template>
     <div>
         <button id="toggle" v-on:click="toggleTest()">토글!</button>
-        <Component_test v-if="isTest"/>
-        <Component_main v-else/>
+        <Component_main v-if="isTest"/>
+        <Component_test v-else/>
     </div>
 
     
@@ -41,6 +41,7 @@ export default {
       } else {
         this.isTest = true;
       }
+      this.$router.push('./calendar')
     }
   }
 };

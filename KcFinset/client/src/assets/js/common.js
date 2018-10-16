@@ -182,7 +182,7 @@ export default {
       if (number === '-') {
         return '-'
       } else {
-        return NaN
+        return 0
       }
     } else {
       if (number.match('-')) {

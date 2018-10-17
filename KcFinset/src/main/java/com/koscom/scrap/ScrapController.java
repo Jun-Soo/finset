@@ -31,6 +31,7 @@ import com.koscom.fincorp.service.FincorpManager;
 import com.koscom.kcb.model.KcbReqNonfiInfoVO;
 import com.koscom.kcb.service.KcbManager;
 import com.koscom.person.model.PersonCertificateInfoVO;
+import com.koscom.person.model.PersonForm;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
 import com.koscom.scrap.model.AnAllVO;
@@ -103,7 +104,100 @@ public class ScrapController {
 	@Autowired
 	private KcbManager kcbManager;
 	
+	/** VUE
+	 * 스크래핑 관련 금융사 내역 조회
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getScrapFcList.json")
+	public String getScrapFcList(
+			HttpServletResponse response,
+			HttpServletRequest request, 
+			HttpSession session, 
+			Model model) {
+		//스크래핑 대상 은행 리스트 가져오기
+		List<String> bankList = fincorpManager.getCooconFcCd(codeManager.getCodeId("cd_fin","은행"));
+		String bankCode = String.join(",", bankList);
+		
+		//스크래핑 대상 카드 리스트 가져오기
+		List<String> cardList = fincorpManager.getCooconFcCd(codeManager.getCodeId("cd_fin","카드"));
+		String cardCode = String.join(",", cardList);
+		
+		logger.debug("bankCode : " + bankCode);
+		logger.debug("cardCode : " + cardCode);
+		
+		model.addAttribute("bank_code", bankCode);
+		model.addAttribute("card_code", cardCode);
+		
+		return "jsonView";
+	}
+	
+	/** VUE
+	 * 스크래핑 관련 증권사 내역 조회
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getScrapStList.json")
+	public String getScrapStList(
+			HttpServletResponse response,
+			HttpServletRequest request, 
+			HttpSession session, 
+			Model model,
+			String dn) {
+		logger.debug("================= dn : " + dn);
+		model.addAttribute("result", "00");
+		return "jsonView";
+	}
+	
+	/** VUE
+	 * 스크래핑 연동 금융사 조회
+	 * @param request
+	 * @param model
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/scrapFcLinkList.json")
+	public String scrapFcLinkList(
+			HttpServletResponse response,
+			HttpServletRequest request, 
+			HttpSession session, 
+			Model model,
+			String no_person,
+			String cn)	{ 
+		
+		logger.debug("================= no_person : " + no_person);
+		logger.debug("================= cn : " + cn);
+		
+		List<LinkedFcInfoVO> linkedFcInfoList = scrapManager.frameFcLinkList(no_person, cn);
 
+		model.addAttribute("linkedFcInfoList", linkedFcInfoList);
+		return "jsonView";
+	}
+	
+	/** VURE
+	 * 스크래핑 연동 금융사 수정 
+	 * @param request
+	 * @param model
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/updateFcLinkInfoList.json")
+	public String updateFcLinkInfoList(
+		HttpServletResponse response,
+		HttpServletRequest request, 
+		HttpSession session, 
+		Model model,
+		FcLinkInfoVO linkedFcInfoList)	{ 
+		logger.debug("updateFcLinkInfoList.json");
+				
+		ReturnClass returnClass = scrapManager.updateFcLinkInfoList(linkedFcInfoList);
+		model.addAttribute("code", returnClass.getCd_result());
+		
+		return "jsonView";
+	}
+	
 	/**
 	 * 금융사 스크랩핑 연동 정보 여부 insert
 	 * @param request
@@ -151,6 +245,7 @@ public class ScrapController {
 
 	}
 	
+	
 	/**
 	 * 스크래핑 연동 금융사 조회 화면 
 	 * @param request
@@ -191,7 +286,7 @@ public class ScrapController {
 		
 		LinkedFcInfoVO linkedFcInfo = new LinkedFcInfoVO();
 		
-		linkedFcInfo.setNO_PERSON(no_person);
+		linkedFcInfo.setNo_person(no_person);
 
 		List<LinkedFcInfoVO> linkedFcInfoList = scrapManager.getLinkFcInfo(linkedFcInfo);
 		List<LinkedFcInfoVO> bankLinkInfo = new ArrayList<LinkedFcInfoVO>();
@@ -199,18 +294,18 @@ public class ScrapController {
 		List<LinkedFcInfoVO> etcLinkInfo = new ArrayList<LinkedFcInfoVO>();
 		
 		for (LinkedFcInfoVO linkedFcInfoVO : linkedFcInfoList) {
-             logger.debug("linkedFcInfoVO.getNO_PERSON() :" + linkedFcInfoVO.getNO_PERSON()  );
-             logger.debug("linkedFcInfoVO.getCN()        :" + linkedFcInfoVO.getCN()         );
-             logger.debug("linkedFcInfoVO.getNM_FC()     :" + linkedFcInfoVO.getNM_FC()      );
-             logger.debug("linkedFcInfoVO.getNM_CODE()   :" + linkedFcInfoVO.getNM_CODE()    );
-             linkedFcInfoVO.setNO_PERSON(no_person);
-             if(linkedFcInfoVO.getNM_CODE().equals("은행"))	{
+             logger.debug("linkedFcInfoVO.getNO_PERSON() :" + linkedFcInfoVO.getNo_person()  );
+             logger.debug("linkedFcInfoVO.getCN()        :" + linkedFcInfoVO.getCn()         );
+             logger.debug("linkedFcInfoVO.getNM_FC()     :" + linkedFcInfoVO.getNm_fc()      );
+             logger.debug("linkedFcInfoVO.getNM_CODE()   :" + linkedFcInfoVO.getNm_code()    );
+             linkedFcInfoVO.setNo_person(no_person);
+             if(linkedFcInfoVO.getNm_code().equals("은행"))	{
             	 bankLinkInfo.add(linkedFcInfoVO);
              }
-             else if(linkedFcInfoVO.getNM_CODE().equals("카드"))	{
+             else if(linkedFcInfoVO.getNm_code().equals("카드"))	{
             	 cardLinkInfo.add(linkedFcInfoVO);
              }
-             else if(linkedFcInfoVO.getNM_CODE().equals("기타"))	{
+             else if(linkedFcInfoVO.getNm_code().equals("기타"))	{
             	 etcLinkInfo.add(linkedFcInfoVO);
              }
 		}
@@ -243,23 +338,6 @@ public class ScrapController {
 		return "/scrap/frameFcLinkControl";
 	}
 	
-	/**
-	 * 스크래핑 연동 금융사 수정 
-	 * @param request
-	 * @param model
-	 * @param session
-	 * @return
-	 */
-	@RequestMapping("/updateFcLinkInfoList.json")
-	public String updateFcLinkInfoList(HttpSession session, FcLinkInfoVO linkedFcInfoList, Model model) throws FinsetException {
-		logger.debug("updateFcLinkInfoList.json");
-				
-		ReturnClass returnClass = scrapManager.updateFcLinkInfoList(linkedFcInfoList);
-		model.addAttribute("code", returnClass.getCd_result());
-		
-		return "jsonView";
-	}
-
 	/**
 	 * 은행 자동 스크래핑 내역 저장 
 	 * @param request

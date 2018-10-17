@@ -87,7 +87,6 @@ export default {
   created() {
     window.resultCheckFingerPrint = this.resultCheckFingerPrint;
     window.resultCheckCert = this.resultCheckCert;
-    window.frmFcListNextFromMobile = this.frmFcListNextFromMobile;
     window.resultCheckPasswordCert = this.resultCheckPasswordCert;
 
     if (Constant.userAgent == "Android") {
@@ -247,45 +246,9 @@ export default {
         window.Android.checkExistCert();
       }
     },
-    //자동스크래핑 가능 금융사 조회
-    frmFcCertList: function() {
-      var _this = this;
-      var formData = new FormData();
-      formData.append("no_person", this.noPerson);
-      this.$http
-        .post("/m/base/getScrapFcList.json", formData)
-        .then(function(response) {
-          _this.$store.state.user.nmPerson = response.data.nm_person;
-          _this.$store.state.bankCode = response.data.bank_code;
-          _this.$store.state.cardCode = response.data.card_code;
-
-          if (Constant.userAgent == "iOS") {
-            Jockey.on("checkAvaliableScrapList", function(param) {
-              frmFcListNextFromMobile();
-            });
-            Jockey.send("checkAvaliableScrapList", {
-              noPerson: _this.$store.state.user.noPerson,
-              bankCode: _this.$store.state.bankCode,
-              cardCode: _this.$store.state.cardCode,
-              nmPerson: _this.$store.state.user.nmPerson
-            });
-            //do nothing
-          } else if (Constant.userAgent == "Android") {
-            window.Android.checkAvaliableScrapList(
-              _this.$store.state.user.noPerson,
-              _this.$store.state.bankCode,
-              _this.$store.state.cardCode,
-              _this.$store.state.user.nmPerson
-            );
-          }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
-        });
-    },
     /***
      * Native Call function
-     **/
+     ***/
     resultCheckFingerPrint: function(result) {
       console.log(result);
       if (result == true || result == 1) {
@@ -298,17 +261,20 @@ export default {
     resultCheckCert: function(isCert) {
       if (isCert) {
         // 공인인증서가 있을 경우
-        //this.frmFcCertList();
         if (Constant.userAgent == "iOS") {
           Jockey.on("checkPasswordCert", function(param) {
             resultCheckPasswordCert();
           });
           Jockey.send("checkPasswordCert", {
+            noPerson: this.$store.state.user.noPerson,
             nmPerson: this.$store.state.user.nmPerson
           });
           //do nothing
         } else if (Constant.userAgent == "Android") {
-          window.Android.checkPasswordCert(this.$store.state.user.nmPerson);
+          window.Android.checkPasswordCert(
+            this.$store.state.user.noPerson,
+            this.$store.state.user.nmPerson
+          );
         }
       } else {
         // 공인인증서가 없을 경우
@@ -316,13 +282,9 @@ export default {
         this.login();
       }
     },
-    resultCheckPasswordCert: function(dn) {
+    resultCheckPasswordCert: function(dn, cn) {
       // 금융정보제공동의서 확인여부 체크 필요
-      this.$router.push({ path: "/member/certStep3", params: { dn: dn } });
-    },
-    //자동 스크래핑 등록 완료 시 (모바일에서 호출)
-    frmFcListNextFromMobile: function() {
-      this.login();
+      this.$router.push({ name: "scrapCertStep", params: { dn: dn, cn: cn } });
     }
   }
 };

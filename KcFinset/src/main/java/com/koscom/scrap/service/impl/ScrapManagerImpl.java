@@ -112,31 +112,31 @@ public class ScrapManagerImpl implements ScrapManager {
         personMapper.createPersonCertificateInfo(personCertificateInfoVO);
         
         //기존 금융사 연계 정보 히스토리 테이블에 저장
-        fcLinkInfo.setNO_PERSON(no_person);
-        fcLinkInfo.setCN(cn);
+        fcLinkInfo.setNo_person(no_person);
+        fcLinkInfo.setCn(cn);
         nResult = scrapMapper.createFcLinkInfoHist(fcLinkInfo);
         logger.debug("scrapManager.createFcLinkInfoHist return  :" + nResult);
         
         //국세청 자동 스크래핑 정보 테이블에 반영 
         if(appFcLinkInfo.getNTS_LINK_INFO() != null){
         	FcLinkInfoVO fcLinkInfoVO = appFcLinkInfo.getNTS_LINK_INFO();
-        	String cd_fc = codeManager.getCodeId("cd_coocon_fc", fcLinkInfoVO.getCD_FC());
+        	String cd_fc = codeManager.getCodeId("cd_coocon_fc", fcLinkInfoVO.getCd_fc());
         	String cd_agency = codeManager.getCodeId("cd_agency", "국세청");
-        	String type_login = codeManager.getCodeId("type_login", fcLinkInfoVO.getTYPE_LOGIN());
-        	fcLinkInfoVO.setNO_PERSON(no_person);
-        	fcLinkInfoVO.setCN(cn);
-        	fcLinkInfoVO.setCD_FC(cd_fc);
-        	fcLinkInfoVO.setCD_AGENCY(cd_agency);
-        	fcLinkInfoVO.setTYPE_LOGIN(type_login);
-        	if(fcLinkInfoVO.getYN_LINK().equals("Y"))	{
-        		fcLinkInfoVO.setCD_LINK_STAT("00");
+        	String type_login = codeManager.getCodeId("type_login", fcLinkInfoVO.getType_login());
+        	fcLinkInfoVO.setNo_person(no_person);
+        	fcLinkInfoVO.setCn(cn);
+        	fcLinkInfoVO.setCd_fc(cd_fc);
+        	fcLinkInfoVO.setCd_agency(cd_agency);
+        	fcLinkInfoVO.setType_login(type_login);
+        	if(fcLinkInfoVO.getYn_link().equals("Y"))	{
+        		fcLinkInfoVO.setCd_link_stat("00");
         	}
         	else	{
-        		fcLinkInfoVO.setCD_LINK_STAT("99");
+        		fcLinkInfoVO.setCd_link_stat("99");
         	}
-        	fcLinkInfoVO.setRSN_LINK_MESSAGE(fcLinkInfoVO.getERROR_MESSAGE());
-        	fcLinkInfoVO.setID_FRT(no_person);
-        	fcLinkInfoVO.setID_LST(no_person);
+        	fcLinkInfoVO.setRsn_link_message(fcLinkInfoVO.getError_message());
+        	fcLinkInfoVO.setId_frt(no_person);
+        	fcLinkInfoVO.setId_lst(no_person);
         	
         	nResult = scrapMapper.createFcLinkInfo(fcLinkInfoVO);
     		logger.debug("scrapManager.createFcLinkInfo return  :" + nResult);
@@ -146,23 +146,23 @@ public class ScrapManagerImpl implements ScrapManager {
         if(appFcLinkInfo.getBANK_LINK_INFO() != null){
         	List<FcLinkInfoVO> FC_LINK_INFO = appFcLinkInfo.getBANK_LINK_INFO();
             for (FcLinkInfoVO fcLinkInfoVO : FC_LINK_INFO) {
-            	String cd_fc = codeManager.getCodeId("cd_coocon_fc", fcLinkInfoVO.getCD_FC());
+            	String cd_fc = codeManager.getCodeId("cd_coocon_fc", fcLinkInfoVO.getCd_fc());
             	String cd_agency = codeManager.getCodeId("cd_agency", "은행");
-            	String type_login = codeManager.getCodeId("type_login", fcLinkInfoVO.getTYPE_LOGIN());
-            	fcLinkInfoVO.setNO_PERSON(no_person);
-            	fcLinkInfoVO.setCN(cn);
-            	fcLinkInfoVO.setCD_FC(cd_fc);
-            	fcLinkInfoVO.setCD_AGENCY(cd_agency);
-            	fcLinkInfoVO.setTYPE_LOGIN(type_login);
-            	if(fcLinkInfoVO.getYN_LINK().equals("Y"))	{
-            		fcLinkInfoVO.setCD_LINK_STAT("00");
+            	String type_login = codeManager.getCodeId("type_login", fcLinkInfoVO.getType_login());
+            	fcLinkInfoVO.setNo_person(no_person);
+            	fcLinkInfoVO.setCn(cn);
+            	fcLinkInfoVO.setCd_fc(cd_fc);
+            	fcLinkInfoVO.setCd_agency(cd_agency);
+            	fcLinkInfoVO.setType_login(type_login);
+            	if(fcLinkInfoVO.getYn_link().equals("Y"))	{
+            		fcLinkInfoVO.setCd_link_stat("00");
             	}
             	else	{
-            		fcLinkInfoVO.setCD_LINK_STAT("99");
+            		fcLinkInfoVO.setCd_link_stat("99");
             	}
-            	fcLinkInfoVO.setRSN_LINK_MESSAGE(fcLinkInfoVO.getERROR_MESSAGE());
-            	fcLinkInfoVO.setID_FRT(no_person);
-            	fcLinkInfoVO.setID_LST(no_person);
+            	fcLinkInfoVO.setRsn_link_message(fcLinkInfoVO.getError_message());
+            	fcLinkInfoVO.setId_frt(no_person);
+            	fcLinkInfoVO.setId_lst(no_person);
             	
             	nResult = scrapMapper.createFcLinkInfo(fcLinkInfoVO);
         		logger.debug("scrapManager.createFcLinkInfo return  :" + nResult);
@@ -173,23 +173,23 @@ public class ScrapManagerImpl implements ScrapManager {
         if(appFcLinkInfo.getCARD_LINK_INFO() != null){
         	List<FcLinkInfoVO> FC_LINK_INFO = appFcLinkInfo.getCARD_LINK_INFO();
             for (FcLinkInfoVO fcLinkInfoVO : FC_LINK_INFO) {
-            	String cd_fc = codeManager.getCodeId("cd_coocon_fc", fcLinkInfoVO.getCD_FC());
+            	String cd_fc = codeManager.getCodeId("cd_coocon_fc", fcLinkInfoVO.getCd_fc());
             	String cd_agency = codeManager.getCodeId("cd_agency", "카드");
-            	String type_login = codeManager.getCodeId("type_login", fcLinkInfoVO.getTYPE_LOGIN());
-            	fcLinkInfoVO.setNO_PERSON(no_person);
-            	fcLinkInfoVO.setCN(cn);
-            	fcLinkInfoVO.setCD_FC(cd_fc);
-            	fcLinkInfoVO.setCD_AGENCY(cd_agency);
-            	fcLinkInfoVO.setTYPE_LOGIN(type_login);
-            	if(fcLinkInfoVO.getYN_LINK().equals("Y"))	{
-            		fcLinkInfoVO.setCD_LINK_STAT("00");
+            	String type_login = codeManager.getCodeId("type_login", fcLinkInfoVO.getType_login());
+            	fcLinkInfoVO.setNo_person(no_person);
+            	fcLinkInfoVO.setCn(cn);
+            	fcLinkInfoVO.setCd_fc(cd_fc);
+            	fcLinkInfoVO.setCd_agency(cd_agency);
+            	fcLinkInfoVO.setType_login(type_login);
+            	if(fcLinkInfoVO.getYn_link().equals("Y"))	{
+            		fcLinkInfoVO.setCd_link_stat("00");
             	}
             	else	{
-            		fcLinkInfoVO.setCD_LINK_STAT("99");
+            		fcLinkInfoVO.setCd_link_stat("99");
             	}
-            	fcLinkInfoVO.setRSN_LINK_MESSAGE(fcLinkInfoVO.getERROR_MESSAGE());
-            	fcLinkInfoVO.setID_FRT(no_person);
-            	fcLinkInfoVO.setID_LST(no_person);
+            	fcLinkInfoVO.setRsn_link_message(fcLinkInfoVO.getError_message());
+            	fcLinkInfoVO.setId_frt(no_person);
+            	fcLinkInfoVO.setId_lst(no_person);
             	
             	nResult = scrapMapper.createFcLinkInfo(fcLinkInfoVO);
         		logger.debug("scrapManager.createFcLinkInfo return  :" + nResult);
@@ -213,43 +213,43 @@ public class ScrapManagerImpl implements ScrapManager {
 		
 		fcLinkInfoVO = gson.fromJson(net.sf.json.JSONObject.fromObject(JSONSerializer.toJSON(data)).toString(), FcLinkInfoVO.class);
        
-		logger.debug("no_person  :" + fcLinkInfoVO.getNO_PERSON());
-		logger.debug("cd_fc      :" + fcLinkInfoVO.getCD_FC());
-		logger.debug("cn         :" + fcLinkInfoVO.getCN());
-		logger.debug("error_code :" + fcLinkInfoVO.getERROR_CODE());
-		logger.debug("error_msg  :" + fcLinkInfoVO.getERROR_MESSAGE());
+		logger.debug("no_person  :" + fcLinkInfoVO.getNo_person());
+		logger.debug("cd_fc      :" + fcLinkInfoVO.getCd_fc());
+		logger.debug("cn         :" + fcLinkInfoVO.getCn());
+		logger.debug("error_code :" + fcLinkInfoVO.getError_code());
+		logger.debug("error_msg  :" + fcLinkInfoVO.getError_message());
    
-		String cd_fc = codeManager.getCodeId("cd_coocon_fc", fcLinkInfoVO.getCD_FC());
-		fcLinkInfoVO.setCD_FC(cd_fc);
+		String cd_fc = codeManager.getCodeId("cd_coocon_fc", fcLinkInfoVO.getCd_fc());
+		fcLinkInfoVO.setCd_fc(cd_fc);
    
 		// 스크래핑 변동 내역 History Table에 Insert
 		nResult = scrapMapper.createFcLinkInfoHist(fcLinkInfoVO);
 		logger.debug("scrapManager.createFcLinkInfoHist return  :" + nResult);
    
-		if(fcLinkInfoVO.getYN_LINK().equals("Y"))	{
-			fcLinkInfoVO.setCD_LINK_STAT("00");
+		if(fcLinkInfoVO.getYn_link().equals("Y"))	{
+			fcLinkInfoVO.setCd_link_stat("00");
 		}
 		else	{
-			fcLinkInfoVO.setCD_LINK_STAT("99");
+			fcLinkInfoVO.setCd_link_stat("99");
 		}
-		fcLinkInfoVO.setRSN_LINK_MESSAGE(fcLinkInfoVO.getERROR_MESSAGE());
+		fcLinkInfoVO.setRsn_link_message(fcLinkInfoVO.getError_message());
        
 		String cd_agency = null;
-		if(fcLinkInfoVO.getCD_AGENCY().equals("bank"))	{
+		if(fcLinkInfoVO.getCd_agency().equals("bank"))	{
 			cd_agency = codeManager.getCodeId("cd_agency", "은행");
 		}
-		else if(fcLinkInfoVO.getCD_AGENCY().equals("card"))	{
+		else if(fcLinkInfoVO.getCd_agency().equals("card"))	{
 			cd_agency = codeManager.getCodeId("cd_agency", "카드");
 		}
-		else if(fcLinkInfoVO.getCD_AGENCY().equals("nts"))	{
+		else if(fcLinkInfoVO.getCd_agency().equals("nts"))	{
 			cd_agency = codeManager.getCodeId("cd_agency", "국세청");
 		}
-		fcLinkInfoVO.setCD_AGENCY(cd_agency);
+		fcLinkInfoVO.setCd_agency(cd_agency);
 
-		String type_login = codeManager.getCodeId("type_login", fcLinkInfoVO.getTYPE_LOGIN());
-		fcLinkInfoVO.setTYPE_LOGIN(type_login);
-		fcLinkInfoVO.setID_FRT(fcLinkInfoVO.getNO_PERSON());
-		fcLinkInfoVO.setID_LST(fcLinkInfoVO.getNO_PERSON());
+		String type_login = codeManager.getCodeId("type_login", fcLinkInfoVO.getType_login());
+		fcLinkInfoVO.setType_login(type_login);
+		fcLinkInfoVO.setId_frt(fcLinkInfoVO.getNo_person());
+		fcLinkInfoVO.setId_lst(fcLinkInfoVO.getNo_person());
    
 		// 스크래핑 변동 내역  Table에 Update
 		nResult = scrapMapper.createFcLinkInfo(fcLinkInfoVO);
@@ -267,11 +267,11 @@ public class ScrapManagerImpl implements ScrapManager {
 		FcLinkInfoVO fcLinkInfoVO	= new FcLinkInfoVO();
 		int	nResult;
 		
-		fcLinkInfoVO.setNO_PERSON(no_person);
-		fcLinkInfoVO.setCD_FC(cd_fc);
-		fcLinkInfoVO.setYN_LINK("N");
-		fcLinkInfoVO.setCD_LINK_STAT("99");
-		fcLinkInfoVO.setID_LST(no_person);
+		fcLinkInfoVO.setNo_person(no_person);
+		fcLinkInfoVO.setCd_fc(cd_fc);
+		fcLinkInfoVO.setYn_link("N");
+		fcLinkInfoVO.setCd_link_stat("99");
+		fcLinkInfoVO.setId_lst(no_person);
 		nResult = scrapMapper.createFcLinkInfo(fcLinkInfoVO);
 		logger.debug("scrapManager.createFcLinkInfo return  :" + nResult);
 		
@@ -284,15 +284,15 @@ public class ScrapManagerImpl implements ScrapManager {
 		logger.debug("cn        : "+ cn);
 		LinkedFcInfoVO linkedFcInfo = new LinkedFcInfoVO();
 		
-		linkedFcInfo.setNO_PERSON(no_person);
-		linkedFcInfo.setCN(cn);
+		linkedFcInfo.setNo_person(no_person);
+		linkedFcInfo.setCn(cn);
 		
 		List<LinkedFcInfoVO> linkedFcInfoList = scrapMapper.getLinkedFcInfo(linkedFcInfo);
 		for (LinkedFcInfoVO linkedFcInfoVO : linkedFcInfoList) {
-             logger.debug("linkedFcInfoVO.getNO_PERSON() :" + linkedFcInfoVO.getNO_PERSON()  );
-             logger.debug("linkedFcInfoVO.getCN()        :" + linkedFcInfoVO.getCN()         );
-             logger.debug("linkedFcInfoVO.getNM_FC()     :" + linkedFcInfoVO.getNM_FC()      );
-             logger.debug("linkedFcInfoVO.getNM_CODE()   :" + linkedFcInfoVO.getNM_CODE()    );
+             logger.debug("linkedFcInfoVO.getNo_person() :" + linkedFcInfoVO.getNo_person()  );
+             logger.debug("linkedFcInfoVO.getCn()        :" + linkedFcInfoVO.getCn()         );
+             logger.debug("linkedFcInfoVO.getNm_fc()     :" + linkedFcInfoVO.getNm_fc()      );
+             logger.debug("linkedFcInfoVO.getNm_code()   :" + linkedFcInfoVO.getNm_code()    );
 		}
 		return linkedFcInfoList;
 	}
@@ -302,15 +302,15 @@ public class ScrapManagerImpl implements ScrapManager {
 		List<FcLinkInfoVO> list = linkedFcInfoList.getList();
 		logger.debug("list.size() : "+ list.size());
 		for (FcLinkInfoVO fcLinkInfoVO : list) {
-			fcLinkInfoVO.setID_LST(fcLinkInfoVO.getNO_PERSON());
-			if(fcLinkInfoVO.getYN_LINK().equals("Y"))	{
-				fcLinkInfoVO.setCD_LINK_STAT("00");
+			fcLinkInfoVO.setId_lst(fcLinkInfoVO.getNo_person());
+			if(fcLinkInfoVO.getYn_link().equals("Y"))	{
+				fcLinkInfoVO.setCd_link_stat("00");
 			}
 			else	{
-				fcLinkInfoVO.setCD_LINK_STAT("99");
+				fcLinkInfoVO.setCd_link_stat("99");
 			}
-			logger.debug("fcLinkInfoVO.getNO_PERSON() : "+ fcLinkInfoVO.getNO_PERSON());
-			logger.debug("fcLinkInfoVO.getCD_FC()     : "+ fcLinkInfoVO.getCD_FC());
+			logger.debug("fcLinkInfoVO.getNo_person() : "+ fcLinkInfoVO.getNo_person());
+			logger.debug("fcLinkInfoVO.getCd_fc()     : "+ fcLinkInfoVO.getCd_fc());
 			scrapMapper.createFcLinkInfo(fcLinkInfoVO);
 		}
 		return new ReturnClass(Constant.SUCCESS);
@@ -356,14 +356,14 @@ public class ScrapManagerImpl implements ScrapManager {
                     logger.debug("getERROR_MESSAGE: " + userBankOutputVO.getERROR_MESSAGE());
                     
                     FcLinkInfoVO fcLinkInfoVO  = new FcLinkInfoVO();
-                    fcLinkInfoVO.setNO_PERSON(no_person);
-                    fcLinkInfoVO.setCD_FC(cd_fc);
-                    fcLinkInfoVO.setRSN_LINK_MESSAGE(userBankOutputVO.getERROR_MESSAGE());
+                    fcLinkInfoVO.setNo_person(no_person);
+                    fcLinkInfoVO.setCd_fc(cd_fc);
+                    fcLinkInfoVO.setRsn_link_message(userBankOutputVO.getERROR_MESSAGE());
                     if(userBankOutputVO.getERROR_CODE().equals("00000000"))	{
-                    	fcLinkInfoVO.setCD_LINK_STAT("00");
+                    	fcLinkInfoVO.setCd_link_stat("00");
                     }
                     else	{
-                    	fcLinkInfoVO.setCD_LINK_STAT("99");
+                    	fcLinkInfoVO.setCd_link_stat("99");
                     }
                     scrapMapper.updateFcLinkInfo(fcLinkInfoVO);
                     
@@ -654,14 +654,14 @@ public class ScrapManagerImpl implements ScrapManager {
             	String cd_fc = codeManager.getCodeId("cd_coocon_fc", userCardOutputVO.getCARD_CODE());
             	
             	FcLinkInfoVO fcLinkInfoVO  = new FcLinkInfoVO();
-                fcLinkInfoVO.setNO_PERSON(no_person);
-                fcLinkInfoVO.setCD_FC(cd_fc);
-                fcLinkInfoVO.setRSN_LINK_MESSAGE(userCardOutputVO.getERROR_MESSAGE());
+                fcLinkInfoVO.setNo_person(no_person);
+                fcLinkInfoVO.setCd_fc(cd_fc);
+                fcLinkInfoVO.setRsn_link_message(userCardOutputVO.getERROR_MESSAGE());
                 if(userCardOutputVO.getERROR_CODE().equals("00000000"))	{
-                	fcLinkInfoVO.setCD_LINK_STAT("00");
+                	fcLinkInfoVO.setCd_link_stat("00");
                 }
                 else	{
-                	fcLinkInfoVO.setCD_LINK_STAT("99");
+                	fcLinkInfoVO.setCd_link_stat("99");
                 }
                 scrapMapper.updateFcLinkInfo(fcLinkInfoVO);
             	
@@ -1087,8 +1087,8 @@ public class ScrapManagerImpl implements ScrapManager {
 	
 		//자동 스크래래핑 관련 조회
 		FcLinkInfoVO fcLinkInfoVO = new FcLinkInfoVO();
-		fcLinkInfoVO.setNO_PERSON(no_person);
-		fcLinkInfoVO.setCD_AGENCY(cd_agency);
+		fcLinkInfoVO.setNo_person(no_person);
+		fcLinkInfoVO.setCd_agency(cd_agency);
 		List<FcLinkInfoVO> fcLinkInfoList = scrapMapper.getFcLinkInfo(fcLinkInfoVO);
 			
 		if(fcLinkInfoList != null && fcLinkInfoList.size() > 0)	{
@@ -1113,17 +1113,17 @@ public class ScrapManagerImpl implements ScrapManager {
 					String bankCode = null;
 					String typeLogin = null;
 					FcLinkInfoVO fcLinkInfo = fcLinkInfoList.get(i);
-					bankCode = codeManager.getCodeName("cd_coocon_fc", fcLinkInfo.getCD_FC());
-					typeLogin = codeManager.getCodeName("type_login", fcLinkInfo.getTYPE_LOGIN());
+					bankCode = codeManager.getCodeName("cd_coocon_fc", fcLinkInfo.getCd_fc());
+					typeLogin = codeManager.getCodeName("type_login", fcLinkInfo.getType_login());
 							
 					jsonBankInfo.put("CODE_BANK", bankCode);
 					jsonBankInfo.put("TYPE_LOGIN", typeLogin);
-					jsonBankInfo.put("CN", fcLinkInfo.getCN());
+					jsonBankInfo.put("CN", fcLinkInfo.getCn());
 					
 					//자동 스크래래핑 관련 은행사의 계좌 조회내역 조회(조회 시작일)				
 					ScrReqBankVO scrReqBankVO = new ScrReqBankVO();
 					scrReqBankVO.setNo_person(no_person);
-					scrReqBankVO.setCd_fc(fcLinkInfo.getCD_FC());
+					scrReqBankVO.setCd_fc(fcLinkInfo.getCd_fc());
 					List<ScrReqBankVO> scrReqBankList = scrapMapper.getScrReqBank(scrReqBankVO);
 					
 					JSONArray jsonAnArr = new JSONArray();
@@ -1159,16 +1159,16 @@ public class ScrapManagerImpl implements ScrapManager {
 					String cardCode = null;
 					String typeLogin = null;
 					FcLinkInfoVO fcLinkInfo = fcLinkInfoList.get(i);
-					cardCode = codeManager.getCodeName("cd_coocon_fc", fcLinkInfo.getCD_FC());
-					typeLogin = codeManager.getCodeName("type_login", fcLinkInfo.getTYPE_LOGIN());
+					cardCode = codeManager.getCodeName("cd_coocon_fc", fcLinkInfo.getCd_fc());
+					typeLogin = codeManager.getCodeName("type_login", fcLinkInfo.getType_login());
 					jsonCardInfo.put("CODE_CARD", cardCode);
 					jsonCardInfo.put("TYPE_LOGIN", typeLogin);
-					jsonCardInfo.put("CN", fcLinkInfo.getCN());
+					jsonCardInfo.put("CN", fcLinkInfo.getCn());
 					
 					//자동 스크래래핑 관련 은행사의 계좌 조회내역 조회(조회 시작일)				
 					ScrReqCardVO scrReqCardVO = new ScrReqCardVO();
 					scrReqCardVO.setNo_person(no_person);
-					scrReqCardVO.setCd_fc(fcLinkInfo.getCD_FC());
+					scrReqCardVO.setCd_fc(fcLinkInfo.getCd_fc());
 					ScrReqCardVO scrReqCard = scrapMapper.getScrReqCard(scrReqCardVO);
 					
 					if(scrReqCard != null)	{
@@ -1194,7 +1194,7 @@ public class ScrapManagerImpl implements ScrapManager {
 				//자동 스크래래핑 관련 은행사의 계좌 조회내역 조회(조회 시작일)				
 				ScrReqCertificationVO scrReqCertificationVO = new ScrReqCertificationVO();
 				scrReqCertificationVO.setNo_person(no_person);
-				jsonRoot.put("CN", fcLinkInfo.getCN());
+				jsonRoot.put("CN", fcLinkInfo.getCn());
 				ScrReqCertificationVO scrReqCertificationResult = scrapMapper.getScrReqCertification(scrReqCertificationVO);
 				if(scrReqCertificationResult != null)	{
 					if(scrReqCertificationResult.getError_cd().equals("00000000") ||			//정상인 경우

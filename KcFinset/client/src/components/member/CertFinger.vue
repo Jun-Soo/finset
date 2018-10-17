@@ -204,11 +204,15 @@ export default {
             resultCheckPasswordCert();
           });
           Jockey.send("checkPasswordCert", {
+            noPerson: this.$store.state.user.noPerson,
             nmPerson: this.$store.state.user.nmPerson
           });
           //do nothing
         } else if (Constant.userAgent == "Android") {
-          window.Android.checkPasswordCert(this.$store.state.user.nmPerson);
+          window.Android.checkPasswordCert(
+            this.$store.state.user.noPerson,
+            this.$store.state.user.nmPerson
+          );
         }
       } else {
         // 공인인증서가 없을 경우
@@ -219,7 +223,7 @@ export default {
     //공인인증서 비밀번호 체크 결과 (모바일에서 호출)
     resultCheckPasswordCert: function(dn) {
       // 금융정보제공동의서 확인여부 체크 필요
-      this.$router.push({ path: "/member/certStep3", params: { dn: dn } });
+      this.$router.push({ name: "scrapCertStep", params: { dn: dn } });
     },
     //자동 스크래핑 등록 완료 시 (모바일에서 호출)
     frmFcListNextFromMobile: function() {

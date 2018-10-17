@@ -102,19 +102,7 @@ export default {
       formData.append("orderby", _parent.orderby);
       this.$store.state.isLoading = true;
       this.$http
-        .post(
-          "/m/loanworker/listLoanNoAffiliates.json",
-          formData
-          // {
-          //   params: {
-          //     page: _parent.page,
-          //     cd_fin: _parent.cd_fin,
-          //     cd_goods_class_l: _parent.cd_goods_class_l,
-          //     cd_goods_class_m: _parent.cd_goods_class_m,
-          //     orderby: _parent.orderby
-          //   }
-          // }
-        )
+        .post("/m/loanworker/listLoanNoAffiliates.json", formData)
         .then(function(response) {
           var list = response.data.pagedList.source;
           _this.$store.state.isLoading = false;

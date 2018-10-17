@@ -122,14 +122,14 @@
 </template>
 
 <script>
-import Common from './../../assets/js/common.js'
-import Constant from './../../assets/js/constant.js'
+import Common from "./../../assets/js/common.js";
+import Constant from "./../../assets/js/constant.js";
 
 export default {
   name: "certStep1",
   data() {
     return {
-      errMsg: '',
+      errMsg: "",
       checked: "",
       chkAll: false,
       chkBox1: false,
@@ -142,18 +142,15 @@ export default {
   // },
   beforeCreate() {},
   created() {
-
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
     }
 
-    this.$store.state.title = "금융정보제공동의서 (7/7)"
-
+    this.$store.state.title = "금융정보제공동의서 (7/7)";
   },
   beforeMount() {},
   mounted() {
-
-     var _this = this;
+    var _this = this;
 
     $(":checkbox").change(function() {
       Common.affixBottom("hide");
@@ -172,7 +169,7 @@ export default {
 
       //마케팅 동의수신 체크시 parameter값 셋팅
       if (_this.chkBox3) {
-        _this.$store.state.user.isEventPush = true
+        _this.$store.state.user.isEventPush = true;
       }
     });
   },
@@ -181,17 +178,15 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-
     allChecked: function() {
-
       var _this = this;
-      if(_this.chkAll) {
+      if (_this.chkAll) {
         _this.chkAll = false;
       } else {
         _this.chkAll = true;
       }
 
-      if(_this.chkAll) {
+      if (_this.chkAll) {
         _this.checked = "check";
         _this.chkBox1 = true;
         _this.chkBox2 = true;
@@ -205,11 +200,17 @@ export default {
     },
 
     confirmedTerms: function() {
-      var _this = this;
-      alert(_this.$route.params.dn);
-      if (_this.chkBox1 && _this.chkBox2) {
-        _this.$router.push("/member/loding")
-      }
+      //if (_this.chkBox1 && _this.chkBox2) {
+        this.$router.push({
+          name: "scrapLoading",
+          params: {
+            dn: this.$route.params.dn,
+            cn: this.$route.params.cn,
+            normalMessage: "연동 가능한 금융사를<br>확인 중 입니다.",
+            smallMessage: "잠시만 기다려주세요."
+          }
+        });
+      //}
     }
   }
 };

@@ -9,7 +9,6 @@ import Logout from '@/components/member/Logout'
 import MemberHome from '@/components/member/Home'
 import CertStep1 from '@/components/member/CertStep1'
 import CertStep2 from '@/components/member/CertStep2'
-import CertStep3 from '@/components/member/CertStep3'
 import CertCode from '@/components/member/CertCode'
 import CertFinger from '@/components/member/CertFinger'
 import CertCodeLogin from '@/components/member/CertCodeLogin'
@@ -45,6 +44,11 @@ import ShareSetting from '@/components/share/Setting'
 import ShareDetail from '@/components/share/Detail'
 import ShareNewRequest from '@/components/share/NewRequest'
 import ShareMain from '@/components/share/Main'
+
+import ScrapHome from '@/components/scrap/Home'
+import CertStep from '@/components/scrap/CertStep'
+import Loading from '@/components/scrap/Loading'
+import RegFcLink from '@/components/scrap/RegFcLink'
 
 // import MypageHome from '@/components/mypage/Home'
 // import CertPerson from '@/components/mypage/CertPerson'
@@ -120,12 +124,6 @@ export const routes = [
         path: 'certStep2',
         alias: '/certStep2',
         component: CertStep2,
-        meta: { allowPath: true }
-      },
-      {
-        path: 'certStep3',
-        alias: '/certStep3',
-        component: CertStep3,
         meta: { allowPath: true }
       },
       {
@@ -285,6 +283,33 @@ export const routes = [
         name: 'shareMain',
         component: ShareMain,
         meta: { allowPath: true, requiresAuth: true }
+      }
+    ]
+  },
+  {
+    path: '/scrap',
+    component: ScrapHome,
+    children: [
+      {
+        path: 'certStep',
+        alias: '/certStep',
+        name: 'scrapCertStep',
+        component: CertStep,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'loading',
+        alias: '/lodaing',
+        name: 'scrapLoading',
+        component: Loading,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'regFcLink',
+        alias: '/regFcLink',
+        name: 'scrapRegFcLink',
+        component: RegFcLink,
+        meta: { allowPath: true }
       }
     ]
   },

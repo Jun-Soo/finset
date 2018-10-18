@@ -12,14 +12,14 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/m/': {
-        target: 'http://192.168.0.3:8080',
+        target: 'http://192.168.0.84:8080',
         changeOrigin: true,
         pathRewrite: {
           '^/m/':'/m/'
         }
       },
       '/check': {
-        target: 'http://192.168.0.3:8080',
+        target: 'http://192.168.0.84:8080',
         changeOrigin: true,
         pathRewrite: {
           '^/check':'/'

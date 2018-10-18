@@ -35,15 +35,47 @@
         :pagination-clickable="false"
         :loop="true"
         @slide-change-start="onSlideChangeStart"
-        @slide-change-end="onSlideChangeEnd">
+        @slide-change-end="onSlideChangeEnd"
+				class="banner-wrap"
+				>
             <div class="item">
-                <a href="#"><img src="../../assets/images/main/spend_banner1.png" alt=""/></a>
+                <a href="#">
+                    <div class="banner">
+                        <div class="left">
+                            <p class="key">우리가족 가계부</p>
+                            <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                        </div>
+                        <div class="right">
+                            <img src="../../assets/images/main/banner_ico.png" alt=""/>
+                        </div>
+                    </div>
+                </a>
             </div>
             <div class="item">
-                <a href="#"><img src="../../assets/images/main/spend_banner1.png" alt=""/></a>
+                <a href="#">
+                    <div class="banner">
+                        <div class="left">
+                            <p class="key">우리가족 가계부</p>
+                            <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                        </div>
+                        <div class="right">
+                            <img src="../../assets/images/main/banner_ico.png" alt=""/>
+                        </div>
+                    </div>
+                </a>
             </div>
             <div class="item">
-                <a href="#"><img src="../../assets/images/main/spend_banner1.png" alt=""/></a>
+                <a href="#">
+                    <div class="banner">
+                        <div class="left">
+                            <p class="key">우리가족 가계부</p>
+                            <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                        </div>
+                        <div class="right">
+                            <img src="../../assets/images/main/banner_ico.png" alt=""/>
+                        </div>
+                    </div>
+                </a>
             </div>
         </swiper>
         <div class="tab">
@@ -62,7 +94,7 @@
                   <p class="cate"><img src="../../assets/images/common/bu_list_shopping.png" alt=""/><span>{{vo.nm_class}} - {{vo.nm_type}}</span></p>
               </div>
               <div class="right">
-                  <p class="number">{{formatNumber(vo.amt_in_out,vo.type_in_out=='02',vo.type_in_out=='01')}}<em>원</em></p>
+                  <p :class="chkType(vo.type_in_out)" class="number">{{formatNumber(vo.amt_in_out,vo.type_in_out=='02',vo.type_in_out=='01')}}<em>원</em></p>
                   <p class="text">{{formatMeansConsume(vo.means_consume)}}</p>
               </div>
             </div>
@@ -154,27 +186,34 @@ export default {
       return Common.formatDate(date, pattern);
     },
     formatMeansConsume(means_consume) {
-      switch(means_consume) {
+      switch (means_consume) {
         case "01":
           return "카드";
-        break;
+          break;
 
         case "02":
           return "현금";
-        break;
+          break;
 
         case "03":
           return "입출금계좌";
-        break;
+          break;
 
         default:
           return "기타";
-        break;
+          break;
       }
     },
     clickTab(tab) {
       this.curTab = tab.srcElement.id;
       this.listConsumeInfo();
+    },
+    chkType(type) {
+      if (type === "01") {
+        return "blue";
+      } else {
+        return "red";
+      }
     }
   }
 };

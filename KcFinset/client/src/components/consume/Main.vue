@@ -1,4 +1,5 @@
 <template>
+  <div class="main">
     <section>
         <div class="top main">
             <ul>
@@ -44,7 +45,7 @@
             <div class="item">
                 <a href="#"><img src="../../assets/images/main/spend_banner1.png" alt=""/></a>
             </div>
-				</swiper>
+        </swiper>
         <div class="tab">
             <div class="wrap col3">
                 <a href="#" id="00" :class="{'on':curTab === '00'}" @click="clickTab">전체</a>
@@ -52,22 +53,23 @@
                 <a href="#" id="01" :class="{'on':curTab === '01'}" @click="clickTab">수입</a>
             </div>
         </div>
-				<div v-if="list.length!=0" class="list02 spend-list">
-					<div v-for="subList in list" :key="subList.index" class="list-wrap">
-						<p class="date">{{formatDate(subList[0].dt_trd,"mmdd")}}</p>
-						<div v-for="vo in subList" :key="vo.index" class="item">
-							<div class="left">
-									<p class="name">{{vo.contents}}</p>
-									<p class="cate"><img src="../../assets/images/common/bu_list_shopping.png" alt=""/><span>{{vo.nm_class}} - {{vo.nm_type}}</span></p>
-							</div>
-							<div class="right">
-									<p class="number">{{formatNumber(vo.amt_in_out,vo.type_in_out=='02',vo.type_in_out=='01')}}<em>원</em></p>
-									<p class="text">{{formatMeansConsume(vo.means_consume)}}</p>
-							</div>
-						</div>
-					</div>
-				</div>
+        <div v-if="list.length!=0" class="list02 spend-list">
+          <div v-for="subList in list" :key="subList.index" class="list-wrap">
+            <p class="date">{{formatDate(subList[0].dt_trd,"mmdd")}}</p>
+            <div v-for="vo in subList" :key="vo.index" class="item">
+              <div class="left">
+                  <p class="name">{{vo.contents}}</p>
+                  <p class="cate"><img src="../../assets/images/common/bu_list_shopping.png" alt=""/><span>{{vo.nm_class}} - {{vo.nm_type}}</span></p>
+              </div>
+              <div class="right">
+                  <p class="number">{{formatNumber(vo.amt_in_out,vo.type_in_out=='02',vo.type_in_out=='01')}}<em>원</em></p>
+                  <p class="text">{{formatMeansConsume(vo.means_consume)}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
     </section>
+  </div>
 </template>
 
 <script>

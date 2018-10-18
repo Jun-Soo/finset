@@ -35,8 +35,7 @@ import ConsumeHome from '@/components/consume/Home'
 import ConsumeMain from '@/components/consume/Main'
 
 import GoodsHome from '@/components/goods/Home'
-import GoodsList from '@/components/goods/List'
-import GoodsDetail from '@/components/goods/Detail'
+import GoodsMain from '@/components/goods/Main'
 import WorkerGoods from '@/components/goods/WorkerGoods'
 
 import ShareHome from '@/components/share/Home'
@@ -50,6 +49,9 @@ import ScrapHome from '@/components/scrap/Home'
 import CertStep from '@/components/scrap/CertStep'
 import Loading from '@/components/scrap/Loading'
 import RegFcLink from '@/components/scrap/RegFcLink'
+
+// import MypageHome from '@/components/mypage/Home'
+// import CertPerson from '@/components/mypage/CertPerson'
 
 import Swiper from '@/components/_sample/Swiper'
 import Gauge from '@/components/_sample/Gauge'
@@ -300,15 +302,9 @@ export const routes = [
     component: GoodsHome,
     children: [
       {
-        path: 'list',
-        alias: '/list',
-        component: GoodsList,
-        meta: { allowPath: true }
-      },
-      {
-        path: 'detail',
-        alias: '/detail',
-        component: GoodsDetail,
+        path: 'main',
+        alias: '/main',
+        component: GoodsMain,
         meta: { allowPath: true }
       },
       {
@@ -388,6 +384,19 @@ export const routes = [
       }
     ]
   },
+  // {
+  //   path: '/mypage',
+  //   name: 'mypage',
+  //   component: MypageHome,
+  //   children: [
+  //     {
+  //       path: 'certPerson',
+  //       alias: '/certPerson',
+  //       component: CertPerson,
+  //       meta: { allowPath: true, requiresAuth: true }
+  //     }
+  //   ]
+  // },
   {
     path: '/sample/swiper',
     name: 'swiper',

@@ -17,6 +17,11 @@ import VueModal from 'vue2-modal'
 
 import 'vue2-toast/lib/toast.css'
 
+import './assets/css/main.css'
+import './assets/css/pop.css'
+import './assets/css/reset.css'
+import './assets/css/style.css'
+
 import './assets/css/bootstrap-datepicker-customize.css'
 import './assets/css/bootstrap.customize.css'
 import './assets/css/bootstrap-select.css'

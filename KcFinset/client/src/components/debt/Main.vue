@@ -1,5 +1,5 @@
 <template>
-    <div class="main">
+    <div>
       <section>
            <div class="top main">
               <ul>
@@ -131,6 +131,9 @@ export default {
         }
       ],
       myoption: {
+        legend: {
+          display: false
+        },
         scales: {
           yAxes: [
             {

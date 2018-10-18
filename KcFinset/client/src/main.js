@@ -13,6 +13,8 @@ import 'jquery'
 import toast from 'vue2-toast'
 import swiper from 'vue2-swiper'
 
+import VueModal from 'vue2-modal'
+
 import 'vue2-toast/lib/toast.css'
 
 import './assets/css/bootstrap-datepicker-customize.css'
@@ -43,6 +45,8 @@ Vue.use(toast, {
 Vue.use(swiper)
 
 Vue.use(window.VueCharts)
+
+Vue.use(VueModal)
 
 Vue.config.debug = true
 Vue.config.productionTip = false

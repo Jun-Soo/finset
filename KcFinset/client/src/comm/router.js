@@ -35,7 +35,8 @@ import ConsumeHome from '@/components/consume/Home'
 import ConsumeMain from '@/components/consume/Main'
 
 import GoodsHome from '@/components/goods/Home'
-import GoodsMain from '@/components/goods/Main'
+import GoodsList from '@/components/goods/List'
+import GoodsDetail from '@/components/goods/Detail'
 import WorkerGoods from '@/components/goods/WorkerGoods'
 
 import ShareHome from '@/components/share/Home'
@@ -231,9 +232,15 @@ export const routes = [
     component: GoodsHome,
     children: [
       {
-        path: 'main',
-        alias: '/main',
-        component: GoodsMain,
+        path: 'list',
+        alias: '/list',
+        component: GoodsList,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'detail',
+        alias: '/detail',
+        component: GoodsDetail,
         meta: { allowPath: true }
       },
       {

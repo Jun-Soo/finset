@@ -57,7 +57,6 @@ export default {
     window.resultFingerPrint = this.resultFingerPrint;
     window.resultCheckCert = this.resultCheckCert;
     window.resultCheckPasswordCert = this.resultCheckPasswordCert;
-    // window.frmFcListNextFromMobile = this.frmFcListNextFromMobile
   },
   beforeMount() {},
   mounted() {},
@@ -221,13 +220,9 @@ export default {
       }
     },
     //공인인증서 비밀번호 체크 결과 (모바일에서 호출)
-    resultCheckPasswordCert: function(dn) {
+    resultCheckPasswordCert: function(dn, cn) {
       // 금융정보제공동의서 확인여부 체크 필요
-      this.$router.push({ name: "scrapCertStep", params: { dn: dn } });
-    },
-    //자동 스크래핑 등록 완료 시 (모바일에서 호출)
-    frmFcListNextFromMobile: function() {
-      this.login();
+      this.$router.push({ name: "scrapCertStep", params: { dn: dn, cn: cn } });
     }
   }
 };

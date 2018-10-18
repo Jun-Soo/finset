@@ -146,7 +146,7 @@ export default {
       } else if ("loanStock" == this.curTab) {
         //do nothing
       }
-      Common.pagination(this.$children[0].listGoods);
+      Common.pagination(this.$children[1].listGoods);
 
       if (this.page == 1) {
         //isSearching = true;

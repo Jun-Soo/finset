@@ -243,6 +243,7 @@
 	          ,(100 -
 	            ROUND((TO_DATE(A.MAX_YMD_LOANEND) - TO_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'YYYYMMDD') - 1) / (TO_DATE(A.MAX_YMD_LOANEND) - TO_DATE(A.MIN_YMD_LOAN)),2)
 	            *100)                                 AS DUTATION_NOW_RATE
+	          ,A.SUM_AMT_CONTRACT								AS AMT_CONTRACT
 	    FROM   (
 	             SELECT A.NO_PERSON
 	                   ,A.NO_MANAGE_INFO
@@ -685,5 +686,20 @@
 			AND TO_NUMBER( DPI.YMD_LOANEND )		>= TO_NUMBER( TO_CHAR( SYSDATE, 'YYYYMMDD' ))
 			AND DPRL.AMT_REPAY		 				IS NOT NULL
 			AND DPRL.REQ_YYYYMM||DPI.INTER_PAY_DAY	= #{req_yyyymmdd	, jdbcType = VARCHAR}
+    </select>
+    <select id="listStatDebtSummary" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtSummaryVO">
+		SELECT
+			REQ_YYYYMM,
+			SUM( AMT_REMAIN ) AS AMT_REMAIN
+		FROM
+			DEBT_PERSONAL_REPAY_LIST
+		WHERE
+			NO_PERSON 				= 		#{no_person, jdbcType = VARCHAR}
+			AND REQ_YYYYMM <![CDATA[>]]>	#{st_yyyymm, jdbcType = VARCHAR}
+			AND REQ_YYYYMM <![CDATA[<]]>	#{ed_yyyymm, jdbcType = VARCHAR}
+		GROUP BY
+			REQ_YYYYMM
+		ORDER BY
+			REQ_YYYYMM ASC
     </select>
 </mapper>

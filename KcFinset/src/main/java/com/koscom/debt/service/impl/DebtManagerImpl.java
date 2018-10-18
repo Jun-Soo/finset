@@ -134,4 +134,9 @@ public class DebtManagerImpl implements DebtManager {
 	public List<DebtCalendarVO> listCalendarDebtData(DebtForm debtForm) {
 		return debtMapper.listCalendarDebtData(debtForm);
 	}
+
+	@Override
+	public List<DebtSummaryVO> listStatDebtSummary(DebtForm debtForm) {
+		return debtMapper.listStatDebtSummary(debtForm);
+	}
 }

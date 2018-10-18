@@ -29,7 +29,9 @@ public class DebtSummaryVO implements Serializable{
     private String repay_pni_per_income; /*원리금상환/소득(%)(년)*/
     private String cur_month           ; /*현재월*/
     private String dutation_now_rate   ; /*전체기간 대비 잔여기간 율*/
-
+    private String amt_contract		   ; /*전체 계약 금액*/
+    private String req_yyyymm		   ; /*납부월*/
+    
     public String getLoan_term() {
 		return loan_term;
 	}
@@ -197,6 +199,23 @@ public class DebtSummaryVO implements Serializable{
 	public void setDutation_now_rate(String dutation_now_rate) {
 		this.dutation_now_rate = dutation_now_rate;
 	}
+	
+	public String getAmt_contract() {
+		return amt_contract;
+	}
+
+	public void setAmt_contract(String amt_contract) {
+		this.amt_contract = amt_contract;
+	}
+	
+	public String getReq_yyyymm() {
+		return req_yyyymm;
+	}
+
+	public void setReq_yyyymm(String req_yyyymm) {
+		this.req_yyyymm = req_yyyymm;
+	}
+
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);

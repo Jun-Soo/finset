@@ -133,7 +133,7 @@ public class DebtController {
 		return "/debt/frameDebtInfoMain";
 	}
 	
-	/**
+	/** VUE
 	 * 부채 메인 요약
 	 * @param model
 	 * @param session
@@ -145,10 +145,26 @@ public class DebtController {
 		String no_person = (String) session.getAttribute("no_person");
 		DebtSummaryVO debtSummaryVO = debtManager.getDebtSummary(no_person);
 		model.addAttribute("debtSummaryData", debtSummaryVO);
+		
+		DebtForm debtForm = new DebtForm();
+		debtForm.setNo_person(no_person);
+		debtForm.setSt_yyyymm("201612");
+		debtForm.setEd_yyyymm("201711");
+		
+		List<DebtSummaryVO> rawStatList = debtManager.listStatDebtSummary(debtForm);
+		List<String> dateList = new ArrayList<String>();
+		List<String> dataList = new ArrayList<String>();
+		for(int i = 0; i< rawStatList.size(); i++) {
+			dateList.add(rawStatList.get(i).getReq_yyyymm().substring(4));
+			dataList.add(rawStatList.get(i).getAmt_remain());
+		}
+		model.addAttribute("dateList",dateList);
+		model.addAttribute("dataList",dataList);
+		
 		return "jsonView";
 	}
 	
-	/**
+	/** VUE
 	 * 부채 메인 리스트
 	 * @param model
 	 * @param session

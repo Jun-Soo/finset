@@ -11,7 +11,7 @@
     transitionName="zoom-in"
     theme="width:100% !important; max-height: 80%; top: 134px; position:absolute"
     >
-      <h2 slot="header">FINSET</h2>
+      <h2 slot="header" @click="hide">FINSET</h2>
       <div class="modal-subHeader">
         <p class="left">{{modalDate}}</p>
         <p class="right">{{sumTotal}} 원</p><br/>
@@ -220,6 +220,13 @@ export default {
     },
     formatNumber(number) {
       return Common.formatNumber(number);
+    },
+    hide() {
+      console.log("ab");
+      debugger;
+      this.$modals.hide("my-modal");
+
+      console.log("cd");
     }
   }
 };

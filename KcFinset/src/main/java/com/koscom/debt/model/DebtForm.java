@@ -18,7 +18,9 @@ public class DebtForm extends SearchForm {
     private String display_yn		;/*부채 삭제 처리용*/
     private List<DebtForm> list		;/*부채 삭제 관리용*/
     private String req_yyyymmdd		;/*캘린더 list 조회*/
-
+    private String st_yyyymm		;/*그래프 시작 기간*/
+    private String ed_yyyymm		;/*그래프 종료 기간*/
+    
 	public String getNo_person() {
 		return no_person;
 	}
@@ -66,6 +68,18 @@ public class DebtForm extends SearchForm {
 	}
 	public void setReq_yyyymmdd(String req_yyyymmdd) {
 		this.req_yyyymmdd = req_yyyymmdd;
+	}
+	public String getSt_yyyymm() {
+		return st_yyyymm;
+	}
+	public void setSt_yyyymm(String st_yyyymm) {
+		this.st_yyyymm = st_yyyymm;
+	}
+	public String getEd_yyyymm() {
+		return ed_yyyymm;
+	}
+	public void setEd_yyyymm(String ed_yyyymm) {
+		this.ed_yyyymm = ed_yyyymm;
 	}
 	
 	@Override

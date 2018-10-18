@@ -124,4 +124,11 @@ public interface DebtManager {
 	 * @return
 	 */
 	List<DebtCalendarVO> listCalendarDebtData(DebtForm debtForm);
+	
+	/**
+	 * 부채 메인 상단 
+	 * @param debtForm
+	 * @return
+	 */
+	List<DebtSummaryVO> listStatDebtSummary(DebtForm debtForm);
 }

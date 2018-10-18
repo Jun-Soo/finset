@@ -2,7 +2,6 @@
   <main>
     <FinsetHeader></FinsetHeader>
     <router-view/>
-    <FinsetBottom></FinsetBottom>
   </main>
 </template>
 

@@ -1,5 +1,8 @@
 package com.koscom.consume;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -56,10 +59,18 @@ public class ConsumeController {
     	return "/consume/frameConsumeList";
     }
     
+    /**
+     * VUE
+     * @param model
+     * @param ym
+     * @param session
+     * @return
+     * @throws FinsetException
+     */
     @RequestMapping("/listConsumeInfo.json")
-    public String listConsumeInfo(Model model,String ym, HttpSession session) throws FinsetException {
+    public String listConsumeInfo(Model model, String ym, String type_in_out, HttpSession session) throws FinsetException {
     	logger.debug("listConsumeInfo");
-    	
+    	logger.debug(type_in_out);
     	String no_person = (String) session.getAttribute("no_person");
     	
     	//DateUtil에서 yyyymmdd를 요구
@@ -76,7 +87,35 @@ public class ConsumeController {
     	consumeForm.setType_in_out("02");	//지출
     	model.addAttribute("consume",consumeManager.getConsumeInfoAmt(consumeForm));
     	
-    	model.addAttribute("listConsumeInfo",consumeManager.listConsumeInfo(consumeForm));
+    	if(type_in_out.equals("00")) {
+    		consumeForm.setType_in_out(null);
+    	} else {
+    		consumeForm.setType_in_out(type_in_out);
+    	}
+    	
+    	List<ConsumeVO> rawList = consumeManager.listConsumeInfo(consumeForm);
+    	
+    	if(rawList.size()==0) {
+    		model.addAttribute("listConsumeInfo", rawList);
+    		return "jsonView";
+    	}
+    	
+    	List<List<ConsumeVO>> consumeList = new ArrayList<List<ConsumeVO>>();
+    	List<ConsumeVO> tempList = new ArrayList<ConsumeVO>();
+    	String curDt="";
+    	for(ConsumeVO vo : rawList) {
+    		if(!curDt.equals(vo.getDt_trd())) {
+    			if(!curDt.equals("")) {
+    				consumeList.add(tempList);
+    				tempList = new ArrayList<ConsumeVO>();
+    			}
+    			curDt = vo.getDt_trd();
+    		}
+    		tempList.add(vo);
+    	}
+    	consumeList.add(tempList);
+    	
+    	model.addAttribute("listConsumeInfo", consumeList);
     	
     	return "jsonView";
     }

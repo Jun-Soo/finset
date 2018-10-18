@@ -172,7 +172,7 @@ export default {
       active.disabled()
     }
   },
-  formatNumber: function (number, isMinus) {
+  formatNumber: function (number, isMinus, isPlus) {
     if (typeof number === 'number') {
       number += ''
     }
@@ -193,7 +193,11 @@ export default {
       if (isMinus) {
         return '-' + formatNum
       } else {
-        return formatNum
+        if (isPlus) {
+          return '+' + formatNum
+        } else {
+          return formatNum
+        }
       }
     }
   },

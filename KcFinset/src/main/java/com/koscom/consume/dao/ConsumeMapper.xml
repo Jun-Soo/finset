@@ -45,7 +45,10 @@
 			AND CI.CD_CLASS					=		PCCI.CD_CLASS
 			AND CI.CD_TYPE					=		PCCI.CD_TYPE
 			AND TO_NUMBER(DT_TRD) <![CDATA[>=]]> 	TO_NUMBER(#{dt_from		, jdbcType=VARCHAR}) 
-			AND TO_NUMBER(DT_TRD) <![CDATA[<=]]> 	TO_NUMBER(#{dt_to		, jdbcType=VARCHAR}) 
+			AND TO_NUMBER(DT_TRD) <![CDATA[<=]]> 	TO_NUMBER(#{dt_to		, jdbcType=VARCHAR})
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(type_in_out)">
+			AND CI.TYPE_IN_OUT				=		#{type_in_out			, jdbcType=VARCHAR}
+			</if>
 			AND YN_CANCEL 					=		'N'
 			AND YN_BUDGET_EXCEPT			=		'N'
 				ORDER BY CI.DT_TRD DESC, CI.TM_TRD DESC

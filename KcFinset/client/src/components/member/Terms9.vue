@@ -1,6 +1,6 @@
 <template>
   <div id="wrapper" class="pop-full">
-	<!-- Header -->
+	<!-- Header 
 	<header id="header">
 		<div class="input-group">
 			<div class="input-group-btn">
@@ -18,7 +18,7 @@
 			<li><a href="#tab2" data-target="#tab2" data-toggle="tab">KT</a></li>
 			<li><a href="#tab3" data-target="#tab3" data-toggle="tab">LGU+</a></li>
 		</ul>
-	</div>
+	</div>-->
 	<!-- <ul class="nav nav-tabs nav-justified nav-terms">
 		<li class="active"><a href="#tab1">SKT</a></li>
 		<li><a href="#tab2">KT</a></li>
@@ -481,17 +481,13 @@
 </template>
 
 <script>
-
 export default {
-  name: "Terms2",
+  name: "Terms9",
   data() {
-    return {
-     
-    };
+    return {};
   },
-  
-  methods: {
-  }
+
+  methods: {}
 };
 </script>
 

@@ -262,17 +262,13 @@
 </template>
 
 <script>
-
 export default {
   name: "Terms1",
   data() {
-    return {
-     
-    };
+    return {};
   },
-  
-  methods: {
-  }
+
+  methods: {}
 };
 </script>
 

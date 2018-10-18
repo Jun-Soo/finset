@@ -1,6 +1,6 @@
 <template class="bg-white">
   <div id="wrapper" class="pop-full">
-	<!-- Header -->
+	<!-- Header 
 	<header id="header">
 		<div class="input-group">
 			<div class="input-group-btn">
@@ -11,7 +11,7 @@
 				<span class="ico-close">닫기</span>
 			</button>
 		</div>
-	</header>
+	</header>-->
 	<!-- Content -->
 	<div id="content">
 		<div class="container">
@@ -171,17 +171,13 @@
 </template>
 
 <script>
-
 export default {
   name: "Terms2",
   data() {
-    return {
-     
-    };
+    return {};
   },
-  
-  methods: {
-  }
+
+  methods: {}
 };
 </script>
 

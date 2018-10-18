@@ -95,4 +95,18 @@ public interface ConsumeMapper {
 	 * @return
 	 */
 	List<ConsumeDetailGoalInfoVO> listDetailGoal(ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO);
+	
+	/**
+	 * 공통 캘린더 합계 조회
+	 * @param consumeForm
+	 * @return
+	 */
+	List<ConsumeVO> getCalendarConsumeData(ConsumeForm consumeForm);
+	
+	/**
+	 * 공통 캘린더 리스트 조회
+	 * @param consumeForm
+	 * @return
+	 */
+	List<ConsumeVO> listCalendarConsumeData(ConsumeForm consumeForm);
 }

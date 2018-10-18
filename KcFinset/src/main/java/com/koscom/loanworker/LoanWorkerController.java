@@ -170,7 +170,7 @@ public class LoanWorkerController implements Constant{
 		return "/loanworker/sub/listLoanNoAffiliates";
 	}
 	
-	/**
+	/** VUE
 	 * 상품리스트 (비제휴)
 	 * @param goodsbankForm
 	 * @param model

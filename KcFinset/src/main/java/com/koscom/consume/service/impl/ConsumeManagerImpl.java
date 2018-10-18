@@ -113,4 +113,16 @@ public class ConsumeManagerImpl implements ConsumeManager {
 		logger.debug("listDetailGoal");
 		return consumeMapper.listDetailGoal(consumeDetailGoalInfoVO);
 	}
+	
+	@Override
+	public List<ConsumeVO> getCalendarConsumeData(ConsumeForm consumeForm) {
+		logger.debug("getCalendarConsumeData");
+		return consumeMapper.getCalendarConsumeData(consumeForm);
+	}
+
+	@Override
+	public List<ConsumeVO> listCalendarConsumeData(ConsumeForm consumeForm) {
+		logger.debug("listCalendarConsumeData");
+		return consumeMapper.listCalendarConsumeData(consumeForm);
+	}
 }

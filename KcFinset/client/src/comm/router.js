@@ -45,16 +45,35 @@ import ShareDetail from '@/components/share/Detail'
 import ShareNewRequest from '@/components/share/NewRequest'
 import ShareMain from '@/components/share/Main'
 
+import ScrapHome from '@/components/scrap/Home'
+import CertStep from '@/components/scrap/CertStep'
+import Loading from '@/components/scrap/Loading'
+import RegFcLink from '@/components/scrap/RegFcLink'
+
 // import MypageHome from '@/components/mypage/Home'
 // import CertPerson from '@/components/mypage/CertPerson'
 
 import Swiper from '@/components/_sample/Swiper'
+import Gauge from '@/components/_sample/Gauge'
+import Progress from '@/components/_sample/Progress'
+import Calendar from '@/components/_sample/Calendar'
 
 import TemplateHome from '@/components/template/Home'
 import TemplateMain from '@/components/template/Main'
 import TemplateChartSingleLine from '@/components/template/ChartsingleLine'
 import TemplateChartSingleLine2 from '@/components/template/ChartSingleLine2'
 import TemplateChartMultipleBar from '@/components/template/ChartMultipleBar'
+
+import Terms1 from '@/components/member/Terms1'
+import Terms2 from '@/components/member/Terms2'
+import Terms3 from '@/components/member/Terms3'
+import Terms4 from '@/components/member/Terms4'
+import Terms5 from '@/components/member/Terms5'
+import Terms6 from '@/components/member/Terms6'
+import Terms7 from '@/components/member/Terms7'
+import Terms8 from '@/components/member/Terms8'
+import Terms9 from '@/components/member/Terms9'
+import Terms10 from '@/components/member/Terms10'
 
 Vue.use(Router)
 
@@ -106,6 +125,66 @@ export const routes = [
     name: 'member',
     component: MemberHome,
     children: [
+      {
+        path: 'Terms1',
+        alias: '/Terms1',
+        component: Terms1,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'Terms2',
+        alias: '/Terms2',
+        component: Terms2,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'Terms3',
+        alias: '/Terms3',
+        component: Terms3,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'Terms4',
+        alias: '/Terms4',
+        component: Terms4,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'Terms5',
+        alias: '/Terms5',
+        component: Terms5,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'Terms6',
+        alias: '/Terms6',
+        component: Terms6,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'Terms7',
+        alias: '/Terms7',
+        component: Terms7,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'Terms8',
+        alias: '/Terms8',
+        component: Terms8,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'Terms9',
+        alias: '/Terms9',
+        component: Terms9,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'Terms10',
+        alias: '/Terms10',
+        component: Terms10,
+        meta: { allowPath: true }
+      },
       {
         path: 'certStep1',
         alias: '/certStep1',
@@ -278,6 +357,33 @@ export const routes = [
       }
     ]
   },
+  {
+    path: '/scrap',
+    component: ScrapHome,
+    children: [
+      {
+        path: 'certStep',
+        alias: '/certStep',
+        name: 'scrapCertStep',
+        component: CertStep,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'loading',
+        alias: '/lodaing',
+        name: 'scrapLoading',
+        component: Loading,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'regFcLink',
+        alias: '/regFcLink',
+        name: 'scrapRegFcLink',
+        component: RegFcLink,
+        meta: { allowPath: true }
+      }
+    ]
+  },
   // {
   //   path: '/mypage',
   //   name: 'mypage',
@@ -288,13 +394,31 @@ export const routes = [
   //       alias: '/certPerson',
   //       component: CertPerson,
   //       meta: { allowPath: true, requiresAuth: true }
-  //     },
+  //     }
   //   ]
-  // }
+  // },
   {
     path: '/sample/swiper',
     name: 'swiper',
     component: Swiper,
+    meta: { allowPath: true }
+  },
+  {
+    path: '/sample/gauge',
+    name: 'gauge',
+    component: Gauge,
+    meta: { allowPath: true }
+  },
+  {
+    path: '/sample/progress',
+    name: 'progress',
+    component: Progress,
+    meta: { allowPath: true }
+  },
+  {
+    path: '/sample/calendar',
+    name: 'calendar',
+    component: Calendar,
     meta: { allowPath: true }
   },
   {

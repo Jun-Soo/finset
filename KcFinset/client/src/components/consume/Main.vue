@@ -1,153 +1,95 @@
 <template>
-<div id="wrapper">
-	<header id="header">
-		<div class="input-group">
-			<div class="input-group-btn">
-				<button type="button" class="ui-nav nav-back" onclick="history.back();">뒤로가기</button>
-			</div>
-			<div class="g-menu">
-				<button id="setting" type="button" style="color: white;">설정</button>
-				<button id="delete" type="button" style="color: white;">삭제</button>
-				<button id="save" type="button" style="color: white;">저장</button>
-			</div>
-			<h1>지출관리</h1>
-		</div>
-	</header>
-	<section id="content">
-		<div id="consume_list">
-				<div class="sum-block consume_title">
-				<div class="calendar_head">
-					<form id="frmConsumeList" name="frmConsumeList" method="POST">
-						<span id="prevMM" v-on:click="setPrevMM()">&lt;</span><input type="text" id="ym" name="ym" readonly="readonly" v-model="ym"/><span id="nextMM" v-on:click="setNextMM()">&gt;</span>
-					</form>
-				</div>
-				<div class="sum-block-items">
-					<div class="row">
-						<dl class="col-xs-6">
-							<dt>수입</dt>
-							<dd id="text_income">{{income}} 원</dd>
-						</dl>
-						<dl class="col-xs-6">
-							<dt>지출</dt>
-							<dd id="text_consume">{{consume}} 원</dd>
-						</dl>
-					</div>
-					<div class="progress-group progress-bar-sum">
-						<div class="progress">
-							<div class="progress-bar" role="progressbar" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100"></div>
-						</div>
-						<div class="progress-label">
-							<label class="label">예산대비 소비율</label>
-							<span>20%</span>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="container consume_condition">
-				<div id="trade_type" class="btn-group btn-group-justified" role="group" aria-label="Justified button group">
-					<button type="button" id="btn_income" name="btn_income" class="btn btn-check active">수입</button>
-					<button type="button" id="btn_consume" name="btn_consume" class="btn btn-check active">지출</button>
-				</div>
-			</div>
-			<div class="list-group">
-				<div :class="vo.class" v-for="vo in consumeList" :key="vo.index">
-					<input type="hidden" class="means_consume" value="${vo.means_consume}"/>
-					<input type="hidden" class="tm_trd" value="${vo.tm_trd}"/>
-					<input type="hidden" class="nm_type" value="${vo.nm_type}"/>
-					<input type="hidden" class="full_dt_trd" value="${vo.dt_trd}"/>
-					<input type="hidden" class="cd_class" value="${vo.cd_class}"/>
-					<input type="hidden" class="memo" value="${vo.memo}"/>
-					<input type="hidden" class="grade" value="${vo.grade}"/>
-					<div class="consume_head">
-						<span class="dt_trd">{{vo.dt_trd}}</span>
-						<span class="contents">{{vo.contents}}</span>
-						<span class="amt_in_out">{{vo.amt_in_out}}</span>
-					</div>
-					<div class="consume_tail">
-						<span class="subcontent_left">{{vo.nm_class}}</span>
-						<span class="subcontent_right">{{vo.nm_card}}</span>
-					</div>
-				</div>
-			</div>
-		</div>
-		<!-- 
-		<div id="consume_detail" class="div_hidden">
-			<div class="container">
-				<form id="frmConsumeInfo" name="frmConsumeInfo" method="post">
-					<div class="form-inline">
-		                <div class="form-group">
-		                    <label for="means_consume" class="label_means_consume">결제 수단</label>
-		                    <select class="selectpicker" data-header="결제 수단" name="means_consume" id="means_consume">
-		                    	<option value="03">입출금 계좌</option>
-		                    	<option value="01">카드</option>
-		                    	<option value="02">현금</option>
-		                    </select>
-		                    <input type="hidden" class="form-control" name="an" id="an" autocomplete="off"/>
-		                </div>
-		                <div class="form-group">
-		                    <label for="amt_in_out">금액</label>
-		                    <input type="number" class="form-control" name="amt_in_out" id="amt_in_out" autocomplete="off"/>
-		                    <span class="form-control-feedback" aria-hidden="true">원</span>
-		                </div>
-		                <div class="form-group">
-		                    <label for="contents">결제처</label>
-		                    <input type="text" class="form-control" name="contents" id="contents" autocomplete="off"/>
-		                </div>
-		                <div class="form-group">
-		                    <label for="category">카테고리</label>
-		                    <select class="selectpicker" data-header="카테고리" name="category" id="category">
-								<c:forEach var="subList" items="${listPersonConsumeClassInfo}">
-									<c:forEach var="vo" items="${subList }" varStatus="myIndex">
-										<c:if test="${myIndex.index eq 0}">
-											<option value="${vo.cd_class}">${vo.nm_class}</option>
-										</c:if>
-									</c:forEach>
-									</div>
-								</c:forEach>
-		                    </select>
-		                </div>
-	  	                <div class="form-group">
-		                    <label for="dt_trd">날짜</label>
-		                    <input type="text" class="form-control" name="dt_trd" id="dt_trd" autocomplete="off"/>
-		                </div>
-	  	                <div class="form-group">
-		                    <label for="memo">메모</label>
-		                    <input type="text" class="form-control" name="memo" id="memo" autocomplete="off"/>
-		                </div>
-		        	</form>
-				</div>
-				<div class="btn-group bootstrap-select trans_detail">
-					<div class="dropdown-menu open">
-						<div class="popover-title">
-							<button type="button" class="close" aria-hidden="true">x</button>
-							입출금 내역
-						</div>
-						<ul class="dropdown-menu inner">
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-		-->
-	</section>
-</div>
+  <div class="main">
+    <section>
+        <div class="top main">
+            <ul>
+                <li><a href="index.html">MY</a></li>
+                <li><a href="index_credit.html">신용</a></li>
+                <li><a href="index_dept.html">부채</a></li>
+                <li class="on"><a href="index_spend.html">지출</a></li>
+                <li><a href="index_assets.html">자산</a></li>
+            </ul>
+        </div>
+        <div class="spend-top">
+            <div class="date-wrap">
+                <button class="prev" @click="setPrevMM"></button>
+                <p>{{ym}}</p>
+                <button class="next" @click="setNextMM"></button>
+                <button class="setting"></button>
+            </div>
+            <div class="wrap">
+                <div class="item">
+                    <p class="key">지출<em>(원)</em></p>
+                    <p class="value">{{formatNumber(consume)}}</p>
+                </div>
+                <div class="item">
+                    <p class="key">수입<em>(원)</em></p>
+                    <p class="value">{{formatNumber(income)}}</p>
+                </div>
+            </div>
+        </div>
+        <swiper direction="horizontal"
+        :mousewheel-control="true"
+        :performance-mode="false"
+        :pagination-visible="false"
+        :pagination-clickable="false"
+        :loop="true"
+        @slide-change-start="onSlideChangeStart"
+        @slide-change-end="onSlideChangeEnd">
+            <div class="item">
+                <a href="#"><img src="../../assets/images/main/spend_banner1.png" alt=""/></a>
+            </div>
+            <div class="item">
+                <a href="#"><img src="../../assets/images/main/spend_banner1.png" alt=""/></a>
+            </div>
+            <div class="item">
+                <a href="#"><img src="../../assets/images/main/spend_banner1.png" alt=""/></a>
+            </div>
+        </swiper>
+        <div class="tab">
+            <div class="wrap col3">
+                <a href="#" id="00" :class="{'on':curTab === '00'}" @click="clickTab">전체</a>
+                <a href="#" id="02" :class="{'on':curTab === '02'}" @click="clickTab">지출</a>
+                <a href="#" id="01" :class="{'on':curTab === '01'}" @click="clickTab">수입</a>
+            </div>
+        </div>
+        <div v-if="list.length!=0" class="list02 spend-list">
+          <div v-for="subList in list" :key="subList.index" class="list-wrap">
+            <p class="date">{{formatDate(subList[0].dt_trd,"mmdd")}}</p>
+            <div v-for="vo in subList" :key="vo.index" class="item">
+              <div class="left">
+                  <p class="name">{{vo.contents}}</p>
+                  <p class="cate"><img src="../../assets/images/common/bu_list_shopping.png" alt=""/><span>{{vo.nm_class}} - {{vo.nm_type}}</span></p>
+              </div>
+              <div class="right">
+                  <p class="number">{{formatNumber(vo.amt_in_out,vo.type_in_out=='02',vo.type_in_out=='01')}}<em>원</em></p>
+                  <p class="text">{{formatMeansConsume(vo.means_consume)}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+  </div>
 </template>
 
 <script>
 import router from "@/comm/router.js";
+import Common from "@/assets/js/common.js";
 
 export default {
   name: "ConsumeMain",
   data() {
     return {
       ym: "",
-      consumeList: [],
+      list: [],
+      curDate: "",
+      curTab: "00",
       standardDt: new Date(),
       income: "",
       consume: ""
     };
   },
-  component: {},
+  components: {},
   // computed () {
   // },
   beforeCreate() {},
@@ -163,23 +105,19 @@ export default {
   destroyed() {},
   methods: {
     listConsumeInfo() {
-      var thisObj = this;
+      var _this = this;
       this.$http
         .get("/m/consume/listConsumeInfo.json", {
-          params: { ym: thisObj.ym.replace(".", "") }
+          params: { ym: _this.ym.replace(".", ""), type_in_out: _this.curTab }
         })
         .then(function(response) {
           var list = response.data.listConsumeInfo;
-          for (var i = 0; i < list.length; i++) {
-            list[i].class =
-              "list-group-item consume_list " + list[i].type_in_out;
-          }
-          thisObj.consumeList = list;
-          thisObj.income = response.data.income;
-          thisObj.consume = response.data.consume;
+
+          _this.list = list;
+          _this.income = response.data.income;
+          _this.consume = response.data.consume;
         });
     },
-
     formatHead(dateStr) {
       return dateStr.substr(0, 4) + "." + dateStr.substr(4, 6);
     },
@@ -201,6 +139,41 @@ export default {
     setNextMM() {
       this.standardDt.setMonth(this.standardDt.getMonth() + 1);
       this.ym = this.formatHead(this.getYm(this.standardDt));
+      this.listConsumeInfo();
+    },
+    onSlideChangeStart() {
+      console.log("slide-start");
+    },
+    onSlideChangeEnd() {
+      console.log("slide-end");
+    },
+    formatNumber(number, isMinus, isPlus) {
+      return Common.formatNumber(number, isMinus, isPlus);
+    },
+    formatDate(date, pattern) {
+      return Common.formatDate(date, pattern);
+    },
+    formatMeansConsume(means_consume) {
+      switch(means_consume) {
+        case "01":
+          return "카드";
+        break;
+
+        case "02":
+          return "현금";
+        break;
+
+        case "03":
+          return "입출금계좌";
+        break;
+
+        default:
+          return "기타";
+        break;
+      }
+    },
+    clickTab(tab) {
+      this.curTab = tab.srcElement.id;
       this.listConsumeInfo();
     }
   }

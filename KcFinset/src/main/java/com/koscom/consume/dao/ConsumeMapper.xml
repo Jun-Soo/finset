@@ -45,7 +45,10 @@
 			AND CI.CD_CLASS					=		PCCI.CD_CLASS
 			AND CI.CD_TYPE					=		PCCI.CD_TYPE
 			AND TO_NUMBER(DT_TRD) <![CDATA[>=]]> 	TO_NUMBER(#{dt_from		, jdbcType=VARCHAR}) 
-			AND TO_NUMBER(DT_TRD) <![CDATA[<=]]> 	TO_NUMBER(#{dt_to		, jdbcType=VARCHAR}) 
+			AND TO_NUMBER(DT_TRD) <![CDATA[<=]]> 	TO_NUMBER(#{dt_to		, jdbcType=VARCHAR})
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(type_in_out)">
+			AND CI.TYPE_IN_OUT				=		#{type_in_out			, jdbcType=VARCHAR}
+			</if>
 			AND YN_CANCEL 					=		'N'
 			AND YN_BUDGET_EXCEPT			=		'N'
 				ORDER BY CI.DT_TRD DESC, CI.TM_TRD DESC
@@ -290,5 +293,42 @@
 			AND REQ_YYYYMM	= {#req_yyyymm	,jdbcType = VARCHAR}
 			AND CD_SET		= {#cd_set		,jdbcType = VARCHAR}
 	</select>
-	
+    <select id="getCalendarConsumeData" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.ConsumeVO">
+		SELECT
+			 TYPE_IN_OUT
+			,DT_TRD
+			,SUM( TO_NUMBER( AMT_IN_OUT )) AMT_IN_OUT
+		FROM
+			CONSUME_INFO
+		WHERE
+			NO_PERSON = #{no_person , jdbcType = VARCHAR}
+			AND(
+				YN_DELETE IS NULL
+				OR YN_DELETE = ''
+			)
+			AND SUBSTR( DT_TRD, 0, 6 )= #{ym_trd , jdbcType = VARCHAR}
+		GROUP BY
+			 DT_TRD
+			,TYPE_IN_OUT
+		ORDER BY
+			DT_TRD DESC 
+    </select>
+    <select id="listCalendarConsumeData" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.ConsumeVO">
+		SELECT
+			 TYPE_IN_OUT
+			,DT_TRD
+			,AMT_IN_OUT
+			,CONTENTS
+		FROM
+			CONSUME_INFO
+		WHERE
+			NO_PERSON = #{no_person , jdbcType = VARCHAR}
+			AND(
+				YN_DELETE IS NULL
+				OR YN_DELETE = ''
+			)
+			AND DT_TRD = #{ymd_trd , jdbcType = VARCHAR}
+		ORDER BY
+			DT_TRD DESC 
+    </select>
 </mapper>

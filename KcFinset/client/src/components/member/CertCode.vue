@@ -85,15 +85,14 @@ export default {
   // },
   beforeCreate() {},
   created() {
-
-    window.resultCheckFingerPrint = this.resultCheckFingerPrint
-    window.resultCheckCert = this.resultCheckCert
-    window.frmFcListNextFromMobile = this.frmFcListNextFromMobile
+    window.resultCheckFingerPrint = this.resultCheckFingerPrint;
+    window.resultCheckCert = this.resultCheckCert;
+    window.resultCheckPasswordCert = this.resultCheckPasswordCert;
 
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
       window.Android.checkFingerPrint();
-    } else if(Constant.userAgent == "iOS") {
+    } else if (Constant.userAgent == "iOS") {
       //지문인식 가능여부 체크 결과 콜백 이벤트
       Jockey.on("resultCheckFingerPrint", function(param) {
         this.resultCheckFingerPrint(param.result);
@@ -103,13 +102,13 @@ export default {
   },
   beforeMount() {},
   mounted() {
-    if(!localStorage.getItem('tempPwd')) {
-      this.$store.state.title = "비밀번호 설정 (3/7)"
-      this.certMessage = '비밀번호를 입력해주세요.'
+    if (!localStorage.getItem("tempPwd")) {
+      this.$store.state.title = "비밀번호 설정 (3/7)";
+      this.certMessage = "비밀번호를 입력해주세요.";
     } else {
-      this.$store.state.title = "비밀번호 확인 (4/7)"
-      this.certMessage = '비밀번호를 다시 한번 입력해주세요.'
-      this.tempPwd = localStorage.getItem('tempPwd')
+      this.$store.state.title = "비밀번호 확인 (4/7)";
+      this.certMessage = "비밀번호를 다시 한번 입력해주세요.";
+      this.tempPwd = localStorage.getItem("tempPwd");
     }
   },
   beforeUpdate() {},
@@ -125,8 +124,8 @@ export default {
       _this.classPass4 = "";
     },
     btnClick: function(val) {
-      var _this = this
-      var type = 'confirmPage'
+      var _this = this;
+      var type = "confirmPage";
       _this.j_password += val;
       if (_this.j_password.length > 0) _this.classPass1 = "active";
       if (_this.j_password.length > 1) _this.classPass2 = "active";
@@ -134,22 +133,22 @@ export default {
       if (_this.j_password.length > 3) {
         _this.classPass4 = "active";
 
-        if(!_this.tempPwd) {
-          localStorage.setItem('tempPwd', _this.j_password)
+        if (!_this.tempPwd) {
+          localStorage.setItem("tempPwd", _this.j_password);
         } else {
-          if(_this.tempPwd != _this.j_password) {
-            _this.j_password = ''
-            this.$toast.center(ko.messages.notMatchPwd)
-            return
+          if (_this.tempPwd != _this.j_password) {
+            _this.j_password = "";
+            this.$toast.center(ko.messages.notMatchPwd);
+            return;
           } else {
-            type = 'changePwd'
+            type = "changePwd";
           }
         }
-        this.nextPage(type)
+        this.nextPage(type);
       }
     },
     backClick: function() {
-      var _this = this
+      var _this = this;
       this.initClassPass();
       _this.j_password = _this.j_password.substr(
         0,
@@ -161,10 +160,10 @@ export default {
       if (_this.j_password.length > 3) _this.classPass4 = "active";
     },
     nextPage: function(type) {
-      var _this = this
-      if(type == 'confirmPage') {
-        this.$store.state.proxyUrl = '/member/certCode'
-        this.$router.push("/proxy")
+      var _this = this;
+      if (type == "confirmPage") {
+        this.$store.state.proxyUrl = "/member/certCode";
+        this.$router.push("/proxy");
         return;
       } else {
         var data = {
@@ -179,39 +178,41 @@ export default {
             var result = response.data;
             console.log(result);
             if (result.result == "00") {
-              if(_this.chkFingerPrint == 'Y') {
-                setTimeout(function(){
-                  _this.$router.push("/member/certFinger")
+              if (_this.chkFingerPrint == "Y") {
+                setTimeout(function() {
+                  _this.$router.push("/member/certFinger");
                 }, 2000);
               } else {
-                if(Constant.userAgent == "Android" && localStorage.getItem("site") != "REAL") {
-                  checkExistCert();
+                if (
+                  Constant.userAgent == "Android" &&
+                  localStorage.getItem("site") != "REAL"
+                ) {
+                  this.checkExistCert();
                 } else {
                   this.login();
                 }
               }
-              this.$toast.center('비밀번호설정이 완료 되었습니다.')
+              this.$toast.center("비밀번호설정이 완료 되었습니다.");
             } else {
-              this.$toast.center(result.message)
+              this.$toast.center(result.message);
               return false;
             }
           })
           .catch(e => {
-            this.$toast.center(ko.messages.error)
+            this.$toast.center(ko.messages.error);
           });
       }
     },
     login: function() {
       var _this = this;
 
-      var querystring = require('querystring')
+      var querystring = require("querystring");
       var data = querystring.stringify({
         j_username: _this.noPerson,
         j_password: _this.j_password
       });
       this.$http
-        .post("/check/j_spring_security_check", data
-        ,{
+        .post("/check/j_spring_security_check", data, {
           headers: {
             "Content-type": "application/x-www-form-urlencoded"
           }
@@ -219,76 +220,71 @@ export default {
         .then(response => {
           if (response.data.result == "10") {
             //정상
-            localStorage.removeItem('tempPwd')
-            _this.$store.commit('LOGIN', response.data)
-            _this.$router.push("/main")
+            localStorage.removeItem("tempPwd");
+            _this.$store.commit("LOGIN", response.data);
+            _this.$router.push("/main");
           } else {
-            this.$toast.center(ko.messages.loginErr)
-            return
+            this.$toast.center(ko.messages.loginErr);
+            return;
           }
         })
         .catch(e => {
-          this.$toast.center(ko.messages.error)
+          this.$toast.center(ko.messages.error);
         });
     },
     // 공인인증서 유무 체크
     checkExistCert: function() {
-      if(Constant.userAgent == "iOS") {
+      if (Constant.userAgent == "iOS") {
         //공인인증서 유무 체크 결과 콜백 이벤트
-        Jockey.on("resultCheckCert" , function(param) {
+        Jockey.on("resultCheckCert", function(param) {
           var iscert = false;
-          if(param.isCert == 1) iscert = true;
+          if (param.isCert == 1) iscert = true;
           resultCheckCert(iscert);
         });
         Jockey.send("checkExistCert");
-      }
-      else if(Constant.userAgent == "Android") {
+      } else if (Constant.userAgent == "Android") {
         window.Android.checkExistCert();
-      }
-    },
-    //자동스크래핑 가능 금융사 조회
-    frmFcCertList: function() {
-      var noPerson = this.$store.state.user.noPerson
-      var nmPerson = this.$store.state.user.nmPerson
-      var bankCode = this.$store.state.bankCode
-      var cardCode = this.$store.state.cardCode
-
-      if(Constant.userAgent == "iOS") {
-        /* Jockey.on("frmFcListNextFromMobile" , function(param) {
-          frmFcListNextFromMobile();
-        });
-        Jockey.send("checkAvaliableScrapList" , {
-          noPerson : noPerson,
-          bankCode : bankCode
-        }); */
-        //do nothing
-      } else if(Constant.userAgent == "Android") {
-        window.Android.checkAvaliableScrapList(noPerson, bankCode, cardCode, nmPerson);
       }
     },
     /***
      * Native Call function
-     **/
+     ***/
     resultCheckFingerPrint: function(result) {
-      console.log(result)
-      if(result == true || result == 1){
-        this.chkFingerPrint = 'Y'
+      console.log(result);
+      if (result == true || result == 1) {
+        this.chkFingerPrint = "Y";
       } else {
-        this.chkFingerPrint = 'N'
+        this.chkFingerPrint = "N";
       }
     },
     //공인인증서 유무 결과 (모바일에서 호출)
     resultCheckCert: function(isCert) {
-      if(isCert) {  // 공인인증서가 있을 경우
-        this.frmFcCertList();
-      } else {      // 공인인증서가 없을 경우
-        this.$toast.center('공인인증서가 없습니다.');
+      if (isCert) {
+        // 공인인증서가 있을 경우
+        if (Constant.userAgent == "iOS") {
+          Jockey.on("checkPasswordCert", function(param) {
+            resultCheckPasswordCert();
+          });
+          Jockey.send("checkPasswordCert", {
+            noPerson: this.$store.state.user.noPerson,
+            nmPerson: this.$store.state.user.nmPerson
+          });
+          //do nothing
+        } else if (Constant.userAgent == "Android") {
+          window.Android.checkPasswordCert(
+            this.$store.state.user.noPerson,
+            this.$store.state.user.nmPerson
+          );
+        }
+      } else {
+        // 공인인증서가 없을 경우
+        this.$toast.center("공인인증서가 없습니다.");
         this.login();
       }
     },
-    //자동 스크래핑 등록 완료 시 (모바일에서 호출)
-    frmFcListNextFromMobile: function() {
-      this.login()
+    resultCheckPasswordCert: function(dn, cn) {
+      // 금융정보제공동의서 확인여부 체크 필요
+      this.$router.push({ name: "scrapCertStep", params: { dn: dn, cn: cn } });
     }
   }
 };
@@ -296,5 +292,8 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
-  .memberMain {background-color: #283593; height: 100%;}
+.memberMain {
+  background-color: #283593;
+  height: 100%;
+}
 </style>

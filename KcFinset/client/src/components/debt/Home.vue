@@ -15,7 +15,7 @@ export default {
   name: "debtMain",
   data() {
     return {
-      isBottom: true
+      isBottom: false
     };
   },
   components: {

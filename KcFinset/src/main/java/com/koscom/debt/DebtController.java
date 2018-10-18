@@ -1,5 +1,6 @@
 package com.koscom.debt;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.koscom.consume.model.ConsumeForm;
+import com.koscom.consume.model.ConsumeVO;
+import com.koscom.consume.service.ConsumeManager;
 import com.koscom.debt.model.DebtCalendarVO;
 import com.koscom.debt.model.DebtDetail12RepVO;
 import com.koscom.debt.model.DebtForm;
@@ -37,6 +41,9 @@ public class DebtController {
 	
 	@Autowired
 	private PersonManager personManager;
+	
+	@Autowired
+	private ConsumeManager consumeManager;
 	
 	/**
 	 * 부채관리 진입 (풋터에서 호출)
@@ -126,7 +133,7 @@ public class DebtController {
 		return "/debt/frameDebtInfoMain";
 	}
 	
-	/**
+	/** VUE
 	 * 부채 메인 요약
 	 * @param model
 	 * @param session
@@ -138,10 +145,26 @@ public class DebtController {
 		String no_person = (String) session.getAttribute("no_person");
 		DebtSummaryVO debtSummaryVO = debtManager.getDebtSummary(no_person);
 		model.addAttribute("debtSummaryData", debtSummaryVO);
+		
+		DebtForm debtForm = new DebtForm();
+		debtForm.setNo_person(no_person);
+		debtForm.setSt_yyyymm("201612");
+		debtForm.setEd_yyyymm("201711");
+		
+		List<DebtSummaryVO> rawStatList = debtManager.listStatDebtSummary(debtForm);
+		List<String> dateList = new ArrayList<String>();
+		List<String> dataList = new ArrayList<String>();
+		for(int i = 0; i< rawStatList.size(); i++) {
+			dateList.add(rawStatList.get(i).getReq_yyyymm().substring(4));
+			dataList.add(rawStatList.get(i).getAmt_remain());
+		}
+		model.addAttribute("dateList",dateList);
+		model.addAttribute("dataList",dataList);
+		
 		return "jsonView";
 	}
 	
-	/**
+	/** VUE
 	 * 부채 메인 리스트
 	 * @param model
 	 * @param session
@@ -398,6 +421,116 @@ public class DebtController {
 			model.addAttribute("message", "비밀번호가 일치하지 않습니다.");
 			model.addAttribute("result", Constant.FAILED);
 		}
+		return "jsonView";
+	}
+	
+	@RequestMapping("/getCalendarData.json")
+	public String getCalendarData(HttpSession session, Model model, String ym) throws FinsetException {
+		String no_person = (String) session.getAttribute("no_person");
+		if(ym == null || ym.equals("")){
+			ym = "201808";	
+		}
+		ConsumeForm consumeForm = new ConsumeForm();
+		consumeForm.setNo_person(no_person);
+		consumeForm.setYm_trd(ym);
+		
+		List<ConsumeVO> incomeList = new ArrayList<ConsumeVO>();
+		List<ConsumeVO> consumeList = new ArrayList<ConsumeVO>();
+		
+		List<ConsumeVO> rawConsumeList = consumeManager.getCalendarConsumeData(consumeForm);		
+		
+		for(ConsumeVO vo : rawConsumeList) {
+			String type = vo.getType_in_out();
+			if(type.equals("01")) {
+				incomeList.add(vo);
+			} else {
+				consumeList.add(vo);
+			}
+		}
+		
+		model.addAttribute("incomeList", incomeList);
+		model.addAttribute("consumeList", consumeList);
+		
+		DebtForm debtForm = new DebtForm();
+		debtForm.setNo_person(no_person);
+		debtForm.setReq_yyyymm(ym);
+		
+		List<DebtCalendarVO> debtList = debtManager.getCalendarDebtData(debtForm);
+		
+		for(DebtCalendarVO vo : debtList) {
+			vo.setReq_yyyymmdd(vo.getReq_yyyymm() + vo.getInter_pay_day());
+		}
+		model.addAttribute("debtList", debtList);
+		
+		return "jsonView";
+	}
+	
+	@RequestMapping("/listCalendarData.json")
+	public String listCalendarData(
+			HttpSession session,
+			Model model,
+			String ymd,
+			boolean isActiveIncome,
+			boolean isActiveConsume,
+			boolean isActiveDebt
+			) throws FinsetException {
+		String no_person = (String) session.getAttribute("no_person");
+
+		int incomeTotal = 0;
+		int consumeTotal = 0;
+		int debtTotal = 0;
+		
+		if(isActiveIncome||isActiveConsume){
+			ConsumeForm consumeForm = new ConsumeForm();
+			consumeForm.setNo_person(no_person);
+			consumeForm.setYmd_trd(ymd);
+			
+			List<ConsumeVO> incomeList = new ArrayList<ConsumeVO>();
+			List<ConsumeVO> consumeList = new ArrayList<ConsumeVO>();
+			
+			List<ConsumeVO> rawConsumeList = consumeManager.listCalendarConsumeData(consumeForm);
+			
+			for(ConsumeVO vo : rawConsumeList) {
+				String type = vo.getType_in_out();
+				if(type.equals("01")) {
+					if(isActiveIncome){
+						incomeList.add(vo);
+						incomeTotal += Integer.parseInt(vo.getAmt_in_out());
+					}
+				} else {
+					if(isActiveConsume){
+						consumeList.add(vo);
+						consumeTotal += Integer.parseInt(vo.getAmt_in_out());
+					}
+				}
+			}
+			if(isActiveIncome){
+				model.addAttribute("incomeTotal", incomeTotal);
+				model.addAttribute("incomeList", incomeList);	
+			}
+			if(isActiveConsume){
+				model.addAttribute("consumeTotal", consumeTotal);
+				model.addAttribute("consumeList", consumeList);	
+			}
+		}
+		if(isActiveDebt){
+			DebtForm debtForm = new DebtForm();
+			debtForm.setNo_person(no_person);
+			debtForm.setReq_yyyymmdd(ymd);
+			
+			List<DebtCalendarVO> debtList = debtManager.listCalendarDebtData(debtForm);
+			
+			for(DebtCalendarVO vo : debtList) {
+				vo.setReq_yyyymmdd(vo.getReq_yyyymm() + vo.getInter_pay_day());
+				debtTotal += Integer.parseInt(vo.getAmt_repay());
+			}
+			
+			model.addAttribute("debtTotal", debtTotal);
+			model.addAttribute("debtList", debtList);
+		}
+		int sumTotal = incomeTotal-consumeTotal-debtTotal;
+		model.addAttribute("sumTotal", sumTotal);
+		
 		return "jsonView";
 	}
 }

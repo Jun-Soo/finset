@@ -1,5 +1,5 @@
 <template>
-<div id="wrapper">
+<div id="wrapper">	
 	<!-- Header -->
 	<header id="header">
 		<div class="input-group">
@@ -26,7 +26,7 @@
 						</ul>
 					</div>
 				</div>
-            </div>
+			</div>
 		</div>
 	</header>
 	<section id="content">
@@ -138,28 +138,28 @@
 			<div class="tab-pane" id="tab1">
 				<!-- tab1 -->
 				<div class="container-fluid">
-                    <div class="repay-status">
-                        <span class="label label-info">정상</span>
-                        <span class="label label-danger">연체</span>
-                        <span class="label label-default">기타</span>
-                    </div>
-                    <div class="repay-date-area">
-                        <div class="row">
-                            <div id="collapseExample_${i}" class="collapse popup-layer">
-                                <div class="popup-layer-header"><span>${oneMonth.req_yyyymm}</span></div>
-                                <span class="title">원리금</span>
-                                <p>${amt_repay}</p>
-                                <p><span><strong>원금</strong> : ${amt_repay_p }</span>
-                                    / <span><strong>이자</strong> : ${amt_repay_i }</span></p>
-                                <button data-toggle="collapse" data-target="#collapseExample_${i}" aria-expanded="false" aria-controls="collapseExample_${i}" class="btn-close"><i class="icon-close">레이어 닫기</i></button>
-                            </div>
-                            <div class="col-xs-3">
-                                <div data-toggle="collapse" href="#collapseExample_${i}" aria-expanded="false" aria-controls="collapseExample_${i}" class="repay-date ${status_color}" data-layer="popupMonth">
-                                    <span>${oneMonth.req_yyyymm}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+					<div class="repay-status">
+							<span class="label label-info">정상</span>
+							<span class="label label-danger">연체</span>
+							<span class="label label-default">기타</span>
+					</div>
+					<div class="repay-date-area">
+							<div class="row">
+									<div id="collapseExample_${i}" class="collapse popup-layer">
+											<div class="popup-layer-header"><span>${oneMonth.req_yyyymm}</span></div>
+											<span class="title">원리금</span>
+											<p>${amt_repay}</p>
+											<p><span><strong>원금</strong> : ${amt_repay_p }</span>
+													/ <span><strong>이자</strong> : ${amt_repay_i }</span></p>
+											<button data-toggle="collapse" data-target="#collapseExample_${i}" aria-expanded="false" aria-controls="collapseExample_${i}" class="btn-close"><i class="icon-close">레이어 닫기</i></button>
+									</div>
+									<div class="col-xs-3">
+											<div data-toggle="collapse" href="#collapseExample_${i}" aria-expanded="false" aria-controls="collapseExample_${i}" class="repay-date ${status_color}" data-layer="popupMonth">
+													<span>${oneMonth.req_yyyymm}</span>
+											</div>
+									</div>
+							</div>
+					</div>
 				</div>
 			</div>
 		</div>

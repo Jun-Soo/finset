@@ -243,6 +243,7 @@
 	          ,(100 -
 	            ROUND((TO_DATE(A.MAX_YMD_LOANEND) - TO_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'YYYYMMDD') - 1) / (TO_DATE(A.MAX_YMD_LOANEND) - TO_DATE(A.MIN_YMD_LOAN)),2)
 	            *100)                                 AS DUTATION_NOW_RATE
+	          ,A.SUM_AMT_CONTRACT								AS AMT_CONTRACT
 	    FROM   (
 	             SELECT A.NO_PERSON
 	                   ,A.NO_MANAGE_INFO
@@ -648,6 +649,57 @@
          WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
          AND DISPLAY_YN = 'Y' /* 삭제를 하지 않은 부채 수를 가져오기 위해 조건 추가 - 김휘경 */
          AND YMD_CANCEL IS NULL /* YMD_CANCEL 반영 - 김휘경 */
-         
+    </select>
+    
+    <select id="getCalendarDebtData" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtCalendarVO">
+		SELECT
+			DPI.INTER_PAY_DAY,
+			SUM(DPRL.AMT_REPAY) AMT_REPAY,
+			DPRL.REQ_YYYYMM
+		FROM
+			DEBT_PERSONAL_INFO DPI,
+			DEBT_PERSONAL_REPAY_LIST DPRL
+		WHERE
+				DPI.NO_PERSON		 = #{no_person	, jdbcType = VARCHAR}
+			AND DPI.NO_PERSON		 = DPRL.NO_PERSON
+			AND DPI.NO_MANAGE_INFO	 = DPRL.NO_MANAGE_INFO
+			AND DPI.YMD_CANCEL		 IS NULL
+			AND TO_NUMBER( DPI.YMD_LOANEND )>= TO_NUMBER( TO_CHAR( SYSDATE, 'YYYYMMDD' ))
+			AND DPRL.AMT_REPAY		 IS NOT NULL
+			AND DPRL.REQ_YYYYMM		 = #{req_yyyymm	, jdbcType = VARCHAR}
+		GROUP BY REQ_YYYYMM||DPI.INTER_PAY_DAY, DPI.INTER_PAY_DAY, DPRL.REQ_YYYYMM
+    </select>
+    <select id="listCalendarDebtData" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtCalendarVO">
+		SELECT
+			DPI.INTER_PAY_DAY,
+			DPI.NM_BIZ,
+			DPRL.AMT_REPAY,
+			DPRL.REQ_YYYYMM
+		FROM
+			DEBT_PERSONAL_INFO DPI,
+			DEBT_PERSONAL_REPAY_LIST DPRL
+		WHERE
+				DPI.NO_PERSON		 				= #{no_person		, jdbcType = VARCHAR}
+			AND DPI.NO_PERSON		 				= DPRL.NO_PERSON
+			AND DPI.NO_MANAGE_INFO	 				= DPRL.NO_MANAGE_INFO
+			AND DPI.YMD_CANCEL		 				IS NULL
+			AND TO_NUMBER( DPI.YMD_LOANEND )		>= TO_NUMBER( TO_CHAR( SYSDATE, 'YYYYMMDD' ))
+			AND DPRL.AMT_REPAY		 				IS NOT NULL
+			AND DPRL.REQ_YYYYMM||DPI.INTER_PAY_DAY	= #{req_yyyymmdd	, jdbcType = VARCHAR}
+    </select>
+    <select id="listStatDebtSummary" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtSummaryVO">
+		SELECT
+			REQ_YYYYMM,
+			SUM( AMT_REMAIN ) AS AMT_REMAIN
+		FROM
+			DEBT_PERSONAL_REPAY_LIST
+		WHERE
+			NO_PERSON 				= 		#{no_person, jdbcType = VARCHAR}
+			AND REQ_YYYYMM <![CDATA[>]]>	#{st_yyyymm, jdbcType = VARCHAR}
+			AND REQ_YYYYMM <![CDATA[<]]>	#{ed_yyyymm, jdbcType = VARCHAR}
+		GROUP BY
+			REQ_YYYYMM
+		ORDER BY
+			REQ_YYYYMM ASC
     </select>
 </mapper>

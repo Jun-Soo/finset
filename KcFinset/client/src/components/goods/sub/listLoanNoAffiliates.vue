@@ -1,5 +1,11 @@
 <template>
 <div v-if="goodsList.length" >
+  <swiper direction="horizontal"
+        :mousewheel-control="true"
+        :performance-mode="false"
+        :pagination-visible="true"
+        :pagination-clickable="true"
+        :loop="true">
  	<div class="list-block" v-for="goods in goodsList" :key="goods.index">
 		<div class="list-block prd-list">
 			<div class="container-fluid prd-loan" id="loan_product">
@@ -55,6 +61,7 @@
 				</div>
 		</div>
 	</div>
+  </swiper>
 </div>
 <div v-else class="data-none">
 	<p>신청 가능한 상품이 없습니다.</p>
@@ -95,19 +102,7 @@ export default {
       formData.append("orderby", _parent.orderby);
       this.$store.state.isLoading = true;
       this.$http
-        .post(
-          "/m/loanworker/listLoanNoAffiliates.json",
-          formData
-          // {
-          //   params: {
-          //     page: _parent.page,
-          //     cd_fin: _parent.cd_fin,
-          //     cd_goods_class_l: _parent.cd_goods_class_l,
-          //     cd_goods_class_m: _parent.cd_goods_class_m,
-          //     orderby: _parent.orderby
-          //   }
-          // }
-        )
+        .post("/m/loanworker/listLoanNoAffiliates.json", formData)
         .then(function(response) {
           var list = response.data.pagedList.source;
           _this.$store.state.isLoading = false;

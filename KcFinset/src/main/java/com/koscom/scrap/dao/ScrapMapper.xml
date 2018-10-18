@@ -45,8 +45,8 @@
 			, YN_LINK
 			, LINK_DATE
 		FROM FC_LINK_INFO
-		WHERE NO_PERSON = #{NO_PERSON, jdbcType=VARCHAR}
-			AND CD_AGENCY= #{CD_AGENCY, jdbcType=VARCHAR} 
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_AGENCY= #{cd_agency, jdbcType=VARCHAR} 
 			AND YN_LINK = 'Y'
 	</select>
 	
@@ -322,18 +322,18 @@
 	<insert id="createFcLinkInfo" parameterType="com.koscom.scrap.model.FcLinkInfoVO">
 		MERGE INTO FC_LINK_INFO
 		USING DUAL
-		ON ( NO_PERSON = #{NO_PERSON, jdbcType=VARCHAR}
-			AND CD_FC = #{CD_FC, jdbcType=VARCHAR} )
+		ON ( NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR} )
 		WHEN MATCHED THEN
 		UPDATE
 		 SET
-		  	CN					= #{CN            ,jdbcType=VARCHAR}
-		    ,CD_LINK_STAT		= #{CD_LINK_STAT  ,jdbcType=VARCHAR}
-		 	,YN_LINK			= #{YN_LINK       ,jdbcType=VARCHAR}
-		 	,TYPE_LOGIN			= #{TYPE_LOGIN    ,jdbcType=VARCHAR}
+		  	CN					= #{cn            ,jdbcType=VARCHAR}
+		    ,CD_LINK_STAT		= #{cd_link_stat  ,jdbcType=VARCHAR}
+		 	,YN_LINK			= #{yn_link       ,jdbcType=VARCHAR}
+		 	,TYPE_LOGIN			= #{type_login    ,jdbcType=VARCHAR}
 			,LINK_DATE			= TO_CHAR(SYSDATE , 'YYYYMMDD')
-			,RSN_LINK_MESSAGE	= #{RSN_LINK_MESSAGE    ,jdbcType=VARCHAR}
-			,ID_LST				= #{ID_LST        ,jdbcType=VARCHAR}
+			,RSN_LINK_MESSAGE	= #{rsn_link_message    ,jdbcType=VARCHAR}
+			,ID_LST				= #{id_lst        ,jdbcType=VARCHAR}
 			,DT_LST				= SYSDATE
 		WHEN NOT MATCHED THEN
         INSERT
@@ -352,18 +352,18 @@
 			,ID_LST
 			,DT_LST
 		) VALUES (
-			 #{NO_PERSON	,jdbcType=VARCHAR}
-			,#{CD_FC		,jdbcType=VARCHAR}
-			,#{CD_AGENCY	,jdbcType=VARCHAR}
-			,#{CN			,jdbcType=VARCHAR}
-			,#{CD_LINK_STAT	,jdbcType=VARCHAR}
-			,#{YN_LINK		,jdbcType=VARCHAR}
-			,#{TYPE_LOGIN	,jdbcType=VARCHAR}
+			 #{no_person	,jdbcType=VARCHAR}
+			,#{cd_fc		,jdbcType=VARCHAR}
+			,#{cd_agency	,jdbcType=VARCHAR}
+			,#{cn			,jdbcType=VARCHAR}
+			,#{cd_link_stat	,jdbcType=VARCHAR}
+			,#{yn_link		,jdbcType=VARCHAR}
+			,#{type_login	,jdbcType=VARCHAR}
 			,TO_CHAR(SYSDATE, 'YYYYMMDD')
-			,#{RSN_LINK_MESSAGE	,jdbcType=VARCHAR}
-			,#{ID_FRT		,jdbcType=VARCHAR}
+			,#{rsn_link_message	,jdbcType=VARCHAR}
+			,#{id_frt		,jdbcType=VARCHAR}
 			,SYSDATE
-			,#{ID_LST		,jdbcType=VARCHAR}
+			,#{id_lst		,jdbcType=VARCHAR}
 			,SYSDATE
 		)
 	</insert>
@@ -371,10 +371,10 @@
 	<update id="updateFcLinkInfo" parameterType="com.koscom.scrap.model.FcLinkInfoVO">
 		UPDATE FC_LINK_INFO
 		SET
-			CD_LINK_STAT = #{CD_LINK_STAT, jdbcType=VARCHAR}
-			, RSN_LINK_MESSAGE = #{RSN_LINK_MESSAGE, jdbcType=VARCHAR}
-		WHERE NO_PERSON = #{NO_PERSON, jdbcType=VARCHAR}
-			AND CD_FC = #{CD_FC, jdbcType=NUMERIC}
+			CD_LINK_STAT = #{cd_link_stat, jdbcType=VARCHAR}
+			, RSN_LINK_MESSAGE = #{rsn_link_message, jdbcType=VARCHAR}
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=NUMERIC}
 	</update>
 	
 	<select id="getLinkedFcCount" parameterType="java.lang.String" resultType="int">
@@ -396,8 +396,8 @@
 			, LK.YN_LINK
 			, LK.TYPE_LOGIN
 		FROM FC_LINK_INFO LK, FC_INFO FC, COMM_CD CD
-		WHERE NO_PERSON = #{NO_PERSON, jdbcType=VARCHAR} 
-			AND CN = #{CN, jdbcType=VARCHAR}
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR} 
+			AND CN = #{cn, jdbcType=VARCHAR}
 			AND LK.YN_LINK = 'Y'  AND LK.CD_FC = FC.CD_FC AND CD.CODE_GROUP = 'cd_fin' AND CD.CODE_VALUE = FC.CD_FIN
 		ORDER BY CD_FIN, NM_FC
 	</select>
@@ -453,10 +453,10 @@
 			,ID_LST
 			,SYSDATE
 		FROM FC_LINK_INFO
-		WHERE NO_PERSON = #{NO_PERSON, jdbcType=VARCHAR} 
-			AND CN = #{CN, jdbcType=VARCHAR}
-		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(CD_FC)">
-			AND CD_FC = #{CD_FC, jdbcType=VARCHAR}
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR} 
+			AND CN = #{cn, jdbcType=VARCHAR}
+		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)">
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
 		</if>
 	</insert>
 	

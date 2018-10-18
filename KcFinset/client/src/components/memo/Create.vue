@@ -19,8 +19,7 @@
                     <textarea class="form-control" name="memo_text" id="memo_text" v-model="memo_text"></textarea>
                 </div>
                 <div class="div_hidden">
-                    <input type="hidden" name="no_person" id="no_person" value="${memoVO.no_person }"/>
-                    <input type="hidden" name="no_manage_info" id="no_manage_info" value="${memoVO.no_manage_info }"/>
+                    <input type="hidden" name="no_manage_info" id="no_manage_info" :value="no_manage_info"/>
                 </div>
                 <div id="alarmModal" class="modal">
                     <div class="alert-content">
@@ -57,8 +56,10 @@ import router from "@/comm/router.js";
 export default {
   name: "memoCreate",
   data() {
+    var thisObj = this;
     return {
-      memo_text: ""
+      memo_text: "",
+      no_manage_info: thisObj.$route.params.no_manage_info
     };
   },
   component: {},
@@ -73,22 +74,38 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    // createMemo() {
+    //   var thisObj = this;
+    //   this.$http
+    //     .post("/m/memo/createMemo.json", {
+    //       params: {
+    //         memo_text: thisObj.memo_text,
+    //         no_manage_info: thisObj.$route.params.no_manage_info
+    //       },
+    //       memo_text: 'test'
+    //     })
+    //     .then(function(response) {
+    //       if (response.data.code == "00") {
+    //         router.push("/memo/main");
+    //       } else {
+    //         thisObj.$toast.center("저장에 실패하였습니다.");
+    //       }
+    //     });
+    // }
     createMemo() {
       var thisObj = this;
-      this.$http
-        .get("/m/memo/createMemo.json", {
-          params: {
-            memo_text: thisObj.memo_text,
-            no_manage_info: thisObj.$route.params.no_manage_info
-          }
-        })
-        .then(function(response) {
-          if (response.data.code == "00") {
-            router.push("/memo/main");
-          } else {
-            thisObj.$toast.center("저장에 실패하였습니다.");
-          }
-        });
+
+      // var frmCreateMemo = document.getElementById("frmCreateMemo");
+      // var data = frmCreateMemo.serialize();
+      var data = $("#frmCreateMemo").serialize();
+
+      this.$http.post("/m/memo/createMemo.json", data).then(function(response) {
+        if (response.data.code == "00") {
+          // router.push("/memo/main");
+        } else {
+          thisObj.$toast.center("저장에 실패하였습니다.");
+        }
+      });
     }
   }
 };

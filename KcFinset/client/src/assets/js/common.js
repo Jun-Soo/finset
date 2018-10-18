@@ -172,14 +172,17 @@ export default {
       active.disabled()
     }
   },
-  formatNumber: function (number, isMinus) {
+  formatNumber: function (number, isMinus, isPlus) {
+    if (typeof number === 'number') {
+      number += ''
+    }
     var regex = /^[-]?\d+(?:[.]\d+)?$/
     var formatNum = ''
     if (!regex.test(number)) {
       if (number === '-') {
         return '-'
       } else {
-        return NaN
+        return 0
       }
     } else {
       if (number.match('-')) {
@@ -190,7 +193,11 @@ export default {
       if (isMinus) {
         return '-' + formatNum
       } else {
-        return formatNum
+        if (isPlus) {
+          return '+' + formatNum
+        } else {
+          return formatNum
+        }
       }
     }
   },
@@ -205,7 +212,13 @@ export default {
     } else if (typeof date === 'object') {
       yyyy = date.getFullYear()
       mm = date.getMonth() + 1
+      if (mm < 10) {
+        mm = '0' + mm
+      }
       dd = date.getDate()
+      if (dd < 10) {
+        dd = '0' + dd
+      }
     }
     if (((pattern || '') === '') || pattern === 'yyyymmdd') {
       return yyyy + '-' + mm + '-' + dd

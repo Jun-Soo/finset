@@ -145,13 +145,6 @@ public class BaseController {
 	
 	
 	
-	
-	
-	
-	
-	
-	
-	
 	/**
 	 * 보안코드 입력 화면
 	 * @param model

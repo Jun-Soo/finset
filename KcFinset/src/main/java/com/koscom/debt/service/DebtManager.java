@@ -110,4 +110,25 @@ public interface DebtManager {
 	 * @return
 	 */
 	int getDebtCount(String no_person);
+	
+	/**
+	 * 공통 캘린더 합계 조회
+	 * @param debtForm
+	 * @return
+	 */
+	List<DebtCalendarVO> getCalendarDebtData(DebtForm debtForm);
+	
+	/**
+	 * 공통 캘린더 리스트 조회
+	 * @param debtForm
+	 * @return
+	 */
+	List<DebtCalendarVO> listCalendarDebtData(DebtForm debtForm);
+	
+	/**
+	 * 부채 메인 상단 
+	 * @param debtForm
+	 * @return
+	 */
+	List<DebtSummaryVO> listStatDebtSummary(DebtForm debtForm);
 }

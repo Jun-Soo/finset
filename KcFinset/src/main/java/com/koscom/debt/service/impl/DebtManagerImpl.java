@@ -124,4 +124,19 @@ public class DebtManagerImpl implements DebtManager {
 	public int getDebtCount(String no_person) {
 		return debtMapper.getDebtCount(no_person);
 	}
+	
+	@Override
+	public List<DebtCalendarVO> getCalendarDebtData(DebtForm debtForm) {
+		return debtMapper.getCalendarDebtData(debtForm);
+	}
+
+	@Override
+	public List<DebtCalendarVO> listCalendarDebtData(DebtForm debtForm) {
+		return debtMapper.listCalendarDebtData(debtForm);
+	}
+
+	@Override
+	public List<DebtSummaryVO> listStatDebtSummary(DebtForm debtForm) {
+		return debtMapper.listStatDebtSummary(debtForm);
+	}
 }

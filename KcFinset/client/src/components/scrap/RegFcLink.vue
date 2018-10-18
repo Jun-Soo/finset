@@ -56,7 +56,6 @@ export default {
       isScrapFcList: false,
       isScrapStList: false,
       linkedFcInfoList: [],
-      updateList: [],
       type: ""
     };
   },
@@ -154,34 +153,62 @@ export default {
     },
     updateLinkedFcInfo: function() {
       var _this = this;
-      var formData = new FormData();
+      var cnt = 0;
+      //form태그 초기화
+      $("#frmFcLinkList").html("");
       for (var i = 0; i < this.linkedFcInfoList.length; i++) {
         if (
           this.linkedFcInfoList[i].yn_link_origin !=
           this.linkedFcInfoList[i].yn_link
         ) {
-          this.updateList.push(this.linkedFcInfoList[i]);
+          //실제 action을 보낼 form 태그 안에 input 태그를 생성
+          $("#frmFcLinkList").append(
+            this.getInputStr("no_person", cnt, this.linkedFcInfoList[i].no_person)
+          );
+          $("#frmFcLinkList").append(
+            this.getInputStr("cd_agency", cnt, this.linkedFcInfoList[i].cd_agency)
+          );
+          $("#frmFcLinkList").append(
+            this.getInputStr("cd_fc", cnt, this.linkedFcInfoList[i].cd_fc)
+          );
+          $("#frmFcLinkList").append(
+            this.getInputStr("cn", cnt, this.linkedFcInfoList[i].cn)
+          );
+          $("#frmFcLinkList").append(
+            this.getInputStr("type_login", cnt, this.linkedFcInfoList[i].type_login)
+          );
+          $("#frmFcLinkList").append(
+            this.getInputStr("yn_link", cnt, this.linkedFcInfoList[i].yn_link)
+          );
+          cnt++;
         }
       }
-      
-      for (var i = 0; i < this.updateList.length; i++) {
-        formData.append("NO_PERSON[]", this.updateList[i].no_person);
-        formData.append("CD_FC[]", this.updateList[i].cd_fc);
-        formData.append("CD_AGENCY[]", this.updateList[i].cd_agency);
-        formData.append("CN[]", this.updateList[i].cn);
-        formData.append("YN_LINK[]", this.updateList[i].yn_link);
-        formData.append("TYPE_LOGIN[]", this.updateList[i].type_login);
+      if(cnt == 0)  {
+        this.login();
+        return;
       }
-      alert("test");
+      var data = $("#frmFcLinkList").serialize();
       this.$http
-        .post("/m/scrap/updateFcLinkInfoList.json", formData)
+        .post("/m/scrap/updateFcLinkInfoList.json", data)
         .then(function(response) {
-          alert("test1");
           var result = response.data.code;
+          this.login();
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);
         });
+    },
+    //각 no_manage_info와 display_yn에 맞는 input 태그를 만들 함수
+    getInputStr: function(name, idx, value) {
+      return (
+        "<input type='hidden' name='list[" +
+        idx +
+        "]." +
+        name +
+        "' value='" +
+        value +
+        "'/>"
+      );
     }
   }
 };

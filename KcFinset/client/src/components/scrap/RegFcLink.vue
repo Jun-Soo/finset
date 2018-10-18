@@ -19,8 +19,7 @@
 					<div class="list-group-item">
 						<div class="list-block">
 							<li class="bank-title">
-								<span class="thumb-logo" :style=linkedFcInfo.style></span>
-								<span>{{linkedFcInfo.nm_fc}}</span>
+								<p class="symbol"><img :src="linkedFcInfo.icon" alt=""/>{{linkedFcInfo.nm_fc}}</p>
                </li>
             </div>
 						<div class="ui-switch" data-ischanged="false">
@@ -77,10 +76,10 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    isLinked(yn_linked) {
+    isLinked: function(yn_linked) {
       return yn_linked == "Y";
     },
-    changeLinked(cd_fc) {
+    changeLinked: function(cd_fc) {
       var chkZzim = $("#" + cd_fc).is(":checked");
       for (var i = 0; i < this.linkedFcInfoList.length; i++) {
         if (this.linkedFcInfoList[i].cd_fc === cd_fc) {
@@ -92,7 +91,7 @@ export default {
         }
       }
     },
-    checkType(type) {
+    checkType: function(type) {
       if (this.type != type) {
         this.type = type;
         return true;
@@ -139,10 +138,8 @@ export default {
         .then(function(response) {
           var list = response.data.linkedFcInfoList;
           for (var i = 0; i < list.length; i++) {
-            list[i].style =
-              "background-image:url('/m/fincorp/getFinCorpIcon.crz?cd_fc=" +
-              list[i].cd_fc +
-              "')";
+            list[i].icon =
+              "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + list[i].cd_fc;
             list[i].yn_link_origin = list[i].yn_link;
           }
           _this.linkedFcInfoList = list;
@@ -163,10 +160,18 @@ export default {
         ) {
           //실제 action을 보낼 form 태그 안에 input 태그를 생성
           $("#frmFcLinkList").append(
-            this.getInputStr("no_person", cnt, this.linkedFcInfoList[i].no_person)
+            this.getInputStr(
+              "no_person",
+              cnt,
+              this.linkedFcInfoList[i].no_person
+            )
           );
           $("#frmFcLinkList").append(
-            this.getInputStr("cd_agency", cnt, this.linkedFcInfoList[i].cd_agency)
+            this.getInputStr(
+              "cd_agency",
+              cnt,
+              this.linkedFcInfoList[i].cd_agency
+            )
           );
           $("#frmFcLinkList").append(
             this.getInputStr("cd_fc", cnt, this.linkedFcInfoList[i].cd_fc)
@@ -175,7 +180,11 @@ export default {
             this.getInputStr("cn", cnt, this.linkedFcInfoList[i].cn)
           );
           $("#frmFcLinkList").append(
-            this.getInputStr("type_login", cnt, this.linkedFcInfoList[i].type_login)
+            this.getInputStr(
+              "type_login",
+              cnt,
+              this.linkedFcInfoList[i].type_login
+            )
           );
           $("#frmFcLinkList").append(
             this.getInputStr("yn_link", cnt, this.linkedFcInfoList[i].yn_link)
@@ -183,7 +192,7 @@ export default {
           cnt++;
         }
       }
-      if(cnt == 0)  {
+      if (cnt == 0) {
         this.login();
         return;
       }

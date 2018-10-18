@@ -1,62 +1,86 @@
 <template>
- 	<div id="wrapper">
-	<!-- Header -->
-	<header id="header">
-		<div class="input-group">
-			<div class="input-group-btn">
-				<button type="button" class="ui-nav nav-back" v-on:click="goBack()">뒤로가기</button>
-			</div>
-			<h1>신용대출(직장인)</h1>
-			<div class="g-menu" id="src_menu">
-				<button type="button" class="btn btn-gmenu" v-on:click="goCondition();">조건검색</button>
-			</div>
-		</div>
-	</header>
-	<!-- Content -->
-	<section id="content">
-		<div class="affix-fixed top-fixed-item">
-			<ul class="nav nav-outline nav-justified tabs">
-				<!-- <li><a id='liaffiliates' href="#">제휴사</a></li> -->
-				<li><a id='libank'       v-on:click="tabOnClick('bank')" >은행</a></li>
-				<li><a id='lisavingBank' v-on:click="tabOnClick('savingBank')" >저축은행</a></li>
-				<li><a id='licapital'    v-on:click="tabOnClick('capital')" >캐피탈/카드</a></li>
-			</ul>
-		    <div class="sort-block" id="divTop">
-				<div class="ctrl-item">
-					<div class="checkbox chk-square" id="divAllCheck">
-	            <label><input type="checkbox" id="allcheck" v-on:change="allcheckOnChange()"> 선택 <em id="checked_count">(0개)</em></label>
-	        </div>
-					<div class="result-item">
-            <div class="result-txt">
-							<p class="prd-ea">총 <em id="list_count" name="list_count">0</em>개의 상품</p>
-						</div>
-						<label for="" class="sr-only">select</label>
-						<select class="pull-right" id="orderby" v-on:change="orderbyOnChange()">
-							<option value="01">금리낮은순</option>
-							<option value="02">한도높은순</option>
-							<option value="03">기간높은순</option>
-						</select>
-          </div>
-				</div>
-				<div class="ctrl-item">
-				</div>
-			</div>
-		</div>
-		<div id="listLoanGoods">
-      <!-- <swiper direction="horizontal"
-        :mousewheel-control="true"
-        :performance-mode="false"
-        :pagination-visible="true"
+ 	<div>
+	<section>
+   <div class="sub-top">
+        <a href="#" class="btn-back"  @click="goBack"></a>
+        <p class="title">추천상품</p>
+        </div>
+        
+        <div class="owl-carousel goods-wrap goods">
+          <swiper direction="horizontal"
+            :mousewheel-control="true"
+            :performance-mode="false"
+            :pagination-visible="true"
         :pagination-clickable="true"
-        :loop="true"> -->
-      <listLoanNoAffiliates/>
-      <!-- </swiper> -->
-		</div>
-		<div class="btn-fixed-bottom affix-bottom" id="next_div">
-			<a role="button" class="btn btn-lg btn-block btn-disabled" onclick="loanWorkerNextStep();">금리/한도 조회하기</a>
-		</div>
-	</section>
-	<!-- //Content -->
+        :loop="true">
+            <div class="item">
+                <a href="#">
+                    <div class="top">
+                        <p class="symbol"><img src="../../assets/images/common/bu_samsung.png" alt=""/>삼성생명보험</p>
+                        <p class="text blue">직장인 신용대출</p>
+                    </div>
+                    <div class="goods-benefit">
+                        <div>5.0~8.0<em> %</em></div>
+                        <div><em>최대 </em>5,000<em> 만원</em></div>
+                    </div>
+                    <p class="goods-text1">특징 및 간략설명 특징 및 간략설명 특징 및 간략설명</p>
+                    <p class="goods-text2">저축은행중앙회 심의필 2018-00404호(2018.8.12)</p>
+                </a>
+            </div>
+            <div class="item">
+                <a href="#">
+                    <div class="top">
+                        <p class="symbol"><img src="../../assets/images/common/bu_samsung.png" alt=""/>삼성생명보험</p>
+                        <p class="text blue">직장인 신용대출</p>
+                    </div>
+                    <div class="goods-benefit">
+                        <div class="left">5.0~8.0<em> %</em></div>
+                        <div class="right"><em>최대 </em>5,000<em> 만원</em></div>
+                    </div>
+                    <p class="goods-text1">특징 및 간략설명 특징 및 간략설명 특징 및 간략설명</p>
+                    <p class="goods-text2">저축은행중앙회 심의필 2018-00404호(2018.8.12)</p>
+                </a>
+            </div>
+            <div class="item">
+                <a href="#">
+                    <div class="top">
+                        <p class="symbol"><img src="../../assets/images/common/bu_samsung.png" alt=""/>삼성생명보험</p>
+                        <p class="text blue">직장인 신용대출</p>
+                    </div>
+                    <div class="goods-benefit">
+                        <div class="left">5.0~8.0<em> %</em></div>
+                        <div class="right"><em>최대 </em>5,000<em> 만원</em></div>
+                    </div>
+                    <p class="goods-text1">특징 및 간략설명 특징 및 간략설명 특징 및 간략설명</p>
+                    <p class="goods-text2">저축은행중앙회 심의필 2018-00404호(2018.8.12)</p>
+                </a>
+            </div>
+            </swiper>
+        </div>
+        
+        <div class="tab mt40">
+            <div class="wrap">
+            <a href="#" :class="{'on':curTab === 'loanWorker'}" @click="tabOnClick('loanWorker')">신용대출</a>
+            <a href="#" :class="{'on':curTab === 'loanHome'}" @click="tabOnClick('loanHome')">주택담보</a>
+            <a href="#" :class="{'on':curTab === 'loanStock'}" @click="tabOnClick('loanStock')">스탁론</a>
+            </div>
+        </div>
+         <div class="box-list goods goods-list">
+             <div class="select">
+                 <div class="left">
+                    <select v-model="orderby" @change="orderbyOnChange()">
+                        <option v-for="option in options" :key="option.index" v-bind:value="option.value">
+                          {{ option.text }}
+                        </option>
+                    </select>
+                 </div>
+                 <div class="right">
+                    <button></button>
+                 </div>
+             </div>
+            <listLoanNoAffiliates/>
+        </div>
+    </section>
 </div>
 </template>
 
@@ -68,17 +92,22 @@ var curTab = "";
 var isSearching = false;
 
 export default {
-  name: "WorkerGoods",
+  name: "List",
   data() {
     return {
       show: true,
-      curTab: "bank",
+      curTab: "loanWorker",
       totalPage: "",
       page: 1,
-      cd_fin: "",
       cd_goods_class_l: "01",
       cd_goods_class_m: "01,03,08,09",
-      orderby: "01"
+      options: [
+        { text: "금리순", value: "01" },
+        { text: "한도순", value: "02" },
+        { text: "기간순", value: "03" }
+      ],
+      orderby: "01",
+      goodsList: []
     };
   },
   components: {
@@ -97,79 +126,25 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    allcheckOnChange() {
-      var checked = $(this).is(":checked");
-      $("#listLoanGoods")
-        .find("div[id=loan_product]")
-        .each(function(i, item) {
-          var disabled = $(this)
-            .find("input:checkbox[name='goods_choice']")
-            .prop("disabled");
-          if (disabled != true) {
-            $(this)
-              .find("input:checkbox[name='goods_choice']")
-              .prop("checked", checked);
-          }
-        });
-      this.setCheckedHtml();
-      this.buttonClassRemove();
-    },
-    setCheckedHtml() {
-      var checkedCount = this.getCheckedCount();
-      var htmlText = "(" + checkedCount + "개)";
-      $("#checked_count").html(htmlText);
-    },
-    getCheckedCount() {
-      var count = 0;
-      $("#listLoanGoods")
-        .find("div[id=loan_product]")
-        .each(function(i, item) {
-          if (
-            $(this)
-              .find("input:checkbox[name='goods_choice']")
-              .is(":checked")
-          ) {
-            count++;
-          }
-        });
-      return count;
-    },
-    buttonClassRemove() {
-      if ($("input:checkbox[name='goods_choice']:checked").length > 0) {
-        enableBottom("true");
-      } else {
-        enableBottom("false");
-      }
-    },
-    setListCount() {
-      $("#list_count").html(this.count);
-    },
-    orderbyOnChange() {
+    orderbyOnChange: function() {
       this.page = 1;
       this.loadGoodsTab(this.curTab);
     },
-    loadGoodsTab(type) {
+    loadGoodsTab: function(type) {
       //isSearching = true;
       if (type == undefined || type == "") {
-        type = "bank";
+        type = "loanWorker";
       }
-
       this.curTab = type;
 
-      if (this.curTab == "affiliates") {
-        $("#src_menu").hide();
-      } else {
-        $("#src_menu").show();
-      }
-
-      if ("bank" == this.curTab) {
-        this.cd_fin = "B";
-      } else if ("savingBank" == type) {
-        this.cd_fin = "S";
-      } else if ("capital" == type) {
-        this.cd_fin = "C";
-      } else if ("card" == type) {
-        this.cd_fin = "D";
+      if ("loanWorker" == this.curTab) {
+        this.cd_goods_class_l = "01";
+        this.cd_goods_class_m = "01,03,08,09";
+      } else if ("loanHome" == this.curTab) {
+        this.cd_goods_class_l = "02";
+        this.cd_goods_class_m = "05, 08";
+      } else if ("loanStock" == this.curTab) {
+        //do nothing
       }
       Common.pagination(this.$children[0].listGoods);
 
@@ -178,20 +153,32 @@ export default {
         $(document).scrollTop(0);
       }
     },
-    tabOnClick(type) {
+    listGoods: function(callback) {
+      var _this = this;
+      var _parent = this.$parent;
+      var formData = new FormData();
+      formData.append("cd_goods_class_l", _parent.cd_goods_class_l);
+      formData.append("cd_goods_class_m", _parent.cd_goods_class_m);
+      formData.append("orderby", _parent.orderby);
+      this.$http
+        .post("/m/loanworker/listLoanAffiliates.json", formData)
+        .then(function(response) {
+          var list = response.data.goodsList;
+          for (var i = 0; i < list.length; i++) {
+            list[i].icon =
+              "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + list[i].cd_fc;
+            list[i].checkId = "z" + list[i].cd_fc + list[i].cd_non_goods;
+          }
+        });
+    },
+    tabOnClick: function(type) {
       if (this.curTab != type) {
         this.page = 1;
       }
       this.loadGoodsTab(type);
     },
-    goGoodsMain() {
+    goBack: function() {
       this.$router.push("/goods/main");
-    },
-    goBack() {
-      this.$router.push("/goods/main");
-    },
-    goCondition() {
-      this.$router.push("/goods/frameLoanWorkerStep");
     },
     showSpinner: async function() {
       this.spinnerIsVisible = true; // 시작시 Spinner 보여주기

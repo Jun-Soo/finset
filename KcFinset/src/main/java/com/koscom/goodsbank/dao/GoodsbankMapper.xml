@@ -191,11 +191,6 @@
 				    <foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
 			        	#{item, jdbcType=VARCHAR}
 				    </foreach>
-                      AND (    (     #{cd_fin, jdbcType=VARCHAR} = 'C'
-                                 AND FI.CD_FIN IN ('C','D')
-                               )
-                            OR FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
-                          )
                 	  AND GI.YN_USE = 'Y'
 					  AND (    /*GI.MAX_LOAN_TERM IS NULL*/
 							/* 대출기간(상환기간) 검색사용안함 */
@@ -379,11 +374,6 @@
 					  <foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
 			       		#{item, jdbcType=VARCHAR}
 				      </foreach>
-                      AND (    (     #{cd_fin, jdbcType=VARCHAR} = 'C'
-                                 AND FI.CD_FIN IN ('C','D')
-                               )
-                            OR FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
-                          )
 					  AND GI.YN_USE = 'Y'
 					  AND (    /*GI.MAX_LOAN_TERM IS NULL*/
 							/* 대출기간(상환기간) 검색사용안함 */
@@ -747,12 +737,6 @@
 					<foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
 			        	#{item, jdbcType=VARCHAR}
 				    </foreach>
-
-                    AND (    (     #{cd_fin, jdbcType=VARCHAR} = 'C'
-                              AND FI.CD_FIN IN ('C','D')
-                             )
-                          OR FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
-                        )
 					AND GI.YN_USE = 'Y'
 					  AND (    /*GI.MAX_LOAN_TERM IS NULL*/
 							/* 대출기간(상환기간) 검색사용안함 */
@@ -1005,12 +989,7 @@
 					<foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
 			        	#{item, jdbcType=VARCHAR}
 				    </foreach>
-                    AND (    (     #{cd_fin, jdbcType=VARCHAR} = 'C'
-                               AND FI.CD_FIN IN ('C','D')
-                             )
-                          OR FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
-                        )
-					AND GI.YN_USE = 'Y'
+					  AND GI.YN_USE = 'Y'
 					  AND (    /*GI.MAX_LOAN_TERM IS NULL*/
 							/* 대출기간(상환기간) 검색사용안함 */
 							/*OR*/ 1 = (SELECT (CASE WHEN CD_TERM_LOAN_01 = 'N'
@@ -1354,11 +1333,6 @@
 					<foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
 			        	#{item, jdbcType=VARCHAR}
 				    </foreach>
-                      AND (    (     #{cd_fin, jdbcType=VARCHAR} = 'C'
-                                 AND FI.CD_FIN IN ('C','D')
-                               )
-                            OR FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
-                          )
                    ORDER BY NVL(FI.YN_ALLIANCE, 'N') DESC, <choose>
                             <when test="'01'.equals(orderby)">
                                 GI.RTO_INTEREST_FROM ASC/*금리낮은순*/,
@@ -1390,11 +1364,6 @@
 	 	  <foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
 		  	#{item, jdbcType=VARCHAR}
 		  </foreach>
-          AND (    (     #{cd_fin, jdbcType=VARCHAR} = 'C'
-                     AND FI.CD_FIN IN ('C','D')
-                   )
-                OR FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
-              )
 	</select>
 	
 	<select id="getGoodsBankFavorite" parameterType="com.koscom.goodsbank.model.GoodsbankVO" resultType="com.koscom.goodsbank.model.GoodsbankVO">

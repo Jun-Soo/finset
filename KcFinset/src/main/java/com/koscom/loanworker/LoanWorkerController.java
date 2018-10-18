@@ -48,6 +48,72 @@ public class LoanWorkerController implements Constant{
 	@Autowired
 	ConditioncreditManager conditioncreditManager;
 	
+	
+	/** VUE
+	 * 상품리스트 (제휴)
+	 * @param goodsForm
+	 * @param model
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/listLoanAffiliates.json")
+	public String listLoanAffiliatesJson(Model model, HttpServletRequest request, HttpServletResponse response, GoodsForm goodsForm, HttpSession session) {
+//        /**
+//         * 접근제어 : start
+//         */
+//        boolean isAuth = AuthUtil.isHaveAuth(request,"/frameLoanWorkerStep2.crz",environment);
+//        if(isAuth == false) {return NOT_AUTH_PAGE;}
+//        /**
+//         * 접근제어 : end
+//         */
+        logger.debug("listLoanAffiliates.json == start");
+		logger.debug(goodsForm.toString());
+		String no_person = (String) session.getAttribute("no_person");
+		goodsForm.setNo_person(no_person);
+		if(StringUtil.isEmpty(goodsForm.getCd_goods_class_l())){
+			goodsForm.setCd_goods_class_l("01");
+		}
+		if(StringUtil.isEmpty(goodsForm.getCd_goods_class_m())) {
+			goodsForm.setCd_goods_class_m("01,03,08,09");
+		}
+		goodsForm.setCd_goods_array_m(goodsForm.getCd_goods_class_m().split(","));
+		
+		if(StringUtil.isEmpty(goodsForm.getCd_goods_class_m())){
+			goodsForm.setCd_goods_class_m("01");
+		}
+        
+		model.addAttribute("goodsList", goodsManager.listGoodsAllianceCredit(goodsForm));
+		return "/";
+	}
+	
+	/** VUE
+	 * 상품리스트 (비제휴)
+	 * @param goodsbankForm
+	 * @param model
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/listLoanNoAffiliates.json")
+	public String listLoanNoAffiliatesJson(Model model, HttpServletRequest request, GoodsbankForm goodsbankForm, HttpSession session) {
+		logger.debug("listLoanNoAffiliates.json == start");
+		logger.debug(goodsbankForm.toString());
+		String no_person = (String) session.getAttribute("no_person");
+		
+		goodsbankForm.setNo_person(no_person);
+		if(StringUtil.isEmpty(goodsbankForm.getCd_goods_class_m())) {
+			goodsbankForm.setCd_goods_class_m("01,03,08,09");
+		}
+		goodsbankForm.setCd_goods_array_m(goodsbankForm.getCd_goods_class_m().split(","));
+		
+		int count = goodsbankManager.listGoodsNoAllianceCreditCount(goodsbankForm);
+		Pagination pagedList = goodsbankForm.setPagedList(goodsbankManager.listGoodsNoAllianceCredit(goodsbankForm),count);
+		model.addAttribute("pagedList", pagedList);
+		model.addAttribute("count", count);
+		return "jsonView";
+	}
+	
 	/**
 	 * 대출상품조회(직장인, 사업자, 주택) 선택
 	 * @param model
@@ -170,32 +236,7 @@ public class LoanWorkerController implements Constant{
 		return "/loanworker/sub/listLoanNoAffiliates";
 	}
 	
-	/** VUE
-	 * 상품리스트 (비제휴)
-	 * @param goodsbankForm
-	 * @param model
-	 * @param request
-	 * @param session
-	 * @return
-	 */
-	@RequestMapping("/listLoanNoAffiliates.json")
-	public String listLoanNoAffiliatesJson(Model model, HttpServletRequest request, GoodsbankForm goodsbankForm, HttpSession session) {
-		logger.debug("listLoanNoAffiliates.json == start");
-		logger.debug(goodsbankForm.toString());
-		String no_person = (String) session.getAttribute("no_person");
-		
-		goodsbankForm.setNo_person(no_person);
-		if(StringUtil.isEmpty(goodsbankForm.getCd_goods_class_m())) {
-			goodsbankForm.setCd_goods_class_m("01,03,08,09");
-		}
-		goodsbankForm.setCd_goods_array_m(goodsbankForm.getCd_goods_class_m().split(","));
-		
-		int count = goodsbankManager.listGoodsNoAllianceCreditCount(goodsbankForm);
-		Pagination pagedList = goodsbankForm.setPagedList(goodsbankManager.listGoodsNoAllianceCredit(goodsbankForm),count);
-		model.addAttribute("pagedList", pagedList);
-		model.addAttribute("count", count);
-		return "jsonView";
-	}
+	
 	
 	/**
 	 * 상품상세 (제휴)

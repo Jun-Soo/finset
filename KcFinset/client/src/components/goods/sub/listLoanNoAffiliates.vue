@@ -1,67 +1,21 @@
 <template>
 <div v-if="goodsList.length" >
-  <swiper direction="horizontal"
-        :mousewheel-control="true"
-        :performance-mode="false"
-        :pagination-visible="true"
-        :pagination-clickable="true"
-        :loop="true">
- 	<div class="list-block" v-for="goods in goodsList" :key="goods.index">
-		<div class="list-block prd-list">
-			<div class="container-fluid prd-loan" id="loan_product">
-					<div class="list-heading" v-on:click="loanGoodsBankDetail(goods.cd_fc, goods.cd_non_goods)">
-						<li class="bank-title">
-							<span class="thumb-logo" :style=goods.style></span>{{goods.nm_fc}}
-							<span v-if="goods.yn_alliance === 'Y'" class="alliance-logo"/>
-						</li>
-						<input type="hidden" name="cd_fc_each" :value="goods.cd_fc"/>
-						<input type="hidden" name="cd_goods_each" :value="goods.cd_non_goods"/>
-						<h2 class="prd-title" v-html=goods.nm_goods></h2>
-						<p v-html=goods.desc_feature>&nbsp;</p>
-						<div class="loan-tag">
-						</div>
-					</div>
-					<div class="list-info">
-						<dl v-on:click="loanGoodsBankDetail(goods.cd_fc, goods.cd_non_goods)">
-							<dt>대출금리</dt>
-							<dd class="txt-point">
-								<label v-if="goods.cd_ratio_type.length > 2">변동,고정</label>
-								<label v-else-if="goods.cd_ratio_type.length == 2">{{Common.getCodeName("cd_ratio_type", goods.cd_ratio_type)}}</label>
-								<span v-if="goods.rto_interest_from == null && goods.rto_interest_to == null">-</span>
-								<span v-else-if="goods.rto_interest_from != null && goods.rto_interest_to != null">
-									{{goods.rto_interest_from}}&nbsp;%&nbsp;~&nbsp;{{goods.rto_interest_to}}&nbsp;%
-								</span>
-								<span v-else-if="goods.rto_interest_from != null && goods.rto_interest_to == null">
-									{{goods.rto_interest_from}}&nbsp;%&nbsp;~
-								</span>
-								<span v-else-if="goods.rto_interest_from == null && goods.rto_interest_to != null">
-									~&nbsp;{{goods.rto_interest_to}}&nbsp;%
-								</span>
-							</dd> 
-						</dl>
-						<dl>
-							<dt>대출한도</dt>
-							<dd v-if="goods.desc_max_limit == '0' && goods.max_loan_term == '' "> 
-								- / - </dd> 
-							<dd v-else-if="goods.desc_max_limit != '0' && goods.max_loan_term != '' ">
-								{{Common.formatNumber(goods.desc_max_limit)}}만원 / {{goods.max_loan_term}}년 </dd>
-							<dd v-else-if="goods.desc_max_limit == '0' && goods.max_loan_term != '' ">
-								- / {{goods.max_loan_term}}년 </dd>
-							<dd v-else-if="goods.desc_max_limit != '0' && goods.max_loan_term == '' ">
-								{{Common.formatNumber(goods.desc_max_limit)}}만원 / - </dd>
-						</dl>
-					</div>
-					<div class="loan-btn">
-						<div class="checkbox ico-loan ico-zzim">
-							<input type="checkbox" :id=goods.checkId  :checked="favourite(goods.yn_favorite)"
-								v-on:change="loanGoodsChoice(goods.cd_fc, goods.cd_non_goods, goods.checkId, 'N')"/>
-							<label class="" :for=goods.checkId></label>
-						</div>
-					</div>
-				</div>
-		</div>
-	</div>
-  </swiper>
+ 	<div v-for="goods in goodsList" :key="goods.index">
+   <div class="item" @click="loanGoodsBankDetail(goods.cd_fc, goods.cd_non_goods)">
+    <a href="#">
+      <div class="top">
+        <p class="symbol"><img :src="goods.icon" alt=""/>{{goods.nm_fc}}</p>
+        <p class="text blue" v-html=goods.nm_goods></p>
+      </div>
+      <div class="goods-benefit">
+        <div>{{goods.rto_interest_from}}~{{goods.rto_interest_to}}<em> %</em></div>
+        <div><em>최대 </em>{{Common.formatNumber(goods.desc_max_limit)}}<em> 만원</em></div>
+      </div>
+      <p class="goods-text1" v-html=goods.desc_feature></p>
+      <p class="goods-text2">저축은행중앙회 심의필 2018-00404호(2018.8.12)</p>
+    </a>
+    </div>
+ 	</div>
 </div>
 <div v-else class="data-none">
 	<p>신청 가능한 상품이 없습니다.</p>
@@ -88,29 +42,24 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    favourite(yn_favourite) {
+    favourite: function(yn_favourite) {
       return yn_favourite == "Y";
     },
-    listGoods(callback) {
+    listGoods: function(callback) {
       var _this = this;
       var _parent = this.$parent;
       var formData = new FormData();
       formData.append("page", _parent.page);
-      formData.append("cd_fin", _parent.cd_fin);
       formData.append("cd_goods_class_l", _parent.cd_goods_class_l);
       formData.append("cd_goods_class_m", _parent.cd_goods_class_m);
       formData.append("orderby", _parent.orderby);
-      this.$store.state.isLoading = true;
       this.$http
         .post("/m/loanworker/listLoanNoAffiliates.json", formData)
         .then(function(response) {
           var list = response.data.pagedList.source;
-          _this.$store.state.isLoading = false;
           for (var i = 0; i < list.length; i++) {
-            list[i].style =
-              "background-image:url('/m/fincorp/getFinCorpIcon.crz?cd_fc=" +
-              list[i].cd_fc +
-              "')";
+            list[i].icon =
+              "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + list[i].cd_fc;
             list[i].checkId = "z" + list[i].cd_fc + list[i].cd_non_goods;
           }
 
@@ -131,7 +80,7 @@ export default {
           _parent.page++;
         });
     },
-    loanGoodsChoice(cd_fc, cd_goods, id, yn_alliance) {
+    loanGoodsChoice: function(cd_fc, cd_goods, id, yn_alliance) {
       var _this = this;
       var chkZzim = $("#" + id).is(":checked");
       var url = "";
@@ -152,6 +101,8 @@ export default {
         .then(function(response) {
           var returnData = response.data.returnData;
         });
+    },
+    loanGoodsBankDetail: function(cd_fc, cd_non_goods)  {
     }
   }
 };

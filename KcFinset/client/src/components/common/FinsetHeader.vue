@@ -1,17 +1,23 @@
-<template>
-    <!-- Header -->
-    <header id='header'>
-      <div class='input-group'>
-        <div class='input-group-btn blind'>
-          <button type='button' class='ui-nav nav-back'>뒤로가기</button>
-        </div>
-        <h1>{{this.$store.state.title}}</h1>
-        <!-- <div class='g-menu'>
-          <button type='button' class='ico ico-notilist'>알림내역</button>
-          <button type='button' class='btn btn-gmenu'>정보공유</button>
-        </div> -->
-      </div>
-    </header>
+<template v-if='this.$store.state.isLoggedIn'>
+<!-- <body class="main"> -->
+	<!--   HEADER 로드   -->
+	<!-- <header></header> -->
+	<!--   CONTENTS   -->
+    <!-- <section> -->
+
+    <div v-if="this.$store.state.header.type == 'main'" id='header' class="top main">
+        <ul>
+            <li id="header_main" v-bind:class="{on: this.$store.state.header.active=='main'}"><a href="/main">MY</a></li>
+            <li id="header_credit" v-bind:class="{on: this.$store.state.header.active=='credit'}"><a href="/credit/main">신용</a></li>
+            <li id="header_debt" v-bind:class="{on: this.$store.state.header.active=='debt'}"><a href="/debt/main">부채</a></li>
+            <li id="header_consume" v-bind:class="{on: this.$store.state.header.active=='consume'}"><a href="/consume/main">지출</a></li>
+            <li id="header_assets" v-bind:class="{on: this.$store.state.header.active=='assets'}"><a href="/assets/main">자산</a></li>
+        </ul>
+    </div>
+    <div v-else id='header' class="sub-top">
+        <a href="#" class="btn-back"></a>
+        <p class="title">{{this.$store.state.title}}</p>
+    </div>
 </template>
 
 <script>

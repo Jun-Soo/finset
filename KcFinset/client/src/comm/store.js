@@ -7,6 +7,10 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     title: 'FINSET',
+    header: {
+      type: 'sub',
+      active: ''
+    },
     user: {
       noPerson: '',
       nmPerson: '',

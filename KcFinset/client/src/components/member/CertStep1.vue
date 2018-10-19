@@ -12,7 +12,7 @@
         <div class="checks">
           <!-- <div v-bind:class="checked"> -->
             <!--전체약관동의-->
-            <input type="checkbox" id="checkall" v-model="chkAll" v-on:click="allChecked()"><label for="checkall">전체 약관 동의</label>
+            <input type="checkbox" id="check-all" v-model="chkAll" v-on:click="allChecked()"><label for="check-all">전체 약관 동의</label>
             
             <div class="box-agree">
               <p><input type="checkbox" name="checkbox1" id="checkbox1" v-model="chkBox1"><label for="checkbox1">[필수] 서비스 이용동의</label></p>

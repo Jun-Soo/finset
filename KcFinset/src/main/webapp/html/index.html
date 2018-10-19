@@ -1,0 +1,273 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title></title>
+<script type="text/javascript" src="_list/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="_list/guide.js"></script>
+<link type="text/css" rel="stylesheet" href="_list/guide.css" />
+</head>
+<body>
+<div id="list_wrap">
+	<!-- header s -->
+	<div id="header">
+		<h1>FINSET</h1>
+		<ul class="gnb">
+			<li><a href="index.html" class="on">국문</a></li>
+		</ul>
+	</div><!--// header e -->
+
+
+	<!-- container s -->
+	<div id="container">
+		<div id="g_content">
+			<table id="focus" class="mlist">
+				<colgroup>
+				<col width="3%" />
+				<col width="6%" />
+				<col width="14%" />
+				<col width="10%" />
+				<col width="14%" />
+				<col width="10%" />
+				<col width="10%" />
+				<col width="10%" />
+				<col width="*" />
+				</colgroup>
+				<thead>
+					<tr onMouseDown="toggleed(this)">
+						<th class="first">NUM</th>
+						<th>Depth</th>
+						<th>1Depth</th>
+						<th>2Depth</th>
+						<th>3Depth</th>
+						<th>4Depth</th>
+						<th>구분</th>
+						<th>작업완료</th>
+						<th>비고</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr onMouseDown="toggleed(this)">
+						<th></th>
+						<td class="itemtit01">사용자</td>
+						<td class="itemtit02">메인</td>
+						<td class="itemtit03"></td>
+						<td class="itemtit04"></td>
+						<td class="itemtit05"></td>
+						<td class="itemtit06"></td>
+						<td class="txt_ok">OK</td>
+						<td><a href="components/main/index.html" target="_blank" class="btn_go">페이지 열기</a></td>
+					</tr>
+                    <tr onMouseDown="toggleed(this)">
+						<th></th>
+						<td class="itemtit01"></td>
+						<td class="itemtit02">신용메인</td>
+						<td class="itemtit03"></td>
+						<td class="itemtit04"></td>
+						<td class="itemtit05"></td>
+						<td class="itemtit06"></td>
+						<td class="txt_ok">OK</td>
+						<td><a href="components/main/index_credit.html" target="_blank" class="btn_go">페이지 열기</a></td>
+					</tr>
+                    <tr onMouseDown="toggleed(this)">
+						<th></th>
+						<td class="itemtit01"></td>
+						<td class="itemtit02">부채메인</td>
+						<td class="itemtit03"></td>
+						<td class="itemtit04"></td>
+						<td class="itemtit05"></td>
+						<td class="itemtit06"></td>
+						<td class="txt_ok">OK</td>
+						<td><a href="components/main/index_dept.html" target="_blank" class="btn_go">페이지 열기</a></td>
+					</tr>
+                    <tr onMouseDown="toggleed(this)">
+						<th></th>
+						<td class="itemtit01"></td>
+						<td class="itemtit02">지출메인</td>
+						<td class="itemtit03"></td>
+						<td class="itemtit04"></td>
+						<td class="itemtit05"></td>
+						<td class="itemtit06"></td>
+						<td class="txt_ok">OK</td>
+						<td><a href="components/main/index_spend.html" target="_blank" class="btn_go">페이지 열기</a></td>
+					</tr>
+                    <tr onMouseDown="toggleed(this)">
+						<th></th>
+						<td class="itemtit01"></td>
+						<td class="itemtit02">공통</td>
+						<td class="itemtit03">약관동의</td>
+						<td class="itemtit04"></td>
+						<td class="itemtit05"></td>
+						<td class="itemtit06"></td>
+						<td class="txt_ok">OK</td>
+						<td><a href="components/common/02.html" target="_blank" class="btn_go">페이지 열기</a></td>
+					</tr>
+                    <tr onMouseDown="toggleed(this)">
+						<th></th>
+						<td class="itemtit01"></td>
+						<td class="itemtit02"></td>
+						<td class="itemtit03"></td>
+						<td class="itemtit04">팝업</td>
+						<td class="itemtit05"></td>
+						<td class="itemtit06"></td>
+						<td class="txt_ok">OK</td>
+						<td><a href="components/common/pop.html" target="_blank" class="btn_go">페이지 열기</a></td>
+					</tr>
+                    <tr onMouseDown="toggleed(this)">
+						<th></th>
+						<td class="itemtit01"></td>
+						<td class="itemtit02">신용</td>
+						<td class="itemtit03">신용관리</td>
+						<td class="itemtit04">변동/조회이력</td>
+						<td class="itemtit05"></td>
+						<td class="itemtit06"></td>
+						<td class="txt_ok">OK</td>
+						<td><a href="components/credit/01.html" target="_blank" class="btn_go">페이지 열기</a></td>
+					</tr>
+                    <tr onMouseDown="toggleed(this)">
+						<th></th>
+						<td class="itemtit01"></td>
+						<td class="itemtit02"></td>
+						<td class="itemtit03"></td>
+						<td class="itemtit04">카드현황</td>
+						<td class="itemtit05"></td>
+						<td class="itemtit06"></td>
+						<td class="txt_ok">OK</td>
+						<td><a href="components/credit/02.html" target="_blank" class="btn_go">페이지 열기</a></td>
+					</tr>
+                    <tr onMouseDown="toggleed(this)">
+						<th></th>
+						<td class="itemtit01"></td>
+						<td class="itemtit02"></td>
+						<td class="itemtit03"></td>
+						<td class="itemtit04">대출현황</td>
+						<td class="itemtit05"></td>
+						<td class="itemtit06"></td>
+						<td class="txt_ok">OK</td>
+						<td><a href="components/credit/03.html" target="_blank" class="btn_go">페이지 열기</a></td>
+					</tr>
+                    <tr onMouseDown="toggleed(this)">
+						<th></th>
+						<td class="itemtit01"></td>
+						<td class="itemtit02"></td>
+						<td class="itemtit03"></td>
+						<td class="itemtit04">연체현황</td>
+						<td class="itemtit05"></td>
+						<td class="itemtit06"></td>
+						<td class="txt_ok">OK</td>
+						<td><a href="components/credit/04.html" target="_blank" class="btn_go">페이지 열기</a></td>
+					</tr>
+                    <tr onMouseDown="toggleed(this)">
+						<th></th>
+						<td class="itemtit01"></td>
+						<td class="itemtit02"></td>
+						<td class="itemtit03"></td>
+						<td class="itemtit04">연대보증현황</td>
+						<td class="itemtit05"></td>
+						<td class="itemtit06"></td>
+						<td class="txt_ok">OK</td>
+						<td><a href="components/credit/05.html" target="_blank" class="btn_go">페이지 열기</a></td>
+					</tr>
+                    <tr onMouseDown="toggleed(this)">
+						<th></th>
+						<td class="itemtit01"></td>
+						<td class="itemtit02">상품</td>
+						<td class="itemtit03">추천상품 메인</td>
+						<td class="itemtit04"></td>
+						<td class="itemtit05"></td>
+						<td class="itemtit06"></td>
+						<td class="txt_ok">OK</td>
+						<td><a href="components/goods/01.html" target="_blank" class="btn_go">페이지 열기</a></td>
+					</tr>
+                    <tr onMouseDown="toggleed(this)">
+						<th></th>
+						<td class="itemtit01"></td>
+						<td class="itemtit02"></td>
+						<td class="itemtit03"></td>
+						<td class="itemtit04"></td>
+						<td class="itemtit05"></td>
+						<td class="itemtit06"></td>
+						<td class="txt_ok"></td>
+						<td><a href="#" target="_blank" class="btn_go">페이지 열기</a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+	</div>
+	<!--// container e -->
+</div>
+</body>
+<script type="text/javascript">$(document).ready(function() {$('#focus').tableHover();});</script>
+<script type="text/javascript">
+	$(function(){
+		var total = $("#focus tbody tr th").length;
+		var ok = $("#focus .txt_ok").filter(function(){return $(this).text().length == 10;}).length;
+		var per = Math.round((ok * 100) / total);
+		$("#per").html(per + "%").css("color","red");
+
+		$.each($("td:last a","#focus tbody tr"), function(){
+			var fn = $(this).attr("href").split(".ht")[0].split("/")[3];
+
+			if(typeof fn != "undefined") $(this).parent().append("<span class='fn'>"+fn+"</span>");
+		});
+		$("title").text($("h1").text());
+	});
+
+
+	var st1 = new SortableTable(document.getElementById("focus"), ["Number" ,"String","String", "String", "String", "String"]);
+	$(function(){
+
+		var tds = $("#focus tbody  th:first-child");
+		for(var i=0; i < tds.length; i++) {
+			$(tds[i]).html(i+1);
+
+		}
+	});
+	$('#focus thead th').click(function(){
+		//alert("a");
+		var tds = $("#focus tbody  th:first-child");
+		for(var i=0; i < tds.length; i++) {
+			//alert(tds[i].firstChild.nodeValue);
+			$(tds[i]).html(i+1);
+		}
+	});
+</script>
+<script type="text/javascript">
+//<!--
+	function toggleed(trEle){
+	 //alert(trEle.parentElement.rows)
+	 var rows = trEle.parentElement.rows;
+
+	 for(i = 0; i < rows.length; i++){
+		if(rows[i] == trEle){
+		 trEle.style.backgroundColor = "#ffebeb"
+		}else{
+		 rows[i].style.backgroundColor = ""
+		}
+	 }
+	}
+//-->
+</script>
+<script type="text/javascript">
+	// popup
+	 function openPopup(url, winName, pwidth, pheight, scrollYN, resizeYN) {
+	 var win = null;
+
+	 var winL = (screen.width-pwidth)/2;
+	 var winT = (screen.height-pheight)/2;
+	 var spec = 'toolbar=no,';
+	 spec += 'status=no,';
+	 spec += 'location=yes,';
+	 spec += 'height='+pheight+',';
+	 spec += 'width='+pwidth+',';
+	 spec += 'top='+winT+',';
+	 spec += 'left='+winL+',';
+	 spec += 'scrollbars='+(scrollYN == undefined ? "yes" : scrollYN)+',';
+	 spec += 'resizable='+(resizeYN == undefined ? "no" : resizeYN);
+	 win = window.open(url, winName, spec);
+	 if(parseInt(navigator.appVersion) >= 4) {
+	  win.window.focus();
+	 }
+ }
+</script>
+</html>

@@ -1,183 +1,94 @@
 <template>
-  <div id="wrapper" class="bg_white">
+  <div id="wrapper">
     <!-- Content -->
     <section id="content">
-      <div class="container">
-        <div class="check-all">
-          <div class="checkbox" v-bind:class="checked"><label><input type="checkbox" id="checkall" v-model="chkAll" v-on:click="allChecked()"> 전체 약관 동의</label></div>
-        </div>
+      
+      <div class="sub-top">
+          <a href="#" class="btn-back"></a>
+          <p class="title">약관동의</p>
       </div>
-      <!-- panel -->
-      <div class="panel-group agree-panel" id="termsList">
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <div class="checkbox">
-              <label>
-  							<input type="checkbox" name="checkbox1" id="checkbox1" v-model="chkBox1" />
-  							<a href="" class="collapsed" role="button" data-toggle="collapse"><em>[필수]</em> 서비스 이용동의</a>
-  						</label>
-            </div>
-          </div>
-          <div class="panel-collapse" id="panel1">
-            <ul class="list-group">
-              <li>
-                <a class="list-group-item" v-on:click="open('1')"> <!--"popTerms('hp1')">-->
-                  <label>서비스 이용약관</label>
-                  <button name="show-popup" type="button" class="btn-terms" v-on:click="open">약관보기</button>
-                  <vue-modal transitionName="zoom-in" name="my-modal1">
-                    <div slot="header">
-                      <h3>서비스 이용약관</h3>
-                    </div>
-                    <Terms1></Terms1>
+
+      <div class="container mt30">
+        <div class="checks">
+          <!-- <div v-bind:class="checked"> -->
+            <!--전체약관동의-->
+            <input type="checkbox" id="checkall" v-model="chkAll" v-on:click="allChecked()"><label for="checkall">전체 약관 동의</label>
+            
+            <div class="box-agree">
+              <p><input type="checkbox" name="checkbox1" id="checkbox1" v-model="chkBox1"><label for="checkbox1">[필수] 서비스 이용동의</label></p>
+              <ul>
+                <li><a v-on:click="open('1')">서비스 이용약관</a>
+                  <vue-modal transitionName="zoom-in" width="100%" name="my-modal1">
+                    <Terms1 slot="header"></Terms1>
                   </vue-modal>
-                </a>
-              </li>
-              <li>
-                <a class="list-group-item" v-on:click="open('2')">
-                  <label>개인정보 처리방침</label>
-                  <button type="button" class="btn-terms">약관보기</button>
+                </li>
+                <li><a v-on:click="open('2')">개인정보 처리방침</a>
                   <vue-modal transitionName="zoom-in" name="my-modal2">
-                    <div slot="header">
-                      <h3>개인정보 처리방침</h3>
-                    </div>
-                    <Terms2></Terms2>
-                    </vue-modal>
-                </a>
-              </li>
-              <li>
-                <a class="list-group-item" v-on:click="open('3')">
-                  <label>KCB 올크레딧 이용약관</label>
-                  <button type="button" class="btn-terms">약관보기</button>
+                    <Terms2 slot="header"></Terms2>
+                  </vue-modal>
+                </li>
+                <li><a v-on:click="open('3')">KCB 올크레딧 이용약관</a>
                   <vue-modal transitionName="zoom-in" name="my-modal3">
-                    <div slot="header">
-                      <h3>KCB 올크레딧 이용약관</h3>
-                    </div>
-                    <Terms3></Terms3>
+                    <Terms3 slot="header"></Terms3>
                   </vue-modal>
-                </a>
-              </li>
-              <li>
-                <a class="list-group-item" v-on:click="open('4');">
-                  <label>개인정보 수집 · 이용 동의</label>
-                  <button type="button" class="btn-terms">약관보기</button>
+                </li>
+                <li><a v-on:click="open('4')">개인정보 수집·이용 동의</a>
                   <vue-modal transitionName="zoom-in" name="my-modal4">
-                    <div slot="header">
-                      <h3>개인정보 수집 · 이용 동의</h3>
-                    </div>
-                    <Terms4></Terms4>
-                    </vue-modal>
-                </a>
-              </li>
-              <li>
-                <a class="list-group-item" v-on:click="open('5');">
-                  <label>개인정보 제3자 제공 동의</label>
-                  <button type="button" class="btn-terms">약관보기</button>
+                    <Terms4 slot="header"></Terms4>
+                  </vue-modal>
+                </li>
+                <li><a v-on:click="open('5')">개인정보 제3자 제공 동의</a>
                   <vue-modal transitionName="zoom-in" name="my-modal5">
-                    <div slot="header">
-                      <h3>개인정보 제3자 제공 동의</h3>
-                    </div>
-                    <Terms5></Terms5>
+                    <Terms5 slot="header"></Terms5>
                   </vue-modal>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <div class="checkbox">
-              <label>
-  							<input type="checkbox" name="checkbox2" id="checkbox2" v-model="chkBox2" />
-  							<a href="" class="collapsed" role="button" data-toggle="collapse"><em>[필수]</em> 휴대전화 본인인증 동의</a>
-  						</label>
+                </li>
+              </ul>
             </div>
-          </div>
-          <div class="panel-collapse" id="panel2">
-            <ul class="list-group">
-              <li>
-                <a class="list-group-item" v-on:click="open('6');">
-                  <label>본인확인서비스 이용약관</label>
-                  <button type="button" class="btn-terms">약관보기</button>
+
+            <div class="box-agree">
+              <p><input type="checkbox" name="checkbox2" id="checkbox2" v-model="chkBox2"><label for="checkbox2">[필수] 통신사/본인확인 서비스 이용 동의</label></p>
+              <ul>
+                <li><a v-on:click="open('6')">본인확인서비스 이용약관</a>
                   <vue-modal transitionName="zoom-in" name="my-modal6">
-                    <div slot="header">
-                      <h3>본인확인서비스 이용약관</h3>
-                    </div>
-                    <Terms6></Terms6>
+                    <Terms6 slot="header"></Terms6>
                   </vue-modal>
-                </a>
-              </li>
-              <li>
-                <a class="list-group-item" v-on:click="open('7');">
-                  <label>개인정보 수집 · 이용/취급위탁 동의</label>
-                  <button type="button" class="btn-terms">약관보기</button>
+                </li>
+                <li><a v-on:click="open('7')">개인정보 수집 · 이용/취급위탁 동의</a>
                   <vue-modal transitionName="zoom-in" name="my-modal7">
-                    <div slot="header">
-                      <h3>개인정보 수집 · 이용/취급위탁 동의</h3>
-                    </div>
-                    <Terms7></Terms7>
+                    <Terms7 slot="header"></Terms7>
                   </vue-modal>
-                </a>
-              </li>
-              <li>
-                <a class="list-group-item" v-on:click="open('8');">
-                  <label>고유식별정보처리 동의</label>
-                  <button type="button" class="btn-terms">약관보기</button>
+                </li>
+                <li><a v-on:click="open('8')">고유식별정보처리 동의</a>
                   <vue-modal transitionName="zoom-in" name="my-modal8">
-                    <div slot="header">
-                      <h3>고유식별정보처리 동의</h3>
-                    </div>
-                    <Terms8></Terms8>
+                    <Terms8 slot="header"></Terms8>
                   </vue-modal>
-                </a>
-              </li>
-              <li>
-                <a class="list-group-item" v-on:click="open('9');">
-                  <label>통신사 본인확인 이용약관 동의</label>
-                  <button type="button" class="btn-terms">약관보기</button>
+                </li>
+                <li><a v-on:click="open('9')">통신사 본인확인 이용약관 동의</a>
                   <vue-modal transitionName="zoom-in" name="my-modal9">
-                    <div slot="header">
-                      <h3>통신사 본인확인 이용약관 동의</h3>
-                    </div>
-                    <Terms9></Terms9>
+                    <Terms9 slot="header"></Terms9>
                   </vue-modal>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="panel panel-default">
-          <div class="panel-heading">
-            <div class="checkbox">
-              <label>
-  							<input type="checkbox" name="checkbox3" id="checkbox3" v-model="chkBox3" />
-  							<a href="" class="collapsed" role="button" data-toggle="collapse"><em>[선택]</em> 마케팅 정보 수신 동의</a>
-  						</label>
+                </li>
+              </ul>
             </div>
-          </div>
-          <div class="panel-collapse" id="panel3">
-            <ul class="list-group">
-              <li>
-                <a class="list-group-item" v-on:click="open('10');">
-                  <label>마케팅 정보 수신 동의</label>
-                  <button type="button" class="btn-terms">약관보기</button>
-                  <vue-modal transitionName="zoom-in" name="my-modal10">
-                    <div slot="header">
-                      <h3>마케팅 정보 수신 동의</h3>
-                    </div>
-                    <Terms10></Terms10>
+            
+
+            <div class="box-agree">
+              <p><input type="checkbox" name="checkbox3" id="checkbox3" v-model="chkBox3"><label for="checkbox3">[선택] 마케팅 정보 수신 동의</label></p>
+              <ul>
+                <li><a v-on:click="open('10')">마케팅 정보 수신 동의</a>
+                  <vue-modal transitionName="zoom-in" name="my-modal5">
+                    <Terms10 slot="header"></Terms10>
                   </vue-modal>
-                </a>
-              </li>
-            </ul>
-          </div>
+                </li>
+              </ul>
+            </div>
         </div>
       </div>
-      <!-- //panel -->
-      <div class="btn-fixed-bottom" id="next_div">
-        <a role="button" id="confirmButton" class="btn btn-lg btn-primary btn-block" v-on:click="confirmedTerms()">다음</a>
+      <!-- next button -->
+      <div class="btn-wrap">
+        <a role="button" id="confirmButton" class="btn-next" v-on:click="confirmedTerms()">다음</a>
       </div>
     </section>
-    <!-- //Content -->
   </div>
   
   
@@ -293,7 +204,3 @@ export default {
   }
 };
 </script>
-
-<!-- Add 'scoped' attribute to limit CSS to this component only -->
-<style lang="scss">
-</style>

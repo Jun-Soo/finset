@@ -22,6 +22,7 @@ import './assets/css/pop.css'
 import './assets/css/reset.css'
 import './assets/css/style.css'
 
+import './assets/js/jquery.js'
 import './assets/js/jockey.js'
 import './comm/message.js'
 

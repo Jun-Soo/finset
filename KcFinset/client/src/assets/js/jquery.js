@@ -6,7 +6,7 @@ $(function () {
   })
 
   /*   GNB 로드   */
-  $('header').load('../include/gnb.html')
+  // $('header').load('../include/gnb.html')
 
   $(document).on('click', 'header .open-menu', function () {
     $('.gnb-wrap').addClass('on')

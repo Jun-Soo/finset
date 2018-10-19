@@ -22,11 +22,6 @@ import './assets/css/pop.css'
 import './assets/css/reset.css'
 import './assets/css/style.css'
 
-import './assets/css/bootstrap-datepicker-customize.css'
-import './assets/css/bootstrap.customize.css'
-import './assets/css/bootstrap-select.css'
-import './assets/css/mobile.css'
-
 import './assets/js/jockey.js'
 import './comm/message.js'
 

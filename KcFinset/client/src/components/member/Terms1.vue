@@ -2,7 +2,7 @@
 <div>
 	<div class="pop-top">
 		<p class="title">서비스 이용약관</p>
-		<a href="#" class="btn-close" onClick="window.close();"></a>
+		<a href="" class="btn-close" onClick="window.close();"></a>
 	</div> 
 	<!-- Content -->
 	<div class="container">

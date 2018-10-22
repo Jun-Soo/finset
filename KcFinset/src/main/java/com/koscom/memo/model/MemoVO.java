@@ -4,7 +4,6 @@ import java.io.Serializable;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.koscom.util.Pagination;
@@ -17,7 +16,6 @@ public class MemoVO extends Pagination implements Serializable{
 	private String 			no_manage_info; //정보관리번호
 	private String 			memo_text; //텍스트 메모
 	
-	@JsonIgnore
 	private MultipartFile 	file; //메모 이미지
 	
 	private String 			alarm_date; //알람일

@@ -48,7 +48,7 @@ export default {
   data() {
     return {
       noPerson: this.$store.state.user.noPerson,
-      j_password: localStorage.getItem("tempPwd"),
+      password: localStorage.getItem("tempPwd"),
       cn: this.$route.params.cn,
       normalMessage: this.$route.params.normalMessage,
       smallMessage: this.$route.params.smallMessage,
@@ -103,8 +103,8 @@ export default {
 
       var querystring = require("querystring");
       var data = querystring.stringify({
-        j_username: _this.noPerson,
-        j_password: _this.j_password
+        username: _this.noPerson,
+        password: _this.password
       });
       this.$http
         .post("/check/j_spring_security_check", data, {

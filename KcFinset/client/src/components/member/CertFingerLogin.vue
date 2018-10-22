@@ -24,8 +24,8 @@ export default {
   data() {
     return {
       errMsg: '',
-      j_username: this.$store.state.user.noPerson,
-      j_password: "",
+      username: this.$store.state.user.noPerson,
+      password: "",
       cntFailFinger: this.$store.state.user.cntFailFinger
     }
   },
@@ -70,8 +70,8 @@ export default {
 
       var querystring = require('querystring')
       var data = querystring.stringify({
-        j_username: _this.j_username,
-        j_password: _this.$store.state.user.authToken
+        username: _this.username,
+        password: _this.$store.state.user.authToken
       });
       this.$http
         .post("/check/j_spring_security_check", data
@@ -102,7 +102,7 @@ export default {
     //비밀번호 틀린횟수 변경
     modifyPwdFailCnt: function(mode, cnt_fail) {
 
-      var data = {"no_person": this.j_username, "cnt_fail_mode":mode, "cnt_fail":cnt_fail};
+      var data = {"no_person": this.username, "cnt_fail_mode":mode, "cnt_fail":cnt_fail};
       this.$http
         .get("/m/person/modifyPwdFailCnt.json", {
           params: data
@@ -142,7 +142,7 @@ export default {
             window.Android.closeFingerPrint();
           }
 
-          var data = {"no_person": _this.j_username, "yn_fingerprint":"N"};
+          var data = {"no_person": _this.username, "yn_fingerprint":"N"};
           this.$http
             .get("/m/person/modifyFingerPrint.json", {
               params: data

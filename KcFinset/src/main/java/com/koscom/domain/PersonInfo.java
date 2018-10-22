@@ -2,13 +2,11 @@ package com.koscom.domain;
 
 import java.io.Serializable;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.web.multipart.MultipartFile;
 
 public class PersonInfo implements Serializable {
 
 	private static final long serialVersionUID = -1538460879578027218L;
-	@JsonIgnore
 	private MultipartFile file1;
 
 	protected String no_person;		

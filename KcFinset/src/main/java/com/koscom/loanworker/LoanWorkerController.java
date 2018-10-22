@@ -59,14 +59,6 @@ public class LoanWorkerController implements Constant{
 	 */
 	@RequestMapping("/listLoanAffiliates.json")
 	public String listLoanAffiliatesJson(Model model, HttpServletRequest request, HttpServletResponse response, GoodsForm goodsForm, HttpSession session) {
-//        /**
-//         * 접근제어 : start
-//         */
-//        boolean isAuth = AuthUtil.isHaveAuth(request,"/frameLoanWorkerStep2.crz",environment);
-//        if(isAuth == false) {return NOT_AUTH_PAGE;}
-//        /**
-//         * 접근제어 : end
-//         */
         logger.debug("listLoanAffiliates.json == start");
 		logger.debug(goodsForm.toString());
 		String no_person = (String) session.getAttribute("no_person");
@@ -82,9 +74,8 @@ public class LoanWorkerController implements Constant{
 		if(StringUtil.isEmpty(goodsForm.getCd_goods_class_m())){
 			goodsForm.setCd_goods_class_m("01");
 		}
-        
 		model.addAttribute("goodsList", goodsManager.listGoodsAllianceCredit(goodsForm));
-		return "/";
+		return "jsonView";
 	}
 	
 	/** VUE

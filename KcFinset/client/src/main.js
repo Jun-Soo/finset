@@ -11,7 +11,8 @@ import store from './comm/store'
 import 'jquery'
 
 import toast from 'vue2-toast'
-import swiper from 'vue2-swiper'
+
+import VueCarousel from 'vue-carousel'
 
 import VueModal from 'vue2-modal'
 
@@ -43,7 +44,7 @@ Vue.use(toast, {
   width: '250px'
 })
 
-Vue.use(swiper)
+Vue.use(VueCarousel)
 
 Vue.use(window.VueCharts)
 

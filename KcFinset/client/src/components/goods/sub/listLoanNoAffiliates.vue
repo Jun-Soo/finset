@@ -1,7 +1,6 @@
 <template>
 <div v-if="goodsList.length" >
- 	<div v-for="goods in goodsList" :key="goods.index">
-   <div class="item" @click="loanGoodsBankDetail(goods.cd_fc, goods.cd_non_goods)">
+   <div class="item" @click="loanGoodsBankDetail(goods.cd_fc, goods.cd_non_goods)" v-for="goods in goodsList" :key="goods.index">
     <a href="#">
       <div class="top">
         <p class="symbol"><img :src="goods.icon" alt=""/>{{goods.nm_fc}}</p>
@@ -15,7 +14,6 @@
       <p class="goods-text2">저축은행중앙회 심의필 2018-00404호(2018.8.12)</p>
     </a>
     </div>
- 	</div>
 </div>
 <div v-else class="data-none">
 	<p>신청 가능한 상품이 없습니다.</p>
@@ -26,6 +24,7 @@ import Common from "./../../../assets/js/common.js";
 
 export default {
   name: "listLoanNoAffiliates",
+  props: ['item'],
   data() {
     return {
       goodsList: [],
@@ -76,7 +75,6 @@ export default {
           }
           _parent.totalPage = response.data.pagedList.pageCount;
           _parent.count = response.data.count;
-          _parent.setListCount();
           _parent.page++;
         });
     },

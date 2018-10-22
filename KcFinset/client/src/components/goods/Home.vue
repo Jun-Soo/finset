@@ -1,8 +1,8 @@
 <template>
   <main>
-    <!-- <FinsetHeader></FinsetHeader> -->
+    <FinsetHeader></FinsetHeader>
     <router-view/>
-    <!-- <FinsetBottom></FinsetBottom> -->
+    <FinsetBottom></FinsetBottom>
   </main>
 </template>
 
@@ -14,8 +14,8 @@ import './../../assets/js/common.js'
 export default {
   name: 'goodsHome',
   components: {
-    // FinsetHeader: FinsetHeader,
-    // FinsetBottom: FinsetBottom
+    FinsetHeader: FinsetHeader,
+    FinsetBottom: FinsetBottom
   }
 }
 </script>

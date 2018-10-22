@@ -69,7 +69,7 @@ export default {
       errMsg: "",
       certMessage: "",
       noPerson: this.$store.state.user.noPerson,
-      j_password: "",
+      password: "",
       tempPwd: "",
       chkPwd: false,
       chkFingerPrint: "",
@@ -126,18 +126,18 @@ export default {
     btnClick: function(val) {
       var _this = this;
       var type = "confirmPage";
-      _this.j_password += val;
-      if (_this.j_password.length > 0) _this.classPass1 = "active";
-      if (_this.j_password.length > 1) _this.classPass2 = "active";
-      if (_this.j_password.length > 2) _this.classPass3 = "active";
-      if (_this.j_password.length > 3) {
+      _this.password += val;
+      if (_this.password.length > 0) _this.classPass1 = "active";
+      if (_this.password.length > 1) _this.classPass2 = "active";
+      if (_this.password.length > 2) _this.classPass3 = "active";
+      if (_this.password.length > 3) {
         _this.classPass4 = "active";
 
         if (!_this.tempPwd) {
-          localStorage.setItem("tempPwd", _this.j_password);
+          localStorage.setItem("tempPwd", _this.password);
         } else {
-          if (_this.tempPwd != _this.j_password) {
-            _this.j_password = "";
+          if (_this.tempPwd != _this.password) {
+            _this.password = "";
             this.$toast.center(ko.messages.notMatchPwd);
             return;
           } else {
@@ -150,14 +150,14 @@ export default {
     backClick: function() {
       var _this = this;
       this.initClassPass();
-      _this.j_password = _this.j_password.substr(
+      _this.password = _this.password.substr(
         0,
-        _this.j_password.length - 1
+        _this.password.length - 1
       );
-      if (_this.j_password.length > 0) _this.classPass1 = "active";
-      if (_this.j_password.length > 1) _this.classPass2 = "active";
-      if (_this.j_password.length > 2) _this.classPass3 = "active";
-      if (_this.j_password.length > 3) _this.classPass4 = "active";
+      if (_this.password.length > 0) _this.classPass1 = "active";
+      if (_this.password.length > 1) _this.classPass2 = "active";
+      if (_this.password.length > 2) _this.classPass3 = "active";
+      if (_this.password.length > 3) _this.classPass4 = "active";
     },
     nextPage: function(type) {
       var _this = this;
@@ -168,7 +168,7 @@ export default {
       } else {
         var data = {
           no_person: _this.noPerson,
-          pass_person: _this.j_password
+          pass_person: _this.password
         };
         this.$http
           .get("/m/person/changePwd.json", {
@@ -208,8 +208,8 @@ export default {
 
       var querystring = require("querystring");
       var data = querystring.stringify({
-        j_username: _this.noPerson,
-        j_password: _this.j_password
+        username: _this.noPerson,
+        password: _this.password
       });
       this.$http
         .post("/check/j_spring_security_check", data, {

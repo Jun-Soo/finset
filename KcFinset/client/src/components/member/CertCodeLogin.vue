@@ -73,8 +73,8 @@ export default {
       cntFailPwd: this.$store.state.user.cntFailPwd,
       cntFailFinger: this.$store.state.user.cntFailFinger,
       ynFingerprint: this.$store.state.user.ynFingerprint,
-      j_username: this.$store.state.user.noPerson,
-      j_password: "",
+      username: this.$store.state.user.noPerson,
+      password: "",
       //class
       classPass1: "",
       classPass2: "",
@@ -114,11 +114,11 @@ export default {
     },
     btnClick: function(val) {
       var _this = this;
-      _this.j_password += val;
-      if (_this.j_password.length > 0) _this.classPass1 = "active";
-      if (_this.j_password.length > 1) _this.classPass2 = "active";
-      if (_this.j_password.length > 2) _this.classPass3 = "active";
-      if (_this.j_password.length > 3) {
+      _this.password += val;
+      if (_this.password.length > 0) _this.classPass1 = "active";
+      if (_this.password.length > 1) _this.classPass2 = "active";
+      if (_this.password.length > 2) _this.classPass3 = "active";
+      if (_this.password.length > 3) {
         _this.classPass4 = "active";
 
         _this.login();
@@ -127,19 +127,19 @@ export default {
     backClick: function() {
       var _this = this;
       this.initClassPass();
-      _this.j_password = _this.j_password.substr(
+      _this.password = _this.password.substr(
         0,
-        _this.j_password.length - 1
+        _this.password.length - 1
       );
-      if (_this.j_password.length > 0) _this.classPass1 = "active";
-      if (_this.j_password.length > 1) _this.classPass2 = "active";
-      if (_this.j_password.length > 2) _this.classPass3 = "active";
-      if (_this.j_password.length > 3) _this.classPass4 = "active";
+      if (_this.password.length > 0) _this.classPass1 = "active";
+      if (_this.password.length > 1) _this.classPass2 = "active";
+      if (_this.password.length > 2) _this.classPass3 = "active";
+      if (_this.password.length > 3) _this.classPass4 = "active";
     },
     //비밀번호 틀린횟수 변경
     modifyPwdFailCnt: function(mode) {
       var _this = this
-      var data = {no_person: _this.j_username,
+      var data = {no_person: _this.username,
                 cnt_fail_mode: mode,
                 cnt_fail: _this.cntFailPwd}
       this.$http
@@ -159,8 +159,8 @@ export default {
 
       var querystring = require('querystring')
       var data = querystring.stringify({
-        j_username: _this.j_username,
-        j_password: _this.j_password
+        username: _this.username,
+        password: _this.password
       });
       this.$http
         .post("/check/j_spring_security_check", data
@@ -178,7 +178,7 @@ export default {
             _this.$router.push("/main")
           } else {
             this.initClassPass()
-            _this.j_password = ""
+            _this.password = ""
             //비밀번호 틀린 누적횟수 증가
             _this.cntFailPwd += 1
             if (_this.cntFailPwd < 5) {
@@ -230,7 +230,7 @@ export default {
           window.Android.closeFingerPrint();
         }
 
-        var data = { yn_fingerprint: "N", no_person: _this.j_username };
+        var data = { yn_fingerprint: "N", no_person: _this.username };
         this.$http
           .get("/m/person/modifyFingerPrint.json", {
             params: data

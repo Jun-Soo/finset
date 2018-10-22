@@ -5,7 +5,7 @@
 	http://www.springframework.org/schema/beans/spring-beans-3.1.xsd">
 
 	<bean name="jsonView"
-		class="org.springframework.web.servlet.view.json.MappingJacksonJsonView">
+		class="org.springframework.web.servlet.view.json.MappingJackson2JsonView">
 	</bean>
 	
 </beans>

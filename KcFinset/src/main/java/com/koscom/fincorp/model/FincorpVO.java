@@ -2,7 +2,6 @@ package com.koscom.fincorp.model;
 
 import java.io.Serializable;
 
-import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.koscom.domain.FincorpInfo;
@@ -12,7 +11,6 @@ public class FincorpVO extends FincorpInfo implements Serializable {
 
 	private static final long serialVersionUID = -5283835109034749303L;
 
-	@JsonIgnore
 	private MultipartFile file1;
 
 	//for file transformation

@@ -1056,4 +1056,27 @@
                     , SYSDATE
             )
     </insert>
+    
+    <insert id="insertDefaultPersonSet" parameterType="java.lang.String">
+		INSERT
+			INTO
+				PERSON_SET_INFO(
+					 NO_PERSON
+					,DT_BASIC
+					,YN_INSTALLMENT
+					,ID_FRT
+					,DT_FRT
+					,ID_LST
+					,DT_LST
+				)
+			VALUES(
+				 #{no_person, jdbcType = VARCHAR}
+				,'1'
+				,'N'
+				,#{no_person, jdbcType = VARCHAR}
+				,SYSDATE
+				,#{no_person, jdbcType = VARCHAR}
+				,SYSDATE
+			)
+    </insert>
 </mapper>

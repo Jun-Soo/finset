@@ -275,4 +275,5 @@ public interface PersonManager {
 	 * @return
 	 */
 	ReturnClass procPersonInfoDelQuit(String no_person) throws UnsupportedEncodingException, FinsetException, IOException;
+
 }

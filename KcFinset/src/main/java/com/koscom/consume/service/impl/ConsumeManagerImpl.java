@@ -17,6 +17,7 @@ import com.koscom.consume.model.PersonConsumeClassVO;
 import com.koscom.consume.model.PersonSetInfoVO;
 import com.koscom.consume.model.PersonTransDetailVO;
 import com.koscom.consume.service.ConsumeManager;
+import com.koscom.domain.PersonInfo;
 
 @Service("consumeManager")
 public class ConsumeManagerImpl implements ConsumeManager {
@@ -25,6 +26,12 @@ public class ConsumeManagerImpl implements ConsumeManager {
 
 	@Autowired
 	private ConsumeMapper consumeMapper;
+
+	@Override
+	public List<PersonInfo> listConsumeSharePersonInfo(String no_person) {
+		logger.debug("listConsumeShareInfo");
+		return consumeMapper.listConsumeSharePersonInfo(no_person);
+	}
 	
 	@Override
 	public int getConsumeInfoAmt(ConsumeForm consumeForm) {

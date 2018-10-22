@@ -305,4 +305,10 @@ public interface PersonMapper {
 	 * @return
 	 */
 	void createPersonQuit(PersonVO personVO);
+	
+	/**
+	 * 개인설정 기본 값 설정
+	 * @param no_person
+	 */
+	void insertDefaultPersonSet(String no_person);
 }

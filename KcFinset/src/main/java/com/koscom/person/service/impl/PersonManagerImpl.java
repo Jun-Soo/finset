@@ -439,6 +439,11 @@ public class PersonManagerImpl implements PersonManager {
 				personMapper.insertCdPushHist(personVO);
 			}
 			logger.info("알림 셋팅 완료");
+			
+			logger.info("회원 설정 세팅 시작");
+			personMapper.insertDefaultPersonSet(personVO.getNo_person());
+			logger.info("회원 설정 세팅 완료");
+			
 		}
 		logger.info("회원 가입 정상 처리 하였습니다.    personVO :" + personVO.toString());
 		return new ReturnClass(Constant.SUCCESS, "정상 처리 하였습니다.", personVO);

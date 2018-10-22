@@ -23,4 +23,6 @@ public interface MainMapper {
 	 */
 	String getMainDebtSumAmt(String no_person);
 
+
+
 }

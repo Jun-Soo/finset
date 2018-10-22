@@ -31,4 +31,6 @@ public class MainManagerImpl implements MainManager {
 		return mainMapper.getMainDebtSumAmt(no_person);
 	}
 
+
+
 }

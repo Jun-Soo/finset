@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.koscom.main.dao.MainMapper;
-import com.koscom.main.model.MainVO;
 import com.koscom.main.service.MainManager;
 
 @Service("mainManager")

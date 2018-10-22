@@ -1,7 +1,5 @@
 package com.koscom.main.dao;
 
-import com.koscom.main.model.MainVO;
-
 public interface MainMapper {
 
 	/**

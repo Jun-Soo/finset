@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.koscom.board.service.BoardManager;
 import com.koscom.credit.service.CreditManager;
-import com.koscom.main.model.MainVO;
 import com.koscom.main.service.MainManager;
 import com.koscom.util.FinsetException;
 

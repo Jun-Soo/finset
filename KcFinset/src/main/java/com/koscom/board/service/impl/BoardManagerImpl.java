@@ -61,4 +61,9 @@ public class BoardManagerImpl implements BoardManager {
 	public Map<String, Object> getBoardImg(BoardInfoVO boardInfoVO){
 		return boardMapper.getBoardImg(boardInfoVO);
 	}
+
+	@Override
+	public List<BoardInfoVO> listMainEventBoard(){
+		return boardMapper.listMainEventBoard();
+	}
 }

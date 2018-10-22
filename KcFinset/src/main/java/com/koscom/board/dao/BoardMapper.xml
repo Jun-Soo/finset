@@ -7,7 +7,7 @@
 	    <result column="img_files" property="img_files" jdbcType="BLOB" javaType="[B"></result>
 	    <result column="nm_img_files" property="nm_img_files" jdbcType="VARCHAR" javaType="String"></result>
 	</resultMap>
-	
+
 	<sql id="listBoardInfo_WHERE">
 		<where>
 			<!-- 상세검색 -->
@@ -56,7 +56,7 @@
 				AND BO.yn_use = 'Y'
 		</where>
 	</sql>
-	
+
 	<select id="listBoardInfo"  parameterType="com.koscom.board.model.BoardForm" resultType="com.koscom.board.model.BoardInfoVO">
 		SELECT
 	        *
@@ -199,7 +199,7 @@
 	        )
 	    WHERE RNUM >= #{startPosition, jdbcType=NUMERIC}
 	</select>
-	
+
 	<select id="SearchBoardCount"  parameterType="com.koscom.board.model.BoardForm" resultType="int">
 		SELECT
             COUNT(*) AS recordCount
@@ -236,4 +236,26 @@
 			) tb
 		WHERE tb.rnum = 1
 	</select>
+
+	<select id="listMainEventBoard" resultType="com.koscom.board.model.BoardInfoVO">
+		SELECT
+			ID_BOARD,
+			SEQ,
+			TITLE,
+			CONTENT,
+			YN_USE,
+			YMD_POST_STRT,
+			YMD_POST_END,
+			CD_EVENT_PROC,
+			DECODE( CD_EVENT_PROC, '01', '예정', '02', '진행중', '03', '종료' ) AS NM_EVENT_PROC,
+			DT_FRT
+		FROM
+			BOARD_INFO
+		WHERE
+			ID_BOARD = 'event'
+			AND YN_USE = 'Y'
+		ORDER BY
+			YMD_POST_END DESC NULLS LAST, DT_FRT DESC NULLS LAST
+	</select>
+
 </mapper>

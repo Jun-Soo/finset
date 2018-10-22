@@ -70,4 +70,11 @@ public interface BoardManager {
 	 * @return ResponseEntity<byte[]>
 	 */
 	Map<String, Object> getBoardImg(BoardInfoVO boardInfoVO);
+
+	/**
+	 * 메인화면 게시판 list조회(이벤트)
+	 * @param
+	 * @return List<BoardInfoVO>
+	 */
+	List<BoardInfoVO> listMainEventBoard();
 }

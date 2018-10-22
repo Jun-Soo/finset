@@ -6,9 +6,9 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 public class BoardInfo implements Serializable{
-	
+
 	private static final long serialVersionUID = -3806143231559839918L;
-	
+
 	protected String seq;    // 게시물 번호
 	protected String seq_group;    // 게시물 원글번호
 	protected String seq_level;    // 답글 레벨
@@ -29,21 +29,22 @@ public class BoardInfo implements Serializable{
 	protected String id_lst;    // 수정 ID
 	protected String dt_lst;    // 수정일자
 	protected String nm_person;    // 작성자
-	protected String board_idx;    
-	
-	
+	protected String board_idx;
+
+
 	/* srchou */
 	protected String ymd_post_strt;	// 게시시작일
 	protected String ymd_post_end;	// 게시종료일
 	protected String post_yn;			// 기간외게시여부
-	protected String cd_event_proc;	// 이벤트진행코드(01예정 02진행 03마감)
+	protected String cd_event_proc;	// 이벤트진행코드(01예정 / 02진행중 / 03종료)
+	protected String nm_event_proc; 	//이벤트진행코드명
 	protected String nm_img_files;
 	private String nm_img_files1;
 	private String nm_img_files2;
 	private String file_type;
 	private int seq_file;
 	/* srchou */
-	
+
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
@@ -249,6 +250,14 @@ public class BoardInfo implements Serializable{
 		this.cd_event_proc = cd_event_proc;
 	}
 
+	public String getNm_event_proc() {
+		return nm_event_proc;
+	}
+
+	public void setNm_event_proc(String nm_event_proc) {
+		this.nm_event_proc = nm_event_proc;
+	}
+
 	public String getNm_img_files() {
 		return nm_img_files;
 	}
@@ -288,5 +297,5 @@ public class BoardInfo implements Serializable{
 	public void setSeq_file(int seq_file) {
 		this.seq_file = seq_file;
 	}
-    
+
 }

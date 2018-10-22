@@ -1,23 +1,36 @@
-<template>
-  <div id="menu-fixed-bottom">
-    <ul class="menu-list">
-      <li id="footer_credit" v-bind:class="{active: creditActive}" v-on:click="activeChange('credit')"><router-link to='/credit/main' class="menu-credit">신용관리</router-link></li>
-      <li id="footer_debt" v-bind:class="{active: debtActive}" v-on:click="activeChange('debt')"><router-link to='/debt/main' class="menu-debt">부채관리</router-link></li>
-      <li id="footer_goods" v-bind:class="{active: loanActive}" v-on:click="activeChange('loan')"><router-link to='/goods/main' class="menu-loan">상품조회</router-link></li>
-      <li id="footer_mypage" v-bind:class="{active: mypageActive}" v-on:click="activeChange('mypage')"><router-link to='/mypage/main' class="menu-mypage">마이페이지</router-link></li>
-    </ul>
-  </div>
+<template v-if='this.$store.state.isLoggedIn'>
+	<aside :class="{on: this.eventShow}" v-if="this.$store.state.header.type == 'main'">
+      <div class="top">
+           <button @click="showListEvent()">이벤트</button>
+       </div>
+       <div class="wrap">
+           <div class="list-wrap">
+               <a @click="viewDetail(eventInfo.seq)" v-for="eventInfo in listEvent" :key="eventInfo.index">
+                   <div class="banner">
+                       <div class="left">
+                           <p class="key">{{formatDate(eventInfo.ymd_post_strt)}} ~ {{formatDate(eventInfo.ymd_post_end)}}</p>
+                           <p class="value">{{eventInfo.title}}</p>
+                       </div>
+                       <div class="right">
+                           <img :src=eventInfo.thumImg alt=""/>
+                       </div>
+                   </div>
+               </a>
+           </div>
+       </div>
+   </aside>
 </template>
 
 <script>
+import Common from "./../../assets/js/common.js";
+import Constant from "./../../assets/js/constant.js";
+
 export default {
   name: 'FinsetBottom',
   data() {
     return {
-      creditActive: false,
-      debtActive: false,
-      loanActive: false,
-      mypageActive: false
+      listEvent: [],
+      eventShow:false
     }
   },
   component: {
@@ -27,6 +40,7 @@ export default {
   beforeCreate() {
   },
   created() {
+      this.getListEvent()
   },
   beforeMount() {
   },
@@ -41,13 +55,43 @@ export default {
   destroyed() {
   },
   methods: {
-    activeChange: function(type) {
-
-      this.creditActive = false, this.debtActive = false, this.loanActive = false, this.mypageActive = false
-      if(type == 'credit') this.creditActive = true
-      if(type == 'debt') this.debtActive = true
-      if(type == 'loan') this.loanActive = true
-      if(type == 'mypage') this.mypageActive = true
+      //이벤트list 조회
+     getListEvent: function() {
+      var _this = this
+      this.$http.get('/m/main/listMainEvnetBoard.json', {
+        params: {}
+      })
+      .then(response => {
+        var list = response.data.listEvent
+        for(var i=0; i<list.length; i++) {
+            list[i].thumImg = "/m/board/getBoardImg.crz?id_board="+list[i].id_board+"&seq="+list[i].seq+"&file_type=01"
+        }
+        _this.listEvent = list
+      })
+      .catch(e => {
+        this.$toast.center(ko.messages.error)
+      })
+    },
+    //이벤트show,hide
+    showListEvent: function() {
+        var _this = this
+        if(_this.eventShow){
+            _this.eventShow = false
+        }else{
+            _this.eventShow = true
+        }
+    },
+    //이벤트 기간 date format
+    formatDate: function(formDate) {
+        var rtnDate = ""
+        if(formDate != null){
+            rtnDate = Common.formatDate(formDate)
+        }
+        return rtnDate
+    },
+    //이벤트 상세
+    viewDetail: function(formDate) {
+        //TODO 상세페이지 이동
     }
   }
 }

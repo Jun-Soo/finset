@@ -33,7 +33,7 @@
 	<http pattern="/m/credit/kcm*" security="none"/>
 	<http pattern="/m/credit/frameAcceptTerms*" security="none"/>
 	<http pattern="/m/scrap/**" security="none"/>
-	<http pattern="/m/fincorp/getFinCorpIcon.crz" security="none"/>
+	
 	
 	<http pattern="/kcb/**" security="none"/>
 	<http pattern="/logout" security="none"/>

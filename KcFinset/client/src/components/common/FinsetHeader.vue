@@ -1,10 +1,8 @@
 <template v-if='this.$store.state.isLoggedIn'>
-<!-- <body class="main"> -->
-	<!--   HEADER 로드   -->
-	<!-- <header></header> -->
-	<!--   CONTENTS   -->
-    <!-- <section> -->
-
+<div>
+    <header>
+        <gnb/>
+    </header>
     <div v-if="this.$store.state.header.type == 'main'" id='header' class="top main">
         <ul>
             <li id="header_main" v-bind:class="{on: this.$store.state.header.active=='main'}"><a href="/main">MY</a></li>
@@ -13,46 +11,39 @@
             <li id="header_consume" v-bind:class="{on: this.$store.state.header.active=='consume'}"><a href="/consume/main">지출</a></li>
             <li id="header_assets" v-bind:class="{on: this.$store.state.header.active=='assets'}"><a href="/assets/main">자산</a></li>
         </ul>
+        
     </div>
     <div v-else id='header' class="sub-top">
         <a href="#" class="btn-back"></a>
         <p class="title">{{this.$store.state.title}}</p>
     </div>
+</div>
 </template>
 
 <script>
+import gnb from "./Gnb";
 export default {
-  name: 'FinsetHeader',
+  name: "FinsetHeader",
   data() {
-    return {
-    }
+    return {};
   },
-  component: {
+  components: {
+    gnb
   },
   // computed () {
   // },
-  beforeCreate() {
-  },
-  created() {
-  },
-  beforeMount() {
-  },
-  mounted() {
-  },
-  beforeUpdate() {
-  },
-  updated() {
-  },
-  beforeDestroy () {
-  },
-  destroyed() {
-  },
-  methods: {
-  }
-}
+  beforeCreate() {},
+  created() {},
+  beforeMount() {},
+  mounted() {},
+  beforeUpdate() {},
+  updated() {},
+  beforeDestroy() {},
+  destroyed() {},
+  methods: {}
+};
 </script>
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
-
 </style>

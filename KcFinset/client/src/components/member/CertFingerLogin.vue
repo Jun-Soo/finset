@@ -70,8 +70,8 @@ export default {
 
       var querystring = require('querystring')
       var data = querystring.stringify({
-        username: _this.username,
-        password: _this.$store.state.user.authToken
+        j_username: _this.username,
+        j_password: _this.$store.state.user.authToken
       });
       this.$http
         .post("/check/j_spring_security_check", data

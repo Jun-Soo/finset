@@ -159,8 +159,8 @@ export default {
 
       var querystring = require('querystring')
       var data = querystring.stringify({
-        username: _this.username,
-        password: _this.password
+        j_username: _this.username,
+        j_password: _this.password
       });
       this.$http
         .post("/check/j_spring_security_check", data
@@ -191,9 +191,6 @@ export default {
                 _this.$router.push("/mypage/certPerson");
               }, 1000)
             }
-            //비밀번호 틀린 누적횟수 증가
-            _this.cntFailPwd += 1
-            _this.errMsg = "비밀번호가 일치하지 않습니다. (" + _this.cntFailPwd + "/5)"
             if (response.data.result == "21" || response.data.result == "22") {
               _this.modifyPwdFailCnt("pwd")
             }

@@ -208,8 +208,8 @@ export default {
 
       var querystring = require("querystring");
       var data = querystring.stringify({
-        username: _this.noPerson,
-        password: _this.password
+        j_username: _this.noPerson,
+        j_password: _this.password
       });
       this.$http
         .post("/check/j_spring_security_check", data, {

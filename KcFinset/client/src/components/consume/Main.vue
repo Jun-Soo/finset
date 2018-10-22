@@ -60,6 +60,11 @@
                 </a>
             </div>
         </div>
+        <div>
+          <div v-for="(person, index) in shareList" :key="person.no_person">
+            <button @click="clickShare(index)" :class="{'active': person.isShow === true}">{{person.nm_person}}</button>
+          </div>
+        </div>
         <div class="tab">
             <div class="wrap col3">
                 <a href="#" id="00" :class="{'on':curTab === '00'}" @click="clickTab">전체</a>
@@ -67,8 +72,8 @@
                 <a href="#" id="01" :class="{'on':curTab === '01'}" @click="clickTab">수입</a>
             </div>
         </div>
-        <div v-if="list.length!=0" class="list02 spend-list">
-          <div v-for="subList in list" :key="subList.index" class="list-wrap">
+        <div v-if="consumeList.length!=0" class="list02 spend-list">
+          <div v-for="subList in consumeList" :key="subList.index" class="list-wrap">
             <p class="date">{{formatDate(subList[0].dt_trd,"mmdd")}}</p>
             <div v-for="vo in subList" :key="vo.index" class="item">
               <div class="left">
@@ -96,7 +101,9 @@ export default {
   data() {
     return {
       ym: "",
-      list: [],
+      consumeList: [],
+      shareList: [],
+      exceptList: [],
       curDate: "",
       curTab: "00",
       standardDt: new Date(),
@@ -114,7 +121,6 @@ export default {
   created() {
     this.ym = this.formatHead(this.getYm(this.standardDt));
     this.listConsumeShareInfo();
-    this.listConsumeInfo();
   },
   beforeMount() {},
   mounted() {},
@@ -126,10 +132,15 @@ export default {
     listConsumeShareInfo: function() {
       var _this = this;
       this.$http
-        .get("/m/consume/listConsumeSharePersonInfo.json",{params:{}})
+        .get("/m/consume/listConsumeSharePersonInfo.json", { params: {} })
         .then(function(response) {
           var list = response.data.listConsumeSharePersonInfo;
-          console.log(list);
+
+          for (var idx in list) {
+            list[idx].isShow = true;
+          }
+          _this.shareList = list;
+          _this.listConsumeInfo();
         });
     },
     listConsumeInfo: function() {
@@ -139,13 +150,13 @@ export default {
           params: {
             ym: _this.ym.replace(".", ""),
             type_in_out: _this.curTab,
-            no_person_list: ["P000000134", "P000000109"]
+            no_person_list: _this.filterShareList()
           }
         })
         .then(function(response) {
           var list = response.data.listConsumeInfo;
 
-          _this.list = list;
+          _this.consumeList = list;
           _this.income = response.data.income;
           _this.consume = response.data.consume;
         });
@@ -160,9 +171,6 @@ export default {
         (date.getMonth() + 1)
       );
     },
-    getTodayYm: function() {
-      return this.getYm(new Date());
-    },
     setPrevMM: function() {
       this.standardDt.setMonth(this.standardDt.getMonth() - 1);
       this.ym = this.formatHead(this.getYm(this.standardDt));
@@ -172,12 +180,6 @@ export default {
       this.standardDt.setMonth(this.standardDt.getMonth() + 1);
       this.ym = this.formatHead(this.getYm(this.standardDt));
       this.listConsumeInfo();
-    },
-    onSlideChangeStart: function() {
-      console.log("slide-start");
-    },
-    onSlideChangeEnd: function() {
-      console.log("slide-end");
     },
     formatNumber: function(number, isMinus, isPlus) {
       return Common.formatNumber(number, isMinus, isPlus);
@@ -214,6 +216,20 @@ export default {
       } else {
         return "red";
       }
+    },
+    filterShareList: function() {
+      var shareList = new Array();
+      var _this = this;
+      for (var idx in _this.shareList) {
+        if(_this.shareList[idx].isShow){
+          shareList.push(_this.shareList[idx].no_person);
+        }
+      }
+      return shareList;
+    },
+    clickShare: function(params) {
+      this.shareList[params].isShow = !this.shareList[params].isShow;
+      this.listConsumeInfo();
     }
   }
 };
@@ -221,4 +237,8 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
+.active {
+  background: green;
+  color: white;
+}
 </style>

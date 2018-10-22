@@ -33,8 +33,18 @@ public class CreditManagerImpl implements CreditManager {
 	}
 
 	@Override
+	public CreditInfo getCreditOverdueSumAmt(String no_person) {
+		return creditMapper.getCreditOverdueSumAmt(no_person);
+	}
+
+	@Override
 	public CreditInfo getCreditMainCntInfo(String no_person) {
 		return creditMapper.getCreditMainCntInfo(no_person);
+	}
+
+	@Override
+	public CreditInfo getCreditMainGradeChangeInfo(String no_person) {
+		return creditMapper.getCreditMainGradeChangeInfo(no_person);
 	}
 
 	@Override
@@ -59,22 +69,32 @@ public class CreditManagerImpl implements CreditManager {
 	public CreditInfo getCreditDetailDEBTCreditSum(String no_person) {
 		return creditMapper.getCreditDetailDEBTCreditSum(no_person);
 	}
-	
+
 	@Override
 	public List<CreditInfo> getCreditDetailDEBTCreditList(String no_person) {
 		return creditMapper.getCreditDetailDEBTCreditList(no_person);
 	}
-	
+
 	@Override
 	public CreditInfo getCreditDetailDEBTLoanSum(String no_person) {
 		return creditMapper.getCreditDetailDEBTLoanSum(no_person);
 	}
-	
+
 	@Override
 	public List<CreditInfo> getCreditDetailDEBTLoanList(String no_person) {
 		return creditMapper.getCreditDetailDEBTLoanList(no_person);
 	}
-	
+
+	@Override
+	public CreditInfo getCreditDetailDEBTSum(String no_person) {
+		return creditMapper.getCreditDetailDEBTSum(no_person);
+	}
+
+	@Override
+	public List<CreditInfo> getCreditDetailDEBTList(String no_person) {
+		return creditMapper.getCreditDetailDEBTList(no_person);
+	}
+
 	@Override
 	public HashMap<String, String> getKcbInfoCLOB(HashMap<String, String> searchMap) {
 		return creditMapper.getKcbInfoCLOB(searchMap);

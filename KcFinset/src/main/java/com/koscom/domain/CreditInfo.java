@@ -27,10 +27,10 @@ public class CreditInfo implements Serializable {
 
 	//client_신용관리메인
 	private String req_yyyymm;
-	private String rating_credit;
-	private String grade_credit;
-	private String percentage;
-	private String rating_diff;
+	private String rating_credit="";
+	private String grade_credit="";
+	private String percentage="";
+	private String rating_diff="";
 	private String cnt_credit_ref_1y;
 	private String cnt_credit_change;
 	private String cnt_normal_info;
@@ -39,6 +39,13 @@ public class CreditInfo implements Serializable {
 	private String cnt_loan;
 	private String cnt_overdue;
 	private String cnt_guarantee;
+
+	//연체 총금액
+	private int koi_sum_amt; //연체정보_연체잔액sum
+	private int kosi_sum_amt; //대지급정보_대지급금액sum
+	private int kodi_sum_amt; //채무불이행정보(기타연체)_연체금액sum
+	private int kopi_sum_amt; //공공정보(기타연체)_등록금액sum
+	private int kfdi_sum_amt; //금융질서문란정보(기타연체)_연체금액sum
 
 	//client_신용관리 신용등급상세
 	private String chart_title;
@@ -59,6 +66,9 @@ public class CreditInfo implements Serializable {
 	private String ymd_loan;
 	private String amt_remain;
 	private String amt_contract;
+	private String yn_credit;
+	private String yn_loan;
+	private String cd_debt;
 
 	@Override
 	public String toString() {
@@ -306,6 +316,46 @@ public class CreditInfo implements Serializable {
 		this.cnt_guarantee = cnt_guarantee;
 	}
 
+	public int getKoi_sum_amt() {
+		return koi_sum_amt;
+	}
+
+	public void setKoi_sum_amt(int koi_sum_amt) {
+		this.koi_sum_amt = koi_sum_amt;
+	}
+
+	public int getKosi_sum_amt() {
+		return kosi_sum_amt;
+	}
+
+	public void setKosi_sum_amt(int kosi_sum_amt) {
+		this.kosi_sum_amt = kosi_sum_amt;
+	}
+
+	public int getKodi_sum_amt() {
+		return kodi_sum_amt;
+	}
+
+	public void setKodi_sum_amt(int kodi_sum_amt) {
+		this.kodi_sum_amt = kodi_sum_amt;
+	}
+
+	public int getKopi_sum_amt() {
+		return kopi_sum_amt;
+	}
+
+	public void setKopi_sum_amt(int kopi_sum_amt) {
+		this.kopi_sum_amt = kopi_sum_amt;
+	}
+
+	public int getKfdi_sum_amt() {
+		return kfdi_sum_amt;
+	}
+
+	public void setKfdi_sum_amt(int kfdi_sum_amt) {
+		this.kfdi_sum_amt = kfdi_sum_amt;
+	}
+
 	public String getChart_title() {
 		return chart_title;
 	}
@@ -432,6 +482,30 @@ public class CreditInfo implements Serializable {
 
 	public void setAmt_contract(String amt_contract) {
 		this.amt_contract = amt_contract;
+	}
+
+	public String getYn_credit() {
+		return yn_credit;
+	}
+
+	public void setYn_credit(String yn_credit) {
+		this.yn_credit = yn_credit;
+	}
+
+	public String getYn_loan() {
+		return yn_loan;
+	}
+
+	public void setYn_loan(String yn_loan) {
+		this.yn_loan = yn_loan;
+	}
+
+	public String getCd_debt() {
+		return cd_debt;
+	}
+
+	public void setCd_debt(String cd_debt) {
+		this.cd_debt = cd_debt;
 	}
 
 }

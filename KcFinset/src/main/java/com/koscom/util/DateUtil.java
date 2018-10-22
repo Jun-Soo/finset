@@ -44,7 +44,7 @@ import org.springframework.util.Assert;
  * Date Utility Class <br>
  * This is used to manage Date Object.
  * <br> org.anyframe.util 패키지 클래스를 목적에 맞게 수정하여 사용합니다.
- * 
+ *
  * @author SoYon Lim
  * @author JongHoon Kim
  * @author HyunJung Jeong
@@ -58,7 +58,8 @@ public class DateUtil {
 	// =============================================
 
 	/** Date pattern */
-	public static final String DATE_PATTERN_DASH = "yyyy-MM-dd"; 
+	public static final String DATE_PATTERN_DASH = "yyyy-MM-dd";
+	public static final String DATE_PATTERN_DOT = "yyyy.MM.dd";
 
 	/** Time pattern */
 	public static final String TIME_PATTERN = "HH:mm";
@@ -106,7 +107,7 @@ public class DateUtil {
 
 	/**
 	 * get current datetime
-	 * 
+	 *
 	 * @return String representing current day (yyyy-MM-dd HH:mm:ss)
 	 */
 	public static String getCurrentDateTime() {
@@ -116,7 +117,7 @@ public class DateUtil {
 
 	/**
 	 * get current time
-	 * 
+	 *
 	 * @param pattern
 	 *            time pattern
 	 * @return String representing current time (type of pattern)
@@ -129,7 +130,7 @@ public class DateUtil {
 
 	/**
 	 * get this month including this year
-	 * 
+	 *
 	 * @return String representing this month (yyyy-MM)
 	 */
 	public static String getThisMonth() {
@@ -138,7 +139,7 @@ public class DateUtil {
 
 	/**
 	 * get this year
-	 * 
+	 *
 	 * @return String representing this year (yyyy)
 	 */
 	public static String getThisYear() {
@@ -148,11 +149,11 @@ public class DateUtil {
 	/**
 	 * return day of the week of the input data. return in abbreviation pattern
 	 * for the default language of the current system.
-	 * 
+	 *
 	 * <pre>
 	 * DateUtil.getDayOfWeek(&quot;2011-02-04&quot;) = &quot;Fri&quot;;
 	 * </pre>
-	 * 
+	 *
 	 * @param date
 	 *            date(yyyy-MM-dd)
 	 * @return String day of week (shortText, Default Locale)
@@ -164,12 +165,12 @@ public class DateUtil {
 	/**
 	 * return day of the week of the input data. return in abbreviation or full
 	 * day of the week pattern for the language after getting locale info.
-	 * 
+	 *
 	 * <pre>
 	 * DateUtil.getDayOfWeek(&quot;2011-02-04&quot;, true, Locale.US) = &quot;Fri&quot;;
 	 * DateUtil.getDayOfWeek(&quot;2011-02-04&quot;, false, Locale.US) = &quot;Friday&quot;;
 	 * </pre>
-	 * 
+	 *
 	 * @param date
 	 *            date(yyyyMMdd)
 	 * @param abbreviation
@@ -193,7 +194,7 @@ public class DateUtil {
 	/**
 	 * It returns the number of days between two Gregorian Calendar dates (e.g.
 	 * cal1: 2005-08-15, cal2: 2005-09-14 => 30 days)
-	 * 
+	 *
 	 * @param startDate
 	 *            the Calendar to calculate
 	 * @param endDate
@@ -208,7 +209,7 @@ public class DateUtil {
 
 	/**
 	 * Calculate number of days between startDate and endDate
-	 * 
+	 *
 	 * @param startDate
 	 *            start date(yyyy-MM-dd)
 	 * @param endDate
@@ -221,7 +222,7 @@ public class DateUtil {
 
 	/**
 	 * Calculate number of days between startDate and endDate
-	 * 
+	 *
 	 * @param startDate
 	 *            start date
 	 * @param endDate
@@ -248,7 +249,7 @@ public class DateUtil {
 
 	/**
 	 * Compares two Dates for ordering.
-	 * 
+	 *
 	 * @param date1
 	 *            Date to be compared.
 	 * @param date2
@@ -262,7 +263,7 @@ public class DateUtil {
 
 	/**
 	 * Compares two Dates for ordering.
-	 * 
+	 *
 	 * @param date1
 	 *            Date to be compared.
 	 * @param date2
@@ -282,7 +283,7 @@ public class DateUtil {
 
 	/**
 	 * Compares two Dates for ordering.
-	 * 
+	 *
 	 * @param date1
 	 *            Date to be compared.
 	 * @param date2
@@ -300,7 +301,7 @@ public class DateUtil {
 
 	/**
 	 * Compares two Timestamps for ordering.
-	 * 
+	 *
 	 * @param timestamp1
 	 *            Date to be compared.
 	 * @param timestamp2
@@ -318,7 +319,7 @@ public class DateUtil {
 
 	/**
 	 * Compares two Timestamps for ordering.
-	 * 
+	 *
 	 * @param timestamp1
 	 *            Timestamp to be compared.
 	 * @param timestamp2
@@ -334,7 +335,7 @@ public class DateUtil {
 
 	/**
 	 * Compares two Timestamps for ordering.
-	 * 
+	 *
 	 * @param timestamp1
 	 *            Timestamp to be compared.
 	 * @param timestamp2
@@ -354,7 +355,7 @@ public class DateUtil {
 
 	/**
 	 * getting end date intervalDays <= 40
-	 * 
+	 *
 	 * @param startDate
 	 *            start day (yyyy-MM-dd)
 	 * @param intervalDays
@@ -416,7 +417,7 @@ public class DateUtil {
 	/**
 	 * return the date adding days to the input date. negative date will be
 	 * returned by calculating the previous days of the input date.
-	 * 
+	 *
 	 * @param date
 	 *            string of the date (yyyyMMdd)
 	 * @param days
@@ -432,11 +433,11 @@ public class DateUtil {
 		DateTime subtracted = dt.withFieldAdded(DurationFieldType.days(), days);
 		return fmt.print(subtracted);
 	}
-	
+
 	/**
 	 * return the date adding months to the input date. negative month will be
 	 * returned by calculating the previous days of the input date.
-	 * 
+	 *
 	 * @param date
 	 *            string of the date (yyyyMMdd)
 	 * @param months
@@ -457,7 +458,7 @@ public class DateUtil {
 	/**
 	 * return the date adding years to the input date. negative year will be
 	 * returned by calculating the previous days of the input date.
-	 * 
+	 *
 	 * @param date
 	 *            string of the date (yyyyMMdd)
 	 * @param years
@@ -477,7 +478,7 @@ public class DateUtil {
 
 	/**
 	 * return date calculating years, months, days to the input date
-	 * 
+	 *
 	 * @param date
 	 *            string of the date (yyyyMMdd)
 	 * @param years
@@ -507,7 +508,7 @@ public class DateUtil {
 
 	/**
 	 * get the first date of the month based on the input date.
-	 * 
+	 *
 	 * @param date
 	 *            string of the date (yyyyMMdd)
 	 * @return the new date of the first date of the month
@@ -520,11 +521,11 @@ public class DateUtil {
 		return fmt.print(dtRet);
 	}
 
-	
+
 
 	/**
 	 * get the last date of the month based on the input date.
-	 * 
+	 *
 	 * @param date
 	 *            string of the date (yyyyMMdd)
 	 * @return the new date of the last date of the month
@@ -542,7 +543,7 @@ public class DateUtil {
 
 	/**
 	 * get the first day of the previous month based on the input date.
-	 * 
+	 *
 	 * @param date
 	 *            string of the date (yyyyMMdd)
 	 * @return the new date of the first date of the previous month
@@ -559,7 +560,7 @@ public class DateUtil {
 
 	/**
 	 * get the first day of the previous month based on the input date.
-	 * 
+	 *
 	 * @param date
 	 *            string of the date (yyyyMMdd)
 	 *            int month
@@ -576,7 +577,7 @@ public class DateUtil {
 
 	/**
 	 * get the last day of the previous month based on the input date.
-	 * 
+	 *
 	 * @param date
 	 *            string of the date (yyyyMMdd)
 	 * @return the new date of the last date of the previous month
@@ -592,10 +593,10 @@ public class DateUtil {
 
 	/**
 	 * check whether the input date is valid.
-	 * 
+	 *
 	 * @param date
 	 *            string of the date (yyyyMMdd)
-	 * 
+	 *
 	 * @return if valid date, return <code>true</code>.
 	 */
 	public static boolean isDate(String date) {
@@ -604,7 +605,7 @@ public class DateUtil {
 
 	/**
 	 * check whether the input date is valid date.
-	 * 
+	 *
 	 * @param date
 	 *            string of the date
 	 * @param pattern
@@ -625,7 +626,7 @@ public class DateUtil {
 
 	/**
 	 * check whether the input time is valid time.
-	 * 
+	 *
 	 * @param date
 	 *            string of the time (HH:mm)
 	 * @return return <code>true</code>if valid time and <code>false</code> if
@@ -637,7 +638,7 @@ public class DateUtil {
 
 	/**
 	 * check whether the input hour is valid time.
-	 * 
+	 *
 	 * @param date
 	 *            string of the time
 	 * @param pattern
@@ -658,7 +659,7 @@ public class DateUtil {
 
 	/**
 	 * convert String to java.util.Date
-	 * 
+	 *
 	 * @param str
 	 *            the String Date to be converted (yyyyMMdd)
 	 * @return <code>java.util.Date</code>
@@ -671,7 +672,7 @@ public class DateUtil {
 
 	/**
 	 * convert String to java.util.Date
-	 * 
+	 *
 	 * @param date
 	 *            the String Date to be converted (yyyyMMdd)
 	 * @return <code>java.util.Date</code>
@@ -682,7 +683,7 @@ public class DateUtil {
 
 	/**
 	 * convert String to <code>java.util.Date</code>
-	 * 
+	 *
 	 * @param str
 	 *            the String Date to be converted (The pattern equals pattern
 	 *            that input argument)
@@ -699,7 +700,7 @@ public class DateUtil {
 
 	/**
 	 * convert String to <code>java.util.Date</code>
-	 * 
+	 *
 	 * @param date
 	 *            the String Date to be converted (The pattern equals pattern
 	 *            that input argument)
@@ -714,7 +715,7 @@ public class DateUtil {
 
 	/**
 	 * convert <code>Date</code> to <code>String</code>
-	 * 
+	 *
 	 * @param Date
 	 *            date
 	 * @return result String (yyyyMMdd)
@@ -727,7 +728,7 @@ public class DateUtil {
 
 	/**
 	 * convert <code>Date</code> to <code>String</code>
-	 * 
+	 *
 	 * @param date
 	 *            date
 	 * @param pattern
@@ -743,7 +744,7 @@ public class DateUtil {
 
 	/**
 	 * convert <code>Date</code> to <code>String</code>
-	 * 
+	 *
 	 * @param date
 	 *            date
 	 * @return result String (yyyyMMdd)
@@ -754,7 +755,7 @@ public class DateUtil {
 
 	/**
 	 * convert <code>Date</code> to <code>String</code>
-	 * 
+	 *
 	 * @param date
 	 *            date
 	 * @param pattern
@@ -769,12 +770,12 @@ public class DateUtil {
 	/**
 	 * convert and return the date of string type of the given pattern to
 	 * user-defined pattern
-	 * 
+	 *
 	 * <pre>
 	 * DateUtil.string2String("20101214", "yyyyMMdd", "yyyy-MM-dd") = "2010-12-14"
 	 * DateUtil.string2String("2010.12.14", "yyyy.MM.dd", "yyyy/MM/dd") = "2010/12/14"
 	 * </pre>
-	 * 
+	 *
 	 * @param str
 	 *            string
 	 * @param basePattern
@@ -795,12 +796,12 @@ public class DateUtil {
 	/**
 	 * convert and return the date of string type of the given pattern to
 	 * user-defined pattern
-	 * 
+	 *
 	 * <pre>
 	 * DateUtil.convertDateFormat("20101214", "yyyyMMdd", "yyyy-MM-dd") = "2010-12-14"
 	 * DateUtil.convertDateFormat("2010.12.14", "yyyy.MM.dd", "yyyy/MM/dd") = "2010/12/14"
 	 * </pre>
-	 * 
+	 *
 	 * @param date
 	 *            string
 	 * @param basePattern
@@ -818,7 +819,7 @@ public class DateUtil {
 
 	/**
 	 * convert String to <code>java.sql.Date</code> type
-	 * 
+	 *
 	 * @param str
 	 *            the String Date to be converted (yyyyMMdd)
 	 * @return <code>java.sql.Date</code>
@@ -832,7 +833,7 @@ public class DateUtil {
 
 	/**
 	 * convert String to <code>java.sql.Date</code> type
-	 * 
+	 *
 	 * @param date
 	 *            the String Date to be converted (yyyyMMdd)
 	 * @return <code>java.sql.Date</code>
@@ -844,7 +845,7 @@ public class DateUtil {
 
 	/**
 	 * convert String to <code>java.sql.Date</code> type
-	 * 
+	 *
 	 * @param str
 	 *            the String Date to be converted
 	 * @param pattern
@@ -860,7 +861,7 @@ public class DateUtil {
 
 	/**
 	 * convert String to <code>java.sql.Date</code> type
-	 * 
+	 *
 	 * @param date
 	 *            the String Date to be converted
 	 * @param pattern
@@ -874,7 +875,7 @@ public class DateUtil {
 
 	/**
 	 * convert String to <code>java.sq.Timestamp</code>
-	 * 
+	 *
 	 * @param str
 	 *            the String Date to be converted (yyyyMMdd)
 	 * @return <code>java.sql.Timestamp</code>
@@ -887,7 +888,7 @@ public class DateUtil {
 
 	/**
 	 * convert String to <code>java.sq.Timestamp</code>
-	 * 
+	 *
 	 * @param date
 	 *            the String Date to be converted (yyyyMMdd)
 	 * @return <code>java.sql.Timestamp</code>
@@ -898,7 +899,7 @@ public class DateUtil {
 
 	/**
 	 * convert String to <code>java.sq.Timestamp</code>
-	 * 
+	 *
 	 * @param str
 	 *            the String Date to be converted (The pattern equals pattern
 	 *            that input argument)
@@ -915,7 +916,7 @@ public class DateUtil {
 
 	/**
 	 * convert String to <code>java.sq.Timestamp</code>
-	 * 
+	 *
 	 * @param date
 	 *            the String Date to be converted (The pattern equals pattern
 	 *            that input argument)
@@ -930,7 +931,7 @@ public class DateUtil {
 
 	/**
 	 * convert <code>java.sq.Timestamp</code> to <code>String</code> type
-	 * 
+	 *
 	 * @param date
 	 *            the Date to be converted
 	 * @return a string representing the date (yyyyMMdd)
@@ -943,7 +944,7 @@ public class DateUtil {
 
 	/**
 	 * convert <code>java.sq.Timestamp</code> to <code>String</code> type
-	 * 
+	 *
 	 * @param date
 	 *            the Date to be converted
 	 * @return a string representing the date (yyyyMMdd)
@@ -954,7 +955,7 @@ public class DateUtil {
 
 	/**
 	 * convert <code>java.sq.Timestamp</code> to <code>String</code> type
-	 * 
+	 *
 	 * @param date
 	 *            the Date to be converted (The pattern equals pattern that
 	 *            input argument)
@@ -973,7 +974,7 @@ public class DateUtil {
 
 	/**
 	 * convert <code>java.sq.Timestamp</code> to <code>String</code> type
-	 * 
+	 *
 	 * @param date
 	 *            the Date to be converted (The pattern equals pattern that
 	 *            input argument)
@@ -990,7 +991,7 @@ public class DateUtil {
 
 	/**
 	 * convert String to <code>java.util.Calendar</code>
-	 * 
+	 *
 	 * @param str
 	 *            the String Date to be converted (yyyyMMddHHmmss)
 	 * @return <code>java.util.Calendar</code>
@@ -1017,7 +1018,7 @@ public class DateUtil {
 
 	/**
 	 * convert String to <code>java.util.Calendar</code>
-	 * 
+	 *
 	 * @param date
 	 *            the String Date to be converted (yyyyMMddHHmmss)
 	 * @return <code>java.util.Calendar</code>
@@ -1041,7 +1042,7 @@ public class DateUtil {
 
 	/**
 	 * convert <code>java.util.Calendar</code> to String
-	 * 
+	 *
 	 * @param calendar
 	 *            the Calendar to be converted
 	 * @return a string representing the date (yyyyMMddHHmmss)
@@ -1067,7 +1068,7 @@ public class DateUtil {
 
 	/**
 	 * convert <code>java.util.Calendar</code> to String
-	 * 
+	 *
 	 * @param calendar
 	 *            the Calendar to be converted
 	 * @return a string representing the date (yyyyMMddHHmmss)
@@ -1089,7 +1090,7 @@ public class DateUtil {
 
 	/**
 	 * It returns the number of minutes between two Gregorian Calendar dates
-	 * 
+	 *
 	 * @param startDate
 	 *            the Calendar to calculate
 	 * @param endDate
@@ -1114,7 +1115,7 @@ public class DateUtil {
 
 	/**
 	 * It returns the number of minutes between two string type dates.
-	 * 
+	 *
 	 * @param startDate
 	 *            the String Date to calculate (yyyyMMddHHmmss)
 	 * @param endDate
@@ -1130,7 +1131,7 @@ public class DateUtil {
 
 	/**
 	 * get yesterday
-	 * 
+	 *
 	 * @return String representing yesterday (yyyyMMdd)
 	 */
 	public static String getYesterday() {
@@ -1139,7 +1140,7 @@ public class DateUtil {
 
 	/**
 	 * get yesterday with pattern
-	 * 
+	 *
 	 * @param pattern
 	 *            Date pattern
 	 * @return String representing yesterday
@@ -1153,7 +1154,7 @@ public class DateUtil {
 
 	/**
 	 * get current calendar of korea time zone
-	 * 
+	 *
 	 * @return <code>java.util.Calendar</code>
 	 */
 	private static Calendar getCalendar() {
@@ -1166,7 +1167,7 @@ public class DateUtil {
 
 	/**
 	 * find dates between startDay and endDay
-	 * 
+	 *
 	 * @param startDate
 	 *            start day (yyyyMMdd)
 	 * @param endDate
@@ -1179,7 +1180,7 @@ public class DateUtil {
 
 	/**
 	 * find dates between startDay and endDay
-	 * 
+	 *
 	 * @param startDate
 	 *            start day
 	 * @param endDate
@@ -1210,7 +1211,7 @@ public class DateUtil {
 	 * <p/>
 	 * ex) String curDate = DateUtil.getCurrentDateString(); // curDate :
 	 * 2009-04-28
-	 * 
+	 *
 	 * @return String representing current time (yyyyMMdd)
 	 * @deprecated Use {@link #getCurrentDate()}
 	 */
@@ -1224,7 +1225,7 @@ public class DateUtil {
 	 * <p/>
 	 * ex) String curDate = DateUtil.getCurrentDateString(); // curDate :
 	 * 2009-04-28
-	 * 
+	 *
 	 * @return String representing current time (yyyyMMdd)
 	 */
 	public static String getCurrentDate() {
@@ -1236,7 +1237,7 @@ public class DateUtil {
 	 * <p/>
 	 * ex) String curDate = DateUtil.getCurrentDateString("yyyyMMdd"); //
 	 * curDate : 20090428
-	 * 
+	 *
 	 * @param pattern
 	 *            date pattern
 	 * @return String representing current date (type of pattern)
@@ -1253,7 +1254,7 @@ public class DateUtil {
 	 * <p/>
 	 * ex) String curDate = DateUtil.getCurrentDateString("yyyyMMdd"); //
 	 * curDate : 20090428
-	 * 
+	 *
 	 * @param pattern
 	 *            date pattern
 	 * @return String representing current date (type of pattern)
@@ -1265,7 +1266,7 @@ public class DateUtil {
 
 	/**
 	 * get {@link java.sql.Date} object of current date
-	 * 
+	 *
 	 * @return {@link java.sql.Date} object (current date)
 	 */
 	public static java.sql.Date getCurrentSQLDate() {
@@ -1274,7 +1275,7 @@ public class DateUtil {
 
 	/**
 	 * get {@link java.sql.Time} object of current time
-	 * 
+	 *
 	 * @return {@link java.sql.Time} object (current time)
 	 */
 	public static Time getCurrentSQLTime() {
@@ -1283,7 +1284,7 @@ public class DateUtil {
 
 	/**
 	 * get current time
-	 * 
+	 *
 	 * @return String (current time)
 	 * @deprecated Use {@link #getCurrentTime()}
 	 */
@@ -1294,7 +1295,7 @@ public class DateUtil {
 
 	/**
 	 * get current time
-	 * 
+	 *
 	 * @return String (current time)
 	 */
 	public static String getCurrentTime() {
@@ -1303,7 +1304,7 @@ public class DateUtil {
 
 	/**
 	 * get {@link java.sql.Timestamp} object of current date
-	 * 
+	 *
 	 * @return {@link java.sql.Timestamp} object (current date)
 	 */
 	public static Timestamp getCurrentSQLTimestamp() {
@@ -1312,7 +1313,7 @@ public class DateUtil {
 
 	/**
 	 * get current timestamp
-	 * 
+	 *
 	 * @return String of current timestamp
 	 * @deprecated Use {@link #getCurrentTimestamp()}
 	 */
@@ -1323,7 +1324,7 @@ public class DateUtil {
 
 	/**
 	 * get the current timestamp
-	 * 
+	 *
 	 * @return String of current timestamp;
 	 */
 	public static String getCurrentTimestamp() {
@@ -1332,7 +1333,7 @@ public class DateUtil {
 
 	/**
 	 * replace the year part of date into the specific year
-	 * 
+	 *
 	 * @param date
 	 *            {@link java.util.Date} object to be changed
 	 * @param year
@@ -1354,7 +1355,7 @@ public class DateUtil {
 	/**
 	 * combine with parts of the specific date into {@link java.util.Date}
 	 * object
-	 * 
+	 *
 	 * @param year
 	 *            year part
 	 * @param month
@@ -1382,7 +1383,7 @@ public class DateUtil {
 	 * <p/>
 	 * ex) int actual = DateUtil.getLastDateOfMonthInt("2008-02-22"); // actual
 	 * : 29
-	 * 
+	 *
 	 * @param date
 	 *            date ( yyyy-MM-dd )
 	 * @return last day of month (int)
@@ -1403,7 +1404,7 @@ public class DateUtil {
 	 * year, false <br/>
 	 * boolean actual = DateUtil.isLastDateOfMonth("2008-02-29"); // Leap year,
 	 * true
-	 * 
+	 *
 	 * @param date
 	 *            date string(yyyy-MM-dd)
 	 * @return true if is the last day of the month
@@ -1437,7 +1438,7 @@ public class DateUtil {
 
 	/**
 	 * check if the date is a leap year
-	 * 
+	 *
 	 * @param date
 	 *            date string(yyyy-MM-dd)
 	 * @return true if it is a leap year
@@ -1450,7 +1451,7 @@ public class DateUtil {
 
 	/**
 	 * check if the specific year is a leap year
-	 * 
+	 *
 	 * @param year
 	 *            specific year (int)
 	 * @return true if it is a leap year
@@ -1460,7 +1461,7 @@ public class DateUtil {
 		return ((year % 4 == 0 && year % 100 != 0) || year % 400 == 0) ? true
 				: false;
 	}
-	
+
 	 /**
      * Method Desc : 사용자포멧 변환
      * @author EKW <kwjojo@crizen.com>
@@ -1472,7 +1473,7 @@ public class DateUtil {
      * @throws Exception
      */
     public static String getFormattedTime(String frForm, String toForm, String thisDate) throws Exception {
-   	 if(thisDate != null && !"".equals(thisDate) && frForm.length() == thisDate.length()) { 
+   	 if(thisDate != null && !"".equals(thisDate) && frForm.length() == thisDate.length()) {
    		 SimpleDateFormat frDateFormat = new SimpleDateFormat(frForm);
    		 SimpleDateFormat toDateFormat = new SimpleDateFormat(toForm);
    		 Date d = frDateFormat.parse(thisDate);
@@ -1486,13 +1487,13 @@ public class DateUtil {
 		String sFormat = format;
 		String sDate = date;
 		String returnValue = "";
-		
+
     	if ( "".equals(StringUtil.nullToString(sFormat)) ) {
     		sFormat = DATE_PATTERN_DASH;
     	}
-    	
+
     	sDate = StringUtil.nullToString(sDate);
-    	
+
     	if ( sDate == null || sDate.equals("") ) {
     		returnValue = "";
     	}
@@ -1504,18 +1505,18 @@ public class DateUtil {
     	}
     	else {
 	    	SimpleDateFormat formatter = new SimpleDateFormat(sFormat);
-	    	
+
 	    	String formatString = formatter.format(chkDate(sDate, DATE_PATTERN));
-	    	if (formatString == null || formatString == "") {		
+	    	if (formatString == null || formatString == "") {
 				formatString = sDate;
 			}
-	    	
+
 	    	returnValue = formatString;
     	}
-    	
+
     	return returnValue;
     }
-	
+
 	public static String formatDate(String date) {
 		String returnValue = "";
 		if(date != null && date != "") {
@@ -1523,18 +1524,18 @@ public class DateUtil {
 		}
 		return returnValue;
 	}
-	
+
 	public static String formatTime(String time, String format) {
 		String returnValue = "";
 		String sTime = time;
 		String sFormat = format;
-		
+
 		if ( "".equals(StringUtil.nullToString(sFormat)) ) {
 			sFormat = TIME_HMS_PATTERN_COLONE;
 		}
-		
+
 		sTime = StringUtil.nullToString(sTime);
-		
+
 		if ( sTime == null || sTime.equals("") ) {
 			returnValue = "";
 		}
@@ -1548,7 +1549,7 @@ public class DateUtil {
 		}
 		return returnValue;
 	}
-	
+
 	public static String formatTime(String time) {
 		String returnValue = "";
 		if(time != null && time != "") {
@@ -1560,7 +1561,7 @@ public class DateUtil {
 	private static Date chkDate(String inputDate, String format) {
     	String _date = null;
     	_date = inputDate;
-    	
+
     	if (_date == null) return null;
     	else {
     		_date = StringUtil.deleteAny(inputDate, '-');
@@ -1568,19 +1569,19 @@ public class DateUtil {
     		_date = StringUtil.deleteAny(_date, '.');
     		_date = StringUtil.deleteAny(_date, ':');
     	}
-    	
+
     	SimpleDateFormat formatter = new SimpleDateFormat(format, java.util.Locale.KOREA);
     	Date date = null;
-    	
+
     	try {
     		date = formatter.parse(_date);
     	}
     	catch ( ParseException e ) {
     		return null;
     	}
-    	
+
     	if ( !formatter.format(date).equals(_date) ) return null;
-    	
+
     	return date;
     }
 
@@ -1592,15 +1593,15 @@ public class DateUtil {
     public static Date convertDateTo(String inputDate) {
     	return convertDate(inputDate + "235959", "yyyyMMddHHmmss");
     }
-    
+
     public static Date convertDateTo(String inputDate, String inputTime) {
     	return convertDate(inputDate + inputTime, "yyyyMMddHHmmss");
     }
-    
+
 	public static Date convertDate(String inputDate, String format) {
     	Date date = null;
     	String sInputDate = inputDate;
-    	
+
     	if ( sInputDate == null ) return null;
     	else {
     		sInputDate = StringUtil.deleteAny(sInputDate, "-");
@@ -1608,7 +1609,7 @@ public class DateUtil {
     		sInputDate = StringUtil.deleteAny(sInputDate, ".");
     		sInputDate = StringUtil.deleteAny(sInputDate, ":");
     	}
-    	
+
     	try {
     		SimpleDateFormat formatter = new SimpleDateFormat(format, java.util.Locale.KOREA);
     		date = formatter.parse(sInputDate);
@@ -1620,7 +1621,7 @@ public class DateUtil {
     	}
     	return date;
     }
-	
+
 	 /**
  	 * @param hhmmss
  	 * @return
@@ -1628,7 +1629,7 @@ public class DateUtil {
  	 */
      public static String formatHhmmss(String hhmmss) {
      	if ( hhmmss == null || "".equals(hhmmss) ) return "";
-     	
+
  		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
  		return formatter.format(convertDateTo(getCurrentDate() + hhmmss, "yyyyMMddHHmmss"));
      }
@@ -1639,16 +1640,16 @@ public class DateUtil {
       * @param startDate
       * @param endDate
       * @return
-     * @throws ParseException 
+     * @throws ParseException
       */
      public static int getDiffDayCount(String startDate, String endDate) throws ParseException {
     	 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
     	 int returnValue = 0;
-    	 
+
     	 if(startDate != null && endDate != null && startDate != "" && endDate != "") {
     		 returnValue = (int) ((sdf.parse(endDate).getTime() - sdf.parse(startDate).getTime()) / 1000 / 60 / 60 / 24);
     	 }
-    	 
+
     	 return returnValue;
      }
 
@@ -1683,7 +1684,7 @@ public class DateUtil {
     	 }
     	 return returnValue;
      }
-     
+
 	public static int getManAge(String bgn) {
 		logger.debug(bgn);//bgn은 이미 1991011 4자리연도포함 성별까지 들어가있다
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
@@ -1701,26 +1702,26 @@ public class DateUtil {
 		}
 		return manAge;
 	}
-	
+
 	public static int getCntMonthFromCurDate(String startDt){
 		int returnValue = 0;
 		String curDate = DateUtil.getCurrentDateTime("yyyyMMdd");
-		
+
 		if(startDt != null && startDt != "" && curDate != null && curDate != "") {
 			returnValue = (NumberUtil.stringToInt(curDate.substring(0, 4)) * 12 + NumberUtil.stringToInt(curDate.substring(4, 6)))
 					- (NumberUtil.stringToInt(startDt.substring(0, 4)) * 12 + NumberUtil.stringToInt(startDt.substring(4, 6)));
 		}
 		return returnValue;
 	}
-	
+
 	public static int getCntMonth(String startDt, String curDate){
 		int returnValue = 0;
-		
+
 		if(startDt != null && startDt != "" && curDate != null && curDate != "") {
 			returnValue = (NumberUtil.stringToInt(curDate.substring(0, 4)) * 12 + NumberUtil.stringToInt(curDate.substring(4, 6)))
 			- (NumberUtil.stringToInt(startDt.substring(0, 4)) * 12 + NumberUtil.stringToInt(startDt.substring(4, 6)));
 		}
-		
+
 		return returnValue;
 	}
 	//현재 월 가져오기
@@ -1728,7 +1729,7 @@ public class DateUtil {
 		Calendar now = Calendar.getInstance();
 		int monthN  = now.get(Calendar.MONTH)+1;
 		String MON  = (monthN<10)? "0"+Integer.toString(monthN):Integer.toString(monthN) ;
-	
+
 		return MON;
 	}
 	public static String getTime(){ //년-월-일 시:분:초
@@ -1737,19 +1738,19 @@ public class DateUtil {
 	}
 	public static String getLastMonthDate() {
 		Calendar cal = new GregorianCalendar();
-	
+
 		String sDay = getTime().substring(0,8);
 		String sMM = "1";
-	
+
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
 		Date d = df.parse(sDay, new ParsePosition(0));
-	
+
 		cal.setTime(d);
 		cal.add(Calendar.MONTH, -Integer.parseInt(sMM));
-	
+
 		return df.format(cal.getTime());
 	}
-	
+
 	/**
 	 * 시간을 더해 준다
 	 * @param date 더해질 시간
@@ -1765,29 +1766,29 @@ public class DateUtil {
 		LocalDateTime subtracted = dt.withFieldAdded(DurationFieldType.hours(), hour);
 		return fmt.print(subtracted);
 	}
-	
+
 	//6개월전 cntMonth = 6 ==> 6개월 후 = -6
 		public static String getAddMonth(int cntMonth) {
 			Calendar cal = new GregorianCalendar();
-			
+
 			String sDay = getTime().substring(0,10);
 //			String sMM = "1";
-			
+
 			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
 			Date d = df.parse(sDay, new ParsePosition(0));
-			
+
 			cal.setTime(d);
 			cal.add(Calendar.MONTH, -(cntMonth));
-			
+
 			return df.format(cal.getTime());
 		}
-		
+
 		public static String getCurrentYMD(){
 			Date d =new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 			return sdf.format(d);
 		}
-		
+
 		public static String getCurrentHIS(){
 			Date d =new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("HHmmss");

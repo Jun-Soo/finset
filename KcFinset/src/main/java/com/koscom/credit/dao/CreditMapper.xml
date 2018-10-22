@@ -75,6 +75,68 @@
 			) TB
 	</select>
 
+	<select id="getCreditOverdueSumAmt" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+	    /* com.koscom.credit.dao.CreditMapper.getCreditOverdueSumAmt */
+	 	SELECT
+			NVL( TB.KOI_SUM_AMT, 0 ) AS KOI_SUM_AMT,
+			NVL( TB.KOSI_SUM_AMT, 0 ) AS KOSI_SUM_AMT,
+			NVL( TB.KODI_SUM_AMT, 0 ) AS KODI_SUM_AMT,
+			NVL( TB.KOPI_SUM_AMT, 0 ) AS KOPI_SUM_AMT,
+			NVL( TB.KFDI_SUM_AMT, 0 ) AS KFDI_SUM_AMT
+		FROM
+			(
+				SELECT
+					(
+						SELECT
+							SUM( AMT_REMAIN ) AS SUM_AMT_REMAIN
+						FROM
+							KCB_OVERDUE_INFO
+						WHERE
+							DT_DELETE IS NULL
+							AND NO_PERSON = P.NO_PERSON
+					) AS KOI_SUM_AMT,
+					(
+						SELECT
+							SUM( AMT_STEAD_PAY ) AS SUM_AMT_STEAD_PAY
+						FROM
+							KCB_OVERDUE_STEADPAY_INFO
+						WHERE
+							DT_DELETE IS NULL
+							AND NO_PERSON = P.NO_PERSON
+					) AS KOSI_SUM_AMT,
+					(
+						SELECT
+							SUM( AMT_DELAY ) AS SUM_AMT_DELAY
+						FROM
+							KCB_OVERDUE_DEFAULT_INFO
+						WHERE
+							DT_DELETE IS NULL
+							AND NO_PERSON = P.NO_PERSON
+					) AS KODI_SUM_AMT,
+					(
+						SELECT
+							SUM( AMT_REGIST ) AS SUM_AMT_REGIST
+						FROM
+							KCB_OVERDUE_PUBLIC_INFO
+						WHERE
+							DT_DELETE IS NULL
+							AND NO_PERSON = P.NO_PERSON
+					) AS KOPI_SUM_AMT,
+					(
+						SELECT
+							SUM( AMT_DELAY ) AS SUM_AMT_DELAY
+						FROM
+							KCB_FIN_DISORDER_INFO
+						WHERE
+							DT_DELETE IS NULL
+							AND NO_PERSON = P.NO_PERSON
+					) AS KFDI_SUM_AMT
+				FROM
+					PERSON_INFO P
+				WHERE P.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			) TB
+	</select>
+
 	<select id="getCreditMainCntInfo" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
 	    /* com.koscom.credit.dao.CreditMapper.getCreditMainCntInfo */
 	    SELECT
@@ -94,6 +156,32 @@
 			KCB_CREDIT_INFO A
 		WHERE
 			A.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</select>
+
+	<select id="getCreditMainGradeChangeInfo" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+		/* com.koscom.credit.dao.CreditMapper.getCreditMainGradeChangeInfo */
+		SELECT
+			TB.DT_INFO,
+			TB.CD_FC,
+			TB.NM_FC,
+			TB.CHANGE_CONTENTS,
+			TB.COLLECTOR
+		FROM (
+			SELECT
+				DECODE(SUBSTR(TO_CHAR(DT_INFO,'MM'),1,1),'0', SUBSTR(TO_CHAR(DT_INFO,'MM'),2,2), TO_CHAR(DT_INFO,'MM')) || '월 '
+				|| TO_CHAR(DT_INFO,'DD') || '일' AS DT_INFO,
+				CD_FC,
+				NM_FC,
+				CHANGE_CONTENTS,
+				COLLECTOR
+			FROM
+				CREDIT_CHANGE_LIST
+			WHERE
+				NO_PERSON = #{noPerson, jdbcType=VARCHAR}
+			ORDER BY
+				DT_INFO DESC
+		) TB
+		WHERE ROWNUM = 1
 	</select>
 
 	<select id="getCreditDetailGradeChartList" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
@@ -165,7 +253,7 @@
 	<select id="getCreditDetailGradeChangeList" parameterType="com.koscom.domain.CreditInfo" resultType="com.koscom.domain.CreditInfo">
 		/* com.koscom.credit.dao.CreditMapper.getCreditDetailGradeChangeList */
 		SELECT
-			TO_CHAR(DT_INFO,'YYYY-MM-DD') AS DT_INFO,
+			TO_CHAR(DT_INFO,'YYYY.MM.DD') AS DT_INFO,
 			CD_FC,
 			NM_FC,
 			CHANGE_CONTENTS,
@@ -210,6 +298,40 @@
 				, AMT_GUARANTEE, LIST_GUARANTEE <!-- 연대보증현황 -->
 		FROM KCB_CREDIT_INFO
 		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</select>
+
+	<select id="getCreditDetailDEBTSum" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+		/* com.koscom.credit.dao.CreditMapper.getCreditDetailDEBTSum */
+	    SELECT
+			COUNT( NO_MANAGE_INFO ) AS DEBT_CNT,
+			SUM( AMT_REMAIN ) AS SUM_AMT_REMAIN,
+			SUM( AMT_CONTRACT ) AS SUM_AMT_CONTRACT
+		FROM
+			DEBT_PERSONAL_INFO
+		WHERE YMD_CANCEL IS NULL
+			AND DISPLAY_YN = 'Y' /*부채 삭제 처리 추가 20180619 김휘경*/
+			AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</select>
+	<select id="getCreditDetailDEBTList" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+		/* com.koscom.credit.dao.CreditMapper.getCreditDetailDEBTList */
+	    SELECT
+			CD_FC,
+			(SELECT nm_fc FROM fc_info WHERE CD_FC = A.CD_FC) AS NM_FC,
+			TO_CHAR(TO_DATE(A.YMD_LOAN), 'YYYY.MM.DD') AS YMD_LOAN,
+			A.AMT_REMAIN,
+			A.AMT_CONTRACT,
+			A.YN_CREDIT,
+			A.YN_LOAN,
+			CASE WHEN YN_CREDIT='Y' THEN '01'
+				 WHEN YN_LOAN='Y' 	THEN '02'
+			END CD_DEBT
+		FROM
+			DEBT_PERSONAL_INFO A
+		WHERE A.YMD_CANCEL IS NULL
+			AND A.DISPLAY_YN = 'Y' /*부채 삭제 처리 추가 20180619 김휘경*/
+			AND A.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		ORDER BY
+			TO_NUMBER(A.AMT_CONTRACT) DESC, A.YMD_LOAN DESC
 	</select>
 
 	<select id="getCreditDetailDEBTCreditSum" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
@@ -308,7 +430,7 @@
 		   AND TO_CHAR(dt_frt,'YYYYMMDD') = TO_CHAR(SYSDATE,'YYYYMMDD')
 		   AND NM_IF = '600420' AND (NM_IF_SUB = '210' OR NM_IF_SUB = '230')
 	</update>
-	
+
 	<update id="saveKcbCreditList" parameterType="com.koscom.kcb.model.CrawlingVO">
 	    /* com.koscom.credit.dao.CreditMapper.saveKcbCreditList */
 		MERGE INTO KCB_CREDIT_LIST
@@ -350,7 +472,7 @@
 				,SYSDATE
 			)
 	</update>
-	
+
 	<update id="saveKcbCreditHistList" parameterType="com.koscom.kcb.model.CrawlingVO">
 	    /* com.koscom.credit.dao.CreditMapper.saveKcbCreditHistList */
 		MERGE INTO KCB_CREDIT_LIST_HIST
@@ -394,7 +516,7 @@
 	    /* com.koscom.credit.dao.CreditMapper.selectMaxCreditChange */
 		SELECT TO_CHAR(MAX(DT_INFO), 'YYYYMMDD') FROM CREDIT_CHANGE_LIST WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</select>
-	
+
 	<insert id="saveKcbCreditChangeInfo" parameterType="com.koscom.credit.model.CreditDtlVO">
 		/* com.koscom.credit.dao.CreditMapper.saveKcbCreditChangeInfo */
 		INSERT
@@ -424,12 +546,12 @@
 				,#{no_person,    	jdbcType=VARCHAR}
 			)
 	</insert>
-	
+
 	<select id="selectMaxCreditInquiry" parameterType="java.lang.String" resultType="java.lang.String">
 	    /* com.koscom.credit.dao.CreditMapper.selectMaxCreditInquiry */
 		SELECT TO_CHAR(MAX(DT_INFO), 'YYYYMMDD') FROM CREDIT_INQUIRY_LIST WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</select>
-	
+
 	<update id="saveKcbCreditInquiryInfo" parameterType="com.koscom.credit.model.CreditDtlVO">
 		/* com.koscom.credit.dao.CreditMapper.saveKcbCreditInquiryInfo */
 		INSERT
@@ -455,14 +577,14 @@
 				,#{no_person,    	jdbcType=VARCHAR}
 			)
 	</update>
-	
+
 	<update id="updateKcbCardInfoToday" parameterType="com.koscom.kcb.model.KcbCardInfo">
-		UPDATE KCB_CARD_INFO 
+		UPDATE KCB_CARD_INFO
 			SET YMD_CANCEL = #{ymd_cancel, jdbcType=VARCHAR}
 		WHERE
 			NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</update>
-	
+
 	<update id="saveKcbCardInfo" parameterType="com.koscom.kcb.model.KcbCardInfo">
 	    /* com.koscom.credit.dao.CreditMapper.saveKcbCardInfo */
 		MERGE INTO KCB_CARD_INFO
@@ -522,7 +644,7 @@
 				,SYSDATE
 			)
 	</update>
-	
+
 	<update id="saveKcbCardDtlList" parameterType="com.koscom.kcb.model.KcbCardDtlList">
 	    /* com.koscom.credit.dao.CreditMapper.saveKcbCardDtlList */
 		MERGE INTO KCB_CARD_DTL_LIST
@@ -578,7 +700,7 @@
 				,SYSDATE
 			)
 	</update>
-	
+
 	<update id="updateDtDeleteOverdueInfo" parameterType="java.lang.String">
 		/* com.koscom.credit.dao.CreditMapper.updateDtDeleteOverdueInfo */
 		UPDATE
@@ -588,7 +710,7 @@
 		WHERE
 			NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</update>
-	
+
 	<update id="saveKcbOverdueInfo" parameterType="com.koscom.kcb.model.KcbOverdueInfo">
 	    /* com.koscom.credit.dao.CreditMapper.saveKcbOverdueInfo */
 		MERGE INTO KCB_OVERDUE_INFO
@@ -629,7 +751,7 @@
 				,SYSDATE
 			)
 	</update>
-	
+
 	<update id="updateDtDeleteOverdueSteadpayInfo" parameterType="java.lang.String">
 		/* com.koscom.credit.dao.CreditMapper.updateDtDeleteOverdueInfo */
 		UPDATE
@@ -639,7 +761,7 @@
 		WHERE
 			NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</update>
-	
+
 	<update id="saveKcbOverdueSteadpayInfo" parameterType="com.koscom.kcb.model.KcbOverdueSteadpayInfo">
 	    /* com.koscom.credit.dao.CreditMapper.saveKcbOverdueSteadpayInfo */
 		MERGE INTO KCB_OVERDUE_STEADPAY_INFO
@@ -680,7 +802,7 @@
 				,SYSDATE
 			)
 	</update>
-	
+
 	<update id="updateDtDeleteOverdueDefaultInfo" parameterType="java.lang.String">
 		/* com.koscom.credit.dao.CreditMapper.updateDtDeleteOverdueInfo */
 		UPDATE
@@ -690,7 +812,7 @@
 		WHERE
 			NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</update>
-	
+
 	<update id="saveKcbOverdueDefaultInfo" parameterType="com.koscom.kcb.model.KcbOverdueDefaultInfo">
 	    /* com.koscom.credit.dao.CreditMapper.saveKcbOverdueDefaultInfo */
 		MERGE INTO KCB_OVERDUE_DEFAULT_INFO
@@ -737,7 +859,7 @@
 				,SYSDATE
 			)
 	</update>
-	
+
 	<update id="updateDtDeleteOverduePublicInfo" parameterType="java.lang.String">
 		/* com.koscom.credit.dao.CreditMapper.updateDtDeleteOverdueInfo */
 		UPDATE
@@ -747,7 +869,7 @@
 		WHERE
 			NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</update>
-	
+
 	<update id="saveKcbOverduePublicInfo" parameterType="com.koscom.kcb.model.KcbOverduePublicInfo">
 	    /* com.koscom.credit.dao.CreditMapper.saveKcbOverduePublicInfo */
 		MERGE INTO KCB_OVERDUE_PUBLIC_INFO
@@ -791,19 +913,19 @@
 				,SYSDATE
 			)
 	</update>
-	
+
 	<update id="insertCrawlingLog" parameterType="java.util.HashMap">
 		INSERT INTO CREDIT_CRAWLING_LOG
 		(
-			 NO_PERSON 
-			,PROC_YMD 
-			,CRAWLING_STEP 
-			,LOG_CONTENT 
+			 NO_PERSON
+			,PROC_YMD
+			,CRAWLING_STEP
+			,LOG_CONTENT
 			,LOG_HTML
 			,ID_FRT
 			,DT_FRT
 		)VALUES(
-			 #{no_person, jdbcType=VARCHAR} 
+			 #{no_person, jdbcType=VARCHAR}
 			,TO_CHAR(SYSDATE,'YYYYMMDD')
 			,#{step, jdbcType=VARCHAR}
 			,#{log, jdbcType=VARCHAR}
@@ -812,7 +934,7 @@
 			,SYSDATE
 		)
 	</update>
-	
+
 	<update id="updateDtDeleteGuaranteeInfo" parameterType="java.lang.String">
 		/* com.koscom.credit.dao.CreditMapper.updateDtDeleteOverdueInfo */
 		UPDATE
@@ -822,14 +944,14 @@
 		WHERE
 			NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</update>
-	
+
 	<update id="saveKcbGuaranteeInfo" parameterType="com.koscom.kcb.model.KcbGuaranteeInfo">
 	    /* com.koscom.credit.dao.CreditMapper.saveKcbGuaranteeInfo */
 		MERGE INTO KCB_GUARANTEE_INFO
 		  USING DUAL
 		  ON (		NO_PERSON 		= #{no_person,			jdbcType=VARCHAR}
 		  		AND CD_FC			= #{cd_fc,				jdbcType=VARCHAR}
-		  		AND CD_GUARANTEE	= #{cd_guarantee,		jdbcType=VARCHAR} 
+		  		AND CD_GUARANTEE	= #{cd_guarantee,		jdbcType=VARCHAR}
 		  		AND DT_GUAR_AGREE	= #{dt_guar_agree,		jdbcType=VARCHAR})
 			WHEN MATCHED THEN
 		     UPDATE
@@ -863,7 +985,7 @@
 				,SYSDATE
 			)
 	</update>
-	
+
 	<select id="selectKcbCreditInfo" parameterType="java.lang.String" resultType="int">
 	    /* com.koscom.credit.dao.CreditMapper.selectKcbCreditInfo */
 		SELECT COUNT(NO_PERSON) FROM KCB_CREDIT_INFO WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
@@ -976,7 +1098,7 @@
                 ,SYSDATE
                )
 	</insert>
-	
+
 	<update id="saveKcbAddrInfo" parameterType="com.koscom.kcb.model.KcbAddrInfo">
 	    /* com.koscom.credit.dao.CreditMapper.saveKcbAddrInfo */
 		MERGE INTO KCB_ADDR_INFO
@@ -1020,7 +1142,7 @@
 				,SYSDATE
 			)
 	</update>
-	
+
 	<update id="saveKcbJobInfo" parameterType="com.koscom.kcb.model.KcbJobInfo">
 	    /* com.koscom.credit.dao.CreditMapper.saveKcbJobInfo */
 		MERGE INTO KCB_JOB_INFO
@@ -1055,7 +1177,7 @@
 				,SYSDATE
 			)
 	</update>
-	
+
 	<update id="insertPersonEtmIncomeInfo" parameterType="com.koscom.person.model.PersonEtmIncomeInfo">
 		/* com.koscom.credit.dao.CreditMapper.insertPersonEtmIncomeInfo */
 	    MERGE INTO PERSON_ETM_INCOME_INFO
@@ -1100,7 +1222,7 @@
 			     SYSDATE
 			)
 	</update>
-	
+
 	<update id="saveKcbContactInfo" parameterType="com.koscom.kcb.model.KcbContactInfo">
 	    /* com.koscom.credit.dao.CreditMapper.saveKcbContactInfo */
 		MERGE INTO KCB_CONTACT_INFO
@@ -1135,7 +1257,7 @@
 				,SYSDATE
 			)
 	</update>
-	
+
 	<select id="getKcbJoinInfo" resultMap="result_lob_map" parameterType="map">
 		/* com.koscom.credit.dao.CreditMapper.getKcbInfoCLOB */
 	    SELECT SEQ, DT_FRT, MSG_RESPONSE FROM (
@@ -1150,7 +1272,7 @@
 		) RESULT
 		WHERE ROWNUM = 1
 	</select>
-	
+
 	<select id="getCreditInfoByNmIf" parameterType="com.koscom.domain.CreditInfo" resultType="com.koscom.domain.CreditInfo">
 		SELECT	SEQ
 				,NO_PERSON

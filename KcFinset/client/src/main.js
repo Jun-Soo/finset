@@ -17,15 +17,12 @@ import VueModal from 'vue2-modal'
 
 import 'vue2-toast/lib/toast.css'
 
-import './assets/css/owl.carousel.css'
-import './assets/css/owl.theme.default.css'
 import './assets/css/main.css'
 import './assets/css/pop.css'
 import './assets/css/reset.css'
 import './assets/css/style.css'
 
 import './assets/js/jquery.js'
-import './assets/js/owl.carousel.js'
 import './assets/js/jockey.js'
 import './comm/message.js'
 

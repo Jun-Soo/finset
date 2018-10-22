@@ -26,13 +26,4 @@ $(function () {
     }
     $(this).toggleClass('on')
   })
-
-  var owl = $('.owl-carousel')
-
-  owl.owlCarousel({
-    items: 1,
-    loop: true,
-    margin: 21,
-    padding: 21
-  })
 })

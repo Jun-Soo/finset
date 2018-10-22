@@ -1,15 +1,6 @@
 <template>
   <div class="main">
     <section>
-        <div class="top main">
-            <ul>
-                <li><a href="index.html">MY</a></li>
-                <li><a href="index_credit.html">신용</a></li>
-                <li><a href="index_dept.html">부채</a></li>
-                <li class="on"><a href="index_spend.html">지출</a></li>
-                <li><a href="index_assets.html">자산</a></li>
-            </ul>
-        </div>
         <div class="spend-top">
             <div class="date-wrap">
                 <button class="prev" @click="setPrevMM"></button>
@@ -28,16 +19,7 @@
                 </div>
             </div>
         </div>
-        <swiper direction="horizontal"
-        :mousewheel-control="true"
-        :performance-mode="false"
-        :pagination-visible="false"
-        :pagination-clickable="false"
-        :loop="true"
-        @slide-change-start="onSlideChangeStart"
-        @slide-change-end="onSlideChangeEnd"
-				class="banner-wrap"
-				>
+        <div class="banner-wrap owl-carousel">
             <div class="item">
                 <a href="#">
                     <div class="banner">
@@ -77,7 +59,7 @@
                     </div>
                 </a>
             </div>
-        </swiper>
+        </div>
         <div class="tab">
             <div class="wrap col3">
                 <a href="#" id="00" :class="{'on':curTab === '00'}" @click="clickTab">전체</a>
@@ -99,6 +81,7 @@
               </div>
             </div>
           </div>
+          <button class="btn-spend-add"></button>
         </div>
     </section>
   </div>
@@ -124,9 +107,13 @@ export default {
   components: {},
   // computed () {
   // },
-  beforeCreate() {},
+  beforeCreate() {
+    this.$store.state.header.type = "main";
+    this.$store.state.header.active = "consume";
+  },
   created() {
     this.ym = this.formatHead(this.getYm(this.standardDt));
+    this.listConsumeShareInfo();
     this.listConsumeInfo();
   },
   beforeMount() {},
@@ -136,11 +123,24 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    listConsumeInfo() {
+    listConsumeShareInfo: function() {
+      var _this = this;
+      this.$http
+        .get("/m/consume/listConsumeSharePersonInfo.json",{params:{}})
+        .then(function(response) {
+          var list = response.data.listConsumeSharePersonInfo;
+          console.log(list);
+        });
+    },
+    listConsumeInfo: function() {
       var _this = this;
       this.$http
         .get("/m/consume/listConsumeInfo.json", {
-          params: { ym: _this.ym.replace(".", ""), type_in_out: _this.curTab }
+          params: {
+            ym: _this.ym.replace(".", ""),
+            type_in_out: _this.curTab,
+            no_person_list: ["P000000134", "P000000109"]
+          }
         })
         .then(function(response) {
           var list = response.data.listConsumeInfo;
@@ -150,42 +150,42 @@ export default {
           _this.consume = response.data.consume;
         });
     },
-    formatHead(dateStr) {
+    formatHead: function(dateStr) {
       return dateStr.substr(0, 4) + "." + dateStr.substr(4, 6);
     },
-    getYm(date) {
+    getYm: function(date) {
       return (
         date.getFullYear() +
         ((date.getMonth() + 1 + "").length == 1 ? "0" : "") +
         (date.getMonth() + 1)
       );
     },
-    getTodayYm() {
+    getTodayYm: function() {
       return this.getYm(new Date());
     },
-    setPrevMM() {
+    setPrevMM: function() {
       this.standardDt.setMonth(this.standardDt.getMonth() - 1);
       this.ym = this.formatHead(this.getYm(this.standardDt));
       this.listConsumeInfo();
     },
-    setNextMM() {
+    setNextMM: function() {
       this.standardDt.setMonth(this.standardDt.getMonth() + 1);
       this.ym = this.formatHead(this.getYm(this.standardDt));
       this.listConsumeInfo();
     },
-    onSlideChangeStart() {
+    onSlideChangeStart: function() {
       console.log("slide-start");
     },
-    onSlideChangeEnd() {
+    onSlideChangeEnd: function() {
       console.log("slide-end");
     },
-    formatNumber(number, isMinus, isPlus) {
+    formatNumber: function(number, isMinus, isPlus) {
       return Common.formatNumber(number, isMinus, isPlus);
     },
-    formatDate(date, pattern) {
+    formatDate: function(date, pattern) {
       return Common.formatDate(date, pattern);
     },
-    formatMeansConsume(means_consume) {
+    formatMeansConsume: function(means_consume) {
       switch (means_consume) {
         case "01":
           return "카드";
@@ -204,11 +204,11 @@ export default {
           break;
       }
     },
-    clickTab(tab) {
+    clickTab: function(tab) {
       this.curTab = tab.srcElement.id;
       this.listConsumeInfo();
     },
-    chkType(type) {
+    chkType: function(type) {
       if (type === "01") {
         return "blue";
       } else {

@@ -3,6 +3,7 @@ package com.koscom.consume;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.koscom.consume.model.ConsumeForm;
 import com.koscom.consume.model.ConsumeGoalInfoVO;
@@ -62,15 +64,28 @@ public class ConsumeController {
     /**
      * VUE
      * @param model
+     * @param session
+     * @return
+     */
+    @RequestMapping("/listConsumeSharePersonInfo.json")
+    public String listConsumeSharePersonInfo(Model model, HttpSession session) {
+    	logger.debug("listConsumeSharePersonInfo");
+    	String no_person = (String) session.getAttribute("no_person");
+    	model.addAttribute("listConsumeSharePersonInfo",consumeManager.listConsumeSharePersonInfo(no_person));
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE
+     * @param model
      * @param ym
      * @param session
      * @return
      * @throws FinsetException
      */
     @RequestMapping("/listConsumeInfo.json")
-    public String listConsumeInfo(Model model, String ym, String type_in_out, HttpSession session) throws FinsetException {
+    public String listConsumeInfo(Model model, String ym, String type_in_out, @RequestParam(value="no_person_list[]") List<String> no_person_list,HttpSession session, HttpServletRequest request) throws FinsetException {
     	logger.debug("listConsumeInfo");
-    	logger.debug(type_in_out);
     	String no_person = (String) session.getAttribute("no_person");
     	
     	//DateUtil에서 yyyymmdd를 요구
@@ -79,6 +94,7 @@ public class ConsumeController {
     	
     	ConsumeForm consumeForm = new ConsumeForm();
     	consumeForm.setNo_person(no_person);
+    	consumeForm.setNo_person_list(no_person_list);
     	consumeForm.setDt_from(dt_from);
     	consumeForm.setDt_to(dt_to);
     	consumeForm.setType_in_out("01");	//수입

@@ -9,9 +9,17 @@ import com.koscom.consume.model.ConsumeVO;
 import com.koscom.consume.model.PersonConsumeClassVO;
 import com.koscom.consume.model.PersonSetInfoVO;
 import com.koscom.consume.model.PersonTransDetailVO;
+import com.koscom.domain.PersonInfo;
 
 
 public interface ConsumeMapper {
+	/**
+	 * 공유된 사용자와 본인 정보를 조회
+	 * @param no_person
+	 * @return
+	 */
+	List<PersonInfo> listConsumeSharePersonInfo(String no_person);
+	
 	/**
 	 * 조회 기간 전체의 수입이나 지출의 합을 조회
 	 * @param consumeForm

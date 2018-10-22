@@ -1,62 +1,108 @@
 <template>
     <div>
       <section>
-           <div class="top main">
-              <ul>
-                  <li><a href="index.html">MY</a></li>
-                  <li><a href="index_credit.html">신용</a></li>
-                  <li class="on"><a href="index_dept.html">부채</a></li>
-                  <li><a href="index_spend.html">지출</a></li>
-                  <li><a href="index_assets.html">자산</a></li>
-              </ul>
+					<div class="top main">
+						<ul>
+							<li><a href="index.html">MY</a></li>
+							<li><a href="index_credit.html">신용</a></li>
+							<li class="on"><a href="index_dept.html">부채</a></li>
+							<li><a href="index_spend.html">지출</a></li>
+							<li><a href="index_assets.html">자산</a></li>
+						</ul>
           </div>
           <div class="dept-top">
-              <div class="balance">
-                  <p class="key">대출잔액</p>
-                  <p class="value">{{formatNumber(debtSummaryData.amt_remain * 10000)}}<em>원</em></p>
-              </div>
-              <!-- <div class="graph"><img src="../../assets/images/main/dept_graph.png" width="100%" alt=""/></div> -->
+            <div class="wrap">
+							<div class="balance">
+								<p class="key">대출잔액</p>
+								<p class="value">{{formatNumber(debtSummaryData.amt_remain * 10000)}}<em>원</em></p>
+							</div>
+							<!-- <div class="graph"><img src="../../assets/images/main/dept_graph.png" width="100%" alt=""/></div> -->
 							<div class="graph"><chartjs-line :labels="mylabels" :datasets="mydatasets" :option="myoption" :bind="true"></chartjs-line></div>
 							<div class="flex2 bar-graph">
-                  <div class="item">
-                      <p class="key">상환율</p>
-                      <div class="text-wrap">
-                          <p class="big">{{debtSummaryData.rate_amt_contract}}<em>%</em></p>
-                          <p class="small">{{formatNumber(debtSummaryData.amt_contract)}}<em>원</em></p>
-                      </div>
-                      <div class="bar">
-													<p class="active" :style="debtSummaryData.repayStyle"></p>
-                      </div>
-                  </div>
-                  <div class="item">
-                      <p class="key">상환능력<em>(소득대비)</em></p>
-                      <div class="text-wrap">
-                          <p class="big">{{calDsr(debtSummaryData.cur_mon_mid_rpy, debtSummaryData.amt_etm_income)}}<em>%</em></p>
-                          <p class="small">{{formatNumber(debtSummaryData.amt_etm_income * 10000)}}<em>원</em></p>
-                      </div>
-                      <div class="bar">
-                          <p class="active" :style="debtSummaryData.dsrStyle"></p>
-                      </div>
-                  </div>
-              </div>
+								<div class="item">
+									<p class="key">상환율</p>
+									<div class="text-wrap">
+										<p class="big">{{debtSummaryData.rate_amt_contract}}<em>%</em></p>
+										<p class="small">{{formatNumber(debtSummaryData.amt_contract)}}<em>원</em></p>
+									</div>
+									<div class="bar">
+										<p class="active" :style="debtSummaryData.repayStyle"></p>
+									</div>
+								</div>
+								<div class="item">
+									<p class="key">상환능력<em>(소득대비)</em></p>
+									<div class="text-wrap">
+										<p class="big">{{calDsr(debtSummaryData.cur_mon_mid_rpy, debtSummaryData.amt_etm_income)}}<em>%</em></p>
+										<p class="small">{{formatNumber(debtSummaryData.amt_etm_income * 10000)}}<em>원</em></p>
+									</div>
+									<div class="bar">
+										<p class="active" :style="debtSummaryData.dsrStyle"></p>
+									</div>
+								</div>
+							</div>
+						</div>
           </div>
-          <swiper direction="horizontal"
+          <!-- <swiper direction="horizontal"
           :mousewheel-control="true"
           :performance-mode="false"
           :pagination-visible="false"
           :pagination-clickable="false"
           :loop="true"
+					class="banner-wrap"
           >
-              <div class="item">
-                  <a href="#"><img src="../../assets/images/main/dept_banner1.png" alt=""/></a>
-              </div>
-              <div class="item">
-                  <a href="#"><img src="../../assets/images/main/dept_banner1.png" alt=""/></a>
-              </div>
-              <div class="item">
-                  <a href="#"><img src="../../assets/images/main/dept_banner1.png" alt=""/></a>
-              </div>
-          </swiper>
+						<div class="item">
+							<a href="#"><img src="../../assets/images/main/dept_banner1.png" alt=""/></a>
+						</div>
+						<div class="item">
+							<a href="#"><img src="../../assets/images/main/dept_banner1.png" alt=""/></a>
+						</div>
+						<div class="item">
+							<a href="#"><img src="../../assets/images/main/dept_banner1.png" alt=""/></a>
+						</div>
+          </swiper> -->
+
+        <div class="banner-wrap owl-carousel">
+            <div class="item">
+                <a href="#">
+                    <div class="banner">
+                        <div class="left">
+                            <p class="key">우리가족 가계부</p>
+                            <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                        </div>
+                        <div class="right">
+                            <img src="../../assets/images/main/banner_ico.png" alt=""/>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="item">
+                <a href="#">
+                    <div class="banner">
+                        <div class="left">
+                            <p class="key">우리가족 가계부</p>
+                            <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                        </div>
+                        <div class="right">
+                            <img src="../../assets/images/main/banner_ico.png" alt=""/>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            <div class="item">
+                <a href="#">
+                    <div class="banner">
+                        <div class="left">
+                            <p class="key">우리가족 가계부</p>
+                            <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                        </div>
+                        <div class="right">
+                            <img src="../../assets/images/main/banner_ico.png" alt=""/>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+
 
 					<div class="list01 dept-list">
 						<div class="item" v-for="vo in debtListData" :key="vo.no_manage_info">
@@ -88,11 +134,8 @@
 								<a href="#" class="solid">부채등록</a>
 						</div>
           </div>
-          
       </section>
     </div>
-
-    
 </template>
 
 <script>
@@ -161,7 +204,7 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    listDebtPg() {
+    listDebtPg: function() {
       var _this = this;
       this.$http.get("/m/debt/listDebtPg.json").then(function(response) {
         var data = response.data.debtListData;
@@ -173,7 +216,7 @@ export default {
         _this.debtListData = data;
       });
     },
-    getDebtSummary() {
+    getDebtSummary: function() {
       var _this = this;
       this.$http.get("/m/debt/getDebtSummary.json").then(function(response) {
         var data = response.data.debtSummaryData;
@@ -189,10 +232,10 @@ export default {
         _this.$set(_this.mydatasets[0], "data", response.data.dataList);
       });
     },
-    formatNumber(number) {
+    formatNumber: function(number) {
       return Common.formatNumber(number);
     },
-    calDsr(repay, income) {
+    calDsr: function(repay, income) {
       if (repay == "-" || income == "-") {
         return 0;
       } else {

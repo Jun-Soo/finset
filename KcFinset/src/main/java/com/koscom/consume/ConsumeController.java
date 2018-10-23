@@ -19,7 +19,6 @@ import com.koscom.consume.model.ConsumeGoalInfoVO;
 import com.koscom.consume.model.ConsumeVO;
 import com.koscom.consume.model.PersonSetInfoVO;
 import com.koscom.consume.service.ConsumeManager;
-import com.koscom.util.DateUtil;
 import com.koscom.util.FinsetException;
 
 @Controller
@@ -36,16 +35,16 @@ public class ConsumeController {
     	
     	logger.debug("frameConsumeList");
     	String no_person = (String) session.getAttribute("no_person");
-    	String ym = DateUtil.getCurrentYMD().substring(0, 6);
+//    	String ym = DateUtil.getCurrentYMD().substring(0, 6);
     	
     	//DateUtil에서 yyyymmdd를 요구
-    	String dt_from = DateUtil.getFirstDateOfMonth(ym+"01");
-    	String dt_to = DateUtil.getLastDateOfMonth(ym+"01");
+//    	String dt_from = DateUtil.getFirstDateOfMonth(ym+"01");
+//    	String dt_to = DateUtil.getLastDateOfMonth(ym+"01");
     	
     	ConsumeForm consumeForm = new ConsumeForm();
     	consumeForm.setNo_person(no_person);
-    	consumeForm.setDt_from(dt_from);
-    	consumeForm.setDt_to(dt_to);
+//    	consumeForm.setDt_from(dt_from);
+//    	consumeForm.setDt_to(dt_to);
     	consumeForm.setType_in_out("01");	//수입
     	model.addAttribute("income",consumeManager.getConsumeInfoAmt(consumeForm));
     	
@@ -87,16 +86,13 @@ public class ConsumeController {
     public String listConsumeInfo(Model model, String ym, String type_in_out, @RequestParam(value="no_person_list[]") List<String> no_person_list,HttpSession session, HttpServletRequest request) throws FinsetException {
     	logger.debug("listConsumeInfo");
     	String no_person = (String) session.getAttribute("no_person");
-    	
-    	//DateUtil에서 yyyymmdd를 요구
-    	String dt_from = DateUtil.getFirstDateOfMonth(ym+"01");
-    	String dt_to = DateUtil.getLastDateOfMonth(ym+"01");
-    	
+
     	ConsumeForm consumeForm = new ConsumeForm();
     	consumeForm.setNo_person(no_person);
     	consumeForm.setNo_person_list(no_person_list);
-    	consumeForm.setDt_from(dt_from);
-    	consumeForm.setDt_to(dt_to);
+    	consumeForm.setYm_trd(ym);
+//    	consumeForm.setDt_from(dt_from);
+//    	consumeForm.setDt_to(dt_to);
     	consumeForm.setType_in_out("01");	//수입
     	model.addAttribute("income",consumeManager.getConsumeInfoAmt(consumeForm));
     	
@@ -142,13 +138,13 @@ public class ConsumeController {
     	String no_person = (String) session.getAttribute("no_person");
     	
     	//DateUtil에서 yyyymmdd를 요구
-    	String dt_from = DateUtil.getFirstDateOfMonth(ym+"01");
-    	String dt_to = DateUtil.getLastDateOfMonth(ym+"01");
+//    	String dt_from = DateUtil.getFirstDateOfMonth(ym+"01");
+//    	String dt_to = DateUtil.getLastDateOfMonth(ym+"01");
     	
     	ConsumeForm consumeForm = new ConsumeForm();
     	consumeForm.setNo_person(no_person);
-    	consumeForm.setDt_from(dt_from);
-    	consumeForm.setDt_to(dt_to);
+//    	consumeForm.setDt_from(dt_from);
+//    	consumeForm.setDt_to(dt_to);
     	
     	model.addAttribute("listPersonTransDetail",consumeManager.listPersonTransDetail(consumeForm));
     	return "jsonView";

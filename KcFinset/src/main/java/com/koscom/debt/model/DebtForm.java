@@ -10,22 +10,29 @@ import com.koscom.comm.model.SearchForm;
 public class DebtForm extends SearchForm {
 	private static final long serialVersionUID = 1397943544218783237L;
 
-    private String no_person      	;
-    private String seq            	;
-    private String seq_credit_info	;
-    private String no_manage_info 	;/* 부채 정보관리번호 */
-    private String req_yyyymm		;
-    private String display_yn		;/*부채 삭제 처리용*/
-    private List<DebtForm> list		;/*부채 삭제 관리용*/
-    private String req_yyyymmdd		;/*캘린더 list 조회*/
-    private String st_yyyymm		;/*그래프 시작 기간*/
-    private String ed_yyyymm		;/*그래프 종료 기간*/
+    private String			no_person      	;
+    private List<String>	no_person_list	;
+    private String			seq            	;
+    private String			seq_credit_info	;
+    private String			no_manage_info 	;/* 부채 정보관리번호 */
+    private String			req_yyyymm		;
+    private String			display_yn		;/*부채 삭제 처리용*/
+    private List<DebtForm>	list			;/*부채 삭제 관리용*/
+    private String			req_yyyymmdd	;/*캘린더 list 조회*/
+    private String			st_yyyymm		;/*그래프 시작 기간*/
+    private String			ed_yyyymm		;/*그래프 종료 기간*/
     
 	public String getNo_person() {
 		return no_person;
 	}
 	public void setNo_person(String no_person) {
 		this.no_person = no_person;
+	}
+	public List<String> getNo_person_list() {
+		return no_person_list;
+	}
+	public void setNo_person_list(List<String> no_person_list) {
+		this.no_person_list = no_person_list;
 	}
 	public String getSeq() {
 		return seq;

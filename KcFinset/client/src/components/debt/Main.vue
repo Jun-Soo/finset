@@ -1,141 +1,116 @@
 <template>
-    <div>
-      <section>
-					<div class="top main">
-						<ul>
-							<li><a href="index.html">MY</a></li>
-							<li><a href="index_credit.html">신용</a></li>
-							<li class="on"><a href="index_dept.html">부채</a></li>
-							<li><a href="index_spend.html">지출</a></li>
-							<li><a href="index_assets.html">자산</a></li>
-						</ul>
+  <div>
+    <section>
+      <div class="dept-top">
+        <div class="wrap">
+          <div class="balance">
+            <p class="key">대출잔액</p>
+            <p class="value">{{formatNumber(debtSummaryData.amt_remain * 10000)}}<em>원</em></p>
           </div>
-          <div class="dept-top">
-            <div class="wrap">
-							<div class="balance">
-								<p class="key">대출잔액</p>
-								<p class="value">{{formatNumber(debtSummaryData.amt_remain * 10000)}}<em>원</em></p>
-							</div>
-							<!-- <div class="graph"><img src="../../assets/images/main/dept_graph.png" width="100%" alt=""/></div> -->
-							<div class="graph"><chartjs-line :labels="mylabels" :datasets="mydatasets" :option="myoption" :bind="true"></chartjs-line></div>
-							<div class="flex2 bar-graph">
-								<div class="item">
-									<p class="key">상환율</p>
-									<div class="text-wrap">
-										<p class="big">{{debtSummaryData.rate_amt_contract}}<em>%</em></p>
-										<p class="small">{{formatNumber(debtSummaryData.amt_contract)}}<em>원</em></p>
-									</div>
-									<div class="bar">
-										<p class="active" :style="debtSummaryData.repayStyle"></p>
-									</div>
-								</div>
-								<div class="item">
-									<p class="key">상환능력<em>(소득대비)</em></p>
-									<div class="text-wrap">
-										<p class="big">{{calDsr(debtSummaryData.cur_mon_mid_rpy, debtSummaryData.amt_etm_income)}}<em>%</em></p>
-										<p class="small">{{formatNumber(debtSummaryData.amt_etm_income * 10000)}}<em>원</em></p>
-									</div>
-									<div class="bar">
-										<p class="active" :style="debtSummaryData.dsrStyle"></p>
-									</div>
-								</div>
-							</div>
-						</div>
+          <!-- <div class="graph"><img src="../../assets/images/main/dept_graph.png" width="100%" alt=""/></div> -->
+          <div class="graph"><chartjs-line :labels="mylabels" :datasets="mydatasets" :option="myoption" :bind="true"></chartjs-line></div>
+          <div class="flex2 bar-graph">
+            <div class="item">
+              <p class="key">상환율</p>
+              <div class="text-wrap">
+                <p class="big">{{debtSummaryData.rate_amt_contract}}<em>%</em></p>
+                <p class="small">{{formatNumber(debtSummaryData.amt_contract/10000)}}<em>만원</em></p>
+              </div>
+              <div class="bar">
+                <p class="active" :style="debtSummaryData.repayStyle"></p>
+              </div>
+            </div>
+            <div class="item">
+              <p class="key">상환능력<em>(소득대비)</em></p>
+              <div class="text-wrap">
+                <p class="big">{{calDsr(debtSummaryData.cur_mon_mid_rpy, debtSummaryData.amt_etm_income)}}<em>%</em></p>
+                <!-- <p class="small">{{formatNumber(debtSummaryData.amt_etm_income * 10000)}}<em>원</em></p> -->
+              </div>
+              <div class="bar">
+                <p class="active" :style="debtSummaryData.dsrStyle"></p>
+              </div>
+            </div>
           </div>
-          <!-- <swiper direction="horizontal"
-          :mousewheel-control="true"
-          :performance-mode="false"
-          :pagination-visible="false"
-          :pagination-clickable="false"
-          :loop="true"
-					class="banner-wrap"
-          >
-						<div class="item">
-							<a href="#"><img src="../../assets/images/main/dept_banner1.png" alt=""/></a>
-						</div>
-						<div class="item">
-							<a href="#"><img src="../../assets/images/main/dept_banner1.png" alt=""/></a>
-						</div>
-						<div class="item">
-							<a href="#"><img src="../../assets/images/main/dept_banner1.png" alt=""/></a>
-						</div>
-          </swiper> -->
-
-        <div class="banner-wrap owl-carousel">
-            <div class="item">
-                <a href="#">
-                    <div class="banner">
-                        <div class="left">
-                            <p class="key">우리가족 가계부</p>
-                            <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
-                        </div>
-                        <div class="right">
-                            <img src="../../assets/images/main/banner_ico.png" alt=""/>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="item">
-                <a href="#">
-                    <div class="banner">
-                        <div class="left">
-                            <p class="key">우리가족 가계부</p>
-                            <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
-                        </div>
-                        <div class="right">
-                            <img src="../../assets/images/main/banner_ico.png" alt=""/>
-                        </div>
-                    </div>
-                </a>
-            </div>
-            <div class="item">
-                <a href="#">
-                    <div class="banner">
-                        <div class="left">
-                            <p class="key">우리가족 가계부</p>
-                            <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
-                        </div>
-                        <div class="right">
-                            <img src="../../assets/images/main/banner_ico.png" alt=""/>
-                        </div>
-                    </div>
-                </a>
-            </div>
         </div>
-
-
-					<div class="list01 dept-list">
-						<div class="item" v-for="vo in debtListData" :key="vo.no_manage_info">
-							<div class="top">
-								<p class="symbol"><img :src="vo.imgSrc" alt=""/>{{vo.nm_fc}}</p>
-								<p class="text blue">{{vo.debt_type}}</p>
-							</div>
-							<div class="number-wrap">
-								<div class="left">
-									<p class="key">잔액</p>
-									<p class="number">{{formatNumber(vo.amt_remain * 10000)}}<em>원</em></p>
-							</div>
-							</div>
-							<div class="bar"><p :style="vo.eachStyle"></p></div>
-							<div class="text-wrap">
-								<div class="left">
-									<p class="key"><span>상환금액</span><span>이자율</span></p>
-									<!-- <p class="value"><span>{{formatNumber(vo.amt_repay * 10000)}}<em>원</em></span><span>{{vo.ever_interest}}<em>%</em></span></p> -->
-                  <p class="value"><span>{{formatNumber((vo.amt_contract-vo.amt_remain) * 10000)}}<em>원</em></span><span>{{vo.ever_interest}}<em>%</em></span></p>
-								</div>
-								<div class="right">
-									<p class="key"><span>원금</span></p>
-									<p class="value"><span>{{formatNumber(vo.amt_contract * 10000)}}<em>원</em></span></p>
-								</div>
-							</div>
-						</div>
-						<p class="info-massage">안내 메세지가 출력되는 영역입니다</p>
-						<div class="btn-wrap">
-								<a href="#" class="solid">부채등록</a>
-						</div>
+      </div>
+      <div class="banner-wrap owl-carousel">
+          <div class="item">
+              <a href="#">
+                  <div class="banner">
+                      <div class="left">
+                          <p class="key">우리가족 가계부</p>
+                          <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                      </div>
+                      <div class="right">
+                          <img src="../../assets/images/main/banner_ico.png" alt=""/>
+                      </div>
+                  </div>
+              </a>
           </div>
-      </section>
-    </div>
+          <div class="item">
+              <a href="#">
+                  <div class="banner">
+                      <div class="left">
+                          <p class="key">우리가족 가계부</p>
+                          <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                      </div>
+                      <div class="right">
+                          <img src="../../assets/images/main/banner_ico.png" alt=""/>
+                      </div>
+                  </div>
+              </a>
+          </div>
+          <div class="item">
+              <a href="#">
+                  <div class="banner">
+                      <div class="left">
+                          <p class="key">우리가족 가계부</p>
+                          <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                      </div>
+                      <div class="right">
+                          <img src="../../assets/images/main/banner_ico.png" alt=""/>
+                      </div>
+                  </div>
+              </a>
+          </div>
+      </div>
+      <div>
+        <div v-for="(person, index) in shareList" :key="person.no_person">
+          <button @click="clickShare(index)" :class="{'active': person.isShow === true}">{{person.nm_person}}</button>
+        </div>
+      </div>
+      <div class="list01 dept-list">
+        <div class="item" v-for="vo in debtListData" :key="vo.no_manage_info">
+          <div class="top">
+            <p class="symbol"><img :src="vo.imgSrc" alt=""/>{{vo.nm_fc}}</p>
+            <p class="text blue">{{vo.debt_type}}</p>
+          </div>
+          <div class="number-wrap">
+            <div class="left">
+              <p class="key">잔액</p>
+              <p class="number">{{formatNumber(vo.amt_remain * 10000)}}<em>원</em></p>
+          </div>
+          </div>
+          <div class="bar"><p :style="vo.eachStyle"></p></div>
+          <div class="text-wrap">
+            <div class="left">
+              <p class="key"><span>상환금액</span><span>이자율</span></p>
+              <!-- <p class="value"><span>{{formatNumber(vo.amt_repay * 10000)}}<em>원</em></span><span>{{vo.ever_interest}}<em>%</em></span></p> -->
+              <p class="value"><span>{{formatNumber((vo.amt_contract-vo.amt_remain) * 10000)}}<em>원</em></span><span>{{vo.ever_interest}}<em>%</em></span></p>
+            </div>
+            <div class="right">
+              <p class="key"><span>원금</span></p>
+              <p class="value"><span>{{formatNumber(vo.amt_contract * 10000)}}<em>원</em></span></p>
+            </div>
+          </div>
+        </div>
+        <p class="info-massage">안내 메세지가 출력되는 영역입니다</p>
+        <div class="btn-wrap">
+            <a href="#" class="solid">부채등록</a>
+        </div>
+      </div>
+    </section>
+  </div>
 </template>
 
 <script>
@@ -186,35 +161,58 @@ export default {
             }
           ]
         }
-      }
+      },
+      shareList: []
     };
   },
   components: {},
   // computed () {
   // },
-  beforeCreate() {},
+  beforeCreate() {
+    this.$store.state.header.type = "main";
+    this.$store.state.header.active = "debt";
+  },
   created() {},
   beforeMount() {},
   mounted() {
-    this.listDebtPg();
-    this.getDebtSummary();
+    // this.listDebtPg();
+    // this.getDebtSummary();
+    this.listDebtSharePersonInfo();
   },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    listDebtSharePersonInfo: function() {
+      var _this = this;
+      this.$http
+        .get("/m/debt/listDebtSharePersonInfo.json")
+        .then(function(response) {
+          var list = response.data.listDebtSharePersonInfo;
+          for (var idx in list) {
+            list[idx].isShow = true;
+          }
+          _this.shareList = list;
+          _this.getDebtSummary();
+          _this.listDebtPg();
+        });
+    },
     listDebtPg: function() {
       var _this = this;
-      this.$http.get("/m/debt/listDebtPg.json").then(function(response) {
-        var data = response.data.debtListData;
-        for (var idx in data) {
-          data[idx].eachStyle = "width:" + data[idx].rate_repay + "%";
-          data[idx].imgSrc =
-            "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + data[idx].cd_fc;
-        }
-        _this.debtListData = data;
-      });
+      this.$http
+        .get("/m/debt/listDebtPg.json", {
+          params: { no_person_list: _this.filterShareList() }
+        })
+        .then(function(response) {
+          var data = response.data.debtListData;
+          for (var idx in data) {
+            data[idx].eachStyle = "width:" + data[idx].rate_repay + "%";
+            data[idx].imgSrc =
+              "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + data[idx].cd_fc;
+          }
+          _this.debtListData = data;
+        });
     },
     getDebtSummary: function() {
       var _this = this;
@@ -241,6 +239,21 @@ export default {
       } else {
         return (repay / income) * 100;
       }
+    },
+    filterShareList: function() {
+      var shareList = new Array();
+      var _this = this;
+      for (var idx in _this.shareList) {
+        if (_this.shareList[idx].isShow) {
+          shareList.push(_this.shareList[idx].no_person);
+        }
+      }
+      return shareList;
+    },
+    clickShare: function(params) {
+      this.shareList[params].isShow = !this.shareList[params].isShow;
+      this.getDebtSummary();
+      this.listDebtPg();
     }
   }
 };
@@ -248,4 +261,8 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
+.active {
+  background: green;
+  color: white;
+}
 </style>

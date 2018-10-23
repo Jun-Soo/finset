@@ -7,6 +7,7 @@ import com.koscom.debt.model.DebtDetail12RepVO;
 import com.koscom.debt.model.DebtForm;
 import com.koscom.debt.model.DebtSummaryVO;
 import com.koscom.debt.model.DebtVO;
+import com.koscom.domain.PersonInfo;
 
 public interface DebtManager {
 
@@ -43,6 +44,13 @@ public interface DebtManager {
 	 * @param no_person
 	 */
 	void modifySeqNewDeptReg(String no_person);
+
+	/**
+	 * 부채 공유 리스트 조회
+	 * @param no_person
+	 * @return
+	 */
+	List<PersonInfo> listDebtSharePersonInfo(String no_person);
 	
 	/**
 	 * 부채 요약 조회

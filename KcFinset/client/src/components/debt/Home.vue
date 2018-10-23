@@ -2,7 +2,7 @@
   <main>
     <FinsetHeader></FinsetHeader>
     <router-view/>
-    <FinsetBottom v-if="isBottom"></FinsetBottom>
+    <!-- <FinsetBottom v-if="isBottom"></FinsetBottom> -->
   </main>
 </template>
 

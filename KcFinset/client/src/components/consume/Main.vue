@@ -72,7 +72,8 @@
                 <a href="#" id="01" :class="{'on':curTab === '01'}" @click="clickTab">수입</a>
             </div>
         </div>
-        <div v-if="consumeList.length!=0" class="list02 spend-list">
+        <!-- <div v-if="consumeList.length!=0" class="list02 spend-list"> -->
+        <div class="list02 spend-list">
           <div v-for="subList in consumeList" :key="subList.index" class="list-wrap">
             <p class="date">{{formatDate(subList[0].dt_trd,"mmdd")}}</p>
             <div v-for="vo in subList" :key="vo.index" class="item">

@@ -16,6 +16,7 @@ import com.koscom.debt.model.DebtForm;
 import com.koscom.debt.model.DebtSummaryVO;
 import com.koscom.debt.model.DebtVO;
 import com.koscom.debt.service.DebtManager;
+import com.koscom.domain.PersonInfo;
 import com.koscom.util.LogUtil;
 
 @Service("debtManager")
@@ -68,6 +69,11 @@ public class DebtManagerImpl implements DebtManager {
 	@Override
 	public void modifySeqNewDeptReg(String no_person) {
 		debtMapper.modifySeqNewDeptReg(no_person);
+	}
+
+	@Override
+	public List<PersonInfo> listDebtSharePersonInfo(String no_person) {
+		return debtMapper.listDebtSharePersonInfo(no_person);
 	}
 	
 	@Override

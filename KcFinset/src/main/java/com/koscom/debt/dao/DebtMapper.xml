@@ -193,6 +193,28 @@
 			AND DEBT_YN = 'Y'
 	</select>
 	
+	<select id="listDebtSharePersonInfo" parameterType="java.lang.String" resultType="com.koscom.domain.PersonInfo">
+		SELECT
+			 OFFER_NO_PERSON AS NO_PERSON
+			,OFFER_NM_PERSON AS NM_PERSON
+		FROM
+			SHARE_INFO
+		WHERE
+				REQ_NO_PERSON			= #{no_person, jdbcType=VARCHAR}
+			AND SHARE_STATUS			= '02'
+			AND YN_DEBT_ITGT_MNGM		= 'Y'
+			AND DT_END_OFFER			> TO_CHAR( SYSDATE, 'YYYYMMDD' )
+		UNION(
+			SELECT
+				 NO_PERSON
+				,NM_PERSON
+			FROM
+				PERSON_INFO
+			WHERE
+				NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		)
+	</select>
+	
 	<select id="getDebtSummary" parameterType="java.lang.String" resultType="com.koscom.debt.model.DebtSummaryVO">
 	    /* com.koscom.debt.dao.DebtMapper.getDebtSummary : 대출 메인 요약 */
 	    SELECT    A.DT_STD               /* 기준일자 */
@@ -300,7 +322,8 @@
 	
 	<select id="listDebtPg" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtVO">
 	    /* com.koscom.debt.dao.DebtMapper.listDebtPg: 부채메인 리스트 */
-	    SELECT    A.NO_MANAGE_INFO
+	    SELECT A.NO_PERSON
+	    	  ,A.NO_MANAGE_INFO
 	          ,B.PATH_FILE1
 	          ,B.NM_FC
 	          ,A.CD_FC
@@ -391,7 +414,10 @@
 	                   ,SUM(CASE WHEN B.REQ_YYYYMM LIKE TO_CHAR(SYSDATE,'YYYY')||'%' THEN TO_NUMBER(B.AMT_REPAY_I) ELSE 0 END)   AS CUR_YEAR_AMT_REPAY_I
 	                   ,MAX(CASE WHEN B.REQ_YYYYMM = TO_CHAR(SYSDATE,'YYYYMM') THEN B.INTEREST_YMD ELSE '' END)  AS CUR_MM_MAX_INR_YMD
 	             FROM   DEBT_PERSONAL_REPAY_LIST B
-	             WHERE   B.NO_PERSON   = #{no_person , jdbcType=VARCHAR}
+	             WHERE   B.NO_PERSON IN
+					<foreach item="no_person" collection="no_person_list" open="(" separator="," close=")">
+						#{no_person}
+					</foreach>
 	             GROUP BY B.NO_PERSON
 	                   ,B.NO_MANAGE_INFO
 	          ) C
@@ -399,7 +425,10 @@
 	             C.NO_PERSON         =   A.NO_PERSON
 	          AND C.NO_MANAGE_INFO   =   A.NO_MANAGE_INFO
 	          )
-	    WHERE   A.NO_PERSON      =   #{no_person , jdbcType=VARCHAR}
+	    WHERE   A.NO_PERSON IN
+   					<foreach item="no_person" collection="no_person_list" open="(" separator="," close=")">
+						#{no_person}
+					</foreach>
 	    AND      A.YMD_CANCEL   IS NULL
 	    <if test="@com.koscom.util.MybatisUtil@isNotEmpty(display_yn)">
 	    	<if test="@com.koscom.util.MybatisUtil@contains('Y',display_yn)">

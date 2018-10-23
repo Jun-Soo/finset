@@ -13,6 +13,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.koscom.consume.model.ConsumeForm;
 import com.koscom.consume.model.ConsumeVO;
@@ -133,6 +134,21 @@ public class DebtController {
 		return "/debt/frameDebtInfoMain";
 	}
 	
+	/**
+	 * VUE
+	 * @param model
+	 * @param session
+	 * @return
+	 * @throws FinsetException
+	 */
+	@RequestMapping("/listDebtSharePersonInfo")
+	public String listDebtSharePersonInfo(Model model, HttpSession session) throws FinsetException {
+		logger.debug("listDebtSharePersonInfo");
+		String no_person = (String) session.getAttribute("no_person");
+		model.addAttribute("listDebtSharePersonInfo",debtManager.listDebtSharePersonInfo(no_person));
+		return "jsonView";
+	}
+	
 	/** VUE
 	 * 부채 메인 요약
 	 * @param model
@@ -172,11 +188,12 @@ public class DebtController {
 	 * @throws FinsetException
 	 */
 	@RequestMapping("/listDebtPg.json")
-	public String listDebtPg(Model model, HttpSession session) throws FinsetException {
+	public String listDebtPg(Model model, HttpSession session, @RequestParam(value="no_person_list[]") List<String> no_person_list) throws FinsetException {
 		String no_person = (String) session.getAttribute("no_person");
 		//부채메인 리스트
 		DebtForm debtForm = new DebtForm();
 		debtForm.setNo_person(no_person);
+		debtForm.setNo_person_list(no_person_list);
 		//display_yn 이 Y 인 것만 가져오도록
 		debtForm.setDisplay_yn("Y");
 		List<DebtVO> debtList = debtManager.listDebtPg(debtForm);

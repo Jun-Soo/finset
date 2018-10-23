@@ -262,7 +262,7 @@ export default {
   handleScroll: function () {
     var html = document.documentElement
     var docHeight = html.scrollHeight
-    var viewHeight = html.offsetHeight
+    var viewHeight = html.offsetHeight > html.clientHeight ? html.clientHeight : html.offsetHeight
     var scrollY = window.scrollY
     var scrollBottom = docHeight - viewHeight - scrollY
     if (scrollBottom === 0) {

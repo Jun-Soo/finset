@@ -3,7 +3,7 @@
     <FinsetHeader></FinsetHeader>
         <div class="my-graph-wrap">
             <p class="title">신용등급</p>
-            <div class="graph">{{ creditInfo!=null ? creditInfo.grade_credit : "" }}</div>
+            <Gauge :value="gaugeValue" :text="gaugeText"/>
             <a href="/credit/main">자세히보기</a>
             <div class="info-wrap">
                 <div class="left">
@@ -65,38 +65,43 @@
 </template>
 
 <script>
-import './../../assets/css/reset.css'
-import './../../assets/css/main.css'
+import "./../../assets/css/reset.css";
+import "./../../assets/css/main.css";
 
 import Common from "./../../assets/js/common.js";
 import Constant from "./../../assets/js/constant.js";
 
 import ko from "vee-validate/dist/locale/ko.js";
 
-import FinsetHeader   from   './../common/FinsetHeader'
-import FinsetBottom   from   './../common/FinsetBottom'
+import FinsetHeader from "./../common/FinsetHeader";
+import FinsetBottom from "./../common/FinsetBottom";
+
+import Gauge from "./../common/Gauge";
 
 export default {
   name: "FinsetMain",
   data() {
     return {
-      creditInfo : "", //신용정보
-      consumeSumAmt : "", //지출총금액
-      assetsSumAmt : "", //자산총금액
-      debtSumAmt : "", //부채총금액
+      creditInfo: "", //신용정보
+      consumeSumAmt: "", //지출총금액
+      assetsSumAmt: "", //자산총금액
+      debtSumAmt: "", //부채총금액
+      gaugeValue: 0,
+      gaugeText: ""
     };
   },
   components: {
     FinsetHeader: FinsetHeader,
-    FinsetBottom: FinsetBottom
+    FinsetBottom: FinsetBottom,
+    Gauge
   },
   // computed () {
   // },
   beforeCreate() {},
   created() {
-    this.$store.state.header.type = 'main'
-    this.$store.state.header.active = 'main'
-    this.getMainInfo()
+    this.$store.state.header.type = "main";
+    this.$store.state.header.active = "main";
+    this.getMainInfo();
   },
   beforeMount() {},
   mounted() {},
@@ -107,21 +112,26 @@ export default {
   methods: {
     getMainInfo: function() {
       var _this = this;
-      this.$http.get("/m/main/getMainInfo.json", {
+      this.$http
+        .get("/m/main/getMainInfo.json", {
           params: {}
         })
         .then(response => {
-            _this.creditInfo = response.data.creditInfo
-            _this.consumeSumAmt = response.data.consumeSumAmt
-            _this.assetsSumAmt = response.data.assetsSumAmt
-            _this.debtSumAmt = response.data.debtSumAmt
+          _this.creditInfo = response.data.creditInfo;
+          _this.consumeSumAmt = response.data.consumeSumAmt;
+          _this.assetsSumAmt = response.data.assetsSumAmt;
+          _this.debtSumAmt = response.data.debtSumAmt;
+          if (_this.creditInfo) {
+            _this.gaugeValue = _this.creditInfo.rating_credit / 1000;
+            _this.gaugeText = _this.creditInfo.grade_credit + "등급";
+          }
         })
         .catch(e => {
-        this.$toast.center(ko.messages.error)
-      })
+          this.$toast.center(ko.messages.error);
+        });
     },
     formatNumber: function(data) {
-        return Common.formatNumber(data);
+      return Common.formatNumber(data);
     }
   }
 };

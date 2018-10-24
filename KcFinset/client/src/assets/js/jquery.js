@@ -5,9 +5,6 @@ $(function () {
     $('aside').toggleClass('on')
   })
 
-  /*   GNB 로드   */
-  // $('header').load('../include/gnb.html')
-
   $(document).on('click', 'header .open-menu', function () {
     $('.gnb-wrap').addClass('on')
     $('body').addClass('not-scroll')
@@ -25,5 +22,13 @@ $(function () {
       $(this).closest('.item').find('.hide-con').slideDown(500, 'easeInOutExpo')
     }
     $(this).toggleClass('on')
+  })
+
+  $(document).on('click', '.btn-search', function () {
+    $('aside.search-wrap').addClass('on')
+  })
+
+  $(document).on('click', '.search-wrap .top button', function () {
+    $('aside.search-wrap').removeClass('on')
   })
 })

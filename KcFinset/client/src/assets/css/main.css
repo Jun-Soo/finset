@@ -162,6 +162,7 @@ aside:before { width: 100%; height: 100vh; position: fixed; top: 0; left: 0; con
 .credit-status { margin-top: 50px; padding-bottom: 95px; }
 .credit-status .title { padding: 0 21px; font-size: 14px; color: #222; font-weight: 700; }
 .credit-status .wrap { border-top: 1px solid #e5e5e5; border-bottom: 1px solid #e5e5e5; display: flex; padding: 0 21px 20px; margin-top: 10px; flex-wrap: wrap; }
+.credit-status .wrap a { display: block; }
 .credit-status .wrap .item { width: 50%; text-align: center; padding-top: 36px; margin-top: 30px; }
 .credit-status .wrap .item .key { font-size: 10px; font-weight: 700; color: #333; }
 .credit-status .wrap .item .value { font-size: 15px; font-weight: 700; margin-top: 5px; color: #62c1d0; }
@@ -268,4 +269,4 @@ aside:before { width: 100%; height: 100vh; position: fixed; top: 0; left: 0; con
 .list02 .list-wrap .item .right .number.blue { color: #62c1d0; }
 .list02 .list-wrap .item .right .number em { font-size: 12px; padding-left: 3px; font-weight: 400; color: #222; }
 .list02 .list-wrap .item .right .text { font-size: 12px; color: #9b9489; margin-top: 10px; }
-.list02 .btn-spend-add { width: 48px; height: 48px; position: fixed; bottom: 70px; right: 15px; background: url(../images/main/btn_floating.png) no-repeat center #62c1d0; background-size: 18px; border-radius: 100%; box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.2); }
+.list02 .btn-spend-add { width: 48px; height: 48px; position: fixed; bottom: 70px; right: 15px; background: url(../images/main/btn_floating.png) no-repeat center #62c1d0; background-size: 18px; border-radius: 100%; box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.4); }

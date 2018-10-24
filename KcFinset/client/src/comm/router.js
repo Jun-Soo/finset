@@ -16,6 +16,7 @@ import CertFingerLogin from '@/components/member/CertFingerLogin'
 
 import CreditHome from '@/components/credit/Home'
 import CreditMain from '@/components/credit/Main'
+import CreditDetail from '@/components/credit/Detail'
 
 import ErrorPage from '@/components/common/Error'
 import ProxyPage from '@/components/common/ProxyPage'
@@ -33,6 +34,8 @@ import MemoCreate from '@/components/memo/Create'
 
 import ConsumeHome from '@/components/consume/Home'
 import ConsumeMain from '@/components/consume/Main'
+import ConsumePayment from '@/components/consume/Payment'
+import ConsumeDraggable from '@/components/consume/Draggable'
 
 import GoodsHome from '@/components/goods/Home'
 import GoodsList from '@/components/goods/List'
@@ -233,6 +236,12 @@ export const routes = [
         alias: '/main',
         component: CreditMain,
         meta: { allowPath: true, requiresAuth: true }
+      },
+      {
+        path: 'detail',
+        alias: '/detail',
+        component: CreditDetail,
+        meta: { allowPath: true, requiresAuth: true }
       }
     ]
   },
@@ -294,6 +303,18 @@ export const routes = [
         path: 'main',
         alias: '/main',
         component: ConsumeMain,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'payment',
+        alias: '/payment',
+        component: ConsumePayment,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'draggable',
+        alias: '/draggable',
+        component: ConsumeDraggable,
         meta: { allowPath: true }
       }
     ]

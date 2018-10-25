@@ -48,6 +48,41 @@ $(function(){
         
     });
     
+    ////////////////////     SEARCH     ////////////////////
+    
+    $(document).on("click",".btn-search",function(){
+        
+        $("aside.search-wrap").addClass("on");
+        
+    });
+    
+    $(document).on("click",".search-wrap .top button",function(){
+        
+        $("aside.search-wrap").removeClass("on");
+        
+    });
+    
+    
+    ////////////////////     리스트 옵션     ////////////////////
+    
+    $(document).on("click",".list02 .btn button",function(){
+        
+        $(this).closest(".btn").toggleClass("on");
+        
+    });
+    
+    
+    ////////////////////     아코디온     ////////////////////
+    
+    
+    $(document).on("click",".accodion .top a",function(e){
+        
+        $(this).closest("li").toggleClass("on");
+        e.preventDefault();
+        
+    });
+    
+    
     ////////////////////     Image Slide     ////////////////////
 	
 	var owl = $(".owl-carousel");

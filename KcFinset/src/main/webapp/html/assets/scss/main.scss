@@ -3,6 +3,7 @@
 @import "compass/css3"; 
 @import "color";
 @import "mixin";
+@import "form";
 @import "layout";
 @import "header";
 @import "event";
@@ -321,6 +322,7 @@
     .item{
         border: 1px solid $lineColor;
         border-radius: 10px;
+        @include box-sizing(border-box);
         a{
             display: block;
             width: 100%;
@@ -417,6 +419,9 @@
         padding: 0 21px 20px;
         margin-top: 10px;
         flex-wrap: wrap;
+        a{
+            display: block;
+        }
         .item{
             width: 50%;
             text-align: center;
@@ -586,7 +591,7 @@
                 }
             }
             .text{
-                width: 50%;
+                width: 45%;
                 text-align: right;
                 line-height: 24px;
                 font-size: 12px;
@@ -595,6 +600,36 @@
                 }
                 &.red{
                     color: $col1;
+                }
+            }
+            .circle{
+                text-align: right;
+                width: 5%;
+                span{
+                    display: inline-block;
+                    line-height: 24px;
+                    text-align: center;
+                    border-radius: 20px;
+                    color: #fff;
+                    height: 12px;
+                    width: 12px;
+                    margin-top: 6px;
+                    vertical-align: middle;
+                    &.red{
+                        background: #e95071;
+                    }
+                    &.orange{
+                        background: #ef903c;
+                    } 
+                    &.green{
+                        background: #89c11c;
+                    } 
+                    &.blue{
+                        background: #6993f3;
+                    } 
+                    &.purple{
+                        background: #bf65f3;
+                    } 
                 }
             }
         }
@@ -863,6 +898,8 @@
                     font-size: 19px;
                     font-weight: 700;
                     color: #222;
+                    display: inline-block;
+                    vertical-align: middle;
                     &.red{
                         color: $col1;
                     }
@@ -881,6 +918,37 @@
                     color: $col2;
                     margin-top: 10px;
                 }
+                .circle{
+                    text-align: right;
+                    display: inline-block;
+                    vertical-align: middle;
+                    margin-left: 5px;
+                    span{
+                        display: inline-block;
+                        line-height: 24px;
+                        text-align: center;
+                        border-radius: 20px;
+                        color: #fff;
+                        height: 12px;
+                        width: 12px;
+                        vertical-align: middle;
+                        &.red{
+                            background: #e95071;
+                        }
+                        &.orange{
+                            background: #ef903c;
+                        } 
+                        &.green{
+                            background: #89c11c;
+                        } 
+                        &.blue{
+                            background: #6993f3;
+                        } 
+                        &.purple{
+                            background: #bf65f3;
+                        } 
+                    }
+                }
             }
         }
     }
@@ -893,12 +961,9 @@
         background: url(../images/main/btn_floating.png) no-repeat center $col4;
         background-size: 18px;
         border-radius: 100%;
-        box-shadow: 10px 10px 20px rgba(#000,.2);
+        box-shadow: 10px 10px 20px rgba(#000,.4);
     }
 }
-
-
-
 
 
 

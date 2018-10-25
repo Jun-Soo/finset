@@ -7,7 +7,7 @@
 @import "table";
 @import "layout";
 @import "header";
-/*@import "modal";*/
+@import "modal";
 
 
 /*   Common   */
@@ -16,9 +16,21 @@
     height: 100vh;
     background: url("../images/common/loading.svg") no-repeat center / 25%;
     text-align: center;
-    padding-top: 100%;
-    line-height: 17px;
+    padding-top: 60vh;
+    line-height: 20px;
+    font-size: 15px;
+    color: #888888;
     @include box-sizing(border-box);
+    &.fail{
+       background: url("../images/common/loading_fail.png") no-repeat center / 75px; 
+    }
+    &.success{
+       background: url("../images/common/loading_success.png") no-repeat center / 75px; 
+    }
+    em{
+        color: #333;
+        font-size: 15px;
+    }
 }
 
 aside.search-wrap{
@@ -294,11 +306,16 @@ aside.search-wrap{
 .box-list{
     background: #efeeec;
     padding: 21px;
-    margin-top: 40px; 
-    
+    margin-top: 40px;
 }
 
 .list01{
+    .header{
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
     .item{
         background: #fff;
         border-radius: 10px;
@@ -357,6 +374,13 @@ aside.search-wrap{
                         } 
                     }
                 }
+                &.corp{
+                    font-weight: 700;
+                    color: #222;
+                }
+                &:last-child{
+                    text-align: right;
+                }
             }
         }
         .number-wrap{
@@ -372,6 +396,7 @@ aside.search-wrap{
                     font-size: 24px;
                     font-weight: 700;
                     color: #222;
+                    margin-top: 5px;
                     em{
                         margin-left: 2px;
                         font-size: 12px;
@@ -557,6 +582,12 @@ aside.search-wrap{
 } 
 
 .list02{
+    .header{
+        font-size: 13px;
+        color: #666;
+        margin-bottom: 15px;
+        font-weight: 700;
+    }
     .item{
         background: #fff;
         border-radius: 10px;
@@ -580,50 +611,26 @@ aside.search-wrap{
                         margin-right: 5px;
                     }
                 }
-            }
-            .btn{
-                text-align: right;
-                line-height: 0;
-                position: relative;
-                width: 50%;
-                button{
-                    width: 24px;
-                    height: 24px;
-                    display: inline-block;
-                    background: url("../images/common/btn_list_option.png") no-repeat center right / contain;
+                &.date{
+                    em{
+                        color: $col2;
+                        padding-left: 5px;
+                    }  
                 }
-                >a{
-                    color: $col4;
-                    padding-right: 15px;
-                    display: inline-block;
+                &.number{
+                    font-size: 16px;
+                    color: #222;
                     font-weight: 700;
-                    background: url("../images/common/btn_blue_arrow.png") no-repeat right center / 6px;
-                    line-height: 24px;
-                }
-                .menu{
-                    position: absolute;
-                    right: 0;
-                    bottom: 24px;
-                    border: 1px solid #666;
-                    display: none;
-                    a{
-                        display: block;
-                        line-height: 40px;
-                        text-indent: 15px;
-                        width: 125px;
-                        font-size: 14px;
-                        color: #000;
-                        text-align: left;
-                        background: #fff;
-                        &:nth-child(odd){
-                            background: #e8e8e8;
-                        }
+                    em{
+                        padding-left: 5px;
                     }
                 }
-                &.on{
-                    .menu{
-                        display: block;
-                    }
+                &.corp{
+                    color: #222;
+                    font-weight: 700;
+                }
+                &:last-child{
+                    text-align: right;
                 }
             }
         }
@@ -642,6 +649,103 @@ aside.search-wrap{
         }
     }
 }
+
+.block-list{
+    background: #efeeec;
+    padding: 21px;
+    .list{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-gap: 9px;
+        li{
+            background: #fff;
+            text-align: center;
+            padding: 25px 10px;
+            border-radius: 10px;
+            .key{
+                color: $col2;
+                padding: 0;
+                border: none;
+                line-height: 1;
+            }
+            .value{
+                margin-top: 10px;
+                font-size: 14px;
+                color: #222;
+                font-weight: 700;
+                padding: 0;
+                border: none;
+                line-height: 1;
+            }
+        }
+    }
+}
+
+.block-list2{
+    background: #efeeec;
+    padding: 21px;
+    .index{
+        display: flex;
+        p{
+            position: relative;
+            padding-left: 18px;
+            color: #333;
+            margin-right: 10px;
+            margin-bottom: 15px;
+            &:before{
+                display: block;
+                position: absolute;
+                width: 12px;
+                height: 12px;
+                left: 0;
+                top: 0;
+                border-radius: 100%;
+                content: "";
+            }
+            &.normal{
+                &:before{
+                    background: $col4;
+                }
+            }
+            &.overdue{
+                &:before{
+                    background: $col1;
+                }
+            }
+            &.etc{
+                &:before{
+                    background: $col2;
+                }
+            }
+        }
+    }
+    .list{
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-gap: 9px;
+        li{
+            background: #fff;
+            text-align: center;
+            line-height: 50px;
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 700;
+            color: #fff;
+            &.normal{
+                background: $col4;
+            }
+            &.overdue{
+                background: $col1;
+            }
+            &.etc{
+                background: $col2;
+            }
+        }
+    }
+}
+
+
+//   button   //
 
 .btn-wrap{
     margin-top: 30px;
@@ -698,6 +802,63 @@ aside.search-wrap{
                 color: #fff;
             }
         }
+    }
+}
+
+.btn-menu-wrap{
+    text-align: right;
+    line-height: 0;
+    position: relative;
+    width: 50%;
+    button{
+        width: 24px;
+        height: 24px;
+        display: inline-block;
+        background: url("../images/common/btn_list_option.png") no-repeat center right / contain;
+    }
+    >a{
+        color: $col4;
+        padding-right: 15px;
+        display: inline-block;
+        font-weight: 700;
+        background: url("../images/common/btn_blue_arrow.png") no-repeat right center / 6px;
+        line-height: 24px;
+    }
+    .menu{
+        position: absolute;
+        right: 20px;
+        top: 0;
+        border: 1px solid #666;
+        display: none;
+        z-index: 1;
+        a{
+            display: block;
+            line-height: 40px;
+            text-indent: 15px;
+            width: 125px;
+            font-size: 14px;
+            color: #000;
+            text-align: left;
+            background: #fff;
+            &:focus{
+                background: #e8e8e8;
+            }
+        }
+    }
+    &.on{
+        .menu{
+            display: block;
+        }
+    }
+}
+
+.btn-onoff{
+    display: inline-block;
+    width: 32px;
+    height: 19px;
+    background: url("../images/common/btn_onoff.png") no-repeat top center / 32px;
+    &.on{
+        background-position: bottom center;
     }
 }
 
@@ -933,6 +1094,27 @@ aside.search-wrap{
 
 .bar-top{
     margin-top: 40px;
+    .top{
+        display: flex;
+        margin-bottom: 15px;
+        p{
+            width: 50%;
+            line-height: 24px;
+            font-size: 12px;
+            &.symbol{
+                height: 24px;
+                margin-right: 8px;
+                vertical-align: middle;
+                font-size: 12px;
+                font-weight: 700;
+                img{
+                    height: 100%;
+                    vertical-align: middle;
+                    margin-right: 5px;
+                }
+            }
+        }
+    }
     .key{
         font-size: 14px;
         font-weight: 700;
@@ -1000,7 +1182,95 @@ aside.search-wrap{
             &.bar-card{
                 text-align: right;
             }
+            .btn-info{
+                display: inline-block;
+                width: 14px;
+                height: 14px;
+                background: url("../images/common/btn_info.png") no-repeat center /contain;
+                margin-left: 5px;
+                vertical-align: middle;
+            }
         }  
+    }
+}
+
+//   건강보험료 납부 내역 조회 결과   //
+
+.credit-inquiry-top{
+    padding: 0 21px;
+    text-align: center;
+    .key{
+        color: $col2;
+        font-size: 14px;
+        font-weight: 700;
+        margin-top: 30px;
+    }
+    .title{
+        font-size: 20px;
+        color: #222;
+        margin-top: 10px;
+        line-height: 27px;
+        em{
+            font-weight: 700;
+            font-size: 20px;
+            color: #222;
+        }
+    }
+    .sub{
+        font-size: 13px;
+        line-height: 18px;
+        margin-top: 15px;
+    }
+    .text{
+        color: $col4;
+        margin-top: 25px;
+        font-size: 13px;
+    }
+}
+
+
+//   신용상담   //
+
+.counsel-list{
+    .item{
+        background: #fff;
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 15px;
+        .key{
+            color: $col2;
+            font-weight: 700;
+        }
+        .text{
+            font-size: 13px;
+            color: #222;
+            margin-top: 10px;
+        }
+        .btn-result{
+            line-height: 45px;
+            background: $col4;
+            color: #fff;
+            font-size: 15px;
+            font-weight: 700;
+            text-align: center;
+            display: block;
+            margin-top: 25px;
+            border-radius: 50px;
+        }
+    }
+}
+
+.counsel-result{
+    padding: 0 21px;
+    .title{
+        margin-top: 30px;
+        font-size: 15px;
+        color: #333;
+        font-weight: 700;
+    }
+    p{
+        margin-top: 25px;
+        line-height: 17px;
     }
 }
 
@@ -1126,7 +1396,35 @@ aside.search-wrap{
     }
 }
 
-
+.debt-modify{
+    margin-top: 20px;
+    border-top: 1px solid $lineColor;
+    li{
+        display: flex;
+        border-bottom: 1px solid $lineColor;
+        p{
+            width: 50%;
+            font-size: 13px;
+            color: $col2;
+            font-weight: 700;
+            line-height: 49px;
+            &:last-child{
+                text-align: right;
+                input[type="text"]{
+                    line-height: 49px;
+                    text-align: right;
+                    padding: 0 10px;
+                    font-size: 14px;
+                    width: 80%;
+                    border: none;
+                }
+            }
+            select{
+                border: none;
+            }
+        }
+    }
+}
 
 
 /*   상품   */
@@ -1308,6 +1606,45 @@ aside.search-wrap{
 
 
 /*   소비   */
+//   환경설정    //
+
+.setting-wrap{
+    margin-top: 25px;
+    dt{
+        font-size: 12px;
+        line-height: 30px;
+        background: #f0efed;
+        text-indent: 21px;
+    }
+    dd{
+        padding: 15px 21px;
+        line-height: 35px;
+        display: flex;
+        p{
+            font-size: 14px;
+            color: #222;
+            font-weight: 700;
+            width: 50%;
+            &:last-child{
+                text-align: right;
+            }
+            a{
+                line-height: 33px;
+                border: 1px solid $col4;
+                color: $col4;
+                display: inline-block;
+                padding: 0 25px;
+                font-size: 14px;
+            }
+            button{
+                margin-top: 8px;
+            }
+        }
+    }
+}
+
+
+
 //   카드대금조회   //
 
 
@@ -1588,6 +1925,9 @@ aside.search-wrap{
     }
     &.cut-top{
         background: url("../images/debt/con_top_cut.png") no-repeat top center / contain;
+    }
+    &.counsel-top{
+        background: url("../images/credit/con_top_counsel.png") no-repeat top center / contain;
     }
 }
 

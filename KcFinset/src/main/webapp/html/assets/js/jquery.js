@@ -65,9 +65,9 @@ $(function(){
     
     ////////////////////     리스트 옵션     ////////////////////
     
-    $(document).on("click",".list02 .btn button",function(){
+    $(document).on("click",".btn-menu-pop",function(){
         
-        $(this).closest(".btn").toggleClass("on");
+        $(this).closest(".btn-menu-wrap").toggleClass("on");
         
     });
     
@@ -81,6 +81,63 @@ $(function(){
         e.preventDefault();
         
     });
+    
+    
+    ////////////////////     설정버튼     ////////////////////
+    
+    $(document).on("click",".btn-onoff",function(e){
+        
+        $(this).toggleClass("on");
+        
+    });
+    
+    ////////////////////     Modal     ////////////////////
+    
+    function modal() {
+		
+		var openBtn = '[data-modal]', 
+			closeBtn = '.modal-close'; 
+		
+		function getTarget(t) { 
+			
+			return $(t).attr('data-modal'); 
+		
+		} 
+		
+		function open(t) { 
+			
+			var showTarget = $('[data-modal-con="' + t + '"]');
+			
+			window.setTimeout(function(){
+				var pop_height = showTarget.height()/-2;
+				var pop_width = showTarget.innerWidth()/-2;
+				showTarget.attr("tabindex","0");
+				showTarget.show().css({"margin-top":pop_height,"margin-left":pop_width});
+				showTarget.focus();
+				showTarget.find('.modal-close').data('activeTarget', t);
+			},500);
+			
+		} 
+		
+		function close(t) { 
+			
+			var activeTarget = $('[data-modal-con="' + t + '"]'); 
+			activeTarget.hide(); 
+			$('[data-modal="' + t + '"]').focus(); 
+		} 
+		
+		$(document).on('click', openBtn, function(e){ 
+			e.preventDefault(); 
+			open(getTarget($(this)));
+			$("#modal-wrap").show();
+		}) .on('click', closeBtn, function(e) { 
+			e.preventDefault(); 
+			close($(this).data('activeTarget'));
+			$("#modal-wrap").hide();
+		}); 
+	}
+	
+	modal(); 
     
     
     ////////////////////     Image Slide     ////////////////////

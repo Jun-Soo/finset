@@ -193,7 +193,7 @@ header .gnb-wrap.on { transform: translateX(0); width: 100%; overflow: auto; }
 .list01 .item .hide-con .list p { width: 50%; margin: 5px 0; }
 .list01 .item .hide-con .list p.left { font-size: 12px; color: #9b9489; }
 .list01 .item .hide-con .list p.right { text-align: right; font-size: 14px; color: #666; }
-.list01 .item .hide-con.on { height: auto; }
+.list01 .item .hide-con.show { display: block; border: none; margin-top: 0; }
 .list01 .item .btn-expand { margin-top: 10px; width: 100%; height: 30px; background: url(../images/common/btn_list_expand.png) no-repeat top center/18px; }
 .list01 .item .btn-expand.on { background-position: bottom center; }
 .list01 .item.expand { padding-bottom: 0; }
@@ -204,6 +204,9 @@ header .gnb-wrap.on { transform: translateX(0); width: 100%; overflow: auto; }
 .btn-wrap a.stroke { border: 1px solid #9b9489; color: #9b9489; }
 .btn-wrap a.solid { background: #9b9489; color: #fff; }
 .btn-wrap a.solid.blue { background: #213e6a; }
+.btn-wrap.col2 { border-top: 1px solid #213e6a; position: fixed; bottom: 0; left: 0; display: flex; width: 100%; }
+.btn-wrap.col2 a { width: 50%; line-height: 59px; color: #213e6a; font-size: 17px; font-weight: 700; border-radius: 0; }
+.btn-wrap.col2 a.btn-solid { background: #213e6a; color: #fff; }
 
 .owl-theme .owl-dots { text-align: center; margin-top: 10px; line-height: 0; font-size: 0; -webkit-tap-highlight-color: transparent; }
 .owl-theme .owl-dots .owl-dot { display: inline-block; }
@@ -328,3 +331,33 @@ aside.search-wrap .action a.solid { background: #213e6a; color: #fff; }
 .spend-top .spend-wrap .wrap .item p.key em { font-size: 14px; font-weight: 300; }
 .spend-top .spend-wrap .wrap .item p.value { font-size: 24px; font-weight: 500; color: #222; margin-top: 10px; }
 .spend-top .btn { display: block; line-height: 43px; color: #62c1d0; font-size: 15px; font-weight: 700; text-align: center; border: 1px solid #62c1d0; margin-top: 30px; border-radius: 50px; }
+
+/*   멤버   */
+.cert-wrap { margin-top: 30px; padding: 0 21px; }
+.cert-wrap .title { font-size: 12px; font-weight: 700; color: #333; }
+.cert-wrap input { margin-top: 15px; border: 1px solid #e5e5e5; line-height: 38px; font-size: 15px; color: #333; text-indent: 10px; width: 100%; height: auto; }
+.cert-wrap input:focus { border-color: #62c1d0; }
+.cert-wrap .grid { display: grid; grid-template-columns: 5fr 1fr 5fr; align-items: center; text-align: center; margin-top: 15px; }
+.cert-wrap .grid .number { text-align: left; letter-spacing: 10px; }
+.cert-wrap .grid input { margin-top: 0; }
+.cert-wrap .grid input[type="password"] { width: 30%; margin-right: 10px; }
+.cert-wrap .grid select { line-height: 38px; height: 38px; }
+.cert-wrap .grid.phone { grid-template-columns: 3fr 7fr; grid-gap: 10px; }
+.cert-wrap button { line-height: 46px; border: 2px solid #62c1d0; text-align: center; font-size: 15px; font-weight: 700; width: 100%; background: #fff; color: #62c1d0; margin-top: 10px; }
+.cert-wrap .warn { color: #e52638; padding-left: 20px; background: url("../images/common/ico_arlam.png") no-repeat left top/13px; margin-top: 10px; }
+.cert-wrap .cert-num { display: grid; grid-template-columns: 7fr 3fr; align-items: center; margin-top: 15px; border: 1px solid #e5e5e5; }
+.cert-wrap .cert-num .time { text-align: center; color: #e52638; text-align: right; padding-right: 15px; }
+.cert-wrap .cert-num input { border: none; margin-top: 0; }
+
+.certcode-wrap { padding-top: 50px; }
+.certcode-wrap .text { font-size: 12px; color: #333; text-align: center; }
+.certcode-wrap .textred { color: #e52638; margin-top: 10px; text-align: center; }
+.certcode-wrap .pass-wrap { margin-top: 30px; display: grid; grid-column-gap: 15px; justify-content: center; grid-template-columns: 40px 40px 40px 40px; }
+.certcode-wrap .pass-wrap input[type="password"] { border: none; border-bottom: 1px solid #e5e5e5; font-size: 40px; width: 100%; text-align: center; padding: 0; text-indent: 0; }
+.certcode-wrap .number { display: grid; grid-column-gap: 35px; grid-row-gap: 15px; justify-content: center; margin: 30px auto 0; grid-template-columns: 75px 75px 75px; }
+.certcode-wrap .number button { width: 75px; line-height: 75px; font-size: 30px; color: #333; font-weight: 700; border-radius: 100%; background: none; }
+.certcode-wrap .number button:active { background: #62c1d0; color: #fff; }
+.certcode-wrap .number button.del { background: url("../images/common/ico_delete.png") no-repeat center/23px; }
+
+.cert-finger { padding-top: 305px; background: url("../images/member/fingerprint.png") no-repeat 50% 150px; background-size: 117px; }
+.cert-finger p { text-align: center; font-size: 15px; }

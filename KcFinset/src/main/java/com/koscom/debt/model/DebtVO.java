@@ -14,7 +14,7 @@ public class DebtVO extends Kcb_Segment030 implements Serializable{
      * 리스트
 */
     private String cd_fc              ;    /*금융사코드*/
-    private String path_file1         ;    /*은행 CI*/
+    private String path_file         ;    /*은행 CI*/
     private String amt_remain         ;    /*대출잔액*/
     private String rate_repay         ;    /*원금상환비율*/
     private String rate_mm_repay_i    ;    /*이자상환비율(당월)*/
@@ -195,12 +195,12 @@ public class DebtVO extends Kcb_Segment030 implements Serializable{
         this.cd_fc = cd_fc;
     }
 
-    public String getPath_file1() {
-        return path_file1;
+    public String getPath_file() {
+        return path_file;
     }
 
-    public void setPath_file1(String path_file1) {
-        this.path_file1 = path_file1;
+    public void setPath_file(String path_file) {
+        this.path_file = path_file;
     }
 
     public String getNm_fc() {

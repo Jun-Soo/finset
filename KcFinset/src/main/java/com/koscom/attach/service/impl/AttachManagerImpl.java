@@ -17,7 +17,7 @@ public class AttachManagerImpl implements AttachManager {
 	@Override
 	public byte[] getBytesAttachFileC(String filename) throws Exception {
         FincorpVO vo = new FincorpVO();
-        vo.setPath_file1(filename);
+        vo.setPath_file(filename);
 		byte readByte[] = null;
 		if( !StringUtil.isEmpty(filename) ){
 			readByte = fincorpManager.getImgBi(filename);

@@ -117,8 +117,8 @@ public class DebtController {
         logger.debug("no_person : " + no_person);
 		if(no_person != null && !no_person.equals("")){
 			//부채메인 요약
-			DebtSummaryVO debtSummaryVO = debtManager.getDebtSummary(no_person);
-			model.addAttribute("debtSummaryData", debtSummaryVO);
+//			DebtSummaryVO debtSummaryVO = debtManager.getDebtSummary(no_person);
+//			model.addAttribute("debtSummaryData", debtSummaryVO);
 			//부채메인 리스트
 			DebtForm debtForm = new DebtForm();
 			debtForm.setNo_person(no_person);
@@ -157,15 +157,14 @@ public class DebtController {
 	 * @throws FinsetException
 	 */
 	@RequestMapping("/getDebtSummary.json")
-	public String getDebtSummary(Model model, HttpSession session) throws FinsetException {
+	public String getDebtSummary(Model model, HttpSession session, @RequestParam(value="no_person_list[]") List<String> no_person_list) throws FinsetException {
 		String no_person = (String) session.getAttribute("no_person");
-		DebtSummaryVO debtSummaryVO = debtManager.getDebtSummary(no_person);
-		model.addAttribute("debtSummaryData", debtSummaryVO);
-		
 		DebtForm debtForm = new DebtForm();
 		debtForm.setNo_person(no_person);
-		debtForm.setSt_yyyymm("201612");
-		debtForm.setEd_yyyymm("201711");
+		debtForm.setNo_person_list(no_person_list);
+		
+		DebtSummaryVO debtSummaryVO = debtManager.getDebtSummary(debtForm);
+		model.addAttribute("debtSummaryData", debtSummaryVO);
 		
 		List<DebtSummaryVO> rawStatList = debtManager.listStatDebtSummary(debtForm);
 		List<String> dateList = new ArrayList<String>();

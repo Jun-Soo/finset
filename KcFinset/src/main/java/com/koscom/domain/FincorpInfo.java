@@ -22,8 +22,8 @@ public class FincorpInfo implements Serializable{
 	protected String addr2_fc; 				//주소2
 	protected String tel;					//대표번호
 	protected String home_page;				//홈페이지
-	protected String path_file1; 			//로그파일 경로
-	protected String nm_file1; 				//로그파일 명
+	protected String path_file; 			//로그파일 경로
+	protected String nm_file; 				//로그파일 명
 	protected String nm_staff_contract; 	//계약 담당자 이름
 	protected String hp_staff_contract; 	//계약 담당자 휴대폰번호
 	protected String home_staff_contract; 	//계약 담당자 연락처
@@ -146,17 +146,17 @@ public class FincorpInfo implements Serializable{
 	public void setHome_page(String home_page) {
 		this.home_page = home_page;
 	}
-	public String getPath_file1() {
-		return path_file1;
+	public String getPath_file() {
+		return path_file;
 	}
-	public void setPath_file1(String path_file1) {
-		this.path_file1 = path_file1;
+	public void setPath_file(String path_file) {
+		this.path_file = path_file;
 	}
-	public String getNm_file1() {
-		return nm_file1;
+	public String getNm_file() {
+		return nm_file;
 	}
-	public void setNm_file1(String nm_file1) {
-		this.nm_file1 = nm_file1;
+	public void setNm_file(String nm_file) {
+		this.nm_file = nm_file;
 	}
 	public String getNm_staff_contract() {
 		return nm_staff_contract;

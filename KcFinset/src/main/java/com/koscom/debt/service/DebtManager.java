@@ -57,7 +57,7 @@ public interface DebtManager {
 	 * @param no_person
 	 * @return
 	 */
-	DebtSummaryVO getDebtSummary(String no_person);
+	DebtSummaryVO getDebtSummary(DebtForm debtForm);
 	
 	/**
 	 * 부채 리스트 조회

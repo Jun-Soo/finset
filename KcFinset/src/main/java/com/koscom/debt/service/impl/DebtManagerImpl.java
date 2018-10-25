@@ -77,8 +77,8 @@ public class DebtManagerImpl implements DebtManager {
 	}
 	
 	@Override
-	public DebtSummaryVO getDebtSummary(String no_person) {
-		return debtMapper.getDebtSummary(no_person);
+	public DebtSummaryVO getDebtSummary(DebtForm debtForm) {
+		return debtMapper.getDebtSummary(debtForm);
 	}
 	
 	@Override

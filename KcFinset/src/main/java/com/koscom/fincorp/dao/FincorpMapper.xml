@@ -18,7 +18,7 @@
 	
 	<select id="getFcPathFile" parameterType="String" resultType="String">
 		SELECT
-			PATH_FILE1
+			PATH_FILE
 		FROM
 			FC_INFO
 		WHERE
@@ -31,7 +31,7 @@
 		FROM
 			FC_INFO
 		WHERE
-				PATH_FILE1 = #{path_file1, jdbcType = VARCHAR}
+				PATH_FILE = #{path_file, jdbcType = VARCHAR}
 			AND IMG_BI IS NOT NULL
 	</select>
 	
@@ -56,10 +56,10 @@
 				,addr2_fc
 				,tel
 				,home_page
-				 <if test="@com.koscom.util.MybatisUtil@isNotEmpty(path_file1)">
-				,path_file1
+				 <if test="@com.koscom.util.MybatisUtil@isNotEmpty(path_file)">
+				,path_file
 				,img_bi
-				,nm_file1
+				,nm_file
 				</if>
 				,id_frt
 				,dt_frt
@@ -86,10 +86,10 @@
 					 ,#{addr2_fc, jdbcType=VARCHAR}
 					 ,#{tel, jdbcType=VARCHAR}
 					 ,#{home_page, jdbcType=VARCHAR}
-					  <if test="@com.koscom.util.MybatisUtil@isNotEmpty(path_file1)">
-					 ,#{path_file1, jdbcType=VARCHAR}
+					  <if test="@com.koscom.util.MybatisUtil@isNotEmpty(path_file)">
+					 ,#{path_file, jdbcType=VARCHAR}
 					 ,#{img_bi, jdbcType=BLOB}
-					 ,#{nm_file1, jdbcType=VARCHAR}
+					 ,#{nm_file, jdbcType=VARCHAR}
 					 </if>
 					, #{id_frt, jdbcType=VARCHAR}
 					, SYSDATE

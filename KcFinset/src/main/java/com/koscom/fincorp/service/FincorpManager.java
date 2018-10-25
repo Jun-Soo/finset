@@ -23,7 +23,7 @@ public interface FincorpManager {
 	 * @param String
 	 * @return String
 	 */
-	byte[] getImgBi(String path_file1) throws Exception;
+	byte[] getImgBi(String path_file) throws Exception;
 	
 	/**
 	 * COOCON 금융사 코드(스크래핑 대상)

@@ -27,9 +27,9 @@ public class FincorpManagerImpl implements FincorpManager{
 	}
 	
 	@Override
-	public byte[] getImgBi(String path_file1) throws Exception {
+	public byte[] getImgBi(String path_file) throws Exception {
         FincorpVO vo = new FincorpVO();
-        vo.setPath_file1(path_file1);
+        vo.setPath_file(path_file);
 	    @SuppressWarnings("rawtypes")
 		Map resMap = fincorpMapper.getImgBi(vo);
         byte[] imgBi = (resMap != null)?(byte[])resMap.get("img_bi"):null;

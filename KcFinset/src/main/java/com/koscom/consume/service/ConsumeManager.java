@@ -6,6 +6,8 @@ import com.koscom.consume.model.ConsumeDetailGoalInfoVO;
 import com.koscom.consume.model.ConsumeForm;
 import com.koscom.consume.model.ConsumeGoalInfoVO;
 import com.koscom.consume.model.ConsumeVO;
+import com.koscom.consume.model.PaymentForm;
+import com.koscom.consume.model.PaymentVO;
 import com.koscom.consume.model.PersonConsumeClassVO;
 import com.koscom.consume.model.PersonSetInfoVO;
 import com.koscom.consume.model.PersonTransDetailVO;
@@ -114,4 +116,11 @@ public interface ConsumeManager {
 	 * @return
 	 */
 	List<ConsumeVO> listCalendarConsumeData(ConsumeForm consumeForm);
+	
+	/**
+	 * 청구내역 리스트 조회
+	 * @param paymentForm
+	 * @return
+	 */
+	List<PaymentVO> listPayment(PaymentForm paymentForm);
 }

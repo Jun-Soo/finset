@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.koscom.consume.model.ConsumeForm;
 import com.koscom.consume.model.ConsumeGoalInfoVO;
 import com.koscom.consume.model.ConsumeVO;
+import com.koscom.consume.model.PaymentForm;
 import com.koscom.consume.model.PersonSetInfoVO;
 import com.koscom.consume.service.ConsumeManager;
 import com.koscom.util.FinsetException;
@@ -193,6 +194,16 @@ public class ConsumeController {
     @RequestMapping("/registerGoal")
     public String registerGoal(HttpSession session, Model model, ConsumeGoalInfoVO consumeGoalInfoVO) throws FinsetException {
     	logger.debug("registerGoal");
+    	return "jsonView";
+    }
+    
+    @RequestMapping("/listPayment.json")
+    public String getPayment(HttpSession session, Model model, @RequestParam(value="no_person_list[]") List<String> no_person_list, String charge_yyyymm) {
+    	logger.debug("listPayment");
+    	PaymentForm paymentForm = new PaymentForm();
+    	paymentForm.setNo_person_list(no_person_list);
+    	paymentForm.setCharge_yyyymm(charge_yyyymm);
+    	model.addAttribute("payment",consumeManager.listPayment(paymentForm));
     	return "jsonView";
     }
 }

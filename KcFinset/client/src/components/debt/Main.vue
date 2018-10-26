@@ -7,7 +7,6 @@
             <p class="key">대출잔액</p>
             <p class="value">{{formatNumber(debtSummaryData.amt_remain * 10000)}}<em>원</em></p>
           </div>
-          <!-- <div class="graph"><img src="../../assets/images/main/dept_graph.png" width="100%" alt=""/></div> -->
           <div class="graph"><chartjs-line :labels="mylabels" :datasets="mydatasets" :option="myoption" :bind="true"></chartjs-line></div>
           <div class="flex2 bar-graph">
             <div class="item">
@@ -24,7 +23,6 @@
               <p class="key">상환능력<em>(소득대비)</em></p>
               <div class="text-wrap">
                 <p class="big">{{calDsr(debtSummaryData.cur_mon_mid_rpy, debtSummaryData.amt_etm_income)}}<em>%</em></p>
-                <!-- <p class="small">{{formatNumber(debtSummaryData.amt_etm_income * 10000)}}<em>원</em></p> -->
               </div>
               <div class="bar">
                 <p class="active" :style="debtSummaryData.dsrStyle"></p>
@@ -33,8 +31,10 @@
           </div>
         </div>
       </div>
+
       <div class="banner-wrap owl-carousel">
-          <div class="item">
+        <carousel :perPage=1>
+          <slide class="item">
               <a href="#">
                   <div class="banner">
                       <div class="left">
@@ -46,8 +46,8 @@
                       </div>
                   </div>
               </a>
-          </div>
-          <div class="item">
+          </slide>
+          <slide class="item">
               <a href="#">
                   <div class="banner">
                       <div class="left">
@@ -59,8 +59,8 @@
                       </div>
                   </div>
               </a>
-          </div>
-          <div class="item">
+          </slide>
+          <slide class="item">
               <a href="#">
                   <div class="banner">
                       <div class="left">
@@ -72,14 +72,16 @@
                       </div>
                   </div>
               </a>
-          </div>
+          </slide>
+        </carousel>
       </div>
-      <div>
-        <div v-for="(person, index) in shareList" :key="person.no_person">
-          <button @click="clickShare(index)" :class="{'active': person.isShow === true}">{{person.nm_person}}</button>
-        </div>
-      </div>
+      
       <div class="list01 dept-list">
+				<div class="filter-wrap">
+					<div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
+							<input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)" :for="settingList[index].id">{{person.nm_person}}</label>
+					</div>
+				</div>
         <div class="item" v-for="vo in debtListData" :key="vo.no_manage_info">
           <div class="top">
             <p class="symbol"><img :src="vo.imgSrc" alt=""/>{{vo.nm_fc}}</p>
@@ -151,18 +153,25 @@ export default {
       myoption: {
         legend: {
           display: false
-        },
-        scales: {
-          yAxes: [
-            {
-              ticks: {
-                stepSize: 10000
-              }
-            }
-          ]
         }
+        // scales: {
+        //   yAxes: [
+        //     {
+        //       ticks: {
+        //         stepSize: 10000
+        //       }
+        //     }
+        //   ]
+        // }
       },
-      shareList: []
+      shareList: [],
+      settingList: [
+        { color: "red", id: "chk1" },
+        { color: "orange", id: "chk2" },
+        { color: "greend", id: "chk3" },
+        { color: "blue", id: "chk4" },
+        { color: "purple", id: "chk5" }
+      ]
     };
   },
   components: {},
@@ -175,8 +184,6 @@ export default {
   created() {},
   beforeMount() {},
   mounted() {
-    // this.listDebtPg();
-    // this.getDebtSummary();
     this.listDebtSharePersonInfo();
   },
   beforeUpdate() {},
@@ -216,19 +223,22 @@ export default {
     },
     getDebtSummary: function() {
       var _this = this;
-      this.$http.get("/m/debt/getDebtSummary.json").then(function(response) {
-        var data = response.data.debtSummaryData;
-        _this.debtSummaryData = data;
-        _this.debtSummaryData.repayStyle =
-          "width:" + data.rate_amt_contract + "%";
-        _this.debtSummaryData.dsrStyle =
-          "width:" +
-          _this.calDsr(data.cur_mon_mid_rpy, data.amt_etm_income) +
-          "%";
-
-        _this.mylabels = response.data.dateList;
-        _this.$set(_this.mydatasets[0], "data", response.data.dataList);
-      });
+      this.$http
+        .get("/m/debt/getDebtSummary.json", {
+          params: { no_person_list: _this.filterShareList() }
+        })
+        .then(function(response) {
+          var data = response.data.debtSummaryData;
+          _this.debtSummaryData = data;
+          _this.debtSummaryData.repayStyle =
+            "width:" + data.rate_amt_contract + "%";
+          _this.debtSummaryData.dsrStyle =
+            "width:" +
+            _this.calDsr(data.cur_mon_mid_rpy, data.amt_etm_income) +
+            "%";
+          _this.mylabels = response.data.dateList;
+          _this.$set(_this.mydatasets[0], "data", response.data.dataList);
+        });
     },
     formatNumber: function(number) {
       return Common.formatNumber(number);

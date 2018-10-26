@@ -1,12 +1,14 @@
 <template>
   <div class="main">
     <draggable v-model="myArray" @start="drag=true" @end="drag=false">
-      <div v-for="element in myArray" :key="element.order">{{element.name}}</div>
+      <div class="card" v-for="element in myArray" :key="element.order"><span class="left">=</span> {{element.name}}</div>
     </draggable>
   </div>
 </template>
 
 <script>
+import draggable from 'vuedraggable'
+
 export default {
   name: "ConsumeDraggable",
   data() {
@@ -55,7 +57,9 @@ export default {
       ]
     };
   },
-  components: {},
+  components: {
+    draggable,
+  },
   // computed () {
   // },
   beforeCreate() {},
@@ -72,4 +76,14 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
+.card {
+  width: 100%;
+  height: 50px;
+  text-align: center;
+  border: 1px solid #000;
+}
+.left {
+  float: left;
+  font-size: 30px;
+}
 </style>

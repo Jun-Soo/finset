@@ -19,8 +19,10 @@
                 </div>
             </div>
         </div>
+
         <div class="banner-wrap owl-carousel">
-            <div class="item">
+          <carousel :perPage=1>
+            <slide class="item">
                 <a href="#">
                     <div class="banner">
                         <div class="left">
@@ -32,8 +34,8 @@
                         </div>
                     </div>
                 </a>
-            </div>
-            <div class="item">
+            </slide>
+            <slide class="item">
                 <a href="#">
                     <div class="banner">
                         <div class="left">
@@ -45,8 +47,8 @@
                         </div>
                     </div>
                 </a>
-            </div>
-            <div class="item">
+            </slide>
+            <slide class="item">
                 <a href="#">
                     <div class="banner">
                         <div class="left">
@@ -58,13 +60,10 @@
                         </div>
                     </div>
                 </a>
-            </div>
+            </slide>
+          </carousel>
         </div>
-        <div>
-          <div v-for="(person, index) in shareList" :key="person.no_person">
-            <button @click="clickShare(index)" :class="{'active': person.isShow === true}">{{person.nm_person}}</button>
-          </div>
-        </div>
+
         <div class="tab">
             <div class="wrap col3">
                 <a href="#" id="00" :class="{'on':curTab === '00'}" @click="clickTab">전체</a>
@@ -72,20 +71,35 @@
                 <a href="#" id="01" :class="{'on':curTab === '01'}" @click="clickTab">수입</a>
             </div>
         </div>
-        <!-- <div v-if="consumeList.length!=0" class="list02 spend-list"> -->
+
         <div class="list02 spend-list">
-          <div v-for="subList in consumeList" :key="subList.index" class="list-wrap">
-            <p class="date">{{formatDate(subList[0].dt_trd,"mmdd")}}</p>
-            <div v-for="vo in subList" :key="vo.index" class="item">
-              <div class="left">
-                  <p class="name">{{vo.contents}}</p>
-                  <p class="cate"><img src="../../assets/images/common/bu_list_shopping.png" alt=""/><span>{{vo.nm_class}} - {{vo.nm_type}}</span></p>
+          <div v-if="consumeList.length!=0" >
+            <div v-for="(subList, index) in consumeList" :key="index" class="list-wrap">
+              <div v-if="index==0" class="filter-wrap">
+                <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
+                    <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)" :for="settingList[index].id">{{person.nm_person}}</label>
+                </div>
               </div>
-              <div class="right">
-                  <p :class="chkType(vo.type_in_out)" class="number">{{formatNumber(vo.amt_in_out,vo.type_in_out=='02',vo.type_in_out=='01')}}<em>원</em></p>
-                  <p class="text">{{formatMeansConsume(vo.means_consume)}}</p>
+              <p class="date">{{formatDate(subList[0].dt_trd,"mmdd")}}</p>
+              <div v-for="vo in subList" :key="vo.index" class="item">
+                <div class="left">
+                    <p class="name">{{vo.contents}}</p>
+                    <p class="cate"><img src="../../assets/images/common/bu_list_shopping.png" alt=""/><span>{{vo.nm_class}} - {{vo.nm_type}}</span></p>
+                </div>
+                <div class="right">
+                    <p :class="chkType(vo.type_in_out)" class="number">{{formatNumber(vo.amt_in_out,vo.type_in_out=='02',vo.type_in_out=='01')}}<em>원</em></p>
+                    <p class="text">{{formatMeansConsume(vo.means_consume)}}</p>
+                </div>
               </div>
             </div>
+          </div>
+          <div v-else class="list-wrap">
+              <div class="filter-wrap">
+                <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
+                    <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)" :for="settingList[index].id">{{person.nm_person}}</label>
+                </div>
+              </div>
+            <div class="">소비,지출 내역이 없습니다.</div>
           </div>
           <button class="btn-spend-add"></button>
         </div>
@@ -109,7 +123,14 @@ export default {
       curTab: "00",
       standardDt: new Date(),
       income: "",
-      consume: ""
+      consume: "",
+      settingList: [
+        { color: "red", id: "chk1" },
+        { color: "orange", id: "chk2" },
+        { color: "greend", id: "chk3" },
+        { color: "blue", id: "chk4" },
+        { color: "purple", id: "chk5" }
+      ]
     };
   },
   components: {},
@@ -222,7 +243,7 @@ export default {
       var shareList = new Array();
       var _this = this;
       for (var idx in _this.shareList) {
-        if(_this.shareList[idx].isShow){
+        if (_this.shareList[idx].isShow) {
           shareList.push(_this.shareList[idx].no_person);
         }
       }

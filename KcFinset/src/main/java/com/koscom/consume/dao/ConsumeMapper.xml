@@ -408,4 +408,27 @@
 		ORDER BY
 			DT_TRD DESC 
     </select>
+    
+    <select id="listPayment" parameterType="com.koscom.consume.model.PaymentForm" resultType="com.koscom.consume.model.PaymentVO">
+		SELECT
+			 SCCI.NO_PERSON
+			,PI.NM_PERSON
+			,SCCI.CD_FC
+			,FI.NM_FC
+			,SCCI.CHARGE_YYYYMM
+			,SCCI.MONTHLY_CHARGE
+			,SCCI.DT_FRT
+		FROM
+			 SCR_CARD_CHARGE_INFO SCCI
+			,PERSON_INFO PI
+			,FC_INFO FI
+		WHERE
+				SCCI.NO_PERSON		IN
+					<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
+						#{each_person}
+					</foreach>
+			AND SCCI.NO_PERSON	= PI.NO_PERSON
+			AND SCCI.CD_FC		= FI.CD_FC 
+			AND CHARGE_YYYYMM	= #{charge_yyyymm	, jdbcType=VARCHAR}
+    </select>
 </mapper>

@@ -13,6 +13,8 @@ import com.koscom.consume.model.ConsumeDetailGoalInfoVO;
 import com.koscom.consume.model.ConsumeForm;
 import com.koscom.consume.model.ConsumeGoalInfoVO;
 import com.koscom.consume.model.ConsumeVO;
+import com.koscom.consume.model.PaymentForm;
+import com.koscom.consume.model.PaymentVO;
 import com.koscom.consume.model.PersonConsumeClassVO;
 import com.koscom.consume.model.PersonSetInfoVO;
 import com.koscom.consume.model.PersonTransDetailVO;
@@ -131,5 +133,11 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	public List<ConsumeVO> listCalendarConsumeData(ConsumeForm consumeForm) {
 		logger.debug("listCalendarConsumeData");
 		return consumeMapper.listCalendarConsumeData(consumeForm);
+	}
+	
+	@Override
+	public List<PaymentVO> listPayment(PaymentForm paymentForm) {
+		logger.debug("listPayment");
+		return consumeMapper.listPayment(paymentForm);
 	}
 }

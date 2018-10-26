@@ -1,0 +1,185 @@
+<template>
+  <section>
+      <div class="con-top cut-top">
+          <p><em>아래의 조건 중 일부 부합이 되면</em><br>금리인하요구권을<br>신청할 수 있습니다</p>
+          <a href="#">바로가기</a>
+      </div>
+      
+      <div class="cut-result-top">
+          <div class="item">
+              <div class="top">
+                  <p class="symbol"><img src="../../assets/images/common/bu_samsung.png" alt=""/>삼성생명보험</p>
+                  <p class="date">2018.5.2</p>
+              </div>
+              <div class="goods-benefit">
+                  <div>2.71<em> %</em></div>
+                  <div>15,000<em> 만원</em></div>
+              </div>
+              <a href="#" class="btn">전화로 문의하기</a>
+          </div>
+          <div class="item">
+              <div class="top">
+                  <p class="symbol"><img src="../../assets/images/common/bu_samsung.png" alt=""/>삼성생명보험</p>
+                  <p class="date">2018.5.2</p>
+              </div>
+              <div class="goods-benefit">
+                  <div>2.71<em> %</em></div>
+                  <div>15,000<em> 만원</em></div>
+              </div>
+              <a href="#" class="btn">전화로 문의하기</a>
+          </div>
+      </div>
+      
+      <div class="accodion">
+          <div class="info-massage">아래의 기준은 은행별로 상이 할 수 있습니다.</div>
+          <ul>
+              <li>
+                  <div class="top"><a href="#">최근에 신용등급이 오르셨나요 ?</a></div>
+                  <div class="con">
+                      <div class="flex">
+                          <p>기준일</p>
+                          <p>
+                              <select>
+                                  <option>2018-08-01</option>
+                              </select>
+                          </p>
+                      </div>
+                      <p class="text">최근 신용등급이 2등급 이상 오른 경우 상승하기 전에 개설 했던 대출에 대해서 금리인하권을 요구 할 수 있습니다.</p>
+                  </div>
+              </li>
+              <li>
+                  <div class="top"><a href="#">최근 직장을 변동이 있으셨나요 ?</a></div>
+                  <div class="con">
+                      <div class="flex">
+                          <p>이직일</p>
+                          <p>
+                              <select>
+                                  <option>2018-08-01</option>
+                              </select>
+                          </p>
+                      </div>
+                      <div class="flex">
+                          <p>이전직장</p>
+                          <p><button class="search"></button></p>
+                      </div>
+                      <div class="flex">
+                          <p>현재직장</p>
+                          <p><button class="search"></button></p>
+                      </div>
+                  </div>
+              </li>
+              <li>
+                  <div class="top"><a href="#">최근 연소득이 증가하셨나요 ?</a></div>
+                  <div class="con">
+                      <div class="flex">
+                          <p>기준일</p>
+                          <p>
+                              <select>
+                                  <option>2018-08-01</option>
+                              </select>
+                          </p>
+                      </div>
+                      <div class="flex">
+                          <p>변경전</p>
+                          <p><input type="text" placeholder="원"></p>
+                      </div>
+                      <div class="flex">
+                          <p>변경후</p>
+                          <p><input type="text" placeholder="원"></p>
+                      </div>
+                      <p class="text">신규 및 연장 시점 대비 연소득이 15% 이상 상승된 경우 요구가 가능합니다.</p>
+                  </div>
+              </li>
+              <li>
+                  <div class="top"><a href="#">최근 부채가 감소하셨나요 ?</a></div>
+                  <div class="con">
+                      <div class="flex">
+                          <p>기준일</p>
+                          <p>
+                              <select>
+                                  <option>2018-08-01</option>
+                              </select>
+                          </p>
+                      </div>
+                      <div class="flex">
+                          <p>변경전</p>
+                          <p><input type="text" placeholder="원"></p>
+                      </div>
+                      <div class="flex">
+                          <p>변경후</p>
+                          <p><input type="text" placeholder="원"></p>
+                      </div>
+                      <p class="text">신규 및 연장 시점 대비 연소득이 15% 이상 상승된 경우 요구가 가능합니다.</p>
+                  </div>
+              </li>
+              <li>
+                  <div class="top"><a href="#">동일 직장내에서 직위가 상승 하셨나요 ?</a></div>
+                  <div class="con">
+                      <div class="flex">
+                          <p>기준일</p>
+                          <p>
+                              <select>
+                                  <option>2018-08-01</option>
+                              </select>
+                          </p>
+                      </div>
+                      <p class="text">신규 및 연장 시점 대비 부채가 현저히 낮아진 경우 요구가 가능합니다.</p>
+                  </div>
+              </li>
+              <li>
+                  <div class="top"><a href="#">전문 자격증을 취득하셨나요 ?</a></div>
+                  <div class="con">
+                      <div class="flex">
+                          <p>기준일</p>
+                          <p>
+                              <select>
+                                  <option>2018-08-01</option>
+                              </select>
+                          </p>
+                      </div>
+                      <div class="flex">
+                          <p>자격증</p>
+                          <p>
+                              <select>
+                                  <option></option>
+                              </select>
+                          </p>
+                      </div>
+                      <p class="text">은행에서 정하는 직업평가기준표에 의한 전문자격증을 취득한 경우 요구가 가능합니다.</p>
+                  </div>
+              </li>
+          </ul>
+      </div>
+      
+      <div class="btn-wrap">
+          <a href="#" class="solid blue box">검색</a>
+      </div>
+  </section>
+</template>
+
+<script>
+export default {
+  name: "",
+  data() {
+    return {};
+  },
+  components: {},
+  computed: {},
+  beforeCreate() {
+    this.$store.state.header.type = "sub";
+    this.$store.state.title = "금리인하요구";
+  },
+  created() {},
+  beforeMount() {},
+  mounted() {},
+  beforeUpdate() {},
+  updated() {},
+  beforeDestroy() {},
+  destroyed() {},
+  methods: {}
+};
+</script>
+
+<!-- Add 'scoped' attribute to limit CSS to this component only -->
+<style lang="scss">
+</style>

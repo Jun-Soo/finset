@@ -1,0 +1,61 @@
+/*   Main   */
+
+@import "compass/css3";
+@import "color";
+@import "mixin";
+@import "layout";
+
+
+
+/*   Common   */
+
+.pop-top{
+    text-align: center;
+    position: relative;
+    .title{
+        font-size: 16px;
+        line-height: 60px;
+        color: #222;
+        font-weight: 500;
+        background: #efeeec;
+    }
+    a{
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 60px;
+        height: 60px;
+        background: url(../images/common/btn_close_pop.png) no-repeat center / contain;
+    } 
+}
+
+.container{
+    padding: 30px 21px;
+}
+
+
+.date{
+    font-size: 12px;
+    color: #888;
+}
+
+.pop-wrap h2{
+    font-size: 15px;
+    color: #333;
+    font-weight: 500;
+    margin-top: 25px;
+}
+
+.pop-wrap h3{
+    font-size: 12px;
+    color: #333;
+    font-weight: 500;
+    margin-top: 20px;
+}
+
+.pop-wrap p{
+    line-height: 18px;
+    font-size: 12px;
+    color: #666;
+}

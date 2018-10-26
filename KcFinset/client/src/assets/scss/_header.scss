@@ -1,0 +1,141 @@
+/*  GNB  */
+
+header{
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
+    z-index: 2;
+    .open-menu{
+        width: 60px;
+        height: 60px;
+        background: url(../images/common/header_menu_btn.png) no-repeat center / contain;
+        position: absolute;
+        top: 0;
+        right: 0;
+        text-indent: -9999px;
+    }
+    .gnb-wrap{
+        overflow: hidden;
+        position: absolute;
+        width: 0;
+        background: #fff;
+        top: 0;
+        right: 0;
+        height: 100vh;
+        transition: .5s ease;
+        transform: translateX(100%);
+        z-index: 3;
+        .top{
+            height: 60px;
+            position: relative;
+            border-bottom: 1px solid $lineColor;
+            .left{
+                position: absolute;
+                left: 6px;
+                top: 6px;
+                button{
+                    width: 48px;
+                    height: 48px;
+                    float: left;
+                    &.alarm{
+                        background: url(../images/common/gnb_alarm.png) no-repeat center / contain;
+                    }
+                    &.logout{
+                        background: url(../images/common/gnb_logout.png) no-repeat center / contain;
+                    }
+                }
+            }
+            .right{
+                position: absolute;
+                top: 0;
+                right: 0;
+                button{
+                    width: 60px;
+                    height: 60px;
+                    background: url(../images/common/gnb_close.png) no-repeat center / contain;
+                }
+            }
+        }
+        .scroll-wrap{
+            height: calc(100vh - 120px);  
+            overflow: auto;
+            .info{
+                padding: 25px 20px;
+                border-bottom: 1px solid $lineColor;
+                position: relative;
+                @include box-sizing(border-box);
+                .name{
+                    color: #222;
+                    font-weight: 700;
+                    font-size: 16px;
+
+                }
+                .date{
+                    color: #bfada1;
+                    margin-top: 10px;
+                    color: $col2;
+                }
+                a{
+                    display: inline-block;
+                    line-height: 28px;
+                    padding: 0 15px;
+                    border: 1px solid $col2;
+                    color: $col2;
+                    font-size: 12px;
+                    font-weight: 500;
+                    text-align: center;
+                    position: absolute;
+                    right: 21px;
+                    top: 50%;
+                    margin-top: -15px;
+                    border-radius: 15px;
+                }
+            }
+            .links{
+                display: flex;
+                flex-wrap: wrap;
+                a{
+                    display: block;
+                    width: 25%;
+                    text-align:center;
+                    padding-top: 64px;
+                    padding-bottom: 30px;
+                    color: #333;
+                    font-size: 12px;
+                    @include box-sizing(border-box);
+                    @for $i from 1 through 8{
+                        &:nth-child(#{$i}){
+                            background: url('../images/common/gnb_ico#{$i}.png') no-repeat 50% 30px / 24px;
+                        }
+                    }
+                }
+            }
+        }
+        &.on{
+            transform: translateX(0);
+            width: 100%;
+            overflow: auto;
+        }
+    }
+}
+
+#gnb{
+    dt{
+        background: #f0efed;
+        line-height: 30px;
+        font-size: 12px;
+        color: #666;
+        text-indent: 20px;
+    }
+    dd{
+        a{
+            font-size: 14px;
+            font-weight: 500;
+            color: #333;
+            line-height: 40px; 
+            text-indent: 20px;
+            display: block;
+        }
+    }
+}

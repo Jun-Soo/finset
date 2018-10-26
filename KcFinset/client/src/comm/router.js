@@ -17,6 +17,7 @@ import CertFingerLogin from '@/components/member/CertFingerLogin'
 import CreditHome from '@/components/credit/Home'
 import CreditMain from '@/components/credit/Main'
 import CreditDetail from '@/components/credit/Detail'
+import CreditRaiseInsPersonInfo from '@/components/credit/RaiseInsPersonInfo'
 
 import ErrorPage from '@/components/common/Error'
 import ProxyPage from '@/components/common/ProxyPage'
@@ -27,6 +28,7 @@ import DebtMain from '@/components/debt/Main'
 import DebtCalendar from '@/components/debt/Calendar'
 import DebtDetail from '@/components/debt/Detail'
 import DebtUpdate from '@/components/debt/Update'
+import DebtReqIntrCut from '@/components/debt/ReqIntrCut'
 
 import MemoHome from '@/components/memo/Home'
 import MemoMain from '@/components/memo/Main'
@@ -40,7 +42,7 @@ import ConsumeDraggable from '@/components/consume/Draggable'
 import GoodsHome from '@/components/goods/Home'
 import GoodsList from '@/components/goods/List'
 import GoodsDetail from '@/components/goods/Detail'
-import WorkerGoods from '@/components/goods/WorkerGoods'
+import GoodsWorkerGoods from '@/components/goods/WorkerGoods'
 
 import ShareHome from '@/components/share/Home'
 import ShareSumMain from '@/components/share/SumMain'
@@ -50,9 +52,10 @@ import ShareNewRequest from '@/components/share/NewRequest'
 import ShareMain from '@/components/share/Main'
 
 import ScrapHome from '@/components/scrap/Home'
-import CertStep from '@/components/scrap/CertStep'
-import Loading from '@/components/scrap/Loading'
-import RegFcLink from '@/components/scrap/RegFcLink'
+import ScrapCertStep from '@/components/scrap/CertStep'
+import ScrapLoading from '@/components/scrap/Loading'
+import ScrapRegFcLink from '@/components/scrap/RegFcLink'
+import ScrapCtrlFcLink from '@/components/scrap/CtrlFcLink'
 
 // import MypageHome from '@/components/mypage/Home'
 // import CertPerson from '@/components/mypage/CertPerson'
@@ -78,6 +81,9 @@ import Terms7 from '@/components/member/Terms7'
 import Terms8 from '@/components/member/Terms8'
 import Terms9 from '@/components/member/Terms9'
 import Terms10 from '@/components/member/Terms10'
+
+import NewsHome from '@/components/news/Home'
+import NewsMain from '@/components/news/Main'
 
 Vue.use(Router)
 
@@ -242,6 +248,12 @@ export const routes = [
         alias: '/detail',
         component: CreditDetail,
         meta: { allowPath: true, requiresAuth: true }
+      },
+      {
+        path: 'raiseInsPersonInfo',
+        alias: '/raiseInsPersonInfo',
+        component: CreditRaiseInsPersonInfo,
+        meta: { allowPath: true, requiresAuth: true }
       }
     ]
   },
@@ -273,6 +285,13 @@ export const routes = [
         alias: '/update',
         name: 'debtUpdate',
         component: DebtUpdate,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'reqIntrCut',
+        alias: '/reqIntrCut',
+        name: 'debtReqIntrCut',
+        component: DebtReqIntrCut,
         meta: { allowPath: true }
       }
     ]
@@ -338,7 +357,7 @@ export const routes = [
       {
         path: 'workergoods',
         alias: '/workergoods',
-        component: WorkerGoods,
+        component: GoodsWorkerGoods,
         meta: { allowPath: true }
       }
     ]
@@ -393,21 +412,28 @@ export const routes = [
         path: 'certStep',
         alias: '/certStep',
         name: 'scrapCertStep',
-        component: CertStep,
+        component: ScrapCertStep,
         meta: { allowPath: true }
       },
       {
         path: 'loading',
         alias: '/lodaing',
         name: 'scrapLoading',
-        component: Loading,
+        component: ScrapLoading,
         meta: { allowPath: true }
       },
       {
         path: 'regFcLink',
         alias: '/regFcLink',
         name: 'scrapRegFcLink',
-        component: RegFcLink,
+        component: ScrapRegFcLink,
+        meta: { allowPath: true }
+      },
+      {
+        path: 'ctrlFcLink',
+        alias: '/ctrlFcLink',
+        name: 'scrapCtrlFcLink',
+        component: ScrapCtrlFcLink,
         meta: { allowPath: true }
       }
     ]
@@ -476,6 +502,19 @@ export const routes = [
         path: 'chartMultipleBar',
         alias: '/chartMultipleBar',
         component: TemplateChartMultipleBar,
+        meta: { allowPath: true }
+      }
+    ]
+  },
+  {
+    path: '/news',
+    component: NewsHome,
+    children: [
+      {
+        path: 'main',
+        alias: '/main',
+        name: 'newsMain',
+        component: NewsMain,
         meta: { allowPath: true }
       }
     ]

@@ -63,6 +63,7 @@ public class CreditInfo implements Serializable {
 	private String debt_cnt;
 	private String sum_amt_remain;
 	private String sum_amt_contract;
+	private String no_manage_info;
 	private String ymd_loan;
 	private String amt_remain;
 	private String amt_contract;
@@ -458,6 +459,14 @@ public class CreditInfo implements Serializable {
 
 	public void setSum_amt_contract(String sum_amt_contract) {
 		this.sum_amt_contract = sum_amt_contract;
+	}
+
+	public String getNo_manage_info() {
+		return no_manage_info;
+	}
+
+	public void setNo_manage_info(String no_manage_info) {
+		this.no_manage_info = no_manage_info;
 	}
 
 	public String getYmd_loan() {

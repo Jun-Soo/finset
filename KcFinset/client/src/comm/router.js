@@ -17,6 +17,11 @@ import CertFingerLogin from '@/components/member/CertFingerLogin'
 import CreditHome from '@/components/credit/Home'
 import CreditMain from '@/components/credit/Main'
 import CreditDetail from '@/components/credit/Detail'
+import CreditCardInfo from '@/components/credit/CardInfo'
+import CreditLoanInfo from '@/components/credit/LoanInfo'
+import CreditOverdueInfo from '@/components/credit/OverdueInfo'
+import CreditGuaranteeInfo from '@/components/credit/GuaranteeInfo'
+import CreditSmartReport from '@/components/credit/SmartReport'
 import CreditRaiseInsPersonInfo from '@/components/credit/RaiseInsPersonInfo'
 
 import ErrorPage from '@/components/common/Error'
@@ -247,6 +252,41 @@ export const routes = [
         path: 'detail',
         alias: '/detail',
         component: CreditDetail,
+        meta: { allowPath: true, requiresAuth: true }
+      },
+      {
+        path: 'cardInfo',
+        alias: '/cardInfo',
+        name: 'creditCardInfo',
+        component: CreditCardInfo,
+        meta: { allowPath: true, requiresAuth: true }
+      },
+      {
+        path: 'loanInfo',
+        alias: '/loanInfo',
+        name: 'creditLoanInfo',
+        component: CreditLoanInfo,
+        meta: { allowPath: true, requiresAuth: true }
+      },
+      {
+        path: 'overdueInfo',
+        alias: '/overdueInfo',
+        name: 'creditOverdueInfo',
+        component: CreditOverdueInfo,
+        meta: { allowPath: true, requiresAuth: true }
+      },
+      {
+        path: 'guaranteeInfo',
+        alias: '/guaranteeInfo',
+        name: 'creditGuaranteeInfo',
+        component: CreditGuaranteeInfo,
+        meta: { allowPath: true, requiresAuth: true }
+      },
+      {
+        path: 'smartReport',
+        alias: '/smartReport',
+        name: 'creditSmartReport',
+        component: CreditSmartReport,
         meta: { allowPath: true, requiresAuth: true }
       },
       {

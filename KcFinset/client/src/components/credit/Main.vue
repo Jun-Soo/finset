@@ -20,59 +20,56 @@
         </div>
     </div>
     
-    <swiper direction="horizontal"
-        :mousewheel-control="true"
-        :performance-mode="false"
-        :pagination-visible="true"
-        :pagination-clickable="true"
-        :loop="true">
-          <div class="item">
+    <div class="banner-wrap owl-carousel">
+        <div class="item">
             <a href="#">
                 <div class="banner">
-                  <div class="left">
-                    <p class="key">우리가족 가계부</p>
-                    <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
-                 </div>
-                 <div class="right">
-                  <img src="./../../assets/images/main/banner_ico.png" alt=""/>
+                    <div class="left">
+                        <p class="key">우리가족 가계부</p>
+                        <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                    </div>
+                    <div class="right">
+                        <img src="../../assets/images/main/banner_ico.png" alt=""/>
+                    </div>
                 </div>
-              </div>
             </a>
-          </div>
-          <div class="item">
+        </div>
+        <div class="item">
             <a href="#">
                 <div class="banner">
-                  <div class="left">
-                    <p class="key">우리가족 가계부</p>
-                    <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
-                 </div>
-                 <div class="right">
-                  <img src="./../../assets/images/main/banner_ico.png" alt=""/>
+                    <div class="left">
+                        <p class="key">우리가족 가계부</p>
+                        <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                    </div>
+                    <div class="right">
+                        <img src="../../assets/images/main/banner_ico.png" alt=""/>
+                    </div>
                 </div>
-              </div>
             </a>
-          </div>
-          <div class="item">
+        </div>
+        <div class="item">
             <a href="#">
                 <div class="banner">
-                  <div class="left">
-                    <p class="key">우리가족 가계부</p>
-                    <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
-                 </div>
-                 <div class="right">
-                  <img src="./../../assets/images/main/banner_ico.png" alt=""/>
+                    <div class="left">
+                        <p class="key">우리가족 가계부</p>
+                        <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                    </div>
+                    <div class="right">
+                        <img src="../../assets/images/main/banner_ico.png" alt=""/>
+                    </div>
                 </div>
-              </div>
             </a>
-          </div>
-    </swiper>
+        </div>
+    </div>
 
     <div class="credit-change">
 		    <div class="top">
 		          <p class="title">나의 신용정보 변동</p>
 		      </div>
 		    <div class="link">
-		       <a href="#">{{ changeInfo!=null ? changeInfo.dt_info+" "+changeInfo.nm_fc+""+changeInfo.change_contents+"되었습니다" : "" }}</a>
+		       <a @click="$router.push('credit/detail')">
+                    {{ changeInfo!=null ? changeInfo.dt_info+" "+changeInfo.nm_fc+" "+changeInfo.change_contents+"되었습니다" : "" }}
+               </a>
 		    </div>
 		</div>
 
@@ -80,26 +77,31 @@
        <p class="title">나의 신용거래 현황</p>
        <div class="wrap">
            <div class="item">
-               <p class="key">8월 카드이용</p>
-               <p class="value">{{cardSumAmt}}<em>원</em></p>
+              <a @click="$router.push('/credit/cardInfo')">
+                <p class="key">8월 카드이용</p>
+                <p class="value">{{formatNumber(cardSumAmt)}}<em>원</em></p>
+              </a>
            </div>
            <div class="item">
-               <p class="key">대출 잔액</p>
-               <p class="value">{{debtSumAmtRemain}}<em>원</em></p>
+              <a @click="$router.push('/credit/loanInfo')">
+                <p class="key">대출 잔액</p>
+                <p class="value">{{formatNumber(debtSumAmtRemain)}}<em>원</em></p>
+              </a>
            </div>
            <div class="item">
-               <p class="key">연체 원금</p>
-               <p class="value">{{overdueSumAmt}}<em>원</em></p>
+              <a @click="$router.push('/credit/overdueInfo')">
+                <p class="key">연체 원금</p>
+                <p class="value">{{formatNumber(overdueSumAmt)}}<em>원</em></p>
+              </a>
            </div>
            <div class="item">
-               <p class="key">연대보증 원금</p>
-               <p class="value">{{guaranteeSumAmt}}<em>원</em></p>
+              <a @click="$router.push('/credit/guaranteeInfo')">
+                <p class="key">연대보증 원금</p>
+                <p class="value">{{formatNumber(guaranteeSumAmt)}}<em>원</em></p>
+              </a>
            </div>
        </div>
    </div>
-        
-    
-
   </section>
 </template>
 
@@ -110,7 +112,7 @@ import Constant from "./../../assets/js/constant.js";
 import ko from "vee-validate/dist/locale/ko.js";
 
 export default {
-  name: 'FinsetMain',
+  name: "creditMain",
   data() {
     return {
       currentDate: "", //현재일자
@@ -119,63 +121,57 @@ export default {
       cardSumAmt: "", //카드이용금액
       debtSumAmtRemain: "", //대출잔액
       overdueSumAmt: "", //연체원금
-      guaranteeSumAmt: "", //연대보증원금
-    }
+      guaranteeSumAmt: "" //연대보증원금
+    };
   },
-  component: {
-  },
+  component: {},
   // computed () {
   // },
-  beforeCreate() {
-  },
+  beforeCreate() {},
   created() {
-    this.$store.state.header.type = 'main'
-    this.$store.state.header.active = 'credit'
-    this.getCreditInfoMain()
+    this.$store.state.header.type = "main";
+    this.$store.state.header.active = "credit";
+    this.getCreditInfoMain();
   },
-  beforeMount() {
-  },
-  mounted() {
-  },
-  beforeUpdate() {
-  },
-  updated() {
-  },
-  beforeDestroy() {
-  },
-  destroyed() {
-  },
+  beforeMount() {},
+  mounted() {},
+  beforeUpdate() {},
+  updated() {},
+  beforeDestroy() {},
+  destroyed() {},
   methods: {
-
     // 신용정보 조회
     getCreditInfoMain: function() {
-      var _this = this
-      this.$http.get('/m/credit/getCreditMainInfo.json', {
-        params: {}
-      })
-      .then(response => {
-        _this.currentDate = response.data.currentDate
+      var _this = this;
+      this.$http
+        .get("/m/credit/getCreditMainInfo.json", {
+          params: {}
+        })
+        .then(response => {
+          _this.currentDate = response.data.currentDate;
 
-        _this.baseInfo = response.data.baseInfo
-        // console.log("baseInfo : "+JSON.stringify(_this.baseInfo))
+          _this.baseInfo = response.data.baseInfo;
+          // console.log("baseInfo : "+JSON.stringify(_this.baseInfo));
 
-        _this.changeInfo = response.data.changeInfo
-        // console.log("changeInfo : "+JSON.stringify(_this.changeInfo))
+          _this.changeInfo = response.data.changeInfo;
+          // console.log("changeInfo : "+JSON.stringify(_this.changeInfo));
 
-        _this.cardSumAmt = response.data.cardSumAmt
-        _this.debtSumAmtRemain = response.data.debtSumAmtRemain
-        _this.overdueSumAmt = response.data.overdueSumAmt
-        _this.guaranteeSumAmt = response.data.guaranteeSumAmt
-      })
-      .catch(e => {
-        this.$toast.center(ko.messages.error)
-      })
+          _this.cardSumAmt = response.data.cardSumAmt;
+          _this.debtSumAmtRemain = response.data.debtSumAmtRemain;
+          _this.overdueSumAmt = response.data.overdueSumAmt;
+          _this.guaranteeSumAmt = response.data.guaranteeSumAmt;
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+        });
+    },
+    formatNumber: function(data) {
+      return Common.formatNumber(data);
     }
   }
-}
+};
 </script>
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
-
 </style>

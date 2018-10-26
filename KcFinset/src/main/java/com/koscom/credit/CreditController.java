@@ -118,7 +118,7 @@ public class CreditController {
 
 	        //카드 이용금액 계산
 	        for (int i = 0; i < listCardUseGson.size(); i++) {
-	        	cardSumAmt += Math.round(Double.valueOf(StringUtil.NVL(listCardUseGson.get(i).get("amt_total"), "0"))/10000);
+	        	cardSumAmt += Integer.parseInt(StringUtil.NVL(listCardUseGson.get(i).get("amt_total"), "0"));
 		    }
         }
         model.addAttribute("cardSumAmt", cardSumAmt);
@@ -325,6 +325,65 @@ public class CreditController {
     }
 
 
+    /**
+     * VUE
+     * 신용관리 스마트리포트
+     * @param request
+     * @param session
+     * @param model
+     * @return String
+     * @throws UnsupportedEncodingException,FinsetException,IOException
+     */
+    @RequestMapping("/getCreditSmartReportInfo.json")
+    public String getCreditSmartReportInfo(HttpServletRequest request, HttpSession session, Model model) throws UnsupportedEncodingException,FinsetException,IOException {
+
+        String      no_person   = (String)session.getAttribute("no_person");
+        PersonVO    vo          = personManager.getPersonInfo(no_person);
+
+        String profile = environment.getProperty("service.profile");
+
+        if(!"LOCAL".equals(profile)) {
+
+        	//1. 600전문 신용정보 URL 조회 (DEV, REAL)
+    		KcbCreditInfoVO info = new KcbCreditInfoVO();
+
+    		info.setNmIf("600420");
+
+    		info.setCd_regist("09"); // 01 신규, 09 URL
+    		info.setBgn(vo.getBgn()); // 생년월일, 성별
+    		info.setNoPerson(no_person); // 회원번호(TEST)
+    		info.setNmCust(vo.getNm_person()); // 회원명
+    		info.setDi(vo.getKcb_di()); // 회원 KCB DI
+    		info.setHp(vo.getHp()); // 회원 휴대폰번호
+
+    		info.setNmIfSub("220");
+    		info.setReq_menu_code("220"); // 200 신용관리(모바일 제휴 보고서), 210 부채관리(제휴사 가공
+    		info.setReq_view_code("s06158737277"); // s07143331300 신용관리, s02173986405 부채관리, s06158737277 신용리포트
+
+    		logger.info("[KCB ]START == \n" + info);
+
+    		ReturnClass kcbCbData = kcbManager.procKcbCb(info);
+    		if (kcbCbData != null) {
+    			logger.info("[KCB ]Data == \n" + kcbCbData.getReturnObj());
+
+    			if (info.getNmIf() != null && info.getNmIf().equals("600420")) {
+    				Object retObject = kcbCbData.getReturnObj();
+    				if (retObject != null && retObject instanceof Kcb_600420) {
+
+    					Kcb_600420 kcb_600420 = (Kcb_600420) retObject;
+    					model.addAttribute("kcbURI", kcb_600420.getKcbURI());
+    					logger.info("[KCB ]kcbURI == \n" + kcb_600420.getKcbURI());
+    				}
+    			}
+    		} else {
+    			logger.info("[KCB ]Data == \n" + kcbCbData);
+    		}
+        }
+
+        return "jsonView";
+    }
+
+
 
     /**
      * VUE
@@ -335,7 +394,7 @@ public class CreditController {
      * @return String
      * @throws FinsetException,IOException
      */
-    @RequestMapping("/getCreditInfoDetail.crz")
+    @RequestMapping("/getCreditInfoDetail.json")
     public String getCreditInfoDetail(HttpServletRequest request, HttpSession session, Model model) throws FinsetException,IOException {
     	String      no_person   = (String)session.getAttribute("no_person");
 
@@ -464,7 +523,7 @@ public class CreditController {
      * @return String
      * @throws FinsetException, IOException, ParseException
      */
-    @RequestMapping("/getCreditCardInfo.crz")
+    @RequestMapping("/getCreditCardInfo.json")
     public String getCreditCardInfo(HttpServletRequest request, HttpSession session, Model model) throws FinsetException, IOException, ParseException {
         String      no_person   = (String)session.getAttribute("no_person");
 
@@ -544,14 +603,14 @@ public class CreditController {
 	        for (int i = 0; i < listCardOpenGson.size(); i++) {
 		        if("02".equals(listCardOpenGson.get(i).get("cd_type_deal"))) {
 		            checkList.add(checkCnt, listCardOpenGson.get(i)); //체크list
-		            checkAmtTotal += Math.round(Double.valueOf(StringUtil.NVL(listCardOpenGson.get(i).get("amt_total"), "0"))/10000); //체크 총이용금액
-		            checkLimitTotal += Math.round(Double.valueOf(StringUtil.NVL(listCardOpenGson.get(i).get("amt_limit"), "0"))/10000); //체크 총한도
+		            checkAmtTotal += Integer.parseInt(StringUtil.NVL(listCardOpenGson.get(i).get("amt_total"), "0")); //체크 총이용금액
+		            checkLimitTotal += Integer.parseInt(StringUtil.NVL(listCardOpenGson.get(i).get("amt_limit"), "0")); //체크 총한도
 		            checkCnt++; //체크건수
 		        }else{
 		            creditList.add(creditCnt, listCardOpenGson.get(i)); //신용list
 
-		            creditAmtTotal += Math.round(Double.valueOf(StringUtil.NVL(listCardOpenGson.get(i).get("amt_total"), "0"))/10000); //신용 총이용금액
-		            creditLimitTotal += Math.round(Double.valueOf(StringUtil.NVL(listCardOpenGson.get(i).get("amt_limit"), "0"))/10000); //신용 총한도
+		            creditAmtTotal += Integer.parseInt(StringUtil.NVL(listCardOpenGson.get(i).get("amt_total"), "0")); //신용 총이용금액
+		            creditLimitTotal += Integer.parseInt(StringUtil.NVL(listCardOpenGson.get(i).get("amt_limit"), "0")); //신용 총한도
 		            creditCnt++; //신용건수
 		        }
 	        }
@@ -701,7 +760,7 @@ public class CreditController {
      * @return String
      * @throws FinsetException,IOException
      */
-    @RequestMapping("/getCreditLoanInfo.crz")
+    @RequestMapping("/getCreditLoanInfo.json")
     public String getCreditLoanInfo(HttpServletRequest request, HttpSession session, Model model) throws FinsetException,IOException {
         String      no_person   = (String)session.getAttribute("no_person");
 
@@ -751,7 +810,7 @@ public class CreditController {
      * @return String
      * @throws FinsetException,IOException
      */
-    @RequestMapping("/getCreditOverdueInfo.crz")
+    @RequestMapping("/getCreditOverdueInfo.json")
     public String getCreditOverdueInfo(HttpServletRequest request, HttpSession session, Model model) throws FinsetException,IOException {
         String no_person    = (String)session.getAttribute("no_person");
 
@@ -821,8 +880,8 @@ public class CreditController {
       model.addAttribute("etcCntPublic", etcCntPublic); //공공정보 건수(DB)
       model.addAttribute("etcCntFinDisorder", etcCntFinDisorder); //금융질서문란 건수(DB)
 
-      model.addAttribute("etcEtcCnt", listOverdueEtcGson.size()); //연체(기타) 건수
-      model.addAttribute("etcEtcList", listOverdueEtcGson); //연체(기타) 내역(cd_type 01채무불이행 / 02공공정보 / 03금융질서문란)
+      model.addAttribute("etcOverdueCnt", listOverdueEtcGson.size()); //연체(기타) 건수
+      model.addAttribute("etcOverdueList", listOverdueEtcGson); //연체(기타) 내역(cd_type 01채무불이행 / 02공공정보 / 03금융질서문란)
 
       return "jsonView";
     }
@@ -1011,7 +1070,7 @@ public class CreditController {
      * @return String
      * @throws FinsetException,IOException
      */
-    @RequestMapping("/getCreditGuaranteeInfo.crz")
+    @RequestMapping("/getCreditGuaranteeInfo.json")
     public String getCreditGuaranteeInfo(HttpServletRequest request, HttpSession session, Model model) throws FinsetException,IOException {
         String no_person    = (String)session.getAttribute("no_person");
 

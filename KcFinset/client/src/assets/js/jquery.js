@@ -4,8 +4,6 @@ $(function () {
   $(document).on('click', 'aside button', function () {
     $('aside').toggleClass('on')
   })
-  /*   GNB 로드   */
-  $('header').load('../include/gnb.html')
 
   $(document).on('click', 'header .open-menu', function () {
     $('.gnb-wrap').addClass('on')
@@ -26,16 +24,12 @@ $(function () {
     $(this).toggleClass('on')
   })
 
-  $(document).on('click', '.btn-search', function () {
-    $('aside.search-wrap').addClass('on')
-  })
-
   $(document).on('click', '.search-wrap .top button', function () {
     $('aside.search-wrap').removeClass('on')
   })
 
-  $(document).on('click', '.btn-menu-pop', function () {
-    $(this).closest('.btn-menu-wrap').toggleClass('on')
+  $(document).on('click', '.list02 .btn button', function () {
+    $(this).closest('.btn').toggleClass('on')
   })
 
   $(document).on('click', '.accodion .top a', function (e) {
@@ -89,13 +83,4 @@ $(function () {
   }
 
   modal()
-
-  var owl = $('.owl-carousel')
-
-  owl.owlCarousel({
-    items: 1,
-    loop: true,
-    margin: 21,
-    padding: 21
-  })
 })

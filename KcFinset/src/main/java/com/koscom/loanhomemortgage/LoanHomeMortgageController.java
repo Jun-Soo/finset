@@ -60,12 +60,12 @@ public class LoanHomeMortgageController implements Constant {
 		logger.info("listLoanAffiliates.json == start");
 		String no_person = (String) session.getAttribute("no_person");
 		goodsForm.setNo_person(no_person);
-		if(StringUtil.isEmpty(goodsForm.getCd_goods_class_l())){
-			goodsForm.setCd_goods_class_l("02");
-		}
-		if(StringUtil.isEmpty(goodsForm.getCd_goods_class_m())) {
-			goodsForm.setCd_goods_class_m("05,08");
-		}
+//		if(StringUtil.isEmpty(goodsForm.getCd_goods_class_l())){
+//			goodsForm.setCd_goods_class_l("02");
+//		}
+//		if(StringUtil.isEmpty(goodsForm.getCd_goods_class_m())) {
+//			goodsForm.setCd_goods_class_m("05,08");
+//		}
 		goodsForm.setCd_goods_array_m(goodsForm.getCd_goods_class_m().split(","));
 		
 		model.addAttribute("goodsList", goodsManager.listGoodsAllianceCredit(goodsForm));
@@ -86,9 +86,9 @@ public class LoanHomeMortgageController implements Constant {
 		logger.info(goodsbankForm.toString());
 		String no_person = (String) session.getAttribute("no_person");
 		goodsbankForm.setNo_person(no_person);
-		if(StringUtil.isEmpty(goodsbankForm.getCd_goods_class_m())) {
-			goodsbankForm.setCd_goods_class_m("05,08");
-		}
+//		if(StringUtil.isEmpty(goodsbankForm.getCd_goods_class_m())) {
+//			goodsbankForm.setCd_goods_class_m("05,08");
+//		}
 		goodsbankForm.setCd_goods_array_m(goodsbankForm.getCd_goods_class_m().split(","));
 		Pagination pagedList = (Pagination) goodsbankForm.setPagedList(goodsbankManager.listGoodsNoAllianceHouse(goodsbankForm), goodsbankManager.listGoodsNoAllianceHouseCount(goodsbankForm));
 		model.addAttribute("pagedList", pagedList);

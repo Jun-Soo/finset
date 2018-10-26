@@ -26,8 +26,8 @@
                 <a href="#">
                     <div class="banner">
                         <div class="left">
-                            <p class="key">우리가족 가계부</p>
-                            <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                            <p class="key">캘린더</p>
+                            <p class="value">수입과 지출 내역을 확인할 수 있는<br>습관 달력을 이용해 보세요</p>
                         </div>
                         <div class="right">
                             <img src="../../assets/images/main/banner_ico.png" alt=""/>
@@ -39,8 +39,8 @@
                 <a href="#">
                     <div class="banner">
                         <div class="left">
-                            <p class="key">우리가족 가계부</p>
-                            <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                            <p class="key">카드 대금</p>
+                            <p class="value">이전에 지출한 카드 대금을<br>한눈에 확인 하세요</p>
                         </div>
                         <div class="right">
                             <img src="../../assets/images/main/banner_ico.png" alt=""/>
@@ -52,8 +52,8 @@
                 <a href="#">
                     <div class="banner">
                         <div class="left">
-                            <p class="key">우리가족 가계부</p>
-                            <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                            <p class="key">소비통계분석</p>
+                            <p class="value">지금까지 사용한 소비와 수입<br>통계를 확인해 보세요</p>
                         </div>
                         <div class="right">
                             <img src="../../assets/images/main/banner_ico.png" alt=""/>
@@ -131,6 +131,7 @@ export default {
   beforeCreate() {
     this.$store.state.header.type = "main";
     this.$store.state.header.active = "consume";
+    this.$parent.isBottom = true;
   },
   created() {
     this.ym = this.formatHead(this.getYm(this.standardDt));

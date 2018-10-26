@@ -35,11 +35,11 @@
       <div class="banner-wrap owl-carousel">
         <carousel :perPage=1>
           <slide class="item">
-              <a href="#">
+              <a href="#" @click="clickBanner('goods')">
                   <div class="banner">
                       <div class="left">
-                          <p class="key">우리가족 가계부</p>
-                          <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                          <p class="key">추천 상품</p>
+                          <p class="value">나의 상황에 맞는<br>상품을 추천합니다</p>
                       </div>
                       <div class="right">
                           <img src="../../assets/images/main/banner_ico.png" alt=""/>
@@ -51,8 +51,8 @@
               <a href="#">
                   <div class="banner">
                       <div class="left">
-                          <p class="key">우리가족 가계부</p>
-                          <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                          <p class="key">계산기</p>
+                          <p class="value">DSR(상환능력), LTV 등을<br>직접 계산해 보세요</p>
                       </div>
                       <div class="right">
                           <img src="../../assets/images/main/banner_ico.png" alt=""/>
@@ -64,8 +64,34 @@
               <a href="#">
                   <div class="banner">
                       <div class="left">
-                          <p class="key">우리가족 가계부</p>
-                          <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                          <p class="key">캘린더</p>
+                          <p class="value">상환일, 이자납입일을 달력으로<br>관리하시면 더 ~ 편리합니다</p>
+                      </div>
+                      <div class="right">
+                          <img src="../../assets/images/main/banner_ico.png" alt=""/>
+                      </div>
+                  </div>
+              </a>
+          </slide>
+          <slide class="item">
+              <a href="#">
+                  <div class="banner">
+                      <div class="left">
+                          <p class="key">뉴스</p>
+                          <p class="value">금리 등 관련 뉴스를<br>조회합니다</p>
+                      </div>
+                      <div class="right">
+                          <img src="../../assets/images/main/banner_ico.png" alt=""/>
+                      </div>
+                  </div>
+              </a>
+          </slide>
+          <slide class="item">
+              <a href="#">
+                  <div class="banner">
+                      <div class="left">
+                          <p class="key">금리인하요구</p>
+                          <p class="value">금리인하요구 조건이 맞는지<br>확인해보세요</p>
                       </div>
                       <div class="right">
                           <img src="../../assets/images/main/banner_ico.png" alt=""/>
@@ -79,7 +105,7 @@
       <div class="list01 dept-list">
 				<div class="filter-wrap">
 					<div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
-							<input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)" :for="settingList[index].id">{{person.nm_person}}</label>
+							<input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
 					</div>
 				</div>
         <div class="item" v-for="vo in debtListData" :key="vo.no_manage_info">
@@ -97,7 +123,6 @@
           <div class="text-wrap">
             <div class="left">
               <p class="key"><span>상환금액</span><span>이자율</span></p>
-              <!-- <p class="value"><span>{{formatNumber(vo.amt_repay * 10000)}}<em>원</em></span><span>{{vo.ever_interest}}<em>%</em></span></p> -->
               <p class="value"><span>{{formatNumber((vo.amt_contract-vo.amt_remain) * 10000)}}<em>원</em></span><span>{{vo.ever_interest}}<em>%</em></span></p>
             </div>
             <div class="right">
@@ -180,6 +205,7 @@ export default {
   beforeCreate() {
     this.$store.state.header.type = "main";
     this.$store.state.header.active = "debt";
+    this.$parent.isBottom = true;
   },
   created() {},
   beforeMount() {},
@@ -207,9 +233,13 @@ export default {
     },
     listDebtPg: function() {
       var _this = this;
+      var no_person_list = _this.filterShareList();
+      if (no_person_list.length == 0) {
+        return;
+      }
       this.$http
         .get("/m/debt/listDebtPg.json", {
-          params: { no_person_list: _this.filterShareList() }
+          params: { no_person_list: no_person_list }
         })
         .then(function(response) {
           var data = response.data.debtListData;
@@ -223,9 +253,13 @@ export default {
     },
     getDebtSummary: function() {
       var _this = this;
+      var no_person_list = _this.filterShareList();
+      if (no_person_list.length == 0) {
+        return;
+      }
       this.$http
         .get("/m/debt/getDebtSummary.json", {
-          params: { no_person_list: _this.filterShareList() }
+          params: { no_person_list: no_person_list }
         })
         .then(function(response) {
           var data = response.data.debtSummaryData;
@@ -261,9 +295,24 @@ export default {
       return shareList;
     },
     clickShare: function(params) {
+      var no_person_list = this.filterShareList();
+      if (no_person_list.length <= 1 && this.shareList[params].isShow == true) {
+        return;
+      }
       this.shareList[params].isShow = !this.shareList[params].isShow;
       this.getDebtSummary();
       this.listDebtPg();
+    },
+    clickBanner: function(key) {
+      var _this = this;
+      switch (key) {
+        case "goods":
+          _this.$router.push("/goods/list");
+          break;
+
+        default:
+          break;
+      }
     }
   }
 };

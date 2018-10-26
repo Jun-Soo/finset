@@ -17,31 +17,11 @@
             <div class="box-agree">
               <p><input type="checkbox" name="checkbox1" id="checkbox1" v-model="chkBox1"><label for="checkbox1">[필수] 서비스 이용동의</label></p>
               <ul>
-                <li><a v-on:click="open('1')">서비스 이용약관</a>
-                  <vue-modal transitionName="zoom-in" width="100%" name="my-modal1">
-                    <Terms1 slot="header"></Terms1>
-                  </vue-modal>
-                </li>
-                <li><a v-on:click="open('2')">개인정보 처리방침</a>
-                  <vue-modal transitionName="zoom-in" name="my-modal2">
-                    <Terms2 slot="header"></Terms2>
-                  </vue-modal>
-                </li>
-                <li><a v-on:click="open('3')">KCB 올크레딧 이용약관</a>
-                  <vue-modal transitionName="zoom-in" name="my-modal3">
-                    <Terms3 slot="header"></Terms3>
-                  </vue-modal>
-                </li>
-                <li><a v-on:click="open('4')">개인정보 수집·이용 동의</a>
-                  <vue-modal transitionName="zoom-in" name="my-modal4">
-                    <Terms4 slot="header"></Terms4>
-                  </vue-modal>
-                </li>
-                <li><a v-on:click="open('5')">개인정보 제3자 제공 동의</a>
-                  <vue-modal transitionName="zoom-in" name="my-modal5">
-                    <Terms5 slot="header"></Terms5>
-                  </vue-modal>
-                </li>
+                <li><a v-on:click="open('1')">서비스 이용약관</a></li>
+                <li><a v-on:click="open('2')">개인정보 처리방침</a></li>
+                <li><a v-on:click="open('3')">KCB 올크레딧 이용약관</a></li>
+                <li><a v-on:click="open('4')">개인정보 수집·이용 동의</a></li>
+                <li><a v-on:click="open('5')">개인정보 제3자 제공 동의</a></li>
               </ul>
             </div>
 
@@ -49,37 +29,20 @@
               <p><input type="checkbox" name="checkbox2" id="checkbox2" v-model="chkBox2"><label for="checkbox2">[필수] 통신사/본인확인 서비스 이용 동의</label></p>
               <ul>
                 <li><a v-on:click="open('6')">본인확인서비스 이용약관</a>
-                  <vue-modal transitionName="zoom-in" name="my-modal6">
-                    <Terms6 slot="header"></Terms6>
-                  </vue-modal>
                 </li>
                 <li><a v-on:click="open('7')">개인정보 수집 · 이용/취급위탁 동의</a>
-                  <vue-modal transitionName="zoom-in" name="my-modal7">
-                    <Terms7 slot="header"></Terms7>
-                  </vue-modal>
                 </li>
                 <li><a v-on:click="open('8')">고유식별정보처리 동의</a>
-                  <vue-modal transitionName="zoom-in" name="my-modal8">
-                    <Terms8 slot="header"></Terms8>
-                  </vue-modal>
                 </li>
                 <li><a v-on:click="open('9')">통신사 본인확인 이용약관 동의</a>
-                  <vue-modal transitionName="zoom-in" name="my-modal9">
-                    <Terms9 slot="header"></Terms9>
-                  </vue-modal>
                 </li>
               </ul>
             </div>
-            
 
             <div class="box-agree">
               <p><input type="checkbox" name="checkbox3" id="checkbox3" v-model="chkBox3"><label for="checkbox3">[선택] 마케팅 정보 수신 동의</label></p>
               <ul>
-                <li><a v-on:click="open('10')">마케팅 정보 수신 동의</a>
-                  <vue-modal transitionName="zoom-in" name="my-modal5">
-                    <Terms10 slot="header"></Terms10>
-                  </vue-modal>
-                </li>
+                <li><a v-on:click="open('10')">마케팅 정보 수신 동의</a></li>
               </ul>
             </div>
         </div>
@@ -89,6 +52,36 @@
         <a role="button" id="confirmButton" class="btn-next" v-on:click="confirmedTerms()">다음</a>
       </div>
     </section>
+    <vue-modal transitionName="zoom-in" width="100%" name="my-modal1" v-on:click="close('1')">
+      <Terms1 slot="body"></Terms1>
+    </vue-modal>
+    <vue-modal transitionName="zoom-in" name="my-modal2">
+      <Terms2 slot="body"></Terms2>
+    </vue-modal>
+    <vue-modal transitionName="zoom-in" name="my-modal3">
+      <Terms3 slot="body"></Terms3>
+    </vue-modal>
+    <vue-modal transitionName="zoom-in" name="my-modal4">
+      <Terms4 slot="body"></Terms4>
+    </vue-modal>
+    <vue-modal transitionName="zoom-in" name="my-modal5">
+      <Terms5 slot="body"></Terms5>
+    </vue-modal>
+    <vue-modal transitionName="zoom-in" name="my-modal6">
+      <Terms6 slot="body"></Terms6>
+    </vue-modal>
+    <vue-modal transitionName="zoom-in" name="my-modal7">
+      <Terms7 slot="body"></Terms7>
+    </vue-modal>
+    <vue-modal transitionName="zoom-in" name="my-modal8">
+      <Terms8 slot="body"></Terms8>
+    </vue-modal>
+    <vue-modal transitionName="zoom-in" name="my-modal9">
+      <Terms9 slot="body"></Terms9>
+    </vue-modal>
+    <vue-modal transitionName="zoom-in" name="my-modal10">
+      <Terms10 slot="body"></Terms10>
+    </vue-modal>
   </div>
   
   
@@ -131,6 +124,12 @@ export default {
     Terms8: Terms8,
     Terms9: Terms9,
     Terms10: Terms10
+  },
+  props: {
+            onClose: {
+                type: Function,
+                required: false
+            }
   },
   beforeCreate() {},
   created() {
@@ -188,6 +187,18 @@ export default {
         _this.chkBox2 = false;
         _this.chkBox3 = false;
       }
+    },
+
+    close :function(location) {
+      var _this = this;
+      if (location === 'outer' && !this.outerClose) return;
+
+      this.$modals.hide(this.name);
+      if (this.onClose) this.onClose();
+      this.$emit('close-modal', this.name);
+      document.body.classList.remove('v-modal__no-scroll');
+      // _this.$parent.close('inner');
+      // _this.$modals.hide("my-modal" + gubun);
     },
 
     confirmedTerms: function() {

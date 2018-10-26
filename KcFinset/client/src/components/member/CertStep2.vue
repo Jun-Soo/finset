@@ -74,10 +74,13 @@ import ko from "vee-validate/dist/locale/ko.js";
 
 export default {
   name: "certStep2",
+  props: {},
   data() {
     return {
       errMsg: "",
       /* form */
+      yn_logout: "",
+      yn_use: "",
       nm_person: "",
       ssn_birth: "",
       birthday: "",
@@ -137,8 +140,11 @@ export default {
       if (val == "sex" && _this.sex.length == 1) $("#telComCd").focus();
       if (val == "telCom" && telComCd) $("#hp").focus();
     },
+    //인증번호 요청
     kcmRequestCertNo: function() {
       var _this = this;
+      // this.checkForm();
+      this.chkCert();
       console.log(_this.$validator.validateAll());
       this.$validator.validateAll().then(res => {
         if (res) {
@@ -180,6 +186,7 @@ export default {
                 $("#smsCertNo").focus();
               } else if (result.result == "11") {
                 this.$toast.center(result.message);
+                _this.$router.push("/member/certStep1"); //frameCertStep1.crz ajax 통신
                 return false;
               } else if (result.result == "01") {
                 this.$toast.center(result.message);
@@ -193,6 +200,7 @@ export default {
         }
       });
     },
+    //인증번호
     setCertNumber: function(number) {
       number = number + "";
       if (this.smsCertNo) {
@@ -200,6 +208,7 @@ export default {
         this.smsCertNoChk();
       }
     },
+    //인증번호가 입력되면
     smsCertNoChk: function() {
       if (this.smsCertNo) {
         Common.affixBottom("show");
@@ -207,6 +216,39 @@ export default {
         Common.affixBottom("hide");
       }
     },
+    //입력값 확인
+    chkCert: function() {
+      var _this = this;
+      var regNumber = /^[0-9]*$/;
+      debugger;
+      if (_this.nm_person == "" || _this.nm_person == null) {
+        this.$toast.center("이름을 입력해주세요.");
+        $("#nm_person").focus();
+        return false;
+      }
+      if (_this.ssn_birth == "" || _this.ssn_birth == null) {
+        this.$toast.center("주민등록번호 앞자리를 입력해주세요.");
+        $("#ssn_birth").focus();
+        return false;
+      } else if (!regNumber.test(_this.ssn_birth)) {
+        this.$toast.center("주민등록번호 앞자리를 숫자만 입력해주세요.");
+        $("#ssn_birth").focus();
+        return false;
+      }
+      if (_this.sex == "" || _this.sex == null) {
+        this.$toast.center("주민등록번호 뒷자리를 입력해주세요.");
+        $("#sex").focus();
+        return false;
+      } else if (!regNumber.test(_this.sex)) {
+        this.$toast.center("주민등록번호 뒷자리를 숫자만 입력해주세요.");
+        _this.sex = "";
+        $("#sex").focus();
+        return false;
+      }
+    },
+    /*
+    * 인증 번호 확인
+    */
     confirmedCertify: function() {
       var _this = this;
       if (this.smsCertNo == "" || this.smsCertNo == "undefined") return false;
@@ -265,6 +307,7 @@ export default {
           this.$store.state.user.noPerson = result.no_person;
           this.$store.state.user.nmPerson = result.nm_person;
           if (result.result == "00") {
+            //joinSuccess
             if (Constant.userAgent == "iOS") {
               Jockey.send("setNoPerson", {
                 noPerson: noPerson,
@@ -276,6 +319,8 @@ export default {
             // frmCertifyStep.action = "<c:url value='/m/base/frameSecurityCode.crz'/>";
             _this.$router.push("/member/certCode");
           } else if (result.result == "11") {
+            //loginSuccess
+            // modifyPersonLogout();
             if (Constant.userAgent == "iOS") {
               Jockey.send("setNoPerson", {
                 noPerson: noPerson,
@@ -286,6 +331,22 @@ export default {
             }
             _this.$router.push("/home?hp=" + _this.hp);
           }
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+        });
+    },
+    //로그아웃 변수 변경
+    modifyPersonLogout: function() {
+      var _this = this;
+      _this.yn_logout = "N";
+      _this.yn_use = "Y";
+      _this.$http
+        .post("/m/person/modifyYnUseAndLogout.json", formData)
+        .then(response => {
+          var result = response.data;
+          var noPerson = result.returnData;
+          // if (result.result == "00") {}
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);
@@ -331,8 +392,56 @@ export default {
 </script>
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
-<style lang="scss">
+<style scoped>
 .memberMain {
   background-color: transparent;
+}
+.input-group {
+  text-align:center;
+}
+.input-group-btn {
+  min-width: 56px;
+  padding: 11px;
+  padding-left: 4px;
+  position: absolute;
+}
+.input-group-btn.blind {
+  min-width: 0;
+}
+.input-group-btn .btn {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+.form-input-block-confrim span > select.form-control {
+  border: 0 !important;
+  width: 30%;
+  position: absolute;
+}
+.form-input-block-confrim .form-control {
+  border: 1px solid #dbdbdb;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+.form-input-block-confrim .form-control-static {
+  text-align: center;
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+.sr-only-focusable:active,
+.sr-only-focusable:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
 }
 </style>

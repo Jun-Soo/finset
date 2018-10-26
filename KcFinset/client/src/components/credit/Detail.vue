@@ -13,14 +13,16 @@
         <div class="container">
             <div class="col-top">
                 <div v-if="inquiryList.length == 0" class="nodata">등록 내역이 없습니다</div>
-                <div v-else>
-                    <p class="key">최근 1개월<em>(건)</em></p>
-                    <p class="value">{{inquiryMmCnt}}</p>
-                </div>
-                <div>
-                    <p class="key">최근 1년<em>(건)</em></p>
-                    <p class="value">{{inquiryYearCnt}}</p>
-                </div>
+                <template v-else>
+                    <div>
+                        <p class="key">최근 1개월<em>(건)</em></p>
+                        <p class="value">{{inquiryMmCnt}}</p>
+                    </div>
+                    <div>
+                        <p class="key">최근 1년<em>(건)</em></p>
+                        <p class="value">{{inquiryYearCnt}}</p>
+                    </div>
+                </template>
             </div>
         </div>
         
@@ -58,14 +60,16 @@
         <div class="container">
             <div class="col-top">
                 <div v-if="loanCardList.length == 0" class="nodata">등록 내역이 없습니다</div>
-                <div v-else>
-                    <p class="key">최근 1개월<em>(건)</em></p>
-                    <p class="value">{{loanCardMmCnt}}</p>
-                </div>
-                <div>
-                    <p class="key">최근 1년<em>(건)</em></p>
-                    <p class="value">{{loanCardYearCnt}}</p>
-                </div>
+                <template v-else>    
+                    <div>
+                        <p class="key">최근 1개월<em>(건)</em></p>
+                        <p class="value">{{loanCardMmCnt}}</p>
+                    </div>
+                    <div>
+                        <p class="key">최근 1년<em>(건)</em></p>
+                        <p class="value">{{loanCardYearCnt}}</p>
+                    </div>
+                </template>
             </div>
         </div>
         
@@ -105,14 +109,16 @@
         <div class="container">
             <div class="col-top">
                 <div v-if="overdueList.length == 0" class="nodata">등록 내역이 없습니다</div>
-                <div v-else>
-                    <p class="key">최근 1개월<em>(건)</em></p>
-                    <p class="value">{{overdueMmCnt}}</p>
-                </div>
-                <div>
-                    <p class="key">최근 1년<em>(건)</em></p>
-                    <p class="value">{{overdueYearCnt}}</p>
-                </div>
+                <template v-else>   
+                    <div>
+                        <p class="key">최근 1개월<em>(건)</em></p>
+                        <p class="value">{{overdueMmCnt}}</p>
+                    </div>
+                    <div>
+                        <p class="key">최근 1년<em>(건)</em></p>
+                        <p class="value">{{overdueYearCnt}}</p>
+                    </div>
+                </template>
             </div>
         </div>
         
@@ -178,7 +184,7 @@ export default {
   computed: {},
   beforeCreate() {},
   created() {
-    this.$store.state.header.listType = "sub";
+    this.$store.state.header.type = "sub";
     this.$store.state.title = "변동이력";
     this.getDetailInfo();
   },
@@ -189,6 +195,11 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    // 탭클릭
+    clickTab: function(listType) {
+      var _this = this;
+      _this.listType = listType;
+    },
     getDetailInfo: function() {
       var _this = this;
       this.$http
@@ -203,10 +214,7 @@ export default {
           //금융사ICON 셋팅
           var inqList = response.data.inquiryList;
           for (var i = 0; i < inqList.length; i++) {
-            inqList[i].fcImg =
-              "background-image:url('/m/fincorp/getFinCorpIcon.crz?cd_fc=" +
-              inqList[i].cd_fc +
-              "')";
+            inqList[i].fcImg = "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + inqList[i].cd_fc;
           }
           _this.inquiryList = inqList;
 
@@ -217,10 +225,7 @@ export default {
           //금융사ICON 셋팅
           var lcList = response.data.loanCardList;
           for (var i = 0; i < lcList.length; i++) {
-            lcList[i].fcImg =
-              "background-image:url('/m/fincorp/getFinCorpIcon.crz?cd_fc=" +
-              lcList[i].cd_fc +
-              "')";
+            lcList[i].fcImg = "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + lcList[i].cd_fc;
           }
           _this.loanCardList = lcList;
 
@@ -231,10 +236,7 @@ export default {
           //금융사ICON 셋팅
           var ovdList = response.data.overdueList;
           for (var i = 0; i < ovdList.length; i++) {
-            ovdList[i].fcImg =
-              "background-image:url('/m/fincorp/getFinCorpIcon.crz?cd_fc=" +
-              ovdList[i].cd_fc +
-              "')";
+            ovdList[i].fcImg = "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + ovdList[i].cd_fc;
           }
           _this.overdueList = ovdList;
         })

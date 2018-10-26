@@ -5,70 +5,72 @@
         <div class="wrap">
             <div class="item">
                 <p class="key">신용등급</p>
-                <p class="value">{{ baseInfo!=null ? baseInfo.grade_credit : "" }}</p>
+                <p class="value">{{ b_grade_credit }}</p>
             </div>
             <div class="item">
                 <p class="key">신용점수</p>
-                <p class="value">{{ baseInfo!=null ? baseInfo.rating_credit : "" }}</p>
-                <p v-if="baseInfo!=null && baseInfo.rating_diff > 0" class="plus">+{{baseInfo.rating_diff}}</p>
-                <p v-else-if="baseInfo!=null && baseInfo.rating_diff < 0" class="minus">{{baseInfo.rating_diff}}</p>
+                <p class="value">{{b_rating_credit}}</p>
+                <p v-if="b_rating_diff > 0" class="plus">+{{b_rating_diff}}</p>
+                <p v-else-if="b_rating_diff < 0" class="minus">{{b_rating_diff}}</p>
             </div>
             <div class="item">
                 <p class="key">상위</p>
-                <p class="value">{{ baseInfo!=null ? baseInfo.percentage : "" }}%</p>
+                <p class="value">{{b_percentage}}%</p>
             </div>
         </div>
     </div>
     
     <div class="banner-wrap owl-carousel">
-        <div class="item">
-            <a href="#">
-                <div class="banner">
-                    <div class="left">
-                        <p class="key">우리가족 가계부</p>
-                        <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
-                    </div>
-                    <div class="right">
-                        <img src="../../assets/images/main/banner_ico.png" alt=""/>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="item">
-            <a href="#">
-                <div class="banner">
-                    <div class="left">
-                        <p class="key">우리가족 가계부</p>
-                        <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
-                    </div>
-                    <div class="right">
-                        <img src="../../assets/images/main/banner_ico.png" alt=""/>
-                    </div>
-                </div>
-            </a>
-        </div>
-        <div class="item">
-            <a href="#">
-                <div class="banner">
-                    <div class="left">
-                        <p class="key">우리가족 가계부</p>
-                        <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
-                    </div>
-                    <div class="right">
-                        <img src="../../assets/images/main/banner_ico.png" alt=""/>
-                    </div>
-                </div>
-            </a>
-        </div>
-    </div>
+	  <carousel :perPage=1>
+	    <slide class="item">
+	        <a href="#">
+	            <div class="banner">
+	                <div class="left">
+	                    <p class="key">우리가족 가계부</p>
+	                    <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+	                </div>
+	                <div class="right">
+	                    <img src="../../assets/images/main/banner_ico.png" alt=""/>
+	                </div>
+	            </div>
+	        </a>
+	    </slide>
+	    <slide class="item">
+	        <a href="#">
+	            <div class="banner">
+	                <div class="left">
+	                    <p class="key">우리가족 가계부</p>
+	                    <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+	                </div>
+	                <div class="right">
+	                    <img src="../../assets/images/main/banner_ico.png" alt=""/>
+	                </div>
+	            </div>
+	        </a>
+	    </slide>
+	    <slide class="item">
+	        <a href="#">
+	            <div class="banner">
+	                <div class="left">
+	                    <p class="key">우리가족 가계부</p>
+	                    <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+	                </div>
+	                <div class="right">
+	                    <img src="../../assets/images/main/banner_ico.png" alt=""/>
+	                </div>
+	            </div>
+	        </a>
+	    </slide>
+	  </carousel>
+	</div>
 
     <div class="credit-change">
 		    <div class="top">
 		          <p class="title">나의 신용정보 변동</p>
 		      </div>
 		    <div class="link">
-		       <a @click="$router.push('credit/detail')">
-                    {{ changeInfo!=null ? changeInfo.dt_info+" "+changeInfo.nm_fc+" "+changeInfo.change_contents+"되었습니다" : "" }}
+		       <a @click="$router.push('/credit/detail')">
+                    {{ ch_dt_info+" "+ch_nm_fc+" "+ch_change_contents+"되었습니다" }}
                </a>
 		    </div>
 		</div>
@@ -116,17 +118,25 @@ export default {
   data() {
     return {
       currentDate: "", //현재일자
-      baseInfo: "", //신용등급, 신용점수, 상위%
-      changeInfo: "", //나의 신용정보 변동내역
-      cardSumAmt: "", //카드이용금액
-      debtSumAmtRemain: "", //대출잔액
-      overdueSumAmt: "", //연체원금
-      guaranteeSumAmt: "" //연대보증원금
+      //신용 기본정보
+      baseInfo: "",
+      b_grade_credit: "", //신용등급
+      b_rating_credit: "", //신용점수
+      b_rating_diff: "", //전월 신용점수 차이
+      b_percentage: "", //상위%
+      //나의 신용정보 변동내역
+      changeInfo: "",
+      ch_dt_info: "", //일자
+      ch_nm_fc: "", //금융사명
+      ch_change_contents: "", //내용
+      cardSumAmt: "0", //카드이용금액
+      debtSumAmtRemain: "0", //대출잔액
+      overdueSumAmt: "0", //연체원금
+      guaranteeSumAmt: "0" //연대보증원금
     };
   },
   component: {},
-  // computed () {
-  // },
+  computed() {},
   beforeCreate() {},
   created() {
     this.$store.state.header.type = "main";
@@ -150,10 +160,23 @@ export default {
         .then(response => {
           _this.currentDate = response.data.currentDate;
 
-          _this.baseInfo = response.data.baseInfo;
+          var baseInfo = response.data.baseInfo;
+          if (baseInfo != null) {
+            _this.b_grade_credit = baseInfo.grade_credit;
+            _this.b_rating_credit = baseInfo.rating_credit;
+            _this.b_rating_diff = baseInfo.rating_diff;
+            _this.b_percentage = baseInfo.percentage;
+          }
+          _this.baseInfo = baseInfo;
           // console.log("baseInfo : "+JSON.stringify(_this.baseInfo));
 
-          _this.changeInfo = response.data.changeInfo;
+          var changeInfo = response.data.changeInfo;
+          if (changeInfo != null) {
+            _this.ch_dt_info = changeInfo.dt_info;
+            _this.ch_nm_fc = changeInfo.nm_fc;
+            _this.ch_change_contents = changeInfo.change_contents;
+          }
+          _this.changeInfo = changeInfo;
           // console.log("changeInfo : "+JSON.stringify(_this.changeInfo));
 
           _this.cardSumAmt = response.data.cardSumAmt;

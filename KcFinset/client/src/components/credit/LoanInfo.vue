@@ -5,22 +5,22 @@
         <div v-else class="bar-top">
               <p class="key">대출잔액</p>
               <div class="wrap">
-                  <div class="left">{{formatNumber(debtSum.sum_amt_remain)}}<em>원</em></div>
+                  <div class="left">{{formatNumber(ds_sum_amt_remain)}}<em>원</em></div>
                   <div class="right">
                       <p class="key">대출금액</p>
-                      <p class="value">{{formatNumber(debtSum.sum_amt_contract/10000)}} 만원</p>
+                      <p class="value">{{formatNumber(Math.round(ds_sum_amt_contract/10000))}} <em>만원</em></p>
                   </div>
               </div>
-              <div class="bar"><p :style="{width: debtSum.totRepayPc+'%'}"></p></div>
+              <div class="bar"><p :style="{width: ds_tot_repay_pc+'%'}"></p></div>
               <div class="bar-text-wrap">
-                  <p class="bar-text">대출금 상환비율<em>{{debtSum.totRepayPc}}%</em></p>
-                  <p class="bar-card">보유갯수<em>{{creditSum.debt_cnt}}</em></p>
+                  <p class="bar-text">대출금 상환비율<em>{{ds_tot_repay_pc}}%</em></p>
+                  <p class="bar-card">보유갯수<em>{{ds_debt_cnt}}</em></p>
               </div>
           </div>
       </div>
       
       <div v-if="debtList.length != 0" class="box-list list01">
-          <div  v-for="debtInfo in debtList" :key="debtInfo.index" class="item" @click="viewDetailDebt(debtInfo.no_manage_info)">
+          <div v-for="debtInfo in debtList" :key="debtInfo.index" class="item" @click="viewDetailDebt(debtInfo.no_manage_info)">
               <div class="top">
                   <p class="symbol"><img :src="debtInfo.fcImg" alt=""/>{{debtInfo.nm_fc}}</p>
                   <p class="text blue">{{debtInfo.cd_debt == '01'? '신용' : '담보'}}</p>
@@ -35,7 +35,7 @@
               <div class="text-wrap">
                   <div class="left">
                       <p class="key">대출금액</p>
-                      <p class="value">{{formatNumber(debtInfo.amt_contract/10000)}} 만원</p>
+                      <p class="value">{{formatNumber(Math.round(debtInfo.amt_contract/10000))}} <em>만원</em></p>
                   </div>
                   <div class="right">
                       <p class="key">개설일자</p>
@@ -68,7 +68,12 @@ export default {
   data() {
     return {
       errMsg: "",
-      debtSum: "", //대출현황 상단정보
+      //상단정보
+      debtSum: "",
+      ds_sum_amt_remain: "0", //대출잔액
+      ds_sum_amt_contract: "0", //대출금액
+      ds_debt_cnt: "0", //보유갯수
+      ds_tot_repay_pc: "0", //전체 대출금 상환비율
       debtList: [] //대출현황list
     };
   },
@@ -95,33 +100,35 @@ export default {
         })
         .then(response => {
           var debtSumInfo = response.data.debtSum;
-          //대출금 상환비율
-          if (debtSumInfo.sum_amt_contract > 0) {
-            debtSumInfo.totRepayPc =
-              ((debtSumInfo.sum_amt_contract - debtSumInfo.sum_amt_remain) /
-                debtSumInfo.sum_amt_contract) * 100;
-          } else {
-            debtSumInfo.totRepayPc = 0.0;
+          if (debtSumInfo != null) {
+            _this.ds_sum_amt_remain = debtSumInfo.sum_amt_remain;
+            _this.ds_sum_amt_contract = debtSumInfo.sum_amt_contract;
+            _this.ds_debt_cnt = debtSumInfo.debt_cnt;
+            //전체 대출금 상환비율
+            if (debtSumInfo.sum_amt_contract > 0) {
+              _this.ds_tot_repay_pc = Math.round(
+                ((debtSumInfo.sum_amt_contract - debtSumInfo.sum_amt_remain) /
+                  debtSumInfo.sum_amt_contract) * 100
+              );
+            }
           }
-          console.log("typeof totRepayPc");
-          console.log(typeof debtSumInfo.totRepayPc);
           _this.debtSum = debtSumInfo;
 
           var list = response.data.debtList;
           for (var i = 0; i < list.length; i++) {
             //금융사ICON 셋팅
             list[i].fcImg =
-              "background-image:url('/m/fincorp/getFinCorpIcon.crz?cd_fc=" +
-              list[i].cd_fc +
-              "')";
+              "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + list[i].cd_fc;
 
-            //비율
+            //개별 대출금 상환비율
             if (list[i].amt_contract > 0) {
-              list[i].repayPc =
+              list[i].repayPc = Math.round(
                 ((list[i].amt_contract - list[i].amt_remain) /
-                  list[i].amt_contract) * 100;
+                  list[i].amt_contract) *
+                  100
+              );
             } else {
-              list[i].repayPc = 0.0;
+              list[i].repayPc = 0;
             }
           }
 
@@ -133,7 +140,10 @@ export default {
     },
     //부채 상세페이지로 이동
     viewDetailDebt: function(no_manage_info) {
-        this.$router.push({name:"debtDetail", params: {no_manage_info:no_manage_info}});
+      this.$router.push({
+        name: "debtDetail",
+        params: { no_manage_info: no_manage_info }
+      });
     },
     formatNumber: function(data) {
       return Common.formatNumber(data);

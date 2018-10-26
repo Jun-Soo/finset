@@ -36,13 +36,13 @@
                   </div>
                   <div class="right">
                       <p class="key">상환금액</p>
-                      <p class="value">{{formatNumber(overdueInfo.amt_repay/10000)}}<em>만원</em></p>
+                      <p class="value">{{formatNumber(Math.round(overdueInfo.amt_repay/10000))}} <em>만원</em></p>
                   </div>
               </div>
               <div class="text-wrap">
                   <div class="left">
                       <p class="key">최초연체금액</p>
-                      <p class="value">{{formatNumber(overdueInfo.amt_frt_delay/10000)}} 만원</p>
+                      <p class="value">{{formatNumber(Math.round(overdueInfo.amt_frt_delay/10000))}} <em>만원</em></p>
                   </div>
                   <div class="right">
                       <p class="key">최초연체기산일자</p>
@@ -74,97 +74,97 @@
           <div v-for="etcOverdueInfo in etcOverdueList" :key="etcOverdueInfo.index" class="item">
               <div class="top">
                   <p class="symbol"><img :src="etcOverdueInfo.fcImg" alt=""/>{{etcOverdueInfo.nm_fc}}</p>
-                  <p v-if="etcOverdueInfo.cd_type == '01'" class="text red">채무불이행</p>
-                  <p v-else-if="etcOverdueInfo.cd_type == '02'" class="text red">공공정보</p>
-                  <p v-else-if="etcOverInfo.cd_type == '03'" class="text red">금융질서문란</p>
+                  <p v-if="etcOverdueInfo.cd_type == '01'" class="text blue">채무불이행</p>
+                  <p v-else-if="etcOverdueInfo.cd_type == '02'" class="text blue">공공정보</p>
+                  <p v-else-if="etcOverInfo.cd_type == '03'" class="text blue">금융질서정보문란</p>
               </div>
               <template v-if="etcOverdueInfo.cd_type == '01'"> <!-- 채무불이행 -->
-              	<div class="text-wrap">
+              	<div class="number-wrap">
 	                    <div class="left">
 	                    <p class="key">연체잔액</p>
-	                    <p class="number">6,920,000<em>원</em></p>
+	                    <p class="number">{{formatNumber(etcOverdueInfo.amt_orderdue)}}<em>원</em></p>
 	                </div>
 	                <div class="right">
 	                    <p class="key">상환금액</p>
-	                    <p class="value">50<em>만원</em></p>
+	                    <p class="value">{{formatNumber(Math.round(etcOverdueInfo.amt_repay/10000))}} <em>만원</em></p>
 	                </div>
 	            </div>
-	            <div class="text-wrap">
-	                <div class="left">
-	                    <p class="key">최초연체금액</p>
-	                    <p class="value">4,000 만원</p>
-	                </div>
-	                <div class="right">
-	                    <p class="key">최초연체기산일자</p>
-	                    <p class="value">2018.04.15</p>
-	                </div>
-	            </div>
+	            <div class="hide-con show">
+                    <div class="list">
+                        <p class="left">발생일자</p>
+                        <p class="right">{{formatDateDot(etcOverdueInfo.ymd_delay)}}</p>
+                    </div>
+                    <div class="list">
+                        <p class="left">연체금액</p>
+                        <p class="right">{{formatNumber(Math.round(etcOverdueInfo.amt_delay/10000))}} <em>만원</em></p>
+                    </div>
+                    <div class="list">
+                        <p class="left">상환일자</p>
+                        <p class="right">{{formatDateDot(etcOverdueInfo.ymd_repay)}}</p>
+                    </div>
+                    <div class="list">
+                        <p class="left">등록사유</p>
+                        <p class="right">{{etcOverdueInfo.cd_default}}</p>
+                    </div>
+                </div>
               </template>
-              <template v-if="etcOverdueInfo.cd_type == '02'"> <!-- 공공정보 -->
-              	<div class="text-wrap">
-	                    <div class="left">
-	                    <p class="key">연체잔액</p>
-	                    <p class="number">6,920,000<em>원</em></p>
-	                </div>
-	                <div class="right">
-	                    <p class="key">상환금액</p>
-	                    <p class="value">50<em>만원</em></p>
-	                </div>
-	            </div>
-	            <div class="text-wrap">
-	                <div class="left">
-	                    <p class="key">최초연체금액</p>
-	                    <p class="value">4,000 만원</p>
-	                </div>
-	                <div class="right">
-	                    <p class="key">최초연체기산일자</p>
-	                    <p class="value">2018.04.15</p>
-	                </div>
-	            </div>
+              <template v-else-if="etcOverdueInfo.cd_type == '02'"> <!-- 공공정보 -->
+              	<div class="hide-con show">
+                    <div class="list">
+                        <p class="left">관리점명</p>
+                        <p class="right">{{etcOverdueInfo.nm_agency}}</p>
+                    </div>
+                    <div class="list">
+                        <p class="left">연체등록일자</p>
+                        <p class="right">{{formatDateDot(etcOverdueInfo.ymd_delay)}}</p>
+                    </div>
+                    <div class="list">
+                        <p class="left">등록금액</p>
+                        <p class="right">{{formatNumber(Math.round(etcOverdueInfo.amt_delay/10000))}} <em>만원</em></p>
+                    </div>
+                    <div class="list">
+                        <p class="left">사건번호</p>
+                        <p class="right">{{etcOverdueInfo.no_case}}</p>
+                    </div>
+                    <div class="list">
+                        <p class="left">등록사유</p>
+                        <p class="right">{{etcOverdueInfo.cd_default}}</p>
+                    </div>
+                </div>
               </template>
-              <template v-if="etcOverdueInfo.cd_type == '03'"> <!-- 공공정보 -->
-              	<div class="text-wrap">
+              <template v-else-if="etcOverdueInfo.cd_type == '03'"> <!-- 금융질서정보문란 -->
+              	<div class="number-wrap">
 	                    <div class="left">
 	                    <p class="key">연체잔액</p>
-	                    <p class="number">6,920,000<em>원</em></p>
+	                    <p class="number">{{formatNumber(etcOverdueInfo.amt_delay)}}<em>원</em></p>
 	                </div>
 	                <div class="right">
 	                    <p class="key">상환금액</p>
-	                    <p class="value">50<em>만원</em></p>
+	                    <p class="value">{{formatNumber(Math.round(etcOverdueInfo.amt_repay/10000))}} <em>만원</em></p>
 	                </div>
 	            </div>
-	            <div class="text-wrap">
-	                <div class="left">
-	                    <p class="key">최초연체금액</p>
-	                    <p class="value">4,000 만원</p>
-	                </div>
-	                <div class="right">
-	                    <p class="key">최초연체기산일자</p>
-	                    <p class="value">2018.04.15</p>
-	                </div>
-	            </div>
-              </template>
-              <template v-if="etcOverdueInfo.cd_type == '03'"> <!-- 금융질서문란 -->
-              	<div class="text-wrap">
-	                    <div class="left">
-	                    <p class="key">연체잔액</p>
-	                    <p class="number">6,920,000<em>원</em></p>
-	                </div>
-	                <div class="right">
-	                    <p class="key">상환금액</p>
-	                    <p class="value">50<em>만원</em></p>
-	                </div>
-	            </div>
-	            <div class="text-wrap">
-	                <div class="left">
-	                    <p class="key">최초연체금액</p>
-	                    <p class="value">4,000 만원</p>
-	                </div>
-	                <div class="right">
-	                    <p class="key">최초연체기산일자</p>
-	                    <p class="value">2018.04.15</p>
-	                </div>
-	            </div>
+	            <div class="hide-con show">
+                    <div class="list">
+                        <p class="left">관리점명</p>
+                        <p class="right">{{etcOverdueInfo.nm_agency}}</p>
+                    </div>
+                    <div class="list">
+                        <p class="left">발생일자</p>
+                        <p class="right">{{formatDateDot(etcOverdueInfo.ymd_default)}}</p>
+                    </div>
+                    <div class="list">
+                        <p class="left">등록금액</p>
+                        <p class="right">{{formatNumber(etcOverdueInfo.amt_delay)}} <em>만원</em></p>
+                    </div>
+                    <div class="list">
+                        <p class="left">상환일자</p>
+                        <p class="right">{{formatDateDot(etcOverdueInfo.ymd_repay)}}</p>
+                    </div>
+                    <div class="list">
+                        <p class="left">등록사유</p>
+                        <p class="right">{{etcoverdueInfo.cd_default}}</p>
+                    </div>
+                </div>
               </template>
           </div>
           
@@ -234,10 +234,7 @@ export default {
           //금융사ICON 셋팅
           var defList = response.data.overdueList;
           for (var i = 0; i < defList.length; i++) {
-            defList[i].fcImg =
-              "background-image:url('/m/fincorp/getFinCorpIcon.crz?cd_fc=" +
-              defList[i].cd_fc +
-              "')";
+            defList[i].fcImg = "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + defList[i].cd_fc;
           }
           _this.overdueList = defList;
 
@@ -247,10 +244,7 @@ export default {
           //금융사ICON 셋팅
           var etcList = response.data.etcOverdueList;
           for (var i = 0; i < etcList.length; i++) {
-            etcList[i].fcImg =
-              "background-image:url('/m/fincorp/getFinCorpIcon.crz?cd_fc=" +
-              etcList[i].cd_fc +
-              "')";
+            etcList[i].fcImg = "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + etcList[i].cd_fc;
           }
           _this.etcOverdueList = etcList;
         })

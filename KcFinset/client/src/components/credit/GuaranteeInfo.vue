@@ -2,7 +2,7 @@
   <section>
     <div class="container">
          <div v-if="guaranteeList.length == 0" class="nodata">등록 내역이 없습니다</div>
-     	   <div else class="col-top">
+     	   <div v-else class="col-top">
 	            <div>
 	                <p class="key">보증건수</p>
 	                <p class="value">{{guaranteeCnt}}</p>
@@ -56,7 +56,7 @@ export default {
   computed: {},
   beforeCreate() {},
   created() {
-    this.$store.state.header.listType = "sub";
+    this.$store.state.header.type = "sub";
     this.$store.state.title = "연대보증현황";
     this.getGuaranteeInfo();
   },
@@ -81,10 +81,7 @@ export default {
           //금융사ICON 셋팅
           var list = response.data.guaranteeList;
           for (var i = 0; i < list.length; i++) {
-            list[i].fcImg =
-              "background-image:url('/m/fincorp/getFinCorpIcon.crz?cd_fc=" +
-              list[i].cd_fc +
-              "')";
+            list[i].fcImg = "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + list[i].cd_fc;
           }
           _this.guaranteeList = response.data.guaranteeList;
         })

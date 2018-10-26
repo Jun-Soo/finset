@@ -161,26 +161,43 @@
 	<select id="getCreditMainGradeChangeInfo" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
 		/* com.koscom.credit.dao.CreditMapper.getCreditMainGradeChangeInfo */
 		SELECT
-			TB.DT_INFO,
+			DECODE( SUBSTR( TO_CHAR( DT_INFO, 'MM' ), 1, 1 ), '0', SUBSTR( TO_CHAR( DT_INFO, 'MM' ), 2, 2 ), TO_CHAR( DT_INFO, 'MM' ))|| '월 ' ||
+			DECODE( SUBSTR( TO_CHAR( DT_INFO, 'DD' ), 1, 1 ), '0', SUBSTR( TO_CHAR( DT_INFO, 'DD' ), 2, 2 ), TO_CHAR( DT_INFO, 'DD' ))|| '일'
+			AS DT_INFO,
 			TB.CD_FC,
 			TB.NM_FC,
-			TB.CHANGE_CONTENTS,
-			TB.COLLECTOR
-		FROM (
-			SELECT
-				DECODE(SUBSTR(TO_CHAR(DT_INFO,'MM'),1,1),'0', SUBSTR(TO_CHAR(DT_INFO,'MM'),2,2), TO_CHAR(DT_INFO,'MM')) || '월 '
-				|| TO_CHAR(DT_INFO,'DD') || '일' AS DT_INFO,
-				CD_FC,
-				NM_FC,
-				CHANGE_CONTENTS,
-				COLLECTOR
-			FROM
-				CREDIT_CHANGE_LIST
-			WHERE
-				NO_PERSON = #{noPerson, jdbcType=VARCHAR}
-			ORDER BY
-				DT_INFO DESC
-		) TB
+			TB.CHANGE_CONTENTS
+		FROM
+			(
+				(
+					SELECT
+						DT_INFO,
+						CD_FC,
+						NM_FC,
+						CHANGE_CONTENTS
+					FROM
+						CREDIT_INQUIRY_LIST
+					WHERE
+						CD_FC IS NOT NULL
+						AND NM_FC IS NOT NULL
+						AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
+				)
+				UNION ALL
+				(
+					SELECT
+						DT_INFO,
+						CD_FC,
+						NM_FC,
+						CHANGE_CONTENTS
+					FROM
+						CREDIT_CHANGE_LIST
+					WHERE
+						CD_FC IS NOT NULL
+						AND NM_FC IS NOT NULL
+						AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
+				)
+			ORDER BY DT_INFO DESC, NM_FC
+			) TB
 		WHERE ROWNUM = 1
 	</select>
 
@@ -244,10 +261,12 @@
 		FROM
 			CREDIT_INQUIRY_LIST
 		WHERE
-        	TO_CHAR(dt_info,'YYYY-MM') >= TO_CHAR(ADD_MONTHS(SYSDATE,-12), 'YYYY-MM')
+			CD_FC IS NOT NULL
+			AND NM_FC IS NOT NULL
+        	AND TO_CHAR(dt_info,'YYYY-MM') >= TO_CHAR(ADD_MONTHS(SYSDATE,-12), 'YYYY-MM')
 			AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
 		ORDER BY
-			DT_INFO DESC
+			DT_INFO DESC, NM_FC
 	</select>
 
 	<select id="getCreditDetailGradeChangeList" parameterType="com.koscom.domain.CreditInfo" resultType="com.koscom.domain.CreditInfo">
@@ -267,11 +286,13 @@
 		FROM
 			CREDIT_CHANGE_LIST
 		WHERE
-			TO_CHAR(DT_INFO,'YYYY-MM') >= TO_CHAR(ADD_MONTHS(SYSDATE,-12), 'YYYY-MM')
+			CD_FC IS NOT NULL
+			AND NM_FC IS NOT NULL
+			AND TO_CHAR(DT_INFO,'YYYY-MM') >= TO_CHAR(ADD_MONTHS(SYSDATE,-12), 'YYYY-MM')
 			AND NO_PERSON = #{noPerson, jdbcType=VARCHAR}
 			AND CD_CHANGE_INFO = #{cdChangeInfo, jdbcType=VARCHAR} <!-- 01대출/카드 02연체 -->
 		ORDER BY
-			DT_INFO DESC
+			DT_INFO DESC, NM_FC
 	</select>
 
 	<resultMap id="result_creditInfo_map" type="java.util.HashMap">
@@ -286,7 +307,7 @@
 		<result property="cnt_fin_disorder" column="CNT_FIN_DISORDER" javaType="java.lang.String" />
 		<result property="list_overdue_etc" column="LIST_OVERDUE_ETC" jdbcType="CLOB" javaType="java.lang.String" />
 
-		<result property="amt_guarantee" column="AMT_GUARANTEE" javaType="java.lang.Integer" />
+		<result property="amt_guarantee" column="AMT_GUARANTEE" javaType="java.lang.String" />
 		<result property="list_guarantee" column="LIST_GUARANTEE" jdbcType="CLOB" javaType="java.lang.String" />
  	</resultMap>
 

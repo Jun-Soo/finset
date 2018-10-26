@@ -8,11 +8,11 @@
             <div class="info-wrap">
                 <div class="left">
                     <p class="key">내 상태(상위)</p>
-                    <p class="value">{{ creditInfo!=null ? creditInfo.percentage : "" }}<em>%</em></p>
+                    <p class="value">{{ci_percentage}}<em>%</em></p>
                 </div>
                 <div class="right">
                     <p class="key">신용점수</p>
-                    <p class="value">{{ creditInfo!=null ? creditInfo.rating_credit : "" }}</p>
+                    <p class="value">{{ci_rating_credit}}</p>
                 </div>
                 
             </div>
@@ -82,7 +82,10 @@ export default {
   name: "FinsetMain",
   data() {
     return {
-      creditInfo: "", //신용정보
+      //신용정보
+      creditInfo: "",
+      ci_percentage: "", //상위%
+      ci_rating_credit: "", //신용점수
       consumeSumAmt: "", //지출총금액
       assetsSumAmt: "", //자산총금액
       debtSumAmt: "", //부채총금액
@@ -117,7 +120,12 @@ export default {
           params: {}
         })
         .then(response => {
-          _this.creditInfo = response.data.creditInfo;
+          var creditInfo = response.data.creditInfo;
+          if (creditInfo != null) {
+            _this.ci_percentage = creditInfo.percentage;
+            _this.ci_rating_credit = creditInfo.rating_credit;
+          }
+          _this.creditInfo = creditInfo;
           _this.consumeSumAmt = response.data.consumeSumAmt;
           _this.assetsSumAmt = response.data.assetsSumAmt;
           _this.debtSumAmt = response.data.debtSumAmt;

@@ -17,7 +17,7 @@
                    <div class="left">{{formatNumber(creditAmtTotal)}}<em>원</em></div>
                    <div class="right">
                        <p class="key">총한도</p>
-                       <p class="value">{{formatNumber(creditLimitTotal/10000)}} 만원</p>
+                       <p class="value">{{formatNumber(Math.round(creditLimitTotal/10000))}} <em>만원</em></p>
                   </div>
                </div>
                <div class="bar"><p :style="{width: creditTotLimitPc+'%'}"></p></div>
@@ -47,33 +47,33 @@
                    </div>
                    <div class="center">
                        <p class="key">총한도</p>
-                       <p class="value">{{formatNumber(creditInfo.amt_limit/10000)}} 만원</p>
+                       <p class="value">{{formatNumber(Math.round(creditInfo.amt_limit/10000))}} <em>만원</em></p>
                    </div>
                    <div class="right">
                        <p class="key">단기대출한도</p>
-                       <p class="value">{{formatNumber(creditInfo.amt_ca_limit/10000)}} 만원</p>
+                       <p class="value">{{formatNumber(Math.round(creditInfo.amt_ca_limit/10000))}} <em>만원</em></p>
                    </div>
                </div>
                <div class="hide-con">
                    <div class="list">
                        <p class="left">일시불</p>
-                       <p class="right">{{formatNumber(creditInfo.amt_lump_sum/10000)}} 만원</p>
+                       <p class="right">{{formatNumber(Math.round(creditInfo.amt_lump_sum/10000))}} <em>만원</em></p>
                    </div>
                    <div class="list">
                        <p class="left">할부</p>
-                       <p class="right">{{formatNumber(creditInfo.amt_installment/10000)}} 만원</p>
+                       <p class="right">{{formatNumber(Math.round(creditInfo.amt_installment/10000))}} <em>만원</em></p>
                    </div>
                    <div class="list">
                        <p class="left">단기대출(현금서비스)</p>
-                       <p class="right">{{formatNumber(creditInfo.amt_short_card_loan/10000)}} 만원</p>
+                       <p class="right">{{formatNumber(Math.round(creditInfo.amt_short_card_loan/10000))}} <em>만원</em></p>
                    </div>
                    <div class="list">
                        <p class="left">체크카드</p>
-                       <p class="right">{{formatNumber(creditInfo.amt_check/10000)}} 만원</p>
+                       <p class="right">{{formatNumber(Math.round(creditInfo.amt_check/10000))}} <em>만원</em></p>
                    </div>
                    <div class="list">
                        <p class="left">연체금액</p>
-                       <p class="right">{{formatNumber(creditInfo.amt_delay/10000)}} 만원</p>
+                       <p class="right">{{formatNumber(Math.round(creditInfo.amt_delay/10000))}} <em>만원</em></p>
                    </div>
                </div>
                <button class="btn-expand"></button>
@@ -102,7 +102,7 @@
                    <div class="left">{{formatNumber(checkAmtTotal)}}<em>원</em></div>
                    <div class="right">
                        <p class="key">총한도</p>
-                       <p class="value">{{formatNumber(checkLimitTotal/10000)}} 만원</p>
+                       <p class="value">{{formatNumber(Math.round(checkLimitTotal/10000))}} <em>만원</em></p>
                   </div>
                </div>
                <div class="bar"><p :style="{width: checkTotUsePc+'%'}"></p></div>
@@ -132,33 +132,33 @@
                    </div>
                    <div class="center">
                        <p class="key">총한도</p>
-                       <p class="value">{{formatNumber(checkInfo.amt_limit/10000)}} 만원</p>
+                       <p class="value">{{formatNumber(Math.round(checkInfo.amt_limit/10000))}} <em>만원</em></p>
                    </div>
                    <div class="right">
                        <p class="key">단기대출한도</p>
-                       <p class="value">{{formatNumber(checkInfo.amt_ca_limit/10000)}} 만원</p>
+                       <p class="value">{{formatNumber(Math.round(checkInfo.amt_ca_limit/10000))}} <em>만원</em></p>
                    </div>
                </div>
                <div class="hide-con">
                    <div class="list">
                        <p class="left">일시불</p>
-                       <p class="right">{{formatNumber(checkInfo.amt_lump_sum/10000)}} 만원</p>
+                       <p class="right">{{formatNumber(Math.round(checkInfo.amt_lump_sum/10000))}} <em>만원</em></p>
                    </div>
                    <div class="list">
                        <p class="left">할부</p>
-                       <p class="right">{{formatNumber(checkInfo.amt_installment/10000)}} 만원</p>
+                       <p class="right">{{formatNumber(Math.round(checkInfo.amt_installment/10000))}} <em>만원</em></p>
                    </div>
                    <div class="list">
                        <p class="left">단기대출(현금서비스)</p>
-                       <p class="right">{{formatNumber(checkInfo.amt_short_card_loan/10000)}} 만원</p>
+                       <p class="right">{{formatNumber(Math.round(checkInfo.amt_short_card_loan/10000))}} <em>만원</em></p>
                    </div>
                    <div class="list">
                        <p class="left">체크카드</p>
-                       <p class="right">{{formatNumber(checkInfo.amt_check/10000)}} 만원</p>
+                       <p class="right">{{formatNumber(Math.round(checkInfo.amt_check/10000))}} <em>만원</em></p>
                    </div>
                    <div class="list">
                        <p class="left">연체금액</p>
-                       <p class="right">{{formatNumber(checkInfo.amt_delay/10000)}} 만원</p>
+                       <p class="right">{{formatNumber(Math.round(checkInfo.amt_delay/10000))}} <em>만원</em></p>
                    </div>
                </div>
                <button class="btn-expand"></button>
@@ -210,7 +210,7 @@ export default {
   computed: {},
   beforeCreate() {},
   created() {
-    this.$store.state.header.listType = "sub";
+    this.$store.state.header.type = "sub";
     this.$store.state.title = "카드현황";
     this.setUseMonth();
     this.getCardInfo();
@@ -249,7 +249,7 @@ export default {
         })
         .then(response => {
           //신용카드
-          _this.creditCnt = reponse.data.creditCnt;
+          _this.creditCnt = response.data.creditCnt;
 
           var creditAmtTotal = response.data.creditAmtTotal;
           var creditLimitTotal = response.data.creditLimitTotal;
@@ -260,29 +260,26 @@ export default {
           if (creditLimitTotal > 0) {
             _this.creditTotLimitPc = (creditAmtTotal / creditLimitTotal) * 100;
           } else {
-            _this.creditTotLimitPc = 0.0;
+            _this.creditTotLimitPc = 0;
           }
 
           var cdList = response.data.creditList;
           for (var i = 0; i < cdList.length; i++) {
             //금융사ICON 셋팅
-            cdList[i].fcImg =
-              "background-image:url('/m/fincorp/getFinCorpIcon.crz?cd_fc=" +
-              cdList[i].cd_fc +
-              "')";
+            cdList[i].fcImg = "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + cdList[i].cd_fc;
 
             //한도 이용율
             if (cdList[i].amt_limit > 0) {
               cdList[i].limitPc =
-                (cdList[i].amt_total / cdList[i].amt_limit) * 100;
+                Math.round((cdList[i].amt_total / cdList[i].amt_limit) * 100);
             } else {
-              cdList[i].limitPc = 0.0;
+              cdList[i].limitPc = 0;
             }
           }
           _this.creditList = cdList;
 
           //체크카드
-          _this.checkCnt = reponse.data.checkCnt;
+          _this.checkCnt = response.data.checkCnt;
 
           var checkAmtTotal = response.data.checkAmtTotal;
           var checkLimitTotal = response.data.checkLimitTotal;
@@ -292,18 +289,15 @@ export default {
           //총 이용율
           if (checkAmtTotal + creditAmtTotal > 0) {
             _this.checkTotUsePc =
-              (checkAmtTotal / (checkAmtTotal + creditAmtTotal)) * 100;
+              Math.round((checkAmtTotal / (checkAmtTotal + creditAmtTotal)) * 100);
           } else {
-            _this.checkTotUsePc = 0.0;
+            _this.checkTotUsePc = 0;
           }
 
           var ckList = response.data.checkList;
           for (var i = 0; i < ckList.length; i++) {
             //금융사ICON 셋팅
-            ckList[i].fcImg =
-              "background-image:url('/m/fincorp/getFinCorpIcon.crz?cd_fc=" +
-              ckList[i].cd_fc +
-              "')";
+            ckList[i].fcImg = "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + ckList[i].cd_fc;
 
             //이용율
             ckList[i].usePc = (ckList[i].amt_total / checkAmtTotal) * 100;

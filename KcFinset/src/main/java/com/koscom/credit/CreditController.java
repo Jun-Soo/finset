@@ -3,9 +3,7 @@ package com.koscom.credit;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -44,10 +42,8 @@ import com.koscom.scrap.model.ScrRespIncomeDtlVO;
 import com.koscom.scrap.model.ScrRespPensionPaymentVO;
 import com.koscom.scrap.model.ScrRespPensionPaymentdtlVO;
 import com.koscom.scrap.service.ScrapManager;
-import com.koscom.util.Constant;
 import com.koscom.util.DateUtil;
 import com.koscom.util.FinsetException;
-import com.koscom.util.LogUtil;
 import com.koscom.util.NumberUtil;
 import com.koscom.util.ReturnClass;
 import com.koscom.util.SkipLoginCheck;
@@ -132,11 +128,13 @@ public class CreditController {
         //연체원금
         CreditInfo overdueSumAmtInfo = creditManager.getCreditOverdueSumAmt(no_person);
         int overdueSumAmt = 0;
-        overdueSumAmt+= overdueSumAmtInfo.getKoi_sum_amt();
-        overdueSumAmt+= overdueSumAmtInfo.getKosi_sum_amt();
-        overdueSumAmt+= overdueSumAmtInfo.getKodi_sum_amt();
-        overdueSumAmt+= overdueSumAmtInfo.getKopi_sum_amt();
-        overdueSumAmt+= overdueSumAmtInfo.getKfdi_sum_amt();
+        if(overdueSumAmtInfo != null){
+        	overdueSumAmt+= overdueSumAmtInfo.getKoi_sum_amt();
+        	overdueSumAmt+= overdueSumAmtInfo.getKosi_sum_amt();
+        	overdueSumAmt+= overdueSumAmtInfo.getKodi_sum_amt();
+        	overdueSumAmt+= overdueSumAmtInfo.getKopi_sum_amt();
+        	overdueSumAmt+= overdueSumAmtInfo.getKfdi_sum_amt();
+        }
         model.addAttribute("overdueSumAmt", overdueSumAmt);
 
         //연대보증원금
@@ -814,10 +812,19 @@ public class CreditController {
     public String getCreditOverdueInfo(HttpServletRequest request, HttpSession session, Model model) throws FinsetException,IOException {
         String no_person    = (String)session.getAttribute("no_person");
 
-        //연체, 대지급 잔액
+        //잔액 정보
         CreditInfo overdueSumAmtInfo = creditManager.getCreditOverdueSumAmt(no_person);
-        int overdueSumAmt = overdueSumAmtInfo.getKoi_sum_amt();
-        int steadSumAmt = overdueSumAmtInfo.getKosi_sum_amt();
+
+        int overdueSumAmt = 0; //연체(기타) 잔액
+        int steadSumAmt = 0; //연체 잔액
+        int overdueEtcSumAmt = 0; //대지급 잔액
+        if(overdueSumAmtInfo != null){
+        	overdueSumAmt = overdueSumAmtInfo.getKoi_sum_amt();
+        	steadSumAmt = overdueSumAmtInfo.getKosi_sum_amt();
+        	overdueEtcSumAmt+= overdueSumAmtInfo.getKodi_sum_amt();
+        	overdueEtcSumAmt+= overdueSumAmtInfo.getKopi_sum_amt();
+        	overdueEtcSumAmt+= overdueSumAmtInfo.getKfdi_sum_amt();
+        }
 
         //연체, 대지급 내역
         Gson gson = new Gson();
@@ -843,12 +850,6 @@ public class CreditController {
       model.addAttribute("steadSumAmt", steadSumAmt); //대지급잔액
       model.addAttribute("overdueCnt", listOverdueInfoGson.size()); //연체+대지급 건수
       model.addAttribute("overdueList", listOverdueInfoGson); //연체+대지급 내역(cd_type 01연체 / 02대지급)
-
-	  //연체(기타) 잔액
-      int overdueEtcSumAmt = 0;
-      overdueEtcSumAmt+= overdueSumAmtInfo.getKodi_sum_amt();
-      overdueEtcSumAmt+= overdueSumAmtInfo.getKopi_sum_amt();
-      overdueEtcSumAmt+= overdueSumAmtInfo.getKfdi_sum_amt();
 
       //연체(기타) 건수
       String etcCntDefault = "0"; //채무불이행 건수(DB)
@@ -1087,7 +1088,7 @@ public class CreditController {
 
         if(creditDetailJsonInfoMap != null
         	&& (!("[]".equals(creditDetailJsonInfoMap.get("list_guarantee"))) && creditDetailJsonInfoMap.get("list_guarantee") != null)) {
-        	amtGuarantee = creditDetailJsonInfoMap.get("amt_guarantee");
+        	amtGuarantee = StringUtil.NVL(creditDetailJsonInfoMap.get("amt_guarantee"), "0");
 
 	        listGuaranteeStr = creditDetailJsonInfoMap.get("list_guarantee");
 	        listGuaranteeGson = gson.fromJson(listGuaranteeStr, type);

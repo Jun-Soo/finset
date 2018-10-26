@@ -43,6 +43,7 @@
 			(
 				cd_fc
 				,cd_fc_coocon
+				,com_alias
 				,cd_fin
 				,no_biz_comp
 				,nm_fc
@@ -73,6 +74,7 @@
 					  #{cdFc}
 				</if>
 					 ,#{cd_fc_coocon, jdbcType=VARCHAR}
+					 ,#{com_alias, jdbcType=VARCHAR}
 					 ,#{cd_fin, jdbcType=VARCHAR}
 					 ,#{no_biz_comp, jdbcType=VARCHAR}
 					 ,#{nm_fc, jdbcType=VARCHAR}

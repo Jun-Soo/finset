@@ -63,17 +63,14 @@ public class LoanWorkerController implements Constant{
 		logger.debug(goodsForm.toString());
 		String no_person = (String) session.getAttribute("no_person");
 		goodsForm.setNo_person(no_person);
-		if(StringUtil.isEmpty(goodsForm.getCd_goods_class_l())){
-			goodsForm.setCd_goods_class_l("01");
-		}
-		if(StringUtil.isEmpty(goodsForm.getCd_goods_class_m())) {
-			goodsForm.setCd_goods_class_m("01,03,08,09");
-		}
+//		if(StringUtil.isEmpty(goodsForm.getCd_goods_class_l())){
+//			goodsForm.setCd_goods_class_l("01");
+//		}
+//		if(StringUtil.isEmpty(goodsForm.getCd_goods_class_m())) {
+//			goodsForm.setCd_goods_class_m("01,03,08,09");
+//		}
 		goodsForm.setCd_goods_array_m(goodsForm.getCd_goods_class_m().split(","));
 		
-		if(StringUtil.isEmpty(goodsForm.getCd_goods_class_m())){
-			goodsForm.setCd_goods_class_m("01");
-		}
 		model.addAttribute("goodsList", goodsManager.listGoodsAllianceCredit(goodsForm));
 		return "jsonView";
 	}
@@ -93,9 +90,9 @@ public class LoanWorkerController implements Constant{
 		String no_person = (String) session.getAttribute("no_person");
 		
 		goodsbankForm.setNo_person(no_person);
-		if(StringUtil.isEmpty(goodsbankForm.getCd_goods_class_m())) {
-			goodsbankForm.setCd_goods_class_m("01,03,08,09");
-		}
+//		if(StringUtil.isEmpty(goodsbankForm.getCd_goods_class_m())) {
+//			goodsbankForm.setCd_goods_class_m("01,03,08,09");
+//		}
 		goodsbankForm.setCd_goods_array_m(goodsbankForm.getCd_goods_class_m().split(","));
 		
 		int count = goodsbankManager.listGoodsNoAllianceCreditCount(goodsbankForm);

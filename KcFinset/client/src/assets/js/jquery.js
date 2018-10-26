@@ -24,9 +24,9 @@ $(function () {
     $(this).toggleClass('on')
   })
 
-  $(document).on('click', '.btn-search', function () {
-    $('aside.search-wrap').addClass('on')
-  })
+  // $(document).on('click', '.btn-search', function () {
+  //   $('aside.search-wrap').addClass('on')
+  // })
 
   $(document).on('click', '.search-wrap .top button', function () {
     $('aside.search-wrap').removeClass('on')

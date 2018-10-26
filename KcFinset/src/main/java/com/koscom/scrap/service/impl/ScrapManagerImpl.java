@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.annotation.Resource;
+
 import net.sf.json.JSONSerializer;
 
 import org.json.simple.JSONArray;
@@ -12,10 +14,19 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.PropertySource;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.koscom.env.service.CodeManager;
+import com.koscom.fccode.dao.FcCodeMapper;
+import com.koscom.fincorp.dao.FincorpMapper;
+import com.koscom.fincorp.model.FincorpVO;
+import com.koscom.fincorp.model.FincorpfcNminfoForm;
 import com.koscom.kcb.model.KcbReqNonfiInfoVO;
 import com.koscom.person.dao.PersonMapper;
 import com.koscom.person.model.PersonCertificateInfoVO;
@@ -62,9 +73,12 @@ import com.koscom.scrap.service.ScrapManager;
 import com.koscom.util.Constant;
 import com.koscom.util.DateUtil;
 import com.koscom.util.LogUtil;
+import com.koscom.util.StringUtil;
+import com.koscom.util.URLConnection;
 import com.koscom.util.ReturnClass;
 
 @Service("scrapManager")
+@PropertySource("classpath:prop/webservice.properties")
 public class ScrapManagerImpl implements ScrapManager {
 	
 	private static final Logger logger = LoggerFactory.getLogger(ScrapManagerImpl.class);
@@ -78,7 +92,69 @@ public class ScrapManagerImpl implements ScrapManager {
 	@Autowired
 	private PersonMapper personMapper;
 	
+	@Autowired
+	private FcCodeMapper fcCodeMapper;
+	
+	@Autowired
+	private FincorpMapper fincorpMapper;
+	
+	@Resource
+	Environment environment;
+	
 	@Override
+	public void getDirectFinanceSearch()	{
+		String directUrl = environment.getProperty("direct.apiUrl") + "/company/finance/search";
+		String directKey = environment.getProperty("direct.apiKey");
+		
+		URLConnection url = new URLConnection();
+		logger.info("getDirectFinanceSearch  : URL[" + directUrl +"], APIkey : "+directKey);
+		
+		ReturnClass returnClass = url.sendReqGET_Direct(directUrl, directKey,"");
+		
+		if(returnClass.getCd_result()  == Constant.SUCCESS)	{
+			String data = returnClass.getMessage();
+			logger.info("data : "+ data);
+			JsonParser jsonParser = new JsonParser();
+			JsonObject jsonObject = (JsonObject) jsonParser.parse(data);
+			
+			JsonArray jsonArray = (JsonArray)jsonObject.get("financeList");
+			for (int i = 0; i < jsonArray.size(); i++) {
+				JsonObject object = (JsonObject) jsonArray.get(i);
+				String nmFc = object.get("comName").getAsString();
+				logger.info("name  :  "+ nmFc);
+				
+				// 증권사 내역 DB 조회 후 없을 경우 추가
+				String cdFc = fcCodeMapper.selectCdFc(nmFc);
+				if(StringUtil.isEmpty(cdFc)) {
+					FincorpVO Fincorp = new FincorpVO();
+					Fincorp.setCd_fin("F"); //F:증권
+					Fincorp.setNo_biz_comp("0000000000");
+					Fincorp.setNm_fc(nmFc);
+					Fincorp.setYn_use("Y");
+					Fincorp.setYn_alliance("N");
+					Fincorp.setCd_fc_coocon(object.get("comId").getAsString());
+					Fincorp.setCom_alias(object.get("comAlias").getAsString());
+					Fincorp.setYn_scrap("N");
+					Fincorp.setId_frt("SYS");
+					Fincorp.setId_lst("SYS");
+					
+					fincorpMapper.createFincorp(Fincorp);
+					cdFc = Fincorp.getCdFc();
+					
+					FincorpfcNminfoForm fincorpfcNminfoForm = new FincorpfcNminfoForm();
+					fincorpfcNminfoForm.setCd_fc(cdFc);
+					fincorpfcNminfoForm.setNm_nm_fc(nmFc);
+					fincorpfcNminfoForm.setNm_yn_use("Y");
+					fincorpfcNminfoForm.setId_frt("SYS");
+					fincorpfcNminfoForm.setId_lst("SYS");
+					fincorpMapper.createFincorpfcNminfo(fincorpfcNminfoForm);
+				}
+			}
+		}
+		else	{
+			logger.error("금융투자회사 기업정보 조회를 실패하였습니다.");
+		}
+	}
 	public String createScrapFcList(String data)	{
 		JSONObject jsonObject = new JSONObject();
 		logger.debug("createScrapFcList.crz");
@@ -202,7 +278,6 @@ public class ScrapManagerImpl implements ScrapManager {
 	@Override
 	public String updateScrapFcList(String data)	{
 		JSONObject jsonObject = new JSONObject();
-		 ReturnClass returnClass = null;
 		logger.debug("updateScrapFc.crz");
 		logger.info("updateScrapFc Data   : " + data);
 		

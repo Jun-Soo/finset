@@ -1,30 +1,25 @@
 package com.koscom.scrap.service;
 
 import java.util.List;
-import java.util.Map;
 
 import com.koscom.scrap.model.FcLinkInfoVO;
 import com.koscom.scrap.model.LinkedFcInfoVO;
-import com.koscom.scrap.model.ScrBankApiAnInfoVO;
-import com.koscom.scrap.model.ScrCardApprovalInfoVO;
-import com.koscom.scrap.model.ScrCardInfoVO;
-import com.koscom.scrap.model.ScrReqBankVO;
-import com.koscom.scrap.model.ScrReqCardVO;
-import com.koscom.scrap.model.ScrReqCertificationVO;
 import com.koscom.scrap.model.ScrReqHealthVO;
 import com.koscom.scrap.model.ScrReqPensionVO;
-import com.koscom.scrap.model.ScrRespCashReceiptVO;
-import com.koscom.scrap.model.ScrRespHealthPaymentVO;
 import com.koscom.scrap.model.ScrRespHealthPaymentdtlVO;
 import com.koscom.scrap.model.ScrRespIncomeDtlVO;
 import com.koscom.scrap.model.ScrRespPensionPaymentVO;
 import com.koscom.scrap.model.ScrRespPensionPaymentdtlVO;
-import com.koscom.scrap.model.ScrRsltScrapVO;
-import com.koscom.scrap.model.sub.AnAllListHistoryVO;
-import com.koscom.scrap.model.sub.DepositAnListHistoryVO;
 import com.koscom.util.ReturnClass;
 
 public interface ScrapManager {
+	
+	/**
+	 * 금융투자회사 기업 정보 조회 (오픈플랫폼)
+	 * @param
+	 * @return 
+	 */
+	void getDirectFinanceSearch();
 
 	/**
 	 * 금융사 스크랩핑 연동 정보 여부 insert

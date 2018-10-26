@@ -28,7 +28,6 @@
 								AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
 			)> 0 THEN 'Y'
 			ELSE 'N' END) AS YN_FAVORITE
-			,FI.PATH_FILE1
 		FROM (SELECT A.CD_GOODS
 				,A.CD_FC
 				,A.DESC_FEATURE
@@ -90,7 +89,6 @@
                                            AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
                                       )> 0 THEN 'Y'
                                   ELSE 'N' END) AS YN_FAVORITE
-                            ,FI.PATH_FILE1
                         FROM (SELECT A.CD_GOODS
                                     ,A.CD_FC
                                     ,A.DESC_FEATURE
@@ -134,7 +132,6 @@
             ,AMT_LIMIT
             ,CD_LOAN_TERM
             ,YN_FAVORITE
-            ,PATH_FILE1
             ,RNUM
         FROM(SELECT LST.CD_GOODS
                     ,LST.CD_FC
@@ -150,7 +147,6 @@
                     ,LST.AMT_LIMIT
                     ,LST.CD_LOAN_TERM
                     ,LST.YN_FAVORITE
-                    ,LST.PATH_FILE1
                    ,ROWNUM RNUM
                FROM (SELECT GI.CD_GOODS
                             ,GI.CD_FC
@@ -173,7 +169,6 @@
                                            AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
                                       )> 0 THEN 'Y'
                                   ELSE 'N' END) AS YN_FAVORITE
-                            ,FI.PATH_FILE1
                         FROM (SELECT
                         			A.CD_GOODS
                                      ,A.CD_FC
@@ -251,7 +246,6 @@
                                            AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
                                       )> 0 THEN 'Y'
                                   ELSE 'N' END) AS YN_FAVORITE
-                         ,FI.PATH_FILE1
                     FROM (SELECT
                         		 A.CD_GOODS
                                  ,A.CD_FC
@@ -424,7 +418,6 @@
                             ) <![CDATA[>]]> 0 THEN 'Y'
                 ELSE 'N'
                 END ) AS YN_FAVORITE
-             , FI.PATH_FILE1
              , FI.NM_FC
          FROM GOODS_INFO GI
          LEFT OUTER JOIN FC_INFO FI
@@ -760,7 +753,6 @@
             , AMT_LIMIT
             , CD_TYPE_INTEREST
             , DESC_FEATURE
-            , PATH_FILE1
             , YN_FAVORITE
             , KEYWORD_LIST
             , RNUM
@@ -807,7 +799,6 @@
                        , LST.AMT_LIMIT
                        , LST.CD_TYPE_INTEREST
                        , LST.DESC_FEATURE
-                       , LST.PATH_FILE1
                        , LST.YN_FAVORITE
                        , LST.KEYWORD_LIST
                        , ROWNUM RNUM
@@ -854,7 +845,6 @@
                                 , GI.AMT_LIMIT
                                 , GI.CD_TYPE_INTEREST
                                 , GI.DESC_FEATURE
-                                , FI.PATH_FILE1
                                 , 'Y' AS YN_FAVORITE
                                 , GI.KEYWORD_LIST
                         FROM COOCON_GOODS_FAVORITE_INFO CGFI
@@ -929,7 +919,6 @@
                     , GI.YN_POST_RANKING
                     , GI.CD_COLLATERAL_HOUSE_TYPE
                     , GI.CD_COLLATERAL_LOAN_USE
-                    , FI.PATH_FILE1
                     , 'Y' AS YN_FAVORITE
                     , GI.KEYWORD_LIST
                 FROM COOCON_GOODS_FAVORITE_INFO CGFI
@@ -1006,7 +995,6 @@
             , CD_TYPE_INTEREST
             , CD_LOAN_TERM
             , DESC_FEATURE
-            --, PATH_FILE1
             , YN_FAVORITE
             , KEYWORD_LIST
             , FC_LINK
@@ -1054,7 +1042,6 @@
                     , LST.CD_TYPE_INTEREST
                     , LST.CD_LOAN_TERM
                     , LST.DESC_FEATURE
-                    --, LST.PATH_FILE1
                     , LST.YN_FAVORITE
                     , LST.KEYWORD_LIST
                     , LST.FC_LINK
@@ -1102,7 +1089,6 @@
                             , GI.CD_RATIO_TYPE AS CD_TYPE_INTEREST
                             , GI.MAX_LOAN_TERM AS CD_LOAN_TERM
                             , GI.DESC_FEATURE
-                            --, FI.PATH_FILE1
                             , 'Y' AS YN_FAVORITE
                             , GI.KEYWORD_LIST
                             , GI.FC_LINK
@@ -1185,7 +1171,6 @@
                     , GI.CD_RATIO_TYPE AS CD_TYPE_INTEREST
                     , GI.MAX_LOAN_TERM AS CD_LOAN_TERM
                     , GI.DESC_FEATURE
-                    --, FI.PATH_FILE1
                     , 'Y' AS YN_FAVORITE
                     , GI.KEYWORD_LIST
                     , GI.FC_LINK

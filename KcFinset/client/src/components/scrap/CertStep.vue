@@ -129,6 +129,7 @@ export default {
   name: "certStep1",
   data() {
     return {
+      uuid: "",
       errMsg: "",
       checked: "",
       chkAll: false,
@@ -145,13 +146,13 @@ export default {
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
     }
-
     this.$store.state.title = "금융정보제공동의서 (7/7)";
+    this.checkUUID();
   },
   beforeMount() {},
   mounted() {
     var _this = this;
-
+    this.getTermsContent;
     $(":checkbox").change(function() {
       Common.affixBottom("hide");
       //약관 전체동의 체크
@@ -178,6 +179,43 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    //금융정보제공동의서 조회
+    getTermsContent: function() {
+      var _this = this;
+      var formData = new FormData();
+      formData.append("no_person", this.$store.state.user.noPerson);
+      formData.append("uuid", this.uuid);
+      formData.append("dn", this.$route.params.dn);
+
+      this.$http
+        .post("/m/scrap/getTermsContent.json", formData)
+        .then(function(response) {
+          var result = response.data.result;
+          _this.isScrapStList = true;
+          if (_this.isScrapFcList && _this.isScrapStList) {
+            _this.nextStep();
+          }
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+        });
+    },
+    // UUID 체크
+    checkUUID: function() {
+      if (Constant.userAgent == "iOS") {
+        //공인인증서 유무 체크 결과 콜백 이벤트
+        Jockey.on("resultCheckDevicesUUID", function(param) {
+          resultCheckDevicesUUID(uuid);
+        });
+        Jockey.send("checkDevicesUUID");
+      } else if (Constant.userAgent == "Android") {
+        window.Android.checkDevicesUUID();
+      }
+    },
+    // UUID 체크 결과(모바일에서 호출)
+    resultCheckDevicesUUID: function(uuid) {
+      this.uuid = uuid;
+    },
     allChecked: function() {
       var _this = this;
       if (_this.chkAll) {
@@ -198,18 +236,17 @@ export default {
         _this.chkBox3 = false;
       }
     },
-
     confirmedTerms: function() {
       //if (_this.chkBox1 && _this.chkBox2) {
-        this.$router.push({
-          name: "scrapLoading",
-          params: {
-            dn: this.$route.params.dn,
-            cn: this.$route.params.cn,
-            normalMessage: "연동 가능한 금융사를<br>확인 중 입니다.",
-            smallMessage: "잠시만 기다려주세요."
-          }
-        });
+      this.$router.push({
+        name: "scrapLoading",
+        params: {
+          dn: this.$route.params.dn,
+          cn: this.$route.params.cn,
+          normalMessage: "연동 가능한 금융사를<br>확인 중 입니다.",
+          smallMessage: "잠시만 기다려주세요."
+        }
+      });
       //}
     }
   }

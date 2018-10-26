@@ -57,7 +57,6 @@
 			,FC_LINK				  /* 금융사링크 */
 			,TIME_INTEREST			  /* 이자부과시기 */
 			,YN_FAVORITE
-			,PATH_FILE1
 			,CD_FC
 			,YN_ALLIANCE
 			,RNUM
@@ -114,7 +113,6 @@
                 ,LST.FC_LINK				  /* 금융사링크 */
                 ,LST.TIME_INTEREST			  /* 이자부과시기 */
 				,LST.YN_FAVORITE
-			    ,LST.PATH_FILE1
 			    ,LST.CD_FC
 			    ,LST.YN_ALLIANCE
 	            ,ROWNUM RNUM
@@ -180,7 +178,6 @@
 					  	ELSE 'N'
 					  	END
 					  	) AS YN_FAVORITE
-			     	  ,FI.PATH_FILE1
 			     	  ,FI.CD_FC
 			     	  ,FI.YN_ALLIANCE
 				 	FROM GOODSBANK_INFO GI
@@ -591,7 +588,6 @@
 			ID_LST,
 			DT_LST,
 			YN_FAVORITE,
-			PATH_FILE1,
 			YN_ALLIANCE,
 	        ROWNUM RNUM
 	    FROM
@@ -654,7 +650,6 @@
 				LST.ID_LST,
 				LST.DT_LST,
 			    LST.YN_FAVORITE,
-			    LST.PATH_FILE1,
 			    LST.YN_ALLIANCE,
 	            ROWNUM RNUM
 	         FROM
@@ -727,7 +722,6 @@
 			     		ELSE 'N'
 			     		END
 			     		) AS YN_FAVORITE
-			     		, FI.PATH_FILE1
 			     		,FI.YN_ALLIANCE
 				 	FROM GOODSBANK_INFO GI
 				 	LEFT OUTER JOIN FC_INFO FI
@@ -980,7 +974,6 @@
 			     		ELSE 'N'
 			     		END
 			     		) AS YN_FAVORITE
-			     		, FI.PATH_FILE1
 				 	FROM GOODSBANK_INFO GI
 				 	LEFT OUTER JOIN FC_INFO FI
 				 	ON GI.CD_FC = FI.CD_FC
@@ -1199,7 +1192,6 @@
             , FC_LINK                  /* 금융사링크            */
             , TIME_INTEREST  		   /* 이자부과시기            */
             , YN_FAVORITE
-			, PATH_FILE1
 			, YN_ALLIANCE
 	        , RNUM
 	    FROM
@@ -1256,7 +1248,6 @@
                 , LST.FC_LINK                  /* 금융사링크            */
                 , LST.TIME_INTEREST  		   /* 이자부과시기            */
 			    , LST.YN_FAVORITE
-			    , LST.PATH_FILE1
 			    , LST.YN_ALLIANCE
 	            , ROWNUM RNUM
 	         FROM
@@ -1322,7 +1313,6 @@
 			     		ELSE 'N'
 			     		END
 			     		) AS YN_FAVORITE
-			     		, FI.PATH_FILE1
 			     		, FI.YN_ALLIANCE
 				 	FROM GOODSBANK_INFO GI
 				 	LEFT OUTER JOIN FC_INFO FI
@@ -1432,7 +1422,6 @@
 			ELSE 'N'
 			END
 			) AS YN_FAVORITE
-			, FI.PATH_FILE1
 			, FI.NM_FC
 		 FROM GOODSBANK_INFO GI
 		 LEFT OUTER JOIN FC_INFO FI

@@ -16,6 +16,7 @@ public class FincorpInfo implements Serializable{
 	protected String yn_scrap;				//스크래핑 가능여부
 	protected String yn_alliance; 			//제휴여부
 	protected String cd_fc_coocon;			//쿠콘금융사코드
+	protected String com_alias;				//COMALIAS
 	protected String cd_addr_fc; 			//주소구분
 	protected String post_fc; 				//우편번호1
 	protected String addr1_fc; 				//주소1
@@ -109,6 +110,12 @@ public class FincorpInfo implements Serializable{
 	}
 	public void setCd_fc_coocon(String cd_fc_coocon) {
 		this.cd_fc_coocon = cd_fc_coocon;
+	}
+	public String getCom_alias() {
+		return com_alias;
+	}
+	public void setCom_alias(String com_alias) {
+		this.com_alias = com_alias;
 	}
 	public String getCd_addr_fc() {
 		return cd_addr_fc;

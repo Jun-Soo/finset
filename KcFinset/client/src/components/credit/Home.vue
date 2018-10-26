@@ -7,17 +7,17 @@
 </template>
 
 <script>
-import  FinsetHeader  from   './../common/FinsetHeader'
-import  FinsetBottom  from   './../common/FinsetBottom'
-import './../../assets/js/common.js'
+import FinsetHeader from "./../common/FinsetHeader";
+import FinsetBottom from "./../common/FinsetBottom";
+import "./../../assets/js/common.js";
 
 export default {
-  name: 'creditHome',
+  name: "creditHome",
   components: {
     FinsetHeader: FinsetHeader,
     FinsetBottom: FinsetBottom
   }
-}
+};
 </script>
 
 <style>

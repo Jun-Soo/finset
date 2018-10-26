@@ -1,9 +1,8 @@
 package com.koscom.scrap;
 
+
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -11,7 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.sf.json.JSONObject;
-import net.sf.json.JSONSerializer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,56 +23,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.google.gson.Gson;
 import com.koscom.env.service.CodeManager;
 import com.koscom.fincorp.service.FincorpManager;
-import com.koscom.kcb.model.KcbReqNonfiInfoVO;
 import com.koscom.kcb.service.KcbManager;
-import com.koscom.person.model.PersonCertificateInfoVO;
-import com.koscom.person.model.PersonForm;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
-import com.koscom.scrap.model.AnAllVO;
-import com.koscom.scrap.model.AppBankInfo;
-import com.koscom.scrap.model.AppCardInfo;
-import com.koscom.scrap.model.AppFcLinkInfo;
-import com.koscom.scrap.model.AppNHISInfo;
-import com.koscom.scrap.model.AppNPSInfo;
-import com.koscom.scrap.model.AppNTSInfo;
-import com.koscom.scrap.model.DepositAnVO;
+
 import com.koscom.scrap.model.FcLinkInfoVO;
-import com.koscom.scrap.model.FundAnVO;
 import com.koscom.scrap.model.LinkedFcInfoVO;
-import com.koscom.scrap.model.LoanAnVO;
-import com.koscom.scrap.model.NHISInfo;
-import com.koscom.scrap.model.NPSInfo;
-import com.koscom.scrap.model.NTSInfo;
-import com.koscom.scrap.model.ScrBankApiAnInfoVO;
-import com.koscom.scrap.model.ScrCardApprovalInfoVO;
-import com.koscom.scrap.model.ScrCardInfoVO;
-import com.koscom.scrap.model.ScrReqBankVO;
-import com.koscom.scrap.model.ScrReqCardVO;
-import com.koscom.scrap.model.ScrReqCertificationVO;
-import com.koscom.scrap.model.ScrReqHealthVO;
-import com.koscom.scrap.model.ScrReqPensionVO;
-import com.koscom.scrap.model.ScrRespCashReceiptVO;
-import com.koscom.scrap.model.ScrRespHealthPaymentVO;
-import com.koscom.scrap.model.ScrRespHealthPaymentdtlVO;
-import com.koscom.scrap.model.ScrRespIncomeDtlVO;
-import com.koscom.scrap.model.ScrRespPensionPaymentVO;
-import com.koscom.scrap.model.ScrRespPensionPaymentdtlVO;
-import com.koscom.scrap.model.ScrRsltScrapVO;
-import com.koscom.scrap.model.UserBankOutputVO;
-import com.koscom.scrap.model.UserCardOutputVO;
-import com.koscom.scrap.model.sub.AnAllListHistoryVO;
-import com.koscom.scrap.model.sub.AnAllListVO;
-import com.koscom.scrap.model.sub.DepositAnListHistoryVO;
-import com.koscom.scrap.model.sub.DepositAnListVO;
-import com.koscom.scrap.model.sub.FundAnListVO;
-import com.koscom.scrap.model.sub.LoanAnListVO;
 import com.koscom.scrap.service.ScrapManager;
-import com.koscom.util.Constant;
-import com.koscom.util.DateUtil;
 import com.koscom.util.FinsetException;
 import com.koscom.util.ReturnClass;
 import com.koscom.util.SkipLoginCheck;
@@ -134,6 +91,32 @@ public class ScrapController {
 	}
 	
 	/** VUE
+	 * 금융정보제공동의서 조회
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/getTermsContent.json")
+	public String getTermsContent(
+			HttpServletResponse response,
+			HttpServletRequest request, 
+			HttpSession session, 
+			Model model,
+			String no_person,
+			String uuid,
+			String dn) {
+		logger.debug("================= no_person : " + no_person);
+		logger.debug("================= uuid : " + uuid);
+		logger.debug("================= dn : " + dn);
+		logger.info("service.profile :" +environment.getProperty("service.profile"));
+		scrapManager.getDirectFinanceSearch();
+		
+	
+		
+		return "jsonView";
+	}
+	
+	/** VUE
 	 * 스크래핑 관련 증권사 내역 조회
 	 * @param model
 	 * @param request
@@ -145,9 +128,17 @@ public class ScrapController {
 			HttpServletRequest request, 
 			HttpSession session, 
 			Model model,
+			String no_person,
+			String uuid,
 			String dn) {
+		logger.debug("================= no_person : " + no_person);
+		logger.debug("================= uuid : " + uuid);
 		logger.debug("================= dn : " + dn);
-		model.addAttribute("result", "00");
+		logger.info("service.profile :" +environment.getProperty("service.profile"));
+
+		
+		
+		
 		return "jsonView";
 	}
 	
@@ -176,7 +167,7 @@ public class ScrapController {
 		return "jsonView";
 	}
 	
-	/** VURE
+	/** VUE
 	 * 스크래핑 연동 금융사 수정 
 	 * @param request
 	 * @param model
@@ -194,6 +185,84 @@ public class ScrapController {
 				
 		ReturnClass returnClass = scrapManager.updateFcLinkInfoList(linkedFcInfoList);
 		model.addAttribute("code", returnClass.getCd_result());
+		
+		return "jsonView";
+	}
+	
+	/** VUE
+	 * 스크래핑 연동 금융사 관리 화면 
+	 * @param request
+	 * @param model
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/listFcLinkInfo.json")
+	public String listFcLinkInfo(
+			HttpServletResponse response,
+			HttpServletRequest request, 
+			HttpSession session, 
+			Model model)	{ 
+		String no_person = (String) session.getAttribute("no_person");
+
+		logger.debug("no_person : "+ no_person);
+		PersonVO personVO = null;
+		personVO = personManager.getPersonInfo(no_person);
+		
+		logger.info("no_person : "+no_person);
+		logger.info("personVO.getNm_person() : "+personVO.getNm_person());
+		
+		model.addAttribute("nm_person", personVO.getNm_person());
+		
+		LinkedFcInfoVO linkedFcInfo = new LinkedFcInfoVO();
+		
+		linkedFcInfo.setNo_person(no_person);
+
+		List<LinkedFcInfoVO> linkedFcInfoList = scrapManager.getLinkFcInfo(linkedFcInfo);
+		List<LinkedFcInfoVO> bankLinkInfo = new ArrayList<LinkedFcInfoVO>();
+		List<LinkedFcInfoVO> cardLinkInfo = new ArrayList<LinkedFcInfoVO>();
+		List<LinkedFcInfoVO> etcLinkInfo = new ArrayList<LinkedFcInfoVO>();
+		
+		for (LinkedFcInfoVO linkedFcInfoVO : linkedFcInfoList) {
+             logger.debug("linkedFcInfoVO.getNO_PERSON() :" + linkedFcInfoVO.getNo_person()  );
+             logger.debug("linkedFcInfoVO.getCN()        :" + linkedFcInfoVO.getCn()         );
+             logger.debug("linkedFcInfoVO.getNM_FC()     :" + linkedFcInfoVO.getNm_fc()      );
+             logger.debug("linkedFcInfoVO.getNM_CODE()   :" + linkedFcInfoVO.getNm_code()    );
+             linkedFcInfoVO.setNo_person(no_person);
+             if(linkedFcInfoVO.getNm_code().equals("은행"))	{
+            	 bankLinkInfo.add(linkedFcInfoVO);
+             }
+             else if(linkedFcInfoVO.getNm_code().equals("카드"))	{
+            	 cardLinkInfo.add(linkedFcInfoVO);
+             }
+             else if(linkedFcInfoVO.getNm_code().equals("기타"))	{
+            	 etcLinkInfo.add(linkedFcInfoVO);
+             }
+		}
+		logger.debug("bankLinkInfo.size()   :" + bankLinkInfo.size()    );
+		logger.debug("cardLinkInfo.size()   :" + cardLinkInfo.size()    );
+		logger.debug("etcLinkInfo.size()    :" + etcLinkInfo.size()    );
+		if(bankLinkInfo.size() > 0)	{
+			model.addAttribute("bankList", bankLinkInfo);
+		}
+		if(cardLinkInfo.size() > 0)	{
+			model.addAttribute("cardList", cardLinkInfo);
+		}
+		if(etcLinkInfo.size() > 0)	{
+			model.addAttribute("etcList", etcLinkInfo);
+		}
+		
+		//스크래핑 대상 은행 리스트 가져오기
+		List<String> bankList = fincorpManager.getCooconFcCd(codeManager.getCodeId("cd_fin","은행"));
+		String bankCode = String.join(",", bankList);
+			
+		List<String> cardList = fincorpManager.getCooconFcCd(codeManager.getCodeId("cd_fin","카드"));
+		String cardCode = String.join(",", cardList);
+		
+		logger.debug("bankCode : " + bankCode);
+		logger.debug("cardCode : " + cardCode);
+		
+		model.addAttribute("bank_code", bankCode);
+		model.addAttribute("card_code", cardCode);
 		
 		return "jsonView";
 	}

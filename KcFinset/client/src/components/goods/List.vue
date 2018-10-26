@@ -43,12 +43,35 @@
           </select>
         </div>
         <div class="right">
-          <button></button>
+          <button class="btn-search"  @click="clickSearch()"></button>
         </div>
       </div>
       <listLoanNoAffiliates :item="item" ref="form"/>
     </div>
   </section>
+  <aside class="search-wrap" :class="{'on':isSearch}" v-if="'loanWorker' === this.curTab">
+        <div class="top" @click="clickSearch()">
+            <button>검색</button>
+        </div>
+        <div class="wrap">
+            <div class="item">
+                <div class="key">신용등급</div>
+                <div class="bar"><p><span class="active" style="width: 20%;"></span><span class="circle" style="left: 20%;"></span></p></div>
+                <div class="num">3</div>
+            </div>
+            <div class="check-wrap">
+                <div class="key">종류</div>
+                <div class="search-check">
+                    <div><input type="checkbox" id="chk1" :checked="isCheckWorker" @click="clickCheckWorker()"><label for="chk1">직장인</label></div>
+                    <div><input type="checkbox" id="chk2" :checked="isCheckSelf" @click="clickCheckSelf()"><label for="chk2">자영업</label></div>
+                </div>
+            </div>
+        </div>
+        <div class="action">
+            <a href="#" class="stroke" @click="clickStroke()">초기화</a>
+            <a href="#" class="solid" @click="clickSolid()">적용</a>
+        </div>
+    </aside>
 </div>
 </template>
 
@@ -63,6 +86,9 @@ export default {
   name: "List",
   data() {
     return {
+      isSearch: false,
+      isCheckWorker: true,
+      isCheckSelf: true,
       item: {},
       Common: Common,
       urlPath: "/m/loanworker/",
@@ -84,11 +110,10 @@ export default {
   components: {
     listLoanNoAffiliates
   },
-  // computed () {
-  // },
+  computed: {},
   beforeCreate() {},
   created() {
-    this.$store.state.title = '추천상품'
+    this.$store.state.title = "추천상품";
   },
   beforeMount() {},
   mounted() {
@@ -99,6 +124,35 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    clickSearch: function() {
+      this.isSearch = !this.isSearch;
+    },
+    clickCheckWorker: function() {
+      this.isCheckWorker = !this.isCheckWorker;
+    },
+    clickCheckSelf: function() {
+      this.isCheckSelf = !this.isCheckSelf;
+    },
+    clickStroke: function() {
+      if ("loanWorker" == this.curTab) {
+        this.isCheckWorker = true;
+        this.isCheckSelf = true;
+      } else if ("loanHome" == this.curTab) {
+      }
+    },
+    clickSolid: function() {
+      if ("loanWorker" == this.curTab) {
+        this.cd_goods_class_m = "03,08,09";
+        if (this.isCheckWorker)
+          this.cd_goods_class_m = this.cd_goods_class_m + ",01";
+        if (this.isCheckSelf)
+          this.cd_goods_class_m = this.cd_goods_class_m + ",02";
+        this.listGoods();
+        Common.pagination(this.$refs.form.listGoods);
+        this.clickSearch();
+      } else if ("loanHome" == this.curTab) {
+      }
+    },
     orderbyOnChange: function() {
       this.page = 1;
       this.loadGoodsTab(this.curTab);
@@ -111,7 +165,11 @@ export default {
 
       if ("loanWorker" == this.curTab) {
         this.cd_goods_class_l = "01";
-        this.cd_goods_class_m = "01,03,08,09";
+        this.cd_goods_class_m = "03,08,09";
+        if (this.isCheckWorker)
+          this.cd_goods_class_m = this.cd_goods_class_m + ",01";
+        if (this.isCheckSelf)
+          this.cd_goods_class_m = this.cd_goods_class_m + ",02";
         this.urlPath = "/m/loanworker/";
       } else if ("loanHome" == this.curTab) {
         this.cd_goods_class_l = "02";
@@ -122,8 +180,6 @@ export default {
       }
 
       this.listGoods();
-      console.log(this.$children);
-      //Common.pagination(this.$children[0].listGoods);
       Common.pagination(this.$refs.form.listGoods);
 
       if (this.page == 1) {
@@ -177,7 +233,7 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
-.test{
-  margin:0 21px
+.test {
+  margin: 0 21px;
 }
 </style>

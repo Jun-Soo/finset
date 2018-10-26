@@ -231,7 +231,7 @@
 	<select id="getCreditDetailGradeInquiryList" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
 		/* com.koscom.credit.dao.CreditMapper.getCreditDetailGradeInquiryList */
 		SELECT
-			TO_CHAR(DT_INFO,'YYYY-MM-DD') AS DT_INFO,
+			TO_CHAR(DT_INFO,'YYYYMMDD') AS DT_INFO,
 			CD_FC,
 			NM_FC,
 			CHANGE_CONTENTS,
@@ -253,7 +253,7 @@
 	<select id="getCreditDetailGradeChangeList" parameterType="com.koscom.domain.CreditInfo" resultType="com.koscom.domain.CreditInfo">
 		/* com.koscom.credit.dao.CreditMapper.getCreditDetailGradeChangeList */
 		SELECT
-			TO_CHAR(DT_INFO,'YYYY.MM.DD') AS DT_INFO,
+			TO_CHAR(DT_INFO,'YYYYMMDD') AS DT_INFO,
 			CD_FC,
 			NM_FC,
 			CHANGE_CONTENTS,
@@ -315,9 +315,10 @@
 	<select id="getCreditDetailDEBTList" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
 		/* com.koscom.credit.dao.CreditMapper.getCreditDetailDEBTList */
 	    SELECT
+	    	NO_MANAGE_INFO,
 			CD_FC,
 			(SELECT nm_fc FROM fc_info WHERE CD_FC = A.CD_FC) AS NM_FC,
-			TO_CHAR(TO_DATE(A.YMD_LOAN), 'YYYY.MM.DD') AS YMD_LOAN,
+			A.YMD_LOAN,
 			A.AMT_REMAIN,
 			A.AMT_CONTRACT,
 			A.YN_CREDIT,

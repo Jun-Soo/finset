@@ -39,6 +39,7 @@
 	<http pattern="/logout" security="none"/>
 	<http pattern="/favicon.ico" security="none"/>
 	
+	<http pattern="/html/**" security="none"/>
 	<http pattern="/index.html" security="none"/>
 	
 	<http auto-config="true">

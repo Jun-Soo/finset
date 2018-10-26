@@ -72,8 +72,8 @@
             </div>
         </div>
 
-        <div class="list02 spend-list">
-          <div v-if="consumeList.length!=0" >
+        <div class="list02 spend-list" v-if="consumeList.length!=0">
+          <div  >
             <div v-for="(subList, index) in consumeList" :key="index" class="list-wrap">
               <div v-if="index==0" class="filter-wrap">
                 <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
@@ -92,14 +92,6 @@
                 </div>
               </div>
             </div>
-          </div>
-          <div v-else class="list-wrap">
-              <div class="filter-wrap">
-                <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
-                    <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)" :for="settingList[index].id">{{person.nm_person}}</label>
-                </div>
-              </div>
-            <div class="">소비,지출 내역이 없습니다.</div>
           </div>
           <button class="btn-spend-add"></button>
         </div>

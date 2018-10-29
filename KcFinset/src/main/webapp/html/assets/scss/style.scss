@@ -747,6 +747,15 @@ aside.search-wrap{
     }
 }
 
+.btn-info{
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background: url("../images/common/btn_info.png") no-repeat center /contain;
+    margin-left: 5px;
+    vertical-align: middle;
+}
+
 
 /*   Main   */
 
@@ -1913,14 +1922,6 @@ aside.search-wrap{
             }
             &.bar-card{
                 text-align: right;
-            }
-            .btn-info{
-                display: inline-block;
-                width: 14px;
-                height: 14px;
-                background: url("../images/common/btn_info.png") no-repeat center /contain;
-                margin-left: 5px;
-                vertical-align: middle;
             }
         }  
     }

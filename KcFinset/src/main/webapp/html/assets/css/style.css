@@ -294,6 +294,8 @@ aside.search-wrap .action a.solid { background: #213e6a; color: #fff; }
 .block-list2 .list li.overdue { background: #e52638; }
 .block-list2 .list li.etc { background: #9b9489; }
 
+.btn-info { display: inline-block; width: 14px; height: 14px; background: url("../images/common/btn_info.png") no-repeat center/contain; margin-left: 5px; vertical-align: middle; }
+
 /*   Main   */
 .owl-theme .owl-dots { text-align: center; margin-top: 10px; line-height: 0; font-size: 0; -webkit-tap-highlight-color: transparent; }
 .owl-theme .owl-dots .owl-dot { display: inline-block; }
@@ -542,7 +544,6 @@ aside.search-wrap .action a.solid { background: #213e6a; color: #fff; }
 .bar-top .bar-text-wrap p em { font-size: 14px; color: #666; padding-left: 10px; }
 .bar-top .bar-text-wrap p.bar-text { text-align: left; }
 .bar-top .bar-text-wrap p.bar-card { text-align: right; }
-.bar-top .bar-text-wrap p .btn-info { display: inline-block; width: 14px; height: 14px; background: url("../images/common/btn_info.png") no-repeat center/contain; margin-left: 5px; vertical-align: middle; }
 
 .credit-inquiry-top { padding: 0 21px; text-align: center; }
 .credit-inquiry-top .key { color: #9b9489; font-size: 14px; font-weight: 700; margin-top: 30px; }

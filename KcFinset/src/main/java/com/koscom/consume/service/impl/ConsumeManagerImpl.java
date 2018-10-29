@@ -34,17 +34,49 @@ public class ConsumeManagerImpl implements ConsumeManager {
 		logger.debug("listConsumeShareInfo");
 		return consumeMapper.listConsumeSharePersonInfo(no_person);
 	}
-	
+
 	@Override
-	public int getConsumeInfoAmt(ConsumeForm consumeForm) {
-		logger.debug("getConsumeInfoAmt");
-		return consumeMapper.getConsumeInfoAmt(consumeForm);
+	public boolean chkScrapCard(String no_person) {
+		logger.debug("chkScrapCard");
+		List<String> list = consumeMapper.chkScrapCard(no_person);
+		if(list == null) {
+			return false;
+		} else if(list.size() == 0) {
+			return false;
+		} else {
+			return true;
+		}
 	}
 	
 	@Override
-	public List<ConsumeVO> listConsumeInfo(ConsumeForm consumeForm) {
+	public List<ConsumeVO> listConsumeInfoAmt(ConsumeForm consumeForm) {
+		logger.debug("getConsumeInfoAmt");
+		return consumeMapper.listConsumeInfoAmt(consumeForm);
+	}
+	
+	@Override
+	public List<List<ConsumeVO>> listConsumeInfo(ConsumeForm consumeForm) {
 		logger.debug("listConsumeInfo");
-		return consumeMapper.listConsumeInfo(consumeForm);
+		List<ConsumeVO> rawList = consumeMapper.listConsumeInfo(consumeForm);
+		if(rawList.size() == 0) {
+			return null;
+		} else {
+	    	List<List<ConsumeVO>> consumeList = new ArrayList<List<ConsumeVO>>();
+	    	List<ConsumeVO> tempList = new ArrayList<ConsumeVO>();
+	    	String curDt="";
+	    	for(ConsumeVO vo : rawList) {
+	    		if(!curDt.equals(vo.getDt_trd())) {
+	    			if(!curDt.equals("")) {
+	    				consumeList.add(tempList);
+	    				tempList = new ArrayList<ConsumeVO>();
+	    			}
+	    			curDt = vo.getDt_trd();
+	    		}
+	    		tempList.add(vo);
+	    	}
+	    	consumeList.add(tempList);
+	    	return consumeList;
+		}
 	}
 
 	@Override

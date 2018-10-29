@@ -7,6 +7,7 @@
 		SELECT
 			 OFFER_NO_PERSON AS NO_PERSON
 			,OFFER_NM_PERSON AS NM_PERSON
+			,0 AS PRIORITY
 		FROM
 			SHARE_INFO
 		WHERE
@@ -18,15 +19,28 @@
 			SELECT
 				 NO_PERSON
 				,NM_PERSON
+				,1 AS PRIORITY
 			FROM
 				PERSON_INFO
 			WHERE
 				NO_PERSON = #{no_person, jdbcType=VARCHAR}
 		)
+		ORDER BY
+		PRIORITY DESC
 	</select>
-	<select id="getConsumeInfoAmt" parameterType="com.koscom.consume.model.ConsumeForm" resultType="java.lang.Integer">
+	<select id="chkScrapCard" parameterType="java.lang.String" resultType="java.lang.String">
 		SELECT
-			NVL( SUM( AMT_IN_OUT ), 0 )
+			'1'
+		FROM
+			FC_LINK_INFO
+		WHERE
+			NO_PERSON			= #{no_person, jdbcType=VARCHAR}
+			AND CD_AGENCY		= '05'
+			AND CD_LINK_STAT	= '00'
+	</select>
+	<select id="listConsumeInfoAmt" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.ConsumeVO">
+		SELECT
+			TYPE_IN_OUT, NVL( SUM( AMT_IN_OUT ), 0 )
 		FROM
 			CONSUME_INFO CI,
 			(
@@ -59,9 +73,12 @@
 					#{each_person}
 				</foreach>
 			AND TO_NUMBER( CI.DT_TRD ) BETWEEN TO_NUMBER( PSI.DT_FROM ) AND TO_NUMBER( PSI.DT_TO )
-			AND CI.TYPE_IN_OUT = #{type_in_out, jdbcType=VARCHAR}
 			AND CI.YN_CANCEL = 'N'
 			AND CI.YN_BUDGET_EXCEPT = 'N'
+		GROUP BY
+			TYPE_IN_OUT
+		ORDER BY
+			TYPE_IN_OUT ASC
 	</select>
 	<select id="listConsumeInfo" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.ConsumeVO">
 		SELECT

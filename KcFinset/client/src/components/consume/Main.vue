@@ -36,7 +36,7 @@
                 </a>
             </slide>
             <slide class="item">
-                <a href="#">
+                <a href="#" @click="clickBanner('payment')">
                     <div class="banner">
                         <div class="left">
                             <p class="key">카드 대금</p>
@@ -77,7 +77,7 @@
             <div v-for="(subList, index) in consumeList" :key="index" class="list-wrap">
               <div v-if="index==0" class="filter-wrap">
                 <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
-                    <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)" :for="settingList[index].id">{{person.nm_person}}</label>
+                    <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
                 </div>
               </div>
               <p class="date">{{formatDate(subList[0].dt_trd,"mmdd")}}</p>
@@ -110,7 +110,7 @@ export default {
       ym: "",
       consumeList: [],
       shareList: [],
-      exceptList: [],
+      isScrap: false,
       curDate: "",
       curTab: "00",
       standardDt: new Date(),
@@ -169,11 +169,10 @@ export default {
           }
         })
         .then(function(response) {
-          var list = response.data.listConsumeInfo;
-
-          _this.consumeList = list;
+          _this.consumeList = response.data.listConsumeInfo;
           _this.income = response.data.income;
           _this.consume = response.data.consume;
+          _this.isScrap = response.data.isScrap;
         });
     },
     formatHead: function(dateStr) {
@@ -243,8 +242,22 @@ export default {
       return shareList;
     },
     clickShare: function(params) {
+      var no_person_list = this.filterShareList();
+      if (no_person_list.length <= 1 && this.shareList[params].isShow == true) {
+        return;
+      }
       this.shareList[params].isShow = !this.shareList[params].isShow;
       this.listConsumeInfo();
+    },
+    clickBanner: function(key) {
+      var _this = this;
+      switch(key) {
+        case "payment":
+          _this.$router.push("/consume/payment");
+          break;
+        default:
+          break;
+      }
     }
   }
 };

@@ -5,27 +5,27 @@
         <div class="wrap">
           <div class="balance">
             <p class="key">대출잔액</p>
-            <p class="value">{{formatNumber(debtSummaryData.amt_remain * 10000)}}<em>원</em></p>
+            <p class="value">{{formatNumber(debtSummary.amt_remain * 10000)}}<em>원</em></p>
           </div>
           <div class="graph"><chartjs-line :labels="mylabels" :datasets="mydatasets" :option="myoption" :bind="true"></chartjs-line></div>
           <div class="flex2 bar-graph">
             <div class="item">
               <p class="key">상환율</p>
               <div class="text-wrap">
-                <p class="big">{{debtSummaryData.rate_amt_contract}}<em>%</em></p>
-                <p class="small">{{formatNumber(debtSummaryData.amt_contract/10000)}}<em>만원</em></p>
+                <p class="big">{{debtSummary.rate_amt_contract}}<em>%</em></p>
+                <p class="small">{{formatNumber(debtSummary.amt_contract/10000)}}<em>만원</em></p>
               </div>
               <div class="bar">
-                <p class="active" :style="debtSummaryData.repayStyle"></p>
+                <p class="active" :style="debtSummary.repayStyle"></p>
               </div>
             </div>
             <div class="item">
               <p class="key">상환능력<em>(소득대비)</em></p>
               <div class="text-wrap">
-                <p class="big">{{calDsr(debtSummaryData.cur_mon_mid_rpy, debtSummaryData.amt_etm_income)}}<em>%</em></p>
+                <p class="big">{{calDsr(debtSummary.cur_mon_mid_rpy, debtSummary.amt_etm_income)}}<em>%</em></p>
               </div>
               <div class="bar">
-                <p class="active" :style="debtSummaryData.dsrStyle"></p>
+                <p class="active" :style="debtSummary.dsrStyle"></p>
               </div>
             </div>
           </div>
@@ -108,7 +108,7 @@
 							<input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
 					</div>
 				</div>
-        <div class="item" v-for="vo in debtListData" :key="vo.no_manage_info">
+        <div class="item" v-for="vo in debtList" :key="vo.no_manage_info">
           <div class="top">
             <p class="symbol"><img :src="vo.imgSrc" alt=""/>{{vo.nm_fc}}</p>
             <p class="text blue">{{vo.debt_type}}</p>
@@ -147,8 +147,8 @@ export default {
   data() {
     return {
       isTest: true,
-      debtListData: [],
-      debtSummaryData: "",
+      debtList: [],
+      debtSummary: "",
       dataList: [1, 2, 3, 4, 5, 6, 7],
       mylabels: [],
       mydatasets: [
@@ -178,16 +178,25 @@ export default {
       myoption: {
         legend: {
           display: false
+        },
+        scales: {
+          yAxes: [
+            {
+              display: false
+            }
+          ]
+        },
+        tooltips: {
+          callbacks: {
+            label: function(obj) {
+              var value = obj.yLabel;
+              value = value.toString();
+              value = value.split(/(?=(?:...)*$)/);
+              value = value.join(",");
+              return value;
+            }
+          }
         }
-        // scales: {
-        //   yAxes: [
-        //     {
-        //       ticks: {
-        //         stepSize: 10000
-        //       }
-        //     }
-        //   ]
-        // }
       },
       shareList: [],
       settingList: [
@@ -227,13 +236,12 @@ export default {
             list[idx].isShow = true;
           }
           _this.shareList = list;
-          _this.getDebtSummary();
           _this.listDebtPg();
         });
     },
     listDebtPg: function() {
       var _this = this;
-      var no_person_list = _this.filterShareList();
+      var no_person_list = this.filterShareList();
       if (no_person_list.length == 0) {
         return;
       }
@@ -242,33 +250,24 @@ export default {
           params: { no_person_list: no_person_list }
         })
         .then(function(response) {
-          var data = response.data.debtListData;
-          for (var idx in data) {
-            data[idx].eachStyle = "width:" + data[idx].rate_repay + "%";
-            data[idx].imgSrc =
-              "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + data[idx].cd_fc;
+          var debtList = response.data.debtList;
+          for (var idx in debtList) {
+            debtList[idx].eachStyle = "width:" + debtList[idx].rate_repay + "%";
+            debtList[idx].imgSrc =
+              "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + debtList[idx].cd_fc;
           }
-          _this.debtListData = data;
-        });
-    },
-    getDebtSummary: function() {
-      var _this = this;
-      var no_person_list = _this.filterShareList();
-      if (no_person_list.length == 0) {
-        return;
-      }
-      this.$http
-        .get("/m/debt/getDebtSummary.json", {
-          params: { no_person_list: no_person_list }
-        })
-        .then(function(response) {
-          var data = response.data.debtSummaryData;
-          _this.debtSummaryData = data;
-          _this.debtSummaryData.repayStyle =
-            "width:" + data.rate_amt_contract + "%";
-          _this.debtSummaryData.dsrStyle =
+          _this.debtList = debtList;
+
+          var debtSummary = response.data.debtSummary;
+          _this.debtSummary = debtSummary;
+          _this.debtSummary.repayStyle =
+            "width:" + debtSummary.rate_amt_contract + "%";
+          _this.debtSummary.dsrStyle =
             "width:" +
-            _this.calDsr(data.cur_mon_mid_rpy, data.amt_etm_income) +
+            _this.calDsr(
+              debtSummary.cur_mon_mid_rpy,
+              debtSummary.amt_etm_income
+            ) +
             "%";
           _this.mylabels = response.data.dateList;
           _this.$set(_this.mydatasets[0], "data", response.data.dataList);
@@ -300,7 +299,6 @@ export default {
         return;
       }
       this.shareList[params].isShow = !this.shareList[params].isShow;
-      this.getDebtSummary();
       this.listDebtPg();
     },
     clickBanner: function(key) {

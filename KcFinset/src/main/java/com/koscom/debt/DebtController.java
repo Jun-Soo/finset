@@ -2,6 +2,7 @@ package com.koscom.debt;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -150,53 +151,28 @@ public class DebtController {
 	}
 	
 	/** VUE
-	 * 부채 메인 요약
+	 * 부채메인 데이터 조회
 	 * @param model
 	 * @param session
-	 * @return
-	 * @throws FinsetException
-	 */
-	@RequestMapping("/getDebtSummary.json")
-	public String getDebtSummary(Model model, HttpSession session, @RequestParam(value="no_person_list[]") List<String> no_person_list) throws FinsetException {
-		String no_person = (String) session.getAttribute("no_person");
-		DebtForm debtForm = new DebtForm();
-		debtForm.setNo_person(no_person);
-		debtForm.setNo_person_list(no_person_list);
-		
-		DebtSummaryVO debtSummaryVO = debtManager.getDebtSummary(debtForm);
-		model.addAttribute("debtSummaryData", debtSummaryVO);
-		
-		List<DebtSummaryVO> rawStatList = debtManager.listStatDebtSummary(debtForm);
-		List<String> dateList = new ArrayList<String>();
-		List<String> dataList = new ArrayList<String>();
-		for(int i = 0; i< rawStatList.size(); i++) {
-			dateList.add(rawStatList.get(i).getReq_yyyymm().substring(4));
-			dataList.add(rawStatList.get(i).getAmt_remain());
-		}
-		model.addAttribute("dateList",dateList);
-		model.addAttribute("dataList",dataList);
-		
-		return "jsonView";
-	}
-	
-	/** VUE
-	 * 부채 메인 리스트
-	 * @param model
-	 * @param session
+	 * @param no_person_list
 	 * @return
 	 * @throws FinsetException
 	 */
 	@RequestMapping("/listDebtPg.json")
-	public String listDebtPg(Model model, HttpSession session, @RequestParam(value="no_person_list[]") List<String> no_person_list) throws FinsetException {
+	public String test(Model model, HttpSession session, @RequestParam(value="no_person_list[]") List<String> no_person_list) throws FinsetException {
 		String no_person = (String) session.getAttribute("no_person");
-		//부채메인 리스트
+
 		DebtForm debtForm = new DebtForm();
 		debtForm.setNo_person(no_person);
 		debtForm.setNo_person_list(no_person_list);
-		//display_yn 이 Y 인 것만 가져오도록
 		debtForm.setDisplay_yn("Y");
-		List<DebtVO> debtList = debtManager.listDebtPg(debtForm);
-		model.addAttribute("debtListData", debtList);
+		
+		model.addAttribute("debtSummary", debtManager.getDebtSummary(debtForm));
+		Map<String, List<String>> summaryMap = debtManager.listStatDebtSummary(debtForm);
+		model.addAttribute("dataList",summaryMap.get("dataList"));
+		model.addAttribute("dateList",summaryMap.get("dateList"));
+		model.addAttribute("debtList",debtManager.listDebtPg(debtForm));
+		
 		return "jsonView";
 	}
 	

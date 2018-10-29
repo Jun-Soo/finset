@@ -20,19 +20,28 @@ public interface ConsumeManager {
 	 * @return
 	 */
 	List<PersonInfo> listConsumeSharePersonInfo(String no_person);
+	
+	/**
+	 * 스크래핑 연계 여부 조회
+	 * @param no_person
+	 * @return
+	 */
+	boolean chkScrapCard(String no_person);
+	
 	/**
 	 * 조회 기간 전체의 수입이나 지출의 합을 조회
 	 * @param consumeForm
 	 * @return
 	 */
-	int getConsumeInfoAmt(ConsumeForm consumeForm);
+	List<ConsumeVO> listConsumeInfoAmt(ConsumeForm consumeForm);
 	
 	/**
 	 * 조건 (일자)와 회원 관리번호의 조건 내에서 해당하는 소비지출 데이터 조회
 	 * @param consumeForm
 	 * @return
 	 */
-	List<ConsumeVO> listConsumeInfo(ConsumeForm consumeForm);
+	List<List<ConsumeVO>> listConsumeInfo(ConsumeForm consumeForm);
+	
 	/**
 	 * 개인 계좌 입출금내역 조회
 	 * @param person

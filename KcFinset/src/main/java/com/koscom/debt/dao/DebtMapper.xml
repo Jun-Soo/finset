@@ -197,6 +197,7 @@
 		SELECT
 			 OFFER_NO_PERSON AS NO_PERSON
 			,OFFER_NM_PERSON AS NM_PERSON
+			,0 AS PRIORITY
 		FROM
 			SHARE_INFO
 		WHERE
@@ -208,11 +209,14 @@
 			SELECT
 				 NO_PERSON
 				,NM_PERSON
+				,1 AS PRIORITY
 			FROM
 				PERSON_INFO
 			WHERE
 				NO_PERSON = #{no_person, jdbcType=VARCHAR}
 		)
+		ORDER BY
+		PRIORITY DESC
 	</select>
 	
 	<select id="getDebtSummary_prev" parameterType="java.lang.String" resultType="com.koscom.debt.model.DebtSummaryVO">
@@ -848,17 +852,21 @@
     </select>
     <select id="listStatDebtSummary" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtSummaryVO">
 		SELECT
-			REQ_YYYYMM,
-			SUM( NVL( AMT_REMAIN, 0) ) AS AMT_REMAIN
+			DPRL.REQ_YYYYMM,
+			SUM( NVL( DPRL.AMT_REMAIN, 0) ) AS AMT_REMAIN
 		FROM
-			DEBT_PERSONAL_REPAY_LIST
+			DEBT_PERSONAL_INFO DPI, DEBT_PERSONAL_REPAY_LIST DPRL
 		WHERE
-			NO_PERSON 				IN
-				<foreach item="no_person" collection="no_person_list" open="(" separator="," close=")">
-					#{no_person}
+				DPRL.NO_PERSON			IN
+				<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
+					#{each_person}
 				</foreach>
-			AND REQ_YYYYMM <![CDATA[>]]>	TO_CHAR( ADD_MONTHS( SYSDATE, -6), 'YYYYMM' )
-			AND REQ_YYYYMM <![CDATA[<=]]>	TO_CHAR( SYSDATE, 'YYYYMM' )
+			AND DPI.NO_MANAGE_INFO		 =		DPRL.NO_MANAGE_INFO
+			AND DPRL.REQ_YYYYMM	<![CDATA[>]]>	TO_CHAR( ADD_MONTHS( SYSDATE, -6), 'YYYYMM' )
+			AND DPRL.REQ_YYYYMM	<![CDATA[<=]]>	TO_CHAR( SYSDATE, 'YYYYMM' )
+			AND DPI.YMD_LOANEND	<![CDATA[>]]>	DPRL.REQ_YYYYMM
+			AND DPI.YMD_CANCEL			 IS		NULL
+			AND DPI.DISPLAY_YN			 =		'Y'	
 		GROUP BY
 			REQ_YYYYMM
 		ORDER BY

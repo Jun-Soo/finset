@@ -284,6 +284,23 @@ export default {
     })
     return name
   },
+  getCodeList: function (cdGroup) {
+    var data = {
+      'code_group': cdGroup
+    }
+    var cdList = []
+    $.ajax({
+      url: '/m/comm/getCodeList.json',
+      data: data,
+      contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+      type: 'POST',
+      async: false,
+      success: function (result) {
+        cdList = result.codeList
+      }
+    })
+    return cdList
+  },
   // pagination 사용법
   // 필요한 함수를 작성하되, 함수 파라미터로 callback을 선언
   pagination: function (callback) {

@@ -2,11 +2,7 @@
   <div id="wrapper">
     <!-- Content -->
     <section id="content">
-      
-      <div class="sub-top">
-          <a href="#" class="btn-back"></a>
-          <p class="title">약관동의</p>
-      </div>
+     
 
       <div class="container mt30">
         <div class="checks">
@@ -52,11 +48,11 @@
         <a role="button" id="confirmButton" class="btn-next" v-on:click="confirmedTerms()">다음</a>
       </div>
     </section>
-    <vue-modal transitionName="zoom-in" width="100%" name="my-modal1" v-on:click="close('1')">
+    <vue-modal transitionName="zoom-in" width="100%" name="my-modal1">
       <Terms1 slot="body"></Terms1>
     </vue-modal>
     <vue-modal transitionName="zoom-in" name="my-modal2">
-      <Terms2 slot="body"></Terms2>
+      <Terms2 slot="body" v-on:close="closeTest('2')"></Terms2>
     </vue-modal>
     <vue-modal transitionName="zoom-in" name="my-modal3">
       <Terms3 slot="body"></Terms3>
@@ -125,18 +121,19 @@ export default {
     Terms9: Terms9,
     Terms10: Terms10
   },
-  props: {
-            onClose: {
-                type: Function,
-                required: false
-            }
-  },
+  // props: {
+  //   onClose: {
+  //     type: Function,
+  //     required: false
+  //   }
+  // },
   beforeCreate() {},
   created() {
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
     }
     this.$store.state.title = "약관동의 (1/7)";
+    this.$store.state.header.type = "sub";
   },
   beforeMount() {},
   mounted() {
@@ -188,18 +185,21 @@ export default {
         _this.chkBox3 = false;
       }
     },
-
-    close :function(location) {
+    closeTest: function(gubun) {
       var _this = this;
-      if (location === 'outer' && !this.outerClose) return;
-
-      this.$modals.hide(this.name);
-      if (this.onClose) this.onClose();
-      this.$emit('close-modal', this.name);
-      document.body.classList.remove('v-modal__no-scroll');
-      // _this.$parent.close('inner');
-      // _this.$modals.hide("my-modal" + gubun);
+      _this.$modals.hide("my-modal" + gubun);
     },
+    // close :function(location) {
+    //   var _this = this;
+    //   if (location === 'outer' && !this.outerClose) return;
+
+    //   this.$modals.hide(this.name);
+    //   if (this.onClose) this.onClose();
+    //   this.$emit('close-modal', this.name);
+    //   document.body.classList.remove('v-modal__no-scroll');
+    //   // _this.$parent.close('inner');
+    //   // _this.$modals.hide("my-modal" + gubun);
+    // },
 
     confirmedTerms: function() {
       var _this = this;

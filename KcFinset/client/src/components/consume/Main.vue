@@ -26,8 +26,21 @@
                 <a href="#">
                     <div class="banner">
                         <div class="left">
-                            <p class="key">우리가족 가계부</p>
-                            <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                            <p class="key">캘린더</p>
+                            <p class="value">수입과 지출 내역을 확인할 수 있는<br>습관 달력을 이용해 보세요</p>
+                        </div>
+                        <div class="right">
+                            <img src="../../assets/images/main/banner_ico.png" alt=""/>
+                        </div>
+                    </div>
+                </a>
+            </slide>
+            <slide class="item">
+                <a href="#" @click="clickBanner('payment')">
+                    <div class="banner">
+                        <div class="left">
+                            <p class="key">카드 대금</p>
+                            <p class="value">이전에 지출한 카드 대금을<br>한눈에 확인 하세요</p>
                         </div>
                         <div class="right">
                             <img src="../../assets/images/main/banner_ico.png" alt=""/>
@@ -39,21 +52,8 @@
                 <a href="#">
                     <div class="banner">
                         <div class="left">
-                            <p class="key">우리가족 가계부</p>
-                            <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
-                        </div>
-                        <div class="right">
-                            <img src="../../assets/images/main/banner_ico.png" alt=""/>
-                        </div>
-                    </div>
-                </a>
-            </slide>
-            <slide class="item">
-                <a href="#">
-                    <div class="banner">
-                        <div class="left">
-                            <p class="key">우리가족 가계부</p>
-                            <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                            <p class="key">소비통계분석</p>
+                            <p class="value">지금까지 사용한 소비와 수입<br>통계를 확인해 보세요</p>
                         </div>
                         <div class="right">
                             <img src="../../assets/images/main/banner_ico.png" alt=""/>
@@ -77,7 +77,7 @@
             <div v-for="(subList, index) in consumeList" :key="index" class="list-wrap">
               <div v-if="index==0" class="filter-wrap">
                 <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
-                    <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)" :for="settingList[index].id">{{person.nm_person}}</label>
+                    <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
                 </div>
               </div>
               <p class="date">{{formatDate(subList[0].dt_trd,"mmdd")}}</p>
@@ -110,7 +110,7 @@ export default {
       ym: "",
       consumeList: [],
       shareList: [],
-      exceptList: [],
+      isScrap: false,
       curDate: "",
       curTab: "00",
       standardDt: new Date(),
@@ -131,6 +131,7 @@ export default {
   beforeCreate() {
     this.$store.state.header.type = "main";
     this.$store.state.header.active = "consume";
+    this.$parent.isBottom = true;
   },
   created() {
     this.ym = this.formatHead(this.getYm(this.standardDt));
@@ -168,11 +169,10 @@ export default {
           }
         })
         .then(function(response) {
-          var list = response.data.listConsumeInfo;
-
-          _this.consumeList = list;
+          _this.consumeList = response.data.listConsumeInfo;
           _this.income = response.data.income;
           _this.consume = response.data.consume;
+          _this.isScrap = response.data.isScrap;
         });
     },
     formatHead: function(dateStr) {
@@ -242,8 +242,22 @@ export default {
       return shareList;
     },
     clickShare: function(params) {
+      var no_person_list = this.filterShareList();
+      if (no_person_list.length <= 1 && this.shareList[params].isShow == true) {
+        return;
+      }
       this.shareList[params].isShow = !this.shareList[params].isShow;
       this.listConsumeInfo();
+    },
+    clickBanner: function(key) {
+      var _this = this;
+      switch(key) {
+        case "payment":
+          _this.$router.push("/consume/payment");
+          break;
+        default:
+          break;
+      }
     }
   }
 };

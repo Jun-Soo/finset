@@ -2,7 +2,7 @@
   <main>
     <FinsetHeader></FinsetHeader>
     <router-view/>
-    <!-- <FinsetBottom></FinsetBottom> -->
+    <FinsetBottom v-if="isBottom"></FinsetBottom>
   </main>
 </template>
 
@@ -13,6 +13,11 @@ import './../../assets/js/common.js'
 
 export default {
   name: 'debtMain',
+  data() {
+    return {
+      isBottom: false
+    };
+  },
   components: {
     FinsetHeader: FinsetHeader,
     FinsetBottom: FinsetBottom

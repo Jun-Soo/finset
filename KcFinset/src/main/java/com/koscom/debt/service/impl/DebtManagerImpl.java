@@ -1,8 +1,10 @@
 package com.koscom.debt.service.impl;
 
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -142,7 +144,17 @@ public class DebtManagerImpl implements DebtManager {
 	}
 
 	@Override
-	public List<DebtSummaryVO> listStatDebtSummary(DebtForm debtForm) {
-		return debtMapper.listStatDebtSummary(debtForm);
+	public Map<String, List<String>> listStatDebtSummary(DebtForm debtForm) {
+		List<DebtSummaryVO> rawStatList = debtMapper.listStatDebtSummary(debtForm);
+		List<String> dateList = new ArrayList<String>();
+		List<String> dataList = new ArrayList<String>();
+		for(int i = 0; i< rawStatList.size(); i++) {
+			dateList.add(rawStatList.get(i).getReq_yyyymm().substring(4));
+			dataList.add(rawStatList.get(i).getAmt_remain());
+		}
+		Map<String, List<String>> summaryMap = new HashMap<String, List<String>>();
+		summaryMap.put("dataList", dataList);
+		summaryMap.put("dateList", dateList);
+		return summaryMap;
 	}
 }

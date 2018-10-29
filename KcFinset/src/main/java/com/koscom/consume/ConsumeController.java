@@ -1,6 +1,5 @@
 package com.koscom.consume;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,10 +46,10 @@ public class ConsumeController {
 //    	consumeForm.setDt_from(dt_from);
 //    	consumeForm.setDt_to(dt_to);
     	consumeForm.setType_in_out("01");	//수입
-    	model.addAttribute("income",consumeManager.getConsumeInfoAmt(consumeForm));
+//    	model.addAttribute("income",consumeManager.getConsumeInfoAmt(consumeForm));
     	
     	consumeForm.setType_in_out("02");	//지출
-    	model.addAttribute("consume",consumeManager.getConsumeInfoAmt(consumeForm));
+//    	model.addAttribute("consume",consumeManager.getConsumeInfoAmt(consumeForm));
     	
     	model.addAttribute("listConsumeInfo",consumeManager.listConsumeInfo(consumeForm));
     	
@@ -87,48 +86,22 @@ public class ConsumeController {
     public String listConsumeInfo(Model model, String ym, String type_in_out, @RequestParam(value="no_person_list[]") List<String> no_person_list,HttpSession session, HttpServletRequest request) throws FinsetException {
     	logger.debug("listConsumeInfo");
     	String no_person = (String) session.getAttribute("no_person");
-
+    	
     	ConsumeForm consumeForm = new ConsumeForm();
     	consumeForm.setNo_person(no_person);
     	consumeForm.setNo_person_list(no_person_list);
     	consumeForm.setYm_trd(ym);
-//    	consumeForm.setDt_from(dt_from);
-//    	consumeForm.setDt_to(dt_to);
-    	consumeForm.setType_in_out("01");	//수입
-    	model.addAttribute("income",consumeManager.getConsumeInfoAmt(consumeForm));
-    	
-    	consumeForm.setType_in_out("02");	//지출
-    	model.addAttribute("consume",consumeManager.getConsumeInfoAmt(consumeForm));
-    	
     	if(type_in_out.equals("00")) {
     		consumeForm.setType_in_out(null);
     	} else {
     		consumeForm.setType_in_out(type_in_out);
     	}
     	
-    	List<ConsumeVO> rawList = consumeManager.listConsumeInfo(consumeForm);
-    	
-    	if(rawList.size()==0) {
-    		model.addAttribute("listConsumeInfo", rawList);
-    		return "jsonView";
-    	}
-    	
-    	List<List<ConsumeVO>> consumeList = new ArrayList<List<ConsumeVO>>();
-    	List<ConsumeVO> tempList = new ArrayList<ConsumeVO>();
-    	String curDt="";
-    	for(ConsumeVO vo : rawList) {
-    		if(!curDt.equals(vo.getDt_trd())) {
-    			if(!curDt.equals("")) {
-    				consumeList.add(tempList);
-    				tempList = new ArrayList<ConsumeVO>();
-    			}
-    			curDt = vo.getDt_trd();
-    		}
-    		tempList.add(vo);
-    	}
-    	consumeList.add(tempList);
-    	
-    	model.addAttribute("listConsumeInfo", consumeList);
+    	List<ConsumeVO> listConsumeInfoAmt = consumeManager.listConsumeInfoAmt(consumeForm);
+    	model.addAttribute("income",listConsumeInfoAmt.get(0).getAmt_in_out());
+    	model.addAttribute("consume",listConsumeInfoAmt.get(1).getAmt_in_out());
+    	model.addAttribute("isScrap", consumeManager.chkScrapCard(no_person));
+    	model.addAttribute("listConsumeInfo", consumeManager.listConsumeInfo(consumeForm));
     	
     	return "jsonView";
     }

@@ -5,27 +5,27 @@
         <div class="wrap">
           <div class="balance">
             <p class="key">대출잔액</p>
-            <p class="value">{{formatNumber(debtSummaryData.amt_remain * 10000)}}<em>원</em></p>
+            <p class="value">{{formatNumber(debtSummary.amt_remain * 10000)}}<em>원</em></p>
           </div>
           <div class="graph"><chartjs-line :labels="mylabels" :datasets="mydatasets" :option="myoption" :bind="true"></chartjs-line></div>
           <div class="flex2 bar-graph">
             <div class="item">
               <p class="key">상환율</p>
               <div class="text-wrap">
-                <p class="big">{{debtSummaryData.rate_amt_contract}}<em>%</em></p>
-                <p class="small">{{formatNumber(debtSummaryData.amt_contract/10000)}}<em>만원</em></p>
+                <p class="big">{{debtSummary.rate_amt_contract}}<em>%</em></p>
+                <p class="small">{{formatNumber(debtSummary.amt_contract/10000)}}<em>만원</em></p>
               </div>
               <div class="bar">
-                <p class="active" :style="debtSummaryData.repayStyle"></p>
+                <p class="active" :style="debtSummary.repayStyle"></p>
               </div>
             </div>
             <div class="item">
               <p class="key">상환능력<em>(소득대비)</em></p>
               <div class="text-wrap">
-                <p class="big">{{calDsr(debtSummaryData.cur_mon_mid_rpy, debtSummaryData.amt_etm_income)}}<em>%</em></p>
+                <p class="big">{{calDsr(debtSummary.cur_mon_mid_rpy, debtSummary.amt_etm_income)}}<em>%</em></p>
               </div>
               <div class="bar">
-                <p class="active" :style="debtSummaryData.dsrStyle"></p>
+                <p class="active" :style="debtSummary.dsrStyle"></p>
               </div>
             </div>
           </div>
@@ -35,11 +35,11 @@
       <div class="banner-wrap owl-carousel">
         <carousel :perPage=1>
           <slide class="item">
-              <a href="#">
+              <a href="#" @click="clickBanner('goods')">
                   <div class="banner">
                       <div class="left">
-                          <p class="key">우리가족 가계부</p>
-                          <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                          <p class="key">추천 상품</p>
+                          <p class="value">나의 상황에 맞는<br>상품을 추천합니다</p>
                       </div>
                       <div class="right">
                           <img src="../../assets/images/main/banner_ico.png" alt=""/>
@@ -51,8 +51,8 @@
               <a href="#">
                   <div class="banner">
                       <div class="left">
-                          <p class="key">우리가족 가계부</p>
-                          <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                          <p class="key">계산기</p>
+                          <p class="value">DSR(상환능력), LTV 등을<br>직접 계산해 보세요</p>
                       </div>
                       <div class="right">
                           <img src="../../assets/images/main/banner_ico.png" alt=""/>
@@ -64,8 +64,34 @@
               <a href="#">
                   <div class="banner">
                       <div class="left">
-                          <p class="key">우리가족 가계부</p>
-                          <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                          <p class="key">캘린더</p>
+                          <p class="value">상환일, 이자납입일을 달력으로<br>관리하시면 더 ~ 편리합니다</p>
+                      </div>
+                      <div class="right">
+                          <img src="../../assets/images/main/banner_ico.png" alt=""/>
+                      </div>
+                  </div>
+              </a>
+          </slide>
+          <slide class="item">
+              <a href="#">
+                  <div class="banner">
+                      <div class="left">
+                          <p class="key">뉴스</p>
+                          <p class="value">금리 등 관련 뉴스를<br>조회합니다</p>
+                      </div>
+                      <div class="right">
+                          <img src="../../assets/images/main/banner_ico.png" alt=""/>
+                      </div>
+                  </div>
+              </a>
+          </slide>
+          <slide class="item">
+              <a href="#">
+                  <div class="banner">
+                      <div class="left">
+                          <p class="key">금리인하요구</p>
+                          <p class="value">금리인하요구 조건이 맞는지<br>확인해보세요</p>
                       </div>
                       <div class="right">
                           <img src="../../assets/images/main/banner_ico.png" alt=""/>
@@ -79,10 +105,10 @@
       <div class="list01 dept-list">
 				<div class="filter-wrap">
 					<div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
-							<input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)" :for="settingList[index].id">{{person.nm_person}}</label>
+							<input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
 					</div>
 				</div>
-        <div class="item" v-for="vo in debtListData" :key="vo.no_manage_info">
+        <div class="item" v-for="vo in debtList" :key="vo.no_manage_info">
           <div class="top">
             <p class="symbol"><img :src="vo.imgSrc" alt=""/>{{vo.nm_fc}}</p>
             <p class="text blue">{{vo.debt_type}}</p>
@@ -97,7 +123,6 @@
           <div class="text-wrap">
             <div class="left">
               <p class="key"><span>상환금액</span><span>이자율</span></p>
-              <!-- <p class="value"><span>{{formatNumber(vo.amt_repay * 10000)}}<em>원</em></span><span>{{vo.ever_interest}}<em>%</em></span></p> -->
               <p class="value"><span>{{formatNumber((vo.amt_contract-vo.amt_remain) * 10000)}}<em>원</em></span><span>{{vo.ever_interest}}<em>%</em></span></p>
             </div>
             <div class="right">
@@ -122,8 +147,8 @@ export default {
   data() {
     return {
       isTest: true,
-      debtListData: [],
-      debtSummaryData: "",
+      debtList: [],
+      debtSummary: "",
       dataList: [1, 2, 3, 4, 5, 6, 7],
       mylabels: [],
       mydatasets: [
@@ -153,16 +178,25 @@ export default {
       myoption: {
         legend: {
           display: false
+        },
+        scales: {
+          yAxes: [
+            {
+              display: false
+            }
+          ]
+        },
+        tooltips: {
+          callbacks: {
+            label: function(obj) {
+              var value = obj.yLabel;
+              value = value.toString();
+              value = value.split(/(?=(?:...)*$)/);
+              value = value.join(",");
+              return value;
+            }
+          }
         }
-        // scales: {
-        //   yAxes: [
-        //     {
-        //       ticks: {
-        //         stepSize: 10000
-        //       }
-        //     }
-        //   ]
-        // }
       },
       shareList: [],
       settingList: [
@@ -180,6 +214,7 @@ export default {
   beforeCreate() {
     this.$store.state.header.type = "main";
     this.$store.state.header.active = "debt";
+    this.$parent.isBottom = true;
   },
   created() {},
   beforeMount() {},
@@ -201,40 +236,38 @@ export default {
             list[idx].isShow = true;
           }
           _this.shareList = list;
-          _this.getDebtSummary();
           _this.listDebtPg();
         });
     },
     listDebtPg: function() {
       var _this = this;
+      var no_person_list = this.filterShareList();
+      if (no_person_list.length == 0) {
+        return;
+      }
       this.$http
         .get("/m/debt/listDebtPg.json", {
-          params: { no_person_list: _this.filterShareList() }
+          params: { no_person_list: no_person_list }
         })
         .then(function(response) {
-          var data = response.data.debtListData;
-          for (var idx in data) {
-            data[idx].eachStyle = "width:" + data[idx].rate_repay + "%";
-            data[idx].imgSrc =
-              "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + data[idx].cd_fc;
+          var debtList = response.data.debtList;
+          for (var idx in debtList) {
+            debtList[idx].eachStyle = "width:" + debtList[idx].rate_repay + "%";
+            debtList[idx].imgSrc =
+              "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + debtList[idx].cd_fc;
           }
-          _this.debtListData = data;
-        });
-    },
-    getDebtSummary: function() {
-      var _this = this;
-      this.$http
-        .get("/m/debt/getDebtSummary.json", {
-          params: { no_person_list: _this.filterShareList() }
-        })
-        .then(function(response) {
-          var data = response.data.debtSummaryData;
-          _this.debtSummaryData = data;
-          _this.debtSummaryData.repayStyle =
-            "width:" + data.rate_amt_contract + "%";
-          _this.debtSummaryData.dsrStyle =
+          _this.debtList = debtList;
+
+          var debtSummary = response.data.debtSummary;
+          _this.debtSummary = debtSummary;
+          _this.debtSummary.repayStyle =
+            "width:" + debtSummary.rate_amt_contract + "%";
+          _this.debtSummary.dsrStyle =
             "width:" +
-            _this.calDsr(data.cur_mon_mid_rpy, data.amt_etm_income) +
+            _this.calDsr(
+              debtSummary.cur_mon_mid_rpy,
+              debtSummary.amt_etm_income
+            ) +
             "%";
           _this.mylabels = response.data.dateList;
           _this.$set(_this.mydatasets[0], "data", response.data.dataList);
@@ -261,9 +294,23 @@ export default {
       return shareList;
     },
     clickShare: function(params) {
+      var no_person_list = this.filterShareList();
+      if (no_person_list.length <= 1 && this.shareList[params].isShow == true) {
+        return;
+      }
       this.shareList[params].isShow = !this.shareList[params].isShow;
-      this.getDebtSummary();
       this.listDebtPg();
+    },
+    clickBanner: function(key) {
+      var _this = this;
+      switch (key) {
+        case "goods":
+          _this.$router.push("/goods/list");
+          break;
+
+        default:
+          break;
+      }
     }
   }
 };

@@ -1,6 +1,7 @@
 package com.koscom.debt.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.koscom.debt.model.DebtCalendarVO;
 import com.koscom.debt.model.DebtDetail12RepVO;
@@ -138,5 +139,5 @@ public interface DebtManager {
 	 * @param debtForm
 	 * @return
 	 */
-	List<DebtSummaryVO> listStatDebtSummary(DebtForm debtForm);
+	Map<String, List<String>> listStatDebtSummary(DebtForm debtForm);
 }

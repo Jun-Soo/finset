@@ -1,5 +1,5 @@
-<template v-if='this.$store.state.isLoggedIn'>
-<div>
+<template>
+<div v-if='this.$store.state.isLoggedIn'>
     <header>
         <gnb/>
     </header>
@@ -15,6 +15,11 @@
     </div>
     <div v-else id='header' class="sub-top">
         <a @click="$router.go(-1)" class="btn-back"></a>
+        <p class="title">{{this.$store.state.title}}</p>
+    </div>
+</div>
+<div v-else>
+    <div id='header' class="sub-top">
         <p class="title">{{this.$store.state.title}}</p>
     </div>
 </div>

@@ -151,7 +151,8 @@ aside:before { width: 100%; height: 100vh; position: fixed; top: 0; left: 0; con
 /*   My   */
 .my-graph-wrap { text-align: center; }
 .my-graph-wrap .title { margin-top: 60px; font-size: 19px; font-weight: 700; color: #222; }
-.my-graph-wrap .graph { margin-top: 40px; height: 95px; background: url(../images/main/graph_sample.png) no-repeat center/cover; }
+.my-graph-wrap .graph { margin: 20px auto 0; height: 96px; width: 181px; background: url(../images/main/graph_sample.png) no-repeat center/cover; position: relative; }
+.my-graph-wrap .graph .graph-text { font-size: 32px; text-align: center; position: absolute; bottom: 0; color: #222; width: 100%; line-height: 1; }
 .my-graph-wrap a { margin-top: 13px; font-size: 12px; color: #9b9489; background: url(../images/main/arrow_graph.png) no-repeat center right/6px; padding-right: 10px; display: inline-block; }
 .my-graph-wrap .info-wrap { display: flex; width: 100%; margin-top: 40px; }
 .my-graph-wrap .info-wrap div { width: 50%; text-align: center; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }

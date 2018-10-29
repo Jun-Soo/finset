@@ -22,7 +22,6 @@ import com.koscom.consume.service.ConsumeManager;
 import com.koscom.debt.model.DebtCalendarVO;
 import com.koscom.debt.model.DebtDetail12RepVO;
 import com.koscom.debt.model.DebtForm;
-import com.koscom.debt.model.DebtSummaryVO;
 import com.koscom.debt.model.DebtVO;
 import com.koscom.debt.service.DebtManager;
 import com.koscom.person.model.PersonVO;

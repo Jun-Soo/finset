@@ -161,8 +161,8 @@
 	<select id="getCreditMainGradeChangeInfo" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
 		/* com.koscom.credit.dao.CreditMapper.getCreditMainGradeChangeInfo */
 		SELECT
-			DECODE( SUBSTR( TO_CHAR( DT_INFO, 'MM' ), 1, 1 ), '0', SUBSTR( TO_CHAR( DT_INFO, 'MM' ), 2, 2 ), TO_CHAR( DT_INFO, 'MM' ))|| '월 ' ||
-			DECODE( SUBSTR( TO_CHAR( DT_INFO, 'DD' ), 1, 1 ), '0', SUBSTR( TO_CHAR( DT_INFO, 'DD' ), 2, 2 ), TO_CHAR( DT_INFO, 'DD' ))|| '일'
+			DECODE( SUBSTR( TO_CHAR( DT_INFO, 'MM' ), 1, 1 ), '0', SUBSTR( TO_CHAR( DT_INFO, 'MM' ), 2, 1 ), TO_CHAR( DT_INFO, 'MM' ))|| '월 ' ||
+			DECODE( SUBSTR( TO_CHAR( DT_INFO, 'DD' ), 1, 1 ), '0', SUBSTR( TO_CHAR( DT_INFO, 'DD' ), 2, 1 ), TO_CHAR( DT_INFO, 'DD' ))|| '일'
 			AS DT_INFO,
 			TB.CD_FC,
 			TB.NM_FC,

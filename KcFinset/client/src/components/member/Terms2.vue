@@ -193,7 +193,11 @@ export default {
   },
   methods: {
     test: function() {
-      debugger;
+    //   debugger;
+    //   this.$parent.$parent.$modals.hide("my-modal2");
+      //   this.$emit("close");
+        // this.$emit("popClose");
+      //   this.$parents.methods.close("inner");
     }
   }
 };

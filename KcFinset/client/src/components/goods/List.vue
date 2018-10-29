@@ -78,9 +78,6 @@
 <script>
 import listLoanNoAffiliates from "./sub/listLoanNoAffiliates";
 import Common from "./../../assets/js/common.js";
-var pageCnt = 1;
-var curTab = "";
-var isSearching = false;
 
 export default {
   name: "List",
@@ -178,14 +175,8 @@ export default {
       } else if ("loanStock" == this.curTab) {
         //do nothing
       }
-
       this.listGoods();
       Common.pagination(this.$refs.form.listGoods);
-
-      if (this.page == 1) {
-        //isSearching = true;
-        $(document).scrollTop(0);
-      }
     },
     listGoods: function() {
       var _this = this;

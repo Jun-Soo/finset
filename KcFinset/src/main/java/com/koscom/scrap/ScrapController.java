@@ -252,17 +252,17 @@ public class ScrapController {
 		}
 		
 		//스크래핑 대상 은행 리스트 가져오기
-		List<String> bankList = fincorpManager.getCooconFcCd(codeManager.getCodeId("cd_fin","은행"));
-		String bankCode = String.join(",", bankList);
-			
-		List<String> cardList = fincorpManager.getCooconFcCd(codeManager.getCodeId("cd_fin","카드"));
-		String cardCode = String.join(",", cardList);
-		
-		logger.debug("bankCode : " + bankCode);
-		logger.debug("cardCode : " + cardCode);
-		
-		model.addAttribute("bank_code", bankCode);
-		model.addAttribute("card_code", cardCode);
+//		List<String> bankList = fincorpManager.getCooconFcCd(codeManager.getCodeId("cd_fin","은행"));
+//		String bankCode = String.join(",", bankList);
+//			
+//		List<String> cardList = fincorpManager.getCooconFcCd(codeManager.getCodeId("cd_fin","카드"));
+//		String cardCode = String.join(",", cardList);
+//		
+//		logger.debug("bankCode : " + bankCode);
+//		logger.debug("cardCode : " + cardCode);
+//		
+//		model.addAttribute("bank_code", bankCode);
+//		model.addAttribute("card_code", cardCode);
 		
 		return "jsonView";
 	}
@@ -305,6 +305,7 @@ public class ScrapController {
 	 */
 	@RequestMapping("/unlinkScrapFc.json")
 	public String unlinkScrapFc(HttpSession session, Model model, HttpServletRequest request, String no_person, String cd_fc) {
+		logger.debug("no_person :" + no_person + "cd_fc :" + cd_fc  );
 		ReturnClass returnClass = scrapManager.unlinkScrapFc(no_person, cd_fc);
 		
 		model.addAttribute("message", returnClass.getMessage());

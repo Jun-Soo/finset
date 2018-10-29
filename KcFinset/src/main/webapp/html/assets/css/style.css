@@ -57,10 +57,10 @@ input[type="file"]::-ms-value { border: 0; height: 45px; }
 input[type="file"]::-ms-browse { color: #fff; border: 0; background: #343f4e; width: 100px; }
 
 /* table */
-table { border-top: 2px solid #333; text-align: left; width: 100%; margin-top: 40px; }
-table th { border-bottom: 1px solid #e5e5e5; border-right: 1px solid #e5e5e5; padding: 20px; color: #222; font-weight: 500; background: #f5f5f5; vertical-align: middle; line-height: 26px; font-size: 16px; text-align: center; }
+table { border-top: 2px solid #333; text-align: left; width: 100%; margin-top: 20px; }
+table th { border-bottom: 1px solid #e5e5e5; border-right: 1px solid #e5e5e5; padding: 10px; color: #222; font-weight: 500; background: #f5f5f5; vertical-align: middle; line-height: 18px; font-size: 12px; text-align: center; }
 table th button { line-height: 16px; background: #7c7c7c; color: #fff; min-width: 60px; text-align: center; border: none; font-weight: 700; padding: 0 10px; cursor: pointer; vertical-align: middle; }
-table td { border-bottom: 1px solid #e5e5e5; border-right: 1px solid #e5e5e5; padding: 17px 20px; vertical-align: middle; line-height: 18px; }
+table td { border-bottom: 1px solid #e5e5e5; border-right: 1px solid #e5e5e5; padding: 10px; vertical-align: middle; line-height: 18px; text-align: center; }
 table td button { line-height: 16px; background: #7c7c7c; color: #fff; min-width: 60px; text-align: center; border: none; font-weight: 700; padding: 0 10px; cursor: pointer; vertical-align: middle; }
 
 /*   Common   */

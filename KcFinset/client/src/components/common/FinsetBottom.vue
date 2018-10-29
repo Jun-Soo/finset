@@ -30,7 +30,7 @@ export default {
   data() {
     return {
       listEvent: [],
-      eventShow:false
+      eventShow: false
     }
   },
   component: {
@@ -75,11 +75,7 @@ export default {
     //이벤트show,hide
     showListEvent: function() {
         var _this = this
-        if(_this.eventShow){
-            _this.eventShow = false
-        }else{
-            _this.eventShow = true
-        }
+        _this.eventShow = !_this.eventShow;
     },
     //이벤트 기간 date format
     formatDate: function(formDate) {

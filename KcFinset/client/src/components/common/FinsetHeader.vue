@@ -13,7 +13,7 @@
         </ul>
         
     </div>
-    <div v-else id='header' class="sub-top">
+    <div v-else-if="this.$store.state.header.type == 'sub'" id='header' class="sub-top">
         <a @click="$router.go(-1)" class="btn-back"></a>
         <p class="title">{{this.$store.state.title}}</p>
     </div>

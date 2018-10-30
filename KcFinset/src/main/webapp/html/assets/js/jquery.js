@@ -50,7 +50,7 @@ $(function(){
     
     ////////////////////     SEARCH     ////////////////////
     
-    $(document).on("click",".btn-search",function(){
+    $(document).on("click",".btn-search,.add-cate",function(){
         
         $("aside.search-wrap").addClass("on");
         
@@ -65,9 +65,10 @@ $(function(){
     
     ////////////////////     리스트 옵션     ////////////////////
     
-    $(document).on("click",".btn-menu-pop",function(){
+    $(document).on("click",".btn-menu-pop,.btn-interlock",function(e){
         
         $(this).closest(".btn-menu-wrap").toggleClass("on");
+        e.preventDefault();
         
     });
     
@@ -138,6 +139,25 @@ $(function(){
 	}
 	
 	modal(); 
+    
+    
+    ////////////////////     지출 카테고리 설정     ////////////////////
+    
+    $(document).on("click",".consume-cate-list>li>.wrap",function(){
+        
+        if($(this).closest("li").hasClass("on")){
+         
+            $(this).closest("li").find("ul").slideUp(500,"easeInOutExpo");
+            $(this).closest("li").removeClass("on");
+            
+        }else{
+           
+            $(this).closest("li").find("ul").slideDown(500,"easeInOutExpo");
+            $(this).closest("li").addClass("on");
+            
+        }
+        
+    });
     
     
     ////////////////////     Image Slide     ////////////////////

@@ -2,7 +2,7 @@
 <div>
 	<div class="pop-top">
 		<p class="title">서비스 이용약관</p>
-		<a class="btn-close" ></a> 
+		<a class="btn-close" v-on:click="$emit('popclose')"></a> 
 		<!-- v-on:click="this.$parent.@click('inner')" -->
 	</div> 
 	<!-- Content -->
@@ -290,16 +290,7 @@
 	
 <script>
 export default {
-  name: "Terms1",
-  methods: {
-    test: function(gubun) {
-      var _this = this;
-      debugger;
-
-      _this.$parent.close("inner");
-      //   _this.$modals.hide("my-modal" + gubun);
-    }
-  }
+  name: "Terms1"
 };
 </script>
 

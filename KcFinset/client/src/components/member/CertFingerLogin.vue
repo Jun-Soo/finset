@@ -1,15 +1,14 @@
 <template>
   <section id="content">
-		<div class="container security-code">
-			<div class="security-code-wrap security-finger">
-				<p>
-					지문을 입력해 주세요.
-          <span id="err_message" v-if="cntFailFinger > 0"> {{ errMsg }} </span>
-				</p>
-				<div class="fingerprt-cert"></div>
-			</div>
-			<p class="link-txt"><router-link to="/member/certCodeLogin"><u>비밀번호를 입력 하시겠습니까?</u></router-link></p>
-		</div>
+    <div class="cert-finger">
+        <p class="text">지문을 입력해 주세요.</p> 
+        <p class="textred" id="err_message" v-if="cntFailFinger> 0" >{{ errMsg }}</p>       
+      </div>
+      <div class="certcode-wrap">
+        <p class="text"><router-link to="/member/certCodeLogin"><u>
+          비밀번호를 입력 하시겠습니까?
+        </u></router-link></p>
+      </div>
 	</section>
 </template>
 
@@ -37,6 +36,7 @@ export default {
   },
   created() {
     this.$store.state.title = '지문인증'
+    this.$store.state.header.type = "sub";
 
     window.resultFingerPrint = this.resultFingerPrint
     if(Constant.userAgent == "Android") {

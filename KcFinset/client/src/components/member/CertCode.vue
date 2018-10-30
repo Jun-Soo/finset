@@ -2,54 +2,31 @@
   <div id="wrapper">
     <!-- Content -->
     <section id="content">
-      <div class="container security-code">
-        <div class="security-code-wrap security-passw">
-          <p>
-            {{ certMessage }}
-          </p>
-          <div class="code-group clearfix">
-            <div class="code form-shake">
-              <div class="mark-group">
-                <label for="" class="code-mark" v-bind:class="classPass1">코드번호</label>
-                <input type="password" class="form-control code-no active" name="pass_number" id="pass_number1" maxlength="1" value="" placeholder="" />
-              </div>
-              <div class="mark-group">
-                <label for="" class="code-mark" v-bind:class="classPass2">코드번호</label>
-                <input type="password" class="form-control code-no" name="pass_number" id="pass_number2" maxlength="1" value="" placeholder="" />
-              </div>
-              <div class="mark-group">
-                <label for="" class="code-mark" v-bind:class="classPass3">코드번호</label>
-                <input type="password" class="form-control code-no" name="pass_number" id="pass_number3" maxlength="1" value="" placeholder="" />
-              </div>
-              <div class="mark-group">
-                <label for="" class="code-mark" v-bind:class="classPass4">코드번호</label>
-                <input type="password" class="form-control code-no" name="pass_number" id="pass_number4" maxlength="1" value="" placeholder="" />
-              </div>
-              <!-- <div class="mark-group">
-                <label for="" class="code-mark">코드번호</label>
-                <input type="password" class="form-control code-no" name="pass_number" id="pass_number5" maxlength="1" value="" placeholder="" />
-              </div>
-              <div class="mark-group">
-                <label for="" class="code-mark">코드번호</label>
-                <input type="password" class="form-control code-no" name="pass_number" id="pass_number6" maxlength="1" value="" placeholder="" />
-              </div> -->
-            </div>
-          </div>
-          <ul class="keypad">
-            <li><button type="button" class="btn btn-lg btn-block btn-key" v-on:click="btnClick('1')">1</button></li>
-            <li><button type="button" class="btn btn-lg btn-block btn-key" v-on:click="btnClick('2')">2</button></li>
-            <li><button type="button" class="btn btn-lg btn-block btn-key" v-on:click="btnClick('3')">3</button></li>
-            <li><button type="button" class="btn btn-lg btn-block btn-key" v-on:click="btnClick('4')">4</button></li>
-            <li><button type="button" class="btn btn-lg btn-block btn-key" v-on:click="btnClick('5')">5</button></li>
-            <li><button type="button" class="btn btn-lg btn-block btn-key" v-on:click="btnClick('6')">6</button></li>
-            <li><button type="button" class="btn btn-lg btn-block btn-key" v-on:click="btnClick('7')">7</button></li>
-            <li><button type="button" class="btn btn-lg btn-block btn-key" v-on:click="btnClick('8')">8</button></li>
-            <li><button type="button" class="btn btn-lg btn-block btn-key" v-on:click="btnClick('9')">9</button></li>
-            <li class="btn-none"><button type="button" class="btn btn-lg btn-block">&nbsp;</button></li>
-            <li><button type="button" class="btn btn-lg btn-block btn-key" data-value="0">0</button></li>
-            <li><button type="button" class="btn btn-lg btn-block btn-backspace" v-on:click="backClick()">←</button></li>
-          </ul>
+      <div class="certcode-wrap">
+        <p class="text">
+          {{ certMessage }}
+        </p>
+        <div class="pass-wrap">
+          <input type="password" v-bind:style="classPass1" name="pass_number" v-model="classPass1" id="pass_number1" maxlength="1" readonly />
+          <input type="password" v-bind:style="classPass2" name="pass_number" v-model="classPass2" id="pass_number2" maxlength="1" readonly />
+          <input type="password" v-bind:style="classPass3" name="pass_number" v-model="classPass3" id="pass_number3" maxlength="1" readonly />
+          <input type="password" v-bind:style="classPass4" name="pass_number" v-model="classPass4" id="pass_number4" maxlength="1" readonly />
         </div>
+        <div class="number">
+          <button type="button" v-on:click="btnClick('1')">1</button>
+          <button type="button" v-on:click="btnClick('2')">2</button>
+          <button type="button" v-on:click="btnClick('3')">3</button>
+          <button type="button" v-on:click="btnClick('4')">4</button>
+          <button type="button" v-on:click="btnClick('5')">5</button>
+          <button type="button" v-on:click="btnClick('6')">6</button>
+          <button type="button" v-on:click="btnClick('7')">7</button>
+          <button type="button" v-on:click="btnClick('8')">8</button>
+          <button type="button" v-on:click="btnClick('9')">9</button>
+          <router-link to="/member/certFingerLogin"><button v-if="chkFingerPrint === 'Y'" class="finger">&nbsp;</button></router-link>
+          <button type="button" v-on:click="btnClick('0')">0</button>
+          <button type="button" class="del" v-on:click="backClick()"></button>
+        </div>
+        <p class="text"><a href=""><u>비밀번호를 재설정 하시겠습니까?</u></a></p>
       </div>
     </section>
   	<!-- //Content -->
@@ -137,6 +114,7 @@ export default {
           localStorage.setItem("tempPwd", _this.password);
         } else {
           if (_this.tempPwd != _this.password) {
+            //앞 비밀번호와 같은지 확인
             _this.password = "";
             this.$toast.center(ko.messages.notMatchPwd);
             return;
@@ -144,16 +122,13 @@ export default {
             type = "changePwd";
           }
         }
-        this.nextPage(type);
+        this.nextPage(type); //confirmPage 일경우 redirect , 재확인일경우 changePwd
       }
     },
     backClick: function() {
       var _this = this;
       this.initClassPass();
-      _this.password = _this.password.substr(
-        0,
-        _this.password.length - 1
-      );
+      _this.password = _this.password.substr(0, _this.password.length - 1);
       if (_this.password.length > 0) _this.classPass1 = "active";
       if (_this.password.length > 1) _this.classPass2 = "active";
       if (_this.password.length > 2) _this.classPass3 = "active";
@@ -292,8 +267,4 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
-.memberMain {
-  background-color: #283593;
-  height: 100%;
-}
 </style>

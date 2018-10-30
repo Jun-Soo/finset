@@ -3,8 +3,7 @@
 	<!-- Header -->
 	<div class="pop-top">
 		<p class="title">KCB 올크레딧 이용약관</p>
-		<a class="btn-close" ></a> 
-		<!-- v-on:click="this.$parent.@click('inner')" -->
+		<a class="btn-close" v-on:click="$emit('popclose')"></a> 
 	</div>
 	<!-- Content -->
 	<div class="container pop-wrap">
@@ -274,11 +273,6 @@
 <script>
 export default {
   name: "Terms3",
-  data() {
-    return {};
-  },
-
-  methods: {}
 };
 </script>
 

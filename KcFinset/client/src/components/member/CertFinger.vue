@@ -2,22 +2,15 @@
   <div id="wrapper">
     <!-- Content -->
     <section id="content">
-		<div class="container security-code">
-			<div class="security-code-wrap security-finger">
-				<div class="fingerprt-cert"></div>
-				<p>
-					지문인증을 사용하시겠습니까?
-				</p>
-			</div>
-			<div class="btn-fixed-bottom affix-bottom">
-				<div class="col-xs-6">
-					<button type="button" class="btn btn-lg btn-default btn-block" v-on:click="chkFinger('N')">아니오</button>
-				</div>
-				<div class="col-xs-6">
-					<button type="button" class="btn btn-lg btn-primary btn-block" v-on:click="chkFinger('Y')">예</button>
-				</div>
-			</div>
-		</div>
+      <div class="cert-finger">
+        <p class="text">지문인증을 사용 하시겠습니까?</p>        
+      </div>
+      
+      <div class="btn-wrap col2">
+        <a v-on:click="chkFinger('N')" class="btn-stroke">아니오</a>
+        <a v-on:click="chkFinger('Y')" class="btn-solid">네</a>
+      </div>
+
 	</section>
   	<!-- //Content -->
   </div>
@@ -53,6 +46,7 @@ export default {
   beforeCreate() {},
   created() {
     this.$store.state.title = "지문인증 설정 (5/7)";
+    // this.$store.state.header.type = "sub";
 
     window.resultFingerPrint = this.resultFingerPrint;
     window.resultCheckCert = this.resultCheckCert;

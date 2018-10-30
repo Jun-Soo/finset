@@ -3,8 +3,7 @@
 	<!-- Header  -->
 	<div class="pop-top">
 		<p class="title">통신사 본인확인서비스 이용약관</p>
-		<a class="btn-close" ></a> 
-		<!-- v-on:click="this.$parent.@click('inner')" -->
+		<a class="btn-close" v-on:click="$emit('popclose')"></a> 
 	</div> 
 	<!-- Content -->
 	<div class="container pop-wrap">
@@ -449,85 +448,95 @@
 				<h3>제12조 (개인정보의 처리)</h3>  
 				<ol class="list-style03">
 					<li>회사는 서비스 제공을 위하여 수집된 본인확인정보의 취급 및 관리 등의 업무를 스스로 수행함을 원칙으로 하나, 필요한 경우 아래 표와 같이 회사가 선정한 사업자에게 위탁할 수 있습니다.
-						<table class="table">
-							<regend>[개인정보의 취급 위탁]</regend>
-							<thead>
-								<tr>
-									<td>수탁자</td>
-									<td>위탁업무내용</td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>서울신용평가정보(주)</td>
-									<td>본인확인정보의 처리, 본인확인 업무대행</td>
-								</tr>
-								<tr>
-									<td>한국모바일인증(주)</td>
-									<td>본인확인 업무대행</td>
-								</tr>
-								<tr>
-									<td>NICE신용평가정보(주)</td>
-									<td>본인확인 업무대행</td>
-								</tr>
-								<tr>
-									<td>(주) 다날</td>
-									<td>본인확인 업무대행</td>
-								</tr>
-								<tr>
-									<td>(주)한국사이버결제</td>
-									<td>본인확인 업무대행</td>
-								</tr>
-								<tr>
-									<td>(주) 인포허브</td>
-									<td>본인확인 업무대행</td>
-								</tr>
-								<tr>
-									<td>(주) 드림시큐리티</td>
-									<td>본인확인 업무대행</td>
-								</tr>
-								<tr>
-									<td>KG모빌리언스</td>
-									<td>본인확인 업무대행</td>
-								</tr>
-								<tr>
-									<td>LG U+</td>
-									<td>본인확인 업무대행</td>
-								</tr>
-								<tr>
-									<td>수미온</td>
-									<td>본인확인 업무대행</td>
-								</tr>
-								<tr>
-									<td>에스케이플래닛(주)</td>
-									<td>본인확인 업무대행</td>
-								</tr>
-							</tbody>
-						</table>
+						<div>
+							<table>
+								<caption>[개인정보의 취급 위탁]</caption>
+								<colgroup>
+									<col width="50%"><col width="50%">
+								</colgroup>
+								<thead>
+									<tr>
+										<th>수탁자</th>
+										<th>위탁업무내용</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>서울신용평가정보(주)</td>
+										<td>본인확인정보의 처리, 본인확인 업무대행</td>
+									</tr>
+									<tr>
+										<td>한국모바일인증(주)</td>
+										<td>본인확인 업무대행</td>
+									</tr>
+									<tr>
+										<td>NICE신용평가정보(주)</td>
+										<td>본인확인 업무대행</td>
+									</tr>
+									<tr>
+										<td>(주) 다날</td>
+										<td>본인확인 업무대행</td>
+									</tr>
+									<tr>
+										<td>(주)한국사이버결제</td>
+										<td>본인확인 업무대행</td>
+									</tr>
+									<tr>
+										<td>(주) 인포허브</td>
+										<td>본인확인 업무대행</td>
+									</tr>
+									<tr>
+										<td>(주) 드림시큐리티</td>
+										<td>본인확인 업무대행</td>
+									</tr>
+									<tr>
+										<td>KG모빌리언스</td>
+										<td>본인확인 업무대행</td>
+									</tr>
+									<tr>
+										<td>LG U+</td>
+										<td>본인확인 업무대행</td>
+									</tr>
+									<tr>
+										<td>수미온</td>
+										<td>본인확인 업무대행</td>
+									</tr>
+									<tr>
+										<td>에스케이플래닛(주)</td>
+										<td>본인확인 업무대행</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</li>
 					<li>회사는 서비스 제공시 인터넷사업자가 필요로 하는 이용자 식별정보(중복가입확인정보, 연계정보)의 생성 및 제공을 위하여 아래 표와 같이 다른 본인확인기관에게 본인확인정보를 제공할 수 있으며, 수집된 식별정보(중복가입확인정보, 연계정보)는 본인 식별 및 확인 위한 목적으로 회사 또는 인증 대행사를 통해 인터넷사업자에게 제공할 수 있습니다.
-						<table class="table">
-							<regend>개인정보의 이용 및 제3자 제공</regend>
-							<thead>
-								<tr>
-									<td>제공 받는자</td>
-									<td>제공목적</td>
-									<td>제공정보</td>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<td>서울신용평가정보(주)</td>
-									<td>휴대폰 본인확인(이용 고객에 한함) 서비스 이용<br>※ 중복가입확인정보(DI), 연계정보(CI)의 생성 및 제공</td>
-									<td>주민등록번호</td>
-								</tr>
-								<tr>
-									<td>코리아크레딧뷰로(주)</td>
-									<td>휴대폰 본인확인(이용 고객에 한함) 서비스 이용<br>※ 중복가입확인정보(DI), 연계정보(CI)의 생성 및 제공</td>
-									<td>주민등록번호</td>
-								</tr>
-							</tbody>
-						</table>
+						<div>
+							<table>
+								<caption>개인정보의 이용 및 제3자 제공</caption>
+								<colgroup>
+									<col width="33%"><col width="33%"><col width="33%">
+								</colgroup>
+								<thead>
+									<tr>
+										<th>제공 받는자</th>
+										<th>제공목적</th>
+										<th>제공정보</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>서울신용평가정보(주)</td>
+										<td>휴대폰 본인확인(이용 고객에 한함) 서비스 이용<br>※ 중복가입확인정보(DI), 연계정보(CI)의 생성 및 제공</td>
+										<td>주민등록번호</td>
+									</tr>
+									<tr>
+										<td>코리아크레딧뷰로(주)</td>
+										<td>휴대폰 본인확인(이용 고객에 한함) 서비스 이용<br>※ 중복가입확인정보(DI), 연계정보(CI)의 생성 및 제공</td>
+										<td>주민등록번호</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
 					</li> 
 					<li>개인정보 처리 및 위탁 등에 관한 사항은 관련법령 및 회사가 정하는 개인정보취급방침에 정한 바에 따릅니다.</li>
 				</ol>
@@ -541,7 +550,6 @@
 				<p class="mt15">(시행일) 이 약관은 공시한 날로부터 시행합니다.</p>
 			</div>
 		</div>
-		<!-- //tab3 -->
 	</div>
 </div>
 </template>
@@ -549,14 +557,6 @@
 <script>
 export default {
   name: "Terms9",
-  data() {
-    return {};
-  },
-
-  methods: {}
 };
 </script>
 
-<!-- Add 'scoped' attribute to limit CSS to this component only -->
-<style lang="scss">
-</style>

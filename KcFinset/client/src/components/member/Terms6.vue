@@ -3,8 +3,7 @@
 	<!-- Header -->
 	<div class="pop-top">
 		<p class="title">본인확인서비스 이용약관</p>
-		<a class="btn-close" ></a> 
-		<!-- v-on:click="this.$parent.@click('inner')" -->
+		<a class="btn-close" v-on:click="$emit('popclose')"></a> 
 	</div> 
 	<!-- Content -->
 	<div id="content" class="container pop-wrap">
@@ -79,11 +78,6 @@
 <script>
 export default {
   name: "Terms6",
-  data() {
-    return {};
-  },
-
-  methods: {}
 };
 </script>
 

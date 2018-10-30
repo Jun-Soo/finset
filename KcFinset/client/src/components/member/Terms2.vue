@@ -3,7 +3,7 @@
 	<!-- Header  -->
 	<div class="pop-top">
 		<p class="title">개인정보 처리방침</p>
-		<a href="" class="btn-close" v-on:click="test"></a>
+		<a class="btn-close" v-on:click="$emit('popclose')"></a>
 	</div> 
 	
 	<!-- Content -->
@@ -188,18 +188,6 @@
 <script>
 export default {
   name: "Terms2",
-  data() {
-    return {};
-  },
-  methods: {
-    test: function() {
-    //   debugger;
-    //   this.$parent.$parent.$modals.hide("my-modal2");
-      //   this.$emit("close");
-        // this.$emit("popClose");
-      //   this.$parents.methods.close("inner");
-    }
-  }
 };
 </script>
 

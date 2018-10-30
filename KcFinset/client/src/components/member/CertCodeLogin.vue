@@ -99,7 +99,7 @@ export default {
       if (_this.password.length > 2) _this.classPass3 = "border-color: #111";
       if (_this.password.length > 3) {
         _this.classPass4 = "border-color: #111";
-
+        //validator
         _this.login();
       }
     },

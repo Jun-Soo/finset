@@ -18,7 +18,7 @@
       <div class="cert-wrap">
           <p class="title">휴대폰인증</p>
           <div class="grid phone">
-              <select id="telComCd" v-model="telComCd" v-validate="'required'" v-on:change="nextFocus('telCom')" v-bind:disabled="isDisabled" placeholder="통신사" data-vv-name='통신사'>
+              <select id="telComCd" name="telComCd" v-model="telComCd" v-validate="'required'" v-on:change="nextFocus('telCom')" v-bind:disabled="isDisabled" placeholder="통신사" data-vv-name='통신사'>
                 <option v-for="option in options" v-bind:key="option.value" v-bind:value="option.value">
                   {{ option.text }}
                 </option>
@@ -145,6 +145,7 @@ export default {
       window.Android.setEndApp("Y");
     }
     this.$store.state.title = "본인확인 (2/7)";
+    this.$store.state.header.type = "sub";
     this.time = this.minutes * 60;
   },
   beforeMount() {},
@@ -242,7 +243,6 @@ export default {
     chkCert: function() {
       var _this = this;
       var regNumber = /^[0-9]*$/;
-      debugger;
       if (_this.nm_person == "" || _this.nm_person == null) {
         this.$toast.center("이름을 입력해주세요.");
         $("#nm_person").focus();
@@ -415,55 +415,4 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
-.memberMain {
-  background-color: transparent;
-}
-.input-group {
-  text-align:center;
-}
-.input-group-btn {
-  min-width: 56px;
-  padding: 11px;
-  padding-left: 4px;
-  position: absolute;
-}
-.input-group-btn.blind {
-  min-width: 0;
-}
-.input-group-btn .btn {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
-.form-input-block-confrim span > select.form-control {
-  border: 0 !important;
-  width: 30%;
-  position: absolute;
-}
-.form-input-block-confrim .form-control {
-  border: 1px solid #dbdbdb;
-  padding-left: 10px;
-  padding-right: 10px;
-}
-.form-input-block-confrim .form-control-static {
-  text-align: center;
-}
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  margin: -1px;
-  padding: 0;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-}
-.sr-only-focusable:active,
-.sr-only-focusable:focus {
-  position: static;
-  width: auto;
-  height: auto;
-  margin: 0;
-  overflow: visible;
-  clip: auto;
-}
 </style>

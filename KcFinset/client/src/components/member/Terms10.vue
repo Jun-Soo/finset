@@ -3,8 +3,7 @@
 	<!-- Header -->
 		<div class="pop-top">
 			<p class="title">마케팅 정보 수신 동의</p>
-			<a class="btn-close" ></a> 
-			<!-- v-on:click="this.$parent.@click('inner')" -->
+			<a class="btn-close" v-on:click="$emit('popclose')"></a> 
 		</div> 
 	<!-- Content -->
 		<div class="container pop-wrap" id="content">
@@ -31,11 +30,6 @@
 <script>
 export default {
   name: "Terms10",
-  data() {
-    return {};
-  },
-
-  methods: {}
 };
 </script>
 

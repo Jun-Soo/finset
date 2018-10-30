@@ -2,8 +2,6 @@
   <div id="wrapper">
     <!-- Content -->
     <section id="content">
-     
-
       <div class="container mt30">
         <div class="checks">
           <!-- <div v-bind:class="checked"> -->
@@ -13,24 +11,24 @@
             <div class="box-agree">
               <p><input type="checkbox" name="checkbox1" id="checkbox1" v-model="chkBox1"><label for="checkbox1">[필수] 서비스 이용동의</label></p>
               <ul>
-                <li><a v-on:click="open('1')">서비스 이용약관</a></li>
-                <li><a v-on:click="open('2')">개인정보 처리방침</a></li>
-                <li><a v-on:click="open('3')">KCB 올크레딧 이용약관</a></li>
-                <li><a v-on:click="open('4')">개인정보 수집·이용 동의</a></li>
-                <li><a v-on:click="open('5')">개인정보 제3자 제공 동의</a></li>
+                <li><a v-on:click="openPop('1')">서비스 이용약관</a></li>
+                <li><a v-on:click="openPop('2')">개인정보 처리방침</a></li>
+                <li><a v-on:click="openPop('3')">KCB 올크레딧 이용약관</a></li>
+                <li><a v-on:click="openPop('4')">개인정보 수집·이용 동의</a></li>
+                <li><a v-on:click="openPop('5')">개인정보 제3자 제공 동의</a></li>
               </ul>
             </div>
 
             <div class="box-agree">
               <p><input type="checkbox" name="checkbox2" id="checkbox2" v-model="chkBox2"><label for="checkbox2">[필수] 통신사/본인확인 서비스 이용 동의</label></p>
               <ul>
-                <li><a v-on:click="open('6')">본인확인서비스 이용약관</a>
+                <li><a v-on:click="openPop('6')">본인확인서비스 이용약관</a>
                 </li>
-                <li><a v-on:click="open('7')">개인정보 수집 · 이용/취급위탁 동의</a>
+                <li><a v-on:click="openPop('7')">개인정보 수집 · 이용/취급위탁 동의</a>
                 </li>
-                <li><a v-on:click="open('8')">고유식별정보처리 동의</a>
+                <li><a v-on:click="openPop('8')">고유식별정보처리 동의</a>
                 </li>
-                <li><a v-on:click="open('9')">통신사 본인확인 이용약관 동의</a>
+                <li><a v-on:click="openPop('9')">통신사 본인확인 이용약관 동의</a>
                 </li>
               </ul>
             </div>
@@ -38,45 +36,45 @@
             <div class="box-agree">
               <p><input type="checkbox" name="checkbox3" id="checkbox3" v-model="chkBox3"><label for="checkbox3">[선택] 마케팅 정보 수신 동의</label></p>
               <ul>
-                <li><a v-on:click="open('10')">마케팅 정보 수신 동의</a></li>
+                <li><a v-on:click="openPop('10')">마케팅 정보 수신 동의</a></li>
               </ul>
             </div>
         </div>
       </div>
       <!-- next button -->
-      <div class="btn-wrap">
+      <div v-if="checked" class="btn-wrap">
         <a role="button" id="confirmButton" class="btn-next" v-on:click="confirmedTerms()">다음</a>
       </div>
     </section>
-    <vue-modal transitionName="zoom-in" width="100%" name="my-modal1">
-      <Terms1 slot="body"></Terms1>
+    <vue-modal transitionName="zoom-in" name="my-modal1" v-on:popclose="closePop('1')">
+      <Terms1 slot="body" v-on:popclose="closePop('1')"></Terms1>
     </vue-modal>
-    <vue-modal transitionName="zoom-in" name="my-modal2">
-      <Terms2 slot="body" v-on:close="closeTest('2')"></Terms2>
+    <vue-modal transitionName="zoom-in" name="my-modal2" v-on:popclose="closePop('2')">
+      <Terms2 slot="body" v-on:popclose="closePop('2')"></Terms2>
     </vue-modal>
-    <vue-modal transitionName="zoom-in" name="my-modal3">
-      <Terms3 slot="body"></Terms3>
+    <vue-modal transitionName="zoom-in" name="my-modal3" v-on:popclose="closePop('3')">
+      <Terms3 slot="body" v-on:popclose="closePop('3')"></Terms3>
     </vue-modal>
-    <vue-modal transitionName="zoom-in" name="my-modal4">
-      <Terms4 slot="body"></Terms4>
+    <vue-modal transitionName="zoom-in" name="my-modal4" v-on:popclose="closePop('4')">
+      <Terms4 slot="body" v-on:popclose="closePop('4')"></Terms4>
     </vue-modal>
-    <vue-modal transitionName="zoom-in" name="my-modal5">
-      <Terms5 slot="body"></Terms5>
+    <vue-modal transitionName="zoom-in" name="my-modal5" v-on:popclose="closePop('5')">
+      <Terms5 slot="body" v-on:popclose="closePop('5')"></Terms5>
     </vue-modal>
-    <vue-modal transitionName="zoom-in" name="my-modal6">
-      <Terms6 slot="body"></Terms6>
+    <vue-modal transitionName="zoom-in" name="my-modal6" v-on:popclose="closePop('6')">
+      <Terms6 slot="body" v-on:popclose="closePop('6')"></Terms6>
     </vue-modal>
-    <vue-modal transitionName="zoom-in" name="my-modal7">
-      <Terms7 slot="body"></Terms7>
+    <vue-modal transitionName="zoom-in" name="my-modal7" v-on:popclose="closePop('7')">
+      <Terms7 slot="body" v-on:popclose="closePop('7')"></Terms7>
     </vue-modal>
-    <vue-modal transitionName="zoom-in" name="my-modal8">
-      <Terms8 slot="body"></Terms8>
+    <vue-modal transitionName="zoom-in" name="my-modal8" v-on:popclose="closePop('8')">
+      <Terms8 slot="body" v-on:popclose="closePop('8')"></Terms8>
     </vue-modal>
-    <vue-modal transitionName="zoom-in" name="my-modal9">
-      <Terms9 slot="body"></Terms9>
+    <vue-modal transitionName="zoom-in" name="my-modal9" v-on:popclose="closePop('9')">
+      <Terms9 slot="body" v-on:popclose="closePop('9')"></Terms9>
     </vue-modal>
-    <vue-modal transitionName="zoom-in" name="my-modal10">
-      <Terms10 slot="body"></Terms10>
+    <vue-modal transitionName="zoom-in" name="my-modal10" v-on:popclose="closePop('10')">
+      <Terms10 slot="body" v-on:popclose="closePop('10')"></Terms10>
     </vue-modal>
   </div>
   
@@ -121,12 +119,6 @@ export default {
     Terms9: Terms9,
     Terms10: Terms10
   },
-  // props: {
-  //   onClose: {
-  //     type: Function,
-  //     required: false
-  //   }
-  // },
   beforeCreate() {},
   created() {
     if (Constant.userAgent == "Android") {
@@ -138,10 +130,7 @@ export default {
   beforeMount() {},
   mounted() {
     var _this = this;
-
     $(":checkbox").change(function() {
-      Common.affixBottom("hide");
-      //약관 전체동의 체크
       if (_this.chkBox1 && _this.chkBox2 && _this.chkBox3) {
         _this.chkAll = true;
         _this.checked = "check";
@@ -151,10 +140,9 @@ export default {
       }
 
       if (_this.chkBox1 && _this.chkBox2) {
-        Common.affixBottom("show");
+        _this.checked = "check";
       }
 
-      //마케팅 동의수신 체크시 parameter값 셋팅
       if (_this.chkBox3) {
         _this.$store.state.user.isEventPush = true;
       }
@@ -185,30 +173,17 @@ export default {
         _this.chkBox3 = false;
       }
     },
-    closeTest: function(gubun) {
+    closePop: function(gubun) {
       var _this = this;
       _this.$modals.hide("my-modal" + gubun);
     },
-    // close :function(location) {
-    //   var _this = this;
-    //   if (location === 'outer' && !this.outerClose) return;
-
-    //   this.$modals.hide(this.name);
-    //   if (this.onClose) this.onClose();
-    //   this.$emit('close-modal', this.name);
-    //   document.body.classList.remove('v-modal__no-scroll');
-    //   // _this.$parent.close('inner');
-    //   // _this.$modals.hide("my-modal" + gubun);
-    // },
-
     confirmedTerms: function() {
       var _this = this;
       if (_this.chkBox1 && _this.chkBox2) {
         _this.$router.push("/member/certStep2");
       }
     },
-
-    open: function(gubun) {
+    openPop: function(gubun) {
       var _this = this;
       _this.$modals.show("my-modal" + gubun);
     }

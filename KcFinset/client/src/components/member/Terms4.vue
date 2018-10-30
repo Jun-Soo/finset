@@ -3,8 +3,7 @@
 	<!-- Header -->
 	<div class="pop-top">
 		<p class="title">개인정보 수집 · 이용 동의</p>
-		<a class="btn-close" ></a> 
-		<!-- v-on:click="this.$parent.@click('inner')" -->
+		<a class="btn-close" v-on:click="$emit('popclose')"></a> 
 	</div> 
 	<!-- Content -->
 	<div id="content" class="container pop-wrap">
@@ -30,11 +29,6 @@
 <script>
 export default {
   name: "Terms4",
-  data() {
-    return {};
-  },
-
-  methods: {}
 };
 </script>
 

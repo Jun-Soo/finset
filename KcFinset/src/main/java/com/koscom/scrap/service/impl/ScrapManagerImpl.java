@@ -285,76 +285,7 @@ public class ScrapManagerImpl implements ScrapManager {
 		return null;
 	}
 	public String sendFinanceTerms(String no_person, String uuid, String dn, String email)	{
-JSONObject jsonSendRoot = new JSONObject();
 		
-		String site = environment.getProperty("service.profile");
-		
-		String directUrl = environment.getProperty("direct.apiUrl") + "/terms/financeterms/content";
-		String directKey = environment.getProperty("direct.apiKey");
-		
-		URLConnection url = new URLConnection();
-		logger.info("getDirectFinanceSearch  : URL[" + directUrl +"], APIkey : "+directKey);
-		
-		PersonVO personVO = null;
-		personVO = personMapper.getPersonInfo(no_person);
-	
-		String noPerson = personVO.getNo_person();
-		
-		JSONObject jsonPartnerInfo = new JSONObject();
-		jsonPartnerInfo.put("comId", environment.getProperty("direct.comId"));
-		jsonPartnerInfo.put("srvId", environment.getProperty("direct.srvId"));
-		jsonSendRoot.put("partner", jsonPartnerInfo);
-		
-		JSONObject jsonCommonInfo = new JSONObject();
-		JSONObject jsonDevInfo = new JSONObject();
-		JSONObject jsonBodyInfo = new JSONObject();
-		JSONObject jsonReqParamInfo = new JSONObject();
-		// 로컬 개발 테스트용 전문
-		if("LOCAL".equals(site))	{
-			jsonCommonInfo.put("reqIdConsumer", "reqid-0001");
-			jsonCommonInfo.put("ci", "1234567890");
-			jsonCommonInfo.put("certDn", "testdn123");
-			jsonSendRoot.put("commonHeader", jsonCommonInfo);
-			
-			jsonDevInfo.put("ipAddr", "192168010001");
-			jsonDevInfo.put("macAddr", "1866DA0D99D6");
-			jsonSendRoot.put("devInfo", jsonDevInfo);
-			
-			jsonReqParamInfo.put("customerBirthDay", "19770101");
-			jsonReqParamInfo.put("customerEmail", "tsme0@hanmail.net");
-			jsonReqParamInfo.put("customerPhone", "010-1111-1111");
-			jsonReqParamInfo.put("customerUserNm", "홍길동");
-			List<String> stockList = fincorpMapper.getStockFcCd(codeManager.getCodeId("cd_fin","증권"));
-			jsonReqParamInfo.put("companyList", stockList);
-			jsonBodyInfo.put("requestParameters", jsonReqParamInfo);
-			jsonSendRoot.put("financeTermsContentRequestBody", jsonBodyInfo);
-		}
-		else	{
-			jsonCommonInfo.put("reqIdConsumer", "test");
-			jsonCommonInfo.put("ci", personVO.getKcb_ci());
-			jsonCommonInfo.put("certDn", dn);
-			jsonSendRoot.put("commonHeader", jsonCommonInfo);
-			
-			// uuid가 있을 경우 - 핸드폰 접속 , 없을 경우  - PC 접속
-			if(uuid != null && uuid.length() > 0)	{
-				jsonDevInfo.put("ipAddr", uuid);
-				jsonDevInfo.put("macAddr", personVO.getHp());
-			}
-			else	{
-				jsonDevInfo.put("ipAddr", "");
-				jsonDevInfo.put("macAddr", "");
-			}
-			jsonSendRoot.put("devInfo", jsonDevInfo);
-						
-			jsonReqParamInfo.put("customerBirthDay", personVO.getBgn().substring(0, 8));
-			jsonReqParamInfo.put("customerEmail", email);
-			jsonReqParamInfo.put("customerPhone", personVO.getHp());
-			jsonReqParamInfo.put("customerUserNm", personVO.getNm_person());
-			List<String> stockList = fincorpMapper.getStockFcCd(codeManager.getCodeId("cd_fin","증권"));
-			jsonReqParamInfo.put("companyList", stockList);
-			jsonBodyInfo.put("requestParameters", jsonReqParamInfo);
-			jsonSendRoot.put("financeTermsContentRequestBody", jsonBodyInfo);
-		}
 		return null;
 	}
 	

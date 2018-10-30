@@ -35,7 +35,7 @@ import ScrapRegFcLink from '@/components/scrap/RegFcLink'
 
 import MemoHome from '@/components/memo/Home'
 import MemoRegister from '@/components/memo/Register'
-import MemoList from '@/components/memo/List'
+// import MemoList from '@/components/memo/List'
 // import MemoDetail from '@/components/memo/Detail'
 import MemoMain from '@/components/memo/Main'
 import MemoCreate from '@/components/memo/Create'
@@ -496,12 +496,12 @@ export const routes = [
         component: MemoRegister,
         meta: { allowPath: true }
       },
-      {
-        path: 'list',
-        alias: '/list',
-        component: MemoList,
-        meta: { allowPath: true }
-      },
+      // {
+      //   path: 'list',
+      //   alias: '/list',
+      //   component: MemoList,
+      //   meta: { allowPath: true }
+      // },
       {
         path: 'main',
         alias: '/main',

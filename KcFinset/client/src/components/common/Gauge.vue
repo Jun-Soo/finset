@@ -88,7 +88,7 @@ export default {
       viewBoxWidth: 100, // svg안 viewBox의 width.
       viewBoxHeight: 50, // svg안 viewBox의 height.
       radius: 50, // 게이지 반지름.
-      strokeWidth: 5 //게이지 두께.
+      strokeWidth: 7 //게이지 두께.
     };
   },
   props: {
@@ -185,8 +185,8 @@ export default {
   margin: auto;
   padding: 0;
   --backgroundColor: #ffffff; /* svg 백그라운드 색 */
-  --backgroundBarColor: #D2D3D7; /* 게이지 기본 색 */
-  --dataBarColor: #FC6E6D; /* 게이지 data 색 */
+  --backgroundBarColor: #d2d3d7; /* 게이지 기본 색 */
+  --dataBarColor: #fc6e6d; /* 게이지 data 색 */
 }
 
 svg {
@@ -225,8 +225,12 @@ svg {
 }
 
 #centerText {
-  font-size: 10px;
-  font-weight: normal;
-  fill: #000000;
+  font-size: 19px;
+  text-align: center;
+  position: absolute;
+  bottom: 0;
+  color: #222;
+  width: 100%;
+  line-height: 1;
 }
 </style>

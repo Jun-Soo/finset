@@ -3,7 +3,9 @@
     <FinsetHeader></FinsetHeader>
         <div class="my-graph-wrap">
             <p class="title">신용등급</p>
-            <Gauge :value="gaugeValue" :text="gaugeText"/>
+								<div class="graph">
+            				<Gauge :value="gaugeValue" :text="gaugeText"/>
+								</div>
             <a href="/credit/main">자세히보기</a>
             <div class="info-wrap">
                 <div class="left">

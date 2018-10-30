@@ -37,6 +37,12 @@ public interface FincorpMapper {
 	int createFincorp(FincorpVO fincorpVO);
 	
 	/**
+	 * 금융사 변경 (KcbManagerImpl)
+	 * @param FincorpVO
+	 */
+	int updateFincorp(FincorpVO fincorpVO);
+	
+	/**
 	 * 금융사명 KCB 사전연계 정보 삽입 (KcbManagerImpl)
 	 * @param fincorpfcNminfoForm
 	 * @return String
@@ -48,5 +54,19 @@ public interface FincorpMapper {
 	 * @param String
 	 * @return List<String>
 	 */
-	List<String> getCooconFcCd(String type_fc);	
+	List<String> getCooconFcCd(String type_fc);
+	
+	/**
+	 *  증권사 금융사 코드(OpenAPI 대상)
+	 * @param String
+	 * @return List<String>
+	 */
+	List<String> getStockFcCd(String type_fc);
+	
+	/**
+	 *  증권사 금융사 코드(OpenAPI 대상)
+	 * @param String
+	 * @return String
+	 */
+	String getCdFcByCooconFcCd(String cd_fc_coocon);
 }

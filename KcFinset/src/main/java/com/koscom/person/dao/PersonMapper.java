@@ -90,6 +90,12 @@ public interface PersonMapper {
 	void insertPersonLoginHist(PersonLoginHistInfo personLoginHist);
 
 	/**
+	 * GNB_최근접속시간
+	 * @param PersonLoginHistInfo personLoginHist
+	 */
+	String getPersonConnectTime(String no_person);
+
+	/**
 	 * 페이지 이동 기록
 	 * @param 	PersonLoginHistInfo
 	 * @return	int
@@ -249,63 +255,63 @@ public interface PersonMapper {
 	 * @return List<PersonShareInfoVO>
 	 */
 	List<PersonShareInfoVO> listPersonShareInfoReqUpdate(PersonShareInfoVO personShareInfoVO);
-	
+
 	/**
 	 * 고유 CI번호를 통해 번호가 바뀐 회언인지 확인
 	 * @param kcb_ci - kcb 에서 사용하는 고유 판별 번호
 	 * @return
 	 */
 	String getPersonInfoDupCi(PersonVO personVO);
-	
+
 	/**
 	 * 핸드폰 번호 업데이트
 	 * @param personVO - hp, no_person 사용
 	 * @return
 	 */
 	int modifyPersonHp(PersonVO personVO);
-	
+
 	/**
 	 * 고객정보 조회 중복 체크
 	 * @param personVO
 	 * @return
 	 */
 	PersonVO getPersonInfoDup(PersonVO personVO);
-	
+
 	/**
 	 * 회원가입 insert
 	 * @param personVO
 	 * @return
 	 */
 	int insertPerson(PersonVO personVO);
-	
+
 	/**
 	 * 사용자 공인인증서 관리
 	 * @param PersonCertificateInfoVO
 	 * @return
 	 */
 	int createPersonCertificateInfo(PersonCertificateInfoVO personCertificateInfoVO);
-	
+
 	/**
 	 * 마이페이지 알람 설정정보 list조회
 	 * @param String
 	 * @return PersonVO
 	 */
 	List<PersonVO> getPushSettingInfo(String no_person);
-	
+
 	/**
 	 * 회원탈퇴 및 데이터 삭제
 	 * @param String
 	 * @return
 	 */
 	int procPersonInfoDelQuit(String no_person);
-	
+
 	/**
 	 * 회원탈퇴 내역 저장
 	 * @param PersonVO
 	 * @return
 	 */
 	void createPersonQuit(PersonVO personVO);
-	
+
 	/**
 	 * 개인설정 기본 값 설정
 	 * @param no_person

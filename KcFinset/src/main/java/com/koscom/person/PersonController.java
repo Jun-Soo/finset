@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
-import com.koscom.domain.PersonLoginHistInfo;
 import com.koscom.login.service.LoginManager;
 import com.koscom.person.model.PersonActiveHistVO;
 import com.koscom.person.model.PersonSmsListVO;
@@ -48,10 +47,10 @@ public class PersonController {
 
 	@Autowired
 	private LoginManager loginManager;
-	
+
 	@Resource
 	Environment environment;
-	
+
 	/** APP
 	 * fcm 토큰 업데이트
 	 * @param model
@@ -60,27 +59,27 @@ public class PersonController {
 	 * @return
 	 */
 	@RequestMapping("/modifyFcmToken.crz")
-	public String modifyFcmToken( 
-			HttpServletRequest request, 
+	public String modifyFcmToken(
+			HttpServletRequest request,
 			PersonVO personVO,
 			Model model) {
-		
+
 		String sYnOs = StringUtil.nullToString(personVO.getYn_os());
-		
+
 		logger.info("FCM TOKEN modify no person : {}, token : {}", StringUtil.nullToString(personVO.getNo_person()), StringUtil.nullToString(personVO.getFcm_token()));
 		logger.info("os : "+sYnOs);
-		
+
 		if(sYnOs != "" && sYnOs.equals("android")){
 			personVO.setYn_os("1");
 		} else {
 			personVO.setYn_os("");
 		}
-		
+
 		ReturnClass returnClass = personManager.modifyFcmToken(personVO);
 		logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
 		return "jsonView";
 	}
-	
+
 	/** VUE
 	 * 지문 업데이트
 	 * @param model
@@ -91,10 +90,10 @@ public class PersonController {
 	@RequestMapping("/modifyFingerPrint.json")
 	public String modifyFingerPrint(
 			HttpServletRequest request,
-			HttpSession session, 
+			HttpSession session,
 			PersonVO personVO,
 			Model model) {
-		
+
 		logger.info("modifyFingerPrint.json start");
 		personVO.setId_lst(personVO.getNo_person());
 		ReturnClass returnClass = personManager.modifyFingerPrint(personVO);
@@ -102,7 +101,7 @@ public class PersonController {
 		model.addAttribute("result" , returnClass.getCd_result());
 		return "jsonView";
 	}
-	
+
 	/** VUE
 	 * 개인정보 등록
 	 * @param session
@@ -113,13 +112,13 @@ public class PersonController {
 	 * @throws Exception
 	 */
 	@RequestMapping("/insertPerson.json")
-	public String insertPerson(HttpSession session, 
-			HttpServletResponse response, 
-			PersonVO personVO, 
+	public String insertPerson(HttpSession session,
+			HttpServletResponse response,
+			PersonVO personVO,
 			Model model) throws UnsupportedEncodingException, FinsetException, IOException {
-		
+
 		String profile = environment.getProperty("service.profile");
-		
+
 		if(!profile.equals("LOCAL")){
 			//KCB_CI를 기준으로 회원을 확인해, 기존 회원의 핸드폰 번호가 변경 된 것이지 확인
 			String no_person = personManager.getPersonInfoDupCi(personVO);
@@ -140,26 +139,26 @@ public class PersonController {
 				}
 			}
 		}
-		
+
 		logger.debug("회원가입 시작");
 		//이미 가입된 정보가 있는지 체크
 		PersonVO person = personManager.getPersonInfoDup(personVO);
 		logger.debug("가입 유무 체크  : " + (person != null));
-		
+
 		if(person != null) {
 			ReturnClass returnClass = new ReturnClass(personVO.PERSON_EXIST, "이미 등록된 정보가 있습니다.");
 			model.addAttribute("message", returnClass.getMessage());
 			model.addAttribute("result", returnClass.getCd_result());
 			model.addAttribute("returnData", person.getNo_person());
-			
+
 		} else {
-			
+
 			ReturnClass returnClass = personManager.insertPerson(personVO);
-			model.addAttribute("message", returnClass.getMessage());		
+			model.addAttribute("message", returnClass.getMessage());
 			model.addAttribute("result", returnClass.getCd_result());
 
 			if(returnClass.getCd_result().equals(Constant.SUCCESS)) {
-				
+
 				person = (PersonVO) returnClass.getReturnObj();
 				model.addAttribute("no_person", person.getNo_person());
 				model.addAttribute("nm_person", person.getNm_person());
@@ -168,7 +167,7 @@ public class PersonController {
 		}
 		return "jsonView";
 	}
-	
+
 	/** VUE
 	 * 완료화면 (보안코드 찾기)
 	 * @param model
@@ -177,14 +176,14 @@ public class PersonController {
 	 */
 	@RequestMapping("/changePwd.json")
 	public String changePwd(
-			HttpSession session, 
-			PersonVO personVO, 
+			HttpSession session,
+			PersonVO personVO,
 			Model model) {
 
 		String kcmCertValue = (String) session.getAttribute("cert_result_value");
-		
+
 		logger.debug("★★★★★ cert_result_value : " + kcmCertValue);
-		
+
 		if(!Constant.SUCCESS.equals(kcmCertValue)) {
 			model.addAttribute("message", "본인인증 후 진행하시기 </br>바랍니다.");
 			model.addAttribute("result", "99");
@@ -200,7 +199,7 @@ public class PersonController {
 			return "jsonView";
 		}
 	}
-	
+
 	/** VUE
 	 * 비밀번호/지문 틀린 횟수 업데이트
 	 * @param model
@@ -211,10 +210,10 @@ public class PersonController {
 	@RequestMapping("/modifyPwdFailCnt.json")
 	public String modifyPwdFailCnt(
 			HttpServletRequest request,
-			HttpSession session, 
+			HttpSession session,
 			PersonVO personVO,
 			Model model) {
-		
+
 		logger.info("modifyPwdFailCnt.json start");
 		logger.info("no_person : " + personVO.getNo_person());
 		personVO.setId_lst(personVO.getNo_person());
@@ -223,19 +222,19 @@ public class PersonController {
 		model.addAttribute("result" , returnClass.getCd_result());
 		return "jsonView";
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	/**
 	 * 본인인증화면 (보안코드 찾기)
@@ -245,10 +244,10 @@ public class PersonController {
 	 */
 	@RequestMapping("/frameFindPwdStep1.crz")
 	public String frameFindPwdStep1(
-			HttpServletRequest request, 
+			HttpServletRequest request,
 			HttpSession session,
 			Model model) {
-		
+
 		String no_person = (String) session.getAttribute("no_person");
 		PersonVO personVO = personManager.getPersonInfo(no_person);
 
@@ -292,7 +291,7 @@ public class PersonController {
 	 */
 	@RequestMapping("/frameSecurityCodeCertify.crz")
 	public String frameSecurityCodeCertify(
-			HttpSession session, 
+			HttpSession session,
 			PersonVO personVO,
 			Model model) {
 
@@ -316,7 +315,7 @@ public class PersonController {
 	@RequestMapping("/personCertify.json")
 	public String personCertify(
 			HttpServletRequest request,
-			HttpSession session, 
+			HttpSession session,
 			PersonVO personVO,
 			Model model) {
 
@@ -347,19 +346,19 @@ public class PersonController {
 	 */
 	@RequestMapping("/insertActiveHist.json")
 	public String insertActiveHist(
-			HttpSession session, 
+			HttpSession session,
 			PersonActiveHistVO personActiveHistVO,
 			Model model) {
-		
+
 		/*** TEST ***/
 		loginManager.listActiveUsers();
-		
+
 		String no_person = (String) session.getAttribute("no_person");
 		logger.info("no_person : "+no_person);
 		if(StringUtil.isNotEmpty(no_person)){
-		
+
 			personActiveHistVO.setNo_person(no_person);
-			
+
 			//return personManager.insertActiveHist(personForm);
 			ReturnClass returnClass = personManager.insertActiveHist((PersonActiveHistVO)SessionUtil.setUser(personActiveHistVO, session));
 			model.addAttribute("message", returnClass.getMessage());
@@ -367,7 +366,7 @@ public class PersonController {
 		}
 		return "jsonView";
 	}
-	
+
 	/**
 	 * 지문인증설정(비밀번호입력)
 	 * @param model
@@ -388,18 +387,18 @@ public class PersonController {
 	@RequestMapping("/modifyPersonEmail.json")
 	public String modifyPersonEmail(
 			HttpServletRequest request,
-			HttpSession session, 
+			HttpSession session,
 			PersonVO personVO,
 			Model model) {
-		
+
 		String no_person = (String) session.getAttribute("no_person");
-		
+
 		logger.info("no_person : "+no_person);
 		personVO.setNo_person(no_person);
 		ReturnClass returnClass = personManager.modifyPersonEmail((PersonVO)SessionUtil.setUser(personVO, session));
-		
+
 		logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
-		
+
 		model.addAttribute("result" , returnClass.getCd_result());
 		model.addAttribute("message" , returnClass.getMessage());
 		if(returnClass.getCd_result().equals("00")){
@@ -408,8 +407,8 @@ public class PersonController {
 		return "jsonView";
 	}
 
-	
-	
+
+
 	/**
 	 * 푸쉬알림설정 업데이트
 	 * @param model
@@ -420,10 +419,10 @@ public class PersonController {
 	@RequestMapping("/modifyPushNoti.json")
 	public String modifyPushNoti(
 			HttpServletRequest request,
-			HttpSession session, 
+			HttpSession session,
 			PersonVO personVO,
 			Model model) {
-		
+
 		String no_person = (String) session.getAttribute("no_person");
 		logger.info("no_person : "+no_person);
 		personVO.setNo_person(no_person);
@@ -432,9 +431,9 @@ public class PersonController {
 		model.addAttribute("result" , returnClass.getCd_result());
 		return "jsonView";
 	}
-	
+
 	/**
-	 * 문자내역 저장 
+	 * 문자내역 저장
 	 * @param request
 	 * @param model
 	 * @param String
@@ -447,23 +446,23 @@ public class PersonController {
 	public String createSmsList(
 			@RequestBody String data,
 			Model model ) {
-		
+
 		JSONObject jsonObject = new JSONObject();
 		Gson gson = new Gson();
-		
+
 		logger.debug("createSmsList.crz");
 		logger.debug("sms data ::: " + data);
-		
+
 		String no_person = null;
 		ReturnClass returnClass = null;
 		PersonSmsListVO personSmsInfo = new PersonSmsListVO();
 		List<PersonSmsListVO> personSmsList = null;
-		
+
 		personSmsInfo = gson.fromJson(net.sf.json.JSONObject.fromObject(JSONSerializer.toJSON(data)).toString(), PersonSmsListVO.class);
-		
+
 		no_person 		= personSmsInfo.getNo_person();
 		personSmsList 	= personSmsInfo.getSms_list();
-		
+
 		if(personSmsList != null && personSmsList.size() > 0)	{
 			for (PersonSmsListVO personSmsListVO : personSmsList) {
 				personSmsListVO.setNo_person(no_person);
@@ -473,13 +472,34 @@ public class PersonController {
 		} else {
 			returnClass = new ReturnClass(Constant.SUCCESS);
 		}
-			
+
         logger.debug("SMS 내역 저장 returnClass  : " + returnClass.toString());
         logger.debug("returnClass.getCd_result():" + returnClass.getCd_result());
 
         jsonObject.put("result", returnClass.getCd_result());
         model.addAttribute("result", returnClass.getCd_result());
-        
+
         return jsonObject.toString();
+	}
+
+	/**
+	 * VUE
+     * GNB - 최근접속시간
+     * @param request
+     * @param session
+     * @param model
+     * @return String
+     * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/getPersonConnectTime.json")
+	public String getPersonConnectTime(
+	HttpServletRequest request,
+	HttpSession session,
+	Model model) throws FinsetException, IOException{
+		String no_person = (String)session.getAttribute("no_person");
+
+		model.addAttribute("connectTime", personManager.getPersonConnectTime(no_person));
+
+		return "jsonView";
 	}
 }

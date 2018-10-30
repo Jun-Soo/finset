@@ -13,8 +13,8 @@
     </div>
     <div class="scroll-wrap">
         <div class="info">
-            <p class="name">홍길동</p>
-            <p class="date">최근 접속 2017.09.11 21:40 </p>
+            <p class="name">{{this.$store.state.user.nmPerson}}</p>
+            <p class="date">최근 접속 {{connectTime}} </p>
             <a href="#">MYPAGE</a>
         </div>
         <div class="links">
@@ -61,14 +61,17 @@ export default {
   name: "error",
   data() {
     return {
-      errMsg: ""
+      errMsg: "",
+      connectTime: ""
     };
   },
   component: {},
   // computed () {
   // },
   beforeCreate() {},
-  created() {},
+  created() {
+    this.getConnectTime();
+  },
   beforeMount() {},
   mounted() {},
   beforeUpdate() {},
@@ -76,16 +79,30 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    goBack: function() {
-      var historySize = history.length;
-      if (historySize == undefined || historySize == 0) {
-        if (Constant.userAgent == "Android") {
-          window.Android.exitApp();
-        }
-      } else {
-        history.back();
-      }
+    // 최근접속시간 조회
+    getConnectTime: function() {
+      var _this = this;
+      this.$http
+        .get("/m/person/getPersonConnectTime.json", {
+          params: {}
+        })
+        .then(response => {
+          _this.connectTime = response.data.connectTime;
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+        });
     }
+    // goBack: function() {
+    //   var historySize = history.length;
+    //   if (historySize == undefined || historySize == 0) {
+    //     if (Constant.userAgent == "Android") {
+    //       window.Android.exitApp();
+    //     }
+    //   } else {
+    //     history.back();
+    //   }
+    // }
   }
 };
 </script>

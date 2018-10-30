@@ -50,16 +50,16 @@ public class PersonManagerImpl implements PersonManager {
 
 	@Autowired
 	private PersonMapper personMapper;
-	
+
 	@Autowired
 	private CreditMapper creditMapper;
-	
+
 	@Autowired
 	private ConditioncreditMapper conditioncreditMapper;
-	
+
 	@Autowired
 	private ConditionbizMapper conditionbizMapper;
-	
+
 	@Autowired
 	private ConditionhouseMapper conditionhouseMapper;
 
@@ -68,7 +68,7 @@ public class PersonManagerImpl implements PersonManager {
 
 	@Value("${service.profile}")
     private String profile;
-	
+
 	@Override
 	public PersonVO getPersonInfoHp(String hp) {
 		return personMapper.getPersonInfoHp(hp);
@@ -129,7 +129,11 @@ public class PersonManagerImpl implements PersonManager {
 	@Override
 	public void insertPersonLoginHist(PersonLoginHistInfo personLoginHist) {
 		personMapper.insertPersonLoginHist(personLoginHist);
+	}
 
+	@Override
+	public String getPersonConnectTime(String no_person) {
+		return personMapper.getPersonConnectTime(no_person);
 	}
 
 	@Override
@@ -338,22 +342,22 @@ public class PersonManagerImpl implements PersonManager {
 	public List<PersonShareInfoVO> listPersonShareInfoReqUpdate(PersonShareInfoVO personShareInfoVO) {
 		return personMapper.listPersonShareInfoReqUpdate(personShareInfoVO);
 	}
-	
+
 	@Override
 	public String getPersonInfoDupCi(PersonVO personVO){
 		return personMapper.getPersonInfoDupCi(personVO);
 	}
-	
+
 	@Override
 	public int modifyPersonHp(PersonVO personVO){
 		return personMapper.modifyPersonHp(personVO);
 	}
-	
+
 	@Override
 	public PersonVO getPersonInfoDup(PersonVO personVO) {
 		return personMapper.getPersonInfoDup(personVO);
 	}
-	
+
 	@Override
 	public ReturnClass insertPerson(PersonVO personVO) throws UnsupportedEncodingException, FinsetException,IOException {
 
@@ -361,9 +365,9 @@ public class PersonManagerImpl implements PersonManager {
 			logger.info("회원 가입 처리에 실패하였습니다. 다시 시도해주세요    personVO :" + personVO.toString());
 			return new ReturnClass(Constant.FAILED, "회원가입 처리에 실패하였습니다. 다시 시도해주세요.", personVO);
 		} else {
-			
+
 			if(!profile.equals("LOCAL")){
-				
+
 				//KCB 회원 등록 처리
 				logger.info("personVO === " + personVO);
 				KcbCreditInfoVO info = new KcbCreditInfoVO();
@@ -386,7 +390,7 @@ public class PersonManagerImpl implements PersonManager {
 
 				logger.info("600420 전문 처리 완료");
 			}
-			
+
 			//등록자, 수정자 셋팅
 			personVO.setId_frt(personVO.getNo_person());
 			personVO.setId_lst(personVO.getNo_person());
@@ -439,26 +443,26 @@ public class PersonManagerImpl implements PersonManager {
 				personMapper.insertCdPushHist(personVO);
 			}
 			logger.info("알림 셋팅 완료");
-			
+
 			logger.info("회원 설정 세팅 시작");
 			personMapper.insertDefaultPersonSet(personVO.getNo_person());
 			logger.info("회원 설정 세팅 완료");
-			
+
 		}
 		logger.info("회원 가입 정상 처리 하였습니다.    personVO :" + personVO.toString());
 		return new ReturnClass(Constant.SUCCESS, "정상 처리 하였습니다.", personVO);
 	}
-	
+
 	@Override
 	public int createPersonCertificateInfo(PersonCertificateInfoVO personCertificateInfoVO) {
 		return personMapper.createPersonCertificateInfo(personCertificateInfoVO);
 	}
-	
+
 	@Override
 	public List<PersonVO> getPushSettingInfo(String no_person) {
 		return personMapper.getPushSettingInfo(no_person);
 	}
-	
+
 	/**
 	 * 회원 탈퇴 및 데이터 삭제
 	 * @param no_person
@@ -478,13 +482,13 @@ public class PersonManagerImpl implements PersonManager {
 			//KCB 회원 삭제 처리
 			logger.info("personVO === " + personVO);
 			KcbCreditInfoVO info = new KcbCreditInfoVO();
-			
+
 			//등록전문 정상여부 체크
 			HashMap<String, String> schMap = new HashMap<String, String>();
 			schMap.put("sch_no_person", personVO.getNo_person());
 			schMap.put("nm_if", "600420");
 			HashMap<String, String> clobMap = creditMapper.getKcbJoinInfo(schMap);
-			
+
 			if (clobMap != null) {
 				info.setBgn(personVO.getBgn());				// 생년월일, 성별
 				info.setNoPerson(personVO.getNo_person());	// 회원번호
@@ -501,7 +505,7 @@ public class PersonManagerImpl implements PersonManager {
 				logger.error(returnClass.getCd_result() + " ::: " + returnClass.getMessage() + " ::: " + returnClass.getReturnObj().toString());
 				logger.error("600420 전문 처리 완료");
 			}
-			
+
 			schMap.put("nm_if", "600");
 			clobMap = creditMapper.getKcbJoinInfo(schMap);
 			if (clobMap != null) {
@@ -515,13 +519,13 @@ public class PersonManagerImpl implements PersonManager {
 			personVO.setId_frt(personVO.getNo_person());
 			personMapper.createPersonQuit(personVO);
 			personMapper.procPersonInfoDelQuit(no_person);
-			
+
 		} catch (FinsetException e) {
-			
+
 			logger.error("600420 전문 처리 완료");
 			return new ReturnClass(Constant.FAILED, "탈퇴처리시 오류가 발생하였습니다.");
 		}
-		
+
 		return new ReturnClass(Constant.SUCCESS,"탈퇴가 완료되었습니다.");
 		}
 }

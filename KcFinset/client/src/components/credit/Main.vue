@@ -136,7 +136,7 @@ export default {
     };
   },
   component: {},
-  computed() {},
+//   computed() {},
   beforeCreate() {},
   created() {
     this.$store.state.header.type = "main";

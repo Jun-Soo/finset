@@ -1,6 +1,8 @@
 package com.koscom.consume;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -97,9 +99,12 @@ public class ConsumeController {
     		consumeForm.setType_in_out(type_in_out);
     	}
     	
-    	List<ConsumeVO> listConsumeInfoAmt = consumeManager.listConsumeInfoAmt(consumeForm);
-    	model.addAttribute("income",listConsumeInfoAmt.get(0).getAmt_in_out());
-    	model.addAttribute("consume",listConsumeInfoAmt.get(1).getAmt_in_out());
+    	Map<String, String> summaryMap = consumeManager.listConsumeInfoAmt(consumeForm);
+    	Iterator<String> iter = summaryMap.keySet().iterator();
+    	while(iter.hasNext()) {
+    		String key = iter.next();
+    		model.addAttribute(key, summaryMap.get(key));
+    	}
     	model.addAttribute("isScrap", consumeManager.chkScrapCard(no_person));
     	model.addAttribute("listConsumeInfo", consumeManager.listConsumeInfo(consumeForm));
     	

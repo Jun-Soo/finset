@@ -1,7 +1,9 @@
 package com.koscom.consume.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -49,9 +51,20 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	}
 	
 	@Override
-	public List<ConsumeVO> listConsumeInfoAmt(ConsumeForm consumeForm) {
+	public Map<String, String> listConsumeInfoAmt(ConsumeForm consumeForm) {
 		logger.debug("getConsumeInfoAmt");
-		return consumeMapper.listConsumeInfoAmt(consumeForm);
+		Map<String, String> summaryMap = new HashMap<String, String>();
+		summaryMap.put("income", "0");
+		summaryMap.put("consume", "0");
+		List<ConsumeVO> rawList = consumeMapper.listConsumeInfoAmt(consumeForm);
+		for(ConsumeVO vo: rawList) {
+			if(vo.getType_in_out().equals("01")) {
+				summaryMap.put("income", vo.getAmt_in_out());
+			} else {
+				summaryMap.put("consume", vo.getAmt_in_out());
+			}
+		}
+		return summaryMap;
 	}
 	
 	@Override

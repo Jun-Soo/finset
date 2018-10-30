@@ -72,24 +72,22 @@
             </div>
         </div>
 
-        <div class="list02 spend-list" v-if="consumeList.length!=0">
-          <div  >
-            <div v-for="(subList, index) in consumeList" :key="index" class="list-wrap">
-              <div v-if="index==0" class="filter-wrap">
-                <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
-                    <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
-                </div>
+        <div class="list02 spend-list" v-if="consumeList">
+          <div v-for="(subList, index) in consumeList" :key="index" class="list-wrap">
+            <div v-if="index==0" class="filter-wrap">
+              <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
+                  <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
               </div>
-              <p class="date">{{formatDate(subList[0].dt_trd,"mmdd")}}</p>
-              <div v-for="vo in subList" :key="vo.index" class="item">
-                <div class="left">
-                    <p class="name">{{vo.contents}}</p>
-                    <p class="cate"><img src="../../assets/images/common/bu_list_shopping.png" alt=""/><span>{{vo.nm_class}} - {{vo.nm_type}}</span></p>
-                </div>
-                <div class="right">
-                    <p :class="chkType(vo.type_in_out)" class="number">{{formatNumber(vo.amt_in_out,vo.type_in_out=='02',vo.type_in_out=='01')}}<em>원</em></p>
-                    <p class="text">{{formatMeansConsume(vo.means_consume)}}</p>
-                </div>
+            </div>
+            <p class="date">{{formatDate(subList[0].dt_trd,"mmdd")}}</p>
+            <div v-for="vo in subList" :key="vo.index" class="item">
+              <div class="left">
+                  <p class="name">{{vo.contents}}</p>
+                  <p class="cate"><img src="../../assets/images/common/bu_list_shopping.png" alt=""/><span>{{vo.nm_class}} - {{vo.nm_type}}</span></p>
+              </div>
+              <div class="right">
+                  <p :class="chkType(vo.type_in_out)" class="number">{{formatNumber(vo.amt_in_out,vo.type_in_out=='02',vo.type_in_out=='01')}}<em>원</em></p>
+                  <p class="text">{{formatMeansConsume(vo.means_consume)}}</p>
               </div>
             </div>
           </div>
@@ -133,12 +131,12 @@ export default {
     this.$store.state.header.active = "consume";
     this.$parent.isBottom = true;
   },
-  created() {
+  created() {},
+  beforeMount() {},
+  mounted() {
     this.ym = this.formatHead(this.getYm(this.standardDt));
     this.listConsumeShareInfo();
   },
-  beforeMount() {},
-  mounted() {},
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},

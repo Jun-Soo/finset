@@ -1,6 +1,7 @@
 package com.koscom.consume.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.koscom.consume.model.ConsumeDetailGoalInfoVO;
 import com.koscom.consume.model.ConsumeForm;
@@ -33,7 +34,7 @@ public interface ConsumeManager {
 	 * @param consumeForm
 	 * @return
 	 */
-	List<ConsumeVO> listConsumeInfoAmt(ConsumeForm consumeForm);
+	Map<String, String> listConsumeInfoAmt(ConsumeForm consumeForm);
 	
 	/**
 	 * 조건 (일자)와 회원 관리번호의 조건 내에서 해당하는 소비지출 데이터 조회

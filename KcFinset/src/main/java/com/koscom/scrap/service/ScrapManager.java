@@ -21,6 +21,21 @@ public interface ScrapManager {
 	 */
 	void getDirectFinanceSearch();
 
+	
+	/**
+	 * 금융투자회사 금융정보제공동의서 조회 (오픈플랫폼)
+	 * @param
+	 * @return 
+	 */
+	String getFinanceTerms(String no_person, String uuid, String dn, String email);
+	
+	/**
+	 * 금융투자회사 금융정보제공동의서 전송 (오픈플랫폼)
+	 * @param
+	 * @return 
+	 */
+	String sendFinanceTerms(String no_person, String uuid, String dn, String email);
+	
 	/**
 	 * 금융사 스크랩핑 연동 정보 여부 insert
 	 * @param String

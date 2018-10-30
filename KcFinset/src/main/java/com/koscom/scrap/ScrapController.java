@@ -28,7 +28,6 @@ import com.koscom.fincorp.service.FincorpManager;
 import com.koscom.kcb.service.KcbManager;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
-
 import com.koscom.scrap.model.FcLinkInfoVO;
 import com.koscom.scrap.model.LinkedFcInfoVO;
 import com.koscom.scrap.service.ScrapManager;
@@ -104,15 +103,51 @@ public class ScrapController {
 			Model model,
 			String no_person,
 			String uuid,
-			String dn) {
+			String dn,
+			String email) {
 		logger.debug("================= no_person : " + no_person);
 		logger.debug("================= uuid : " + uuid);
 		logger.debug("================= dn : " + dn);
 		logger.info("service.profile :" +environment.getProperty("service.profile"));
-		scrapManager.getDirectFinanceSearch();
 		
+		no_person = (String) session.getAttribute("no_person");
+		//scrapManager.getDirectFinanceSearch();
+		
+		String result = scrapManager.getFinanceTerms(no_person, uuid, dn, email);
+		
+		logger.debug("result : " + result);
+		model.addAttribute("result", result);
+		return "jsonView";
+	}
 	
+	/** VUE
+	 * 금융정보제공동의서 전송
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/sendTermsContent.json")
+	public String sendTermsContent(
+			HttpServletResponse response,
+			HttpServletRequest request, 
+			HttpSession session, 
+			Model model,
+			String no_person,
+			String uuid,
+			String dn,
+			String email) {
+		logger.debug("================= no_person : " + no_person);
+		logger.debug("================= uuid : " + uuid);
+		logger.debug("================= dn : " + dn);
+		logger.info("service.profile :" +environment.getProperty("service.profile"));
 		
+		no_person = (String) session.getAttribute("no_person");
+		//scrapManager.getDirectFinanceSearch();
+		
+		String result = scrapManager.sendFinanceTerms(no_person, uuid, dn, email);
+		
+		logger.debug("result : " + result);
+		model.addAttribute("result", result);
 		return "jsonView";
 	}
 	

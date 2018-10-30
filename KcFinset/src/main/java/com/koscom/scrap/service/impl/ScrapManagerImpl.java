@@ -29,7 +29,11 @@ import com.koscom.fincorp.model.FincorpVO;
 import com.koscom.fincorp.model.FincorpfcNminfoForm;
 import com.koscom.kcb.model.KcbReqNonfiInfoVO;
 import com.koscom.person.dao.PersonMapper;
+import com.koscom.person.model.PersonActiveHistVO;
+import com.koscom.person.model.PersonAgreeHistVO;
+import com.koscom.person.model.PersonAgreedtHistVO;
 import com.koscom.person.model.PersonCertificateInfoVO;
+import com.koscom.person.model.PersonVO;
 import com.koscom.scrap.dao.ScrapMapper;
 import com.koscom.scrap.model.AnAllVO;
 import com.koscom.scrap.model.AppBankInfo;
@@ -112,7 +116,7 @@ public class ScrapManagerImpl implements ScrapManager {
 		ReturnClass returnClass = url.sendReqGET_Direct(directUrl, directKey,"");
 		
 		if(returnClass.getCd_result()  == Constant.SUCCESS)	{
-			String data = returnClass.getMessage();
+			String data = returnClass.getDes_message();
 			logger.info("data : "+ data);
 			JsonParser jsonParser = new JsonParser();
 			JsonObject jsonObject = (JsonObject) jsonParser.parse(data);
@@ -123,24 +127,24 @@ public class ScrapManagerImpl implements ScrapManager {
 				String nmFc = object.get("comName").getAsString();
 				logger.info("name  :  "+ nmFc);
 				
-				// 증권사 내역 DB 조회 후 없을 경우 추가
-				String cdFc = fcCodeMapper.selectCdFc(nmFc);
+				FincorpVO Fincorp = new FincorpVO();
+				Fincorp.setCd_fin("F"); //F:증권
+				Fincorp.setNo_biz_comp("0000000000");
+				Fincorp.setNm_fc(nmFc);
+				Fincorp.setYn_use("Y");
+				Fincorp.setYn_alliance("N");
+				Fincorp.setCd_fc_coocon(object.get("comId").getAsString());
+				Fincorp.setCom_alias(object.get("comAlias").getAsString());
+				Fincorp.setYn_scrap("Y");
+				Fincorp.setId_frt("SYS");
+				Fincorp.setId_lst("SYS");
+				
+				// 증권사 내역 DB 조회 후 추가 또는 변경
+				String cdFc = fcCodeMapper.selectCdFc(nmFc);				
 				if(StringUtil.isEmpty(cdFc)) {
-					FincorpVO Fincorp = new FincorpVO();
-					Fincorp.setCd_fin("F"); //F:증권
-					Fincorp.setNo_biz_comp("0000000000");
-					Fincorp.setNm_fc(nmFc);
-					Fincorp.setYn_use("Y");
-					Fincorp.setYn_alliance("N");
-					Fincorp.setCd_fc_coocon(object.get("comId").getAsString());
-					Fincorp.setCom_alias(object.get("comAlias").getAsString());
-					Fincorp.setYn_scrap("N");
-					Fincorp.setId_frt("SYS");
-					Fincorp.setId_lst("SYS");
-					
 					fincorpMapper.createFincorp(Fincorp);
+					logger.info("금융투자회사["+nmFc+"] 기업정보  생성 하였습니다.");
 					cdFc = Fincorp.getCdFc();
-					
 					FincorpfcNminfoForm fincorpfcNminfoForm = new FincorpfcNminfoForm();
 					fincorpfcNminfoForm.setCd_fc(cdFc);
 					fincorpfcNminfoForm.setNm_nm_fc(nmFc);
@@ -149,12 +153,211 @@ public class ScrapManagerImpl implements ScrapManager {
 					fincorpfcNminfoForm.setId_lst("SYS");
 					fincorpMapper.createFincorpfcNminfo(fincorpfcNminfoForm);
 				}
+				else	{
+					fincorpMapper.updateFincorp(Fincorp);
+					logger.info("금융투자회사["+nmFc+"] 기업정보 업데이트 하였습니다.");
+				}
 			}
 		}
 		else	{
 			logger.error("금융투자회사 기업정보 조회를 실패하였습니다.");
 		}
 	}
+	
+	public String getFinanceTerms(String no_person, String uuid, String dn, String email)	{
+		JSONObject jsonSendRoot = new JSONObject();
+		
+		String site = environment.getProperty("service.profile");
+		
+		String directUrl = environment.getProperty("direct.apiUrl") + "/terms/financeterms/content";
+		String directKey = environment.getProperty("direct.apiKey");
+		
+		URLConnection url = new URLConnection();
+		logger.info("getDirectFinanceSearch  : URL[" + directUrl +"], APIkey : "+directKey);
+		
+		PersonVO personVO = null;
+		personVO = personMapper.getPersonInfo(no_person);
+	
+		String noPerson = personVO.getNo_person();
+		
+		JSONObject jsonPartnerInfo = new JSONObject();
+		jsonPartnerInfo.put("comId", environment.getProperty("direct.comId"));
+		jsonPartnerInfo.put("srvId", environment.getProperty("direct.srvId"));
+		jsonSendRoot.put("partner", jsonPartnerInfo);
+		
+		JSONObject jsonCommonInfo = new JSONObject();
+		JSONObject jsonDevInfo = new JSONObject();
+		JSONObject jsonBodyInfo = new JSONObject();
+		JSONObject jsonReqParamInfo = new JSONObject();
+		// 로컬 개발 테스트용 전문
+		if("LOCAL".equals(site))	{
+			jsonCommonInfo.put("reqIdConsumer", "reqid-0001");
+			jsonCommonInfo.put("ci", "1234567890");
+			jsonCommonInfo.put("certDn", "testdn123");
+			jsonSendRoot.put("commonHeader", jsonCommonInfo);
+			
+			jsonDevInfo.put("ipAddr", "192168010001");
+			jsonDevInfo.put("macAddr", "1866DA0D99D6");
+			jsonSendRoot.put("devInfo", jsonDevInfo);
+			
+			jsonReqParamInfo.put("customerBirthDay", "19770101");
+			jsonReqParamInfo.put("customerEmail", "tsme0@hanmail.net");
+			jsonReqParamInfo.put("customerPhone", "010-1111-1111");
+			jsonReqParamInfo.put("customerUserNm", "홍길동");
+			List<String> stockList = fincorpMapper.getStockFcCd(codeManager.getCodeId("cd_fin","증권"));
+			jsonReqParamInfo.put("companyList", stockList);
+			jsonBodyInfo.put("requestParameters", jsonReqParamInfo);
+			jsonSendRoot.put("financeTermsContentRequestBody", jsonBodyInfo);
+		}
+		else	{
+			jsonCommonInfo.put("reqIdConsumer", "test");
+			jsonCommonInfo.put("ci", personVO.getKcb_ci());
+			jsonCommonInfo.put("certDn", dn);
+			jsonSendRoot.put("commonHeader", jsonCommonInfo);
+			
+			// uuid가 있을 경우 - 핸드폰 접속 , 없을 경우  - PC 접속
+			if(uuid != null && uuid.length() > 0)	{
+				jsonDevInfo.put("ipAddr", uuid);
+				jsonDevInfo.put("macAddr", personVO.getHp());
+			}
+			else	{
+				jsonDevInfo.put("ipAddr", "");
+				jsonDevInfo.put("macAddr", "");
+			}
+			jsonSendRoot.put("devInfo", jsonDevInfo);
+						
+			jsonReqParamInfo.put("customerBirthDay", personVO.getBgn().substring(0, 8));
+			jsonReqParamInfo.put("customerEmail", email);
+			jsonReqParamInfo.put("customerPhone", personVO.getHp());
+			jsonReqParamInfo.put("customerUserNm", personVO.getNm_person());
+			List<String> stockList = fincorpMapper.getStockFcCd(codeManager.getCodeId("cd_fin","증권"));
+			jsonReqParamInfo.put("companyList", stockList);
+			jsonBodyInfo.put("requestParameters", jsonReqParamInfo);
+			jsonSendRoot.put("financeTermsContentRequestBody", jsonBodyInfo);
+		}
+		
+		logger.info("jsonRoot.toString() : " +jsonSendRoot.toString());
+		
+		ReturnClass returnClass = url.sendReqPOST_Direct(directUrl, directKey, jsonSendRoot);
+		
+		if(returnClass.getCd_result()  == Constant.SUCCESS)	{
+			String data = returnClass.getDes_message();
+			logger.info("data : "+ data);
+			JsonParser jsonParser = new JsonParser();
+			JsonObject jsonRecvRoot = (JsonObject) jsonParser.parse(data);
+			JsonObject jsonBodyObject = (JsonObject) jsonRecvRoot.get("financeTermsInfo");
+		
+			logger.info("jsonBodyObject : "+ jsonBodyObject.toString());
+			
+			PersonAgreeHistVO personAgreeHistVO = new PersonAgreeHistVO();
+			personAgreeHistVO.setNo_person(noPerson);
+			personAgreeHistVO.setDt_agree(DateUtil.getCurrentYMD());
+			personAgreeHistVO.setCd_agree("04"); // 01:서비스 이용동의(금투사포함), 02:휴대전화 본인인증 동의, 03:마케팅 정보 수신동의, 04:금투사 정보제공동의 전자서명
+			personAgreeHistVO.setTerms_content(jsonBodyObject.get("text").getAsString());
+			personAgreeHistVO.setTerms_version(jsonBodyObject.get("version").getAsString());
+			personAgreeHistVO.setTerms_date(jsonBodyObject.get("termsDate").getAsString());
+			personAgreeHistVO.setTerms_start_date(jsonBodyObject.get("termsStartDate").getAsString());
+			personAgreeHistVO.setTerms_end_date(jsonBodyObject.get("termsEndDate").getAsString());
+			personAgreeHistVO.setId_frt("SYS");
+			personMapper.createPersonAgreeHist(personAgreeHistVO);
+			//JsonArray jsonArray = (JsonArray)jsonObject.get("financeList");
+			JsonArray jsonkArr = (JsonArray)jsonBodyObject.get("companyList");
+			//JsonObject jsonkArr = (JsonObject)jsonBodyObject.get("companyList");
+			//List<String> fcList = (List)jsonkArr.toString();
+			
+			for (int i = 0; i < jsonkArr.size(); i++) {
+				PersonAgreedtHistVO personAgreedtHistVO = new PersonAgreedtHistVO();
+				String cd_fc =  fincorpMapper.getCdFcByCooconFcCd(jsonkArr.get(i).getAsString());
+				personAgreedtHistVO.setNo_person(noPerson);
+				personAgreedtHistVO.setDt_agree(DateUtil.getCurrentYMD());
+				personAgreedtHistVO.setCd_agree("04"); // 01:서비스 이용동의(금투사포함), 02:휴대전화 본인인증 동의, 03:마케팅 정보 수신동의, 04:금투사 정보제공동의 전자서명
+				personAgreedtHistVO.setCd_fc(cd_fc);
+				personAgreedtHistVO.setId_frt("SYS");
+				personMapper.createPersonAgreedtHist(personAgreedtHistVO);
+				
+			}
+			return jsonBodyObject.toString();
+		}
+		else	{
+			logger.error("금융투자회사 금융정보제공동의서 Content 조회를 실패하였습니다.");
+		}
+		
+		return null;
+	}
+	public String sendFinanceTerms(String no_person, String uuid, String dn, String email)	{
+JSONObject jsonSendRoot = new JSONObject();
+		
+		String site = environment.getProperty("service.profile");
+		
+		String directUrl = environment.getProperty("direct.apiUrl") + "/terms/financeterms/content";
+		String directKey = environment.getProperty("direct.apiKey");
+		
+		URLConnection url = new URLConnection();
+		logger.info("getDirectFinanceSearch  : URL[" + directUrl +"], APIkey : "+directKey);
+		
+		PersonVO personVO = null;
+		personVO = personMapper.getPersonInfo(no_person);
+	
+		String noPerson = personVO.getNo_person();
+		
+		JSONObject jsonPartnerInfo = new JSONObject();
+		jsonPartnerInfo.put("comId", environment.getProperty("direct.comId"));
+		jsonPartnerInfo.put("srvId", environment.getProperty("direct.srvId"));
+		jsonSendRoot.put("partner", jsonPartnerInfo);
+		
+		JSONObject jsonCommonInfo = new JSONObject();
+		JSONObject jsonDevInfo = new JSONObject();
+		JSONObject jsonBodyInfo = new JSONObject();
+		JSONObject jsonReqParamInfo = new JSONObject();
+		// 로컬 개발 테스트용 전문
+		if("LOCAL".equals(site))	{
+			jsonCommonInfo.put("reqIdConsumer", "reqid-0001");
+			jsonCommonInfo.put("ci", "1234567890");
+			jsonCommonInfo.put("certDn", "testdn123");
+			jsonSendRoot.put("commonHeader", jsonCommonInfo);
+			
+			jsonDevInfo.put("ipAddr", "192168010001");
+			jsonDevInfo.put("macAddr", "1866DA0D99D6");
+			jsonSendRoot.put("devInfo", jsonDevInfo);
+			
+			jsonReqParamInfo.put("customerBirthDay", "19770101");
+			jsonReqParamInfo.put("customerEmail", "tsme0@hanmail.net");
+			jsonReqParamInfo.put("customerPhone", "010-1111-1111");
+			jsonReqParamInfo.put("customerUserNm", "홍길동");
+			List<String> stockList = fincorpMapper.getStockFcCd(codeManager.getCodeId("cd_fin","증권"));
+			jsonReqParamInfo.put("companyList", stockList);
+			jsonBodyInfo.put("requestParameters", jsonReqParamInfo);
+			jsonSendRoot.put("financeTermsContentRequestBody", jsonBodyInfo);
+		}
+		else	{
+			jsonCommonInfo.put("reqIdConsumer", "test");
+			jsonCommonInfo.put("ci", personVO.getKcb_ci());
+			jsonCommonInfo.put("certDn", dn);
+			jsonSendRoot.put("commonHeader", jsonCommonInfo);
+			
+			// uuid가 있을 경우 - 핸드폰 접속 , 없을 경우  - PC 접속
+			if(uuid != null && uuid.length() > 0)	{
+				jsonDevInfo.put("ipAddr", uuid);
+				jsonDevInfo.put("macAddr", personVO.getHp());
+			}
+			else	{
+				jsonDevInfo.put("ipAddr", "");
+				jsonDevInfo.put("macAddr", "");
+			}
+			jsonSendRoot.put("devInfo", jsonDevInfo);
+						
+			jsonReqParamInfo.put("customerBirthDay", personVO.getBgn().substring(0, 8));
+			jsonReqParamInfo.put("customerEmail", email);
+			jsonReqParamInfo.put("customerPhone", personVO.getHp());
+			jsonReqParamInfo.put("customerUserNm", personVO.getNm_person());
+			List<String> stockList = fincorpMapper.getStockFcCd(codeManager.getCodeId("cd_fin","증권"));
+			jsonReqParamInfo.put("companyList", stockList);
+			jsonBodyInfo.put("requestParameters", jsonReqParamInfo);
+			jsonSendRoot.put("financeTermsContentRequestBody", jsonBodyInfo);
+		}
+		return null;
+	}
+	
 	public String createScrapFcList(String data)	{
 		JSONObject jsonObject = new JSONObject();
 		logger.debug("createScrapFcList.crz");

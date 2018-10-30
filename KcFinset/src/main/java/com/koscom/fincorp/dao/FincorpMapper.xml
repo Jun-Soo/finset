@@ -99,6 +99,32 @@
 					, SYSDATE
 				)
 	</insert>
+	<update id="updateFincorp" parameterType="com.koscom.fincorp.model.FincorpVO">
+		UPDATE FC_INFO
+        SET
+        	cd_fc_coocon	= #{cd_fc_coocon, jdbcType=VARCHAR}
+			,com_alias		= #{com_alias, jdbcType=VARCHAR}
+			,cd_fin			= #{cd_fin, jdbcType=VARCHAR}
+			,no_biz_comp	= #{no_biz_comp, jdbcType=VARCHAR}
+			,nm_ceo			= #{nm_ceo, jdbcType=VARCHAR}
+			,yn_use			= #{yn_use, jdbcType=VARCHAR}
+			,yn_alliance	= #{yn_alliance, jdbcType=VARCHAR}
+			,yn_scrap		= #{yn_scrap, jdbcType=VARCHAR}
+			,cd_addr_fc		= #{cd_addr_fc, jdbcType=VARCHAR}
+			,post_fc		= #{post_fc, jdbcType=VARCHAR}
+			,addr1_fc		= #{addr1_fc, jdbcType=VARCHAR}
+			,addr2_fc		= #{addr2_fc, jdbcType=VARCHAR}
+			,tel			= #{tel, jdbcType=VARCHAR}
+			,home_page		= #{home_page, jdbcType=VARCHAR}
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(path_file)">
+			,path_file		= #{path_file, jdbcType=VARCHAR}
+			,img_bi			= #{img_bi, jdbcType=VARCHAR}
+			,nm_file		= #{nm_file, jdbcType=VARCHAR}
+			</if>
+			,id_lst  		= #{id_lst, jdbcType=VARCHAR}
+			,dt_lst  		= SYSDATE
+        WHERE nm_fc = #{nm_fc, jdbcType=VARCHAR}
+	</update>
 	
  	<update id="createFincorpfcNminfo" parameterType="com.koscom.fincorp.model.FincorpfcNminfoForm">
  	    /* com.koscom.fincorp.dao.FincorpMapper.createFincorpfcNminfo */
@@ -148,6 +174,19 @@
 			AND FC.CD_FIN = #{type_fc, jdbcType=VARCHAR}
       		AND CD.YN_USE = 'Y' AND FC.YN_SCRAP = 'Y'
       		AND CD.CODE_VALUE = FC.CD_FC
+ 	</select>
+ 	
+ 	<select id="getStockFcCd" parameterType="String" resultType="String">
+ 		SELECT CD_FC_COOCON
+		FROM FC_INFO
+		WHERE CD_FIN = #{type_fc, jdbcType=VARCHAR}
+      		AND YN_SCRAP = 'Y'
+ 	</select>
+ 	
+ 	<select id="getCdFcByCooconFcCd" parameterType="String" resultType="String">
+ 		SELECT CD_FC
+		FROM FC_INFO
+		WHERE CD_FC_COOCON = #{cd_fc_coocon, jdbcType=VARCHAR}
  	</select>
 </mapper>
 

@@ -3,6 +3,51 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.koscom.person.dao.PersonMapper">
+	<insert id="createPersonAgreeHist" parameterType="com.koscom.person.model.PersonAgreeHistVO">
+        INSERT INTO PERSON_AGREE_HIST
+            (     NO_PERSON
+                , DT_AGREE
+                , CD_AGREE
+                , TERMS_CONTENT
+                , TERMS_VERSION
+                , TERMS_DATE
+                , TERMS_START_DATE
+                , TERMS_END_DATE
+                , YN_DISUSE
+                , ID_FRT
+                , DT_FRT
+            ) VALUES (
+                  #{no_person, 			jdbcType=VARCHAR}
+                , #{dt_agree, 			jdbcType=VARCHAR}
+                , #{cd_agree, 			jdbcType=VARCHAR}
+                , #{terms_content, 		jdbcType=VARCHAR}
+                , #{terms_version, 		jdbcType=VARCHAR}
+                , #{terms_date, 		jdbcType=VARCHAR}
+                , #{terms_start_date, 	jdbcType=VARCHAR}
+                , #{terms_end_date, 	jdbcType=VARCHAR}
+                , #{yn_disuse, 			jdbcType=VARCHAR}
+                , #{id_frt, 			jdbcType=VARCHAR}
+                , SYSDATE
+            )
+    </insert>
+    
+    <insert id="createPersonAgreedtHist" parameterType="com.koscom.person.model.PersonAgreedtHistVO">
+        INSERT INTO PERSON_AGREEDT_HIST
+            (     NO_PERSON
+                , DT_AGREE
+                , CD_AGREE
+                , CD_FC
+                , ID_FRT
+                , DT_FRT
+            ) VALUES (
+                  #{no_person, 			jdbcType=VARCHAR}
+                , #{dt_agree, 			jdbcType=VARCHAR}
+                , #{cd_agree, 			jdbcType=VARCHAR}
+                , #{cd_fc, 				jdbcType=VARCHAR}
+                , #{id_frt, 			jdbcType=VARCHAR}
+                , SYSDATE
+            )
+    </insert>
 
 	<select id="getPersonInfoHp" parameterType="String" resultType="com.koscom.person.model.PersonVO">
 		/* com.koscom.person.dao.PersonMapper.getPersonInfoHp */
@@ -934,7 +979,7 @@
 			AND SMI.REQ_STATUS = '01'
 			AND SI.OFFER_NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
 	</select>
-
+	
 	<select id="getPersonInfoDupCi" parameterType="com.koscom.person.model.PersonVO" resultType="java.lang.String">
 		SELECT NO_PERSON
 			FROM PERSON_INFO
@@ -942,13 +987,13 @@
 				KCB_CI = #{kcb_ci, jdbcType=VARCHAR}
 		  AND	YN_USE = 'Y'
 	</select>
-
+	
 	<update id="modifyPersonHp" parameterType="com.koscom.person.model.PersonVO">
 		UPDATE PERSON_INFO SET
 			HP = #{hp, jdbcType=VARCHAR}
 		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</update>
-
+	
 	<select id="getPersonInfoDup" parameterType="com.koscom.person.model.PersonVO" resultType="com.koscom.person.model.PersonVO">
         SELECT
         	NO_PERSON
@@ -956,7 +1001,7 @@
         FROM PERSON_INFO
          WHERE NO_PERSON = #{nm_person, jdbcType=VARCHAR} AND HP = #{hp, jdbcType=VARCHAR}
     </select>
-
+    
     <insert id="insertPerson">
         <selectKey keyProperty="no_person" resultType="string" order="BEFORE">
             (SELECT 'P'||LPAD(SEQ_PERSON_NO.NEXTVAL,9,'0') FROM DUAL)
@@ -1001,7 +1046,7 @@
                 , SYSDATE
             )
     </insert>
-
+    
     <insert id="createPersonCertificateInfo" parameterType="com.koscom.person.model.PersonCertificateInfoVO">
 		MERGE INTO PERSON_CERTIFICATE_INFO
         USING DUAL
@@ -1039,7 +1084,7 @@
         , SYSDATE
         )
 	</insert>
-
+	
 	<select id="getPushSettingInfo" parameterType="java.lang.String" resultType="com.koscom.person.model.PersonVO">
         SELECT
             CD_PUSH AS ITEM_PUSH
@@ -1048,11 +1093,11 @@
         WHERE
             NO_PERSON = #{no_person, jdbcType=VARCHAR}
     </select>
-
+    
     <select id="procPersonInfoDelQuit" parameterType="String" resultType="int">
         SELECT FN_PERSON_QUIT( #{no_person, jdbcType=VARCHAR} ) FROM DUAL
     </select>
-
+    
     <insert id="createPersonQuit">
         INSERT INTO person_quit_hist
             (
@@ -1074,7 +1119,7 @@
                     , SYSDATE
             )
     </insert>
-
+    
     <insert id="insertDefaultPersonSet" parameterType="java.lang.String">
 		INSERT
 			INTO

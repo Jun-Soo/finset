@@ -4,13 +4,14 @@ import java.io.*;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
-
 import java.security.cert.X509Certificate;
+
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -344,7 +345,7 @@ public class URLConnection {
         }
 
 		logger.info("2. 요청 처리 결과 메시지 ["+returnMsg+"]");
-		return new ReturnClass(cd_result, returnMsg);
+		return new ReturnClass(cd_result, "요청을 처리하였습니다." , returnMsg);
 	}
 	
 	/** VUE
@@ -353,7 +354,7 @@ public class URLConnection {
 	 * @param param
 	 * @return
 	 */
-	public ReturnClass sendReqPOST_Direct(String targetUrl, String param) {
+	public ReturnClass sendReqPOST_Direct(String targetUrl, String apikey, JSONObject json) {
 		if (StringUtil.isEmpty(targetUrl)) {
 			logger.info("==== 요청 된 URL 이 없습니다. ====");
 			return new ReturnClass(Constant.FAILED, "요청 URL 이 없습니다.");
@@ -368,13 +369,28 @@ public class URLConnection {
 		OutputStream opstrm = null;
 
 		try {
+			// SSL 처리(통과)
+    		TrustManager[] trustAllCerts = new TrustManager[] { 
+    				new X509TrustManager() { 
+    					public java.security.cert.X509Certificate[] getAcceptedIssuers() { 
+    						return null; 
+    					} 
+    					public void checkClientTrusted(X509Certificate[] certs, String authType) { } 
+    					public void checkServerTrusted(X509Certificate[] certs, String authType) { } 
+    				} 
+    		}; 
+    		SSLContext sc = SSLContext.getInstance("SSL");
+    		sc.init(null, trustAllCerts, new java.security.SecureRandom()); 
+    		
+    		HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory()); 
+    		
 			aURL = new URL(targetUrl);
-
 			connection = (HttpURLConnection) aURL.openConnection();
 			connection.setConnectTimeout(30000); // millisecond//
 			connection.setReadTimeout(60000); // millisecond//
 			// 헤더값 설정
-			connection.setRequestProperty("contentType", "text/html; charset=EUC-KR");
+			connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
+			connection.setRequestProperty("apikey", apikey);
 			// 전달방식을 설정한다. POST or GET, 기본값은 GET 이다.
 			connection.setRequestMethod("POST");
 			// 서버로 데이터를 전송할 수 있도록 한다. GET 방식이면 사용될 일이 없으나,
@@ -386,12 +402,12 @@ public class URLConnection {
 			connection.setDefaultUseCaches(false);
 			
 			opstrm = connection.getOutputStream();
-			opstrm.write( param.getBytes() );
+			opstrm.write(json.toString().getBytes("UTF-8"));
 			opstrm.flush();
 			opstrm.close();
 
 			logger.info("1. 요청 URL["+ targetUrl + "]");
-			logger.info("==== 요청 처리 결과 리턴 [" + connection.getResponseCode() + "]: \r\n[" + targetUrl + "]\r\n[" + param + "]");
+			logger.info("==== 요청 처리 결과 리턴 [" + connection.getResponseCode() + "]: \r\n[" + targetUrl + "]\r\n[" + json.toString() + "]");
 			
 				// 데이터 수신
 				if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {

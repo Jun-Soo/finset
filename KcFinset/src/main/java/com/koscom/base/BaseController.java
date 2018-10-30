@@ -77,7 +77,7 @@ public class BaseController {
 			
 			//사용여부 N:회원가입, Y:로그인화면
 			if(personVO.getYn_use().equals("N")) {
-				rtnUrl = "/login/frameCertStep1";
+				rtnUrl = "/member/certStep1";
 			} else {
 				
 				if(StringUtil.isEmpty(personVO.getPass_person())) {
@@ -85,7 +85,7 @@ public class BaseController {
 					rtnUrl = "/member/certCode";
 				} else if(Integer.parseInt(StringUtil.NVL(personVO.getCnt_fail_pwd(), "0")) > 4) { //비밀번호 실패건수
 					model.addAttribute("personHp", personVO.getHp());
-					rtnUrl = "/person/frameFindPwdStep1";
+					rtnUrl = "/mypage/certPerson";
 				} else if("Y".equals(personVO.getYn_fingerprint()) && Integer.parseInt(StringUtil.NVL(personVO.getCnt_fail_finger(), "0")) < 5) {
 					model.addAttribute("authToken", personVO.getPass_person());
 					rtnUrl = "/member/certFingerLogin";

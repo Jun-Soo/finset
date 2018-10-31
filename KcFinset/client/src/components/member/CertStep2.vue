@@ -2,7 +2,6 @@
 <div>
       <!-- Content -->
   <section id="content">
-    <form name="frmCertifyStep" id="frmCertifyStep" method="post">
       <div class="cert-wrap">
         <p class="title">회원정보</p>
         <input type="text" class="form-control" name="nm_person" id="nm_person" v-model="nm_person" v-validate="'required|max:8'" v-bind:disabled="isDisabled" autocomplete="off" placeholder="이름을 입력하세요" data-vv-name='이름' />
@@ -29,7 +28,7 @@
             <button id="req_certification" v-on:click="kcmRequestCertNo()">인증번호 전송</button>
             <!-- </span> -->
           <div class="cert-num" id="cert_no_conteiner">
-            <input type="number" name="smsCertNo" id="smsCertNo" v-model="smsCertNo" placeholder="인증번호를 입력하세요" autocomplete="off" disabled>
+            <input type="number" name="smsCertNo" id="smsCertNo" v-model="smsCertNo" placeholder="인증번호를 입력하세요" autocomplete="off" readonly>
             <!-- <input type="number" data-vv-name='인증번호' name="smsCertNo" id="smsCertNo" class="form-control" v-model="smsCertNo" placeholder="인증번호를 입력하세요" autocomplete="off" readonly="readonly" v-on:keyup="smsCertNoChk()"> -->
             <p class="time" id="countdown" aria-hidden="true">{{ timer }}</p>
           </div>
@@ -81,8 +80,7 @@
             <input type="number" name="smsCertNo" id="smsCertNo" class="form-control" v-model="smsCertNo" placeholder="인증번호를 입력하세요" autocomplete="off" readonly="readonly" v-on:keyup="smsCertNoChk()">
             <span id="countdown" class="form-control-feedback cert-num" aria-hidden="true">{{ timer }}</span>
           </div> -->
-  </form>
-  <div class="btn-wrap" id="confirmed_div" v-if="smsCertNo">
+    <div class="btn-wrap" id="confirmed_div" v-if="smsCertNo">
     <a id="confirmed_certify" class="btn-next" v-on:click="confirmedCertify()">다음</a>
   </div>
   </section>
@@ -169,7 +167,9 @@ export default {
     kcmRequestCertNo: function() {
       var _this = this;
       // this.chkCert();
-      $('#telComCd').removeAttr("disabled");
+      $("#telComCd").removeAttr("disabled");
+      $("#smsCertNo").removeAttr("readonly");
+
       debugger;
       console.log(_this.$validator.validateAll());
       this.$validator.validateAll().then(res => {
@@ -189,8 +189,14 @@ export default {
           formData.append("smsReSndYn", _this.smsReSndYn);
           formData.append("nation", _this.nation);
           this.$http
-            .post("/m/login/kcmRequestCertNo.json", formData)
-            .then(response => {
+            .post("/m/login/kcmRequestCertNo.json", formData, {
+              headers: {
+                async: false,
+                "Content-Type":
+                  "application/x-www-form-urlencoded; charset=UTF-8"
+              }
+            })
+            .then(response=> {
               var result = response.data;
               console.log(result);
               debugger;
@@ -209,7 +215,7 @@ export default {
                 this.start();
                 $("#req_certification").html("인증번호 재전송");
                 _this.svcTxSeqno = result.svcTxSeqno;
-                frmCertifyStep.smsCertNo.readOnly = false;
+                //frmCertifyStep.smsCertNo.readOnly = false; //*******vue에서 처리방식 */
                 $("#smsCertNo").focus();
               } else if (result.result == "11") {
                 this.$toast.center(result.message);

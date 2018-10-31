@@ -1,21 +1,20 @@
 <template>
-  <newsDetail>
+  <div id="newsDetail">
   <div style="font-size:20pt;">제목:{{title}}</div>
   <div style="font-size:20pt;">뉴스원:{{newsCompany}}</div>
   <div style="font-size:20pt;">일자:{{pubDate}}</div>
   <div style="font-size:20pt;">연계링크메세지:{{localLinkText}}</div>
   <div style="font-size:20pt;">연계링크:{{localLink}}</div>
   <div style="font-size:20pt;"><a @click="goLocalLink(localLink)">{{localLinkText}}</a></div>
-  <div style="font-size:20pt;"><img :src="bodyImg" alt="본문img" /></div>
+  <div style="font-size:20pt;"><img :src="bodyImg"/></div>
   <div style="font-size:20pt;">내용:{{contents}}</div>
-  </newsDetail>
+  </div>
 </template>
 
 <script>
 import Common from "./../../assets/js/common.js";
 import Constant from "./../../assets/js/constant.js";
 import ko from "vee-validate/dist/locale/ko.js";
-import defBodyImg from "./../../assets/images/common/news_dummy.png";
 
 export default {
   name: "helloWorld",
@@ -61,10 +60,9 @@ export default {
           _this.localLinkText = newsInfo.local_link_text;
           _this.localLink = newsInfo.local_link;
           //본문이미지 셋팅
-          if(newsInfo.seq_body_file != null){
-           _this.bodyImg = "/m/news/getApiNewsImg.json?seq_news=" + newsInfo.seq_news + "&file_type=02";
-          }else{
-            _this.bodyImg = defBodyImg;
+          if (newsInfo.seq_body_file != null) {
+            _this.bodyImg =
+              "/m/news/getApiNewsImg.json?seq_news=" + newsInfo.seq_news + "&file_type=02";
           }
         })
         .catch(e => {
@@ -74,7 +72,7 @@ export default {
     //연계링크 이동
     goLocalLink: function(link) {
       this.$router.push(link);
-    },
+    }
   }
 };
 </script>

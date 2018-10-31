@@ -2,7 +2,7 @@
   <section>
       <div class="con-top cut-top">
           <p><em>아래의 조건 중 일부 부합이 되면</em><br>금리인하요구권을<br>신청할 수 있습니다</p>
-          <a href="#">바로가기</a>
+          <a @click="openInfo()">금리인하요구권이란?</a>
       </div>
       
       <div class="cut-result-top">
@@ -154,16 +154,24 @@
       <div class="btn-wrap">
           <a href="#" class="solid blue box">검색</a>
       </div>
+
+      <vue-modal transitionName="zoom-in" name="info-modal" v-on:popclose="closeInfo()">
+        <ReqIntrCutInfo slot="body" v-on:popclose="closeInfo()"></ReqIntrCutInfo>
+    </vue-modal>
   </section>
 </template>
 
 <script>
+import ReqIntrCutInfo from "./ReqIntrCutInfo.vue";
+
 export default {
-  name: "",
+  name: "debtReqIntrCut",
   data() {
     return {};
   },
-  components: {},
+  components: {
+    ReqIntrCutInfo: ReqIntrCutInfo
+  },
   computed: {},
   beforeCreate() {
     this.$store.state.header.type = "sub";
@@ -176,7 +184,16 @@ export default {
   updated() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    openInfo: function() {
+      var _this = this;
+      _this.$modals.show("info-modal");
+    },
+    closeInfo: function() {
+      var _this = this;
+      _this.$modals.hide("info-modal");
+    }
+  }
 };
 </script>
 

@@ -80,7 +80,6 @@ import DebtDetail from '@/components/debt/Detail'
 // import DebtCreditLoan from '@/components/debt/CreditLoan'
 // import DebtMortgageLoan from '@/components/debt/MortgageLoan'
 import DebtReqIntrCut from '@/components/debt/ReqIntrCut'
-// import DebtReqIntrCutInfo from '@/components/debt/ReqIntrCutInfo'
 import DebtCalendar from '@/components/debt/Calendar'
 import DebtUpdate from '@/components/debt/Update'
 

@@ -18,18 +18,19 @@
       <div class="cert-wrap">
           <p class="title">휴대폰인증</p>
           <div class="grid phone">
-              <select id="telComCd" name="telComCd" v-model="telComCd" v-validate="'required'" v-on:change="nextFocus('telCom')" v-bind:disabled="isDisabled" placeholder="통신사" data-vv-name='통신사'>
+              <select id="telComCd" name="telComCd" v-model="telComCd" v-validate="'required'" v-on:change="nextFocus('telComCd')" v-bind:disabled="isDisabled" placeholder="통신사" data-vv-name='통신사'>
                 <option v-for="option in options" v-bind:key="option.value" v-bind:value="option.value">
                   {{ option.text }}
                 </option>
               </select>
-              <input type="number" name="hp" id="hp" placeholder="전화번호 불러오기" disabled>
-              <!-- <input type="tel" name="hp" id="hp" class="form-control" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'/> -->
+              <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
           </div>
-          <span class="form-control-feedback" aria-hidden="true">
-            <button id="req_certification" v-on:click="kcmRequestCertNo()">인증번호 전송</button></span>
-          <div class="cert-num" for="smsCertNo" id="cert_no_conteiner">
-            <input type="number" data-vv-name='인증번호' name="smsCertNo" id="smsCertNo" v-model="smsCertNo" placeholder="인증번호를 입력하세요" autocomplete="off" readonly="readonly" v-on:keyup="smsCertNoChk()">
+          <!-- <span class="form-control-feedback" aria-hidden="true"> -->
+            <button id="req_certification" v-on:click="kcmRequestCertNo()">인증번호 전송</button>
+            <!-- </span> -->
+          <div class="cert-num" id="cert_no_conteiner">
+            <input type="number" name="smsCertNo" id="smsCertNo" v-model="smsCertNo" placeholder="인증번호를 입력하세요" autocomplete="off" disabled>
+            <!-- <input type="number" data-vv-name='인증번호' name="smsCertNo" id="smsCertNo" class="form-control" v-model="smsCertNo" placeholder="인증번호를 입력하세요" autocomplete="off" readonly="readonly" v-on:keyup="smsCertNoChk()"> -->
             <p class="time" id="countdown" aria-hidden="true">{{ timer }}</p>
           </div>
             <p class="warn" v-if="errors.has('인증번호')">오류메세지 출력 영역</p>
@@ -81,7 +82,7 @@
             <span id="countdown" class="form-control-feedback cert-num" aria-hidden="true">{{ timer }}</span>
           </div> -->
   </form>
-  <div class="btn-wrap" id="confirmed_div">
+  <div class="btn-wrap" id="confirmed_div" v-if="smsCertNo">
     <a id="confirmed_certify" class="btn-next" v-on:click="confirmedCertify()">다음</a>
   </div>
   </section>
@@ -161,13 +162,15 @@ export default {
       var _this = this;
       if (val == "birth" && _this.ssn_birth.length == 6) $("#sex").focus();
       if (val == "sex" && _this.sex.length == 1) $("#telComCd").focus();
-      if (val == "telCom" && telComCd) $("#hp").focus();
+      if (val == "telComCd" && _this.telComCd) $("#hp").focus();
+      if (val == "hp" && _this.hp) $("").focus();
     },
     //인증번호 요청
     kcmRequestCertNo: function() {
       var _this = this;
-      // this.checkForm();
-      this.chkCert();
+      // this.chkCert();
+      $('#telComCd').removeAttr("disabled");
+      debugger;
       console.log(_this.$validator.validateAll());
       this.$validator.validateAll().then(res => {
         if (res) {
@@ -190,6 +193,7 @@ export default {
             .then(response => {
               var result = response.data;
               console.log(result);
+              debugger;
               if (result.result == "00") {
                 _this.smsCertNo = "";
                 this.$toast.center(result.message);
@@ -231,43 +235,43 @@ export default {
         this.smsCertNoChk();
       }
     },
-    //인증번호가 입력되면
-    smsCertNoChk: function() {
-      if (this.smsCertNo) {
-        Common.affixBottom("show");
-      } else {
-        Common.affixBottom("hide");
-      }
-    },
+    //인증번호가 입력되면 ******************* 수정필요
+    // smsCertNoChk: function() {
+    //   if (this.smsCertNo) {
+    //     Common.affixBottom("show");
+    //   } else {
+    //     Common.affixBottom("hide");
+    //   }
+    // },
     //입력값 확인
-    chkCert: function() {
-      var _this = this;
-      var regNumber = /^[0-9]*$/;
-      if (_this.nm_person == "" || _this.nm_person == null) {
-        this.$toast.center("이름을 입력해주세요.");
-        $("#nm_person").focus();
-        return false;
-      }
-      if (_this.ssn_birth == "" || _this.ssn_birth == null) {
-        this.$toast.center("주민등록번호 앞자리를 입력해주세요.");
-        $("#ssn_birth").focus();
-        return false;
-      } else if (!regNumber.test(_this.ssn_birth)) {
-        this.$toast.center("주민등록번호 앞자리를 숫자만 입력해주세요.");
-        $("#ssn_birth").focus();
-        return false;
-      }
-      if (_this.sex == "" || _this.sex == null) {
-        this.$toast.center("주민등록번호 뒷자리를 입력해주세요.");
-        $("#sex").focus();
-        return false;
-      } else if (!regNumber.test(_this.sex)) {
-        this.$toast.center("주민등록번호 뒷자리를 숫자만 입력해주세요.");
-        _this.sex = "";
-        $("#sex").focus();
-        return false;
-      }
-    },
+    // chkCert: function() {
+    //   var _this = this;
+    //   var regNumber = /^[0-9]*$/;
+    //   if (_this.nm_person == "" || _this.nm_person == null) {
+    //     this.$toast.center("이름을 입력해주세요.");
+    //     $("#nm_person").focus();
+    //     return false;
+    //   }
+    //   if (_this.ssn_birth == "" || _this.ssn_birth == null) {
+    //     this.$toast.center("주민등록번호 앞자리를 입력해주세요.");
+    //     $("#ssn_birth").focus();
+    //     return false;
+    //   } else if (!regNumber.test(_this.ssn_birth)) {
+    //     this.$toast.center("주민등록번호 앞자리를 숫자만 입력해주세요.");
+    //     $("#ssn_birth").focus();
+    //     return false;
+    //   }
+    //   if (_this.sex == "" || _this.sex == null) {
+    //     this.$toast.center("주민등록번호 뒷자리를 입력해주세요.");
+    //     $("#sex").focus();
+    //     return false;
+    //   } else if (!regNumber.test(_this.sex)) {
+    //     this.$toast.center("주민등록번호 뒷자리를 숫자만 입력해주세요.");
+    //     _this.sex = "";
+    //     $("#sex").focus();
+    //     return false;
+    //   }
+    // },
     /*
     * 인증 번호 확인
     */

@@ -23,7 +23,7 @@
     <div class="banner-wrap owl-carousel">
 	  <carousel :perPage=1>
 	    <slide class="item">
-	        <a href="#">
+	        <a @click="$router.push(' ')">
 	            <div class="banner">
 	                <div class="left">
 	                    <p class="key">우리가족 가계부</p>
@@ -36,7 +36,7 @@
 	        </a>
 	    </slide>
 	    <slide class="item">
-	        <a href="#">
+	        <a @click="$router.push(' ')">
 	            <div class="banner">
 	                <div class="left">
 	                    <p class="key">우리가족 가계부</p>
@@ -49,7 +49,7 @@
 	        </a>
 	    </slide>
 	    <slide class="item">
-	        <a href="#">
+	        <a @click="$router.push(' ')">
 	            <div class="banner">
 	                <div class="left">
 	                    <p class="key">우리가족 가계부</p>

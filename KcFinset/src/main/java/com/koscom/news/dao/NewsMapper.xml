@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.news.dao.NewsMapper">
+
+    <sql id="listApiNews_WHERE">
+		<where>
+		    ANR.SEQ_SEARCH = AN.SEQ_SEARCH
+			AND ANR.YN_USE = 'Y'
+		<!-- 	AND ANR.NEWS_STATUS='02' 임시 주석-->
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(scKeyword)">
+			AND(
+				SELECT
+					CODE_VALUE
+				FROM
+					COMM_CD
+				WHERE
+					CODE_GROUP = 'news_search_query'
+					AND NM_CODE = AN.SEARCH_QUERY
+			) IN
+			<foreach item="item" collection="scKeyword" index="index" open="(" separator="," close=")">
+				#{item, jdbcType=VARCHAR}
+			</foreach>
+			</if>
+		</where>
+	</sql>
+
+	<select id="listApiNews" parameterType="com.koscom.news.model.NewsForm" resultType="com.koscom.news.model.NewsVO">
+    	/* com.koscom.news.dao.NewsMapper.listApiNews  */
+    	SELECT
+    		SEQ_NEWS,
+			SEQ_SEARCH,
+			TITLE,
+			LINK,
+			DESCRIPTION,
+			PUB_DATE,
+			NEWS_COMPANY,
+			LOCAL_LINK_TEXT,
+			LOCAL_LINK,
+			CONTENTS,
+			NEWS_STATUS,
+			KEYWORD,
+			YN_USE,
+			DT_WRT,
+			DT_FRT,
+			SEARCH_QUERY,
+			SEQ_THUM_FILE,
+			RNUM
+    	FROM (
+    		SELECT
+				LST.SEQ_NEWS,
+				LST.SEQ_SEARCH,
+				LST.TITLE,
+				LST.LINK,
+				LST.DESCRIPTION,
+				LST.PUB_DATE,
+				LST.NEWS_COMPANY,
+				LST.LOCAL_LINK_TEXT,
+				LST.LOCAL_LINK,
+				LST.CONTENTS,
+				LST.NEWS_STATUS,
+				LST.KEYWORD,
+				LST.YN_USE,
+				LST.DT_WRT,
+				LST.DT_FRT,
+				LST.SEARCH_QUERY,
+				LST.SEQ_THUM_FILE,
+				ROWNUM RNUM
+    		FROM (
+				SELECT
+					ANR.SEQ_NEWS,
+					ANR.SEQ_SEARCH,
+					ANR.TITLE,
+					ANR.LINK,
+					ANR.DESCRIPTION,
+					DECODE( SUBSTR( TO_CHAR( ANR.PUB_DATE, 'MM' ), 1, 1 ), '0', SUBSTR( TO_CHAR( ANR.PUB_DATE, 'MM' ), 2, 1 ), TO_CHAR( ANR.PUB_DATE, 'MM' ))|| '/' ||
+					DECODE( SUBSTR( TO_CHAR( ANR.PUB_DATE, 'DD' ), 1, 1 ), '0', SUBSTR( TO_CHAR( ANR.PUB_DATE, 'DD' ), 2, 1 ), TO_CHAR( ANR.PUB_DATE, 'DD' ))
+					AS PUB_DATE,
+					ANR.NEWS_COMPANY,
+					ANR.LOCAL_LINK_TEXT,
+					ANR.LOCAL_LINK,
+					ANR.CONTENTS,
+					ANR.NEWS_STATUS,
+					ANR.KEYWORD,
+					ANR.YN_USE,
+					ANR.DT_WRT,
+					ANR.DT_FRT,
+					AN.SEARCH_QUERY,
+					(SELECT SEQ_FILE FROM API_NEWS_FILE_INFO ANFI WHERE ANFI.SEQ_NEWS = ANR.SEQ_NEWS AND FILE_TYPE='01') AS SEQ_THUM_FILE
+				FROM
+					API_NEWS_RESULT ANR,
+					API_NEWS AN
+				<include refid="listApiNews_WHERE"/>
+				ORDER BY
+				<choose>
+				<when test="'01'.equals(orderby)">
+					ANR.PUB_DATE DESC /*최신날짜순*/,
+				</when>
+				<when test="'02'.equals(orderby)">
+					ANR.HITS DESC /*조회수순*/,
+				</when>
+				</choose>
+				ANR.DT_FRT       DESC
+			) LST
+	    	WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	    )
+	    WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+	</select>
+
+	<select id="listApiNewsCount" parameterType="com.koscom.news.model.NewsVO" resultType="int">
+	    SELECT
+	    	COUNT(*) AS recordCount
+	    FROM
+			API_NEWS_RESULT ANR,
+			API_NEWS AN
+		<include refid="listApiNews_WHERE"/>
+	</select>
+
+	<resultMap id="apiNewsImgMap" type="hashMap">
+	    <result column="img_files" property="img_files" jdbcType="BLOB" javaType="[B"></result>
+	    <result column="nm_img_files" property="nm_img_files" jdbcType="VARCHAR" javaType="String"></result>
+	</resultMap>
+	<select id="getApiNewsImgInfo" parameterType="com.koscom.news.model.NewsVO" resultMap="apiNewsImgMap">
+		SELECT
+			TB.IMG_FILES,
+			TB.NM_IMG_FILES
+		FROM
+			(
+				SELECT
+					IMG_FILES,
+					NM_IMG_FILES,
+					ROW_NUMBER() OVER(
+					ORDER BY
+						DT_FRT DESC
+					) AS RNUM
+				FROM
+					API_NEWS_FILE_INFO
+				WHERE
+					SEQ_NEWS = #{seq_news, jdbcType = NUMERIC}
+					AND FILE_TYPE = #{file_type, jdbcType = VARCHAR}
+			) TB
+		WHERE
+			TB.RNUM = 1
+	</select>
+
+	<update id="updateApiNewsHits" parameterType="com.koscom.news.model.NewsVO">
+		UPDATE
+			API_NEWS_RESULT
+		SET
+			NVL( MAX( HITS ), 0 )+ 1
+		WHERE
+			SEQ_NEWS = #{seq_news, jdbcType = NUMERIC}
+	</update>
+
+	<select id="getApiNewsInfo" parameterType="com.koscom.news.model.NewsVO" resultType="com.koscom.news.model.NewsVO">
+	    SELECT
+			ANR.SEQ_NEWS,
+			ANR.SEQ_SEARCH,
+			ANR.TITLE,
+			ANR.LINK,
+			ANR.DESCRIPTION,
+			TO_CHAR( ANR.PUB_DATE, 'YYYY') || '/' ||
+			DECODE( SUBSTR( TO_CHAR( ANR.PUB_DATE, 'MM' ), 1, 1 ), '0', SUBSTR( TO_CHAR( ANR.PUB_DATE, 'MM' ), 2, 1 ), TO_CHAR( ANR.PUB_DATE, 'MM' ))|| '/' ||
+			DECODE( SUBSTR( TO_CHAR( ANR.PUB_DATE, 'DD' ), 1, 1 ), '0', SUBSTR( TO_CHAR( ANR.PUB_DATE, 'DD' ), 2, 1 ), TO_CHAR( ANR.PUB_DATE, 'DD' ))
+			AS PUB_DATE,
+			ANR.NEWS_COMPANY,
+			ANR.LOCAL_LINK_TEXT,
+			ANR.LOCAL_LINK,
+			ANR.CONTENTS,
+			ANR.NEWS_STATUS,
+			ANR.KEYWORD,
+			ANR.YN_USE,
+			ANR.DT_WRT,
+			ANR.DT_FRT,
+			AN.SEARCH_QUERY,
+			(SELECT SEQ_FILE FROM API_NEWS_FILE_INFO ANFI WHERE ANFI.SEQ_NEWS = ANR.SEQ_NEWS AND FILE_TYPE='02') AS SEQ_BODY_FILE
+		FROM
+			API_NEWS_RESULT ANR,
+			API_NEWS AN
+		WHERE ANR.SEQ_SEARCH = AN.SEQ_SEARCH
+			AND ANR.SEQ_NEWS = #{seq_news, jdbcType=NUMERIC}
+	</select>
+
+</mapper>

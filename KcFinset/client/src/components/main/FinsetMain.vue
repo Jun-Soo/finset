@@ -6,7 +6,7 @@
 								<div class="graph">
             				<Gauge :value="gaugeValue" :text="gaugeText"/>
 								</div>
-            <a href="/credit/main">자세히보기</a>
+            <a @click="$router.push('/credit/main')">자세히보기</a>
             <div class="info-wrap">
                 <div class="left">
                     <p class="key">내 상태(상위)</p>
@@ -24,42 +24,42 @@
             <div class="list">
                 <div class="item">
                     <div class="left">
-                        <a href="/consume/main">지출</a>
+                        <a @click="$router.push('/consume/main')">지출</a>
                         <p>{{ formatNumber(consumeSumAmt) }}<em>원</em></p>
                     </div>
                     <div class="right">
-                        <a href="#"></a>
+                        <a @click="$router.push(' ')"></a>
                     </div>
                 </div>
             </div>
             <div class="list">
                 <div class="item">
                     <div class="left">
-                        <a href="/assets/main">자산</a>
+                        <a @click="$router.push('/assets/main')">자산</a>
                         <p>{{ formatNumber(assetsSumAmt) }}<em>원</em></p>
                     </div>
                     <div class="right">
-                        <a href="#"></a>
+                        <a @click="$router.push(' ')"></a>
                     </div>
                 </div>
             </div>
             <div class="list">
                 <div class="item">
                     <div class="left">
-                        <a href="/debt/main">부채</a>
+                        <a @click="$router.push('/debt/main')">부채</a>
                         <p>{{ formatNumber(debtSumAmt) }}<em>원</em></p>
                     </div>
                     <div class="right">
-                        <a href="/debt/register"></a>
+                        <a @click="$router.push('/debt/register')"></a>
                     </div>
                 </div>
             </div>
         </div>
         <div class="my-links">
             <div class="wrap">
-                <a href="/credit/raiseMain">신용등급<br>올리기</a>
-                <a href="/credit/smartReport">신용<br>리포트</a>
-                <a href="/share/main">정보<br>공유하기</a>
+                <a @click="$router.push('/credit/raiseMain')">신용등급<br>올리기</a>
+                <a @click="$router.push('/credit/smartReport')">신용<br>리포트</a>
+                <a @click="$router.push('/share/main')">정보<br>공유하기</a>
             </div>
         </div>
     <FinsetBottom></FinsetBottom>

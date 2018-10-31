@@ -43,7 +43,7 @@ import MemoCreate from '@/components/memo/Create'
 
 import NewsHome from '@/components/news/Home'
 import NewsMain from '@/components/news/Main'
-// import NewsDetail from '@/components/news/Detail'
+import NewsDetail from '@/components/news/Detail'
 
 import CreditHome from '@/components/credit/Home'
 import CreditMain from '@/components/credit/Main'
@@ -914,6 +914,15 @@ export const routes = [{
     alias: '/main',
     name: 'newsMain',
     component: NewsMain,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'detail',
+    alias: '/detail',
+    name: 'newsDetail',
+    component: NewsDetail,
     meta: {
       allowPath: true
     }

@@ -110,6 +110,7 @@ export default {
   computed: {},
   beforeCreate() {},
   created() {
+    this.$store.state.header.type = "sub";
     this.$store.state.title = "추천상품";
   },
   beforeMount() {},

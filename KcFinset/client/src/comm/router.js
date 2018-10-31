@@ -71,8 +71,8 @@ import DebtHome from '@/components/debt/Home'
 import DebtMain from '@/components/debt/Main'
 import DebtDetail from '@/components/debt/Detail'
 // import DebtRepayment from '@/components/debt/Repayment'
-// import DebtModify from '@/components/debt/Modify'
-// import DebtCalc from '@/components/debt/Calc'
+import DebtModify from '@/components/debt/Modify'
+import DebtCalc from '@/components/debt/Calc'
 // import DebtCalcSearch from '@/components/debt/CalcSearch'
 // import DebtRegister from '@/components/debt/Register'
 // import DebtRegDetail from '@/components/debt/RegDetail'
@@ -109,7 +109,7 @@ import GoodsWorkerGoods from '@/components/goods/WorkerGoods'
 import ConsumeHome from '@/components/consume/Home'
 import ConsumeMain from '@/components/consume/Main'
 import ConsumeRegGoal from '@/components/consume/RegGoal'
-// import ConsumeConsumeDetail from '@/components/consume/ConsumeDetail'
+import ConsumeConsumeDetail from '@/components/consume/ConsumeDetail'
 // import ConsumeIncomeStat from '@/components/consume/IncomeStat'
 // import ConsumeConsumeStat from '@/components/consume/ConsumeStat'
 import ConsumeSetting from '@/components/consume/Setting'
@@ -134,12 +134,12 @@ import AssetsMain from '@/components/assets/Main'
 // import AssetsStockDelDetail from '@/components/assets/StockDelDetail'
 // import AssetsStockAnsDetail from '@/components/assets/StockAnsDetail'
 
-// import MypageHome from '@/components/mypage/Home'
+import MypageHome from '@/components/mypage/Home'
 // import MypageMain from '@/components/mypage/Main'
-// import MypageInfo from '@/components/mypage/Info'
-// import MypageEmail from '@/components/mypage/Email'
-// import MypageLogout from '@/components/mypage/Logout'
-// import MypageRegAlarm from '@/components/mypage/RegAlarm'
+import MypageInfo from '@/components/mypage/Info'
+import MypageEmail from '@/components/mypage/Email'
+import MypageLogout from '@/components/mypage/Logout'
+import MypageRegAlarm from '@/components/mypage/RegAlarm'
 // import MypageCert from '@/components/mypage/Cert'
 // import MypageRegCertLogin from '@/components/mypage/RegCertLogin'
 // import MypageCertPerson from '@/components/mypage/CertPerson'
@@ -153,8 +153,8 @@ import AssetsMain from '@/components/assets/Main'
 // import MypageRstlReqGoods from '@/components/mypage/RstlReqGoods'
 // import MypageState from '@/components/mypage/State'
 // import MypageStateList from '@/components/mypage/StateList'
-// import MypageDrop from '@/components/mypage/Drop'
-// import MypageDropDone from '@/components/mypage/DropDone'
+import MypageDrop from '@/components/mypage/Drop'
+import MypageDropDone from '@/components/mypage/DropDone'
 // import MypageMySet from '@/components/mypage/MySet'
 
 import ShareHome from '@/components/share/Home'
@@ -568,6 +568,24 @@ export const routes = [{
     }
   },
   {
+    path: 'modify',
+    alias: '/modify',
+    name: 'debtModify',
+    component: DebtModify,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'calc',
+    alias: '/calc',
+    name: 'debtCalc',
+    component: DebtCalc,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
     path: 'update',
     alias: '/update',
     name: 'debtUpdate',
@@ -637,6 +655,14 @@ export const routes = [{
     path: 'regGoal',
     alias: '/regGoal',
     component: ConsumeRegGoal,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'consumeDetail',
+    alias: '/consumeDetail',
+    component: ConsumeConsumeDetail,
     meta: {
       allowPath: true
     }
@@ -822,19 +848,72 @@ export const routes = [{
   }
   ]
 },
-  // {
-  //   path: '/mypage',
-  //   name: 'mypage',
-  //   component: MypageHome,
-  //   children: [
-  //     {
-  //       path: 'certPerson',
-  //       alias: '/certPerson',
-  //       component: CertPerson,
-  //       meta: { allowPath: true, requiresAuth: true }
-  //     }
-  //   ]
-  // },
+{
+  path: '/mypage',
+  name: 'mypage',
+  component: MypageHome,
+  children: [{
+    path: 'info',
+    alias: '/info',
+    component: MypageInfo,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'email',
+    alias: '/email',
+    component: MypageEmail,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'logout',
+    alias: '/logout',
+    component: MypageLogout,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'regAlarm',
+    alias: '/regAlarm',
+    component: MypageRegAlarm,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'drop',
+    alias: '/drop',
+    component: MypageDrop,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'dropDone',
+    alias: '/dropDone',
+    component: MypageDropDone,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  }
+    // {
+    //   path: 'certPerson',
+    //   alias: '/certPerson',
+    //   component: CertPerson,
+    //   meta: { allowPath: true, requiresAuth: true }
+    // }
+  ]
+},
 {
   path: '/sample/swiper',
   name: 'swiper',
@@ -927,7 +1006,8 @@ export const routes = [{
       allowPath: true,
       requiresAuth: true
     }
-  }]
+  }
+  ]
 }
 ]
 

@@ -83,4 +83,24 @@ $(function () {
   }
 
   modal()
+
+  $(document).on('click', '.consume-cate-list>li>.wrap', function () {
+    if ($(this).closest('li').hasClass('on')) {
+      $(this).closest('li').find('ul').slideUp(500, 'easeInOutExpo')
+      $(this).closest('li').removeClass('on')
+    } else {
+      $(this).closest('li').find('ul').slideDown(500, 'easeInOutExpo')
+      $(this).closest('li').addClass('on')
+    }
+  })
+
+  $(document).on('click', '.calc-acco .top .ui', function () {
+    if ($(this).hasClass('on')) {
+      $(this).closest('.calc-acco').find('.acco-body-wrap').slideUp(500, 'easeInOutExpo')
+      $(this).removeClass('on')
+    } else {
+      $(this).closest('.calc-acco').find('.acco-body-wrap').slideDown(500, 'easeInOutExpo')
+      $(this).addClass('on')
+    }
+  })
 })

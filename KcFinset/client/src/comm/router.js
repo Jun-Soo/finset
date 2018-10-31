@@ -915,7 +915,8 @@ export const routes = [{
     name: 'newsMain',
     component: NewsMain,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -924,7 +925,8 @@ export const routes = [{
     name: 'newsDetail',
     component: NewsDetail,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   }]
 }

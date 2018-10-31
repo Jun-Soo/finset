@@ -160,6 +160,25 @@ $(function(){
     });
     
     
+    ////////////////////     계산기 아코디온     ////////////////////
+    
+    $(document).on("click",".calc-acco .top .ui",function(){
+        
+        if($(this).hasClass("on")){
+         
+            $(this).closest(".calc-acco").find(".acco-body-wrap").slideUp(500,"easeInOutExpo");
+            $(this).removeClass("on");
+            
+        }else{
+           
+            $(this).closest(".calc-acco").find(".acco-body-wrap").slideDown(500,"easeInOutExpo");
+            $(this).addClass("on");
+            
+        }
+        
+    });
+    
+    
     ////////////////////     Image Slide     ////////////////////
 	
 	var owl = $(".owl-carousel");

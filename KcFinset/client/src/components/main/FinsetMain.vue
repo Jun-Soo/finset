@@ -1,75 +1,72 @@
 <template>
-    <main>
+  <main>
     <FinsetHeader></FinsetHeader>
-        <div class="my-graph-wrap">
-            <p class="title">신용등급</p>
-								<div class="graph">
-            				<Gauge :value="gaugeValue" :text="gaugeText"/>
-								</div>
-            <a @click="$router.push('/credit/main')">자세히보기</a>
-            <div class="info-wrap">
-                <div class="left">
-                    <p class="key">내 상태(상위)</p>
-                    <p class="value">{{ci_percentage}}<em>%</em></p>
-                </div>
-                <div class="right">
-                    <p class="key">신용점수</p>
-                    <p class="value">{{ci_rating_credit}}</p>
-                </div>
-                
-            </div>
+    <div class="my-graph-wrap">
+      <p class="title">신용등급</p>
+      <div class="graph">
+        <Gauge :value="gaugeValue" :text="gaugeText" />
+      </div>
+      <a @click="$router.push('/credit/main')">자세히보기</a>
+      <div class="info-wrap">
+        <div class="left">
+          <p class="key">내 상태(상위)</p>
+          <p class="value">{{ci_percentage}}<em>%</em></p>
         </div>
-        
-        <div class="my-main-list">
-            <div class="list">
-                <div class="item">
-                    <div class="left">
-                        <a @click="$router.push('/consume/main')">지출</a>
-                        <p>{{ formatNumber(consumeSumAmt) }}<em>원</em></p>
-                    </div>
-                    <div class="right">
-                        <a @click="$router.push(' ')"></a>
-                    </div>
-                </div>
-            </div>
-            <div class="list">
-                <div class="item">
-                    <div class="left">
-                        <a @click="$router.push('/assets/main')">자산</a>
-                        <p>{{ formatNumber(assetsSumAmt) }}<em>원</em></p>
-                    </div>
-                    <div class="right">
-                        <a @click="$router.push(' ')"></a>
-                    </div>
-                </div>
-            </div>
-            <div class="list">
-                <div class="item">
-                    <div class="left">
-                        <a @click="$router.push('/debt/main')">부채</a>
-                        <p>{{ formatNumber(debtSumAmt) }}<em>원</em></p>
-                    </div>
-                    <div class="right">
-                        <a @click="$router.push('/debt/register')"></a>
-                    </div>
-                </div>
-            </div>
+        <div class="right">
+          <p class="key">신용점수</p>
+          <p class="value">{{ci_rating_credit}}</p>
         </div>
-        <div class="my-links">
-            <div class="wrap">
-                <a @click="$router.push('/credit/raiseMain')">신용등급<br>올리기</a>
-                <a @click="$router.push('/credit/smartReport')">신용<br>리포트</a>
-                <a @click="$router.push('/share/main')">정보<br>공유하기</a>
-            </div>
+
+      </div>
+    </div>
+
+    <div class="my-main-list">
+      <div class="list">
+        <div class="item">
+          <div class="left">
+            <a @click="$router.push('/consume/main')">지출</a>
+            <p>{{ formatNumber(consumeSumAmt) }}<em>원</em></p>
+          </div>
+          <div class="right">
+            <a @click="$router.push(' ')"></a>
+          </div>
         </div>
+      </div>
+      <div class="list">
+        <div class="item">
+          <div class="left">
+            <a @click="$router.push('/assets/main')">자산</a>
+            <p>{{ formatNumber(assetsSumAmt) }}<em>원</em></p>
+          </div>
+          <div class="right">
+            <a @click="$router.push(' ')"></a>
+          </div>
+        </div>
+      </div>
+      <div class="list">
+        <div class="item">
+          <div class="left">
+            <a @click="$router.push('/debt/main')">부채</a>
+            <p>{{ formatNumber(debtSumAmt) }}<em>원</em></p>
+          </div>
+          <div class="right">
+            <a @click="$router.push('/debt/register')"></a>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="my-links">
+      <div class="wrap">
+        <a @click="$router.push('/credit/raiseMain')">신용등급<br>올리기</a>
+        <a @click="$router.push('/credit/smartReport')">신용<br>리포트</a>
+        <a @click="$router.push('/share/main')">정보<br>공유하기</a>
+      </div>
+    </div>
     <FinsetBottom></FinsetBottom>
-    </main>
+  </main>
 </template>
 
 <script>
-import "./../../assets/css/reset.css";
-import "./../../assets/css/main.css";
-
 import Common from "./../../assets/js/common.js";
 import Constant from "./../../assets/js/constant.js";
 

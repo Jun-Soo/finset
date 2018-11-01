@@ -24,12 +24,9 @@
               </select>
               <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
           </div>
-          <!-- <span class="form-control-feedback" aria-hidden="true"> -->
             <button id="req_certification" v-on:click="kcmRequestCertNo()">인증번호 전송</button>
-            <!-- </span> -->
           <div class="cert-num" id="cert_no_conteiner">
             <input type="number" name="smsCertNo" id="smsCertNo" v-model="smsCertNo" placeholder="인증번호를 입력하세요" autocomplete="off" readonly>
-            <!-- <input type="number" data-vv-name='인증번호' name="smsCertNo" id="smsCertNo" class="form-control" v-model="smsCertNo" placeholder="인증번호를 입력하세요" autocomplete="off" readonly="readonly" v-on:keyup="smsCertNoChk()"> -->
             <p class="time" id="countdown" aria-hidden="true">{{ timer }}</p>
           </div>
             <p class="warn" v-if="errors.has('인증번호')">오류메세지 출력 영역</p>

@@ -29,55 +29,9 @@
             <input type="number" name="smsCertNo" id="smsCertNo" v-model="smsCertNo" placeholder="인증번호를 입력하세요" autocomplete="off" readonly>
             <p class="time" id="countdown" aria-hidden="true">{{ timer }}</p>
           </div>
-            <p class="warn" v-if="errors.has('인증번호')">오류메세지 출력 영역</p>
+          <p class="warn" id="certNoWarning" name="certNoWarning" v-if="timer==='00:00'">인증번호를 재전송 해주세요.</p>
       </div>
-
-          <!-- <div class="form-group">
-            <label for="" class="sr-only">주민등록번호 앞 7자리</label>
-            <div class="row">
-              <div class="col-xs-5">
-                <input type="number" class="form-control xe_required" name="ssn_birth" id="ssn_birth" v-model="ssn_birth" v-validate="'required|length:6|max:6'" v-on:keyup="nextFocus('birth')" v-bind:disabled="isDisabled" autocomplete="off" placeholder="주민등록번호 앞자리" data-vv-name='생년월일' />
-              </div>
-              <div class="col-xs-1">
-                <p class="form-control-static">-</p>
-              </div>
-              <div class="col-xs-2">
-                <label for="" class="sr-only">주민번호 7번째 자리</label>
-                <input type="number" class="form-control" pattern="[0-9]*" name="sex" id="sex" v-model="sex" inputmode="numeric" style="-webkit-text-security:disc" v-validate="'required|length:1|max:1'" v-on:keyup="nextFocus('sex')" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='성별' />
-              </div>
-              <div class="col-xs-4">
-                <p class="form-control-static">* * * * * *</p>
-              </div>
-            </div>
-            <div class="row"><span class="error" v-if="errors.has('생년월일')">{{errors.first('생년월일')}}</span></div>
-            <div class="row"><span class="error" v-if="errors.has('성별')">{{errors.first('성별')}}</span></div>
-          </div>
-          <div class="form-group">
-            <div class="row">
-              <div class="col-xs-5">
-                <select class="form-input-inline bootstrap-select" id="telComCd" v-model="telComCd" v-validate="'required'" v-on:change="nextFocus('telCom')" v-bind:disabled="isDisabled" placeholder="통신사" data-vv-name='통신사'>
-                  <option v-for="option in options" v-bind:key="option.value" v-bind:value="option.value">
-                    {{ option.text }}
-                  </option>
-                </select>
-              </div>
-              <div class="col-xs-7">
-                <label for="hp" class="sr-only">휴대폰 번호</label>
-                <input type="tel" name="hp" id="hp" class="form-control" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'/>
-                <span class="form-control-feedback" aria-hidden="true"><a role="button" id="req_certification" class="btn btn-primary btn-cert-no" v-on:click="kcmRequestCertNo()">인증요청</a></span>
-              </div>
-            </div>
-            <div class="row">
-              <span class="error" v-if="errors.has('통신사')">{{errors.first('통신사')}}</span>
-              <span class="error" v-if="errors.has('휴대폰 번호')">{{errors.first('휴대폰 번호')}}</span>
-            </div>
-          </div>
-          <div class="form-group has-feedback" id="cert_no_conteiner">
-            <label for="smsCertNo" class="sr-only">인증번호</label>
-            <input type="number" name="smsCertNo" id="smsCertNo" class="form-control" v-model="smsCertNo" placeholder="인증번호를 입력하세요" autocomplete="off" readonly="readonly" v-on:keyup="smsCertNoChk()">
-            <span id="countdown" class="form-control-feedback cert-num" aria-hidden="true">{{ timer }}</span>
-          </div> -->
-    <div class="btn-wrap" id="confirmed_div" v-if="smsCertNo">
+    <div class="btn-wrap" id="confirmed_div" v-if="smsCertNo&&timer!='00:00'">
     <a id="confirmed_certify" class="btn-next" v-on:click="confirmedCertify()">다음</a>
   </div>
   </section>
@@ -97,8 +51,6 @@ export default {
     return {
       errMsg: "",
       /* form */
-      yn_logout: "",
-      yn_use: "",
       nm_person: "",
       ssn_birth: "",
       birthday: "",
@@ -126,11 +78,14 @@ export default {
       timeId: "",
       timerObj: null,
       timer: null,
-      minutes: 5,
+      minutes: 3,
       secondes: 0,
       time: 0,
       /* class */
-      isDisabled: false
+      isDisabled: false,
+      /* modifyPersonLogout 함수 사용시 필요 */
+      yn_logout: "",
+      yn_use: ""
     };
   },
   component: {},
@@ -140,14 +95,12 @@ export default {
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
     }
-    this.$store.state.title = "본인확인 (2/7)";
+    this.$store.state.title = "본인확인";
     this.$store.state.header.type = "sub";
     this.time = this.minutes * 60;
   },
   beforeMount() {},
-  mounted() {
-    var _this = this;
-  },
+  mounted() {},
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
@@ -160,15 +113,11 @@ export default {
       if (val == "telComCd" && _this.telComCd) $("#hp").focus();
       if (val == "hp" && _this.hp) $("").focus();
     },
-    //인증번호 요청
+    /**
+     * 인증번호 요청
+     */
     kcmRequestCertNo: function() {
       var _this = this;
-      // this.chkCert();
-      $("#telComCd").removeAttr("disabled");
-      $("#smsCertNo").removeAttr("readonly");
-
-      debugger;
-      console.log(_this.$validator.validateAll());
       this.$validator.validateAll().then(res => {
         if (res) {
           if (_this.sex == "1" || _this.sex == "2") {
@@ -193,7 +142,7 @@ export default {
                   "application/x-www-form-urlencoded; charset=UTF-8"
               }
             })
-            .then(response=> {
+            .then(response => {
               var result = response.data;
               console.log(result);
               debugger;
@@ -212,11 +161,11 @@ export default {
                 this.start();
                 $("#req_certification").html("인증번호 재전송");
                 _this.svcTxSeqno = result.svcTxSeqno;
-                //frmCertifyStep.smsCertNo.readOnly = false; //*******vue에서 처리방식 */
+                $("#smsCertNo").removeAttr("readonly");
                 $("#smsCertNo").focus();
               } else if (result.result == "11") {
                 this.$toast.center(result.message);
-                _this.$router.push("/member/certStep1"); //frameCertStep1.crz ajax 통신
+                _this.$router.push("/member/certStep1");
                 return false;
               } else if (result.result == "01") {
                 this.$toast.center(result.message);
@@ -230,63 +179,14 @@ export default {
         }
       });
     },
-    //인증번호
-    setCertNumber: function(number) {
-      number = number + "";
-      if (this.smsCertNo) {
-        this.smsCertNo = number;
-        this.smsCertNoChk();
-      }
-    },
-    //인증번호가 입력되면 ******************* 수정필요
-    // smsCertNoChk: function() {
-    //   if (this.smsCertNo) {
-    //     Common.affixBottom("show");
-    //   } else {
-    //     Common.affixBottom("hide");
-    //   }
-    // },
-    //입력값 확인
-    // chkCert: function() {
-    //   var _this = this;
-    //   var regNumber = /^[0-9]*$/;
-    //   if (_this.nm_person == "" || _this.nm_person == null) {
-    //     this.$toast.center("이름을 입력해주세요.");
-    //     $("#nm_person").focus();
-    //     return false;
-    //   }
-    //   if (_this.ssn_birth == "" || _this.ssn_birth == null) {
-    //     this.$toast.center("주민등록번호 앞자리를 입력해주세요.");
-    //     $("#ssn_birth").focus();
-    //     return false;
-    //   } else if (!regNumber.test(_this.ssn_birth)) {
-    //     this.$toast.center("주민등록번호 앞자리를 숫자만 입력해주세요.");
-    //     $("#ssn_birth").focus();
-    //     return false;
-    //   }
-    //   if (_this.sex == "" || _this.sex == null) {
-    //     this.$toast.center("주민등록번호 뒷자리를 입력해주세요.");
-    //     $("#sex").focus();
-    //     return false;
-    //   } else if (!regNumber.test(_this.sex)) {
-    //     this.$toast.center("주민등록번호 뒷자리를 숫자만 입력해주세요.");
-    //     _this.sex = "";
-    //     $("#sex").focus();
-    //     return false;
-    //   }
-    // },
     /*
     * 인증 번호 확인
     */
     confirmedCertify: function() {
       var _this = this;
+
       if (this.smsCertNo == "" || this.smsCertNo == "undefined") return false;
-      var regExp = /^[0-9]+$/;
-      if (!regExp.test(this.smsCertNo)) {
-        this.$toast.center("숫자만 입력해주세요.");
-        this.smsCertNo = "";
-        return false;
-      }
+
       var formData = new FormData();
       formData.append("svcTxSeqno", _this.svcTxSeqno);
       formData.append("hp", _this.hp);
@@ -327,6 +227,8 @@ export default {
         "yn_eventPush",
         this.$store.state.user.isEventPush ? "Y" : "N"
       );
+      formData.append("yn_logout", _this.yn_logout);
+      formData.append("yn_use", _this.yn_use);
 
       this.$http
         .post("/m/person/insertPerson.json", formData)
@@ -345,11 +247,10 @@ export default {
             } else if (Constant.userAgent == "Android") {
               window.Android.setNoPerson(noPerson, this.hp);
             }
-            // frmCertifyStep.action = "<c:url value='/m/base/frameSecurityCode.crz'/>";
             _this.$router.push("/member/certCode");
           } else if (result.result == "11") {
             //loginSuccess
-            // modifyPersonLogout();
+            // modifyPersonLogout(); //로그아웃 변수 변경** 추가해야하는지 확인필요
             if (Constant.userAgent == "iOS") {
               Jockey.send("setNoPerson", {
                 noPerson: noPerson,
@@ -383,13 +284,19 @@ export default {
     },
     start: function() {
       var _this = this;
+      $("#smsCertNo").removeAttr("readOnly");
       _this.time = _this.minutes * 60 + _this.secondes;
       console.log(_this.time);
+      console.log(this.timerObj);
       if (!this.timerObj) {
         this.timerObj = setInterval(() => {
           if (_this.time > 0) {
             _this.time--;
             _this.timer = this.prettyTime();
+          } else if (_this.time == 0) {
+            debugger;
+            $("#smsCertNo").attr("readonly", "true");
+            // _this.smsCertNo="";
           } else {
             clearInterval(_this.timerObj);
             _this.reset();
@@ -405,7 +312,7 @@ export default {
     reset: function() {
       this.time = 0;
       this.secondes = 0;
-      this.minutes = 5;
+      this.minutes = 3;
     },
     prettyTime: function() {
       let time = this.time / 60;

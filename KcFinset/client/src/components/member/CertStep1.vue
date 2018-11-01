@@ -124,7 +124,7 @@ export default {
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
     }
-    this.$store.state.title = "약관동의 (1/7)";
+    this.$store.state.title = "약관동의";
     this.$store.state.header.type = "sub";
   },
   beforeMount() {},

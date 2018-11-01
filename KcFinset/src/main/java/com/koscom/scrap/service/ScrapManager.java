@@ -34,7 +34,7 @@ public interface ScrapManager {
 	 * @param
 	 * @return 
 	 */
-	String sendFinanceTerms(String no_person, String uuid, String dn, String email);
+	String sendFinanceTerms(String no_person, String uuid, String dn, String email, String financeTerms, String jwsInfo);
 	
 	/**
 	 * 금융사 스크랩핑 연동 정보 여부 insert

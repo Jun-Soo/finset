@@ -15,7 +15,7 @@
       <a @click="$router.push(' ')">알림설정</a>
       <a @click="$router.push(' ')">인증/보안</a>
       <a @click="$router.push(' ')">공유관리</a>
-      <a @click="$router.push(' ')">연동관리</a>
+      <a @click="$router.push('/scrap/ctrlFcLink')">연동관리</a>
       <a @click="$router.push(' ')">신용컨설팅</a>
       <a @click="$router.push(' ')">관심상품</a>
       <a @click="$router.push(' ')">상품조회결과</a>

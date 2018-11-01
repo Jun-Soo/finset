@@ -13,9 +13,9 @@
           <div class="panel-heading">
             <div class="checkbox">
               <label>
-  							<input type="checkbox" name="checkbox1" id="checkbox1" v-model="chkBox1" />
-  							<a href="" class="collapsed" role="button" data-toggle="collapse"><em>[필수]</em> 서비스 이용동의</a>
-  						</label>
+                <input type="checkbox" name="checkbox1" id="checkbox1" v-model="chkBox1" />
+                <a href="" class="collapsed" role="button" data-toggle="collapse"><em>[필수]</em> 서비스 이용동의</a>
+              </label>
             </div>
           </div>
           <div class="panel-collapse" id="panel1">
@@ -57,9 +57,9 @@
           <div class="panel-heading">
             <div class="checkbox">
               <label>
-  							<input type="checkbox" name="checkbox2" id="checkbox2" v-model="chkBox2" />
-  							<a href="" class="collapsed" role="button" data-toggle="collapse"><em>[필수]</em> 휴대전화 본인인증 동의</a>
-  						</label>
+                <input type="checkbox" name="checkbox2" id="checkbox2" v-model="chkBox2" />
+                <a href="" class="collapsed" role="button" data-toggle="collapse"><em>[필수]</em> 휴대전화 본인인증 동의</a>
+              </label>
             </div>
           </div>
           <div class="panel-collapse" id="panel2">
@@ -95,9 +95,9 @@
           <div class="panel-heading">
             <div class="checkbox">
               <label>
-  							<input type="checkbox" name="checkbox3" id="checkbox3" v-model="chkBox3" />
-  							<a href="" class="collapsed" role="button" data-toggle="collapse"><em>[선택]</em> 마케팅 정보 수신 동의</a>
-  						</label>
+                <input type="checkbox" name="checkbox3" id="checkbox3" v-model="chkBox3" />
+                <a href="" class="collapsed" role="button" data-toggle="collapse"><em>[선택]</em> 마케팅 정보 수신 동의</a>
+              </label>
             </div>
           </div>
           <div class="panel-collapse" id="panel3">
@@ -135,7 +135,8 @@ export default {
       chkAll: false,
       chkBox1: false,
       chkBox2: false,
-      chkBox3: false
+      chkBox3: false,
+      financeTerms: ""
     };
   },
   component: {},
@@ -143,16 +144,17 @@ export default {
   // },
   beforeCreate() {},
   created() {
+    window.resultCertSignInfo = this.resultCertSignInfo;
+
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
     }
     this.$store.state.title = "금융정보제공동의서 (7/7)";
-    this.checkUUID();
   },
   beforeMount() {},
   mounted() {
     var _this = this;
-    this.getTermsContent;
+    this.getTermsContent();
     $(":checkbox").change(function() {
       Common.affixBottom("hide");
       //약관 전체동의 체크
@@ -179,42 +181,59 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    //금융정보제공동의서 조회
-    getTermsContent: function() {
-      var _this = this;
-      var formData = new FormData();
-      formData.append("no_person", this.$store.state.user.noPerson);
-      formData.append("uuid", this.uuid);
-      formData.append("dn", this.$route.params.dn);
-
-      this.$http
-        .post("/m/scrap/getTermsContent.json", formData)
-        .then(function(response) {
-          var result = response.data.result;
-          _this.isScrapStList = true;
-          if (_this.isScrapFcList && _this.isScrapStList) {
-            _this.nextStep();
-          }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
-        });
-    },
-    // UUID 체크
-    checkUUID: function() {
+    // 공인인증서 유무 체크
+    checkExistCert: function() {
       if (Constant.userAgent == "iOS") {
         //공인인증서 유무 체크 결과 콜백 이벤트
-        Jockey.on("resultCheckDevicesUUID", function(param) {
-          resultCheckDevicesUUID(uuid);
+        Jockey.on("resultCheckCert", function(param) {
+          var iscert = false;
+          if (param.isCert == 1) iscert = true;
+          resultCheckCert(iscert);
         });
-        Jockey.send("checkDevicesUUID");
+        Jockey.send("checkExistCert");
       } else if (Constant.userAgent == "Android") {
-        window.Android.checkDevicesUUID();
+        window.Android.checkExistCert();
       }
     },
-    // UUID 체크 결과(모바일에서 호출)
-    resultCheckDevicesUUID: function(uuid) {
-      this.uuid = uuid;
+    /***
+     * Native Call function
+     ***/
+    resultCheckFingerPrint: function(result) {
+      console.log(result);
+      if (result == true || result == 1) {
+        this.chkFingerPrint = "Y";
+      } else {
+        this.chkFingerPrint = "N";
+      }
+    },
+    //공인인증서 유무 결과 (모바일에서 호출)
+    resultCheckCert: function(isCert) {
+      if (isCert) {
+        // 공인인증서가 있을 경우
+        if (Constant.userAgent == "iOS") {
+          Jockey.on("checkPasswordCert", function(param) {
+            resultCheckPasswordCert();
+          });
+          Jockey.send("checkPasswordCert", {
+            noPerson: this.$store.state.user.noPerson,
+            nmPerson: this.$store.state.user.nmPerson
+          });
+          //do nothing
+        } else if (Constant.userAgent == "Android") {
+          window.Android.checkPasswordCert(
+            this.$store.state.user.noPerson,
+            this.$store.state.user.nmPerson
+          );
+        }
+      } else {
+        // 공인인증서가 없을 경우
+        this.$toast.center("공인인증서가 없습니다.");
+        this.login();
+      }
+    },
+    resultCheckPasswordCert: function(dn, cn) {
+      // 금융정보제공동의서 확인여부 체크 필요
+      this.$router.push({ name: "scrapSelFcLink", params: { dn: dn, cn: cn } });
     },
     allChecked: function() {
       var _this = this;
@@ -237,16 +256,17 @@ export default {
       }
     },
     confirmedTerms: function() {
+      this.checkExistCert();
       //if (_this.chkBox1 && _this.chkBox2) {
-      this.$router.push({
-        name: "scrapLoading",
-        params: {
-          dn: this.$route.params.dn,
-          cn: this.$route.params.cn,
-          normalMessage: "연동 가능한 금융사를<br>확인 중 입니다.",
-          smallMessage: "잠시만 기다려주세요."
-        }
-      });
+      // this.$router.push({
+      //   name: "scrapLoading",
+      //   params: {
+      //     dn: this.$route.params.dn,
+      //     cn: this.$route.params.cn,
+      //     normalMessage: "연동 가능한 금융사를<br>확인 중 입니다.",
+      //     smallMessage: "잠시만 기다려주세요."
+      //   }
+      // });
       //}
     }
   }

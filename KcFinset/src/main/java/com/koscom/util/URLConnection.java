@@ -15,6 +15,8 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.google.gson.JsonObject;
+
 public class URLConnection {
 	
 	private static final Logger logger = LoggerFactory.getLogger(URLConnection.class);
@@ -354,7 +356,7 @@ public class URLConnection {
 	 * @param param
 	 * @return
 	 */
-	public ReturnClass sendReqPOST_Direct(String targetUrl, String apikey, JSONObject json) {
+	public ReturnClass sendReqPOST_Direct(String targetUrl, String apikey, JsonObject json) {
 		if (StringUtil.isEmpty(targetUrl)) {
 			logger.info("==== 요청 된 URL 이 없습니다. ====");
 			return new ReturnClass(Constant.FAILED, "요청 URL 이 없습니다.");

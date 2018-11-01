@@ -1,83 +1,88 @@
 <template>
-<div>
-  <section>
-    <!-- <div class="sub-top">
+  <div>
+    <section>
+      <!-- <div class="sub-top">
       <a href="#" class="btn-back"  @click="goBack"></a>
       <p class="title">추천상품</p>
     </div> -->
-    <div class="goods-wrap goods" v-if="goodsList.length">
-      <carousel :perPage=1>
-        <slide class="item" v-for="goods in goodsList" :key="goods.index">
-          <a href="#">
-            <div class="top">
-              <p class="symbol"><img :src="goods.icon" alt=""/>{{goods.nm_fc}}</p>
-              <p class="text blue" v-html=goods.nm_goods></p>
-            </div>
-            <div class="goods-benefit">
-              <div>{{goods.rto_interest_from}}~{{goods.rto_interest_to}}<em> %</em></div>
-              <div><em>최대 </em>{{Common.formatNumber(goods.amt_limit)}}<em> 만원</em></div>
-            </div>
-            <p class="goods-text1" v-html=goods.desc_feature></p>
-            <p class="goods-text2">저축은행중앙회 심의필 2018-00404호(2018.8.12)</p>
-          </a>
-        </slide>
-      </carousel>
-    </div>
-    <div v-else class="data-none">
-	    <p>신청 가능한 상품이 없습니다.</p>
-    </div>
-    <div class="tab mt40">
-      <div class="wrap">
-        <a href="#" :class="{'on':curTab === 'loanWorker'}" @click="tabOnClick('loanWorker')">신용대출</a>
-        <a href="#" :class="{'on':curTab === 'loanHome'}" @click="tabOnClick('loanHome')">주택담보</a>
-        <a href="#" :class="{'on':curTab === 'loanStock'}" @click="tabOnClick('loanStock')">스탁론</a>
+      <div class="goods-wrap goods" v-if="goodsList.length">
+        <carousel :perPage=1>
+          <slide class="item" v-for="goods in goodsList" :key="goods.index">
+            <a href="#">
+              <div class="top">
+                <p class="symbol"><img :src="goods.icon" alt="" />{{goods.nm_fc}}</p>
+                <p class="text blue" v-html=goods.nm_goods></p>
+              </div>
+              <div class="goods-benefit">
+                <div>{{goods.rto_interest_from}}~{{goods.rto_interest_to}}<em> %</em></div>
+                <div><em>최대 </em>{{Common.formatNumber(goods.amt_limit)}}<em> 만원</em></div>
+              </div>
+              <p class="goods-text1" v-html=goods.desc_feature></p>
+              <p class="goods-text2">저축은행중앙회 심의필 2018-00404호(2018.8.12)</p>
+            </a>
+          </slide>
+        </carousel>
       </div>
-    </div>
-    <div class="box-list goods goods-list">
-      <div class="select">
-        <div class="left">
-          <select v-model="orderby" @change="orderbyOnChange()">
-            <option v-for="option in options" :key="option.index" v-bind:value="option.value">
-              {{ option.text }}
-            </option>
-          </select>
-        </div>
-        <div class="right">
-          <button class="btn-search"  @click="clickSearch()"></button>
-        </div>
+      <div v-else class="data-none">
+        <p>신청 가능한 상품이 없습니다.</p>
       </div>
-      <listLoanNoAffiliates :item="item" ref="form"/>
-    </div>
-  </section>
-  <aside class="search-wrap" :class="{'on':isSearch}" v-if="'loanWorker' === this.curTab">
-        <div class="top" @click="clickSearch()">
-            <button>검색</button>
-        </div>
+      <div class="tab mt40">
         <div class="wrap">
-            <div class="item">
-                <div class="key">신용등급</div>
-                <div class="bar"><p><span class="active" style="width: 20%;"></span><span class="circle" style="left: 20%;"></span></p></div>
-                <div class="num">3</div>
-            </div>
-            <div class="check-wrap">
-                <div class="key">종류</div>
-                <div class="search-check">
-                    <div><input type="checkbox" id="chk1" :checked="isCheckWorker" @click="clickCheckWorker()"><label for="chk1">직장인</label></div>
-                    <div><input type="checkbox" id="chk2" :checked="isCheckSelf" @click="clickCheckSelf()"><label for="chk2">자영업</label></div>
-                </div>
-            </div>
+          <a href="#" :class="{'on':curTab === 'loanWorker'}" @click="tabOnClick('loanWorker')">신용대출</a>
+          <a href="#" :class="{'on':curTab === 'loanHome'}" @click="tabOnClick('loanHome')">주택담보</a>
+          <a href="#" :class="{'on':curTab === 'loanStock'}" @click="tabOnClick('loanStock')">스탁론</a>
         </div>
-        <div class="action">
-            <a href="#" class="stroke" @click="clickStroke()">초기화</a>
-            <a href="#" class="solid" @click="clickSolid()">적용</a>
+      </div>
+      <div class="box-list goods goods-list">
+        <div class="select">
+          <div class="left">
+            <select v-model="orderby" @change="orderbyOnChange()">
+              <option v-for="option in options" :key="option.index" v-bind:value="option.value">
+                {{ option.text }}
+              </option>
+            </select>
+          </div>
+          <div class="right">
+            <!-- <button class="btn-search" @click="clickSearch()"></button> -->
+            <button class="btn-search" @click="clickTest()"></button>
+          </div>
         </div>
+        <listLoanNoAffiliates :item="item" ref="form" />
+      </div>
+    </section>
+    <aside class="search-wrap" :class="{'on':isSearch}" v-if="'loanWorker' === this.curTab">
+      <div class="top" @click="clickSearch()">
+        <button>검색</button>
+      </div>
+      <div class="wrap">
+        <div class="item">
+          <div class="key">신용등급</div>
+          <div class="bar">
+            <p><span class="active" style="width: 20%;"></span><span class="circle" style="left: 20%;"></span></p>
+          </div>
+          <div class="num">3</div>
+        </div>
+        <div class="check-wrap">
+          <div class="key">종류</div>
+          <div class="search-check">
+            <div><input type="checkbox" id="chk1" :checked="isCheckWorker" @click="clickCheckWorker()"><label for="chk1">직장인</label></div>
+            <div><input type="checkbox" id="chk2" :checked="isCheckSelf" @click="clickCheckSelf()"><label for="chk2">자영업</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="action">
+        <a href="#" class="stroke" @click="clickStroke()">초기화</a>
+        <a href="#" class="solid" @click="clickSolid()">적용</a>
+      </div>
     </aside>
-</div>
+  </div>
 </template>
 
 <script>
 import listLoanNoAffiliates from "./sub/listLoanNoAffiliates";
 import Common from "./../../assets/js/common.js";
+
+import Constant from "./../../assets/js/constant.js";
 
 export default {
   name: "List",
@@ -112,6 +117,9 @@ export default {
   created() {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "추천상품";
+
+    window.resultCheckCert = this.resultCheckCert;
+    window.resultCheckPasswordCert = this.resultCheckPasswordCert;
   },
   beforeMount() {},
   mounted() {
@@ -218,6 +226,65 @@ export default {
           this.spinnerIsVisible = false; // 0초되면 숨기기
         }
       }, 1000);
+    },
+    //테스트 영역
+    clickTest: function(type) {
+      alert("test");
+      this.checkExistCert();
+    },
+    // 공인인증서 유무 체크
+    checkExistCert: function() {
+      if (Constant.userAgent == "iOS") {
+        //공인인증서 유무 체크 결과 콜백 이벤트
+        Jockey.on("resultCheckCert", function(param) {
+          var iscert = false;
+          if (param.isCert == 1) iscert = true;
+          resultCheckCert(iscert);
+        });
+        Jockey.send("checkExistCert");
+      } else if (Constant.userAgent == "Android") {
+        window.Android.checkExistCert();
+      }
+    },
+    /***
+     * Native Call function
+     ***/
+    resultCheckFingerPrint: function(result) {
+      console.log(result);
+      if (result == true || result == 1) {
+        this.chkFingerPrint = "Y";
+      } else {
+        this.chkFingerPrint = "N";
+      }
+    },
+    //공인인증서 유무 결과 (모바일에서 호출)
+    resultCheckCert: function(isCert) {
+      if (isCert) {
+        // 공인인증서가 있을 경우
+        if (Constant.userAgent == "iOS") {
+          Jockey.on("checkPasswordCert", function(param) {
+            resultCheckPasswordCert();
+          });
+          Jockey.send("checkPasswordCert", {
+            noPerson: this.$store.state.user.noPerson,
+            nmPerson: this.$store.state.user.nmPerson
+          });
+          //do nothing
+        } else if (Constant.userAgent == "Android") {
+          window.Android.checkPasswordCert(
+            this.$store.state.user.noPerson,
+            this.$store.state.user.nmPerson
+          );
+        }
+      } else {
+        // 공인인증서가 없을 경우
+        this.$toast.center("공인인증서가 없습니다.");
+        this.login();
+      }
+    },
+    resultCheckPasswordCert: function(dn, cn) {
+      // 금융정보제공동의서 확인여부 체크 필요
+      this.$router.push({ name: "scrapSelFcLink", params: { dn: dn, cn: cn } });
     }
   }
 };

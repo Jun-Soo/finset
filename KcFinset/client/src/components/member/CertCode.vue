@@ -29,7 +29,7 @@
         <p class="text"><a href=""><u>비밀번호를 재설정 하시겠습니까?</u></a></p>
       </div>
     </section>
-  	<!-- //Content -->
+    <!-- //Content -->
   </div>
 </template>
 
@@ -259,7 +259,7 @@ export default {
     },
     resultCheckPasswordCert: function(dn, cn) {
       // 금융정보제공동의서 확인여부 체크 필요
-      this.$router.push({ name: "scrapCertStep", params: { dn: dn, cn: cn } });
+      this.$router.push({ name: "scrapSelFcLink", params: { dn: dn, cn: cn } });
     }
   }
 };

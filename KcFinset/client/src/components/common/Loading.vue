@@ -21,9 +21,15 @@ export default {
   // },
   beforeCreate() {},
   created() {
-    var params = common.getParams();
-    this.normalMessage = params.mag1;
-    this.smallMessage = params.mag2;
+    var params = Common.getParams();
+
+    console.log(params);
+    if (params.msg1) {
+      this.normalMessage = decodeURI(params.msg1);
+    }
+    if (params.msg2) {
+      this.smallMessage = decodeURI(params.msg2);
+    }
   },
   beforeMount() {},
   mounted() {},

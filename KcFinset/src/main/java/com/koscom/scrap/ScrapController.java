@@ -113,10 +113,10 @@ public class ScrapController {
 		no_person = (String) session.getAttribute("no_person");
 		//scrapManager.getDirectFinanceSearch();
 		
-		String result = scrapManager.getFinanceTerms(no_person, uuid, dn, email);
+		String financeTerms = scrapManager.getFinanceTerms(no_person, uuid, dn, email);
 		
-		logger.debug("result : " + result);
-		model.addAttribute("result", result);
+		logger.debug("financeTerms : " + financeTerms);
+		model.addAttribute("financeTerms", financeTerms);
 		return "jsonView";
 	}
 	
@@ -135,16 +135,21 @@ public class ScrapController {
 			String no_person,
 			String uuid,
 			String dn,
-			String email) {
+			String email,
+			String financeTerms,
+			String jwsInfo) {
 		logger.debug("================= no_person : " + no_person);
 		logger.debug("================= uuid : " + uuid);
 		logger.debug("================= dn : " + dn);
+		logger.debug("================= financeTerms : " + financeTerms);
+		logger.debug("================= jwsInfo : " + jwsInfo);
+		
 		logger.info("service.profile :" +environment.getProperty("service.profile"));
 		
 		no_person = (String) session.getAttribute("no_person");
 		//scrapManager.getDirectFinanceSearch();
 		
-		String result = scrapManager.sendFinanceTerms(no_person, uuid, dn, email);
+		String result = scrapManager.sendFinanceTerms(no_person, uuid, dn, email, financeTerms, jwsInfo);
 		
 		logger.debug("result : " + result);
 		model.addAttribute("result", result);

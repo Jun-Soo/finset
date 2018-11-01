@@ -1,0 +1,40 @@
+<template>
+  <div class="loading">
+    <span v-html=normalMessage></span><br><small v-html=smallMessage></small>
+  </div>
+</template>
+
+<script>
+import Common from "./../../assets/js/common.js";
+import Constant from "./../../assets/js/constant.js";
+
+export default {
+  name: "loading",
+  data() {
+    return {
+      normalMessage: "",
+      smallMessage: ""
+    };
+  },
+  component: {},
+  // computed () {
+  // },
+  beforeCreate() {},
+  created() {},
+  beforeMount() {},
+  mounted() {
+    var params = common.getParams();
+    this.normalMessage = params.mag1;
+    this.smallMessage = params.mag2;
+  },
+  beforeUpdate() {},
+  updated() {},
+  beforeDestroy() {},
+  destroyed() {},
+  methods: {}
+};
+</script>
+
+<!-- Add 'scoped' attribute to limit CSS to this component only -->
+<style lang="scss">
+</style>

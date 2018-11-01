@@ -180,6 +180,7 @@ import ShareSumMain from '@/components/share/SumMain'
 import ErrorPage from '@/components/common/Error'
 import ProxyPage from '@/components/common/ProxyPage'
 import Spinner from '@/components/common/Spinner'
+import Loading from '@/components/common/Loading'
 
 import Swiper from '@/components/_sample/Swiper'
 import Gauge from '@/components/_sample/Gauge'
@@ -247,6 +248,14 @@ export const routes = [{
   path: 'spinner',
   alias: '/spinner',
   component: Spinner,
+  meta: {
+    allowPath: true
+  }
+},
+{
+  path: 'common/common',
+  alias: '/common',
+  component: Common,
   meta: {
     allowPath: true
   }
@@ -821,7 +830,7 @@ export const routes = [{
   },
   {
     path: 'loading',
-    alias: '/lodaing',
+    alias: '/loadaing',
     name: 'scrapLoading',
     component: ScrapLoading,
     meta: {

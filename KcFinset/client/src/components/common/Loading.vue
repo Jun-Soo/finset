@@ -20,13 +20,13 @@ export default {
   // computed () {
   // },
   beforeCreate() {},
-  created() {},
-  beforeMount() {},
-  mounted() {
+  created() {
     var params = common.getParams();
     this.normalMessage = params.mag1;
     this.smallMessage = params.mag2;
   },
+  beforeMount() {},
+  mounted() {},
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},

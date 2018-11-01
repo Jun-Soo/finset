@@ -253,12 +253,17 @@ export const routes = [{
   }
 },
 {
-  path: 'common/common',
-  alias: '/common',
-  component: Common,
-  meta: {
-    allowPath: true
-  }
+  path: '/common',
+  name: 'common',
+  component: MemberHome,
+  children: [{
+    path: 'loading',
+    alias: '/loading',
+    component: Loading,
+    meta: {
+      allowPath: true
+    }
+  }]
 },
 {
   path: '/member',

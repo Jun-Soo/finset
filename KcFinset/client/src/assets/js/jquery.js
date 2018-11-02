@@ -1,4 +1,5 @@
 // JavaScript Document
+import $ from 'jquery'
 
 $(function () {
   $(document).on('click', 'aside button', function () {

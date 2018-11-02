@@ -630,12 +630,12 @@ export const routes = [{
       allowPath: true
     }
   },
-    // {
-    //   path: 'list',
-    //   alias: '/list',
-    //   component: MemoList,
-    //   meta: { allowPath: true }
-    // },
+  // {
+  //   path: 'list',
+  //   alias: '/list',
+  //   component: MemoList,
+  //   meta: { allowPath: true }
+  // },
   {
     path: 'main',
     alias: '/main',
@@ -1031,26 +1031,30 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  const hp = localStorage.getItem('hp')
-  if (to.meta.allowPath) {
-    if (to.meta.requiresAuth) {
-      const accessToken = localStorage.getItem('accessToken')
-      if (!accessToken) {
-        alert('잘못된 접근입니다.')
-        setTimeout(function () {
-          next('/home?hp=' + hp)
-        }, 1000)
+  if (to.path === '/index.html') {
+    next('/home?hp=' + to.query.hp)
+  } else {
+    const hp = localStorage.getItem('hp')
+    if (to.meta.allowPath) {
+      if (to.meta.requiresAuth) {
+        const accessToken = localStorage.getItem('accessToken')
+        if (!accessToken) {
+          alert('잘못된 접근입니다.')
+          setTimeout(function () {
+            next('/home?hp=' + hp)
+          }, 1000)
+        } else {
+          next()
+        }
       } else {
         next()
       }
     } else {
-      next()
+      alert('잘못된 접근입니다.')
+      setTimeout(function () {
+        next('/home?hp=' + hp)
+      }, 1000)
     }
-  } else {
-    alert('잘못된 접근입니다.')
-    setTimeout(function () {
-      next('/home?hp=' + hp)
-    }, 1000)
   }
 })
 

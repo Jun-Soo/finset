@@ -8,13 +8,12 @@ import ko from 'vee-validate/dist/locale/ko.js'
 import axios from 'axios'
 import router from './comm/router'
 import store from './comm/store'
-import 'jquery'
 
 import toast from 'vue2-toast'
-
 import VueCarousel from 'vue-carousel'
-
 import VueModal from 'vue2-modal'
+
+import 'jquery'
 
 import 'vue2-toast/lib/toast.css'
 
@@ -58,6 +57,8 @@ new Vue({
   el: '#app',
   router,
   store,
-  components: { App },
+  components: {
+    App
+  },
   template: '<App/>'
 })

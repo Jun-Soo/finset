@@ -15,7 +15,7 @@
         <div class="info">
           <p class="name">{{this.$store.state.user.nmPerson}}</p>
           <p class="date">최근 접속 {{connectTime}} </p>
-          <a href="#" @click="$router.push('/mypage/info')">MYPAGE</a>
+          <a href="#" @click="clickButton('/mypage/info')">MYPAGE</a>
         </div>
         <div class="links">
           <a href="#">고객센터</a>
@@ -92,6 +92,12 @@ export default {
         .catch(e => {
           this.$toast.center(ko.messages.error);
         });
+    },
+    clickButton: function(page) {
+      // GNB Close Event
+      $(".gnb-wrap").removeClass("on");
+      $("body").removeClass("not-scroll");
+      this.$router.push(page);
     }
     // goBack: function() {
     //   var historySize = history.length;

@@ -140,7 +140,7 @@ import MypageInfo from '@/components/mypage/Info'
 import MypageEmail from '@/components/mypage/Email'
 import MypageLogout from '@/components/mypage/Logout'
 import MypageRegAlarm from '@/components/mypage/RegAlarm'
-// import MypageCert from '@/components/mypage/Cert'
+import MypageCert from '@/components/mypage/Cert'
 // import MypageRegCertLogin from '@/components/mypage/RegCertLogin'
 // import MypageCertPerson from '@/components/mypage/CertPerson'
 // import MypageChgPwd from '@/components/mypage/ChgPwd'
@@ -270,80 +270,80 @@ export const routes = [{
   name: 'member',
   component: MemberHome,
   children: [{
-    path: 'Terms1',
-    alias: '/Terms1',
+    path: 'terms1',
+    alias: '/terms1',
     component: MemberTerms1,
     meta: {
       allowPath: true
     }
   },
   {
-    path: 'Terms2',
-    alias: '/Terms2',
+    path: 'terms2',
+    alias: '/terms2',
     component: MemberTerms2,
     meta: {
       allowPath: true
     }
   },
   {
-    path: 'Terms3',
-    alias: '/Terms3',
+    path: 'terms3',
+    alias: '/terms3',
     component: MemberTerms3,
     meta: {
       allowPath: true
     }
   },
   {
-    path: 'Terms4',
-    alias: '/Terms4',
+    path: 'terms4',
+    alias: '/terms4',
     component: MemberTerms4,
     meta: {
       allowPath: true
     }
   },
   {
-    path: 'Terms5',
-    alias: '/Terms5',
+    path: 'terms5',
+    alias: '/terms5',
     component: MemberTerms5,
     meta: {
       allowPath: true
     }
   },
   {
-    path: 'Terms6',
-    alias: '/Terms6',
+    path: 'terms6',
+    alias: '/terms6',
     component: MemberTerms6,
     meta: {
       allowPath: true
     }
   },
   {
-    path: 'Terms7',
-    alias: '/Terms7',
+    path: 'terms7',
+    alias: '/terms7',
     component: MemberTerms7,
     meta: {
       allowPath: true
     }
   },
   {
-    path: 'Terms8',
-    alias: '/Terms8',
+    path: 'terms8',
+    alias: '/terms8',
     component: MemberTerms8,
     meta: {
       allowPath: true
     }
   },
   {
-    path: 'Terms9',
-    alias: '/Terms9',
+    path: 'terms9',
+    alias: '/terms9',
     component: MemberTerms9,
     meta: {
       allowPath: true
     }
   },
   {
-    path: 'Terms10',
-    alias: '/Terms10',
+    path: 'terms10',
+    alias: '/terms10',
     component: MemberTerms10,
     meta: {
       allowPath: true
@@ -915,6 +915,15 @@ export const routes = [{
     path: 'dropDone',
     alias: '/dropDone',
     component: MypageDropDone,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'cert',
+    alias: '/cert',
+    component: MypageCert,
     meta: {
       allowPath: true,
       requiresAuth: true

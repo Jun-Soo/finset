@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 // import Constant from './../assets/js/constant'
+import Common from './../assets/js/common.js'
 
 Vue.use(Vuex)
 
@@ -32,9 +33,29 @@ const store = new Vuex.Store({
     cardCode: '',
     etcCode: '',
     isLoading: false,
-    isScrap: true
+    isScrap: true,
+    loginPath: '/check/j_spring_security_check'
   },
   mutations: {
+    INIT (state, data) {
+      state.user.noPerson = data.no_person
+      state.user.nmPerson = data.nm_person
+      state.user.cntFailPwd = Number(data.cnt_fail_pwd)
+      state.user.cntFailFinger = Number(data.cnt_fail_finger)
+      state.user.ynFingerprint = Common.nvl(data.yn_fingerprint, 'N')
+      state.user.dt_basic = data.dt_basic
+
+      state.bankCode = data.bank_code
+      state.cardCode = data.card_code
+      state.site = data.site
+      if (data.rtnPath === '/member/certFingerLogin') {
+        state.user.authToken = data.authToken
+      }
+      if (data.site !== 'LOCAL') { // dev, real login path
+        state.loginPath = '/j_spring_security_check'
+      }
+      localStorage.setItem('site', data.site)
+    },
     LOGIN (state, data) {
       localStorage.setItem('accessToken', data.accessToken)
       state.accessToken = data.accessToken

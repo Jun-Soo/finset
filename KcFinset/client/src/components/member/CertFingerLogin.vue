@@ -74,7 +74,7 @@ export default {
         j_password: _this.$store.state.user.authToken
       });
       this.$http
-        .post("/check/j_spring_security_check", data
+        .post(_this.$store.state.loginPath, data
         ,{
           headers: {
             "Content-type": "application/x-www-form-urlencoded"

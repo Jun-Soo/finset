@@ -248,7 +248,10 @@ public class ScrapManagerImpl implements ScrapManager {
 		
 		logger.info("jsonRoot.toString() : " +jsonSendRoot.toString());
 		
-		ReturnClass returnClass = url.sendReqPOST_Direct(directUrl, directKey, jsonSendRoot);
+		HashMap<String, String> headerMap = new HashMap();
+		headerMap.put("apikey", directKey);
+		
+		ReturnClass returnClass = url.sendReqPOST_Direct(directUrl, headerMap, jsonSendRoot);
 		
 		if(returnClass.getCd_result()  == Constant.SUCCESS)	{
 			String data = returnClass.getDes_message();
@@ -364,7 +367,10 @@ public class ScrapManagerImpl implements ScrapManager {
 		
 		logger.info("jsonRoot.toString() : " +jsonSendRoot.toString());
 		
-		ReturnClass returnClass = url.sendReqPOST_Direct(directUrl, directKey, jsonSendRoot);
+		HashMap<String, String> headerMap = new HashMap();
+		headerMap.put("apikey", directKey);
+		
+		ReturnClass returnClass = url.sendReqPOST_Direct(directUrl, headerMap, jsonSendRoot);
 		
 		if(returnClass.getCd_result()  == Constant.SUCCESS)	{
 		}

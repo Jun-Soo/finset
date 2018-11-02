@@ -5,6 +5,11 @@ import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.security.cert.X509Certificate;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -356,7 +361,7 @@ public class URLConnection {
 	 * @param param
 	 * @return
 	 */
-	public ReturnClass sendReqPOST_Direct(String targetUrl, String apikey, JsonObject json) {
+	public ReturnClass sendReqPOST_Direct(String targetUrl, HashMap<String, String> headerMap, JsonObject json) {
 		if (StringUtil.isEmpty(targetUrl)) {
 			logger.info("==== 요청 된 URL 이 없습니다. ====");
 			return new ReturnClass(Constant.FAILED, "요청 URL 이 없습니다.");
@@ -392,7 +397,17 @@ public class URLConnection {
 			connection.setReadTimeout(60000); // millisecond//
 			// 헤더값 설정
 			connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-			connection.setRequestProperty("apikey", apikey);
+			
+			// header map 추가
+			Set<Entry<String, String>> set = headerMap.entrySet();
+			Iterator<Entry<String, String>> itr = set.iterator();
+
+			while (itr.hasNext())
+			{
+				Map.Entry<String, String> e = (Map.Entry<String, String>)itr.next();
+				connection.setRequestProperty(e.getKey(), e.getValue());
+			}
+		
 			// 전달방식을 설정한다. POST or GET, 기본값은 GET 이다.
 			connection.setRequestMethod("POST");
 			// 서버로 데이터를 전송할 수 있도록 한다. GET 방식이면 사용될 일이 없으나,

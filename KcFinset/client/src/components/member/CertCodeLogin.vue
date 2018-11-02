@@ -15,18 +15,19 @@
           <input type="password" v-bind:style="classPass4" v-model="classPass4" id="pass_number4" maxlength="1" readonly />
         </div>
         <div class="number">
-          <button type="button" v-on:click="btnClick('1')">1</button>
-          <button type="button" v-on:click="btnClick('2')">2</button>
-          <button type="button" v-on:click="btnClick('3')">3</button>
-          <button type="button" v-on:click="btnClick('4')">4</button>
-          <button type="button" v-on:click="btnClick('5')">5</button>
-          <button type="button" v-on:click="btnClick('6')">6</button>
-          <button type="button" v-on:click="btnClick('7')">7</button>
-          <button type="button" v-on:click="btnClick('8')">8</button>
-          <button type="button" v-on:click="btnClick('9')">9</button>
-          <router-link to="/member/certFingerLogin"><button v-if="ynFingerprint === 'Y'" class="finger">&nbsp;</button></router-link>
-          <button type="button" v-on:click="btnClick('0')">0</button>
-          <button type="button" class="del" v-on:click="backClick()"></button>
+          <button v-on:click="btnClick('1')">1</button>
+          <button v-on:click="btnClick('2')">2</button>
+          <button v-on:click="btnClick('3')">3</button>
+          <button v-on:click="btnClick('4')">4</button>
+          <button v-on:click="btnClick('5')">5</button>
+          <button v-on:click="btnClick('6')">6</button>
+          <button v-on:click="btnClick('7')">7</button>
+          <button v-on:click="btnClick('8')">8</button>
+          <button v-on:click="btnClick('9')">9</button>
+          <button v-if="ynFingerprint === 'Y'" v-on:click="gotoFingerPrint()" class="finger"></button>
+          <button v-else disabled="disabled">&nbsp;</button>
+          <button v-on:click="btnClick('0')">0</button>
+          <button class="del" v-on:click="backClick()"></button>
         </div>
         <p class="text"><a href=""><u>비밀번호를 재설정 하시겠습니까?</u></a></p>
       </div>
@@ -93,7 +94,9 @@ export default {
     },
     btnClick: function(val) {
       var _this = this;
-      _this.password += val;
+      if(_this.password.length < 4){
+        _this.password += val;
+      }
       if (_this.password.length > 0) _this.classPass1 = "border-color: #111";
       if (_this.password.length > 1) _this.classPass2 = "border-color: #111";
       if (_this.password.length > 2) _this.classPass3 = "border-color: #111";
@@ -102,6 +105,10 @@ export default {
         //validator
         _this.login();
       }
+    },
+    gotoFingerPrint: function(){
+      var _this = this;
+      _this.$router.push("/member/certFingerLogin");
     },
     backClick: function() {
       var _this = this;
@@ -226,7 +233,3 @@ export default {
   }
 };
 </script>
-
-<!-- Add 'scoped' attribute to limit CSS to this component only -->
-<style lang="scss">
-</style>

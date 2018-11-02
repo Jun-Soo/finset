@@ -31,7 +31,8 @@ const store = new Vuex.Store({
     bankCode: '',
     cardCode: '',
     etcCode: '',
-    isLoading: false
+    isLoading: false,
+    isScrap: true
   },
   mutations: {
     LOGIN (state, data) {

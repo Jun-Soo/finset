@@ -99,7 +99,13 @@ export default {
       var _this = this;
       this.$validator.validateAll().then(res => {
         if (res) {
-          if (_this.isCheckCert) {
+          // 증권 연동이 아닐경우 로딩페이지로 이동
+          if (_this.isCheckStock == false) {
+            _this.nextStep();
+          }
+          // 증권연동 - 동의서 체크여부
+          else if (_this.isCheckCert) {
+            // 증권연동 - 동의서 다운여부
             if (_this.isGetCertContent) {
               _this.getCertSignInfo();
             } else {
@@ -151,23 +157,27 @@ export default {
         .post("/m/scrap/sendTermsContent.json", formData)
         .then(function(response) {
           console.log(response.data);
-          this.$router.push({
-            name: "scrapLoading",
-            params: {
-              dn: this.$route.params.dn,
-              cn: this.$route.params.cn,
-              normalMessage: "연동 가능한 금융사를<br>확인 중 입니다.",
-              smallMessage: "잠시만 기다려주세요.",
-              isCheckBank: _this.isCheckBank,
-              isCheckCard: _this.isCheckCard,
-              isCheckStock: _this.isCheckStock,
-              isCheckNts: _this.isCheckNts
-            }
-          });
+          _this.nextStep();
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);
         });
+    },
+    nextStep: function() {
+      var _this = this;
+      this.$router.push({
+        name: "scrapLoading",
+        params: {
+          dn: this.$route.params.dn,
+          cn: this.$route.params.cn,
+          normalMessage: "연동 가능한 금융사를<br>확인 중 입니다.",
+          smallMessage: "잠시만 기다려주세요.",
+          isCheckBank: _this.isCheckBank,
+          isCheckCard: _this.isCheckCard,
+          isCheckStock: _this.isCheckStock,
+          isCheckNts: _this.isCheckNts
+        }
+      });
     },
     // 인증정보 가져오기
     getCertSignInfo: function() {
@@ -191,10 +201,11 @@ export default {
     },
     // UUID 체크
     checkUUID: function() {
+      var _this = this;
       if (Constant.userAgent == "iOS") {
         //공인인증서 유무 체크 결과 콜백 이벤트
         Jockey.on("resultCheckDevicesUUID", function(param) {
-          resultCheckDevicesUUID(uuid);
+          _this.resultCheckDevicesUUID(uuid);
         });
         Jockey.send("checkDevicesUUID");
       } else if (Constant.userAgent == "Android") {

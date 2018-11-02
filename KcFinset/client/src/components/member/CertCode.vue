@@ -13,20 +13,19 @@
           <input type="password" v-bind:style="classPass4" name="pass_number" v-model="classPass4" id="pass_number4" maxlength="1" readonly />
         </div>
         <div class="number">
-          <button type="button" v-on:click="btnClick('1')">1</button>
-          <button type="button" v-on:click="btnClick('2')">2</button>
-          <button type="button" v-on:click="btnClick('3')">3</button>
-          <button type="button" v-on:click="btnClick('4')">4</button>
-          <button type="button" v-on:click="btnClick('5')">5</button>
-          <button type="button" v-on:click="btnClick('6')">6</button>
-          <button type="button" v-on:click="btnClick('7')">7</button>
-          <button type="button" v-on:click="btnClick('8')">8</button>
-          <button type="button" v-on:click="btnClick('9')">9</button>
-          <router-link to="/member/certFingerLogin"><button v-if="chkFingerPrint === 'Y'" class="finger">&nbsp;</button></router-link>
-          <button type="button" v-on:click="btnClick('0')">0</button>
-          <button type="button" class="del" v-on:click="backClick()"></button>
+          <button v-on:click="btnClick('1')">1</button>
+          <button v-on:click="btnClick('2')">2</button>
+          <button v-on:click="btnClick('3')">3</button>
+          <button v-on:click="btnClick('4')">4</button>
+          <button v-on:click="btnClick('5')">5</button>
+          <button v-on:click="btnClick('6')">6</button>
+          <button v-on:click="btnClick('7')">7</button>
+          <button v-on:click="btnClick('8')">8</button>
+          <button v-on:click="btnClick('9')">9</button>
+          <button disabled="disabled">&nbsp;</button>
+          <button v-on:click="btnClick('0')">0</button>
+          <button class="del" v-on:click="backClick()"></button>
         </div>
-        <p class="text"><a href=""><u>비밀번호를 재설정 하시겠습니까?</u></a></p>
       </div>
     </section>
     <!-- //Content -->
@@ -80,10 +79,10 @@ export default {
   beforeMount() {},
   mounted() {
     if (!localStorage.getItem("tempPwd")) {
-      this.$store.state.title = "비밀번호 설정 (3/7)";
+      this.$store.state.title = "비밀번호 설정";
       this.certMessage = "비밀번호를 입력해주세요.";
     } else {
-      this.$store.state.title = "비밀번호 확인 (4/7)";
+      this.$store.state.title = "비밀번호 확인";
       this.certMessage = "비밀번호를 다시 한번 입력해주세요.";
       this.tempPwd = localStorage.getItem("tempPwd");
     }
@@ -103,7 +102,9 @@ export default {
     btnClick: function(val) {
       var _this = this;
       var type = "confirmPage";
-      _this.password += val;
+      if(_this.password.length < 4){
+        _this.password += val;
+      }
       if (_this.password.length > 0) _this.classPass1 = "active";
       if (_this.password.length > 1) _this.classPass2 = "active";
       if (_this.password.length > 2) _this.classPass3 = "active";
@@ -116,6 +117,7 @@ export default {
           if (_this.tempPwd != _this.password) {
             //앞 비밀번호와 같은지 확인
             _this.password = "";
+            _this.backClick();
             this.$toast.center(ko.messages.notMatchPwd);
             return;
           } else {
@@ -264,7 +266,3 @@ export default {
   }
 };
 </script>
-
-<!-- Add 'scoped' attribute to limit CSS to this component only -->
-<style lang="scss">
-</style>

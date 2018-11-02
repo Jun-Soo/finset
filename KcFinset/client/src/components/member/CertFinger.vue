@@ -45,8 +45,8 @@ export default {
   // },
   beforeCreate() {},
   created() {
-    this.$store.state.title = "지문인증 설정 (5/7)";
-    // this.$store.state.header.type = "sub";
+    this.$store.state.title = "지문인증 설정";
+    this.$store.state.header.type = "sub";
 
     window.resultFingerPrint = this.resultFingerPrint;
     window.resultCheckCert = this.resultCheckCert;
@@ -216,16 +216,8 @@ export default {
     //공인인증서 비밀번호 체크 결과 (모바일에서 호출)
     resultCheckPasswordCert: function(dn, cn) {
       // 금융정보제공동의서 확인여부 체크 필요
-      this.$router.push({ name: "scrapCertStep", params: { dn: dn, cn: cn } });
+      this.$router.push({ name: "scrapSelFcLink", params: { dn: dn, cn: cn } });
     }
   }
 };
 </script>
-
-<!-- Add 'scoped' attribute to limit CSS to this component only -->
-<style lang="scss">
-.memberMain {
-  background-color: #283593;
-  height: 100%;
-}
-</style>

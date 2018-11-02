@@ -143,6 +143,7 @@
 		SELECT NO_PERSON
 			, SEQ_SCRAPING_RESULT
 			, CD_FC
+			, CD_TYPE
 			, YMD_STT
 			, YMD_END
 			, ERROR_CD
@@ -151,13 +152,15 @@
 		FROM SCR_REQ_CARD
 		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
 			AND CD_FC= #{cd_fc, jdbcType=VARCHAR}
+			AND CD_TYPE= #{cd_type, jdbcType=VARCHAR}
 	</select>
 	
 	<insert id="createScrReqCard" parameterType="com.koscom.scrap.model.ScrReqCardVO">
 		MERGE INTO SCR_REQ_CARD
 		USING DUAL
 		ON ( NO_PERSON		= #{no_person	,jdbcType=VARCHAR}
-			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR} )
+			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR}
+			AND CD_TYPE		= #{cd_type		,jdbcType=VARCHAR} )
 		WHEN MATCHED THEN
 		UPDATE
 		 SET
@@ -173,6 +176,7 @@
 			 NO_PERSON
 			,SEQ_SCRAPING_RESULT
 			,CD_FC
+			,CD_TYPE
 			,YMD_STT
 			,YMD_END
 			,ERROR_CD
@@ -182,6 +186,7 @@
 			 #{no_person			,jdbcType=VARCHAR}
 			,#{seq_scraping_result	,jdbcType=VARCHAR}
 			,#{cd_fc				,jdbcType=VARCHAR}
+			,#{cd_type				,jdbcType=VARCHAR}
 			,#{ymd_stt				,jdbcType=VARCHAR}
 			,#{ymd_end				,jdbcType=VARCHAR}
 			,#{error_cd				,jdbcType=VARCHAR}
@@ -196,6 +201,7 @@
 			 NO_PERSON
 			, SEQ_SCRAPING_RESULT
 			, CD_FC
+			, CD_TYPE
 			, YMD_STT
 			, YMD_END
 			, ERROR_CD
@@ -205,6 +211,7 @@
 		SELECT NO_PERSON
 			, SEQ_SCRAPING_RESULT
 			, CD_FC
+			, CD_TYPE
 			, YMD_STT
 			, YMD_END
 			, ERROR_CD
@@ -213,6 +220,7 @@
 		FROM SCR_REQ_CARD
 		WHERE NO_PERSON		= #{no_person	,jdbcType=VARCHAR}
 			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR}
+			AND CD_TYPE		= #{cd_type		,jdbcType=VARCHAR}
 	</insert>
 	
 	<select id="getScrReqHealth" parameterType="com.koscom.scrap.model.ScrReqHealthVO" resultType="com.koscom.scrap.model.ScrReqHealthVO">
@@ -409,7 +417,7 @@
 			, FC.CD_FC
 			, FC.NM_FC
 			, (SELECT NM_CODE FROM COMM_CD WHERE CODE_GROUP = 'cd_fin' AND CODE_VALUE = FC.CD_FIN) NM_CODE
-			, CD.NM_CODE CD_COOCON
+			, CD_FC_COOCON CD_COOCON
 			, NVL(LK.YN_LINK, 'N') YN_LINK
 			, LK.CD_LINK_STAT
 			, LK.RSN_LINK_MESSAGE
@@ -418,10 +426,7 @@
 			FC LEFT OUTER JOIN
 			(SELECT * FROM FC_LINK_INFO WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}) LK  
 			ON LK.CD_FC = FC.CD_FC
-			, COMM_CD CD
 		WHERE FC.YN_SCRAP = 'Y'
-			AND CD.CODE_GROUP = 'cd_coocon_fc'
-			AND CD.CODE_VALUE = FC.CD_FC
 		ORDER BY CD_FIN, YN_LINK DESC, NM_FC
 	</select>
 	
@@ -611,7 +616,82 @@
 		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
 			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
 		GROUP BY NO_PERSON, CD_FC
-	</select >
+	</select>
+	
+	<insert id="createScrCardChargeInfo" parameterType="com.koscom.scrap.model.ScrCardChargeInfoVO">
+		MERGE INTO SCR_CARD_CHARGE_INFO
+		USING DUAL
+		ON (NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CHARGE_YYYYMM = #{charge_yyyymm, jdbcType=VARCHAR} )
+		WHEN MATCHED THEN
+		UPDATE
+		 SET
+		    MONTHLY_CHARGE  = #{monthly_charge ,jdbcType=VARCHAR}
+		    ,DT_FRT 	    = SYSDATE
+		WHEN NOT MATCHED THEN
+        INSERT
+        (
+			 NO_PERSON
+			,CD_FC
+			,CHARGE_YYYYMM
+			,MONTHLY_CHARGE
+			,DT_FRT
+		) VALUES (
+			 #{no_person      ,jdbcType=VARCHAR}
+			,#{cd_fc		  ,jdbcType=VARCHAR}
+			,#{charge_yyyymm  ,jdbcType=VARCHAR}
+			,#{monthly_charge ,jdbcType=VARCHAR}
+			,SYSDATE
+		)
+	</insert>
+	
+	<insert id="createScrCardChargeDetail" parameterType="com.koscom.scrap.model.ScrCardChargeDetailVO">
+		INSERT INTO SCR_CARD_CHARGE_DETAIL(
+			 NO_PERSON
+			,CD_FC
+			,CHARGE_YYYYMM
+			,TYPE_CARD
+			,NO_CARD
+			,DT_PAYMENT
+			,DT_USE
+			,NM_MEMBER
+			,MONTH_INSTALLMENT
+			,DEPOSIT_NUMBER
+			,USAGE_FEE
+			,AMT_CHARGE
+			,FEES
+			,AMT_AFTER_PAYMENT
+			,NO_BIZ_MEMBER
+			,TYPE_BIZ_MEMBER
+			,DT_FRT
+
+		) VALUES (
+			 #{no_person         ,jdbcType=VARCHAR}
+			,#{cd_fc             ,jdbcType=VARCHAR}
+			,#{charge_yyyymm     ,jdbcType=VARCHAR}
+			,#{type_card         ,jdbcType=VARCHAR}
+			,#{no_card           ,jdbcType=VARCHAR}
+			,#{dt_payment        ,jdbcType=VARCHAR}
+			,#{dt_use            ,jdbcType=VARCHAR}
+			,#{nm_member         ,jdbcType=VARCHAR}
+			,#{month_installment ,jdbcType=VARCHAR}
+			,#{deposit_number    ,jdbcType=VARCHAR}
+			,#{usage_fee         ,jdbcType=VARCHAR}
+			,#{amt_charge        ,jdbcType=VARCHAR}
+			,#{fees              ,jdbcType=VARCHAR}
+			,#{amt_after_payment ,jdbcType=VARCHAR}
+			,#{no_biz_member     ,jdbcType=VARCHAR}
+			,#{type_biz_member   ,jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<select id="getMaxDateScrCardChargeDetail" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT MAX(DT_USE) MAX_DT_TRD FROM SCR_CARD_CHARGE_DETAIL
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+		GROUP BY NO_PERSON, CD_FC
+	</select>
 	
 	<insert id="createScrReqCertification" parameterType="com.koscom.scrap.model.ScrReqCertificationVO">
 		INSERT INTO SCR_REQ_CERTIFICATION(

@@ -29,7 +29,8 @@
               <a href="#" @click="clickLink(bank.cd_fc)">연동정보 변경</a>
             </div>
           </div>
-          <div class="btn-menu-wrap" :class="{'on':bank.isClickLink}" v-else><a href="#" @click="clickLink(bank.cd_fc)">연동하기</a>
+          <div class="btn-menu-wrap" :class="{'on':bank.isClickLink}" v-else>
+            <a href="#" class="btn-interlock" @click="clickLink(bank.cd_fc)">연동하기</a>
             <div class="menu">
               <a href="#" @click="clickCert(bank)">공인인증서</a>
               <a href="#" @click="clickId(bank)">아이디/비번</a>
@@ -55,7 +56,8 @@
               <a href="#" @click="clickLink(card.cd_fc)">연동정보 변경</a>
             </div>
           </div>
-          <div class="btn-menu-wrap" :class="{'on':card.isClickLink}" v-else><a href="#" @click="clickLink(card.cd_fc)">연동하기</a>
+          <div class="btn-menu-wrap" :class="{'on':card.isClickLink}" v-else>
+            <a href="#" class="btn-interlock" @click="clickLink(card.cd_fc)">연동하기</a>
             <div class="menu">
               <a href="#" @click="clickCert(card)">공인인증서</a>
               <a href="#" @click="clickId(card)">아이디/비번</a>
@@ -65,7 +67,23 @@
         <p class="warn" v-if="card.cd_link_stat=='99' && card.rsn_link_message != null"><a href="#">{{card.rsn_link_message}}</a></p>
       </div>
     </div>
-
+    <div class="box-list list02 noMG" v-else-if="'stock'==this.curTab && stockList">
+      <div class="item" v-for="stock in stockList" :key="stock.index">
+        <div class="flex">
+          <p class="symbol"><img :src="stock.icon" alt="" />{{stock.nm_fc}}</p>
+          <div class="btn-menu-wrap" :class="{'on':stock.isClickMenu}" v-if="stock.yn_link==='Y'">
+            <button class="btn-menu-pop" @click="clickMenu(stock.cd_fc)"></button>
+            <div class="menu">
+              <a href="#" @click="clickUnlink(stock)">연결해제</a>
+            </div>
+          </div>
+          <div class="btn-menu-wrap" :class="{'on':stock.isClickLink}" v-else>
+            <a href="#" class="btn-interlock" @click="clickLink(stock.cd_fc)">연동하기</a>
+          </div>
+        </div>
+        <p class="warn" v-if="stock.cd_link_stat=='99' && stock.rsn_link_message != null"><a href="#">{{stock.rsn_link_message}}</a></p>
+      </div>
+    </div>
     <div class="box-list list02 noMG" v-else-if="'etc'==this.curTab && etcList">
       <div class="item" v-for="etc in etcList" :key="etc.index">
         <div class="flex">
@@ -82,7 +100,7 @@
             </div>
           </div>
           <div class="btn-menu-wrap" :class="{'on':etc.isClickLink}" v-else>
-            <a href="#" @click="clickLink(etc.cd_fc)">연동하기</a>
+            <a href="#" class="btn-interlock" @click="clickLink(etc.cd_fc)">연동하기</a>
             <div class="menu">
               <a href="#" @click="clickCert(etc)">공인인증서</a>
               <a href="#" @click="clickId(etc)">아이디/비번</a>
@@ -206,6 +224,8 @@ export default {
             this.etcList[i].isClickMenu = false;
           }
         }
+      } else if (this.curTab == "stock") {
+        // 공인인증서 연동(증권 전용)
       }
     },
     clickUnlink: function(bank) {
@@ -290,6 +310,7 @@ export default {
         .then(function(response) {
           _this.bankList = response.data.bankList;
           _this.cardList = response.data.cardList;
+          _this.stockList = response.data.stockList;
           _this.etcList = response.data.etcList;
           if (_this.bankList) {
             for (var i = 0; i < _this.bankList.length; i++) {
@@ -309,6 +330,13 @@ export default {
               _this.cardList[i].isClickLink = false;
             }
           }
+          if (_this.stockList) {
+            for (var i = 0; i < _this.stockList.length; i++) {
+              _this.stockList[i].icon =
+                "/m/fincorp/getFinCorpIcon.crz?cd_fc=" +
+                _this.stockList[i].cd_fc;
+            }
+          }
           if (_this.etcList) {
             for (var i = 0; i < _this.etcList.length; i++) {
               _this.etcList[i].icon =
@@ -321,12 +349,13 @@ export default {
     },
     // 공인인증서 유무 체크
     checkExistCert: function() {
+      var _this = this;
       if (Constant.userAgent == "iOS") {
         //공인인증서 유무 체크 결과 콜백 이벤트
         Jockey.on("resultCheckCert", function(param) {
           var iscert = false;
           if (param.isCert == 1) iscert = true;
-          resultCheckCert(iscert);
+          _this.resultCheckCert(iscert);
         });
         Jockey.send("checkExistCert");
       } else if (Constant.userAgent == "Android") {
@@ -335,11 +364,12 @@ export default {
     },
     //공인인증서 유무 결과 (모바일에서 호출)
     resultCheckCert: function(isCert) {
+      var _this = this;
       if (isCert) {
         // 공인인증서가 있을 경우
         if (Constant.userAgent == "iOS") {
           Jockey.on("checkPasswordCert", function(param) {
-            resultCheckPasswordCert();
+            _this.resultCheckPasswordCert();
           });
           Jockey.send("checkPasswordCert", {
             noPerson: this.$store.state.user.noPerson,

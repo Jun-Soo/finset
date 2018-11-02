@@ -8,6 +8,8 @@ import com.koscom.scrap.model.FcLinkInfoVO;
 import com.koscom.scrap.model.LinkedFcInfoVO;
 import com.koscom.scrap.model.ScrBankApiAnInfoVO;
 import com.koscom.scrap.model.ScrCardApprovalInfoVO;
+import com.koscom.scrap.model.ScrCardChargeDetailVO;
+import com.koscom.scrap.model.ScrCardChargeInfoVO;
 import com.koscom.scrap.model.ScrCardInfoVO;
 import com.koscom.scrap.model.ScrReqBankVO;
 import com.koscom.scrap.model.ScrReqCardVO;
@@ -235,6 +237,27 @@ public interface ScrapMapper { // com.koscom.scrap.dao.ScrapMapper
 	 * @return String
 	 */
 	String getMaxDateScrCardApprovalInfo(Map<String, Object> parmMap);
+	
+	/**
+	 * 카드청구 내역 insert
+	 * @param ScrCardChargeInfoVO
+	 * @return 
+	 */
+	int createScrCardChargeInfo(ScrCardChargeInfoVO scrCardChargeInfoVO);
+	
+	/**
+	 * 카드청구 상세 내역 insert
+	 * @param ScrCardChargeDetailVO
+	 * @return 
+	 */
+	int createScrCardChargeDetail(ScrCardChargeDetailVO scrCardChargeDetailVO);
+	
+	/**
+	 * 카드승인 내역 마지막 조회 일자/시간 조회
+	 * @param no_person, cd_fc
+	 * @return String
+	 */
+	String getMaxDateScrCardChargeDetail(Map<String, Object> parmMap);
 	
 	/**
 	 * 건강보험 납부 내역 insert

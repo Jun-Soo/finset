@@ -1,7 +1,7 @@
 <template>
-<div>
-      <!-- Content -->
-  <section id="content">
+  <div>
+    <!-- Content -->
+    <section id="content">
       <div class="cert-wrap">
         <p class="title">회원정보</p>
         <input type="text" class="form-control" name="nm_person" id="nm_person" v-model="nm_person" v-validate="'required|max:8'" v-bind:disabled="isDisabled" autocomplete="off" placeholder="이름을 입력하세요" data-vv-name='이름' />
@@ -145,7 +145,6 @@ export default {
             .then(response => {
               var result = response.data;
               console.log(result);
-              debugger;
               if (result.result == "00") {
                 _this.smsCertNo = "";
                 this.$toast.center(result.message);
@@ -234,7 +233,7 @@ export default {
         .post("/m/person/insertPerson.json", formData)
         .then(response => {
           var result = response.data;
-          var noPerson = result.returnData;
+          var noPerson = result.no_person;
           this.$store.state.user.noPerson = result.no_person;
           this.$store.state.user.nmPerson = result.nm_person;
           if (result.result == "00") {

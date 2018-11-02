@@ -3,16 +3,16 @@
     <!-- Content -->
     <section id="content">
       <div class="cert-finger">
-        <p class="text">지문인증을 사용 하시겠습니까?</p>
+        <p class="text">지문인증을 사용 하시겠습니까?</p>        
       </div>
-
+      
       <div class="btn-wrap col2">
         <a v-on:click="chkFinger('N')" class="btn-stroke">아니오</a>
         <a v-on:click="chkFinger('Y')" class="btn-solid">네</a>
       </div>
 
-    </section>
-    <!-- //Content -->
+	</section>
+  	<!-- //Content -->
   </div>
 </template>
 
@@ -45,8 +45,8 @@ export default {
   // },
   beforeCreate() {},
   created() {
-    this.$store.state.title = "지문인증 설정 (5/7)";
-    // this.$store.state.header.type = "sub";
+    this.$store.state.title = "지문인증 설정";
+    this.$store.state.header.type = "sub";
 
     window.resultFingerPrint = this.resultFingerPrint;
     window.resultCheckCert = this.resultCheckCert;
@@ -221,11 +221,3 @@ export default {
   }
 };
 </script>
-
-<!-- Add 'scoped' attribute to limit CSS to this component only -->
-<style lang="scss">
-.memberMain {
-  background-color: #283593;
-  height: 100%;
-}
-</style>

@@ -56,15 +56,16 @@ public interface FincorpMapper {
 	 */
 	List<String> getCooconFcCd(String type_fc);
 	
-	/**
-	 *  증권사 금융사 코드(OpenAPI 대상)
-	 * @param String
-	 * @return List<String>
-	 */
-	List<String> getStockFcCd(String type_fc);
 	
 	/**
-	 *  증권사 금융사 코드(OpenAPI 대상)
+	 * COOCON 금융사 코드
+	 * @param String
+	 * @return String
+	 */
+	String getCooconFcCdByCdFc(String cd_fc);
+	
+	/**
+	 *  증권사 금융사 코드
 	 * @param String
 	 * @return String
 	 */

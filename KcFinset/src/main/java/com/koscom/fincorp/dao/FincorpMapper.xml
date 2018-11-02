@@ -168,20 +168,18 @@
  	</update>
  	
  	<select id="getCooconFcCd" parameterType="String" resultType="String">
- 		SELECT CD.NM_CODE
-		FROM COMM_CD CD, FC_INFO FC
-		WHERE CD.CODE_GROUP = 'cd_coocon_fc'
-			AND FC.CD_FIN = #{type_fc, jdbcType=VARCHAR}
-      		AND CD.YN_USE = 'Y' AND FC.YN_SCRAP = 'Y'
-      		AND CD.CODE_VALUE = FC.CD_FC
- 	</select>
- 	
- 	<select id="getStockFcCd" parameterType="String" resultType="String">
  		SELECT CD_FC_COOCON
 		FROM FC_INFO
 		WHERE CD_FIN = #{type_fc, jdbcType=VARCHAR}
       		AND YN_SCRAP = 'Y'
  	</select>
+ 	
+ 	<select id="getCooconFcCdByCdFc" parameterType="String" resultType="String">
+ 		SELECT CD_FC_COOCON
+		FROM FC_INFO
+		WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+ 	</select>
+ 	
  	
  	<select id="getCdFcByCooconFcCd" parameterType="String" resultType="String">
  		SELECT CD_FC

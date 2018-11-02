@@ -7,6 +7,7 @@ public class ScrReqCardVO implements Serializable{
 	String no_person = "";			//회원관리번호
 	long   seq_scraping_result = 0;	//스크래핑 일련번호
 	String cd_fc = "";				//금융사코드
+	String cd_type = "";			//항목구분
 	String ymd_stt = "";			//조회시작일
 	String ymd_end = "";			//조회종료일
 	String error_cd = "";			//에러코드
@@ -29,6 +30,12 @@ public class ScrReqCardVO implements Serializable{
 	}
 	public void setCd_fc(String cd_fc) {
 		this.cd_fc = cd_fc;
+	}
+	public String getCd_type() {
+		return cd_type;
+	}
+	public void setCd_type(String cd_type) {
+		this.cd_type = cd_type;
 	}
 	public String getYmd_stt() {
 		return ymd_stt;

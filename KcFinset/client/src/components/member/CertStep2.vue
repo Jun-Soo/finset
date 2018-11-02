@@ -1,7 +1,7 @@
 <template>
-<div>
-      <!-- Content -->
-  <section id="content">
+  <div>
+    <!-- Content -->
+    <section id="content">
       <div class="cert-wrap">
         <p class="title">회원정보</p>
         <input type="text" class="form-control" name="nm_person" id="nm_person" v-model="nm_person" v-validate="'required|max:8'" v-bind:disabled="isDisabled" autocomplete="off" placeholder="이름을 입력하세요" data-vv-name='이름' />
@@ -15,27 +15,27 @@
         <p class="warn" v-if="errors.has('성별')">{{errors.first('성별')}}</p>
       </div>
       <div class="cert-wrap">
-          <p class="title">휴대폰인증</p>
-          <div class="grid phone">
-              <select id="telComCd" name="telComCd" v-model="telComCd" v-validate="'required'" v-on:change="nextFocus('telComCd')" v-bind:disabled="isDisabled" placeholder="통신사" data-vv-name='통신사'>
-                <option v-for="option in options" v-bind:key="option.value" v-bind:value="option.value">
-                  {{ option.text }}
-                </option>
-              </select>
-              <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
-          </div>
-            <button id="req_certification" v-on:click="kcmRequestCertNo()">인증번호 전송</button>
-          <div class="cert-num" id="cert_no_conteiner">
-            <input type="number" name="smsCertNo" id="smsCertNo" v-model="smsCertNo" placeholder="인증번호를 입력하세요" autocomplete="off" readonly>
-            <p class="time" id="countdown" aria-hidden="true">{{ timer }}</p>
-          </div>
-          <p class="warn" id="certNoWarning" name="certNoWarning" v-if="timer==='00:00'">인증번호를 재전송 해주세요.</p>
+        <p class="title">휴대폰인증</p>
+        <div class="grid phone">
+          <select id="telComCd" name="telComCd" v-model="telComCd" v-validate="'required'" v-on:change="nextFocus('telComCd')" v-bind:disabled="isDisabled" placeholder="통신사" data-vv-name='통신사'>
+            <option v-for="option in options" v-bind:key="option.value" v-bind:value="option.value">
+              {{ option.text }}
+            </option>
+          </select>
+          <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
+        </div>
+        <button id="req_certification" v-on:click="kcmRequestCertNo()">인증번호 전송</button>
+        <div class="cert-num" id="cert_no_conteiner">
+          <input type="number" name="smsCertNo" id="smsCertNo" v-model="smsCertNo" placeholder="인증번호를 입력하세요" autocomplete="off" readonly>
+          <p class="time" id="countdown" aria-hidden="true">{{ timer }}</p>
+        </div>
+        <p class="warn" id="certNoWarning" name="certNoWarning" v-if="timer==='00:00'">인증번호를 재전송 해주세요.</p>
       </div>
-    <div class="btn-wrap" id="confirmed_div" v-if="smsCertNo&&timer!='00:00'">
-    <a id="confirmed_certify" class="btn-next" v-on:click="confirmedCertify()">다음</a>
+      <div class="btn-wrap" id="confirmed_div" v-if="smsCertNo&&timer!='00:00'">
+        <a id="confirmed_certify" class="btn-next" v-on:click="confirmedCertify()">다음</a>
+      </div>
+    </section>
   </div>
-  </section>
-</div>
 </template>
 
 <script>
@@ -234,7 +234,7 @@ export default {
         .post("/m/person/insertPerson.json", formData)
         .then(response => {
           var result = response.data;
-          var noPerson = result.returnData;
+          var noPerson = result.no_person;
           this.$store.state.user.noPerson = result.no_person;
           this.$store.state.user.nmPerson = result.nm_person;
           if (result.result == "00") {

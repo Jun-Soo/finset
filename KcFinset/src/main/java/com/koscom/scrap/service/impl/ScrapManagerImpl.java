@@ -52,6 +52,8 @@ import com.koscom.scrap.model.NPSInfo;
 import com.koscom.scrap.model.NTSInfo;
 import com.koscom.scrap.model.ScrBankApiAnInfoVO;
 import com.koscom.scrap.model.ScrCardApprovalInfoVO;
+import com.koscom.scrap.model.ScrCardChargeDetailVO;
+import com.koscom.scrap.model.ScrCardChargeInfoVO;
 import com.koscom.scrap.model.ScrCardInfoVO;
 import com.koscom.scrap.model.ScrReqBankVO;
 import com.koscom.scrap.model.ScrReqCardVO;
@@ -205,7 +207,7 @@ public class ScrapManagerImpl implements ScrapManager {
 			jsonReqParamInfo.addProperty("customerPhone", "010-1111-1111");
 			jsonReqParamInfo.addProperty("customerUserNm", "홍길동");
 			JsonArray list = new JsonArray();
-			List<String> stockList = fincorpMapper.getStockFcCd(codeManager.getCodeId("cd_fin","증권"));
+			List<String> stockList = fincorpMapper.getCooconFcCd(codeManager.getCodeId("cd_fin","증권"));
 			for (int i = 0; i < stockList.size(); i++) {
 				list.add(stockList.get(i));
 			}
@@ -235,7 +237,7 @@ public class ScrapManagerImpl implements ScrapManager {
 			jsonReqParamInfo.addProperty("customerPhone", personVO.getHp());
 			jsonReqParamInfo.addProperty("customerUserNm", personVO.getNm_person());
 			JsonArray list = new JsonArray();
-			List<String> stockList = fincorpMapper.getStockFcCd(codeManager.getCodeId("cd_fin","증권"));
+			List<String> stockList = fincorpMapper.getCooconFcCd(codeManager.getCodeId("cd_fin","증권"));
 			for (int i = 0; i < stockList.size(); i++) {
 				list.add(stockList.get(i));
 			}
@@ -410,7 +412,8 @@ public class ScrapManagerImpl implements ScrapManager {
         //국세청 자동 스크래핑 정보 테이블에 반영 
         if(appFcLinkInfo.getNTS_LINK_INFO() != null){
         	FcLinkInfoVO fcLinkInfoVO = appFcLinkInfo.getNTS_LINK_INFO();
-        	String cd_fc = codeManager.getCodeId("cd_coocon_fc", fcLinkInfoVO.getCd_fc());
+        	//String cd_fc = codeManager.getCodeId("cd_coocon_fc", fcLinkInfoVO.getCd_fc());
+        	String cd_fc = fincorpMapper.getCdFcByCooconFcCd(fcLinkInfoVO.getCd_fc());
         	String cd_agency = codeManager.getCodeId("cd_agency", "국세청");
         	String type_login = codeManager.getCodeId("type_login", fcLinkInfoVO.getType_login());
         	fcLinkInfoVO.setNo_person(no_person);
@@ -436,7 +439,8 @@ public class ScrapManagerImpl implements ScrapManager {
         if(appFcLinkInfo.getBANK_LINK_INFO() != null){
         	List<FcLinkInfoVO> FC_LINK_INFO = appFcLinkInfo.getBANK_LINK_INFO();
             for (FcLinkInfoVO fcLinkInfoVO : FC_LINK_INFO) {
-            	String cd_fc = codeManager.getCodeId("cd_coocon_fc", fcLinkInfoVO.getCd_fc());
+            	//String cd_fc = codeManager.getCodeId("cd_coocon_fc", fcLinkInfoVO.getCd_fc());
+            	String cd_fc = fincorpMapper.getCdFcByCooconFcCd(fcLinkInfoVO.getCd_fc());
             	String cd_agency = codeManager.getCodeId("cd_agency", "은행");
             	String type_login = codeManager.getCodeId("type_login", fcLinkInfoVO.getType_login());
             	fcLinkInfoVO.setNo_person(no_person);
@@ -463,7 +467,8 @@ public class ScrapManagerImpl implements ScrapManager {
         if(appFcLinkInfo.getCARD_LINK_INFO() != null){
         	List<FcLinkInfoVO> FC_LINK_INFO = appFcLinkInfo.getCARD_LINK_INFO();
             for (FcLinkInfoVO fcLinkInfoVO : FC_LINK_INFO) {
-            	String cd_fc = codeManager.getCodeId("cd_coocon_fc", fcLinkInfoVO.getCd_fc());
+            	//String cd_fc = codeManager.getCodeId("cd_coocon_fc", fcLinkInfoVO.getCd_fc());
+            	String cd_fc = fincorpMapper.getCdFcByCooconFcCd(fcLinkInfoVO.getCd_fc());
             	String cd_agency = codeManager.getCodeId("cd_agency", "카드");
             	String type_login = codeManager.getCodeId("type_login", fcLinkInfoVO.getType_login());
             	fcLinkInfoVO.setNo_person(no_person);
@@ -508,7 +513,8 @@ public class ScrapManagerImpl implements ScrapManager {
 		logger.debug("error_code :" + fcLinkInfoVO.getError_code());
 		logger.debug("error_msg  :" + fcLinkInfoVO.getError_message());
    
-		String cd_fc = codeManager.getCodeId("cd_coocon_fc", fcLinkInfoVO.getCd_fc());
+		//String cd_fc = codeManager.getCodeId("cd_coocon_fc", fcLinkInfoVO.getCd_fc());
+		String cd_fc = fincorpMapper.getCdFcByCooconFcCd(fcLinkInfoVO.getCd_fc());
 		fcLinkInfoVO.setCd_fc(cd_fc);
    
 		// 스크래핑 변동 내역 History Table에 Insert
@@ -638,7 +644,8 @@ public class ScrapManagerImpl implements ScrapManager {
             for (UserBankOutputVO userBankOutputVO : USER_BANK_OUTPUT) {
                 
             	if(userBankOutputVO != null){
-            		cd_fc = codeManager.getCodeId("cd_coocon_fc", userBankOutputVO.getBANK_CODE());
+            		//cd_fc = codeManager.getCodeId("cd_coocon_fc", userBankOutputVO.getBANK_CODE());
+            		cd_fc = fincorpMapper.getCdFcByCooconFcCd(userBankOutputVO.getBANK_CODE());
             		
                     logger.debug("getBankCode    : " + cd_fc);
                     logger.debug("getERROR_CODE   : " + userBankOutputVO.getERROR_CODE());
@@ -940,8 +947,9 @@ public class ScrapManagerImpl implements ScrapManager {
         if(appCardInfo.getUSER_CARD_OUTPUT() != null){
         	List<UserCardOutputVO> USER_CARD_OUTPUT = appCardInfo.getUSER_CARD_OUTPUT();
             for (UserCardOutputVO userCardOutputVO : USER_CARD_OUTPUT) {
-            	String cd_fc = codeManager.getCodeId("cd_coocon_fc", userCardOutputVO.getCARD_CODE());
-            	
+            	//String cd_fc = codeManager.getCodeId("cd_coocon_fc", userCardOutputVO.getCARD_CODE());
+            	String cd_fc = fincorpMapper.getCdFcByCooconFcCd(userCardOutputVO.getCARD_CODE());
+            	            	
             	FcLinkInfoVO fcLinkInfoVO  = new FcLinkInfoVO();
                 fcLinkInfoVO.setNo_person(no_person);
                 fcLinkInfoVO.setCd_fc(cd_fc);
@@ -968,6 +976,16 @@ public class ScrapManagerImpl implements ScrapManager {
                         scrapMapper.createScrCardInfo(scrCardInfo);
             		}
             	}
+            	//카드 내역 History 저장 및 갱신
+            	ScrReqCardVO scrReqCardVO = new ScrReqCardVO();
+            	scrReqCardVO.setNo_person(no_person);
+            	scrReqCardVO.setCd_fc(cd_fc);
+            	scrReqCardVO.setCd_type("01"); //01 보유카드현황, 02 승인내역, 03 청구내역, 	04 한도조회, 05 포인트조회
+            	scrReqCardVO.setSeq_scraping_result(seq_scrap);
+            	scrReqCardVO.setError_cd(userCardOutputVO.getCARD_ERROR_CODE());
+            	scrReqCardVO.setError_msg(userCardOutputVO.getCARD_ERROR_MESSAGE());
+                scrapMapper.insertScrReqCardHist(scrReqCardVO);
+                scrapMapper.createScrReqCard(scrReqCardVO);
             	
             	//카드 승인내역 마지막 조회 내역 조회
             	Map<String, Object> paramMap = new HashMap<String, Object>();
@@ -1000,22 +1018,71 @@ public class ScrapManagerImpl implements ScrapManager {
                          }
                          list.add(scrCardApprovalInfo);
             		}
-            		//현금영수증 내역 Insert
+            		//카드승인 내역 Insert
                     logger.debug("list.size() : "+ list.size());
                     for (ScrCardApprovalInfoVO scrCardApprovalInfo : list) {
                     	scrapMapper.createScrCardApprovalInfo(scrCardApprovalInfo);
                     }
             	}
 
-            	//카드조회 내역 History 저장 및 갱신
-            	ScrReqCardVO scrReqCardVO = new ScrReqCardVO();
-            	scrReqCardVO.setNo_person(no_person);
-            	scrReqCardVO.setCd_fc(cd_fc);
+            	//카드조회 내역 History 저장 및 갱신  - 승인내역
+            	scrReqCardVO.setCd_type("02"); //01 보유카드현황, 02 승인내역, 03 청구내역, 	04 한도조회, 05 포인트조회
             	scrReqCardVO.setSeq_scraping_result(seq_scrap);
-            	scrReqCardVO.setYmd_stt(userCardOutputVO.getDT_START());
-            	scrReqCardVO.setYmd_end(userCardOutputVO.getDT_END());
+            	scrReqCardVO.setYmd_stt(userCardOutputVO.getDT_APPROVAL_START());
+            	scrReqCardVO.setYmd_end(userCardOutputVO.getDT_APPROVAL_END());
             	scrReqCardVO.setError_cd(userCardOutputVO.getAPPROVAL_ERROR_CODE());
             	scrReqCardVO.setError_msg(userCardOutputVO.getAPPROVAL_ERROR_MESSAGE());
+                scrapMapper.insertScrReqCardHist(scrReqCardVO);
+                scrapMapper.createScrReqCard(scrReqCardVO);
+                
+              //카드 청구내역 마지막 조회 내역 조회
+            	max_date = scrapMapper.getMaxDateScrCardChargeDetail(paramMap);
+                //카드 청구내역 저장
+            	List<ScrCardChargeInfoVO> scrCardChargeInfoList = userCardOutputVO.getCARD_CHARGE();
+            	if(scrCardChargeInfoList != null){
+            		for (ScrCardChargeInfoVO scrCardChargeInfoVO : scrCardChargeInfoList) {
+                        logger.debug("scrCardChargeInfoVO.getCharge_yyyymm  : "+ scrCardChargeInfoVO.getCharge_yyyymm());
+                        logger.debug("scrCardChargeInfoVO.getMonthly_charge : "+ scrCardChargeInfoVO.getMonthly_charge());
+                        scrCardChargeInfoVO.setNo_person(no_person);
+                        scrCardChargeInfoVO.setCd_fc(cd_fc);
+
+                        //카드 청구내역 Insert
+                		scrapMapper.createScrCardChargeInfo(scrCardChargeInfoVO);
+                        
+                        List<ScrCardChargeDetailVO> scrCardChargeDetailList = scrCardChargeInfoVO.getCARD_CHARGE_DTL();
+                        if(scrCardChargeDetailList != null){
+                        	List<ScrCardChargeDetailVO> list = new ArrayList<ScrCardChargeDetailVO>();
+                        	for (ScrCardChargeDetailVO scrCardChargeDetail : scrCardChargeDetailList) {
+                        		logger.debug("scrCardChargeDetail.getDt_use : "+ scrCardChargeDetail.getDt_use());
+                                logger.debug("scrCardChargeDetail.getFees   : "+ scrCardChargeDetail.getFees());
+                                scrCardChargeDetail.setNo_person(no_person);
+                        		scrCardChargeDetail.setCd_fc(cd_fc);
+                        		scrCardChargeDetail.setCharge_yyyymm(scrCardChargeInfoVO.getCharge_yyyymm());
+                        		
+		                        String date = scrCardChargeDetail.getDt_use();
+		                        // 카드 청구내역 조회 마지막 날짜 이후 마지막 날짜/시간 이후의 데이터만 List에 추가
+		                        if(max_date != null && max_date != "" && date != null && date != ""
+		                        	&& Long.parseLong(max_date) >= Long.parseLong(date))	{
+		                        	continue;
+		                        }
+		                        list.add(scrCardChargeDetail);
+                        	}
+                        	//카드 청구내역 상세 Insert
+                            logger.debug("list.size() : "+ list.size());
+                            logger.debug("list.size() : "+ list.size());
+                            for (ScrCardChargeDetailVO scrCardChargeDetailVO : list) {
+                            	scrapMapper.createScrCardChargeDetail(scrCardChargeDetailVO);
+                            }
+                        }
+            		}
+            	}
+            	//카드조회 내역 History 저장 및 갱신  - 청구내역
+            	scrReqCardVO.setCd_type("03"); //01 보유카드현황, 02 승인내역, 03 청구내역, 	04 한도조회, 05 포인트조회
+            	scrReqCardVO.setSeq_scraping_result(seq_scrap);
+            	scrReqCardVO.setYmd_stt(userCardOutputVO.getDT_CHARGE_START());
+            	scrReqCardVO.setYmd_end(userCardOutputVO.getDT_CHARGE_END());
+            	scrReqCardVO.setError_cd(userCardOutputVO.getCHARGE_ERROR_CODE());
+            	scrReqCardVO.setError_msg(userCardOutputVO.getCHARGE_ERROR_MESSAGE());
                 scrapMapper.insertScrReqCardHist(scrReqCardVO);
                 scrapMapper.createScrReqCard(scrReqCardVO);
             }
@@ -1402,7 +1469,9 @@ public class ScrapManagerImpl implements ScrapManager {
 					String bankCode = null;
 					String typeLogin = null;
 					FcLinkInfoVO fcLinkInfo = fcLinkInfoList.get(i);
-					bankCode = codeManager.getCodeName("cd_coocon_fc", fcLinkInfo.getCd_fc());
+					//bankCode = codeManager.getCodeName("cd_coocon_fc", fcLinkInfo.getCd_fc());
+					bankCode = fincorpMapper.getCooconFcCdByCdFc(fcLinkInfo.getCd_fc());
+					
 					typeLogin = codeManager.getCodeName("type_login", fcLinkInfo.getType_login());
 							
 					jsonBankInfo.put("CODE_BANK", bankCode);
@@ -1439,6 +1508,7 @@ public class ScrapManagerImpl implements ScrapManager {
 					jsonBankArr.add(jsonBankInfo);
 				}
 				jsonRoot.put("LIST_BANK", jsonBankArr);
+				jsonRoot.put("CODE_SCRAP", "bank");
 			}
 			else if(cd_agency.equals(codeManager.getCodeId("cd_agency", "카드")))	{
 				String startDate = "";
@@ -1448,7 +1518,8 @@ public class ScrapManagerImpl implements ScrapManager {
 					String cardCode = null;
 					String typeLogin = null;
 					FcLinkInfoVO fcLinkInfo = fcLinkInfoList.get(i);
-					cardCode = codeManager.getCodeName("cd_coocon_fc", fcLinkInfo.getCd_fc());
+					//cardCode = codeManager.getCodeName("cd_coocon_fc", fcLinkInfo.getCd_fc());
+					cardCode = fincorpMapper.getCooconFcCdByCdFc(fcLinkInfo.getCd_fc());
 					typeLogin = codeManager.getCodeName("type_login", fcLinkInfo.getType_login());
 					jsonCardInfo.put("CODE_CARD", cardCode);
 					jsonCardInfo.put("TYPE_LOGIN", typeLogin);
@@ -1476,6 +1547,7 @@ public class ScrapManagerImpl implements ScrapManager {
 					jsonCardArr.add(jsonCardInfo);
 				}
 				jsonRoot.put("LIST_CARD", jsonCardArr);
+				jsonRoot.put("CODE_SCRAP", "card");
 			}
 			else if(cd_agency.equals(codeManager.getCodeId("cd_agency", "국세청")))	{
 				FcLinkInfoVO fcLinkInfo = fcLinkInfoList.get(0);
@@ -1498,8 +1570,7 @@ public class ScrapManagerImpl implements ScrapManager {
 					startMonth = DateUtil.addMonths(toDay, -3).substring(0, 6);
 				}
 				jsonRoot.put("RCPT_START_MONTH", startMonth);
-				
-			
+				jsonRoot.put("CODE_SCRAP", "nts");
 			}
 			logger.info("json object :" + jsonRoot.toString());
 			return jsonRoot.toString();

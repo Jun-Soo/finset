@@ -3,16 +3,16 @@
     <!-- Content -->
     <section id="content">
       <div class="cert-finger">
-        <p class="text">지문인증을 사용 하시겠습니까?</p>        
+        <p class="text">지문인증을 사용 하시겠습니까?</p>
       </div>
-      
+
       <div class="btn-wrap col2">
         <a v-on:click="chkFinger('N')" class="btn-stroke">아니오</a>
         <a v-on:click="chkFinger('Y')" class="btn-solid">네</a>
       </div>
 
-	</section>
-  	<!-- //Content -->
+    </section>
+    <!-- //Content -->
   </div>
 </template>
 
@@ -216,7 +216,7 @@ export default {
     //공인인증서 비밀번호 체크 결과 (모바일에서 호출)
     resultCheckPasswordCert: function(dn, cn) {
       // 금융정보제공동의서 확인여부 체크 필요
-      this.$router.push({ name: "scrapCertStep", params: { dn: dn, cn: cn } });
+      this.$router.push({ name: "scrapSelFcLink", params: { dn: dn, cn: cn } });
     }
   }
 };

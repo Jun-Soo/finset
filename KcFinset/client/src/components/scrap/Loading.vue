@@ -25,9 +25,6 @@ export default {
   beforeCreate() {},
   created() {
     window.resultCheckAvaliableScrapList = this.resultCheckAvaliableScrapList;
-    if (Constant.userAgent == "Android") {
-      window.Android.setEndApp("Y");
-    }
   },
   beforeMount() {},
   mounted() {
@@ -73,7 +70,7 @@ export default {
 
           if (Constant.userAgent == "iOS") {
             Jockey.on("checkAvaliableScrapList", function(param) {
-              frmFcListNextFromMobile();
+              _this.frmFcListNextFromMobile();
             });
             Jockey.send("checkAvaliableScrapList", {
               noPerson: _this.$store.state.user.noPerson,
@@ -81,12 +78,12 @@ export default {
               cardCode: _this.$store.state.cardCode,
               etcCode: _this.$store.state.etcCode
             });
-            //do nothing
           } else if (Constant.userAgent == "Android") {
             window.Android.checkAvaliableScrapList(
               _this.$store.state.user.noPerson,
               _this.$store.state.bankCode,
-              _this.$store.state.cardCode
+              _this.$store.state.cardCode,
+              _this.$store.state.etcCode
             );
           }
         })
@@ -103,6 +100,7 @@ export default {
         .post("/m/scrap/getScrapStList.json", formData)
         .then(function(response) {
           var result = response.data.result;
+          alert("result : " + response.data.result);
           _this.isScrapStList = true;
           if (_this.isScrapFcList && _this.isScrapStList) {
             _this.nextStep();

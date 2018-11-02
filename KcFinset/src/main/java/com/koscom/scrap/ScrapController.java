@@ -31,8 +31,12 @@ import com.koscom.person.service.PersonManager;
 import com.koscom.scrap.model.FcLinkInfoVO;
 import com.koscom.scrap.model.LinkedFcInfoVO;
 import com.koscom.scrap.service.ScrapManager;
+import com.koscom.util.Constant;
+import com.koscom.util.DateUtil;
+import com.koscom.util.FcmUtil;
 import com.koscom.util.FinsetException;
 import com.koscom.util.ReturnClass;
+import com.koscom.util.SessionUtil;
 import com.koscom.util.SkipLoginCheck;
 
 @Controller
@@ -260,6 +264,7 @@ public class ScrapController {
 		List<LinkedFcInfoVO> linkedFcInfoList = scrapManager.getLinkFcInfo(linkedFcInfo);
 		List<LinkedFcInfoVO> bankLinkInfo = new ArrayList<LinkedFcInfoVO>();
 		List<LinkedFcInfoVO> cardLinkInfo = new ArrayList<LinkedFcInfoVO>();
+		List<LinkedFcInfoVO> stockLinkInfo = new ArrayList<LinkedFcInfoVO>();
 		List<LinkedFcInfoVO> etcLinkInfo = new ArrayList<LinkedFcInfoVO>();
 		
 		for (LinkedFcInfoVO linkedFcInfoVO : linkedFcInfoList) {
@@ -274,18 +279,25 @@ public class ScrapController {
              else if(linkedFcInfoVO.getNm_code().equals("카드"))	{
             	 cardLinkInfo.add(linkedFcInfoVO);
              }
+             else if(linkedFcInfoVO.getNm_code().equals("증권"))	{
+            	 stockLinkInfo.add(linkedFcInfoVO);
+             }
              else if(linkedFcInfoVO.getNm_code().equals("기타"))	{
             	 etcLinkInfo.add(linkedFcInfoVO);
              }
 		}
 		logger.debug("bankLinkInfo.size()   :" + bankLinkInfo.size()    );
 		logger.debug("cardLinkInfo.size()   :" + cardLinkInfo.size()    );
+		logger.debug("stockLinkInfo.size()   :" + stockLinkInfo.size()    );
 		logger.debug("etcLinkInfo.size()    :" + etcLinkInfo.size()    );
 		if(bankLinkInfo.size() > 0)	{
 			model.addAttribute("bankList", bankLinkInfo);
 		}
 		if(cardLinkInfo.size() > 0)	{
 			model.addAttribute("cardList", cardLinkInfo);
+		}
+		if(stockLinkInfo.size() > 0)	{
+			model.addAttribute("stockList", stockLinkInfo);
 		}
 		if(etcLinkInfo.size() > 0)	{
 			model.addAttribute("etcList", etcLinkInfo);
@@ -304,6 +316,114 @@ public class ScrapController {
 //		model.addAttribute("bank_code", bankCode);
 //		model.addAttribute("card_code", cardCode);
 		
+		return "jsonView";
+	}
+	
+	/** VUE
+	 * 스크래핑 연동 금융사 관리 화면 
+	 * @param request
+	 * @param model
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/getAutoScrapInfo.json")
+	public String getAutoScrapInfo(
+			HttpServletResponse response,
+			HttpServletRequest request, 
+			HttpSession session, 
+			Model model,
+			String no_person)	{
+		String smsStartDate = null;
+    	String smsInclude = null;
+    	String smsExclude = null;
+    	//마지막 문자내역 시간 체크
+    	smsStartDate = personManager.getLastPersonSmsDt(no_person);
+    	//문자내역이 없을 경우 기본 3달 전으로 셋팅
+    	if(smsStartDate == null || smsStartDate.length() == 0)	{
+    		String toDay = DateUtil.getCurrentDateTime("yyyyMMdd");
+    		smsStartDate = DateUtil.addMonths(toDay, -3);
+    		//시분초 추가
+    		smsStartDate += "000000";
+    	}
+    	
+    	//SMS내역 및 스크래핑 내역 화면에 전송
+		logger.debug("=======================================");
+    	model.addAttribute("smsStartDate", smsStartDate);
+    	logger.debug("SMS Start Date : " + smsStartDate);
+    	smsInclude = codeManager.getCodeName("_CONF_SMS", "INCLUDE");
+    	model.addAttribute("smsInclude", smsInclude);
+    	logger.debug("SMS Include : " + smsInclude);
+    	smsExclude = codeManager.getCodeName("_CONF_SMS", "EXCLUDE");
+    	model.addAttribute("smsExclude", smsExclude);
+    	logger.debug("SMS Exclude : " + smsExclude);
+
+    	String autoScrapInfo = null;
+    	String cd_agency = codeManager.getCodeId("cd_agency","은행");
+    	autoScrapInfo = scrapManager.getAutoScrapInfo(cd_agency, no_person);
+    	logger.debug("Bank autoScrapInfo : " + autoScrapInfo);
+    	if(autoScrapInfo != null && autoScrapInfo.length() > 0)	{
+    		model.addAttribute("autoScrapBankInfo", autoScrapInfo);
+    	}
+    	cd_agency = codeManager.getCodeId("cd_agency","카드");
+    	autoScrapInfo = scrapManager.getAutoScrapInfo(cd_agency, no_person);
+    	logger.debug("Card autoScrapInfo : " + autoScrapInfo);
+    	if(autoScrapInfo != null && autoScrapInfo.length() > 0)	{
+    		model.addAttribute("autoScrapCardInfo", autoScrapInfo);
+    	}
+    	cd_agency = codeManager.getCodeId("cd_agency","국세청");
+    	autoScrapInfo = scrapManager.getAutoScrapInfo(cd_agency, no_person);
+    	logger.debug("NTS autoScrapInfo : " + autoScrapInfo);
+    	if(autoScrapInfo != null && autoScrapInfo.length() > 0)	{
+    		model.addAttribute("autoScrapNTSInfo", autoScrapInfo);
+    	}
+    	logger.debug("=======================================");
+
+    	return "jsonView"; 
+	}
+	
+	/** VUE
+	 * 개별 푸시 보내기
+	 * @param request
+	 * @param response
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/sendPushMsg.json")
+	public String sendPushMsg(HttpServletRequest request, HttpServletResponse response, Model model, String no_person, String push_msg){
+		
+		SessionUtil sessionUtil = new SessionUtil(request);
+		sessionUtil.getUserId();
+		
+		logger.info("푸시 보내기 : ", no_person);
+
+		boolean isSendPushResult;
+		String 	os 			= null;
+		String 	type 		= null;
+		String 	sFcmToken 	= null;
+		
+		//토큰, os 등 조회
+		PersonVO personVO = personManager.getPersonInfo(no_person);
+			
+		sFcmToken = personVO.getFcm_token();
+		os = personVO.getYn_os();
+			
+		if( os == null || os.equals("")){
+			os = "1";
+		}
+			
+		type = personVO.getCd_push();
+		logger.info(">>> FCM OS : " + os + ", type : "+ type + ", sFcmToken : " + sFcmToken);
+
+		//push 발송
+		isSendPushResult = FcmUtil.sendFcm(sFcmToken, push_msg, push_msg, "", os, type);
+		logger.info("푸시 보내기 isSendPushResult  : " + isSendPushResult);
+		
+		if(isSendPushResult)	{
+			model.addAttribute("result", Constant.SUCCESS);
+		}
+		else	{
+			model.addAttribute("result", Constant.FAILED);
+		}
 		return "jsonView";
 	}
 	

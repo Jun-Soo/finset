@@ -31,6 +31,8 @@ textarea { width: 100%; height: 70vh; padding: 20px; border: 1px solid #e5e5e5; 
 .checks input[type="checkbox"]#check-all + label:before { position: relative; display: inline-block; content: ""; width: 13px; height: 15px; vertical-align: middle; margin-right: 10px; background: url(../images/_form/checkbox_all.png) no-repeat left top/13px; }
 .checks input[type="checkbox"]#check-all:checked + label { background: #62c1d0; color: #fff; }
 .checks input[type="checkbox"]#check-all:checked + label:before { background-position: left bottom; }
+.checks .small input[type="checkbox"] + label { padding-left: 25px; font-weight: 400; font-size: 12px; line-height: 18px; margin-bottom: 10px; }
+.checks .small input[type="checkbox"] + label:before { width: 18px; height: 18px; vertical-align: top; margin-right: 10px; background-image: url("../images/_form/checkbox_s.png"); background-size: 18px; }
 
 .filter-wrap { display: table; margin-bottom: 15px; }
 .filter-wrap .filter { display: table-cell; padding-right: 10px; }
@@ -77,6 +79,8 @@ input[type="file"]::-ms-browse { color: #fff; border: 0; background: #343f4e; wi
 .list-style05 { margin-top: 10px; }
 .list-style05 > li { position: relative; padding-left: 40px; margin-bottom: 10px; font-size: 12px; }
 .list-style05 > li span { position: absolute; top: 0; left: 0; color: #e52638; padding-right: 10px; border-right: 1px solid #e5e5e5; }
+
+.list-style06 > li { line-height: 24px; padding-left: 15px; text-align: left; background: url("../images/common/bu_check.png") no-repeat 0 8px; background-size: 10px; font-size: 14px; font-weight: 700; color: #222; }
 
 .point { color: #e52638 !important; }
 

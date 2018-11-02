@@ -295,6 +295,11 @@ aside.search-wrap{
         left: 0;
         top: 0;
         background: url(../images/common/btn_top_back.png) no-repeat center / contain;
+        &.setting{
+            width: 38px;
+            left: calc(100% - 98px);
+            background: url("../images/common/header_setting.png") no-repeat center / contain;
+        }
     }
 }
 
@@ -684,6 +689,10 @@ aside.search-wrap{
         color: #666;
         margin-bottom: 15px;
         font-weight: 700;
+        &.col{
+            color: $col2;
+            margin-bottom: 10px;
+        }
     }
     .item{
         background: #fff;
@@ -752,6 +761,41 @@ aside.search-wrap{
                 color: inherit;
                 display: block;
                 background: url("../images/common/btn_red_arrow.png") no-repeat right center / 6px;
+            }
+        }
+        .share{
+            display: block;
+            background: url("../images/common/btn_contop_arrow.png") no-repeat right center / 7px;
+            span{
+                font-size: 13px;
+                display: inline-block;
+                padding-right: 15px;
+                &.name{
+                    font-size: 14px;
+                    color: #222;
+                    font-weight: 700;
+                }
+                &.state{
+                    color: $col4;
+                    font-weight: 700;
+                    em{
+                        display: inline-block;
+                        padding-left: 10px;
+                        margin-left: 10px;
+                        border-left: 1px solid $lineColor;
+                        color: $col4;
+                    }
+                }
+            }
+        }
+        .checks{
+            .title{
+                font-size: 14px;
+                font-weight: 700;
+                color: #222;
+            }
+            .small{
+                margin-top: 10px;
             }
         }
     }
@@ -889,6 +933,28 @@ aside.search-wrap{
         display: inline-block;
         margin-top: 15px;
     }
+    ul{
+        margin-top: 25px;
+        li{
+            margin-bottom: 10px;
+            display: flex;
+            .key{
+                font-size: 13px;
+                color: $col2;
+                font-weight: 700;
+                width: 60px;
+            }
+            em{
+                font-size: 13px;
+                display: inline-block;
+                &.state{
+                    color: $col4;
+                    font-size: 13px;
+                    font-weight: 700;
+                }
+            }
+        }
+    }
     &.cert-top{
         background: url("../images/scrap/con_top_cert.png") no-repeat top center / contain;
     }
@@ -900,6 +966,9 @@ aside.search-wrap{
     }
     &.goal-top{
         background: url("../images/consume/con_top_goal.png") no-repeat top center / contain;
+    }
+    &.share-top{
+        background: url("../images/share/con_top_share.png") no-repeat top center / contain;
     }
 }
 
@@ -1683,6 +1752,11 @@ aside.search-wrap{
         &.stroke{
             border: 1px solid $col2;
             color: $col2;
+            font-weight: 700;
+            &.blue{
+                border: 1px solid $col4;
+                color: $col4;
+            }
         }
         &.solid{
             background: $col2;
@@ -3343,6 +3417,185 @@ aside.search-wrap{
         text-decoration: underline;
     }
 }
+
+//   정보공유 요청   //
+
+.info-share{
+    .title{
+        font-size: 20px;
+        font-weight: 700;
+        color: #222;
+    }
+    .text{
+        font-size: 13px;
+        margin-top: 15px;
+        margin-bottom: 25px;
+    }
+    a{
+        display: block;
+        border: 1px solid $lineColor;
+        text-indent: 15px;
+        color: #333;
+        font-size: 15px;
+        line-height: 38px;
+        background: url("../images/share/btn_share.png") no-repeat right center / contain;
+    }
+}
+
+
+//   신용정보   //
+
+.credit-info{
+    padding: 30px 0;
+    .title{
+        line-height: 30px;
+        background: #f0efed;
+        text-indent: 21px;
+    }
+    .key{
+        font-size: 14px;
+        color: #333;
+        font-weight: 700;
+        padding-bottom: 10px;
+        border-bottom: 1px solid $lineColor;
+        margin-top: 20px;
+    }
+    .wrap{
+        padding: 0 21px;
+    }
+    ul{
+        li{
+            display: flex;
+            border-bottom: 1px solid $lineColor;
+            line-height: 35px;
+            p{
+                width: 50%;
+                padding: 0 15px;
+                color: #888;
+                &:last-child{
+                    text-align: right;
+                    color: #333;
+                }
+            }
+        }
+        &.left{
+            li{
+                p{
+                    width: 20%;
+                    &:last-child{
+                        width: 80%;
+                        text-align: left;
+                        line-height: 18px;
+                        padding: 9px 0;
+                    }
+                }
+            }
+        }
+    }
+    .right{
+        text-align: right;
+        margin-top: 10px;
+    }
+}
+
+
+//   신용정보   //
+
+.history{
+    .item{
+        border: 1px solid $lineColor;
+        padding: 20px;
+        border-radius: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 15px;
+        p{
+            width: 50%;
+            font-size: 13px;
+            margin-bottom: 10px;
+            &.name{
+                font-size: 14px;
+                color: #333;
+                font-weight: 700;
+            }
+            &.result{
+                color: $col1;
+                font-weight: 700;
+            }
+            &.number{
+                color: #888;
+            }
+            &.date{
+                color: #888;
+                font-weight: 700;
+            }
+            &.cate{
+                 width: 100%;
+                em{
+                    color: $col4;
+                    font-weight: 700;
+                    font-size: 13px;
+                    padding-left: 8px;
+                    margin-left: 8px;
+                    border-left: 1px solid $lineColor;
+                    &:first-child{
+                        padding-left: 0;
+                        margin-left: 0;
+                        border-left: none;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.alarm-history{
+    &:nth-child(1){
+        margin-top: 30px;
+    }
+    .date{
+        line-height: 30px;
+        background: #f0efed;
+        text-indent: 21px;
+    }
+    .alarm-list{
+        padding: 20px 21px 0;
+        .item{
+            border: 1px solid $lineColor;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            a{
+                display: block;
+                background: url("../images/common/btn_arrow.png") no-repeat right center / 7px;
+            }
+            .ico{
+                color: #333;
+                font-weight: 700;
+                padding-left: 30px;
+                line-height: 24px;
+                &.alarm{
+                    background: url("../images/etc/alarm.png") no-repeat left center / 24px;
+                }
+            }
+            .text{
+                font-size: 14px;
+                color: #333;
+                margin-top: 15px;
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
 
 
 

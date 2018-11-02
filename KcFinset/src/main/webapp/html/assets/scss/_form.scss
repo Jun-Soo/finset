@@ -198,6 +198,23 @@ textarea{
 		}
 	}
     
+    .small{
+        input[type="checkbox"] + label{
+            padding-left:25px;
+            font-weight: 400;
+            font-size: 12px;
+            line-height:18px;
+            margin-bottom: 10px;
+            &:before{
+                width: 18px;
+                height: 18px;
+                vertical-align: top;
+                margin-right: 10px;
+                background-image:url("../images/_form/checkbox_s.png");
+                background-size: 18px;
+            }
+        }
+    }  
 }
 
 .filter-wrap{

@@ -214,7 +214,26 @@ textarea{
                 background-size: 18px;
             }
         }
-    }  
+    }
+    
+    &.search-check{
+        input[type="checkbox"] + label{
+            padding:0 12px;
+            color:$col4;
+            font-size: 14px;
+            line-height:28px;
+            text-align:center;
+            border: 1px solid $col4;
+            border-radius: 20px;
+            &:before{
+                display: none;
+            }
+        }
+        input[type="checkbox"]:checked + label{
+            background: $col4;
+            color: #fff;
+        }
+    }
 }
 
 .filter-wrap{

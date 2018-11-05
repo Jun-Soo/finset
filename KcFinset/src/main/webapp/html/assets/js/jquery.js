@@ -86,7 +86,7 @@ $(function(){
     
     ////////////////////     설정버튼     ////////////////////
     
-    $(document).on("click",".btn-onoff",function(e){
+    $(document).on("click",".btn-onoff,.btn-star",function(e){
         
         $(this).toggleClass("on");
         

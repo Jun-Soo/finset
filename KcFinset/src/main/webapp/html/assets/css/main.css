@@ -33,6 +33,9 @@ textarea { width: 100%; height: 70vh; padding: 20px; border: 1px solid #e5e5e5; 
 .checks input[type="checkbox"]#check-all:checked + label:before { background-position: left bottom; }
 .checks .small input[type="checkbox"] + label { padding-left: 25px; font-weight: 400; font-size: 12px; line-height: 18px; margin-bottom: 10px; }
 .checks .small input[type="checkbox"] + label:before { width: 18px; height: 18px; vertical-align: top; margin-right: 10px; background-image: url("../images/_form/checkbox_s.png"); background-size: 18px; }
+.checks.search-check input[type="checkbox"] + label { padding: 0 12px; color: #62c1d0; font-size: 14px; line-height: 28px; text-align: center; border: 1px solid #62c1d0; border-radius: 20px; }
+.checks.search-check input[type="checkbox"] + label:before { display: none; }
+.checks.search-check input[type="checkbox"]:checked + label { background: #62c1d0; color: #fff; }
 
 .filter-wrap { display: table; margin-bottom: 15px; }
 .filter-wrap .filter { display: table-cell; padding-right: 10px; }
@@ -132,7 +135,7 @@ aside .wrap .list-wrap a .banner .right img { width: 62px; }
 aside.on:before { display: block; }
 aside.on button { background-position: right bottom; }
 aside.on .wrap { height: auto; }
-aside:before { width: 100%; height: 100vh; position: fixed; bottom: 0; left: 0; content: ""; background: rgba(0, 0, 0, 0.8); z-index: -1; display: none; }
+aside:before { width: 100%; height: 200vh; position: fixed; bottom: 0; left: 0; content: ""; background: rgba(0, 0, 0, 0.8); z-index: -1; display: none; }
 
 /*   Common   */
 .owl-theme .owl-dots { text-align: center; margin-top: 10px; line-height: 0; font-size: 0; -webkit-tap-highlight-color: transparent; }

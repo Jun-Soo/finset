@@ -5,11 +5,12 @@
 @import "mixin";
 @import "form";
 @import "table";
+@import "board";
 @import "layout";
 @import "header";
 @import "modal";
 @import "event";
-
+ 
 
 /*   Common   */
 
@@ -34,6 +35,10 @@ h3{
     &.success{
        background: url("../images/common/loading_success.png") no-repeat center / 75px; 
     }
+    &.exit{
+       background: url("../images/common/loading_exit.png") no-repeat center / 75px; 
+    }
+    
     em{
         color: #333;
         font-size: 15px;
@@ -404,6 +409,9 @@ aside.search-wrap{
                         vertical-align: middle;
                         margin-right: 5px;
                     }
+                    label{
+                        height: 30px;
+                    }
                 }
                 &.text{
                     text-align: right;
@@ -679,6 +687,56 @@ aside.search-wrap{
         }
         &.expand{
             padding-bottom: 0;
+        }
+        .goods-name{
+            font-size: 14px;
+            color: #222;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+        .goods-cate{
+            margin-top: 10px;
+            em{
+                color: $col4;
+                font-weight: 700;
+                padding-left: 5px;
+                margin-left: 5px;
+                border-left: 1px solid $lineColor;
+                &:first-child{
+                    padding-left: 0;
+                    margin-left: 0;
+                    border-left: none;
+                }
+            }
+        }
+        .detail{
+            margin-top: 15px;
+            padding-top: 5px;
+            border-top: 1px solid $lineColor;
+            .wrap{
+                display: flex;
+                justify-content: space-between;
+                p{
+                    margin-top: 10px;
+                    &:first-child{
+                        color: $col2;
+                    }
+                    &.rate{
+                        font-size: 14px;
+                        em{
+                            display: inline-block;
+                            line-height: 16px;
+                            color: $col4;
+                            border: 1px solid $col4;
+                            border-radius: 20px;
+                            margin-right: 5px;
+                            padding: 0 10px;
+                            vertical-align: middle;
+                            font-weight: 700;
+                        }
+                    }
+                }
+            }
         }
     }
 } 
@@ -1486,11 +1544,12 @@ aside.search-wrap{
             }
             .small{
                 padding-top: 9px;
+                padding-left: 5px;
                 text-align: right;
-                font-size: 12px;
+                font-size: 10px;
                 color: #888;
                 em{
-                    font-size: 12px;
+                    font-size: 10px;
                     color: #888;
                     padding-left: 5px;
                 }
@@ -1783,6 +1842,7 @@ aside.search-wrap{
             font-size: 17px;
             font-weight: 700;
             border-radius: 0;
+            background: #fff;
             &.btn-solid{
                 background: #213e6a;
                 color: #fff;
@@ -1853,6 +1913,27 @@ aside.search-wrap{
         background-position: bottom center;
     }
 }
+
+.btn-star{
+    display: inline-block;
+    width: 16px;
+    height: 15px;
+    background: url("../images/common/btn-star.png") no-repeat top center / 16px;
+    &.on{
+        background-position: bottom center;
+    }
+}
+
+button.cal{
+    width: 29px;
+    height: 49px;
+    background: url("../images/common/btn_cal.png") no-repeat center / 19px;
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+
 
 .owl-theme .owl-dots {
 	text-align: center;
@@ -1987,6 +2068,7 @@ aside.search-wrap{
         }
     }
 }
+
 
 /*   POP   */
 
@@ -2428,13 +2510,14 @@ aside.search-wrap{
         display: flex;
         border-bottom: 1px solid $lineColor;
         p{
-            width: 50%;
+            width: 30%;
             font-size: 13px;
             color: $col2;
             font-weight: 700;
             line-height: 49px;
             &:last-child{
                 text-align: right;
+                width: 70%;
                 input[type="text"]{
                     line-height: 49px;
                     text-align: right;
@@ -3264,14 +3347,30 @@ aside.search-wrap{
 .search{
     display: flex;
     margin-bottom: 15px;
+    justify-content: space-between;
     div{
-        width: 50%;
+        //width: auto;
         &.right{
             text-align: right;
             button{
                 width: 35px;
                 height: 35px;
                 background: url("../images/common/btn-search.png") no-repeat center / contain;
+            }
+        }
+        .total{
+            display: inline-block;
+            padding-left: 5px;
+            margin-left: 5px;
+            border-left: 1px solid $lineColor;
+            margin-top: 10px;
+            &:first-child{
+                adding-left: 0;
+                margin-left: 0;
+                border-left: none;
+            }
+            em{
+                color: $col1;
             }
         }
     }
@@ -3550,9 +3649,6 @@ aside.search-wrap{
 }
 
 .alarm-history{
-    &:nth-child(1){
-        margin-top: 30px;
-    }
     .date{
         line-height: 30px;
         background: #f0efed;

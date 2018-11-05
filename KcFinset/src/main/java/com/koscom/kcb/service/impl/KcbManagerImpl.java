@@ -114,7 +114,7 @@ public class KcbManagerImpl implements KcbManager {
 
         boolean isSuccess = false;
 
-        if("LOCAL".equals(profile)) {
+        if(!"REAL".equals(profile)) {
 			logger.error("continue");
 //			info.setYn_craw_test("Y");
 //			info.setNoPerson(person.getNo_person());

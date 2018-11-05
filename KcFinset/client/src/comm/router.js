@@ -113,7 +113,7 @@ import ConsumeConsumeDetail from '@/components/consume/ConsumeDetail'
 // import ConsumeIncomeStat from '@/components/consume/IncomeStat'
 // import ConsumeConsumeStat from '@/components/consume/ConsumeStat'
 import ConsumeSetting from '@/components/consume/Setting'
-// import ConsumeConsumeClass from '@/components/consume/ConsumeClass'
+import ConsumeConsumeClass from '@/components/consume/ConsumeClass'
 // import ConsumeIncomeClass from '@/components/consume/IncomeClass'
 import ConsumePayment from '@/components/consume/Payment'
 import ConsumePaymentDetail from '@/components/consume/PaymentDetail'
@@ -165,7 +165,18 @@ import ShareDetail from '@/components/share/Detail'
 // import ShareHistory from '@/components/share/History'
 import ShareSumMain from '@/components/share/SumMain'
 
-// import EtcHome from '@/components/etc/Home'
+// --------------------통합 이후 삭제되어야 하는 부분
+import ShareDesignMain from '@/components/share/design/Main'
+import ShareDesignNewRequest from '@/components/share/design/NewRequest'
+import ShareDesignSetting from '@/components/share/design/Setting'
+import ShareDesignSetting2 from '@/components/share/design/Setting_2'
+import ShareDesignSetting3 from '@/components/share/design/Setting_3'
+import ShareDesignDetail from '@/components/share/design/Detail'
+import ShareDesignHistory from '@/components/share/design/History'
+// --------------------통합 이후 삭제되어야 하는 부분
+
+import EtcHome from '@/components/etc/Home'
+import EtcAlarmHistory from '@/components/etc/AlarmHistory'
 // import EtcCustomerCenter from '@/components/etc/CustomerCenter'
 // import EtcNoticeMain from '@/components/etc/NoticeMain'
 // import EtcNoticeList from '@/components/etc/NoticeList'
@@ -630,12 +641,12 @@ export const routes = [{
       allowPath: true
     }
   },
-  // {
-  //   path: 'list',
-  //   alias: '/list',
-  //   component: MemoList,
-  //   meta: { allowPath: true }
-  // },
+    // {
+    //   path: 'list',
+    //   alias: '/list',
+    //   component: MemoList,
+    //   meta: { allowPath: true }
+    // },
   {
     path: 'main',
     alias: '/main',
@@ -685,6 +696,14 @@ export const routes = [{
     path: 'setting',
     alias: '/setting',
     component: ConsumeSetting,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'consumeClass',
+    alias: '/consumeClass',
+    component: ConsumeConsumeClass,
     meta: {
       allowPath: true
     }
@@ -809,8 +828,93 @@ export const routes = [{
       allowPath: true,
       requiresAuth: true
     }
+  },
+    // -------------통합 이후 삭제되어야 하는 부분
+  {
+    path: 'designMain',
+    alias: '/designMain',
+    name: 'shareDesignMain',
+    component: ShareDesignMain,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'designNewRequest',
+    alias: '/designNewRequest',
+    name: 'shareDesignNewRequest',
+    component: ShareDesignNewRequest,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'designSetting',
+    alias: '/designSetting',
+    name: 'shareDesignSetting',
+    component: ShareDesignSetting,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'designSetting_2',
+    alias: '/designSetting_2',
+    name: 'shareDesignSetting_2',
+    component: ShareDesignSetting2,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'designSetting_3',
+    alias: '/designSetting_3',
+    name: 'shareDesignSetting_3',
+    component: ShareDesignSetting3,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'designDetail',
+    alias: '/designDetail',
+    name: 'shareDesignDetail',
+    component: ShareDesignDetail,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'designHistory',
+    alias: '/designHistory',
+    name: 'shareDesignHistory',
+    component: ShareDesignHistory,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
   }
+    // -------------통합 이후 삭제되어야 하는 부분
   ]
+},
+{
+  path: '/etc',
+  component: EtcHome,
+  children: [{
+    path: 'alarmHistory',
+    alias: '/alarmHistory',
+    name: 'etcAlarmHistory',
+    component: EtcAlarmHistory,
+    meta: {
+      allowPath: true
+    }
+  }]
 },
 {
   path: '/scrap',

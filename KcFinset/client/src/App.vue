@@ -20,6 +20,7 @@ export default {
   },
   created() {
     window.resultAutoScrap = this.resultAutoScrap;
+    window.saveScrapData = this.saveScrapData;
   },
   methods: {
     //스크래핑 완료 (모바일에서 호출)
@@ -47,6 +48,16 @@ export default {
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);
+        });
+    },
+    saveScrapData: function() {
+      this.$http
+        .post("/m/scrapData/saveScrapData.json")
+        .then(function(response) {
+          var result = response.data;
+          console.log(
+            "응답 코드:" + result.cd_err + "/응답 메세지:" + result.msg_err
+          );
         });
     }
   }

@@ -17,7 +17,6 @@ import 'jquery'
 
 import 'vue2-toast/lib/toast.css'
 
-import './assets/css/main.css'
 import './assets/css/reset.css'
 import './assets/css/style.css'
 

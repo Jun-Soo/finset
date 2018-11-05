@@ -85,7 +85,7 @@ $(function () {
 
   modal()
 
-  $(document).on('click', '.consume-cate-list>li>.wrap', function () {
+  $(document).on('click', '.consume-cate-list>div>li>.wrap', function () {
     if ($(this).closest('li').hasClass('on')) {
       $(this).closest('li').find('ul').slideUp(500, 'easeInOutExpo')
       $(this).closest('li').removeClass('on')

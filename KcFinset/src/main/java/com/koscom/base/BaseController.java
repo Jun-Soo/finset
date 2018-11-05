@@ -136,6 +136,7 @@ public class BaseController {
 		model.addAttribute("rtnPath", rtnUrl);
 		
 		String site = (environment != null) ? environment.getProperty("service.profile") : "";
+		logger.debug("SITE ==== " + site);
 		model.addAttribute("site", site);
 		return "jsonView";
 	}

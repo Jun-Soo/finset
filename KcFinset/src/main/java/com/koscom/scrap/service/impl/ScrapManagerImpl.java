@@ -1,6 +1,8 @@
 package com.koscom.scrap.service.impl;
 
 import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Base64.Encoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,6 +69,7 @@ import com.koscom.scrap.model.ScrRespIncomeDtlVO;
 import com.koscom.scrap.model.ScrRespPensionPaymentVO;
 import com.koscom.scrap.model.ScrRespPensionPaymentdtlVO;
 import com.koscom.scrap.model.ScrRsltScrapVO;
+import com.koscom.scrap.model.StockListVO;
 import com.koscom.scrap.model.UserBankOutputVO;
 import com.koscom.scrap.model.UserCardOutputVO;
 import com.koscom.scrap.model.sub.AnAllListHistoryVO;
@@ -191,67 +194,43 @@ public class ScrapManagerImpl implements ScrapManager {
 		JsonObject jsonDevInfo = new JsonObject();
 		JsonObject jsonBodyInfo = new JsonObject();
 		JsonObject jsonReqParamInfo = new JsonObject();
-		// 로컬 개발 테스트용 전문
-		if("TEST".equals(site))	{
-			jsonCommonInfo.addProperty("reqIdConsumer", "reqid-0001");
-			jsonCommonInfo.addProperty("ci", "1234567890");
-			jsonCommonInfo.addProperty("certDn", "testdn123");
-			jsonSendRoot.add("commonHeader", jsonCommonInfo);
-			
-			jsonDevInfo.addProperty("ipAddr", "192168010001");
-			jsonDevInfo.addProperty("macAddr", "1866DA0D99D6");
-			jsonSendRoot.add("devInfo", jsonDevInfo);
-			
-			jsonReqParamInfo.addProperty("customerBirthDay", "19770101");
-			jsonReqParamInfo.addProperty("customerEmail", "tsme0@hanmail.net");
-			jsonReqParamInfo.addProperty("customerPhone", "010-1111-1111");
-			jsonReqParamInfo.addProperty("customerUserNm", "홍길동");
-			JsonArray list = new JsonArray();
-			List<String> stockList = fincorpMapper.getCooconFcCd(codeManager.getCodeId("cd_fin","증권"));
-			for (int i = 0; i < stockList.size(); i++) {
-				list.add(stockList.get(i));
-			}
-			jsonReqParamInfo.add("companyList",list);
-			jsonBodyInfo.add("requestParameters", jsonReqParamInfo);
-			jsonSendRoot.add("financeTermsContentRequestBody", jsonBodyInfo);
+		
+		jsonCommonInfo.addProperty("reqIdConsumer", "test");
+		jsonCommonInfo.addProperty("ci", personVO.getKcb_ci());
+		jsonCommonInfo.addProperty("certDn", dn);
+		jsonSendRoot.add("commonHeader", jsonCommonInfo);
+		
+		// uuid가 있을 경우 - 핸드폰 접속 , 없을 경우  - PC 접속
+		if(uuid != null && uuid.length() > 0)	{
+			jsonDevInfo.addProperty("ipAddr", personVO.getHp());
+			jsonDevInfo.addProperty("macAddr", uuid);
 		}
 		else	{
-			jsonCommonInfo.addProperty("reqIdConsumer", "test");
-			jsonCommonInfo.addProperty("ci", personVO.getKcb_ci());
-			jsonCommonInfo.addProperty("certDn", dn);
-			jsonSendRoot.add("commonHeader", jsonCommonInfo);
-			
-			// uuid가 있을 경우 - 핸드폰 접속 , 없을 경우  - PC 접속
-			if(uuid != null && uuid.length() > 0)	{
-				jsonDevInfo.addProperty("ipAddr", personVO.getHp());
-				jsonDevInfo.addProperty("macAddr", uuid);
-			}
-			else	{
-				jsonDevInfo.addProperty("ipAddr", "");
-				jsonDevInfo.addProperty("macAddr", "");
-			}
-			jsonSendRoot.add("devInfo", jsonDevInfo);
-						
-			jsonReqParamInfo.addProperty("customerBirthDay", personVO.getBgn().substring(0, 8));
-			jsonReqParamInfo.addProperty("customerEmail", email);
-			jsonReqParamInfo.addProperty("customerPhone", personVO.getHp());
-			jsonReqParamInfo.addProperty("customerUserNm", personVO.getNm_person());
-			JsonArray list = new JsonArray();
-			List<String> stockList = fincorpMapper.getCooconFcCd(codeManager.getCodeId("cd_fin","증권"));
-			for (int i = 0; i < stockList.size(); i++) {
-				list.add(stockList.get(i));
-			}
-			jsonReqParamInfo.add("companyList",list);
-			jsonBodyInfo.add("requestParameters", jsonReqParamInfo);
-			jsonSendRoot.add("financeTermsContentRequestBody", jsonBodyInfo);
+			jsonDevInfo.addProperty("ipAddr", "");
+			jsonDevInfo.addProperty("macAddr", "");
 		}
+		jsonSendRoot.add("devInfo", jsonDevInfo);
+					
+		jsonReqParamInfo.addProperty("customerBirthDay", personVO.getBgn().substring(0, 8));
+		jsonReqParamInfo.addProperty("customerEmail", email);
+		jsonReqParamInfo.addProperty("customerPhone", personVO.getHp());
+		jsonReqParamInfo.addProperty("customerUserNm", personVO.getNm_person());
+		JsonArray list = new JsonArray();
+		List<String> stockList = fincorpMapper.listCooconFcCd(codeManager.getCodeId("cd_fin","증권"));
+		for (int i = 0; i < stockList.size(); i++) {
+			list.add(stockList.get(i));
+		}
+		jsonReqParamInfo.add("companyList",list);
+		jsonBodyInfo.add("requestParameters", jsonReqParamInfo);
+		jsonSendRoot.add("financeTermsContentRequestBody", jsonBodyInfo);
 		
 		logger.info("jsonRoot.toString() : " +jsonSendRoot.toString());
 		
 		HashMap<String, String> headerMap = new HashMap();
+		headerMap.put("Content-Type", "application/json; charset=UTF-8");
 		headerMap.put("apikey", directKey);
 		
-		ReturnClass returnClass = url.sendReqPOST_Direct(directUrl, headerMap, jsonSendRoot);
+		ReturnClass returnClass = url.sendReqPOST_Direct(directUrl, headerMap, jsonSendRoot.toString());
 		
 		if(returnClass.getCd_result()  == Constant.SUCCESS)	{
 			String data = returnClass.getDes_message();
@@ -324,57 +303,191 @@ public class ScrapManagerImpl implements ScrapManager {
 		JsonObject jsonCommonInfo = new JsonObject();
 		JsonObject jsonDevInfo = new JsonObject();
 		JsonObject jsonBodyInfo = new JsonObject();
-		// 로컬 개발 테스트용 전문
-		if("TEST".equals(site))	{
-			jsonCommonInfo.addProperty("reqIdConsumer", "reqid-0001");
-			jsonCommonInfo.addProperty("ci", "1234567890");
-			jsonCommonInfo.addProperty("certDn", "testdn123");
-			jsonSendRoot.add("commonHeader", jsonCommonInfo);
-			
-			jsonDevInfo.addProperty("ipAddr", "192168010001");
-			jsonDevInfo.addProperty("macAddr", "1866DA0D99D6");
-			jsonSendRoot.add("devInfo", jsonDevInfo);
-			
-			JsonObject jsonObject = (JsonObject) jsonParser.parse(financeTerms);
-			jsonBodyInfo.add("requestParameters", jsonObject);
-			jsonSendRoot.add("financeTermsContentRequestBody", jsonBodyInfo);
+		
+		jsonCommonInfo.addProperty("reqIdConsumer", "test");
+		jsonCommonInfo.addProperty("ci", personVO.getKcb_ci());
+		jsonCommonInfo.addProperty("certDn", dn);
+		jsonSendRoot.add("commonHeader", jsonCommonInfo);
+		
+		// uuid가 있을 경우 - 핸드폰 접속 , 없을 경우  - PC 접속
+		if(uuid != null && uuid.length() > 0)	{
+			jsonDevInfo.addProperty("ipAddr", personVO.getHp());
+			jsonDevInfo.addProperty("macAddr", uuid);
 		}
 		else	{
-			jsonCommonInfo.addProperty("reqIdConsumer", "test");
-			jsonCommonInfo.addProperty("ci", personVO.getKcb_ci());
-			jsonCommonInfo.addProperty("certDn", dn);
-			jsonSendRoot.add("commonHeader", jsonCommonInfo);
-			
-			// uuid가 있을 경우 - 핸드폰 접속 , 없을 경우  - PC 접속
-			if(uuid != null && uuid.length() > 0)	{
-				jsonDevInfo.addProperty("ipAddr", personVO.getHp());
-				jsonDevInfo.addProperty("macAddr", uuid);
-			}
-			else	{
-				jsonDevInfo.addProperty("ipAddr", "");
-				jsonDevInfo.addProperty("macAddr", "");
-			}
-			jsonSendRoot.add("devInfo", jsonDevInfo);
-			
-
-			JsonObject jsonfinanceTerms = (JsonObject) jsonParser.parse(financeTerms);
-			jsonBodyInfo.add("requestParameters", jsonfinanceTerms);
-			
-			JsonObject jsonjwsInfo = (JsonObject) jsonParser.parse(jwsInfo);
-			jsonSendRoot.add("financeTermsTransmitRequestBody", jsonBodyInfo);
-			jsonSendRoot.add("jws", jsonjwsInfo);
+			jsonDevInfo.addProperty("ipAddr", "");
+			jsonDevInfo.addProperty("macAddr", "");
 		}
+		jsonSendRoot.add("devInfo", jsonDevInfo);
+		
+
+		JsonObject jsonfinanceTerms = (JsonObject) jsonParser.parse(financeTerms);
+		jsonBodyInfo.add("requestParameters", jsonfinanceTerms);
+		
+		JsonObject jsonjwsInfo = (JsonObject) jsonParser.parse(jwsInfo);
+		jsonSendRoot.add("financeTermsTransmitRequestBody", jsonBodyInfo);
+		jsonSendRoot.add("jws", jsonjwsInfo);
 		
 		logger.info("jsonRoot.toString() : " +jsonSendRoot.toString());
 		
 		HashMap<String, String> headerMap = new HashMap();
+		headerMap.put("Content-Type", "application/json; charset=UTF-8");
 		headerMap.put("apikey", directKey);
 		
-		ReturnClass returnClass = url.sendReqPOST_Direct(directUrl, headerMap, jsonSendRoot);
+		ReturnClass returnClass = url.sendReqPOST_Direct(directUrl, headerMap, jsonSendRoot.toString());
 		
 		if(returnClass.getCd_result()  == Constant.SUCCESS)	{
 		}
 		return null;
+	}
+	
+	public String getAccessToken()	{
+		String tokenUrl = environment.getProperty("token.apiUrl");
+		String key = environment.getProperty("direct.apiKey")+":"+environment.getProperty("direct.secret");
+		
+		URLConnection url = new URLConnection();
+		logger.info("getAccessToken  : URL[" + tokenUrl +"], Key : "+key);
+		
+		
+		 // Base64 인코딩
+		byte[] targetBytes = key.getBytes(); 
+		Encoder encoder = Base64.getEncoder();
+		byte[] encodedBytes = encoder.encode(targetBytes); 
+	
+		String authorization = "Basic " + new String(encodedBytes);
+		
+		HashMap<String, String> headerMap = new HashMap();
+		headerMap.put("Content-Type", "Application/x-www-form-urlencoded");
+		headerMap.put("Authorization", authorization);
+		logger.info("Authorization  : " + authorization);
+		
+		ReturnClass returnClass = url.sendReqPOST_Direct(tokenUrl, headerMap, "");
+		
+		if(returnClass.getCd_result()  == Constant.SUCCESS)	{
+			String data = returnClass.getDes_message();
+			logger.info("data : "+ data);
+			JsonParser jsonParser = new JsonParser();
+			JsonObject jsonRecvRoot = (JsonObject) jsonParser.parse(data);
+			logger.info("access_token  : " +jsonRecvRoot.get("access_token").toString());
+			
+			return jsonRecvRoot.get("access_token").toString();
+		}
+		else	{
+			logger.error("금융투자회사 Access Token 조회를 실패하였습니다.");
+		}
+		
+		return null;
+	}
+	
+	public String checkAllFinance(String no_person, String uuid, String dn, String token)	{
+
+		List<String> stockList = fincorpMapper.listComAlias(codeManager.getCodeId("cd_fin", "증권"));
+		
+		for (int i= 0; i< stockList.size(); i++){
+			createFinanceAccount(no_person, uuid, dn, token, stockList.get(i));
+			
+			
+			
+		}
+
+		return null;
+	}
+	
+	public ReturnClass createFinanceAccount(String no_person, String uuid, String dn, String token, String com_alias)	{
+		String financeUrl = String.format(environment.getProperty("account.apiUrl"), com_alias)+"/vtaccount/create";
+		
+//		PersonVO personVO = null;
+//		personVO = personMapper.getPersonInfo(no_person);
+//		String ci = personVO.getKcb_ci();
+//		String hp = personVO.getHp();
+		
+		//테스트용 임시데이터
+		uuid = "1866DA0D99D6";
+		dn = "testdn123";
+		token = "Bearer fbf794d3-9be6-4163-9df6-927d43736470";
+		String ci = "1234567890";
+		String hp = "192168010001";
+		
+		JsonObject jsonSendRoot = new JsonObject();
+		JsonObject jsonPartnerInfo = new JsonObject();
+		jsonPartnerInfo.addProperty("comId", environment.getProperty("direct.comId"));
+		jsonPartnerInfo.addProperty("srvId", environment.getProperty("direct.srvId"));
+		jsonSendRoot.add("partner", jsonPartnerInfo);
+		
+		JsonObject jsonCommonInfo = new JsonObject();
+		JsonObject jsonDevInfo = new JsonObject();
+		
+		jsonCommonInfo.addProperty("reqIdConsumer", "test");
+		jsonCommonInfo.addProperty("ci", ci);
+		jsonCommonInfo.addProperty("certDn", dn);
+		jsonSendRoot.add("commonHeader", jsonCommonInfo);
+		
+		// uuid가 있을 경우 - 핸드폰 접속 , 없을 경우  - PC 접속
+		if(uuid != null && uuid.length() > 0)	{
+			jsonDevInfo.addProperty("ipAddr", hp);
+			jsonDevInfo.addProperty("macAddr", uuid);
+		}
+		else	{
+			jsonDevInfo.addProperty("ipAddr", "");
+			jsonDevInfo.addProperty("macAddr", "");
+		}
+		jsonSendRoot.add("devInfo", jsonDevInfo);
+					
+		logger.info("jsonRoot.toString() : " +jsonSendRoot.toString());
+			
+		URLConnection url = new URLConnection();
+		logger.info("getAccessToken  : URL[" + financeUrl +"], token : "+token);
+		
+		HashMap<String, String> headerMap = new HashMap();
+		headerMap.put("Format", "JSON <application/json; charset=utf-8>");
+		headerMap.put("Content-Type", "Application/json");
+		headerMap.put("Authorization", token);
+				
+		ReturnClass returnClass = url.sendReqPOST_Direct(financeUrl, headerMap, jsonSendRoot.toString());
+		
+		String data = returnClass.getDes_message();
+		logger.info("data : "+ data);
+		JsonParser jsonParser = new JsonParser();
+		JsonObject jsonRecvRoot = (JsonObject) jsonParser.parse(data);
+		
+		if(returnClass.getCd_result()  == Constant.SUCCESS)	{
+			JsonArray jsonArry = (JsonArray)jsonRecvRoot.get("accountList");
+			if(jsonArry != null && jsonArry.size() > 0)	{
+				String cd_fc = fincorpMapper.getCdFcByComAlias(com_alias);
+				//계좌 내역 추가
+				for(int i=0; i<jsonArry.size(); i++)	{
+					JsonObject object = (JsonObject)jsonArry.get(i);
+					StockListVO stockList = new StockListVO();
+					stockList.setNo_person(no_person);
+					stockList.setCd_fc(cd_fc);
+					stockList.setAccno(object.get("vtAccNo").getAsString());
+					stockList.setDt(object.get("vtAccAlias").getAsString());
+					//stockList.set(object.get("realAccNo").getAsString());
+					stockList.setAcc_type(object.get("accType").getAsString());
+					stockList.setState(object.get("status").getAsString());
+					scrapMapper.createStockList(stockList);
+					
+				}
+				//금융사 연동 정보 추가
+				FcLinkInfoVO fcLinkInfoVO = new FcLinkInfoVO();
+	        	String cd_agency = codeManager.getCodeId("cd_agency", "증권");
+	        	String type_login = codeManager.getCodeId("type_login", "CERT");
+	        	fcLinkInfoVO.setNo_person(no_person);
+	        	fcLinkInfoVO.setCn(dn);
+	        	fcLinkInfoVO.setCd_fc(cd_fc);
+	        	fcLinkInfoVO.setCd_agency(cd_agency);
+	        	fcLinkInfoVO.setType_login(type_login);
+	        	fcLinkInfoVO.setYn_link("Y");
+	        	fcLinkInfoVO.setCd_link_stat("00");
+	        	fcLinkInfoVO.setId_frt(no_person);
+	        	fcLinkInfoVO.setId_lst(no_person);
+	        	scrapMapper.createFcLinkInfo(fcLinkInfoVO);
+			}
+		}
+		else	{
+			logger.error("금융투자회사 가상 계좌 개설이 실패하였습니다.");
+		}
+		return returnClass;
 	}
 	
 	public String createScrapFcList(String data)	{
@@ -391,8 +504,6 @@ public class ScrapManagerImpl implements ScrapManager {
 		String cn = "";
 		int	nResult;
 		
-		ReturnClass returnClass;
-
 		appFcLinkInfo = gson.fromJson(net.sf.json.JSONObject.fromObject(JSONSerializer.toJSON(data)).toString(), AppFcLinkInfo.class);
         no_person 	= appFcLinkInfo.getNO_PERSON();
         cn 	= appFcLinkInfo.getCN();
@@ -413,7 +524,7 @@ public class ScrapManagerImpl implements ScrapManager {
         fcLinkInfo.setNo_person(no_person);
         fcLinkInfo.setCn(cn);
         nResult = scrapMapper.createFcLinkInfoHist(fcLinkInfo);
-        logger.debug("scrapManager.createFcLinkInfoHist return  :" + nResult);
+        logger.debug("scrapMapper.createFcLinkInfoHist return  :" + nResult);
         
         //국세청 자동 스크래핑 정보 테이블에 반영 
         if(appFcLinkInfo.getNTS_LINK_INFO() != null){
@@ -1446,7 +1557,17 @@ public class ScrapManagerImpl implements ScrapManager {
 		JSONObject jsonRoot = new JSONObject();
 		ScrRsltScrapVO scrRsltScrapVO = new ScrRsltScrapVO();
 		int result;
-	
+		
+		// IOS 스크래핑 내역을 합산해서 전달하기때문에 구분자 필요
+		if(cd_agency.equals(codeManager.getCodeId("cd_agency", "은행")))	{
+			jsonRoot.put("CODE_SCRAP", "bank");
+		}
+		else if(cd_agency.equals(codeManager.getCodeId("cd_agency", "카드")))	{
+			jsonRoot.put("CODE_SCRAP", "card");
+		}
+		else if(cd_agency.equals(codeManager.getCodeId("cd_agency", "국세청")))	{
+			jsonRoot.put("CODE_SCRAP", "nts");
+		}
 		//자동 스크래래핑 관련 조회
 		FcLinkInfoVO fcLinkInfoVO = new FcLinkInfoVO();
 		fcLinkInfoVO.setNo_person(no_person);
@@ -1514,7 +1635,7 @@ public class ScrapManagerImpl implements ScrapManager {
 					jsonBankArr.add(jsonBankInfo);
 				}
 				jsonRoot.put("LIST_BANK", jsonBankArr);
-				jsonRoot.put("CODE_SCRAP", "bank");
+
 			}
 			else if(cd_agency.equals(codeManager.getCodeId("cd_agency", "카드")))	{
 				String startDate = "";
@@ -1553,7 +1674,6 @@ public class ScrapManagerImpl implements ScrapManager {
 					jsonCardArr.add(jsonCardInfo);
 				}
 				jsonRoot.put("LIST_CARD", jsonCardArr);
-				jsonRoot.put("CODE_SCRAP", "card");
 			}
 			else if(cd_agency.equals(codeManager.getCodeId("cd_agency", "국세청")))	{
 				FcLinkInfoVO fcLinkInfo = fcLinkInfoList.get(0);
@@ -1576,12 +1696,10 @@ public class ScrapManagerImpl implements ScrapManager {
 					startMonth = DateUtil.addMonths(toDay, -3).substring(0, 6);
 				}
 				jsonRoot.put("RCPT_START_MONTH", startMonth);
-				jsonRoot.put("CODE_SCRAP", "nts");
 			}
-			logger.info("json object :" + jsonRoot.toString());
-			return jsonRoot.toString();
 		}
-		return "";
+		logger.info("json object :" + jsonRoot.toString());
+		return jsonRoot.toString();
 	}
 	
 	@Override

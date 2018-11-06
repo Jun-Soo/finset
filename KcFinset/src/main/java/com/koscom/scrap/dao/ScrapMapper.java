@@ -23,10 +23,23 @@ import com.koscom.scrap.model.ScrRespIncomeDtlVO;
 import com.koscom.scrap.model.ScrRespPensionPaymentVO;
 import com.koscom.scrap.model.ScrRespPensionPaymentdtlVO;
 import com.koscom.scrap.model.ScrRsltScrapVO;
+import com.koscom.scrap.model.StockListVO;
 import com.koscom.scrap.model.sub.AnAllListHistoryVO;
 import com.koscom.scrap.model.sub.DepositAnListHistoryVO;
 
 public interface ScrapMapper { // com.koscom.scrap.dao.ScrapMapper
+	/**
+	 * 증권사 가상계좌 발급 정보 저장
+	 * @param StockListVO
+	 */
+	int createStockList(StockListVO stockListVO);
+	
+	/**
+	 * 증권사 가상계좌 발급 정보 조회
+	 * @param StockListVO
+	 * @return StockListVO
+	 */
+	List<StockListVO> listStockList(StockListVO stockListVO);
 	
 	/**
 	 * 스크래핑 조회내역 저장

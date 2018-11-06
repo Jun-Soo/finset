@@ -37,7 +37,7 @@ public class FincorpManagerImpl implements FincorpManager{
 	}
 	
 	@Override
-	public List<String> getCooconFcCd(String type_fc){
-		return fincorpMapper.getCooconFcCd(type_fc);
+	public List<String> listCooconFcCd(String type_fc){
+		return fincorpMapper.listCooconFcCd(type_fc);
 	}
 }

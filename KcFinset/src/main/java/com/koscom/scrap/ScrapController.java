@@ -77,11 +77,11 @@ public class ScrapController {
 			HttpSession session, 
 			Model model) {
 		//스크래핑 대상 은행 리스트 가져오기
-		List<String> bankList = fincorpManager.getCooconFcCd(codeManager.getCodeId("cd_fin","은행"));
+		List<String> bankList = fincorpManager.listCooconFcCd(codeManager.getCodeId("cd_fin","은행"));
 		String bankCode = String.join(",", bankList);
 		
 		//스크래핑 대상 카드 리스트 가져오기
-		List<String> cardList = fincorpManager.getCooconFcCd(codeManager.getCodeId("cd_fin","카드"));
+		List<String> cardList = fincorpManager.listCooconFcCd(codeManager.getCodeId("cd_fin","카드"));
 		String cardCode = String.join(",", cardList);
 		
 		logger.debug("bankCode : " + bankCode);
@@ -176,13 +176,15 @@ public class ScrapController {
 			String uuid,
 			String dn) {
 		logger.debug("================= no_person : " + no_person);
-		logger.debug("================= uuid : " + uuid);
 		logger.debug("================= dn : " + dn);
 		logger.info("service.profile :" +environment.getProperty("service.profile"));
+		
+		String token = scrapManager.getAccessToken();
+		logger.debug("================= token : " + token);
+		
+		token = "Bearer fbf794d3-9be6-4163-9df6-927d43736470";
+		scrapManager.checkAllFinance(no_person, uuid, dn, token);
 
-		
-		
-		
 		return "jsonView";
 	}
 	
@@ -553,10 +555,10 @@ public class ScrapController {
 		}
 		
 		//스크래핑 대상 은행 리스트 가져오기
-		List<String> bankList = fincorpManager.getCooconFcCd(codeManager.getCodeId("cd_fin","은행"));
+		List<String> bankList = fincorpManager.listCooconFcCd(codeManager.getCodeId("cd_fin","은행"));
 		String bankCode = String.join(",", bankList);
 			
-		List<String> cardList = fincorpManager.getCooconFcCd(codeManager.getCodeId("cd_fin","카드"));
+		List<String> cardList = fincorpManager.listCooconFcCd(codeManager.getCodeId("cd_fin","카드"));
 		String cardCode = String.join(",", cardList);
 		
 		logger.debug("bankCode : " + bankCode);

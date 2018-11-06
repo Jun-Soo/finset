@@ -167,8 +167,15 @@
 
  	</update>
  	
- 	<select id="getCooconFcCd" parameterType="String" resultType="String">
+ 	<select id="listCooconFcCd" parameterType="String" resultType="String">
  		SELECT CD_FC_COOCON
+		FROM FC_INFO
+		WHERE CD_FIN = #{type_fc, jdbcType=VARCHAR}
+      		AND YN_SCRAP = 'Y'
+ 	</select>
+ 	
+ 	<select id="listComAlias" parameterType="String" resultType="String">
+ 		SELECT COM_ALIAS
 		FROM FC_INFO
 		WHERE CD_FIN = #{type_fc, jdbcType=VARCHAR}
       		AND YN_SCRAP = 'Y'
@@ -185,6 +192,12 @@
  		SELECT CD_FC
 		FROM FC_INFO
 		WHERE CD_FC_COOCON = #{cd_fc_coocon, jdbcType=VARCHAR}
+ 	</select>
+ 	
+ 	<select id="getCdFcByComAlias" parameterType="String" resultType="String">
+ 		SELECT CD_FC
+		FROM FC_INFO
+		WHERE COM_ALIAS = #{com_alias, jdbcType=VARCHAR}
  	</select>
 </mapper>
 

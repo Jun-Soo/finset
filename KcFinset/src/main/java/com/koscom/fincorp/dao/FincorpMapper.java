@@ -54,8 +54,14 @@ public interface FincorpMapper {
 	 * @param String
 	 * @return List<String>
 	 */
-	List<String> getCooconFcCd(String type_fc);
+	List<String> listCooconFcCd(String type_fc);
 	
+	/**
+	 * 금융사 COM_ALIAS(스크래핑 대상)
+	 * @param String
+	 * @return List<String>
+	 */
+	List<String> listComAlias(String type_fc);
 	
 	/**
 	 * COOCON 금융사 코드
@@ -70,4 +76,12 @@ public interface FincorpMapper {
 	 * @return String
 	 */
 	String getCdFcByCooconFcCd(String cd_fc_coocon);
+	
+	/**
+	 *  증권사 금융사 코드
+	 * @param String
+	 * @return String
+	 */
+	String getCdFcByComAlias(String com_alias);
+
 }

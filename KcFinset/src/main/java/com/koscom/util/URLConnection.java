@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Scanner;
 import java.util.Set;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -361,13 +362,14 @@ public class URLConnection {
 	 * @param param
 	 * @return
 	 */
-	public ReturnClass sendReqPOST_Direct(String targetUrl, HashMap<String, String> headerMap, JsonObject json) {
+	public ReturnClass sendReqPOST_Direct(String targetUrl, HashMap<String, String> headerMap, String body) {
 		if (StringUtil.isEmpty(targetUrl)) {
 			logger.info("==== 요청 된 URL 이 없습니다. ====");
 			return new ReturnClass(Constant.FAILED, "요청 URL 이 없습니다.");
 		}		
 		
 		HttpURLConnection connection = null;
+		int returnCd = 0;
 		String returnMsg = "";
 		String cd_result = Constant.FAILED;
 
@@ -395,10 +397,8 @@ public class URLConnection {
 			connection = (HttpURLConnection) aURL.openConnection();
 			connection.setConnectTimeout(30000); // millisecond//
 			connection.setReadTimeout(60000); // millisecond//
-			// 헤더값 설정
-			connection.setRequestProperty("Content-Type", "application/json; charset=UTF-8");
-			
-			// header map 추가
+		
+			// 헤더값 설정 - header map 추가
 			Set<Entry<String, String>> set = headerMap.entrySet();
 			Iterator<Entry<String, String>> itr = set.iterator();
 
@@ -417,39 +417,30 @@ public class URLConnection {
 			connection.setDoInput(true);
 			connection.setUseCaches(false);
 			connection.setDefaultUseCaches(false);
-			
+
 			opstrm = connection.getOutputStream();
-			opstrm.write(json.toString().getBytes("UTF-8"));
+			opstrm.write(body.getBytes("UTF-8"));
 			opstrm.flush();
 			opstrm.close();
-
-			logger.info("1. 요청 URL["+ targetUrl + "]");
-			logger.info("==== 요청 처리 결과 리턴 [" + connection.getResponseCode() + "]: \r\n[" + targetUrl + "]\r\n[" + json.toString() + "]");
 			
-				// 데이터 수신
-				if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-					in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-					// 리턴되는 메시지를 읽는다 .
-					
-					String strLine ="";
-					while ((strLine=in.readLine())!= null) {
-						returnMsg+=strLine;
-					}
-					if( in != null ){
-					      in = null;
-				     }
-					cd_result = Constant.SUCCESS;
-				//리턴 302,303
-				}else if(connection.getResponseCode() ==  HttpURLConnection.HTTP_MOVED_TEMP 
-						|| connection.getResponseCode() == HttpURLConnection.HTTP_MOVED_PERM){
-					
-					cd_result = Constant.SUCCESS;
-					String redirectedUrl = connection.getHeaderField("Location");
- 		            logger.info(redirectedUrl + "<<<<<<<<<<<<<<<<<< redirectedUrl");
-				}else {
-					returnMsg = "전송 실패("+connection.getResponseCode()+")";
-				}
-
+			InputStream ipstrm = null;
+			if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
+				ipstrm = connection.getInputStream();
+				cd_result = Constant.SUCCESS;
+			}
+			else	{
+				ipstrm = connection.getErrorStream();
+			}
+			
+			Scanner scn = new Scanner(ipstrm, "UTF-8").useDelimiter("\\A");
+			if (scn.hasNext()) {
+				returnMsg =  scn.next();					
+			}
+			ipstrm.close();		
+			logger.info("1. 요청 URL["+ targetUrl + "]");
+			returnCd = connection.getResponseCode();
+			
+	
 		} catch (ConnectException ex) {
 			if (connection !=null) {
 				try {
@@ -474,8 +465,7 @@ public class URLConnection {
 			}
 		}
 		
-		logger.info("2. 요청 처리 결과 메시지 ["+returnMsg+"]");
+		logger.info("2. 요청 처리 결과  ["+returnCd+"]["+returnMsg+"]");
 		return new ReturnClass(cd_result, "요청을 처리하였습니다." , returnMsg);
 	}
-	
 }

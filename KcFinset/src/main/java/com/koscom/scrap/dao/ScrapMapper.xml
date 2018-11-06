@@ -3,6 +3,65 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.koscom.scrap.dao.ScrapMapper">
+	<insert id="createStockList" parameterType="com.koscom.scrap.model.StockListVO">
+		MERGE INTO STOCK_LIST
+		USING DUAL
+		ON ( NO_PERSON		= #{no_person	,jdbcType=VARCHAR}
+			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR} 
+			AND ACCNO		= #{accno		,jdbcType=VARCHAR} )
+		WHEN MATCHED THEN
+		UPDATE
+		 SET
+		  	STATE			= #{state		,jdbcType=VARCHAR}
+		    ,ACC_TYPE		= #{acc_type	,jdbcType=VARCHAR}
+		 	,DT				= #{dt			,jdbcType=VARCHAR}
+			,ID_LST			= #{id_lst		,jdbcType=VARCHAR}
+			,DT_LST			= SYSDATE
+		WHEN NOT MATCHED THEN
+        INSERT
+        (
+			 NO_PERSON
+			,CD_FC
+			,ACCNO
+			,SECU_NO
+			,SECU_NM
+			,STATE
+			,ACC_TYPE
+			,DT
+			,ID_FRT
+			,DT_FRT
+		) VALUES (
+			 #{no_person		,jdbcType=VARCHAR}
+			,#{cd_fc			,jdbcType=VARCHAR}
+			,#{accno			,jdbcType=VARCHAR}
+			,#{secu_no			,jdbcType=VARCHAR}
+			,#{secu_nm			,jdbcType=VARCHAR}
+			,#{state			,jdbcType=VARCHAR}
+			,#{acc_type			,jdbcType=VARCHAR}
+			,#{dt				,jdbcType=VARCHAR}
+			,#{id_frt			,jdbcType=VARCHAR}
+			,SYSDATE
+		)
+	</insert>
+	
+	<select id="listStockList" parameterType="com.koscom.scrap.model.StockListVO">
+		SELECT NO_PERSON
+			, CD_FC
+			, ACCNO
+			, SECU_NO
+			, SECU_NM
+			, STATE
+			, ACC_TYPE
+			, DT
+			, ID_FRT
+			, DT_FRT
+			, ID_FRT
+			, DT_FRT
+		FROM FC_LINK_INFO
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC= #{cd_fc, jdbcType=VARCHAR} 
+			AND STATE = '사용'
+	</select>
 
 	<insert id="insertScrRsltScrap" parameterType="com.koscom.scrap.model.ScrRsltScrapVO">
 		<selectKey keyProperty="seq_scraping_result" resultType="integer" order="BEFORE">

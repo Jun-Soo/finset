@@ -30,5 +30,5 @@ public interface FincorpManager {
 	 * @param String
 	 * @return List<String>
 	 */
-	List<String> getCooconFcCd(String type_fc);
+	List<String> listCooconFcCd(String type_fc);
 }

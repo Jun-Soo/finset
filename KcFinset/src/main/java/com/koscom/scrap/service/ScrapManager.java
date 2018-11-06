@@ -37,6 +37,27 @@ public interface ScrapManager {
 	String sendFinanceTerms(String no_person, String uuid, String dn, String email, String financeTerms, String jwsInfo);
 	
 	/**
+	 * 금융투자회사 Access Token 조회 (오픈플랫폼)
+	 * @param
+	 * @return 
+	 */
+	String getAccessToken();
+	
+	/**
+	 * 금융투자회사 계좌 개설 가능 체크 (오픈플랫폼)
+	 * @param
+	 * @return 
+	 */
+	String checkAllFinance(String no_person, String uuid, String dn, String token);
+	
+	/**
+	 * 금융투자회사 가상 계좌 개설 (오픈플랫폼)
+	 * @param String
+	 * @return ReturnClass
+	 */
+	ReturnClass createFinanceAccount(String no_person, String uuid, String dn, String token, String cd_fc);
+	
+	/**
 	 * 금융사 스크랩핑 연동 정보 여부 insert
 	 * @param String
 	 * @return String

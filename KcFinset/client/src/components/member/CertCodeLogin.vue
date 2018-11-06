@@ -52,6 +52,7 @@ export default {
       ynFingerprint: this.$store.state.user.ynFingerprint,
       username: this.$store.state.user.noPerson,
       password: "",
+      hp: this.$store.state.user.hp,
       //class
       classPass1: "",
       classPass2: "",
@@ -94,7 +95,7 @@ export default {
     },
     btnClick: function(val) {
       var _this = this;
-      if(_this.password.length < 4){
+      if (_this.password.length < 4) {
         _this.password += val;
       }
       if (_this.password.length > 0) _this.classPass1 = "border-color: #111";
@@ -106,7 +107,7 @@ export default {
         _this.login();
       }
     },
-    gotoFingerPrint: function(){
+    gotoFingerPrint: function() {
       var _this = this;
       _this.$router.push("/member/certFingerLogin");
     },
@@ -157,6 +158,14 @@ export default {
           console.log(response.data.result);
           if (response.data.result == "10") {
             //정상
+            if (Constant.userAgent == "iOS") {
+              Jockey.send("setNoPerson", {
+                noPerson: _this.username,
+                phNum: _this.hp
+              });
+            } else if (Constant.userAgent == "Android") {
+              window.Android.setNoPerson(_this.username, _this.hp);
+            }
             _this.$store.state.user.authToken = null;
             _this.$store.commit("LOGIN", response.data);
             _this.$router.push("/main");

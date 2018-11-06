@@ -13,81 +13,81 @@
 </template>
 
 <script>
-
 import Common from "./../../assets/js/common.js";
 import Constant from "./../../assets/js/constant.js";
 import ko from "vee-validate/dist/locale/ko.js";
 
 export default {
-  name: 'certFinger',
+  name: "certFinger",
   data() {
     return {
-      errMsg: '',
+      errMsg: "",
       username: this.$store.state.user.noPerson,
       password: "",
-      cntFailFinger: this.$store.state.user.cntFailFinger
-    }
+      cntFailFinger: this.$store.state.user.cntFailFinger,
+      hp: this.$store.state.user.hp
+    };
   },
-  component: {
-  },
-  computed: {
-  },
-  beforeCreate() {
-  },
+  component: {},
+  computed: {},
+  beforeCreate() {},
   created() {
-    this.$store.state.title = '지문인증'
+    this.$store.state.title = "지문인증";
     this.$store.state.header.type = "sub";
 
-    window.resultFingerPrint = this.resultFingerPrint
-    if(Constant.userAgent == "Android") {
+    window.resultFingerPrint = this.resultFingerPrint;
+    if (Constant.userAgent == "Android") {
       window.Android.initFingerPrint();
-    } else if(Constant.userAgent == "iOS") {
+    } else if (Constant.userAgent == "iOS") {
       //지문인식 결과 콜백 이벤트
-      Jockey.on("resultFingerPrint" , function(param) {
+      Jockey.on("resultFingerPrint", function(param) {
         var result = false;
-        if(param.result == 1) result = true;
+        if (param.result == 1) result = true;
         resultFingerPrint(result);
       });
       Jockey.send("initFingerPrint");
     }
-    this.errMsg = "지문인증을 " + this.cntFailFinger + "회 실패한 이력이 있습니다.";
+    this.errMsg =
+      "지문인증을 " + this.cntFailFinger + "회 실패한 이력이 있습니다.";
   },
-  beforeMount() {
-  },
-  mounted() {
-  },
-  beforeUpdate() {
-  },
-  updated() {
-  },
-  beforeDestroy() {
-  },
-  destroyed() {
-  },
+  beforeMount() {},
+  mounted() {},
+  beforeUpdate() {},
+  updated() {},
+  beforeDestroy() {},
+  destroyed() {},
   methods: {
     login: function() {
       var _this = this;
 
-      var querystring = require('querystring')
+      var querystring = require("querystring");
       var data = querystring.stringify({
         j_username: _this.username,
         j_password: _this.$store.state.user.authToken
       });
       this.$http
-        .post(_this.$store.state.loginPath, data
-        ,{
+        .post(_this.$store.state.loginPath, data, {
           headers: {
             "Content-type": "application/x-www-form-urlencoded"
           }
         })
         .then(response => {
           if (response.data.result == "10") {
+
             //정상
-            _this.$store.state.user.authToken = null
-            _this.$store.commit('LOGIN', response.data)
+            if (Constant.userAgent == "iOS") {
+              Jockey.send("setNoPerson", {
+                noPerson: _this.username,
+                phNum: _this.hp
+              });
+            } else if (Constant.userAgent == "Android") {
+              window.Android.setNoPerson(_this.username, _this.hp);
+            }
+            _this.$store.state.user.authToken = null;
+            _this.$store.commit("LOGIN", response.data);
             _this.$router.push("/main");
           } else {
-            this.$toast.center(ko.messages.loginErr)
+            this.$toast.center(ko.messages.loginErr);
             if (response.data.result == "21") {
               //ID오류
             } else if (response.data.result == "22") {
@@ -96,13 +96,16 @@ export default {
           }
         })
         .catch(e => {
-          this.$toast.center(ko.messages.error)
+          this.$toast.center(ko.messages.error);
         });
     },
     //비밀번호 틀린횟수 변경
     modifyPwdFailCnt: function(mode, cnt_fail) {
-
-      var data = {"no_person": this.username, "cnt_fail_mode":mode, "cnt_fail":cnt_fail};
+      var data = {
+        no_person: this.username,
+        cnt_fail_mode: mode,
+        cnt_fail: cnt_fail
+      };
       this.$http
         .get("/m/person/modifyPwdFailCnt.json", {
           params: data
@@ -112,14 +115,14 @@ export default {
           console.log(result);
         })
         .catch(e => {
-          this.$toast.center(ko.messages.error)
+          this.$toast.center(ko.messages.error);
         });
     },
     /***
      * Native Call function
      **/
     resultFingerPrint: function(result) {
-      var _this = this
+      var _this = this;
       if (result == true || result == 1) {
         //지문인식 성공
         if (Constant.userAgent == "Android") {
@@ -142,14 +145,14 @@ export default {
             window.Android.closeFingerPrint();
           }
 
-          var data = {"no_person": _this.username, "yn_fingerprint":"N"};
+          var data = { no_person: _this.username, yn_fingerprint: "N" };
           this.$http
             .get("/m/person/modifyFingerPrint.json", {
               params: data
             })
             .then(response => {
               this.$store.state.user.ynFingerprint = "N";
-              this.$router.push('/member/certCodeLogin')
+              this.$router.push("/member/certCodeLogin");
             })
             .catch(e => {
               this.$toast.center(ko.messages.error);
@@ -159,10 +162,13 @@ export default {
       }
     }
   }
-}
+};
 </script>
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
-  .memberMain {background-color: #283593; height: 100%;}
+.memberMain {
+  background-color: #283593;
+  height: 100%;
+}
 </style>

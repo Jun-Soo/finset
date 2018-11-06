@@ -26,8 +26,8 @@ import MemberCertFingerLogin from '@/components/member/CertFingerLogin'
 
 import ScrapHome from '@/components/scrap/Home'
 import ScrapCertStep from '@/components/scrap/CertStep'
-// import ScrapFcLink from '@/components/scrap/FcLink'
-// import ScrapSelectFcLink from '@/components/scrap/SelectFcLink'
+import ScrapFcLink from '@/components/scrap/FcLink'
+import ScrapSelectFcLink from '@/components/scrap/SelectFcLink'
 // import ScrapResultFcLink from '@/components/scrap/ResultFcLink'
 import ScrapCtrlFcLink from '@/components/scrap/CtrlFcLink'
 import ScrapLoading from '@/components/scrap/Loading'
@@ -36,14 +36,15 @@ import ScrapSelFcLink from '@/components/scrap/SelFcLink'
 
 import MemoHome from '@/components/memo/Home'
 import MemoRegister from '@/components/memo/Register'
-// import MemoList from '@/components/memo/List'
-// import MemoDetail from '@/components/memo/Detail'
+import MemoList from '@/components/memo/List'
+import MemoDetail from '@/components/memo/Detail'
 import MemoMain from '@/components/memo/Main'
 import MemoCreate from '@/components/memo/Create'
 
 import NewsHome from '@/components/news/Home'
 import NewsMain from '@/components/news/Main'
 import NewsDetail from '@/components/news/Detail'
+import NewsDesignDetail from '@/components/news/design/Detail'
 
 import CreditHome from '@/components/credit/Home'
 import CreditMain from '@/components/credit/Main'
@@ -70,7 +71,8 @@ import CreditCounselResult from '@/components/credit/CounselResult'
 import DebtHome from '@/components/debt/Home'
 import DebtMain from '@/components/debt/Main'
 import DebtDetail from '@/components/debt/Detail'
-// import DebtRepayment from '@/components/debt/Repayment'
+import DebtDetail2 from '@/components/debt/Detail_2'
+import DebtRepayment from '@/components/debt/Repayment'
 import DebtModify from '@/components/debt/Modify'
 import DebtCalc from '@/components/debt/Calc'
 // import DebtCalcSearch from '@/components/debt/CalcSearch'
@@ -144,7 +146,7 @@ import MypageCert from '@/components/mypage/Cert'
 // import MypageRegCertLogin from '@/components/mypage/RegCertLogin'
 // import MypageCertPerson from '@/components/mypage/CertPerson'
 // import MypageChgPwd from '@/components/mypage/ChgPwd'
-// import MypageFavGoods from '@/components/mypage/FavGoods'
+import MypageFavGoods from '@/components/mypage/FavGoods'
 // import MypageFavList from '@/components/mypage/FavList'
 // import MypageFavDetail from '@/components/mypage/FavDetail'
 // import MypageRstlInqGoods from '@/components/mypage/RstlInqGoods'
@@ -178,9 +180,10 @@ import ShareDesignHistory from '@/components/share/design/History'
 import EtcHome from '@/components/etc/Home'
 import EtcAlarmHistory from '@/components/etc/AlarmHistory'
 // import EtcCustomerCenter from '@/components/etc/CustomerCenter'
-// import EtcNoticeMain from '@/components/etc/NoticeMain'
-// import EtcNoticeList from '@/components/etc/NoticeList'
-// import EtcNoticeDetail from '@/components/etc/NoticeDetail'
+import EtcNoticeMain from '@/components/etc/NoticeMain'
+import EtcNoticeMain2 from '@/components/etc/NoticeMain_2'
+import EtcNoticeDetail from '@/components/etc/NoticeDetail'
+import EtcEventDetail from '@/components/etc/EventDetail'
 // import EtcFaqMain from '@/components/etc/FaqMain'
 // import EtcFaqList from '@/components/etc/FaqList'
 // import EtcFaqDetail from '@/components/etc/FaqDetail'
@@ -593,6 +596,24 @@ export const routes = [{
     }
   },
   {
+    path: 'detail_2',
+    alias: '/detail_2',
+    name: 'debtDetail_2',
+    component: DebtDetail2,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'repayment',
+    alias: '/repayment',
+    name: 'debtRepayment',
+    component: DebtRepayment,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
     path: 'modify',
     alias: '/modify',
     name: 'debtModify',
@@ -641,12 +662,22 @@ export const routes = [{
       allowPath: true
     }
   },
-    // {
-    //   path: 'list',
-    //   alias: '/list',
-    //   component: MemoList,
-    //   meta: { allowPath: true }
-    // },
+  {
+    path: 'list',
+    alias: '/list',
+    component: MemoList,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'detail',
+    alias: '/detail',
+    component: MemoDetail,
+    meta: {
+      allowPath: true
+    }
+  },
   {
     path: 'main',
     alias: '/main',
@@ -914,7 +945,45 @@ export const routes = [{
     meta: {
       allowPath: true
     }
-  }]
+  },
+  {
+    path: 'noticeMain',
+    alias: '/noticeMain',
+    name: 'etcNoticeMain',
+    component: EtcNoticeMain,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'noticeMain_2',
+    alias: '/noticeMain_2',
+    name: 'etcNoticeMain_2',
+    component: EtcNoticeMain2,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'noticeDetail',
+    alias: '/noticeDetail',
+    name: 'etcNoticeDetail',
+    component: EtcNoticeDetail,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'eventDetail',
+    alias: '/eventDetail',
+    name: 'etcEventDetail',
+    component: EtcEventDetail,
+    meta: {
+      allowPath: true
+    }
+  }
+
+  ]
 },
 {
   path: '/scrap',
@@ -924,6 +993,24 @@ export const routes = [{
     alias: '/certStep',
     name: 'scrapCertStep',
     component: ScrapCertStep,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'fcLink',
+    alias: '/fcLink',
+    name: 'scrapFcLink',
+    component: ScrapFcLink,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'selectFcLink',
+    alias: '/selectFcLink',
+    name: 'scrapSelectFcLink',
+    component: ScrapSelectFcLink,
     meta: {
       allowPath: true
     }
@@ -1032,6 +1119,15 @@ export const routes = [{
       allowPath: true,
       requiresAuth: true
     }
+  },
+  {
+    path: 'favGoods',
+    alias: '/favGoods',
+    component: MypageFavGoods,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
   }
     // {
     //   path: 'certPerson',
@@ -1129,6 +1225,16 @@ export const routes = [{
     alias: '/detail',
     name: 'newsDetail',
     component: NewsDetail,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'designDetail',
+    alias: '/designDetail',
+    name: 'newsDesignDetail',
+    component: NewsDesignDetail,
     meta: {
       allowPath: true,
       requiresAuth: true

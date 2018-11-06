@@ -38,7 +38,10 @@ $(function () {
     e.preventDefault()
   })
 
-  $(document).on('click', '.btn-onoff', function (e) {
+  // $(document).on('click', '.btn-onoff', function (e) {
+  // $(this).toggleClass('on')
+  // })
+  $(document).on('click', '.btn-onoff,.btn-star', function (e) {
     $(this).toggleClass('on')
   })
 

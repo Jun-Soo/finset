@@ -81,6 +81,16 @@
 	}
 }
 
+.list-style06{
+	>li{
+		@include listStyle(15px, 24px, "../images/common/bu_check.png",8px);
+        background-size: 10px;
+		font-size: 14px;
+		font-weight: 700;
+        color: #222;
+	}	
+}
+
 
 .point{
 	color: $col1 !important;

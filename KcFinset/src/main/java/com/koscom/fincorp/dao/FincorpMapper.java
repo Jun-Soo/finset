@@ -83,5 +83,12 @@ public interface FincorpMapper {
 	 * @return String
 	 */
 	String getCdFcByComAlias(String com_alias);
+	
+	/**
+	 * 금융사 COM_ALIAS
+	 * @param String
+	 * @return String
+	 */
+	String getComAliasCdByCdFc(String cd_fc);
 
 }

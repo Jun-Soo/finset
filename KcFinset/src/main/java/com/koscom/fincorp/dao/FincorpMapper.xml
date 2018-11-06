@@ -187,7 +187,6 @@
 		WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
  	</select>
  	
- 	
  	<select id="getCdFcByCooconFcCd" parameterType="String" resultType="String">
  		SELECT CD_FC
 		FROM FC_INFO
@@ -198,6 +197,12 @@
  		SELECT CD_FC
 		FROM FC_INFO
 		WHERE COM_ALIAS = #{com_alias, jdbcType=VARCHAR}
+ 	</select>
+ 	
+ 	<select id="getComAliasCdByCdFc" parameterType="String" resultType="String">
+ 		SELECT COM_ALIAS
+		FROM FC_INFO
+		WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
  	</select>
 </mapper>
 

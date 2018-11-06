@@ -1,38 +1,32 @@
 <template>
-<div>
-  <div id="progress-bg">
-    <vue-progress-bar id="progress"></vue-progress-bar>
+  <div ref="progressBar" id="progressBar" class="progressBar">
+    <div ref="background" id="background">
+      <h4>{{text}}</h4>
+    </div>
+    <div ref="container" id="container">
+      <div ref="foreground" id="foreground">
+        <h4>{{text}}</h4>
+      </div>
+    </div>
   </div>
-  <button type="button" style="align:" v-on:click="clickStart"> Start </button>
-</div>
 </template>
 
 <script>
-import Vue from "vue";
-import VueProgressBar from "vue-progressbar";
-
-const options = {
-  color: "#FC6E6D",
-  failedColor: "#874b4b",
-  thickness: "15px",
-  transition: {
-    speed: "0.2s",
-    opacity: "0.6s",
-    termination: 300
-  },
-  position: "inherit",
-  autoRevert: false,
-  location: "top",
-  autoFinish: false,
-  inverse: false
-};
-Vue.use(VueProgressBar, options);
-
 export default {
   name: "test",
+  props: {
+    max: {
+      default: 0.8,
+      type: Number
+    },
+    text: {
+      default: "RANDOM TEXT",
+      type: String
+    }
+  },
   data() {
     return {
-      percentage: 0
+      animationTime: "1s"
     };
   },
   components: {},
@@ -40,15 +34,35 @@ export default {
   beforeCreate() {},
   created() {},
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    // background/foreground
+    // width가 고정이여서 윈도우창 사이즈가 바뀌어도, 같이 바뀌지는 않습니다.
+    let clientWidth = this.$refs.progressBar.clientWidth;
+    let clientHeight = this.$refs.progressBar.clientHeight;
+    this.$refs.background.style.width = clientWidth + "px";
+    this.$refs.background.style.height = clientHeight + "px";
+    this.$refs.foreground.style.width = clientWidth + "px";
+    this.$refs.foreground.style.height = clientHeight + "px";
+
+    this.$refs.container.style.width = clientWidth * this.max + "px";
+    this.$refs.container.style.transitionDuration = this.animationTime;
+  },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    clickStart() {
-      var random = Math.floor(Math.random() * 100);
-      this.$Progress.set(random);
+    start() {
+      this.$refs.container.style.width = this.max + "%";
+      this.$refs.container.style.transitionDuration =
+        this.animationTime / 1000 + "s";
+
+      let _this = this;
+      var start = 0;
+      var interval = setInterval(function() {
+        if (start >= _this.max) clearInterval(interval);
+        _this.current = start++;
+      }, _this.animationTime / _this.max);
     }
   }
 };
@@ -56,11 +70,51 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
-#progress {
-  border-radius: 7px;
+.progressBar {
+  --progressBarWidth: 500px;
+  --progressBarHeight: 300px;
+  --fontSize: 30pt;
+  --borderRadius: 25px;
+  width: var(--progressBarWidth);
+  height: var(--progressBarHeight);
+  position: relative;
 }
-#progress-bg {
-  border-radius: 7px;
-  background-color: #D2D3D7;
+
+.progressBar #background,
+.progressBar #container #foreground {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  font-weight: bold;
+  border-radius: var(--borderRadius);
+}
+
+.progressBar #background {
+  /* progressBar 기본 색상 */
+  background: blue;
+}
+.progressBar #background h4 {
+  /* progressBar 기본 텍스트 색상 */
+  color: red;
+  font-size: var(--fontSize);
+}
+.progressBar #container #foreground {
+  /* progressBar 데이터 색상 */
+  background: red;
+}
+.progressBar #container #foreground h4 {
+  /* progressBar 데이터 텍스트 색상 */
+  color: blue;
+  font-size: var(--fontSize);
+}
+
+.progressBar #container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0%;
+  overflow: hidden;
+  transition-timing-function: ease;
 }
 </style>

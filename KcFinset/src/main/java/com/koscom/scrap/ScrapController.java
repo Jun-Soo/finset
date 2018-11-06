@@ -70,6 +70,24 @@ public class ScrapController {
 	 * @param request
 	 * @return
 	 */
+	@RequestMapping("/startScrapSt.json")
+	public String startScrapSt(
+			HttpServletResponse response,
+			HttpServletRequest request, 
+			HttpSession session, 
+			Model model) {
+		logger.debug("startScrapSt.json called return: " + Constant.SUCCESS);
+		model.addAttribute("result", Constant.SUCCESS);
+		return "jsonView";
+	}
+			
+	
+	/** VUE
+	 * 스크래핑 관련 금융사 내역 조회
+	 * @param model
+	 * @param request
+	 * @return
+	 */
 	@RequestMapping("/getScrapFcList.json")
 	public String getScrapFcList(
 			HttpServletResponse response,

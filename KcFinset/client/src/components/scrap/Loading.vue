@@ -95,6 +95,8 @@ export default {
     checkStCertList: function() {
       var _this = this;
       var formData = new FormData();
+      formData.append("no_person", this.noPerson);
+      formData.append("uuid", this.uuid);
       formData.append("dn", _this.dn);
       this.$http
         .post("/m/scrap/getScrapStList.json", formData)

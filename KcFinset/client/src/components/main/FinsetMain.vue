@@ -108,6 +108,7 @@ export default {
     if (this.$store.state.isScrap) {
       this.startAutoScrap();
       this.$store.state.isScrap = false;
+      this.$parent.startScrapSt();
     }
   },
   beforeMount() {},

@@ -24,10 +24,6 @@
 			</list>
 		</property>
 	</bean>	
-
-	<beans:bean id="securityReqFilter" class="com.koscom.util.SecurityReqFilter">
-	</beans:bean>
-	
 	<bean id="secureManager" class="${SecureManager.serviceName}" />
 	
     <!-- enable component scanning (beware that this does not enable mapper scanning!) -->    
@@ -100,7 +96,7 @@
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
         <property name="basePackage" value="com.koscom.*.dao" />
     </bean>
-
+	
     <!-- enable declarative annotation-based caching -->
 	<cache:annotation-driven cache-manager="cacheManager" />
 	<bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager" p:cache-manager-ref="ehcache" />

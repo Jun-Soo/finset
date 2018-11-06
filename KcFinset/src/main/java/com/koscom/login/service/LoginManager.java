@@ -45,7 +45,6 @@ import com.koscom.util.FinsetException;
 import com.koscom.util.LogUtil;
 import com.koscom.util.ResUtil;
 import com.koscom.util.ReturnClass;
-import com.koscom.util.SessionUtil;
 import com.koscom.util.StringUtil;
 
 import net.sf.json.JSONObject;
@@ -196,8 +195,8 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 				
 				PrintWriter out 	= response.getWriter();
 			    JSONObject	result	= new JSONObject();
-			    result.put("result", 	cd_result);
-			    result.put("userToken", session.getId());
+			    result.put("result", 		cd_result);
+			    result.put("accessToken", 	session.getId());
 			    //result.put("linkUrl", 	linkUrl);
 			    
 			    //사용자정보

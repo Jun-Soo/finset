@@ -61,6 +61,8 @@ input[type="file"]::-ms-value { border: 0; height: 45px; }
 
 input[type="file"]::-ms-browse { color: #fff; border: 0; background: #343f4e; width: 100px; }
 
+::-webkit-search-cancel-button { height: 36px; width: 36px; display: inline-block; background: url("../images/etc/search-delete.png") no-repeat right center/14px; }
+
 /* table */
 table { border-top: 2px solid #333; text-align: left; width: 100%; margin-top: 20px; }
 table th { border-bottom: 1px solid #e5e5e5; border-right: 1px solid #e5e5e5; padding: 10px; color: #222; font-weight: 500; background: #f5f5f5; vertical-align: middle; line-height: 18px; font-size: 12px; text-align: center; }
@@ -190,7 +192,8 @@ h3 { color: #333; font-size: 12px; font-weight: 700; }
 .loading.fail { background: url("../images/common/loading_fail.png") no-repeat center/75px; }
 .loading.success { background: url("../images/common/loading_success.png") no-repeat center/75px; }
 .loading.exit { background: url("../images/common/loading_exit.png") no-repeat center/75px; }
-.loading em { color: #333; font-size: 15px; }
+.loading.share { background: url("../images/common/loading_share.png") no-repeat center/75px; }
+.loading em { color: #333; font-size: 15px; display: inline-block; }
 
 aside.search-wrap { position: fixed; left: 0; bottom: 0; width: 100%; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); border-top-left-radius: 21px; border-top-right-radius: 21px; transition: .5s ease; transform: translateY(100%); }
 aside.search-wrap.on { transform: translateY(0); }
@@ -636,6 +639,28 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 
 .memo-detail { font-size: 13px; color: #333; line-height: 19px; }
 
+.check-flex { display: flex; justify-content: space-between; padding: 0 21px; margin-top: 30px; }
+.check-flex .today { line-height: 28px; border: 1px solid #9b9489; padding: 0 13px; color: #9b9489; font-weight: 700; background: #fff; border-radius: 50px; }
+.check-flex .wrap button { margin-left: 6px; width: 68px; height: 30px; line-height: 30px; text-indent: 23px; }
+.check-flex .wrap button.income { background: url("../images/common/btn_income.png") no-repeat left top/68px; color: #4f82d6; font-weight: 700; }
+.check-flex .wrap button.debt { background: url("../images/common/btn_debt.png") no-repeat left top/68px; color: #25bdd5; font-weight: 700; }
+.check-flex .wrap button.loan { background: url("../images/common/btn_loan.png") no-repeat left top/68px; color: #e52638; font-weight: 700; }
+.check-flex .wrap button.on { background-position: left bottom; color: #fff; }
+
+.calendar { padding: 0 21px; }
+.calendar table { table-layout: fixed; border-top: none; }
+.calendar th { line-height: 34px; color: #222; text-align: center; font-weight: 700; border-bottom: 1px solid #222; background: #fff; border-right: none; padding: 0; }
+.calendar td { border-right: none; text-align: center; padding: 0; vertical-align: top; }
+.calendar td a { display: block; padding: 5px 0 0 0; border: 1px solid #fff; min-height: 80px; }
+.calendar td a .day { line-height: 20px; margin-bottom: 5px; }
+.calendar td a .day span { display: inline-block; width: 20px; height: 20px; background: #fff; }
+.calendar td a .day span.today { background: #e52638; color: #fff; font-weight: 700; border-radius: 100%; }
+.calendar td a em { line-height: 12px; font-size: 8px; color: #fff; margin-bottom: 3px; display: block; }
+.calendar td a em.debt { background: #25bdd5; }
+.calendar td a em.income { background: #4f82d6; }
+.calendar td a em.loan { background: #e52638; }
+.calendar td a.on { border: 1px solid #213e6a; }
+
 /*   신용   */
 .nodata { background: url("../images/common/nodata.png") no-repeat center top/330px; padding-top: 195px; text-align: center; font-size: 14px; color: #888; }
 
@@ -953,3 +978,33 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .alarm-history .alarm-list .item .ico { color: #333; font-weight: 700; padding-left: 30px; line-height: 24px; }
 .alarm-history .alarm-list .item .ico.alarm { background: url("../images/etc/alarm.png") no-repeat left center/24px; }
 .alarm-history .alarm-list .item .text { font-size: 14px; color: #333; margin-top: 15px; }
+
+/*   기타   */
+.cs-top { padding: 30px 21px 40px; font-size: 20px; line-height: 27px; color: #222; text-align: center; border-bottom: 1px solid #e5e5e5; }
+.cs-top em { color: #62c1d0; font-weight: 700; font-size: 20px; }
+.cs-top .links { margin-top: 30px; text-align: center; }
+.cs-top .links a { display: inline-block; font-size: 13px; color: #000; padding-top: 70px; margin: 0 20px; }
+.cs-top .links a.kakao { background: url("../images/etc/kakao.png") no-repeat center top/60px; }
+.cs-top .links a.email { background: url("../images/etc/email.png") no-repeat center top/60px; }
+.cs-top .cs-search { line-height: 38px; border: 1px solid #e5e5e5; padding-left: 36px; background: url("../images/etc/cs_search.png") no-repeat left top/36px; text-align: left; }
+.cs-top .cs-search input { width: 95%; line-height: 38px; }
+
+.cs-links { margin-top: 30px; padding: 0 21px; }
+.cs-links p { line-height: 51px; border: 1px solid #e5e5e5; border-radius: 10px; margin-bottom: 15px; display: flex; justify-content: space-between; }
+.cs-links p a { display: block; line-height: 51px; text-indent: 20px; font-size: 14px; color: #333; font-weight: 700; background: url("../images/common/btn_arrow.png") no-repeat 95% 50%/7px; width: 100%; }
+.cs-links p em:first-child { text-indent: 20px; font-size: 14px; color: #333; font-weight: 700; }
+.cs-links p em:last-child { padding-right: 20px; }
+
+.faq-list { padding: 0 21px; margin-top: 30px; }
+.faq-list .title { font-weight: 700; font-size: 13px; }
+.faq-list .list { border: 1px solid #e5e5e5; margin-top: 15px; }
+.faq-list .list p:first-child { background: url("../images/etc/ico_faq.png") no-repeat 20px 15px/30px; padding-left: 60px; padding-top: 20px; }
+.faq-list .list p:first-child a { color: #333; font-size: 15px; font-weight: 700; line-height: 19px; display: block; padding-right: 50px; padding-bottom: 20px; position: relative; }
+.faq-list .list p:first-child a:after { display: inline-block; content: ""; width: 17px; height: 10px; background: url("../images/etc/faq_arrow.png") no-repeat right top/17px; position: absolute; right: 20px; top: 5px; }
+.faq-list .list p:first-child a.on:after { background-position: right bottom; }
+.faq-list .list p:last-child { padding: 20px; font-size: 13px; line-height: 18px; border-top: 1px solid #e5e5e5; display: none; }
+
+.terms { padding: 30px 21px 0; }
+.terms h2 { font-size: 15px; color: #333; font-weight: 700; }
+.terms h3 { color: #333; font-weight: 700; margin-top: 25px; }
+.terms .text { margin-top: 15px; line-height: 18px; }

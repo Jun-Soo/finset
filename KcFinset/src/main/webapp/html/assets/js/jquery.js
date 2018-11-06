@@ -86,7 +86,7 @@ $(function(){
     
     ////////////////////     설정버튼     ////////////////////
     
-    $(document).on("click",".btn-onoff,.btn-star",function(e){
+    $(document).on("click",".btn-onoff,.btn-star,.check-flex .wrap button",function(e){
         
         $(this).toggleClass("on");
         
@@ -177,6 +177,28 @@ $(function(){
         }
         
     });
+    
+    
+    ////////////////////     FAQ     ////////////////////
+    
+    
+    $(document).on("click",".faq-list .list a",function(e){
+        
+        if($(this).hasClass("on")){
+         
+            $(this).closest(".list").find("p:eq(1)").slideUp(500,"easeInOutExpo");
+            $(this).removeClass("on");
+            e.preventDefault();
+            
+        }else{
+           
+            $(this).closest(".list").find("p:eq(1)").slideDown(500,"easeInOutExpo");
+            $(this).addClass("on");
+            e.preventDefault();
+        }
+        
+    });
+    
     
     
     ////////////////////     Image Slide     ////////////////////

@@ -14,6 +14,7 @@ import com.koscom.consume.dao.ConsumeMapper;
 import com.koscom.consume.model.ConsumeDetailGoalInfoVO;
 import com.koscom.consume.model.ConsumeForm;
 import com.koscom.consume.model.ConsumeGoalInfoVO;
+import com.koscom.consume.model.PersonSetInfoForm;
 import com.koscom.consume.model.ConsumeVO;
 import com.koscom.consume.model.PaymentForm;
 import com.koscom.consume.model.PaymentVO;
@@ -105,31 +106,54 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	}
 	
 	@Override
-	public List<List<PersonConsumeClassVO>> listPersonConsumeClassInfo(String no_person) {
+	public Map<String, List<PersonConsumeClassVO>> listPersonConsumeClassInfo(String no_person) {
 		logger.debug("listPersonConsumeClassInfo");
 		
-		List<List<PersonConsumeClassVO>> returnList = new ArrayList<List<PersonConsumeClassVO>>();
-		List<PersonConsumeClassVO> list = consumeMapper.listPersonConsumeClassInfo(no_person);
-		String curClass = "";
-		List<PersonConsumeClassVO> subList = new ArrayList<PersonConsumeClassVO>();
-		for(PersonConsumeClassVO vo: list) {
-			if(!curClass.equals(vo.getCd_class())){
-				if(!curClass.equals("")){
-					returnList.add(subList);
-					subList = new ArrayList<PersonConsumeClassVO>();
-				}
-				curClass = vo.getCd_class();
+		Map<String, List<PersonConsumeClassVO>> consumeClassMap = new HashMap<>();
+		List<PersonConsumeClassVO> rawList = consumeMapper.listPersonConsumeClassInfo(no_person);
+		List<PersonConsumeClassVO> tempList = new ArrayList<>();
+		String curCd_class = "";
+		for(PersonConsumeClassVO vo: rawList) {
+			if(curCd_class.equals("")) {
+				tempList.add(vo);
+				curCd_class = vo.getCd_class();
+			} else if(curCd_class.equals(vo.getCd_class())) {
+				tempList.add(vo);
+			} else if(!curCd_class.equals(vo.getCd_class())) {
+				consumeClassMap.put(curCd_class, tempList);
+				tempList = new ArrayList<>();
+				curCd_class = vo.getCd_class();
+				tempList.add(vo);
 			}
-			subList.add(vo);
 		}
-		returnList.add(subList);
-		return returnList;
+		consumeClassMap.put(curCd_class, tempList);
+		
+		return consumeClassMap;
 	}
 	
 	@Override
-	public List<PersonConsumeClassVO> listPersonIncomeClassInfo(String no_person) {
+	public Map<String, List<PersonConsumeClassVO>> listPersonIncomeClassInfo(String no_person) {
 		logger.debug("listPersonIncomeClassInfo");
-		return consumeMapper.listPersonIncomeClassInfo(no_person);
+		Map<String, List<PersonConsumeClassVO>> consumeClassMap = new HashMap<>();
+		List<PersonConsumeClassVO> rawList = consumeMapper.listPersonIncomeClassInfo(no_person);
+		List<PersonConsumeClassVO> tempList = new ArrayList<>();
+		String curCd_class = "";
+		for(PersonConsumeClassVO vo: rawList) {
+			if(curCd_class.equals("")) {
+				tempList.add(vo);
+				curCd_class = vo.getCd_class();
+			} else if(curCd_class.equals(vo.getCd_class())) {
+				tempList.add(vo);
+			} else if(!curCd_class.equals(vo.getCd_class())) {
+				consumeClassMap.put(curCd_class, tempList);
+				tempList = new ArrayList<>();
+				curCd_class = vo.getCd_class();
+				tempList.add(vo);
+			}
+		}
+		consumeClassMap.put(curCd_class, tempList);
+		
+		return consumeClassMap;
 	}
 	
 	@Override
@@ -157,18 +181,6 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	}
 	
 	@Override
-	public int createDetailGoal(ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO) {
-		logger.debug("createDetailGoal");
-		return consumeMapper.createDetailGoal(consumeDetailGoalInfoVO);
-	}
-	
-	@Override
-	public List<ConsumeDetailGoalInfoVO> listDetailGoal(ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO) {
-		logger.debug("listDetailGoal");
-		return consumeMapper.listDetailGoal(consumeDetailGoalInfoVO);
-	}
-	
-	@Override
 	public List<ConsumeVO> getCalendarConsumeData(ConsumeForm consumeForm) {
 		logger.debug("getCalendarConsumeData");
 		return consumeMapper.getCalendarConsumeData(consumeForm);
@@ -181,8 +193,82 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	}
 	
 	@Override
+	public PaymentVO getPaymentSummary(PaymentForm paymentForm) {
+		logger.debug("getPaymentSummary");
+		return consumeMapper.getPaymentSummary(paymentForm);
+	}
+	
+	@Override
 	public List<PaymentVO> listPayment(PaymentForm paymentForm) {
 		logger.debug("listPayment");
 		return consumeMapper.listPayment(paymentForm);
+	}
+
+	@Override
+	public void modifyYn_installment(PersonSetInfoForm personSetInfoForm) {
+		logger.debug("modifyYn_installment");
+		consumeMapper.modifyYn_installment(personSetInfoForm);
+	}
+	
+	@Override
+	public void modifyDt_basic(PersonSetInfoForm personSetInfoForm) {
+		logger.debug("modifyDt_basic");
+		consumeMapper.modifyDt_basic(personSetInfoForm);
+	}
+
+	@Override
+	public List<ConsumeDetailGoalInfoVO> listDetailGoal(String no_person, String cd_set) {
+		logger.debug("listDetailGoal");
+		if(cd_set.equals("01")) {
+			return consumeMapper.listDetailGoalClass(no_person);
+		} else {
+			return consumeMapper.listDetailGoalMeans(no_person);
+		}
+		
+	}
+	
+	@Override
+	public List<ConsumeDetailGoalInfoVO> listPrevMonthConsume(String no_person, String cd_set) {
+		logger.debug("listPrevMonthConsume");
+		if(cd_set.equals("01")) {
+			return consumeMapper.listPrevMonthClass(no_person);
+		} else {
+			return consumeMapper.listPrevMonthMeans(no_person);
+		}
+		
+	}
+	
+	@Override
+	public void createDetailGoal(ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO, String cd_set) {
+		logger.debug("createDetailGoal");
+		List<ConsumeDetailGoalInfoVO> consumeDetailGoalList = consumeDetailGoalInfoVO.getList();
+		if(cd_set.equals("01")) {
+			for(ConsumeDetailGoalInfoVO vo: consumeDetailGoalList) {
+				vo.setNo_person(consumeDetailGoalInfoVO.getNo_person());
+				consumeMapper.createDetailGoalClass(vo);
+			}
+		} else {
+			for(ConsumeDetailGoalInfoVO vo: consumeDetailGoalList) {
+				vo.setNo_person(consumeDetailGoalInfoVO.getNo_person());
+				consumeMapper.createDetailGoalMeans(vo);
+			}
+		}
+	}
+	
+	@Override
+	public List<ConsumeDetailGoalInfoVO> listAverageConsume(String no_person, String cd_set) {
+		logger.debug("listAverageConsume");
+		if(cd_set.equals("01")) {
+			return consumeMapper.listAverageClass(no_person);
+		} else {
+			return consumeMapper.listAverageMeans(no_person);
+		}
+		
+	}
+	
+	@Override
+	public ConsumeVO getConsumeInfo(ConsumeForm consumeForm) {
+		logger.debug("getConsumeInfo");
+		return consumeMapper.getConsumeInfo(consumeForm);
 	}
 }

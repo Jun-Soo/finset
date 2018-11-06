@@ -203,7 +203,7 @@
 		WHERE
 				REQ_NO_PERSON			= #{no_person, jdbcType=VARCHAR}
 			AND SHARE_STATUS			= '02'
-			AND YN_DEBT_ITGT_MNGM		= 'Y'
+			AND YN_DEBT_INFO			= 'Y'
 			AND DT_END_OFFER			> TO_CHAR( SYSDATE, 'YYYYMMDD' )
 		UNION(
 			SELECT

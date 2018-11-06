@@ -10,6 +10,11 @@ public class PaymentVO implements Serializable{
 
 	private static final long serialVersionUID = 3624567199963252874L;
 
+	//요약 데이터 조회
+	private String count_fc;			//카드사 갯수 
+	private String sum_charge_yyyymm;	//청구액 합계
+	
+	//리스트 조회
 	private String	no_person;			//회원관리번호
 	private String	nm_person;			//회원명
 	private String	cd_fc;				//금융사코드
@@ -17,12 +22,14 @@ public class PaymentVO implements Serializable{
 	private String	charge_yyyymm;		//청구 년월
 	private String	monthly_charge;		//청구액
 	private Date	dt_frt;
-
+	
 	public PaymentVO() {
 	}
-	public PaymentVO(String no_person, String nm_person, String cd_fc,
-			String nm_fc, String charge_yyyymm, String monthly_charge,
-			Date dt_frt) {
+	public PaymentVO(String count_fc, String sum_charge_yyyymm,
+			String no_person, String nm_person, String cd_fc, String nm_fc,
+			String charge_yyyymm, String monthly_charge, Date dt_frt) {
+		this.count_fc = count_fc;
+		this.sum_charge_yyyymm = sum_charge_yyyymm;
 		this.no_person = no_person;
 		this.nm_person = nm_person;
 		this.cd_fc = cd_fc;
@@ -32,6 +39,18 @@ public class PaymentVO implements Serializable{
 		this.dt_frt = dt_frt;
 	}
 
+	public String getCount_fc() {
+		return count_fc;
+	}
+	public void setCount_fc(String count_fc) {
+		this.count_fc = count_fc;
+	}
+	public String getSum_charge_yyyymm() {
+		return sum_charge_yyyymm;
+	}
+	public void setSum_charge_yyyymm(String sum_charge_yyyymm) {
+		this.sum_charge_yyyymm = sum_charge_yyyymm;
+	}
 	public String getNo_person() {
 		return no_person;
 	}

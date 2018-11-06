@@ -15,10 +15,12 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.koscom.consume.model.ConsumeDetailGoalInfoVO;
 import com.koscom.consume.model.ConsumeForm;
 import com.koscom.consume.model.ConsumeGoalInfoVO;
 import com.koscom.consume.model.ConsumeVO;
 import com.koscom.consume.model.PaymentForm;
+import com.koscom.consume.model.PersonSetInfoForm;
 import com.koscom.consume.model.PersonSetInfoVO;
 import com.koscom.consume.service.ConsumeManager;
 import com.koscom.util.FinsetException;
@@ -175,13 +177,160 @@ public class ConsumeController {
     	return "jsonView";
     }
     
+    /**
+     * VUE
+     * @param session
+     * @param model
+     * @param no_person_list
+     * @param charge_yyyymm
+     * @return
+     */
     @RequestMapping("/listPayment.json")
     public String getPayment(HttpSession session, Model model, @RequestParam(value="no_person_list[]") List<String> no_person_list, String charge_yyyymm) {
     	logger.debug("listPayment");
+    	String no_person = (String) session.getAttribute("no_person");
     	PaymentForm paymentForm = new PaymentForm();
     	paymentForm.setNo_person_list(no_person_list);
     	paymentForm.setCharge_yyyymm(charge_yyyymm);
-    	model.addAttribute("payment",consumeManager.listPayment(paymentForm));
+    	model.addAttribute("isScrap", consumeManager.chkScrapCard(no_person));
+    	model.addAttribute("paymentSummary",consumeManager.getPaymentSummary(paymentForm));
+    	model.addAttribute("paymentList",consumeManager.listPayment(paymentForm));
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE
+     * @param session
+     * @param model
+     * @return
+     */
+    @RequestMapping("/getPersonSetInfo.json")
+    public String getPersonSetInfo(HttpSession session, Model model) {
+    	logger.debug("getPersonSetInfo");
+    	String no_person = (String) session.getAttribute("no_person");
+    	model.addAttribute("personInfo", consumeManager.getPersonSetInfo(no_person));
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE
+     * @param session
+     * @param model
+     * @param personSetInfoForm
+     * @return
+     */
+    @RequestMapping("/modifyYn_installment.json")
+    public String modifyYn_installment(HttpSession session, Model model, PersonSetInfoForm personSetInfoForm) {
+    	logger.debug("modifyYn_installment");
+    	String no_person = (String) session.getAttribute("no_person");
+    	personSetInfoForm.setNo_person(no_person);
+    	consumeManager.modifyYn_installment(personSetInfoForm);
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE
+     * @param session
+     * @param model
+     * @param personSetInfoForm
+     * @return
+     */
+    @RequestMapping("/modifyDt_basic.json")
+    public String modifyDt_basic(HttpSession session, Model model, PersonSetInfoForm personSetInfoForm) {
+    	logger.debug("modifyDt_basic");
+    	String no_person = (String) session.getAttribute("no_person");
+    	personSetInfoForm.setNo_person(no_person);
+    	consumeManager.modifyDt_basic(personSetInfoForm);
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE
+     * @param session
+     * @param model
+     * @return
+     */
+    @RequestMapping("/listDetailGoal.json")
+    public String listDetailGoal(HttpSession session, Model model, String cd_set) {
+    	logger.debug("listDetailGoal");
+    	String no_person = (String) session.getAttribute("no_person");
+    	model.addAttribute("listDetailGoal", consumeManager.listDetailGoal(no_person, cd_set));
+    	return "jsonView";
+    }
+    /**
+     * VUE
+     * @param session
+     * @param model
+     * @return
+     */
+    @RequestMapping("/listPrevMonthConsume.json")
+    public String getPrevMonthConsume(HttpSession session, Model model, String cd_set) {
+    	logger.debug("listPrevMonthConsume");
+    	String no_person = (String) session.getAttribute("no_person");
+    	model.addAttribute("listPrevMonthConsume", consumeManager.listPrevMonthConsume(no_person, cd_set));
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE
+     * @param session
+     * @param model
+     * @return
+     */
+    @RequestMapping("/listAverageConsume.json")
+    public String listAverageConsume(HttpSession session, Model model, String cd_set) {
+    	logger.debug("listAverageConsume");
+    	String no_person = (String) session.getAttribute("no_person");
+    	model.addAttribute("listAverageConsume", consumeManager.listAverageConsume(no_person, cd_set));
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE
+     * @param session
+     * @param model
+     * @param consumeDetailGoalInfoVO
+     * @return
+     */
+    @RequestMapping("/createGoal.json")
+    public String createGoal(HttpSession session, Model model, ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO, String cd_set) {
+    	logger.debug("createGoal");
+    	String no_person = (String) session.getAttribute("no_person");
+    	consumeDetailGoalInfoVO.setNo_person(no_person);
+    	consumeManager.createDetailGoal(consumeDetailGoalInfoVO, cd_set);
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE 
+     * @param session
+     * @param model
+     * @param consumeForm
+     * @return
+     */
+    @RequestMapping("/getConsumeInfo.json")
+    public String getConsumeInfo(HttpSession session, Model model, ConsumeForm consumeForm) {
+    	logger.debug("getConsumeInfo");
+    	model.addAttribute("consumeVO", consumeManager.getConsumeInfo(consumeForm));
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE
+     * @param model
+     * @param no_person
+     * @return
+     */
+    @RequestMapping("/listPersonConsumeClassInfo.json")
+    public String listPersonConsumeClassInfo(HttpSession session, Model model, String no_person) {
+    	logger.debug("listPersonConsumeClassInfo");
+    	if(no_person == null) {
+    		no_person = (String) session.getAttribute("no_person");
+    	} else if (no_person.equals("")) {
+    		no_person = (String) session.getAttribute("no_person");
+    	}
+    	
+    	model.addAttribute("listPersonConsumeClassInfo", consumeManager.listPersonConsumeClassInfo(no_person));
     	return "jsonView";
     }
 }

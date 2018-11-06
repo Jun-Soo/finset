@@ -8,13 +8,10 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.annotation.Resource;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +21,7 @@ import com.koscom.conditioncredit.dao.ConditioncreditMapper;
 import com.koscom.conditioncredit.model.ConditioncreditVO;
 import com.koscom.conditionhouse.dao.ConditionhouseMapper;
 import com.koscom.conditionhouse.model.ConditionhouseVO;
+import com.koscom.consume.dao.ConsumeMapper;
 import com.koscom.credit.dao.CreditMapper;
 import com.koscom.domain.PersonLoginHistInfo;
 import com.koscom.domain.PersonShareInfo;
@@ -54,6 +52,9 @@ public class PersonManagerImpl implements PersonManager {
 	@Autowired
 	private CreditMapper creditMapper;
 
+	@Autowired
+	private ConsumeMapper consumeMapper;
+	
 	@Autowired
 	private ConditioncreditMapper conditioncreditMapper;
 
@@ -444,6 +445,10 @@ public class PersonManagerImpl implements PersonManager {
 			}
 			logger.info("알림 셋팅 완료");
 
+			logger.info("회원 소비 분류 코드 세팅 시작");
+			consumeMapper.createDefaultConsumeClassInfo(personVO.getNo_person());
+			logger.info("회원 소비 분류 코드 세팅 완료");
+			
 			logger.info("회원 설정 세팅 시작");
 			personMapper.insertDefaultPersonSet(personVO.getNo_person());
 			logger.info("회원 설정 세팅 완료");

@@ -26,6 +26,7 @@ import com.koscom.scrapData.dao.ConsumeDataMapper;
 import com.koscom.scrapData.model.ConsumeDataForm;
 import com.koscom.scrapData.model.ConsumeDataVO;
 import com.koscom.scrapData.service.ConsumeDataManager;
+import com.koscom.util.DateUtil;
 
 @Service("consumeDataManager")
 public class ConsumeDataManagerImpl implements ConsumeDataManager {
@@ -105,7 +106,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 //						String type_card = scrCardMap.get("TYPE_CARD"); V와 L 밖에 없는데 이에대한 논의가 필요해보임
 						String no_card = scrCardMap.get("NO_CARD");
 						String nm_member = scrCardMap.get("NM_MEMBER");
-//						String type_sales = scrCardMap.get("TYPE_SALES"); //0: 기타, 1: 일시불, 2:할부, 3:현금서비스, 4: 포인트 일시불, 5: 포인트 할부
+						String type_sales = scrCardMap.get("TYPE_SALES"); //0: 기타, 1: 일시불, 2:할부, 3:현금서비스, 4: 포인트 일시불, 5: 포인트 할부
 						String period_installment = scrCardMap.get("PERIOD_INSTALLMENT");
 						String amt_approval = scrCardMap.get("AMT_APPROVAL");
 						String ymd_cancel = scrCardMap.get("YMD_CANCEL");
@@ -116,6 +117,10 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 						//String cd_currency = scrCardMap.get("CD_CURRENCY");
 						//String cd_in_out = scrCardMap.get("CD_IN_OUT");
 						//String dt_frt = scrCardMap.get("DT_FRT");
+						
+						if(type_sales.equals("0")||type_sales.equals("4")||type_sales.equals("5")) {
+							continue;
+						}
 						
 						//실제 사용될 변수
 						String type_in_out = "02";		//01:수입, 02:지출
@@ -142,8 +147,11 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 						String grade = null;
 						String amt_in_out = amt_approval;
 						String mon_installment = period_installment;
-						String mon_remaining = (Integer.parseInt(period_installment)-1)+"";
-						String yn_pay_installment = null;
+						String mon_remaining = "0";
+						String yn_pay_installment = "N";
+						if(type_sales.equals("2")) {
+							yn_pay_installment = "Y";
+						}
 						String yn_delete = "N";
 						String yn_cancel = "N";
 						if(ymd_cancel!=null) {
@@ -157,7 +165,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 						Date dt_frt = null;
 						String id_lst = no_person;
 						Date dt_lst = null;
-		
+
 						ConsumeDataVO consumeVO =
 								new ConsumeDataVO(
 										no_person,
@@ -192,7 +200,11 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 										id_lst,
 										dt_lst
 										);
-						 consumeList.add(consumeVO);
+						if(type_sales.equals("2")) {
+							List<ConsumeDataVO> installmentList = getInstallmentList(consumeVO);
+							consumeList.addAll(installmentList);
+						}
+						consumeList.add(consumeVO);
 					}
 				}
 			}
@@ -244,7 +256,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 					
 					//실제 사용할 변수들
 					String type_in_out = "02";
-					String means_consume = "03";	//01:카드, 02:현금, 03:입출금내역
+					String means_consume = "03";	//01:카드, 02:현금, 03:현금영수증, 04:입출금내역
 					String cd_fc = nts;		//국세청 
 					String nm_card = null;
 					String no_card = null;
@@ -375,5 +387,50 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 			nts = null;
 		}
 		return nts;
+	}
+	
+	private List<ConsumeDataVO> getInstallmentList(ConsumeDataVO consumeDataVO) {
+		List<ConsumeDataVO> returnList = new ArrayList<ConsumeDataVO>();
+		int amt_in_out = Integer.parseInt(consumeDataVO.getAmt_in_out());
+		int mon_installment = Integer.parseInt(consumeDataVO.getMon_installment());
+		
+		int each_amt_in_out = amt_in_out/mon_installment;
+		for(int i = 0; i<mon_installment; i++) {
+			ConsumeDataVO tempVO = new ConsumeDataVO(
+					consumeDataVO.getNo_person(),
+					0,
+					consumeDataVO.getType_in_out(),
+					consumeDataVO.getMeans_consume(),
+					consumeDataVO.getCd_fc(),
+					consumeDataVO.getNm_card(),
+					consumeDataVO.getNo_card(),
+					consumeDataVO.getType_card(),
+					DateUtil.addMonths(consumeDataVO.getDt_trd(), i),
+					consumeDataVO.getTm_trd(),
+					consumeDataVO.getNo_biz(),
+					consumeDataVO.getNm_biz(),
+					consumeDataVO.getCd_class(),
+					consumeDataVO.getCd_type(),
+					consumeDataVO.getCd_consume_class(),
+					consumeDataVO.getContents(),
+					consumeDataVO.getMemo(),
+					consumeDataVO.getGrade(),
+					each_amt_in_out+"",
+					consumeDataVO.getNo_approval(),
+					mon_installment+"",
+					(i+1)+"",
+					consumeDataVO.getYn_pay_installment(),
+					consumeDataVO.getYn_delete(),
+					consumeDataVO.getYn_cancel(),
+					consumeDataVO.getYn_auto(),
+					consumeDataVO.getYn_budget_except(),
+					consumeDataVO.getId_frt(),
+					consumeDataVO.getDt_frt(),
+					consumeDataVO.getId_lst(),
+					consumeDataVO.getDt_lst()
+					);
+			returnList.add(tempVO);
+		}
+		return returnList;
 	}
 }

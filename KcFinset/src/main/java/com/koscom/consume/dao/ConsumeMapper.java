@@ -9,6 +9,7 @@ import com.koscom.consume.model.ConsumeVO;
 import com.koscom.consume.model.PaymentForm;
 import com.koscom.consume.model.PaymentVO;
 import com.koscom.consume.model.PersonConsumeClassVO;
+import com.koscom.consume.model.PersonSetInfoForm;
 import com.koscom.consume.model.PersonSetInfoVO;
 import com.koscom.consume.model.PersonTransDetailVO;
 import com.koscom.domain.PersonInfo;
@@ -100,20 +101,6 @@ public interface ConsumeMapper {
 	ConsumeGoalInfoVO getGoal(ConsumeGoalInfoVO consumeGoalInfoVO);
 	
 	/**
-	 * 소비 상세 목표 등록
-	 * @param consumeDetailGoalInfoVO
-	 * @return
-	 */
-	int createDetailGoal(ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO);
-	
-	/**
-	 * 소비 상세 목표 리스트 조회
-	 * @param consumeDetailGoalInfoVO
-	 * @return
-	 */
-	List<ConsumeDetailGoalInfoVO> listDetailGoal(ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO);
-	
-	/**
 	 * 공통 캘린더 합계 조회
 	 * @param consumeForm
 	 * @return
@@ -128,9 +115,89 @@ public interface ConsumeMapper {
 	List<ConsumeVO> listCalendarConsumeData(ConsumeForm consumeForm);
 	
 	/**
+	 * 청구내역 요약 조회
+	 * @param paymentForm
+	 * @return
+	 */
+	PaymentVO getPaymentSummary(PaymentForm paymentForm);
+	
+	/**
 	 * 청구내역 리스트 조회
 	 * @param paymentForm
 	 * @return
 	 */
 	List<PaymentVO> listPayment(PaymentForm paymentForm);
+
+	/**
+	 * 할부 분할 여부 업데이트
+	 * @param consumeSettingForm
+	 */
+	void modifyYn_installment(PersonSetInfoForm personSetInfoForm);
+	
+	/**
+	 * 기준일 업데이트
+	 * @param consumeSettingForm
+	 */
+	void modifyDt_basic(PersonSetInfoForm personSetInfoForm);
+	
+	/**
+	 * 소비 상세 목표 리스트 조회(분류별)
+	 * @param consumeDetailGoalInfoVO
+	 * @return
+	 */
+	List<ConsumeDetailGoalInfoVO> listDetailGoalClass(String no_person);
+	
+	/**
+	 * 소비 상세 목표 리스트 조회(수단별)
+	 * @param no_person
+	 * @return
+	 */
+	List<ConsumeDetailGoalInfoVO> listDetailGoalMeans(String no_person);
+	
+	/**
+	 * 예산 사용을 위해 전월 지출내역 조회(분류별)
+	 * @param no_person
+	 * @return
+	 */
+	List<ConsumeDetailGoalInfoVO> listPrevMonthClass(String no_person);
+	
+	/**
+	 * 예산 사용을 위해 전월 지출내역 조회(수단별)
+	 * @param no_person
+	 * @return
+	 */
+	List<ConsumeDetailGoalInfoVO> listPrevMonthMeans(String no_person);
+	
+	/**
+	 * 예산 상세 내역 저장(분류별)
+	 * @param consumeDetailGoalInfoVO
+	 */
+	void createDetailGoalClass(ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO);
+	
+	/**
+	 * 예산 상세 내역 저장(수단별)
+	 * @param consumeDetailGoalInfoVO
+	 */
+	void createDetailGoalMeans(ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO);
+	
+	/**
+	 * 예산 사용을 위해 3개월 평균 지출내역 조회(분류별)
+	 * @param no_person
+	 * @return
+	 */
+	List<ConsumeDetailGoalInfoVO> listAverageClass(String no_person);
+	
+	/**
+	 * 예산 사용을 위해 3개월 평균 지출내역 조회(수단별)
+	 * @param no_person
+	 * @return
+	 */
+	List<ConsumeDetailGoalInfoVO> listAverageMeans(String no_person);
+	
+	/**
+	 * 소비 상세내역 조회
+	 * @param consumeForm
+	 * @return
+	 */
+	ConsumeVO getConsumeInfo(ConsumeForm consumeForm);
 }

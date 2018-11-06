@@ -2,6 +2,7 @@ package com.koscom.consume.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
@@ -10,31 +11,36 @@ public class ConsumeDetailGoalInfoVO implements Serializable{
 	
 	private static final long serialVersionUID = -2473734196250963548L;
 	
-	private String	no_person;
-	private String	req_yyyymm;
-	private String	cd_set;
-	private String	cd_class;
-	private String	cd_type;
-	private String	cd_fc;
-	private String	nm_card;
-	private String	no_card;
-	private String	amt_budget;
-	private String	amt_expense;
+	private String	no_person;		//회원관리번호
+	private String	req_yyyymm;		//기준년월
+	private String	cd_set;			//설정구분
+	private String	cd_class;		//분류코드
+	private String	nm_class;		//분류명
+	private String	cd_type;		//항목코드
+	private String	cd_fc;			//금융사코드
+	private String	nm_card;		//카드명
+	private String	no_card;		//카드번호
+	private String	amt_budget;		//예산금액
+	private String	amt_expense;	//지출금액
 	private String	id_frt;
 	private Date	dt_frt;
 	private String	id_lst;
 	private Date	dt_lst;
 	
+	//데이터터를 전달 받을 리스트
+	private List<ConsumeDetailGoalInfoVO> list;
+	
 	public ConsumeDetailGoalInfoVO() {}
 	public ConsumeDetailGoalInfoVO(String no_person, String req_yyyymm,
-			String cd_set, String cd_class, String cd_type, String cd_fc,
-			String nm_card, String no_card, String amt_budget,
+			String cd_set, String cd_class, String nm_class, String cd_type,
+			String cd_fc, String nm_card, String no_card, String amt_budget,
 			String amt_expense, String id_frt, Date dt_frt, String id_lst,
-			Date dt_lst) {
+			Date dt_lst, List<ConsumeDetailGoalInfoVO> list) {
 		this.no_person = no_person;
 		this.req_yyyymm = req_yyyymm;
 		this.cd_set = cd_set;
 		this.cd_class = cd_class;
+		this.nm_class = nm_class;
 		this.cd_type = cd_type;
 		this.cd_fc = cd_fc;
 		this.nm_card = nm_card;
@@ -45,6 +51,7 @@ public class ConsumeDetailGoalInfoVO implements Serializable{
 		this.dt_frt = dt_frt;
 		this.id_lst = id_lst;
 		this.dt_lst = dt_lst;
+		this.list = list;
 	}
 	
 	public String getNo_person() {
@@ -70,6 +77,12 @@ public class ConsumeDetailGoalInfoVO implements Serializable{
 	}
 	public void setCd_class(String cd_class) {
 		this.cd_class = cd_class;
+	}
+	public String getNm_class() {
+		return nm_class;
+	}
+	public void setNm_class(String nm_class) {
+		this.nm_class = nm_class;
 	}
 	public String getCd_type() {
 		return cd_type;
@@ -130,6 +143,12 @@ public class ConsumeDetailGoalInfoVO implements Serializable{
 	}
 	public void setDt_lst(Date dt_lst) {
 		this.dt_lst = dt_lst;
+	}
+	public List<ConsumeDetailGoalInfoVO> getList() {
+		return list;
+	}
+	public void setList(List<ConsumeDetailGoalInfoVO> list) {
+		this.list = list;
 	}
 	
 	public String toString() {

@@ -1,6 +1,5 @@
 <template>
   <section>
-
     <div class="spend-top">
       <div class="date-wrap">
         <button class="prev" @click="setPrevMM"></button>
@@ -8,53 +7,31 @@
         <button class="next" @click="setNextMM"></button>
       </div>
       <div class="owl-carousel spend-wrap">
-        <carousel :perPage=1>
-          <slide class="wrap">
-            <div class="item">
-              <p class="key">대금<em>(원)</em></p>
-              <p class="value">4,550,000</p>
-            </div>
-            <div class="item">
-              <p class="key">청구카드수</p>
-              <p class="value">3</p>
-            </div>
-          </slide>
-          <slide class="wrap">
-            <div class="item">
-              <p class="key">청구카드수</p>
-              <p class="value">4,550,000</p>
-            </div>
-            <div class="item">
-              <p class="key">수입<em>(원)</em></p>
-              <p class="value">3</p>
-            </div>
-          </slide>
-          <slide class="wrap">
-            <div class="item">
-              <p class="key">대금<em>(원)</em></p>
-              <p class="value">4,550,000</p>
-            </div>
-            <div class="item">
-              <p class="key">청구카드수</p>
-              <p class="value">3</p>
-            </div>
-          </slide>
-        </carousel>
+        <div class="wrap">
+          <div class="item">
+            <p class="key">대금<em>(원)</em></p>
+            <p class="value">{{formatNumber(paymentSummary.sum_charge_yyyymm)}}</p>
+          </div>
+          <div class="item">
+            <p class="key">청구내역 수</p>
+            <p class="value">{{paymentSummary.count_fc}}</p>
+          </div>
+        </div>
       </div>
-      <a href="#" class="btn">카드를 등록하고 간편하게 조회하세요</a>
+      <a href="#" class="btn" v-if="!isScrap">카드를 등록하고 간편하게 조회하세요</a>
     </div>
 
     <div class="box-list list01">
       <div class="filter-wrap">
         <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
-            <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)" :for="settingList[index].id">{{person.nm_person}}</label>
+          <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)" :for="settingList[index].id">{{person.nm_person}}</label>
         </div>
       </div>
 
-      <div v-for="payment in paymentList" :key="payment.no_person" class="item">
+      <div v-for="(payment, index) in paymentList" :key="index" class="item">
         <div class="top">
-          <p class="symbol"><img :src="payment.imgSrc" alt=""/>{{payment.nm_fc}}</p>
-          <p class="circle"><span class="blue">{{payment.nm_person}}</span></p>
+          <p class="symbol"><img :src="payment.imgSrc" alt="" />{{payment.nm_fc}}</p>
+          <p class="text"><span class="circle" :class="settingList[shareList.findIndex(person => person.no_person === payment.no_person)].color">{{payment.nm_person.substring(payment.nm_person.length-2)}}</span></p>
         </div>
         <div class="number-wrap">
           <div class="left">
@@ -62,17 +39,8 @@
             <p class="number">{{formatNumber(payment.monthly_charge)}}<em>원</em></p>
           </div>
         </div>
-        <!-- <div class="text-wrap">
-          <div class="left">
-            <p class="key">카드번호</p>
-            <p class="value">1234-1234-1234-****</p>
-          </div>
-          <div class="right">
-            <p class="key">결제일</p>
-            <p class="value">2018.04.15</p>
-          </div>
-        </div> -->
       </div>
+
       <!-- <div class="item">
         <div class="top">
           <p class="symbol"><img src="../../assets/images/common/bu_kb.png" alt=""/>국민은행</p>
@@ -140,6 +108,8 @@ export default {
         { color: "blue", id: "chk4" },
         { color: "purple", id: "chk5" }
       ],
+      isScrap: false,
+      paymentSummary: { sum_charge_yyyymm: 0, count_fc: 0 },
       paymentList: []
     };
   },
@@ -204,11 +174,13 @@ export default {
           }
         })
         .then(function(response) {
-          var list = response.data.payment;
+          var list = response.data.paymentList;
           for (var idx in list) {
             list[idx].imgSrc =
               "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + list[idx].cd_fc;
           }
+          _this.isScrap = response.data.isScrap;
+          _this.paymentSummary = response.data.paymentSummary;
           _this.paymentList = list;
         });
     },
@@ -228,6 +200,9 @@ export default {
     clickShare: function(params) {
       this.shareList[params].isShow = !this.shareList[params].isShow;
       this.listPayment();
+    },
+    formatDateDot: function(date) {
+      return Common.formatDateDot(date);
     }
   }
 };

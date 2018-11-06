@@ -7,7 +7,9 @@
             <p class="key">대출잔액</p>
             <p class="value">{{formatNumber(debtSummary.amt_remain * 10000)}}<em>원</em></p>
           </div>
-          <div class="graph"><chartjs-line :labels="mylabels" :datasets="mydatasets" :option="myoption" :bind="true"></chartjs-line></div>
+          <div class="graph">
+            <chartjs-line :labels="mylabels" :datasets="mydatasets" :option="myoption" :bind="true"></chartjs-line>
+          </div>
           <div class="flex2 bar-graph">
             <div class="item">
               <p class="key">상환율</p>
@@ -35,91 +37,95 @@
       <div class="banner-wrap owl-carousel">
         <carousel :perPage=1>
           <slide class="item">
-              <a href="#" @click="clickBanner('goods')">
-                  <div class="banner">
-                      <div class="left">
-                          <p class="key">추천 상품</p>
-                          <p class="value">나의 상황에 맞는<br>상품을 추천합니다</p>
-                      </div>
-                      <div class="right">
-                          <img src="../../assets/images/main/banner_ico.png" alt=""/>
-                      </div>
-                  </div>
-              </a>
+            <a href="#" @click="clickBanner('goods')">
+              <div class="banner">
+                <div class="left">
+                  <p class="key">추천 상품</p>
+                  <p class="value">나의 상황에 맞는<br>상품을 추천합니다</p>
+                </div>
+                <div class="right">
+                  <img src="../../assets/images/main/banner_ico.png" alt="" />
+                </div>
+              </div>
+            </a>
           </slide>
           <slide class="item">
-              <a href="#">
-                  <div class="banner">
-                      <div class="left">
-                          <p class="key">계산기</p>
-                          <p class="value">DSR(상환능력), LTV 등을<br>직접 계산해 보세요</p>
-                      </div>
-                      <div class="right">
-                          <img src="../../assets/images/main/banner_ico.png" alt=""/>
-                      </div>
-                  </div>
-              </a>
+            <a href="#">
+              <div class="banner">
+                <div class="left">
+                  <p class="key">계산기</p>
+                  <p class="value">DSR(상환능력), LTV 등을<br>직접 계산해 보세요</p>
+                </div>
+                <div class="right">
+                  <img src="../../assets/images/main/banner_ico.png" alt="" />
+                </div>
+              </div>
+            </a>
           </slide>
           <slide class="item">
-              <a href="#">
-                  <div class="banner">
-                      <div class="left">
-                          <p class="key">캘린더</p>
-                          <p class="value">상환일, 이자납입일을 달력으로<br>관리하시면 더 ~ 편리합니다</p>
-                      </div>
-                      <div class="right">
-                          <img src="../../assets/images/main/banner_ico.png" alt=""/>
-                      </div>
-                  </div>
-              </a>
+            <a href="#">
+              <div class="banner">
+                <div class="left">
+                  <p class="key">캘린더</p>
+                  <p class="value">상환일, 이자납입일을 달력으로<br>관리하시면 더 ~ 편리합니다</p>
+                </div>
+                <div class="right">
+                  <img src="../../assets/images/main/banner_ico.png" alt="" />
+                </div>
+              </div>
+            </a>
           </slide>
           <slide class="item">
-              <a href="#">
-                  <div class="banner">
-                      <div class="left">
-                          <p class="key">뉴스</p>
-                          <p class="value">금리 등 관련 뉴스를<br>조회합니다</p>
-                      </div>
-                      <div class="right">
-                          <img src="../../assets/images/main/banner_ico.png" alt=""/>
-                      </div>
-                  </div>
-              </a>
+            <a href="#">
+              <div class="banner">
+                <div class="left">
+                  <p class="key">뉴스</p>
+                  <p class="value">금리 등 관련 뉴스를<br>조회합니다</p>
+                </div>
+                <div class="right">
+                  <img src="../../assets/images/main/banner_ico.png" alt="" />
+                </div>
+              </div>
+            </a>
           </slide>
           <slide class="item">
-              <a href="#">
-                  <div class="banner">
-                      <div class="left">
-                          <p class="key">금리인하요구</p>
-                          <p class="value">금리인하요구 조건이 맞는지<br>확인해보세요</p>
-                      </div>
-                      <div class="right">
-                          <img src="../../assets/images/main/banner_ico.png" alt=""/>
-                      </div>
-                  </div>
-              </a>
+            <a href="#">
+              <div class="banner">
+                <div class="left">
+                  <p class="key">금리인하요구</p>
+                  <p class="value">금리인하요구 조건이 맞는지<br>확인해보세요</p>
+                </div>
+                <div class="right">
+                  <img src="../../assets/images/main/banner_ico.png" alt="" />
+                </div>
+              </div>
+            </a>
           </slide>
         </carousel>
       </div>
-      
-      <div class="list01 dept-list">
-				<div class="filter-wrap">
-					<div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
-							<input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
-					</div>
-				</div>
+
+      <div class="list01 box-list pb90">
+        <div class="filter-wrap">
+          <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
+            <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
+          </div>
+        </div>
         <div class="item" v-for="vo in debtList" :key="vo.no_manage_info">
           <div class="top">
-            <p class="symbol"><img :src="vo.imgSrc" alt=""/>{{vo.nm_fc}}</p>
-            <p class="text blue">{{vo.debt_type}}</p>
+            <p class="symbol"><img :src="vo.imgSrc" alt="" />{{vo.nm_fc}}</p>
+            <p class="text blue">{{vo.debt_type}}
+              <span class="circle" :class="settingList[shareList.findIndex(person => person.no_person === vo.no_person)].color"></span>
+            </p>
           </div>
           <div class="number-wrap">
             <div class="left">
               <p class="key">잔액</p>
               <p class="number">{{formatNumber(vo.amt_remain * 10000)}}<em>원</em></p>
+            </div>
           </div>
+          <div class="bar">
+            <p :style="vo.eachStyle"></p>
           </div>
-          <div class="bar"><p :style="vo.eachStyle"></p></div>
           <div class="text-wrap">
             <div class="left">
               <p class="key"><span>상환금액</span><span>이자율</span></p>
@@ -131,9 +137,8 @@
             </div>
           </div>
         </div>
-        <p class="info-massage">안내 메세지가 출력되는 영역입니다</p>
         <div class="btn-wrap">
-            <a href="#" class="solid">부채등록</a>
+          <a href="#" class="solid">부채등록</a>
         </div>
       </div>
     </section>
@@ -155,18 +160,18 @@ export default {
         {
           label: " ",
           fill: false,
-          lineTension: 0.1,
+          lineTension: 0.2,
           backgroundColor: "rgba(75,192,192,0.4)",
-          borderColor: "rgba(75,192,192,1)",
+          borderColor: "rgba(228,42,59,1)",
           borderCapStyle: "butt",
           borderDash: [],
           borderDashOffset: 0.0,
           borderJoinStyle: "miter",
-          pointBorderColor: "rgba(75,192,192,1)",
+          pointBorderColor: "rgba(234,85,100,1)",
           pointBackgroundColor: "#fff",
           pointBorderWidth: 1,
           pointHoverRadius: 5,
-          pointHoverBackgroundColor: "rgba(75,192,192,1)",
+          pointHoverBackgroundColor: "rgba(234,85,100,1)",
           pointHoverBorderColor: "rgba(220,220,220,1)",
           pointHoverBorderWidth: 2,
           pointRadius: 1,

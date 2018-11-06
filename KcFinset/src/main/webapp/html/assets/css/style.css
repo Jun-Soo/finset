@@ -948,7 +948,9 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 
 .info-share .title { font-size: 20px; font-weight: 700; color: #222; }
 .info-share .text { font-size: 13px; margin-top: 15px; margin-bottom: 25px; }
-.info-share a { display: block; border: 1px solid #e5e5e5; text-indent: 15px; color: #333; font-size: 15px; line-height: 38px; background: url("../images/share/btn_share.png") no-repeat right center/contain; }
+.info-share .input-wrap { border: 1px solid #e5e5e5; line-height: 38px; display: flex; justify-content: space-between; }
+.info-share .input-wrap input[type="text"] { border: none; line-height: 38px; text-indent: 15px; color: #333; font-size: 15px; }
+.info-share .input-wrap a { width: 38px; height: 38px; background: url("../images/share/btn_share.png") no-repeat right center/contain; }
 
 .credit-info { padding: 30px 0; }
 .credit-info .title { line-height: 30px; background: #f0efed; text-indent: 21px; }

@@ -14,7 +14,6 @@ import VueCarousel from 'vue-carousel'
 import VueModal from 'vue2-modal'
 
 import 'jquery'
-
 import 'vue2-toast/lib/toast.css'
 
 import './assets/css/reset.css'
@@ -48,7 +47,15 @@ Vue.use(window.VueCharts)
 Vue.use(VueModal)
 
 Vue.config.debug = true
+Vue.config.devtools = true
 Vue.config.productionTip = false
+
+axios.interceptors.request.use(function (config) {
+  config.headers.AJAX = true
+  return config
+}, function (err) {
+  return Promise.reject(err)
+})
 Vue.prototype.$http = axios
 
 /* eslint-disable no-new */

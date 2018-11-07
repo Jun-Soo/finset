@@ -1,18 +1,45 @@
 <template>
   <section>
-    <div class="loading success">
-      <em>금융사 연동 완료</em><br>금융사 연동이 완료되었습니다
+    <div class="box-list noMG list02 pb90">
+      <p class="header">은행</p>
+      <div class="item">
+        <div class="flex">
+          <p class="symbol"><img src="../../assets/images/common/bu_samsung.png" alt="" />삼성생명보험</p>
+          <p><button class="btn-onoff on"></button></p>
+        </div>
+      </div>
+      <div class="item">
+        <div class="flex">
+          <p class="symbol"><img src="../../assets/images/common/bu_samsung.png" alt="" />삼성생명보험</p>
+          <p><button class="btn-onoff"></button></p>
+        </div>
+      </div>
+      <p class="header">카드</p>
+      <div class="item">
+        <div class="flex">
+          <p class="symbol"><img src="../../assets/images/common/bu_samsung.png" alt="" />삼성생명보험</p>
+          <p><button class="btn-onoff"></button></p>
+        </div>
+      </div>
+      <p class="header">기타</p>
+      <div class="item">
+        <div class="flex">
+          <p class="symbol"><img src="../../assets/images/common/bu_samsung.png" alt="" />삼성생명보험</p>
+          <p><button class="btn-onoff"></button></p>
+        </div>
+      </div>
     </div>
 
-    <div class="btn-wrap float">
-      <a @click="$router.push('')" class="solid box blue">확인</a>
+    <div class="btn-wrap col2">
+      <a @click="$router.push('')">취소</a>
+      <a href="#" class="btn-solid">연결</a>
     </div>
   </section>
 </template>
 
 <script>
 export default {
-  name: "ScrapSelectFcLink",
+  name: "ScrapFcLink",
   data() {
     return {};
   },
@@ -20,7 +47,7 @@ export default {
   computed: {},
   beforeCreate() {
     this.$store.state.header.type = "sub";
-    this.$store.state.title = "";
+    this.$store.state.title = "연동가능 금융사";
   },
   created() {},
   beforeMount() {},

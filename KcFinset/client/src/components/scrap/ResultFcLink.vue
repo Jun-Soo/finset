@@ -12,7 +12,7 @@
 
 <script>
 export default {
-  name: "ScrapSelectFcLink",
+  name: "",
   data() {
     return {};
   },

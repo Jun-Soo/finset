@@ -381,7 +381,12 @@ input[type="file"]::-ms-browse {
 }
 
 
-
+::-webkit-search-cancel-button {
+    height: 36px;
+    width: 36px;
+    display: inline-block;
+    background: url("../images/etc/search-delete.png") no-repeat right center / 14px;
+}
 
 
 

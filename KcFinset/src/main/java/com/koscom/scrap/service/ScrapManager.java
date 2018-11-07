@@ -13,6 +13,12 @@ import com.koscom.scrap.model.ScrRespPensionPaymentdtlVO;
 import com.koscom.util.ReturnClass;
 
 public interface ScrapManager {
+	/**
+	 * 금융투자회사 스크래핑 (오픈플랫폼)
+	 * @param
+	 * @return 
+	 */
+	String startScrapFinance(String no_person, String uuid, String token);
 	
 	/**
 	 * 금융투자회사 기업 정보 조회 (오픈플랫폼)

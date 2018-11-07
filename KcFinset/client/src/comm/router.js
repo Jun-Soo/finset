@@ -28,7 +28,7 @@ import ScrapHome from '@/components/scrap/Home'
 import ScrapCertStep from '@/components/scrap/CertStep'
 import ScrapFcLink from '@/components/scrap/FcLink'
 import ScrapSelectFcLink from '@/components/scrap/SelectFcLink'
-// import ScrapResultFcLink from '@/components/scrap/ResultFcLink'
+import ScrapResultFcLink from '@/components/scrap/ResultFcLink'
 import ScrapCtrlFcLink from '@/components/scrap/CtrlFcLink'
 import ScrapLoading from '@/components/scrap/Loading'
 import ScrapRegFcLink from '@/components/scrap/RegFcLink'
@@ -184,17 +184,18 @@ import EtcNoticeMain from '@/components/etc/NoticeMain'
 import EtcNoticeMain2 from '@/components/etc/NoticeMain_2'
 import EtcNoticeDetail from '@/components/etc/NoticeDetail'
 import EtcEventDetail from '@/components/etc/EventDetail'
-// import EtcFaqMain from '@/components/etc/FaqMain'
-// import EtcFaqList from '@/components/etc/FaqList'
-// import EtcFaqDetail from '@/components/etc/FaqDetail'
-// import EtcTerm from '@/components/etc/Term'
-// import EtcTermDetail from '@/components/etc/TermDetail'
+import EtcFaqMain from '@/components/etc/FaqMain'
+import EtcFaqList from '@/components/etc/FaqList'
+import EtcFaqDetail from '@/components/etc/FaqDetail'
+import EtcTerm from '@/components/etc/Term'
+import EtcTermDetail from '@/components/etc/TermDetail'
 // import EtcVersion from '@/components/etc/Version'
 
 import ErrorPage from '@/components/common/Error'
 import ProxyPage from '@/components/common/ProxyPage'
 import Spinner from '@/components/common/Spinner'
 import Loading from '@/components/common/Loading'
+import CommonMonthCal from '@/components/common/MonthCal'
 
 import Swiper from '@/components/_sample/Swiper'
 import Gauge from '@/components/_sample/Gauge'
@@ -225,14 +226,14 @@ export const routes = [{
     allowPath: true
   }
 },
-// {
-//  path: '/client/logout',
-//  name: 'logout',
-//  component: Logout,
-//  meta: {
-//    allowPath: true
-//  }
-// },
+  // {
+  //  path: '/client/logout',
+  //  name: 'logout',
+  //  component: Logout,
+  //  meta: {
+  //    allowPath: true
+  //  }
+  // },
 {
   path: '/error',
   name: 'error',
@@ -277,7 +278,16 @@ export const routes = [{
     meta: {
       allowPath: true
     }
-  }]
+  },
+  {
+    path: 'monthCal',
+    alias: '/monthCal',
+    component: CommonMonthCal,
+    meta: {
+      allowPath: true
+    }
+  }
+  ]
 },
 {
   path: '/member',
@@ -860,7 +870,7 @@ export const routes = [{
       requiresAuth: true
     }
   },
-  // -------------통합 이후 삭제되어야 하는 부분
+    // -------------통합 이후 삭제되어야 하는 부분
   {
     path: 'designMain',
     alias: '/designMain',
@@ -981,8 +991,52 @@ export const routes = [{
     meta: {
       allowPath: true
     }
+  },
+  {
+    path: 'faqMain',
+    alias: '/faqMain',
+    name: 'etcFaqMain',
+    component: EtcFaqMain,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'faqList',
+    alias: '/faqList',
+    name: 'etcFaqList',
+    component: EtcFaqList,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'faqDetail',
+    alias: '/faqDetail',
+    name: 'etcFaqDetail',
+    component: EtcFaqDetail,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'term',
+    alias: '/term',
+    name: 'etcTerm',
+    component: EtcTerm,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'termDetail',
+    alias: '/termDetail',
+    name: 'etcTermDetail',
+    component: EtcTermDetail,
+    meta: {
+      allowPath: true
+    }
   }
-
   ]
 },
 {
@@ -1011,6 +1065,15 @@ export const routes = [{
     alias: '/selectFcLink',
     name: 'scrapSelectFcLink',
     component: ScrapSelectFcLink,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'resultFcLink',
+    alias: '/resultFcLink',
+    name: 'scrapResultFcLink',
+    component: ScrapResultFcLink,
     meta: {
       allowPath: true
     }

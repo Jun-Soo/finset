@@ -38,10 +38,14 @@ h3{
     &.exit{
        background: url("../images/common/loading_exit.png") no-repeat center / 75px; 
     }
+    &.share{
+       background: url("../images/common/loading_share.png") no-repeat center / 75px; 
+    }
     
     em{
         color: #333;
         font-size: 15px;
+        display: inline-block;
     }
 }
 
@@ -2194,6 +2198,119 @@ button.cal{
 }
 
 
+//   칼렌다   //
+
+.check-flex{
+    display: flex;
+    justify-content: space-between;
+    padding: 0 21px;
+    margin-top: 30px;
+    .today{
+        line-height: 28px;
+        border: 1px solid $col2;
+        padding: 0 13px;
+        color: $col2;
+        font-weight: 700;
+        background: #fff;
+        border-radius: 50px;
+    }
+    .wrap{
+        button{
+            margin-left: 6px;
+            width: 68px;
+            height: 30px;
+            line-height: 30px;
+            text-indent: 23px;
+            &.income{
+                background: url("../images/common/btn_income.png") no-repeat left top / 68px;
+                color: #4f82d6;
+                font-weight: 700;
+            }
+            &.debt{
+                background: url("../images/common/btn_debt.png") no-repeat left top / 68px;
+                color: #25bdd5;
+                font-weight: 700;
+            }
+            &.loan{
+                background: url("../images/common/btn_loan.png") no-repeat left top / 68px;
+                color: #e52638;
+                font-weight: 700;
+            }
+            &.on{
+                background-position: left bottom;
+                color: #fff;
+            }
+        }
+    }
+}
+
+.calendar{
+    padding: 0 21px;
+    table{
+        table-layout: fixed;
+        border-top: none;
+        //@include box-sizing(border-box);
+    }
+    th{
+        line-height: 34px;
+        color: #222;
+        text-align: center;
+        font-weight: 700;
+        border-bottom: 1px solid #222;
+        background: #fff;
+        border-right: none;
+        padding: 0;
+    }
+    td{
+        border-right: none;
+        text-align: center;
+        padding: 0;
+        vertical-align: top;
+        a{
+            display: block;
+            padding: 5px 0 0 0;
+            border: 1px solid #fff;
+            min-height: 80px;
+            .day{
+                line-height: 20px;
+                margin-bottom: 5px;
+                span{
+                    display: inline-block;
+                    width: 20px;
+                    height: 20px;
+                    background: #fff;
+                    &.today{
+                        background: $col1;
+                        color: #fff;
+                        font-weight: 700;
+                        border-radius: 100%;
+                    }
+                }
+            }
+            em{
+                line-height: 12px;
+                font-size: 8px;
+                color: #fff;
+                margin-bottom: 3px;
+                display: block;
+                &.debt{
+                    background: #25bdd5;
+                }
+                &.income{
+                    background: #4f82d6;
+                }
+                &.loan{
+                    background: $col1;
+                }
+            }
+            &.on{
+                border: 1px solid #213e6a;
+            }
+        }
+    }
+}
+
+
 /*   신용   */
 
 //   카드현황   //
@@ -3530,14 +3647,23 @@ button.cal{
         margin-top: 15px;
         margin-bottom: 25px;
     }
-    a{
-        display: block;
+    .input-wrap{
         border: 1px solid $lineColor;
-        text-indent: 15px;
-        color: #333;
-        font-size: 15px;
         line-height: 38px;
-        background: url("../images/share/btn_share.png") no-repeat right center / contain;
+        display: flex;
+        justify-content: space-between;
+        input[type="text"]{
+            border: none;
+            line-height: 38px;
+            text-indent: 15px;
+            color: #333;
+            font-size: 15px;
+        }
+        a{
+            width: 38px;
+            height: 38px;
+            background: url("../images/share/btn_share.png") no-repeat right center / contain;
+        }
     }
 }
 
@@ -3685,16 +3811,157 @@ button.cal{
 
 
 
+/*   기타   */
+
+//   고객센터   //
+
+.cs-top{
+    padding: 30px 21px 40px;
+    font-size: 20px;
+    line-height: 27px;
+    color: #222;
+    text-align: center;
+    border-bottom: 1px solid $lineColor;
+    em{
+        color: $col4;
+        font-weight: 700;
+        font-size: 20px;
+    }
+    .links{
+        margin-top: 30px;
+        text-align: center;
+        a{
+            display: inline-block;
+            font-size: 13px;
+            color: #000;
+            padding-top: 70px;
+            margin: 0 20px;
+            &.kakao{
+                background: url("../images/etc/kakao.png") no-repeat center top / 60px;
+            }
+            &.email{
+                background: url("../images/etc/email.png") no-repeat center top / 60px;
+            }
+        }
+    }
+    .cs-search{
+        line-height: 38px;
+        border: 1px solid $lineColor;
+        padding-left: 36px;
+        background: url("../images/etc/cs_search.png") no-repeat left top / 36px;
+        text-align: left;
+        input{
+            width: 95%;
+            line-height: 38px;
+        }
+    }
+}
+.cs-links{
+    margin-top: 30px;
+    padding: 0 21px;
+    p{
+        line-height: 51px;
+        border: 1px solid $lineColor;
+        border-radius: 10px;
+        margin-bottom: 15px;
+        display: flex;
+        justify-content: space-between;
+        a{
+            display: block;
+            line-height: 51px;
+            text-indent: 20px;
+            font-size: 14px;
+            color: #333;
+            font-weight: 700;
+            background: url("../images/common/btn_arrow.png") no-repeat 95% 50% / 7px;
+            width: 100%;
+        }
+        em{
+            &:first-child{
+                text-indent: 20px;
+                font-size: 14px;
+                color: #333;
+                font-weight: 700;
+            }
+            &:last-child{
+                padding-right: 20px;
+            }
+        }
+    }
+}
+
+.faq-list{
+    padding: 0 21px;
+    margin-top: 30px;
+    .title{
+        font-weight: 700;
+        font-size: 13px;
+    }
+    .list{
+        border: 1px solid $lineColor;
+        margin-top: 15px;
+        p{
+            &:first-child{
+                background: url("../images/etc/ico_faq.png") no-repeat 20px 15px / 30px;
+                padding-left: 60px;
+                padding-top: 20px;
+                a{
+                    color: #333;
+                    font-size: 15px;
+                    font-weight: 700;
+                    line-height: 19px;
+                    display: block;
+                    padding-right: 50px;
+                    padding-bottom: 20px;
+                    position: relative;
+                    &:after{
+                        display: inline-block;
+                        content: "";
+                        width: 17px;
+                        height: 10px;
+                        background: url("../images/etc/faq_arrow.png") no-repeat right  top / 17px;
+                        position: absolute;
+                        right: 20px;
+                        top: 5px;
+                    }
+                    &.on{
+                        &:after{
+                            background-position: right bottom;
+                        }
+                    }
+                }
+            }
+            &:last-child{
+                padding: 20px;
+                font-size: 13px;
+                line-height: 18px;
+                border-top:1px solid $lineColor;
+                display: none;
+            }
+        }
+    }
+}
 
 
+//   약관   //
 
-
-
-
-
-
-
-
+.terms{
+    padding: 30px 21px 0;
+    h2{
+        font-size: 15px;
+        color: #333;
+        font-weight: 700;
+    }
+    h3{
+        color: #333;
+        font-weight: 700;
+        margin-top: 25px;
+    }
+    .text{
+        margin-top: 15px;
+        line-height: 18px;
+    }
+}
 
 
 

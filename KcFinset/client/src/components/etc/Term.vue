@@ -1,18 +1,15 @@
 <template>
   <section>
-    <div class="loading success">
-      <em>금융사 연동 완료</em><br>금융사 연동이 완료되었습니다
-    </div>
-
-    <div class="btn-wrap float">
-      <a @click="$router.push('')" class="solid box blue">확인</a>
+    <div class="cs-links">
+      <p><a @click="$router.push('')">서비스 이용약관</a></p>
+      <p><a @click="$router.push('')">개인정보 처리방침</a></p>
     </div>
   </section>
 </template>
 
 <script>
 export default {
-  name: "ScrapSelectFcLink",
+  name: "EtcTerm",
   data() {
     return {};
   },
@@ -20,7 +17,7 @@ export default {
   computed: {},
   beforeCreate() {
     this.$store.state.header.type = "sub";
-    this.$store.state.title = "";
+    this.$store.state.title = "이용 정책 및 약관";
   },
   created() {},
   beforeMount() {},

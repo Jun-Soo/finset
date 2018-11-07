@@ -65,7 +65,7 @@ public class ScrapController {
 	private KcbManager kcbManager;
 	
 	/** VUE
-	 * 스크래핑 관련 금융사 내역 조회
+	 * 증권사 스크래핑 시작(OpenAPI)
 	 * @param model
 	 * @param request
 	 * @return
@@ -75,8 +75,14 @@ public class ScrapController {
 			HttpServletResponse response,
 			HttpServletRequest request, 
 			HttpSession session, 
-			Model model) {
-		logger.debug("startScrapSt.json called return: " + Constant.SUCCESS);
+			Model model,
+			String no_person,
+			String uuid,
+			String token) {
+		
+		scrapManager.startScrapFinance(no_person, uuid, token);
+		
+		
 		model.addAttribute("result", Constant.SUCCESS);
 		return "jsonView";
 	}
@@ -203,6 +209,7 @@ public class ScrapController {
 		token = "Bearer fbf794d3-9be6-4163-9df6-927d43736470";
 		scrapManager.checkAllFinance(no_person, uuid, dn, token);
 
+		model.addAttribute("token", token);
 		return "jsonView";
 	}
 	
@@ -322,19 +329,6 @@ public class ScrapController {
 		if(etcLinkInfo.size() > 0)	{
 			model.addAttribute("etcList", etcLinkInfo);
 		}
-		
-		//스크래핑 대상 은행 리스트 가져오기
-//		List<String> bankList = fincorpManager.getCooconFcCd(codeManager.getCodeId("cd_fin","은행"));
-//		String bankCode = String.join(",", bankList);
-//			
-//		List<String> cardList = fincorpManager.getCooconFcCd(codeManager.getCodeId("cd_fin","카드"));
-//		String cardCode = String.join(",", cardList);
-//		
-//		logger.debug("bankCode : " + bankCode);
-//		logger.debug("cardCode : " + cardCode);
-//		
-//		model.addAttribute("bank_code", bankCode);
-//		model.addAttribute("card_code", cardCode);
 		
 		return "jsonView";
 	}

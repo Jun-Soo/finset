@@ -25,12 +25,21 @@ $(function () {
     $(this).toggleClass('on')
   })
 
+  $(document).on('click', '.btn-search,.add-cate', function () {
+    $('aside.search-wrap').addClass('on')
+  })
+
   $(document).on('click', '.search-wrap .top button', function () {
     $('aside.search-wrap').removeClass('on')
   })
 
-  $(document).on('click', '.list02 .btn button', function () {
-    $(this).closest('.btn').toggleClass('on')
+  // $(document).on('click', '.list02 .btn button', function () {
+  //   $(this).closest('.btn').toggleClass('on')
+  // })
+
+  $(document).on('click', '.btn-menu-pop,.btn-interlock', function (e) {
+    $(this).closest('.btn-menu-wrap').toggleClass('on')
+    e.preventDefault()
   })
 
   $(document).on('click', '.accodion .top a', function (e) {
@@ -41,7 +50,11 @@ $(function () {
   // $(document).on('click', '.btn-onoff', function (e) {
   // $(this).toggleClass('on')
   // })
-  $(document).on('click', '.btn-onoff,.btn-star', function (e) {
+  // $(document).on('click', '.btn-onoff,.btn-star', function (e) {
+  //   $(this).toggleClass('on')
+  // })
+
+  $(document).on('click', '.btn-onoff,.btn-star,.check-flex .wrap button', function (e) {
     $(this).toggleClass('on')
   })
 
@@ -105,6 +118,18 @@ $(function () {
     } else {
       $(this).closest('.calc-acco').find('.acco-body-wrap').slideDown(500, 'easeInOutExpo')
       $(this).addClass('on')
+    }
+  })
+
+  $(document).on('click', '.faq-list .list a', function (e) {
+    if ($(this).hasClass('on')) {
+      $(this).closest('.list').find('p:eq(1)').slideUp(500, 'easeInOutExpo')
+      $(this).removeClass('on')
+      e.preventDefault()
+    } else {
+      $(this).closest('.list').find('p:eq(1)').slideDown(500, 'easeInOutExpo')
+      $(this).addClass('on')
+      e.preventDefault()
     }
   })
 })

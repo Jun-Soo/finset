@@ -18,7 +18,7 @@
 	<beans:bean id="securityReqFilter" class="com.koscom.util.SecurityReqFilter">
 	</beans:bean>
 	 -->
-	<!-- 패턴정의 
+	<!-- 패턴정의 -->
 	<http pattern="/ckeditor/**" security="none"/>
 	<http pattern="/fonts/**" security="none"/>
 	<http pattern="/img/**" security="none"/>
@@ -32,12 +32,16 @@
 	<http pattern="/m/credit/kcm*" security="none"/>
 	<http pattern="/m/credit/frameAcceptTerms*" security="none"/>
 	<http pattern="/m/scrap/**" security="none"/>
+	<http pattern="/m/customercenter/**" security="none"/>
+	<http pattern="/m/comm/**" security="none"/>
+	<http pattern="/code/**" security="none"/>
+	
 	
 	
 	<http pattern="/kcb/**" security="none"/>
 	<http pattern="/logout" security="none"/>
 	<http pattern="/favicon.ico" security="none"/>
-	-->
+	
 	
 	<http pattern="/html/**" security="none"/>
 	<http pattern="/m/base/**" security="none"/>

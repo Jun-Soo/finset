@@ -1258,7 +1258,7 @@ router.beforeEach((to, from, next) => {
       if (to.meta.requiresAuth) {
         const accessToken = localStorage.getItem('accessToken')
         if (!accessToken) {
-          alert('잘못된 접근입니다.')
+          alert('접근 권한이 없습니다. 시작페이지로 이동합니다.')
           setTimeout(function () {
             next('/home?hp=' + hp)
           }, 1000)
@@ -1269,7 +1269,7 @@ router.beforeEach((to, from, next) => {
         next()
       }
     } else {
-      alert('잘못된 접근입니다.')
+      alert('잘못된 접근입니다. 시작페이지로 이동합니다.')
       setTimeout(function () {
         next('/home?hp=' + hp)
       }, 1000)

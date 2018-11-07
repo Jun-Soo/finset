@@ -28,7 +28,7 @@ export default {
   created() {
     var _this = this;
     var frm = new FormData();
-    _this.$http.post("/m/login/framePersonLogout.crz", frm).then(response => {
+    _this.$http.post("/m/login/framePersonLogout.json", frm).then(response => {
       _this.$store.commit("LOGOUT");
       if (Constant.userAgent == "Android") {
         window.Android.setEndApp("Y");

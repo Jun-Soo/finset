@@ -490,7 +490,7 @@ public class LoginController {
 	 * @param fcmVO
 	 * @return
 	 */
-	@RequestMapping("/framePersonLogout.crz")
+	@RequestMapping("/framePersonLogout.json")
 	public String framePersonLogout(
 			HttpServletRequest request,
 			HttpSession session, 

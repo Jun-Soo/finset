@@ -4,8 +4,8 @@
     <div class="gnb-wrap">
       <div class="top">
         <div class="left">
-          <button class="alarm"></button>
-          <button class="logout"></button>
+          <button class="alarm" @click="$router.push('/etc/alarmHistory')"></button>
+          <button class="logout" @click="$router.push('/mypage/logout')"></button>
         </div>
         <div class="right">
           <button class="gnb-close"></button>
@@ -15,7 +15,7 @@
         <div class="info">
           <p class="name">{{this.$store.state.user.nmPerson}}</p>
           <p class="date">최근 접속 {{connectTime}} </p>
-          <a href="#" @click="clickButton('/mypage/info')">MYPAGE</a>
+          <a href="" @click="clickButton('/mypage/info')">MYPAGE</a>
         </div>
         <div class="links">
           <a href="#">고객센터</a>

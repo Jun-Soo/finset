@@ -396,17 +396,17 @@ public class ScrapManagerImpl implements ScrapManager {
 	public ReturnClass createFinanceAccount(String no_person, String uuid, String dn, String token, String com_alias)	{
 		String financeUrl = String.format(environment.getProperty("account.apiUrl"), com_alias)+"/vtaccount/create";
 		
-//		PersonVO personVO = null;
-//		personVO = personMapper.getPersonInfo(no_person);
-//		String ci = personVO.getKcb_ci();
-//		String hp = personVO.getHp();
+		PersonVO personVO = personMapper.getPersonInfo(no_person);
+		String ci = personVO.getKcb_ci();
+		String hp = personVO.getHp();
 		
-		//테스트용 임시데이터
+		//테스트용 임시데이터=======================================================
 		uuid = "1866DA0D99D6";
 		dn = "testdn123";
 		token = "Bearer fbf794d3-9be6-4163-9df6-927d43736470";
-		String ci = "1234567890";
-		String hp = "192168010001";
+		ci = "1234567890";
+		hp = "192168010001";
+		//테스트용 임시데이터=======================================================
 		
 		JsonObject jsonSendRoot = new JsonObject();
 		JsonObject jsonPartnerInfo = new JsonObject();
@@ -461,8 +461,8 @@ public class ScrapManagerImpl implements ScrapManager {
 					stockList.setNo_person(no_person);
 					stockList.setCd_fc(cd_fc);
 					stockList.setAccno(object.get("vtAccNo").getAsString());
-					stockList.setDt(object.get("vtAccAlias").getAsString());
-					//stockList.set(object.get("realAccNo").getAsString());
+					stockList.setAlias(object.get("vtAccAlias").getAsString());
+					stockList.setReal_accno(object.get("realAccNo").getAsString());
 					stockList.setAcc_type(object.get("accType").getAsString());
 					stockList.setState(object.get("status").getAsString());
 					scrapMapper.createStockList(stockList);
@@ -488,6 +488,49 @@ public class ScrapManagerImpl implements ScrapManager {
 			logger.error("금융투자회사 가상 계좌 개설이 실패하였습니다.");
 		}
 		return returnClass;
+	}
+	public String startScrapFinance(String no_person, String uuid, String token)	{
+		PersonVO personVO = personMapper.getPersonInfo(no_person);
+		String ci = personVO.getKcb_ci();
+		String hp = personVO.getHp();
+		
+		String cd_agency = codeManager.getCodeId("cd_agency","증권");
+    	
+    	FcLinkInfoVO fcLinkInfoVO = new FcLinkInfoVO();
+		fcLinkInfoVO.setNo_person(no_person);
+		fcLinkInfoVO.setCd_agency(cd_agency);
+		List<FcLinkInfoVO> fcLinkInfoList = scrapMapper.getFcLinkInfo(fcLinkInfoVO);
+		
+		for (int i = 0; i < fcLinkInfoList.size(); i++) {
+			FcLinkInfoVO fcLinkInfo = fcLinkInfoList.get(i);
+			String cd_fc = fcLinkInfo.getCd_fc();
+			String dn = fcLinkInfo.getCn();
+			String com_alias = fincorpMapper.getComAliasCdByCdFc(cd_fc);
+			
+			logger.debug("cd_fc		:" + cd_fc);
+			logger.debug("com_alias	:" + com_alias);
+			logger.debug("dn		:" + dn);
+			
+			// 계좌 조회 전 가상계좌 발급으로 가상계좌 내역 갱신  (uuid 처리 여부)
+			createFinanceAccount(no_person, uuid, dn, token, com_alias);
+			
+			StockListVO stockListVO = new StockListVO();
+			stockListVO.setNo_person(no_person);
+			stockListVO.setCd_fc(cd_fc);
+			
+			List<StockListVO> stockList = scrapMapper.listStockList(stockListVO);
+			for (StockListVO stockListInfo : stockList) {
+				logger.debug("stockListInfo.getCd_fc	:" + stockListInfo.getCd_fc());
+				logger.debug("stockListInfo.getAccno	:" + stockListInfo.getAccno());
+				logger.debug("stockListInfo.getAcc_type	:" + stockListInfo.getAcc_type());
+				
+			}
+
+			
+		}
+		
+    	
+		return "";
 	}
 	
 	public String createScrapFcList(String data)	{

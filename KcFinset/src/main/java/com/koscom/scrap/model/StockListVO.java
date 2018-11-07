@@ -7,11 +7,10 @@ public class StockListVO implements Serializable{
 	String no_person = "";			//회원관리번호
 	String cd_fc = "";				//금융사코드
 	String accno = "";				//가상계좌번호
-	String secu_no = "";			//증권사코드
-	String secu_nm = "";			//증권사명
+	String real_accno = "";			//실계좌번호
 	String state = "";				//상태
 	String acc_type = "";			//계좌종류
-	String dt = "";					//가상계좌Alias
+	String alias = "";				//가상계좌Alias
 	String id_frt = "";				//최초입력아이디
 	String dt_frt = "";				//최초입력시간
 	String id_lst = "";				//최종수정아이디
@@ -34,17 +33,11 @@ public class StockListVO implements Serializable{
 	public void setAccno(String accno) {
 		this.accno = accno;
 	}
-	public String getSecu_no() {
-		return secu_no;
+	public String getReal_accno() {
+		return real_accno;
 	}
-	public void setSecu_no(String secu_no) {
-		this.secu_no = secu_no;
-	}
-	public String getSecu_nm() {
-		return secu_nm;
-	}
-	public void setSecu_nm(String secu_nm) {
-		this.secu_nm = secu_nm;
+	public void setReal_accno(String real_accno) {
+		this.real_accno = real_accno;
 	}
 	public String getState() {
 		return state;
@@ -58,11 +51,11 @@ public class StockListVO implements Serializable{
 	public void setAcc_type(String acc_type) {
 		this.acc_type = acc_type;
 	}
-	public String getDt() {
-		return dt;
+	public String getAlias() {
+		return alias;
 	}
-	public void setDt(String dt) {
-		this.dt = dt;
+	public void setAlias(String alias) {
+		this.alias = alias;
 	}
 	public String getId_frt() {
 		return id_frt;
@@ -88,4 +81,5 @@ public class StockListVO implements Serializable{
 	public void setDt_lst(String dt_lst) {
 		this.dt_lst = dt_lst;
 	}
+
 }

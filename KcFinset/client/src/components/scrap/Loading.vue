@@ -101,9 +101,9 @@ export default {
       this.$http
         .post("/m/scrap/getScrapStList.json", formData)
         .then(function(response) {
-          var result = response.data.result;
-          alert("result : " + response.data.result);
+          var returnData = response.data;
           _this.isScrapStList = true;
+          _this.$store.state.token = returnData.token;
           if (_this.isScrapFcList && _this.isScrapStList) {
             _this.nextStep();
           }

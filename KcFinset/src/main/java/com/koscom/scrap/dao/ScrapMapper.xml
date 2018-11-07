@@ -23,22 +23,20 @@
 			 NO_PERSON
 			,CD_FC
 			,ACCNO
-			,SECU_NO
-			,SECU_NM
+			,REAL_ACCNO
 			,STATE
 			,ACC_TYPE
-			,DT
+			,ALIAS
 			,ID_FRT
 			,DT_FRT
 		) VALUES (
 			 #{no_person		,jdbcType=VARCHAR}
 			,#{cd_fc			,jdbcType=VARCHAR}
 			,#{accno			,jdbcType=VARCHAR}
-			,#{secu_no			,jdbcType=VARCHAR}
-			,#{secu_nm			,jdbcType=VARCHAR}
+			,#{real_accno		,jdbcType=VARCHAR}
 			,#{state			,jdbcType=VARCHAR}
 			,#{acc_type			,jdbcType=VARCHAR}
-			,#{dt				,jdbcType=VARCHAR}
+			,#{alias			,jdbcType=VARCHAR}
 			,#{id_frt			,jdbcType=VARCHAR}
 			,SYSDATE
 		)
@@ -48,11 +46,10 @@
 		SELECT NO_PERSON
 			, CD_FC
 			, ACCNO
-			, SECU_NO
-			, SECU_NM
+			, REAL_ACCNO
 			, STATE
 			, ACC_TYPE
-			, DT
+			, ALIAS
 			, ID_FRT
 			, DT_FRT
 			, ID_FRT
@@ -681,6 +678,7 @@
 		MERGE INTO SCR_CARD_CHARGE_INFO
 		USING DUAL
 		ON (NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
 			AND CHARGE_YYYYMM = #{charge_yyyymm, jdbcType=VARCHAR} )
 		WHEN MATCHED THEN
 		UPDATE

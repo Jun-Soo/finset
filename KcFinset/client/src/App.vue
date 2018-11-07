@@ -8,6 +8,8 @@
 <script>
 import Spinner from "./components/common/Spinner.vue";
 import ko from "vee-validate/dist/locale/ko.js";
+import Constant from "./assets/js/constant.js";
+
 export default {
   name: "App",
   data() {
@@ -28,6 +30,7 @@ export default {
   created() {
     window.resultAutoScrap = this.resultAutoScrap;
     window.saveScrapData = this.saveScrapData;
+    window.resultCheckDevicesUUID = this.resultCheckDevicesUUID;
   },
   methods: {
     sendPush: function() {
@@ -57,26 +60,7 @@ export default {
     },
     //증권사 스크래핑 요청 - back
     startScrapSt: function() {
-      var _this = this;
-
-      var formData = new FormData();
-      formData.append("no_person", this.$store.state.user.noPerson);
-      this.$http
-        .post("/m/scrap/startScrapSt.json", formData)
-        .then(function(response) {
-          var result = response.data;
-          console.log(
-            "응답 코드:" + result.cd_err + "/응답 메세지:" + result.msg_err
-          );
-          if (result.result != "00") {
-            _this.isScrapSuccess = false;
-          }
-          _this.isStScrapDone = true;
-
-          if (_this.isStScrapDone && _this.isFcScrapDone) {
-            _this.sendPush();
-          }
-        });
+      this.checkUUID();
     },
     //스크래핑 완료 (모바일에서 호출)
     resultAutoScrap: function(isSucccess) {
@@ -97,6 +81,43 @@ export default {
           console.log(
             "응답 코드:" + result.cd_err + "/응답 메세지:" + result.msg_err
           );
+        });
+    },
+    // UUID 체크
+    checkUUID: function() {
+      var _this = this;
+      if (Constant.userAgent == "iOS") {
+        //공인인증서 유무 체크 결과 콜백 이벤트
+        Jockey.on("resultCheckDevicesUUID", function(param) {
+          _this.resultCheckDevicesUUID(uuid);
+        });
+        Jockey.send("checkDevicesUUID");
+      } else if (Constant.userAgent == "Android") {
+        window.Android.checkDevicesUUID();
+      }
+    },
+    // UUID 체크 결과(모바일에서 호출)
+    resultCheckDevicesUUID: function(uuid) {
+      var _this = this;
+      var formData = new FormData();
+      formData.append("no_person", this.$store.state.user.noPerson);
+      formData.append("uuid", uuid);
+      formData.append("token", this.$store.state.token);
+      this.$http
+        .post("/m/scrap/startScrapSt.json", formData)
+        .then(function(response) {
+          var result = response.data;
+          console.log(
+            "응답 코드:" + result.cd_err + "/응답 메세지:" + result.msg_err
+          );
+          if (result.result != "00") {
+            _this.isScrapSuccess = false;
+          }
+          _this.isStScrapDone = true;
+
+          if (_this.isStScrapDone && _this.isFcScrapDone) {
+            _this.sendPush();
+          }
         });
     }
   }

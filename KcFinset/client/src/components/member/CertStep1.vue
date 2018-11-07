@@ -94,6 +94,7 @@ import Terms7 from "./Terms7.vue";
 import Terms8 from "./Terms8.vue";
 import Terms9 from "./Terms9.vue";
 import Terms10 from "./Terms10.vue";
+import Popup from "./sub/Popup.vue";
 
 export default {
   name: "certStep1",
@@ -117,7 +118,8 @@ export default {
     Terms7: Terms7,
     Terms8: Terms8,
     Terms9: Terms9,
-    Terms10: Terms10
+    Terms10: Terms10,
+    Popup: Popup
   },
   beforeCreate() {},
   created() {
@@ -126,6 +128,13 @@ export default {
     }
     this.$store.state.title = "약관동의";
     this.$store.state.header.type = "sub";
+
+    var frm = new FormData();
+    frm.append("code_value", "1.0");
+    frm.append("code_group", "OPENAPI_TERMS");
+    this.$http.post("/m/comm/getOpenApiTerm.json", frm).then(response => {
+      debugger;
+    });
   },
   beforeMount() {},
   mounted() {
@@ -185,6 +194,7 @@ export default {
     },
     openPop: function(gubun) {
       var _this = this;
+      alert('ss');
       _this.$modals.show("my-modal" + gubun);
     }
   }

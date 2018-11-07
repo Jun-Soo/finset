@@ -11,7 +11,7 @@ import store from './comm/store'
 
 import toast from 'vue2-toast'
 import VueCarousel from 'vue-carousel'
-import VueModal from 'vue2-modal'
+import VueModal from './components/member/sub/index'
 
 import 'jquery'
 import 'vue2-toast/lib/toast.css'

@@ -5,12 +5,15 @@
     </div>
 
     <div class="btn-wrap float">
-      <a @click="$router.push(' ')" class="solid box blue">다시 로그인하기</a>
+      <a @click="reLogin()" class="solid box blue">다시 로그인하기</a>
     </div>
   </section>
 </template>
 
 <script>
+import Constant from "./../../assets/js/constant.js";
+import Common from "./../../assets/js/common.js";
+
 export default {
   name: "MypageLogout",
   data() {
@@ -22,17 +25,26 @@ export default {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "로그아웃 완료";
   },
-  created() {},
+  created() {
+    var _this = this;
+    var frm = new FormData();
+    _this.$http.post("/m/login/framePersonLogout.crz", frm).then(response => {
+      _this.$store.commit("LOGOUT");
+      if (Constant.userAgent == "Android") {
+        window.Android.setEndApp("Y");
+      }
+    });
+  },
   beforeMount() {},
   mounted() {},
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    reLogin: function() {
+      this.$router.push("/home?hp=" + localStorage.getItem("hp"));
+    }
+  }
 };
 </script>
-
-<!-- Add 'scoped' attribute to limit CSS to this component only -->
-<style lang="scss">
-</style>

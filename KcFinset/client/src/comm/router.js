@@ -4,7 +4,7 @@ import Router from 'vue-router'
 import Home from '@/components/main/Home'
 import FinsetIntro from '@/components/main/Intro'
 import FinsetMain from '@/components/main/FinsetMain'
-import Logout from '@/components/member/Logout'
+// import Logout from '@/components/member/Logout'
 
 import MemberHome from '@/components/member/Home'
 import MemberCertStep1 from '@/components/member/CertStep1'
@@ -225,14 +225,14 @@ export const routes = [{
     allowPath: true
   }
 },
-{
-  path: '/client/logout',
-  name: 'logout',
-  component: Logout,
-  meta: {
-    allowPath: true
-  }
-},
+// {
+//  path: '/client/logout',
+//  name: 'logout',
+//  component: Logout,
+//  meta: {
+//    allowPath: true
+//  }
+// },
 {
   path: '/error',
   name: 'error',
@@ -860,7 +860,7 @@ export const routes = [{
       requiresAuth: true
     }
   },
-    // -------------통합 이후 삭제되어야 하는 부분
+  // -------------통합 이후 삭제되어야 하는 부분
   {
     path: 'designMain',
     alias: '/designMain',

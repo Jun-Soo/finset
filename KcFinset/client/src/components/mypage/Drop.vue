@@ -46,7 +46,12 @@ export default {
   updated() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    dropPerson : function(){
+      let url = '/m/customercenter/frameCustomerQuit.crz';
+    }
+
+  }
 };
 </script>
 

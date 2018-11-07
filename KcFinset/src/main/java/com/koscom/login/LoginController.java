@@ -524,7 +524,7 @@ public class LoginController {
 			
 		}
 		
-		return "/person/framePersonLogout";
+		return "jsonView";
 	}
 	
 	/**

@@ -99,7 +99,7 @@ public class CustomerCenterController implements Constant {
 		PersonVO personVO = personManager.getPersonInfo(no_person);
 		model.addAttribute("personVO", personVO);
 		logger.info("personVO====MAIN======" + personVO.toString());
-		return "/customercenter/frameCustomerCenterMain";
+		return "jsonView";
 	}
 
 	/**
@@ -875,7 +875,7 @@ public class CustomerCenterController implements Constant {
 
 		model.addAttribute("listPushSetting", personManager.getPushSettingInfo(no_person));
 		
-		return "/customercenter/frameCustomerNotificationSetting";
+		return "jsonView";
 	}
 	
 	/**

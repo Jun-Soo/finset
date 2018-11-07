@@ -47,14 +47,25 @@ Vue.use(window.VueCharts)
 Vue.use(VueModal)
 
 Vue.config.debug = true
-Vue.config.devtools = true
+Vue.config.devtools = false
 Vue.config.productionTip = false
 
 axios.interceptors.request.use(function (config) {
   config.headers.AJAX = true
   return config
-}, function (err) {
-  return Promise.reject(err)
+})
+axios.interceptors.response.use((response) => {
+  return response
+}, function (error) {
+  debugger
+  if (error.response.status === 401) {
+    console.log('unauthorized, logging out ...')
+    router.replace('/mypage/logout')
+  } else if (error.response.status === 403) {
+    console.log('unauthorized, logging out ...')
+    router.replace('/mypage/logout')
+  }
+  return Promise.reject(error.response)
 })
 Vue.prototype.$http = axios
 

@@ -56,8 +56,8 @@
 					authentication-failure-handler-ref="loginManager"
 					/>
 		<!-- 중복로그인 -->
-		<session-management invalid-session-url="/mypage/logout">
-			<concurrency-control max-sessions="1" expired-url="/home?denied=92" />
+		<session-management>
+			<concurrency-control max-sessions="1" />
 		</session-management>
 		<logout invalidate-session="true" />
 		

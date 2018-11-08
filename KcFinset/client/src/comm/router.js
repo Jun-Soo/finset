@@ -497,6 +497,7 @@ export const routes = [{
   {
     path: 'raiseInsPersonInfo',
     alias: '/raiseInsPersonInfo',
+    name: 'CreditRaiseInsPersonInfo',
     component: CreditRaiseInsPersonInfo,
     meta: {
       allowPath: true,

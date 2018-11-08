@@ -54,8 +54,8 @@ import CreditLoanInfo from '@/components/credit/LoanInfo'
 import CreditOverdueInfo from '@/components/credit/OverdueInfo'
 import CreditGuaranteeInfo from '@/components/credit/GuaranteeInfo'
 import CreditSmartReport from '@/components/credit/SmartReport'
-// import CreditRaiseMain from '@/components/credit/RaiseMain'
-// import CreditRaiseInfo from '@/components/credit/RaiseInfo'
+import CreditRaiseMain from '@/components/credit/RaiseMain'
+import CreditRaiseInfo from '@/components/credit/RaiseInfo'
 import CreditRaiseInsPersonInfo from '@/components/credit/RaiseInsPersonInfo'
 import CreditRaiseInsPersonInfoNts from '@/components/credit/RaiseInsPersonInfoNts'
 import CreditLoading from '@/components/credit/Loading'
@@ -516,6 +516,24 @@ export const routes = [{
     path: 'loading',
     alias: '/loading',
     component: CreditLoading,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'raiseMain',
+    alias: '/raiseMain',
+    component: CreditRaiseMain,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'raiseInfo',
+    alias: '/raiseInfo',
+    component: CreditRaiseInfo,
     meta: {
       allowPath: true,
       requiresAuth: true

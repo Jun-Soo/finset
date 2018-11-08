@@ -1577,6 +1577,10 @@ aside.search-wrap .action.btn1 {
   background: #bf65f3;
 }
 
+.list01 .item .top p.text em {
+  padding-left: 10px;
+}
+
 .list01 .item .top p.corp {
   font-weight: 700;
   color: #222;
@@ -1766,6 +1770,12 @@ aside.search-wrap .action.btn1 {
 .list01 .item .text-wrap .right .value span em {
   margin-left: 2px;
   font-size: 14px;
+}
+
+.list01 .item .text-result {
+  font-size: 14px; 
+  color: #333; 
+  margin-top: 15px;
 }
 
 .list01 .item .flex-wrap {
@@ -2184,6 +2194,11 @@ aside.search-wrap .action.btn1 {
   font-weight: 400;
 }
 
+.con-top p em.red { 
+	font-weight: 700; 
+	color: #e52638; 
+}
+
 .con-top a {
   font-size: 14px;
   color: #9b9489;
@@ -2239,6 +2254,10 @@ aside.search-wrap .action.btn1 {
 
 .con-top.share-top {
   background: url("../images/share/con_top_share.png") no-repeat top center/contain;
+}
+
+.con-top.credit-up { 
+	background: url("../images/credit/con_top_creditup.png") no-repeat top center/contain; 
 }
 
 /*   Main   */

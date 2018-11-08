@@ -1,15 +1,17 @@
 <template>
   <section id="content">
     <div class="cert-finger">
-        <p class="text">지문을 입력해 주세요.</p> 
-        <p class="textred" id="err_message" v-if="cntFailFinger> 0" >{{ errMsg }}</p>       
-      </div>
-      <div class="certcode-wrap">
-        <p class="text"><router-link to="/member/certCodeLogin"><u>
-          비밀번호를 입력 하시겠습니까?
-        </u></router-link></p>
-      </div>
-	</section>
+      <p class="text">지문을 입력해 주세요.</p>
+      <p class="textred" id="err_message" v-if="cntFailFinger> 0">{{ errMsg }}</p>
+    </div>
+    <div class="certcode-wrap">
+      <p class="text">
+        <router-link to="/member/certCodeLogin"><u>
+            비밀번호를 입력 하시겠습니까?
+          </u></router-link>
+      </p>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -59,11 +61,11 @@ export default {
   methods: {
     login: function() {
       var _this = this;
-
+      debugger;
       var querystring = require("querystring");
       var data = querystring.stringify({
         j_username: _this.username,
-        j_password: _this.$store.state.user.authToken
+        j_password: _this.password
       });
       this.$http
         .post(_this.$store.state.loginPath, data, {
@@ -73,7 +75,6 @@ export default {
         })
         .then(response => {
           if (response.data.result == "10") {
-
             //정상
             if (Constant.userAgent == "iOS") {
               Jockey.send("setNoPerson", {
@@ -128,7 +129,18 @@ export default {
         if (Constant.userAgent == "Android") {
           window.Android.closeFingerPrint();
         }
-        this.login();
+
+        if (this.$store.state.ynReload == "Y") {
+          if (Constant.userAgent == "Android") {
+            window.Android.closeWebView();
+          } else if (Constant.userAgent == "iOS") {
+            Jockey.send("closeWebView", {});
+          }
+          return false;
+        } else {
+          _this.password = _this.$store.state.user.authToken;
+          this.login();
+        }
       } else {
         //지문 틀린 누적횟수 증가
         _this.cntFailFinger += 1;

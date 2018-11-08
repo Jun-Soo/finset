@@ -66,8 +66,6 @@ export default {
   beforeCreate() {},
   created() {
     this.$store.state.title = "비밀번호 확인";
-    window.resultFingerPrint = this.resultFingerPrint;
-    // window.resultFingerPrint = this.resultFingerPrint
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
 
@@ -104,10 +102,10 @@ export default {
       if (_this.password.length > 3) {
         _this.classPass4 = "border-color: #111";
 
+        debugger;
         //validator
         if (this.$store.state.ynReload == "Y") {
-          window.Android.closeWebView();
-          return false;
+          _this.passCheck();
         } else {
           _this.login();
         }
@@ -212,6 +210,31 @@ export default {
         .catch(e => {
           this.$toast.center(ko.messages.error);
         });
+    },
+    passCheck: function() {
+      var _this = this;
+
+      var formData = new FormData();
+      formData.append("no_person", _this.username);
+      formData.append("pass_person", _this.password);
+
+      this.$http
+        .post("/m/login/loginChkCode.json", formData)
+        .then(response => {
+          console.log(response.data.result);
+          if (response.data.result == "00") {
+            //정상
+            if (Constant.userAgent == "iOS") {
+              Jockey.send("closeWebView", {});
+            } else if (Constant.userAgent == "Android") {
+              window.Android.closeWebView();
+              return false;
+            }
+          }
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+        });
     }
   },
   /***
@@ -226,9 +249,14 @@ export default {
       }
 
       if (this.$store.state.ynReload == "Y") {
-        window.Android.closeWebView();
+        if (Constant.userAgent == "Android") {
+          window.Android.closeWebView();
+        } else if (Constant.userAgent == "iOS") {
+          Jockey.send("closeWebView", {});
+        }
         return false;
       } else {
+        _this.password = _this.$store.state.user.authToken;
         _this.login();
       }
     } else {

@@ -471,19 +471,7 @@ public class LoginController {
         return "jsonView";
     }
 	
-
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/**
+	/** VUE
 	 * 로그아웃 업데이트
 	 * @param model
 	 * @param request
@@ -527,226 +515,35 @@ public class LoginController {
 		return "jsonView";
 	}
 	
-	/**
-	 * 로그아웃 업데이트
+	/** VUE
+	 * 지문인증설정 (비밀번호확인)
 	 * @param model
 	 * @param request
-	 * @param fcmVO
 	 * @return
-	 * TODO 사용여부 확인 필요
 	 */
-	@RequestMapping("/modifyYnUseAndLogout.json")
-	public String modifyYnUseAndLogout(
-			HttpServletRequest request,
-			HttpSession session, 
-			PersonVO personVO,
-			Model model) {
+	@RequestMapping("/loginChkCode.json")
+	public String fingerChkCode(HttpSession session, Model model, HttpServletRequest request, PersonVO personVO) {
+
+		int pwdCheck = personManager.checkPersonPass(personVO);
 		
-		String no_person = (String) session.getAttribute("no_person");
-		logger.info("no_person : "+no_person);
-		personVO.setNo_person(no_person);
-		ReturnClass returnClass = personManager.modifyYnUseAndLogout((PersonVO)SessionUtil.setUser(personVO, session));
-		
-		logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
-		model.addAttribute("result" , returnClass.getCd_result());
-		model.addAttribute("message" , returnClass.getMessage());
+		if(pwdCheck > 0) {	//암호화 비밀번호 체크
+			model.addAttribute("result", Constant.SUCCESS);
+		} else {
+			model.addAttribute("message", "비밀번호가 일치하지 않습니다.");
+			model.addAttribute("result", Constant.FAILED);
+		}
 		
 		return "jsonView";
 	}
 	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/**
-	 * 최초 비밀번호 입력 화면
-	 * @param response
-	 * @param request
+	/** APP
+	 * NATIVE finger 정보 get
 	 * @param model
-	 * @param session
-	 * @param PersonForm
+	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/frameSecurityCodeConfirm.crz")
-	public String frameSecurityCodeConfirm(
-			HttpServletResponse response, 
-			HttpServletRequest request, 
-			HttpSession session, 
-			PersonForm personForm,
-			Model model) {
-		
-		String denied = request.getParameter("denied");
-		
-		if(!StringUtil.isEmpty(denied)){
-			String msg = "";
-			int cd_result = NumberUtil.stringToInt(denied);
-			//로그인 에러 코드에 따라 메시지 출력
-			switch (cd_result) {
-			case 21: 
-				msg = "등록되지 않은 사용자 입니다.";
-				break;
-			case 22:
-				msg = "비밀번호를 잘못 입력하였습니다.";
-				break;
-			case 91:
-				msg = "시스템에 접근이 <strong>허용되지 않은 IP 주소</strong>입니다.";
-				break;
-			case 92:
-				msg = "다른 사용자가 로그인을 시도하였습니다.";
-				break;
-			case 100:
-				msg = "아이디를 입력해주세요.";
-				break;
-			case 101:
-				msg = "패스워드를 입력해주세요.";
-				break;
-			}
-			model.addAttribute("msg", msg);
-			return "/login/frameSecurityCodeConfirm";
-		}
-		
-		String rtnUrl 	= "";
-		String noPerson = (String)session.getAttribute("no_person");
-		String hp = (String)session.getAttribute("hp");
-
-		PersonVO personVO = new PersonVO();
-
-		logger.debug("접속 IP			: " + request.getRemoteAddr());
-		logger.debug("세션 NO_PERSON 	: " + noPerson);
-		logger.debug("받은 핸드폰 번호 	: " + personForm.getHp());
-
-		
-		model.addAttribute("no_person", noPerson);
-		
-		//전화번호값이 넘어오면 session 초기화 처리
-		if(!StringUtil.isEmpty(personForm.getHp())) {
-			noPerson = "";
-			session.setAttribute("expiredTime", "");
-			session.setAttribute("rememberMe",  "");
-			session.setAttribute("no_person", 	"");
-			session.setAttribute("yn_reload",   "");
-		}
-		
-		//session에 전화번호와 URL정보가 담겨있을 경우
-		if(!StringUtil.isEmpty(hp)) {
-			personForm.setHp(session.getAttribute("hp").toString());
-		}
-		
-		if(StringUtil.isEmpty(noPerson)) {
-			
-			// 1.전화번호 조회
-			personVO = personManager.getPersonInfoHp(personForm.getHp());
-			
-			if(personVO != null) {
-				
-				model.addAttribute("no_token", personVO.getPass_person());
-				
-				logger.debug("personVO2.toString() === " + personVO.toString());
-				logger.debug("========= 세션 없는데 번호 있을경우 =======");
-				
-				setAutoLoginWithCookies(session, response, personVO.getNo_person());
-				
-				//사용여부 N:회원가입, Y:로그인화면
-				if(personVO.getYn_use().equals("N")) {
-					rtnUrl = "/login/frameCertStep1";
-				} else {
-					
-					if(StringUtil.isEmpty(personVO.getPass_person())) {
-						session.setAttribute("cert_result_value", Constant.SUCCESS);
-						rtnUrl = "/base/frameSecurityCode";
-					} else if(Integer.parseInt(StringUtil.NVL(personVO.getCnt_fail_pwd(), "0")) > 4) { //비밀번호 실패건수
-						model.addAttribute("personHp", personVO.getHp());
-						rtnUrl = "/person/frameFindPwdStep1";
-					} else if("Y".equals(personVO.getYn_fingerprint()) && Integer.parseInt(StringUtil.NVL(personVO.getCnt_fail_finger(), "0")) < 5) {
-						rtnUrl = "/login/frameFingerConfirm";
-					}else {
-						rtnUrl = "/login/frameSecurityCodeConfirm";
-					}
-				}
-				
-				//지문 활성화 일 경우 체크 Y일때만 지문 활성화 N or 빈값 일 경우 비활성화
-				model.addAttribute("yn_fingerprint", 	personVO.getYn_fingerprint());
-				model.addAttribute("cd_push", 			personVO.getCd_push());
-				model.addAttribute("yn_push", 			personVO.getYn_push());
-				model.addAttribute("cnt_fail_pwd", 		personVO.getCnt_fail_pwd());
-				model.addAttribute("cnt_fail_finger", 	personVO.getCnt_fail_finger());
-				
-				logger.debug(request.getHeader("user-agent"));
-				logger.debug(personVO.toString());
-				logger.debug(request.getRemoteAddr());
-
-				model.addAttribute("securityResult", "Y");
-
-				//App Version Check
-				CodeInfo codeInfo = new CodeInfo();
-				if(!"1".equals(StringUtil.NVL(personVO.getYn_os(), "1"))) {
-					codeInfo = codeManager.getCodeInfo("_CONF_SYSTEM", "IOS_VERSION");
-				} else {
-					codeInfo = codeManager.getCodeInfo("_CONF_SYSTEM", "ANDROID_VERSION");
-				}
-				model.addAttribute("app_version", 	codeInfo.getNm_code());	
-				
-			} else {
-				rtnUrl = "/login/frameServiceIntro";
-			}
-			
-		} else {
-			
-			personVO = personManager.getPersonInfo(noPerson);
-			
-			model.addAttribute("no_token", personVO.getPass_person());
-			
-			//지문 활성화 일 경우 체크 Y일때만 지문 활성화 N or 빈값 일 경우 비활성화
-			model.addAttribute("yn_fingerprint", 	personVO.getYn_fingerprint());
-			model.addAttribute("cd_push", 			personVO.getCd_push());
-			model.addAttribute("yn_push", 			personVO.getYn_push());
-			model.addAttribute("cnt_fail_pwd", 		personVO.getCnt_fail_pwd());
-			model.addAttribute("cnt_fail_finger", 	personVO.getCnt_fail_finger());
-			
-			logger.debug(request.getHeader("user-agent"));
-			logger.debug(request.getRemoteAddr());
-
-			model.addAttribute("securityResult", "Y");
-			
-			//사용여부 N:회원가입, Y:로그인화면
-			if(personVO.getYn_use().equals("N")) {
-				rtnUrl = "/login/frameCertStep1";
-			} else {
-				
-				if(StringUtil.isEmpty(personVO.getPass_person())) {
-					session.setAttribute("cert_result_value", Constant.SUCCESS);
-					rtnUrl = "/base/frameSecurityCode";
-				} else if(Integer.parseInt(StringUtil.NVL(personVO.getCnt_fail_pwd(), "0")) > 4) { //비밀번호 실패건수
-					model.addAttribute("personHp", personVO.getHp());
-					rtnUrl = "/person/frameFindPwdStep1";
-				} else if("Y".equals(personVO.getYn_fingerprint()) && Integer.parseInt(StringUtil.NVL(personVO.getCnt_fail_finger(), "0")) < 5) {
-					rtnUrl = "/login/frameFingerConfirm";
-				} else {
-					rtnUrl = "/login/frameSecurityCodeConfirm";
-				}
-			}
-		}
-
-		return rtnUrl;
-	}
-	
 	@RequestMapping("/getYnfingerInfo.json")
-	public String getYnfingerInfo(
-			HttpSession session, 
-			Model model) throws Exception {
+	public String getYnfingerInfo(HttpSession session, Model model, HttpServletRequest request) throws Exception {
 		
 		String noPerson = "";
 		noPerson = (String)session.getAttribute("no_person");
@@ -764,233 +561,14 @@ public class LoginController {
 	}
 	
 	/**
-	 * 비밀번호 입력 화면
-	 * @param request
-	 * @param model
-	 * @param session
-	 * @param personForm
-	 * @return
-	 */
-	@RequestMapping("/frameCodeConfirm.crz")
-	public String frameCodeConfirm(
-			HttpServletRequest request,
-			HttpSession session,
-			PersonForm personForm, 
-			Model model) throws FinsetException {
-		
-		String noPerson = (String)session.getAttribute("no_person");
-		
-		PersonVO personVO = new PersonVO();
-		personVO = personManager.getPersonInfo(noPerson);
-		logger.debug("personVO.toString()"+personVO.toString());
-		
-		model.addAttribute("no_person", noPerson);
-		model.addAttribute("no_token", personVO.getPass_person());
-		model.addAttribute("yn_fingerprint", personVO.getYn_fingerprint());
-		model.addAttribute("cd_push", personVO.getCd_push());
-		model.addAttribute("yn_push", personVO.getYn_push());
-		model.addAttribute("cnt_fail_pwd", personVO.getCnt_fail_pwd());
-		model.addAttribute("cnt_fail_finger", personVO.getCnt_fail_finger());
-		
-		if(!StringUtil.isEmpty(personForm.getYn_reload())) {
-			session.setAttribute("yn_reload", personForm.getYn_reload());
-		}
-		model.addAttribute("yn_reload", (String)session.getAttribute("yn_reload"));
-		model.addAttribute("securityResult", "Y");
-			
-		logger.debug(request.getHeader("user-agent"));
-		logger.debug(request.getRemoteAddr());
-		
-		return "/login/frameSecurityCodeConfirm";
-	}
-	
-	/**
-	 * 지문 인증화면
-	 * @param model
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/frameFingerConfirm.crz")
-	public String frameFingerConfirm(
-			HttpSession session,
-			PersonForm personForm,
-			Model model) throws FinsetException {
-		
-		String noPerson = (String) session.getAttribute("no_person");
-		
-		PersonVO personVO = new PersonVO();
-		personVO = personManager.getPersonInfo(noPerson);
-		
-		model.addAttribute("cnt_fail_finger", personVO.getCnt_fail_finger());
-		model.addAttribute("no_token", personVO.getPass_person());
-		if(!StringUtil.isEmpty(personForm.getYn_reload())) {
-			session.setAttribute("yn_reload", personForm.getYn_reload());
-		}
-		model.addAttribute("yn_reload", (String)session.getAttribute("yn_reload"));
-		
-		return "/login/frameFingerConfirm";
-	}
-	
-	/**
-	 * 로그인 후 Kcb 크롤링 호출용 화면
-	 * @param model
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/frameKcbCrawling.crz")
-	public String frameKcbCrawling(
-			HttpServletRequest request,
-			Model model) {
-		
-		model.addAttribute("linkUrl", (String)request.getAttribute("linkUrl"));
-		return "/login/frameKcbCrawling";
-	}
-	
-	/**
-	 * Kcb 크롤링 호출
-	 * @param model
-	 * @param request
-	 * @return
-	 * @throws IOException 
-	 * @throws FinsetException 
-	 * @throws UnsupportedEncodingException 
-	 */
-	@RequestMapping("/getKcbCrawling.json")
-	public String getKcbCrawling(
-			HttpServletRequest request, 
-			HttpSession session, 
-			Model model) throws Exception {
-		
-		String noPerson = (String) session.getAttribute("no_person");
-		String profile  = environment.getProperty("service.profile");
-		
-		logger.debug(":::::::::::::::::::::::::::::::::::: KCB START ::::::::::::::::::::::::::::::::::::");
-		PersonVO 			person 	= personManager.getPersonInfo(noPerson);
-		//KcbCreditInfoVO 	info 	= new KcbCreditInfoVO();
-
-        boolean isSuccess = false;
-
-        if("LOCAL".equals(profile)) {
-			
-			logger.debug("continue");
-			model.addAttribute("cd_result", Constant.SUCCESS);
-			
-		} else {
-			
-//			try {
-//
-//				//600420 크롤링 시작
-//				logger.debug(":::::::::::::::::::::::::::::::::::: KCB CRAW START ::::::::::::::::::::::::::::::::::::");
-//				info.setNoPerson(person.getNo_person());
-//				info.setNmCust(person.getNm_person());
-//				info.setNmIf("600420");
-//				info.setCd_regist("09");	//01 신규, 09 URL
-//				info.setBgn(person.getBgn());
-//				info.setDi(person.getKcb_di());
-//				info.setHp(person.getHp());
-//				
-//				ReturnClass returnClass = kcbManager.urlCrawling(info);
-//				
-//				logger.debug(":::::::::::::::::::::::::::::::::::: KCB CRAW END ::::::::::::::::::::::::::::::::::::");
-//				
-//				//lca parsing
-//				returnClass = kcbManager.parseCrawling(info);
-//				if(Constant.SUCCESS.equals(returnClass.getCd_result())) {
-//					
-//					//TODO call Package
-//					/*** 부채TABLE DATA생성 proc call ***/
-//					debtManager.debtPdocRun(person.getNo_person());
-//	                isSuccess = true;
-//				}
-//				
-//				model.addAttribute("cd_result", returnClass.getCd_result());
-//                
-//			} catch (FinsetException e) {
-//                isSuccess = false;
-//                LogUtil.error(logger, e);
-//                throw e;
-//			} catch (IOException e) {
-//                isSuccess = false;
-//                LogUtil.error(logger, e);
-//                throw e;
-//			} finally {
-//                if(isSuccess == false) {
-//                    //error 발생시 당일 전문 데이터 DELETE
-//                    kcbManager.deleteKcbCb(person.getNo_person());
-//                    model.addAttribute("cd_result", Constant.FAILED);
-//                }
-//			}
-		}
-			
-		logger.debug(":::::::::::::::::::::::::::::::::::: KCB END ::::::::::::::::::::::::::::::::::::");
-		
-		return "jsonView";
-	}
-	
-	/**
-	 * 본인인증화면 (약관)
-	 * @param model 
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/frameCertStep1.crz")
-	public String frameCertStep1() {
-		return "/login/frameCertStep1";
-	}
-	
-	/**
-	 * 본인인증화면
-	 * @param model
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/frameCertStep2.crz")
-	public String frameCertStep2(
-			PersonVO personVO,
-			Model model) {
-		
-		model.addAttribute("yn_eventPush", personVO.getYn_eventPush()); //이벤트푸시 수신여부
-		return "/login/frameCertStep2";
-	}
-	
-	//쿠키, 세션 값 맺는 메소드
-	private void setAutoLoginWithCookies(HttpSession session, HttpServletResponse response, String noPerson) {
-		
-		String currentDateTime = DateUtil.getCurrentDateTime(DateUtil.DATE_HMS_PATTERN);
-		String expiredTime =  DateUtil.addHours(currentDateTime, 720);
-
-		/*
-		Cookie _rememberMe = new Cookie("rememberMe", "Y");
-		_rememberMe.setMaxAge(30*24*60*60);
-		_rememberMe.setPath("/");
-		response.addCookie(_rememberMe);
-
-		Cookie _noPerson = new Cookie("noPerson", noPerson);
-		_noPerson.setMaxAge(30*24*60*60);
-		_noPerson.setPath("/");
-		response.addCookie(_noPerson);
-
-		Cookie _expiredTime = new Cookie("expiredTime", expiredTime);
-		_expiredTime.setMaxAge(30*24*60*60);
-		_expiredTime.setPath("/");
-		response.addCookie(_expiredTime);
-		*/
-		
-		session.setAttribute("expiredTime", expiredTime);
-		session.setAttribute("rememberMe", "Y");
-		session.setAttribute("no_person", noPerson);
-	}
-	
-	/**
 	 * 인증서 비밀번호 복호화
 	 * : App에서 호출하나, 보안문제로 Deprecated
 	 * @param encPwd
 	 * @return
 	 */
-	@Deprecated
-	@RequestMapping("/getDecodedPassword.crz")
+	@RequestMapping("/getDecodedPassword.json")
 	@ResponseBody
-	public ReturnClass getDecodedPassword(@RequestParam("encPwd") String encPwd) {
+	public String getDecodedPassword(@RequestParam("encPwd") String encPwd, Model model) {
 		
 		ReturnClass returnClass = new ReturnClass();
 
@@ -999,12 +577,15 @@ public class LoginController {
 		String decPwd = secureManager.getDecodedPassword(encPwd);
 		
 		if ( encPwd.equals( decPwd ) ) {
-			returnClass.setCd_result( Constant.FAILED );
-			returnClass.setMessage("복호화에 실패하였습니다.");
+			model.addAttribute("cd_result", Constant.FAILED);
+			model.addAttribute("message", "복호화에 실패하였습니다.");
 		} else {
-			returnClass.setCd_result( Constant.SUCCESS );
-			returnClass.setMessage(decPwd);
+			model.addAttribute("cd_result", Constant.SUCCESS);
+			model.addAttribute("message", decPwd);
 		}
-		return returnClass;
+		
+		
+		
+		return "jsonView";
 	}
 }

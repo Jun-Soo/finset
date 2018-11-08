@@ -35,7 +35,9 @@ const store = new Vuex.Store({
     isLoading: false,
     isScrap: true, // 스크래핑 여부
     token: '', // 금융투자회사 조회용 Token
-    loginPath: '/check/j_spring_security_check'
+    loginPath: '/check/j_spring_security_check',
+    linkUrl: '',
+    ynReload: 'N'
   },
   mutations: {
     INIT (state, data) {

@@ -31,6 +31,7 @@ export default {
     window.resultAutoScrap = this.resultAutoScrap;
     window.saveScrapData = this.saveScrapData;
     window.resultCheckDevicesUUID = this.resultCheckDevicesUUID;
+    window.pushUrlLink = this.pushUrlLink;
   },
   methods: {
     sendPush: function() {
@@ -96,6 +97,10 @@ export default {
         window.Android.checkDevicesUUID();
       }
     },
+
+    /***
+     * Native Call function
+     **/
     // UUID 체크 결과(모바일에서 호출)
     resultCheckDevicesUUID: function(uuid) {
       var _this = this;
@@ -119,6 +124,11 @@ export default {
             _this.sendPush();
           }
         });
+    },
+    // linkUrl 페이지로 전환
+    pushUrlLink: function(linkUrl) {
+      debugger;
+      this.$router.push(linkUrl);
     }
   }
 };

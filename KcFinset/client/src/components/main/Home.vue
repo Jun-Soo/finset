@@ -27,6 +27,12 @@ export default {
     this.$store.state.user.hp = Constant.params.hp;
     localStorage.setItem("hp", Constant.params.hp);
 
+    // url
+    this.$store.state.linkUrl = Constant.params.url;
+
+    // 비밀번호, 지문인증 재확인
+    this.$store.state.ynReload = Constant.params.yn_reload;
+
     // page call
     this.getUserPage();
   },

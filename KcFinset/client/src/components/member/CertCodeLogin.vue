@@ -7,7 +7,7 @@
           비밀번호를 입력해주세요.
         </p>
         <p class="textred" v-if="cntFailPwd > 0"> {{ errMsg }} </p>
-        
+
         <div class="pass-wrap">
           <input type="password" v-bind:style="classPass1" v-model="classPass1" id="pass_number1" maxlength="1" readonly />
           <input type="password" v-bind:style="classPass2" v-model="classPass2" id="pass_number2" maxlength="1" readonly />
@@ -33,7 +33,7 @@
       </div>
     </section>
   </div>
-  
+
 </template>
 
 <script>
@@ -103,8 +103,14 @@ export default {
       if (_this.password.length > 2) _this.classPass3 = "border-color: #111";
       if (_this.password.length > 3) {
         _this.classPass4 = "border-color: #111";
+
         //validator
-        _this.login();
+        if (this.$store.state.ynReload == "Y") {
+          window.Android.closeWebView();
+          return false;
+        } else {
+          _this.login();
+        }
       }
     },
     gotoFingerPrint: function() {
@@ -143,6 +149,10 @@ export default {
     login: function() {
       var _this = this;
 
+      var formData = new FormData();
+      formData.append("j_username", _this.username);
+      formData.append("j_password", _this.password);
+
       var querystring = require("querystring");
       var data = querystring.stringify({
         j_username: _this.username,
@@ -163,12 +173,21 @@ export default {
                 noPerson: _this.username,
                 phNum: _this.hp
               });
+              Jockey.send("loginFlag", {
+                flag: "Y"
+              });
             } else if (Constant.userAgent == "Android") {
               window.Android.setNoPerson(_this.username, _this.hp);
+              window.Android.loginFlag("Y");
             }
             _this.$store.state.user.authToken = null;
             _this.$store.commit("LOGIN", response.data);
-            _this.$router.push("/main");
+            debugger;
+            if (_this.$store.state.linkUrl) {
+              _this.$router.push(_this.$store.state.linkUrl);
+            } else {
+              _this.$router.push("/main");
+            }
           } else {
             this.initClassPass();
             _this.password = "";
@@ -205,7 +224,13 @@ export default {
       if (Constant.userAgent == "Android") {
         window.Android.closeFingerPrint();
       }
-      _this.login();
+
+      if (this.$store.state.ynReload == "Y") {
+        window.Android.closeWebView();
+        return false;
+      } else {
+        _this.login();
+      }
     } else {
       //지문 틀린 누적횟수 증가
       _this.cntFailFinger += 1;

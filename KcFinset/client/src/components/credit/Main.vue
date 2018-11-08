@@ -1,109 +1,109 @@
 <template>
   <section>
     <div class="credit-top">
-        <div class="time">{{ currentDate }}</div>
-        <div class="wrap">
-            <div class="item">
-                <p class="key">신용등급</p>
-                <p class="value">{{ b_grade_credit }}</p>
-            </div>
-            <div class="item">
-                <p class="key">신용점수</p>
-                <p class="value">{{b_rating_credit}}</p>
-                <p v-if="b_rating_diff > 0" class="plus">+{{b_rating_diff}}</p>
-                <p v-else-if="b_rating_diff < 0" class="minus">{{b_rating_diff}}</p>
-            </div>
-            <div class="item">
-                <p class="key">상위</p>
-                <p class="value">{{b_percentage}}%</p>
-            </div>
+      <div class="time">{{ currentDate }}</div>
+      <div class="wrap">
+        <div class="item">
+          <p class="key">신용등급</p>
+          <p class="value">{{ b_grade_credit }}</p>
         </div>
+        <div class="item">
+          <p class="key">신용점수</p>
+          <p class="value">{{b_rating_credit}}</p>
+          <p v-if="b_rating_diff > 0" class="plus">+{{b_rating_diff}}</p>
+          <p v-else-if="b_rating_diff < 0" class="minus">{{b_rating_diff}}</p>
+        </div>
+        <div class="item">
+          <p class="key">상위</p>
+          <p class="value">{{b_percentage}}%</p>
+        </div>
+      </div>
     </div>
-    
+
     <div class="banner-wrap owl-carousel">
-	  <carousel :perPage=1>
-	    <slide class="item">
-	        <a @click="$router.push(' ')">
-	            <div class="banner">
-	                <div class="left">
-	                    <p class="key">우리가족 가계부</p>
-	                    <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
-	                </div>
-	                <div class="right">
-	                    <img src="../../assets/images/main/banner_ico.png" alt=""/>
-	                </div>
-	            </div>
-	        </a>
-	    </slide>
-	    <slide class="item">
-	        <a @click="$router.push(' ')">
-	            <div class="banner">
-	                <div class="left">
-	                    <p class="key">우리가족 가계부</p>
-	                    <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
-	                </div>
-	                <div class="right">
-	                    <img src="../../assets/images/main/banner_ico.png" alt=""/>
-	                </div>
-	            </div>
-	        </a>
-	    </slide>
-	    <slide class="item">
-	        <a @click="$router.push(' ')">
-	            <div class="banner">
-	                <div class="left">
-	                    <p class="key">우리가족 가계부</p>
-	                    <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
-	                </div>
-	                <div class="right">
-	                    <img src="../../assets/images/main/banner_ico.png" alt=""/>
-	                </div>
-	            </div>
-	        </a>
-	    </slide>
-	  </carousel>
-	</div>
+      <carousel :perPage=1>
+        <slide class="item">
+          <a @click="$router.push(' ')">
+            <div class="banner">
+              <div class="left">
+                <p class="key">우리가족 가계부</p>
+                <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+              </div>
+              <div class="right">
+                <img src="../../assets/images/main/banner_ico.png" alt="" />
+              </div>
+            </div>
+          </a>
+        </slide>
+        <slide class="item">
+          <a @click="$router.push(' ')">
+            <div class="banner">
+              <div class="left">
+                <p class="key">우리가족 가계부</p>
+                <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+              </div>
+              <div class="right">
+                <img src="../../assets/images/main/banner_ico.png" alt="" />
+              </div>
+            </div>
+          </a>
+        </slide>
+        <slide class="item">
+          <a @click="$router.push(' ')">
+            <div class="banner">
+              <div class="left">
+                <p class="key">우리가족 가계부</p>
+                <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+              </div>
+              <div class="right">
+                <img src="../../assets/images/main/banner_ico.png" alt="" />
+              </div>
+            </div>
+          </a>
+        </slide>
+      </carousel>
+    </div>
 
     <div class="credit-change">
-		    <div class="top">
-		          <p class="title">나의 신용정보 변동</p>
-		      </div>
-		    <div class="link">
-		       <a @click="$router.push('/credit/detail')">
-                    {{ ch_dt_info+" "+ch_nm_fc+" "+ch_change_contents+"되었습니다" }}
-               </a>
-		    </div>
-		</div>
+      <div class="top">
+        <p class="title">나의 신용정보 변동</p>
+      </div>
+      <div class="link">
+        <a @click="$router.push('/credit/detail')">
+          {{ ch_dt_info+" "+ch_nm_fc+" "+ch_change_contents+"되었습니다" }}
+        </a>
+      </div>
+    </div>
 
     <div class="credit-status">
-       <p class="title">나의 신용거래 현황</p>
-       <div class="wrap">
-           <div class="item">
-              <a @click="$router.push('/credit/cardInfo')">
-                <p class="key">8월 카드이용</p>
-                <p class="value">{{formatNumber(cardSumAmt)}}<em>원</em></p>
-              </a>
-           </div>
-           <div class="item">
-              <a @click="$router.push('/credit/loanInfo')">
-                <p class="key">대출 잔액</p>
-                <p class="value">{{formatNumber(debtSumAmtRemain)}}<em>원</em></p>
-              </a>
-           </div>
-           <div class="item">
-              <a @click="$router.push('/credit/overdueInfo')">
-                <p class="key">연체 원금</p>
-                <p class="value">{{formatNumber(overdueSumAmt)}}<em>원</em></p>
-              </a>
-           </div>
-           <div class="item">
-              <a @click="$router.push('/credit/guaranteeInfo')">
-                <p class="key">연대보증 원금</p>
-                <p class="value">{{formatNumber(guaranteeSumAmt)}}<em>원</em></p>
-              </a>
-           </div>
-       </div>
-   </div>
+      <p class="title">나의 신용거래 현황</p>
+      <div class="wrap">
+        <div class="item">
+          <a @click="$router.push('/credit/cardInfo')">
+            <p class="key">8월 카드이용</p>
+            <p class="value">{{formatNumber(cardSumAmt)}}<em>원</em></p>
+          </a>
+        </div>
+        <div class="item">
+          <a @click="$router.push('/credit/loanInfo')">
+            <p class="key">대출 잔액</p>
+            <p class="value">{{formatNumber(debtSumAmtRemain)}}<em>원</em></p>
+          </a>
+        </div>
+        <div class="item">
+          <a @click="$router.push('/credit/overdueInfo')">
+            <p class="key">연체 원금</p>
+            <p class="value">{{formatNumber(overdueSumAmt)}}<em>원</em></p>
+          </a>
+        </div>
+        <div class="item">
+          <a @click="$router.push('/credit/guaranteeInfo')">
+            <p class="key">연대보증 원금</p>
+            <p class="value">{{formatNumber(guaranteeSumAmt)}}<em>원</em></p>
+          </a>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -136,7 +136,7 @@ export default {
     };
   },
   component: {},
-//   computed() {},
+  //   computed() {},
   beforeCreate() {},
   created() {
     this.$store.state.header.type = "main";

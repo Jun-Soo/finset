@@ -30,8 +30,13 @@ export default {
     var frm = new FormData();
     _this.$http.post("/m/login/framePersonLogout.json", frm).then(response => {
       _this.$store.commit("LOGOUT");
-      if (Constant.userAgent == "Android") {
-        window.Android.setEndApp("Y");
+
+      if (Constant.userAgent == "iOS") {
+        Jockey.send("loginFlag", {
+          flag: "N"
+        });
+      } else if (Constant.userAgent == "Android") {
+        window.Android.loginFlag("N");
       }
     });
   },

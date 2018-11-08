@@ -200,4 +200,58 @@ public interface ConsumeMapper {
 	 * @return
 	 */
 	ConsumeVO getConsumeInfo(ConsumeForm consumeForm);
+	
+	/**
+	 * 소비 분류 정렬순서 업데이트
+	 * @param personConsumeClassVO
+	 */
+	void modifyPersonSortClass(PersonConsumeClassVO personConsumeClassVO);
+	
+	/**
+	 * 소비 항목 정렬순서 업데이트
+	 * @param personConsumeClassVO
+	 */
+	void modifyPersonSortType(PersonConsumeClassVO personConsumeClassVO);
+	
+	/**
+	 * 분류 미사용 처리
+	 * @param personConsumeClassVO
+	 */
+	void deletePersonConsumeClass(PersonConsumeClassVO personConsumeClassVO);
+	
+	/**
+	 * 항목 미사용 처리
+	 * @param personConsumeClassVO
+	 */
+	void deletePersonConsumeClassType(PersonConsumeClassVO personConsumeClassVO);
+	
+	/**
+	 * 분류명 변경
+	 * @param personConsumeClassVO
+	 */
+	void modifyPersonConsumeClassNmClass(PersonConsumeClassVO personConsumeClassVO);
+	
+	/**
+	 * 항목명 변경
+	 * @param personConsumeClassVO
+	 */
+	void modifyPersonConsumeClassNmType(PersonConsumeClassVO personConsumeClassVO);
+	
+	/**
+	 * 소비 분류 추가
+	 * @param personConsumeClassVO
+	 */
+	void createPersonConsumeClassClass(PersonConsumeClassVO personConsumeClassVO);
+	
+	/**
+	 * 소비 항목 추가
+	 * @param personConsumeClassVO
+	 */
+	void createPersonConsumeClassType(PersonConsumeClassVO personConsumeClassVO);
+	
+	/**
+	 * 수입 분류 추가
+	 * @param personConsumeClassVO
+	 */
+	void createPersonConsumeClassIncome(PersonConsumeClassVO personConsumeClassVO);
 }

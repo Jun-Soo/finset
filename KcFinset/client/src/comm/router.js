@@ -116,7 +116,7 @@ import ConsumeConsumeDetail from '@/components/consume/ConsumeDetail'
 // import ConsumeConsumeStat from '@/components/consume/ConsumeStat'
 import ConsumeSetting from '@/components/consume/Setting'
 import ConsumeConsumeClass from '@/components/consume/ConsumeClass'
-// import ConsumeIncomeClass from '@/components/consume/IncomeClass'
+import ConsumeIncomeClass from '@/components/consume/IncomeClass'
 import ConsumePayment from '@/components/consume/Payment'
 import ConsumePaymentDetail from '@/components/consume/PaymentDetail'
 // import ConsumeSettlement from '@/components/consume/Settlement'
@@ -226,14 +226,14 @@ export const routes = [{
     allowPath: true
   }
 },
-// {
-//  path: '/client/logout',
-//  name: 'logout',
-//  component: Logout,
-//  meta: {
-//    allowPath: true
-//  }
-// },
+  // {
+  //  path: '/client/logout',
+  //  name: 'logout',
+  //  component: Logout,
+  //  meta: {
+  //    allowPath: true
+  //  }
+  // },
 {
   path: '/error',
   name: 'error',
@@ -750,6 +750,14 @@ export const routes = [{
     }
   },
   {
+    path: 'incomeClass',
+    alias: '/incomeClass',
+    component: ConsumeIncomeClass,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
     path: 'payment',
     alias: '/payment',
     component: ConsumePayment,
@@ -870,7 +878,7 @@ export const routes = [{
       requiresAuth: true
     }
   },
-  // -------------통합 이후 삭제되어야 하는 부분
+    // -------------통합 이후 삭제되어야 하는 부분
   {
     path: 'designMain',
     alias: '/designMain',

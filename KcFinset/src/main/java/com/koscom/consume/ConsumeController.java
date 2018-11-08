@@ -20,6 +20,7 @@ import com.koscom.consume.model.ConsumeForm;
 import com.koscom.consume.model.ConsumeGoalInfoVO;
 import com.koscom.consume.model.ConsumeVO;
 import com.koscom.consume.model.PaymentForm;
+import com.koscom.consume.model.PersonConsumeClassVO;
 import com.koscom.consume.model.PersonSetInfoForm;
 import com.koscom.consume.model.PersonSetInfoVO;
 import com.koscom.consume.service.ConsumeManager;
@@ -333,4 +334,169 @@ public class ConsumeController {
     	model.addAttribute("listPersonConsumeClassInfo", consumeManager.listPersonConsumeClassInfo(no_person));
     	return "jsonView";
     }
+    
+    /**
+     * VUE 
+     * @param session
+     * @param model
+     * @param personConsumeClassVO
+     * @return
+     */
+    @RequestMapping("/modifyPersonSortClass.json")
+    public String modifyPersonSortClass(HttpSession session, Model model, PersonConsumeClassVO personConsumeClassVO) {
+    	logger.debug("modifyPersonSortClass");
+    	String no_person = (String) session.getAttribute("no_person");
+    	personConsumeClassVO.setNo_person(no_person);
+    	consumeManager.modifyPersonSortClass(personConsumeClassVO);
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE 
+     * @param session
+     * @param model
+     * @param personConsumeClassVO
+     * @return
+     */
+    @RequestMapping("/modifyPersonSortType.json")
+    public String modifyPersonSortType(HttpSession session, Model model, PersonConsumeClassVO personConsumeClassVO) {
+    	logger.debug("modifyPersonSortType");
+    	String no_person = (String) session.getAttribute("no_person");
+    	personConsumeClassVO.setNo_person(no_person);
+    	consumeManager.modifyPersonSortType(personConsumeClassVO);
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE 
+     * @param session
+     * @param model
+     * @param personConsumeClassVO
+     * @return
+     */
+    @RequestMapping("/deletePersonConsumeClass.json")
+    public String deletePersonConsumeClass(HttpSession session, Model model, PersonConsumeClassVO personConsumeClassVO) {
+    	logger.debug("deletePersonConsumeClass");
+    	String no_person = (String) session.getAttribute("no_person");
+    	personConsumeClassVO.setNo_person(no_person);
+    	consumeManager.deletePersonConsumeClass(personConsumeClassVO);
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE 
+     * @param session
+     * @param model
+     * @param personConsumeClassVO
+     * @return
+     */
+    @RequestMapping("/deletePersonConsumeClassType.json")
+    public String deletePersonConsumeClassType(HttpSession session, Model model, PersonConsumeClassVO personConsumeClassVO) {
+    	logger.debug("deletePersonConsumeClassType");
+    	String no_person = (String) session.getAttribute("no_person");
+    	personConsumeClassVO.setNo_person(no_person);
+    	consumeManager.deletePersonConsumeClassType(personConsumeClassVO);
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE 
+     * @param session
+     * @param model
+     * @param personConsumeClassVO
+     * @return
+     */
+    @RequestMapping("/createPersonConsumeClassClass.json")
+    public String createPersonConsumeClassClass(HttpSession session, Model model, PersonConsumeClassVO personConsumeClassVO) {
+    	logger.debug("createPersonConsumeClassClass");
+    	String no_person = (String) session.getAttribute("no_person");
+    	personConsumeClassVO.setNo_person(no_person);
+    	consumeManager.createPersonConsumeClassClass(personConsumeClassVO);
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE 
+     * @param session
+     * @param model
+     * @param personConsumeClassVO
+     * @return
+     */
+    @RequestMapping("/createPersonConsumeClassType.json")
+    public String createPersonConsumeClassType(HttpSession session, Model model, PersonConsumeClassVO personConsumeClassVO) {
+    	logger.debug("createPersonConsumeClassType");
+    	String no_person = (String) session.getAttribute("no_person");
+    	personConsumeClassVO.setNo_person(no_person);
+    	consumeManager.createPersonConsumeClassType(personConsumeClassVO);
+    	return "jsonView";
+    }
+    
+	/**
+	 * VUE
+	 * @param session
+	 * @param model
+	 * @param no_person
+	 * @return
+	 */
+    @RequestMapping("/listPersonIncomeClassInfo.json")
+    public String listPersonIncomeClassInfo(HttpSession session, Model model, String no_person) {
+    	logger.debug("listPersonIncomeClassInfo");
+    	if(no_person == null) {
+    		no_person = (String) session.getAttribute("no_person");
+    	} else if (no_person.equals("")) {
+    		no_person = (String) session.getAttribute("no_person");
+    	}
+    	
+    	model.addAttribute("listPersonIncomeClassInfo", consumeManager.listPersonIncomeClassInfo(no_person));
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE
+     * @param session
+     * @param model
+     * @param personConsumeClassVO
+     * @return
+     */
+    @RequestMapping("/modifyPersonConsumeClassNmClass.json")
+    public String modifyPersonConsumeClassNmClass(HttpSession session, Model model, PersonConsumeClassVO personConsumeClassVO) {
+    	logger.debug("modifyPersonConsumeClassNmClass");
+    	String no_person = (String) session.getAttribute("no_person");
+    	personConsumeClassVO.setNo_person(no_person);
+    	consumeManager.modifyPersonConsumeClassNmClass(personConsumeClassVO);
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE
+     * @param session
+     * @param model
+     * @param personConsumeClassVO
+     * @return
+     */
+    @RequestMapping("/modifyPersonConsumeClassNmType.json")
+    public String modifyPersonConsumeClassNmType(HttpSession session, Model model, PersonConsumeClassVO personConsumeClassVO) {
+    	logger.debug("modifyPersonConsumeClassNmType");
+    	String no_person = (String) session.getAttribute("no_person");
+    	personConsumeClassVO.setNo_person(no_person);
+    	consumeManager.modifyPersonConsumeClassNmType(personConsumeClassVO);
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE
+     * @param session
+     * @param model
+     * @param personConsumeClassVO
+     * @return
+     */
+    @RequestMapping("/createPersonConsumeClassIncome.json")
+    public String createPersonConsumeClassIncome(HttpSession session, Model model, PersonConsumeClassVO personConsumeClassVO) {
+    	logger.debug("createPersonConsumeClassIncome");
+    	String no_person = (String) session.getAttribute("no_person");
+    	personConsumeClassVO.setNo_person(no_person);
+    	consumeManager.createPersonConsumeClassIncome(personConsumeClassVO);
+    	return "jsonView";
+    }
+    
 }

@@ -110,7 +110,7 @@
             <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
           </div>
         </div>
-        <div class="item" v-for="vo in debtList" :key="vo.no_manage_info">
+        <div class="item" v-for="vo in debtList" :key="vo.no_manage_info" @click="goDetail(vo.no_person, vo.no_manage_info)">
           <div class="top">
             <p class="symbol"><img :src="vo.imgSrc" alt="" />{{vo.nm_fc}}</p>
             <p class="text blue">{{vo.debt_type}}
@@ -316,6 +316,12 @@ export default {
         default:
           break;
       }
+    },
+    goDetail: function(no_person, no_manage_info) {
+      this.$router.push({
+        path: "/debt/detail",
+        query: { no_person: no_person, no_manage_info: no_manage_info }
+      });
     }
   }
 };

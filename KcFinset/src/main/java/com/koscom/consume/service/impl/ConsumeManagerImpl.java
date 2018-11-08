@@ -106,10 +106,11 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	}
 	
 	@Override
-	public Map<String, List<PersonConsumeClassVO>> listPersonConsumeClassInfo(String no_person) {
+	public List<List<PersonConsumeClassVO>> listPersonConsumeClassInfo(String no_person) {
+		
 		logger.debug("listPersonConsumeClassInfo");
 		
-		Map<String, List<PersonConsumeClassVO>> consumeClassMap = new HashMap<>();
+		List<List<PersonConsumeClassVO>> consumeClassList = new ArrayList<>();
 		List<PersonConsumeClassVO> rawList = consumeMapper.listPersonConsumeClassInfo(no_person);
 		List<PersonConsumeClassVO> tempList = new ArrayList<>();
 		String curCd_class = "";
@@ -120,40 +121,21 @@ public class ConsumeManagerImpl implements ConsumeManager {
 			} else if(curCd_class.equals(vo.getCd_class())) {
 				tempList.add(vo);
 			} else if(!curCd_class.equals(vo.getCd_class())) {
-				consumeClassMap.put(curCd_class, tempList);
+				consumeClassList.add(tempList);
 				tempList = new ArrayList<>();
 				curCd_class = vo.getCd_class();
 				tempList.add(vo);
 			}
 		}
-		consumeClassMap.put(curCd_class, tempList);
+		consumeClassList.add(tempList);
 		
-		return consumeClassMap;
+		return consumeClassList;
 	}
 	
 	@Override
-	public Map<String, List<PersonConsumeClassVO>> listPersonIncomeClassInfo(String no_person) {
+	public List<PersonConsumeClassVO> listPersonIncomeClassInfo(String no_person) {
 		logger.debug("listPersonIncomeClassInfo");
-		Map<String, List<PersonConsumeClassVO>> consumeClassMap = new HashMap<>();
-		List<PersonConsumeClassVO> rawList = consumeMapper.listPersonIncomeClassInfo(no_person);
-		List<PersonConsumeClassVO> tempList = new ArrayList<>();
-		String curCd_class = "";
-		for(PersonConsumeClassVO vo: rawList) {
-			if(curCd_class.equals("")) {
-				tempList.add(vo);
-				curCd_class = vo.getCd_class();
-			} else if(curCd_class.equals(vo.getCd_class())) {
-				tempList.add(vo);
-			} else if(!curCd_class.equals(vo.getCd_class())) {
-				consumeClassMap.put(curCd_class, tempList);
-				tempList = new ArrayList<>();
-				curCd_class = vo.getCd_class();
-				tempList.add(vo);
-			}
-		}
-		consumeClassMap.put(curCd_class, tempList);
-		
-		return consumeClassMap;
+		return consumeMapper.listPersonIncomeClassInfo(no_person);
 	}
 	
 	@Override
@@ -270,5 +252,68 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	public ConsumeVO getConsumeInfo(ConsumeForm consumeForm) {
 		logger.debug("getConsumeInfo");
 		return consumeMapper.getConsumeInfo(consumeForm);
+	}
+	
+	@Override
+	public void modifyPersonSortClass(PersonConsumeClassVO personConsumeClassVO) {
+		logger.debug("modifyPersonSortClass");
+		List<PersonConsumeClassVO> list = personConsumeClassVO.getList();
+		String no_person = personConsumeClassVO.getNo_person();
+		for(PersonConsumeClassVO vo: list) {
+			vo.setNo_person(no_person);
+			consumeMapper.modifyPersonSortClass(vo);
+		}
+	}
+	
+	@Override
+	public void modifyPersonSortType(PersonConsumeClassVO personConsumeClassVO) {
+		logger.debug("modifyPersonSortType");
+		List<PersonConsumeClassVO> list = personConsumeClassVO.getList();
+		String no_person = personConsumeClassVO.getNo_person();
+		for(PersonConsumeClassVO vo: list) {
+			vo.setNo_person(no_person);
+			consumeMapper.modifyPersonSortType(vo);
+		}
+	}
+	
+	@Override
+	public void deletePersonConsumeClass(PersonConsumeClassVO personConsumeClassVO) {
+		logger.debug("deletePersonConsumeClass");
+		consumeMapper.deletePersonConsumeClass(personConsumeClassVO);
+	}
+	
+	@Override
+	public void deletePersonConsumeClassType(PersonConsumeClassVO personConsumeClassVO) {
+		logger.debug("deletePersonConsumeClassType");
+		consumeMapper.deletePersonConsumeClassType(personConsumeClassVO);
+	}
+	
+	@Override
+	public void modifyPersonConsumeClassNmClass(PersonConsumeClassVO personConsumeClassVO) {
+		logger.debug("modifyPersonConsumeClassNmClass");
+		consumeMapper.modifyPersonConsumeClassNmClass(personConsumeClassVO);
+	}
+	
+	@Override
+	public void modifyPersonConsumeClassNmType(PersonConsumeClassVO personConsumeClassVO) {
+		logger.debug("modifyPersonConsumeClassNmType");
+		consumeMapper.modifyPersonConsumeClassNmType(personConsumeClassVO);
+	}
+	
+	@Override
+	public void createPersonConsumeClassClass(PersonConsumeClassVO personConsumeClassVO) {
+		logger.debug("createPersonConsumeClassClass");
+		consumeMapper.createPersonConsumeClassClass(personConsumeClassVO);
+	}
+	
+	@Override
+	public void createPersonConsumeClassType(PersonConsumeClassVO personConsumeClassVO) {
+		logger.debug("createPersonConsumeClassType");
+		consumeMapper.createPersonConsumeClassType(personConsumeClassVO);
+	}
+	
+	public void createPersonConsumeClassIncome(PersonConsumeClassVO personConsumeClassVO) {
+		logger.debug("createPersonConsumeClassIncome");
+		consumeMapper.createPersonConsumeClassIncome(personConsumeClassVO);
 	}
 }

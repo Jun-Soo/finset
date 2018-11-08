@@ -63,14 +63,14 @@ public interface ConsumeManager {
 	 * @param no_person
 	 * @return
 	 */
-	Map<String, List<PersonConsumeClassVO>> listPersonConsumeClassInfo(String no_person);
+	List<List<PersonConsumeClassVO>> listPersonConsumeClassInfo(String no_person);
 	
 	/**
 	 * 수입 분류 리스트 조회
 	 * @param no_person
 	 * @return
 	 */
-	Map<String, List<PersonConsumeClassVO>> listPersonIncomeClassInfo(String no_person);
+	List<PersonConsumeClassVO> listPersonIncomeClassInfo(String no_person);
 
 	/**
 	 * 개인 설정 조회
@@ -173,4 +173,58 @@ public interface ConsumeManager {
 	 * @return
 	 */
 	List<ConsumeDetailGoalInfoVO> listAverageConsume(String no_person, String cd_set);
+	
+	/**
+	 * 소비 분류 정렬순서 업데이트
+	 * @param personConsumeClassVO
+	 */
+	void modifyPersonSortClass(PersonConsumeClassVO personConsumeClassVO);
+	
+	/**
+	 * 소비 항목 정렬순서 업데이트
+	 * @param personConsumeClassVO
+	 */
+	void modifyPersonSortType(PersonConsumeClassVO personConsumeClassVO);
+	
+	/**
+	 * 분류 미사용 처리
+	 * @param personConsumeClassVO
+	 */
+	void deletePersonConsumeClass(PersonConsumeClassVO personConsumeClassVO);
+	
+	/**
+	 * 항목 미사용 처리
+	 * @param personConsumeClassVO
+	 */
+	void deletePersonConsumeClassType(PersonConsumeClassVO personConsumeClassVO);
+	
+	/**
+	 * 분류명 변경
+	 * @param personConsumeClassVO
+	 */
+	void modifyPersonConsumeClassNmClass(PersonConsumeClassVO personConsumeClassVO);
+	
+	/**
+	 * 항목명 변경
+	 * @param personConsumeClassVO
+	 */
+	void modifyPersonConsumeClassNmType(PersonConsumeClassVO personConsumeClassVO);
+	
+	/**
+	 * 소비 분류 추가
+	 * @param personConsumeClassVO
+	 */
+	void createPersonConsumeClassClass(PersonConsumeClassVO personConsumeClassVO);
+	
+	/**
+	 * 소비 항목 추가
+	 * @param personConsumeClassVO
+	 */
+	void createPersonConsumeClassType(PersonConsumeClassVO personConsumeClassVO);
+	
+	/**
+	 * 수입 분류 추가
+	 * @param personConsumeClassVO
+	 */
+	void createPersonConsumeClassIncome(PersonConsumeClassVO personConsumeClassVO);
 }

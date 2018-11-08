@@ -11,11 +11,11 @@
       <dt>지출</dt>
       <dd>
         <p class="key">지출예산설정</p>
-        <p class="value"><a href="#" @click="clickSetting('regGoal')">설정</a></p>
+        <p class="value"><a @click="clickSetting('regGoal')">설정</a></p>
       </dd>
       <dd>
         <p class="key">카테고리설정</p>
-        <p class="value"><a href="#" @click="clickSetting('consumeClass')">설정</a></p>
+        <p class="value"><a @click="clickSetting('consumeClass')">설정</a></p>
       </dd>
       <dd>
         <p class="key">할부개월수 분할</p>
@@ -24,7 +24,7 @@
       <dt>수입</dt>
       <dd>
         <p class="key">카테고리설정</p>
-        <p class="value"><a href="#" @click="clickSetting('incomeClass')">설정</a></p>
+        <p class="value"><a @click="clickSetting('incomeClass')">설정</a></p>
       </dd>
     </dl>
   </section>

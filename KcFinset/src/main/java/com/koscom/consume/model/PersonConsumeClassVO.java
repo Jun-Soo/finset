@@ -2,6 +2,7 @@ package com.koscom.consume.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
@@ -18,13 +19,21 @@ public class PersonConsumeClassVO implements Serializable{
 	private String 	nm_type;							// 항목명
 	private String 	yn_default;							// 기본항목여부
 	private String 	yn_use;								// 사용여부
+	private String	sort_class;							// 분류 정렬순서
+	private String	sort_type;							// 항목 정렬순서
 	private String 	id_frt;								// 최초입력아이디
 	private Date 	dt_frt;								// 최초입력시간
 	private String 	id_lst;								// 최종수정아이디
 	private Date 	dt_lst;								// 최종수정시간
-
-	public PersonConsumeClassVO(){}
-	public PersonConsumeClassVO(String no_person, String cd_consume_class, String cd_class, String nm_class, String cd_type, String nm_type, String yn_default, String yn_use, String id_frt, Date dt_frt, String id_lst, Date dt_lst) {
+	private List<PersonConsumeClassVO> list;			// 업데이트 데이터 저장 list
+	
+	public PersonConsumeClassVO() {
+	}
+	public PersonConsumeClassVO(String no_person, String cd_consume_class,
+			String cd_class, String nm_class, String cd_type, String nm_type,
+			String yn_default, String yn_use, String sort_class,
+			String sort_type, String id_frt, Date dt_frt, String id_lst,
+			Date dt_lst, List<PersonConsumeClassVO> list) {
 		this.no_person = no_person;
 		this.cd_consume_class = cd_consume_class;
 		this.cd_class = cd_class;
@@ -33,10 +42,13 @@ public class PersonConsumeClassVO implements Serializable{
 		this.nm_type = nm_type;
 		this.yn_default = yn_default;
 		this.yn_use = yn_use;
+		this.sort_class = sort_class;
+		this.sort_type = sort_type;
 		this.id_frt = id_frt;
 		this.dt_frt = dt_frt;
 		this.id_lst = id_lst;
 		this.dt_lst = dt_lst;
+		this.list = list;
 	}
 
 	public String getNo_person() {
@@ -87,6 +99,18 @@ public class PersonConsumeClassVO implements Serializable{
 	public void setYn_use(String yn_use) {
 		this.yn_use = yn_use;
 	}
+	public String getSort_class() {
+		return sort_class;
+	}
+	public void setSort_class(String sort_class) {
+		this.sort_class = sort_class;
+	}
+	public String getSort_type() {
+		return sort_type;
+	}
+	public void setSort_type(String sort_type) {
+		this.sort_type = sort_type;
+	}
 	public String getId_frt() {
 		return id_frt;
 	}
@@ -111,7 +135,13 @@ public class PersonConsumeClassVO implements Serializable{
 	public void setDt_lst(Date dt_lst) {
 		this.dt_lst = dt_lst;
 	}
-
+	public List<PersonConsumeClassVO> getList() {
+		return list;
+	}
+	public void setList(List<PersonConsumeClassVO> list) {
+		this.list = list;
+	}
+	
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}

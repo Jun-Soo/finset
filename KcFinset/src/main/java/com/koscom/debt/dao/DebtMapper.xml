@@ -659,7 +659,8 @@
 		                    B.CUR_MM_AMT_REPAY
 		             END
 		         )                                                                      AS CUR_MM_AMT_REPAY     /*상환금액(당월)*/
-		        ,FN_AMT_VIEW(A.AMT_REMAIN)                                              AS AMT_REMAIN           /*대출잔액*/
+		        /*,FN_AMT_VIEW(A.AMT_REMAIN)                                              AS AMT_REMAIN */          /*대출잔액*/
+		        ,A.AMT_REMAIN															AS AMT_REMAIN
 		        ,CASE 
 		            WHEN FN_ETM_INTEREST(A.NO_PERSON, A.NO_MANAGE_INFO) = 0 THEN
 		                '-'
@@ -686,7 +687,8 @@
 		         END                                                                    AS TYPE_DEAL            /*대출구분*/
 		        ,A.YMD_LOAN                         /*개설일자*/
 		        ,A.YMD_LOANEND                      /*만기일자*/
-		        ,FN_AMT_VIEW(A.AMT_CONTRACT)                                            AS AMT_CONTRACT         /*대출원금*/
+		        /*,FN_AMT_VIEW(A.AMT_CONTRACT)                                            AS AMT_CONTRACT*/         /*대출원금*/
+		        ,A.AMT_CONTRACT
 		        ,MONTHS_BETWEEN(TO_DATE(SUBSTR(A.YMD_LOANEND,1,6),'YYYYMM'),TO_DATE(SUBSTR(A.YMD_LOAN,1,6),'YYYYMM')) AS TERM_ALL   /*대출기간*/
 		        ,CASE
 		             WHEN A.CD_TYPE_DEAL IN ('1','4') THEN '분할상환'

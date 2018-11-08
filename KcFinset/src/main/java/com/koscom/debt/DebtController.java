@@ -158,7 +158,7 @@ public class DebtController {
 	 * @throws FinsetException
 	 */
 	@RequestMapping("/listDebtPg.json")
-	public String test(Model model, HttpSession session, @RequestParam(value="no_person_list[]") List<String> no_person_list) throws FinsetException {
+	public String listDebtPg(Model model, HttpSession session, @RequestParam(value="no_person_list[]") List<String> no_person_list) throws FinsetException {
 		String no_person = (String) session.getAttribute("no_person");
 
 		DebtForm debtForm = new DebtForm();
@@ -171,6 +171,27 @@ public class DebtController {
 		model.addAttribute("dataList",summaryMap.get("dataList"));
 		model.addAttribute("dateList",summaryMap.get("dateList"));
 		model.addAttribute("debtList",debtManager.listDebtPg(debtForm));
+		
+		return "jsonView";
+	}
+	
+	/**
+	 * VUE
+	 * @param session
+	 * @param model
+	 * @param no_person
+	 * @param debtForm
+	 * @return
+	 */
+	@RequestMapping("/getDebtInfo.json")
+	public String getDebtInfo(HttpSession session, Model model, String no_person, DebtForm debtForm) {
+		if(no_person == null || no_person.equals("")) {
+			no_person = (String) session.getAttribute("no_person");
+		}
+		debtForm.setNo_person(no_person);
+		
+		model.addAttribute("debtVO", debtManager.getDebtInfo(debtForm));
+		model.addAttribute("listDebtRepay", debtManager.listDebtLast12BizDay(debtForm));
 		
 		return "jsonView";
 	}
@@ -241,7 +262,7 @@ public class DebtController {
 		return "/debt/frameInDebtDetail";
 	}
 	
-	@RequestMapping("/getDebtInfo.json")
+//	@RequestMapping("/getDebtInfo.json")
 	public String getDebtInfo(HttpSession session, Model model, String no_manage_info) throws FinsetException{
 		String no_person = (String) session.getAttribute("no_person"); 
 		

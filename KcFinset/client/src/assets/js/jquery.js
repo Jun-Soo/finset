@@ -37,10 +37,10 @@ $(function () {
   //   $(this).closest('.btn').toggleClass('on')
   // })
 
-  $(document).on('click', '.btn-menu-pop,.btn-interlock', function (e) {
-    $(this).closest('.btn-menu-wrap').toggleClass('on')
-    e.preventDefault()
-  })
+  // $(document).on('click', '.btn-menu-pop,.btn-interlock', function (e) {
+  //   $(this).closest('.btn-menu-wrap').toggleClass('on')
+  //   e.preventDefault()
+  // })
 
   $(document).on('click', '.accodion .top a', function (e) {
     $(this).closest('li').toggleClass('on')
@@ -100,16 +100,6 @@ $(function () {
   }
 
   modal()
-
-  $(document).on('click', '.consume-cate-list>div>li>.wrap', function () {
-    if ($(this).closest('li').hasClass('on')) {
-      $(this).closest('li').find('ul').slideUp(500, 'easeInOutExpo')
-      $(this).closest('li').removeClass('on')
-    } else {
-      $(this).closest('li').find('ul').slideDown(500, 'easeInOutExpo')
-      $(this).closest('li').addClass('on')
-    }
-  })
 
   $(document).on('click', '.calc-acco .top .ui', function () {
     if ($(this).hasClass('on')) {

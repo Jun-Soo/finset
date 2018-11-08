@@ -150,17 +150,21 @@
 	</select>
 
 	<select id="listPersonIncomeClassInfo" parameterType="java.lang.String" resultType="com.koscom.consume.model.PersonConsumeClassVO">
-		SELECT DISTINCT
-			 CD_CLASS
+		SELECT
+			 NO_PERSON
+			,CD_CLASS
 			,NM_CLASS
-			,CD_TYPE
-			,NM_TYPE
-				FROM PERSON_CONSUME_CLASS_INFO
-		WHERE 		NO_PERSON 	= #{no_person	, jdbcType=VARCHAR}
-				AND TO_NUMBER(CD_CLASS) <![CDATA[<]]> 10
-				AND CD_TYPE IS NOT NULL
-				AND YN_USE 		= 'Y'
-		ORDER BY CD_CLASS ASC, CD_TYPE ASC
+			,YN_DEFAULT
+			,YN_USE
+			,SORT_CLASS
+		FROM
+			PERSON_CONSUME_CLASS_INFO
+		WHERE
+				NO_PERSON = #{no_person, jdbcType = VARCHAR}
+			AND CD_CLASS <![CDATA[<=]]> 10
+			AND YN_USE = 'Y'
+		ORDER BY
+			TO_NUMBER(SORT_CLASS) ASC
 	</select>
 	<select id="listPersonConsumeClassInfo" parameterType="java.lang.String" resultType="com.koscom.consume.model.PersonConsumeClassVO">
 		SELECT DISTINCT
@@ -168,12 +172,14 @@
 			,NM_CLASS
 			,CD_TYPE
 			,NM_TYPE
+			,SORT_CLASS
+			,SORT_TYPE
 				FROM PERSON_CONSUME_CLASS_INFO
 		WHERE 		NO_PERSON 	= #{no_person	, jdbcType=VARCHAR}
 				AND TO_NUMBER(CD_CLASS) <![CDATA[>]]> 10
 				AND CD_TYPE IS NOT NULL
 				AND YN_USE 		= 'Y'
-		ORDER BY CD_CLASS ASC, CD_TYPE ASC
+		ORDER BY TO_NUMBER(SORT_CLASS) ASC, TO_NUMBER(SORT_TYPE) ASC
 	</select>
 	<select id="getPersonSetInfo" parameterType="java.lang.String" resultType="com.koscom.consume.model.PersonSetInfoVO">
 		SELECT
@@ -260,9 +266,9 @@
 					,'Y' AS YN_DEFAULT
 					,'Y' AS YN_USE
 					,CASE
-						WHEN CD_CLASS <![CDATA[<=]]> 10						 THEN TO_CHAR( TO_NUMBER( A.CD_CLASS ))
-						WHEN CD_CLASS <![CDATA[>]]>  10 AND CD_CLASS = '99'  THEN A.CD_CLASS
-						WHEN CD_CLASS <![CDATA[>]]>  10 AND CD_CLASS != '99' THEN TO_CHAR( TO_NUMBER( A.CD_CLASS )- 10 )
+						WHEN A.CD_CLASS <![CDATA[<=]]> 10						 THEN TO_CHAR( TO_NUMBER( A.CD_CLASS ))
+						WHEN A.CD_CLASS <![CDATA[>]]>  10 AND CD_CLASS = '99'  THEN A.CD_CLASS
+						WHEN A.CD_CLASS <![CDATA[>]]>  10 AND CD_CLASS != '99' THEN TO_CHAR( TO_NUMBER( A.CD_CLASS )- 10 )
 					 END AS SORT_CLASS
 					,TO_CHAR( ROW_NUMBER() OVER( PARTITION BY A.CD_CLASS ORDER BY A.CD_TYPE ASC )) AS SORT_TYPE
 					,#{no_person, jdbcType=VARCHAR} AS ID_FRT
@@ -273,7 +279,7 @@
 					(
 						SELECT
 							 A.CD_CONSUME_CLASS
-							,CD_CLASS
+							,A.CD_CLASS
 							,A.NM_CLASS
 							,A.CD_TYPE
 							,A.NM_TYPE
@@ -514,6 +520,7 @@
 		SELECT DISTINCT 
 			 PCCI.CD_CLASS
 			,NVL( CGDI.AMT_EXPENSE, 0 ) AS AMT_EXPENSE
+			,PCCI.SORT_CLASS
 		FROM
 			PERSON_CONSUME_CLASS_INFO PCCI
 		LEFT JOIN(
@@ -548,7 +555,7 @@
 			PCCI.NO_PERSON = #{no_person, jdbcType = VARCHAR}
 			AND PCCI.CD_CLASS <![CDATA[>]]> 10
 		ORDER BY
-			CD_CLASS ASC
+			TO_NUMBER(SORT_CLASS) ASC
     </select>
     <select id="listPrevMonthMeans" parameterType="java.lang.String" resultType="com.koscom.consume.model.ConsumeDetailGoalInfoVO">
 		SELECT
@@ -641,6 +648,7 @@
 		SELECT
 			 DISTINCT PCCI.CD_CLASS
 			,NVL( CGDI.AMT_EXPENSE, 0 ) AS AMT_EXPENSE
+			,PCCI.SORT_CLASS
 		FROM
 			PERSON_CONSUME_CLASS_INFO PCCI
 		LEFT JOIN(
@@ -684,7 +692,7 @@
 		WHERE
 			PCCI.CD_CLASS <![CDATA[>]]> 10
 		ORDER BY
-			PCCI.CD_CLASS ASC
+			TO_NUMBER(SORT_CLASS) ASC
     </select>
     <select id="listAverageMeans" parameterType="java.lang.String" resultType="com.koscom.consume.model.ConsumeDetailGoalInfoVO">
 		SELECT
@@ -902,4 +910,164 @@
 			AND YN_CANCEL		= 'N'
 			AND YN_DELETE		= 'N'
 	</select>
+	
+	<update id="modifyPersonSortClass" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
+		UPDATE
+			PERSON_CONSUME_CLASS_INFO
+		SET
+			SORT_CLASS = #{sort_class, jdbcType = VARCHAR}
+		WHERE
+				NO_PERSON	= #{no_person	, jdbcType = VARCHAR}
+			AND CD_CLASS	= #{cd_class	, jdbcType = VARCHAR}
+	</update>
+	<update id="modifyPersonSortType" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
+		UPDATE
+			PERSON_CONSUME_CLASS_INFO
+		SET
+			SORT_TYPE = #{sort_type, jdbcType = VARCHAR}
+		WHERE
+				NO_PERSON	= #{no_person	, jdbcType = VARCHAR}
+			AND CD_CLASS	= #{cd_class	, jdbcType = VARCHAR}
+			AND CD_TYPE		= #{cd_type		, jdbcType = VARCHAR}
+	</update>
+	<update id="deletePersonConsumeClass" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
+		UPDATE
+			PERSON_CONSUME_CLASS_INFO
+		SET
+			YN_USE = 'N'
+		WHERE
+				NO_PERSON	= #{no_person	, jdbcType = VARCHAR}
+			AND CD_CLASS	= #{cd_class	, jdbcType = VARCHAR}
+	</update>
+	<update id="deletePersonConsumeClassType" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
+		UPDATE
+			PERSON_CONSUME_CLASS_INFO
+		SET
+			YN_USE = 'N'
+		WHERE
+				NO_PERSON = #{no_person, jdbcType = VARCHAR}
+			AND CD_CLASS = #{cd_class, jdbcType = VARCHAR}
+			AND CD_TYPE = #{cd_type, jdbcType = VARCHAR}
+	</update>
+	<update id="modifyPersonConsumeClassNmClass" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
+		UPDATE
+			PERSON_CONSUME_CLASS_INFO
+		SET
+			NM_CLASS = #{nm_class, jdbcType = VARCHAR}
+		WHERE
+				NO_PERSON	= #{no_person	, jdbcType = VARCHAR}
+			AND CD_CLASS	= #{cd_class	, jdbcType = VARCHAR}
+	</update>
+	<update id="modifyPersonConsumeClassNmType" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
+		UPDATE
+			PERSON_CONSUME_CLASS_INFO
+		SET
+			NM_TYPE = #{nm_type, jdbcType = VARCHAR}
+		WHERE
+				NO_PERSON	= #{no_person	, jdbcType = VARCHAR}
+			AND CD_CLASS	= #{cd_class	, jdbcType = VARCHAR}
+			AND CD_TYPE		= #{cd_type		, jdbcType = VARCHAR}
+	</update>
+	<insert id="createPersonConsumeClassClass" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
+		INSERT INTO
+			PERSON_CONSUME_CLASS_INFO(
+				SELECT
+					 #{no_person, jdbcType = VARCHAR}				AS NO_PERSON
+					,(MAX( TO_NUMBER( CD_CLASS ))+ 1)|| '000'		AS CD_CONSUME_CLASS
+					,MAX( TO_NUMBER( CD_CLASS ))+ 1					AS CD_CLASS
+					,#{nm_class, jdbcType = VARCHAR}				AS NM_CLASS
+					,'000'											AS CD_TYPE
+					,NULL											AS_NM_TYPE
+					,'N'											AS YN_DEFAULT
+					,'Y'											AS YN_USE
+					,TO_CHAR( MAX( TO_NUMBER( SORT_CLASS ))+ 1 )	AS SORT_CLASS
+					,'1'											AS SORT_TYPE
+					,#{no_person, jdbcType = VARCHAR}				AS IS_FRT
+					,SYSDATE										AS DT_FRT
+					,#{no_person, jdbcType = VARCHAR}				AS ID_LST
+					,SYSDATE										AS DT_LST
+				FROM
+					PERSON_CONSUME_CLASS_INFO
+				WHERE
+						NO_PERSON = #{no_person, jdbcType = VARCHAR}
+					AND CD_CLASS != 99
+					AND CD_CLASS > 10
+			)
+	</insert>
+	<insert id="createPersonConsumeClassType" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
+		INSERT INTO
+			PERSON_CONSUME_CLASS_INFO(
+				SELECT
+					 #{no_person, jdbcType = VARCHAR}									AS NO_PERSON
+					,#{cd_class, jdbcType = VARCHAR} || (MAX( TO_NUMBER( CD_TYPE ))+ 1)	AS CD_CONSUME_CLASS
+					,#{cd_class, jdbcType = VARCHAR}									AS CD_CLASS
+					,NM_CLASS															AS NM_CLASS
+					,MAX( TO_NUMBER( CD_TYPE ))+ 1										AS CD_TYPE
+					,#{nm_type, jdbcType = VARCHAR}										AS_NM_TYPE
+					,'N'																AS YN_DEFAULT
+					,'Y'																AS YN_USE
+					,SORT_CLASS															AS SORT_CLASS
+					,MAX(TO_NUMBER(SORT_TYPE))+1										AS SORT_TYPE
+					,#{no_person, jdbcType = VARCHAR}									AS IS_FRT
+					,SYSDATE															AS DT_FRT
+					,#{no_person, jdbcType = VARCHAR}									AS ID_LST
+					,SYSDATE															AS DT_LST
+				FROM
+					PERSON_CONSUME_CLASS_INFO
+				WHERE
+						NO_PERSON = #{no_person, jdbcType = VARCHAR}
+					AND CD_CLASS > 10
+					AND CD_CLASS = #{cd_class, jdbcType = VARCHAR}
+					AND CD_TYPE != '999'
+				GROUP BY
+					 NM_CLASS
+					,SORT_CLASS
+			)
+	</insert>
+	<insert id="createPersonConsumeClassIncome" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
+		INSERT INTO
+			PERSON_CONSUME_CLASS_INFO(
+				 NO_PERSON
+				,CD_CONSUME_CLASS
+				,CD_CLASS
+				,NM_CLASS
+				,CD_TYPE
+				,YN_DEFAULT
+				,YN_USE
+				,SORT_CLASS
+				,SORT_TYPE
+				,ID_FRT
+				,DT_FRT
+				,ID_LST
+				,DT_LST
+			)(
+				SELECT
+					#{no_person, jdbcType = VARCHAR}				AS NO_PERSON,
+					DECODE(
+						LENGTH( MAX( TO_NUMBER( CD_CLASS ))),
+						1, '0' ||( MAX( TO_NUMBER( CD_CLASS ))+ 1 ),
+						2,( MAX( TO_NUMBER( CD_CLASS ))+ 1 )
+						) || '000'									AS CD_CONSUME_CLASS,
+					DECODE(
+						LENGTH( MAX( TO_NUMBER( CD_CLASS ))),
+						1, '0' ||( MAX( TO_NUMBER( CD_CLASS ))+ 1 ),
+						2,( MAX( TO_NUMBER( CD_CLASS ))+ 1 )
+						)											AS CD_CLASS,
+					#{nm_class, jdbcType = VARCHAR}					AS NM_CLASS,
+					'000'											AS CD_TYPE,
+					'N'												AS YN_DEFAULT,
+					'Y'												AS YN_USE,
+					MAX( TO_NUMBER( SORT_CLASS ))+ 1				AS SORT_CLASS,
+					'1'												AS SORT_TYPE,
+					#{no_person, jdbcType = VARCHAR}				AS ID_FRT,
+					SYSDATE											AS DT_FRT,
+					#{no_person, jdbcType = VARCHAR}				AS ID_LST,
+					SYSDATE											AS DT_LST
+				FROM
+					PERSON_CONSUME_CLASS_INFO
+				WHERE
+						NO_PERSON	= #{no_person, jdbcType = VARCHAR}
+					AND CD_CLASS <![CDATA[<=]]> 10
+			)
+	</insert>
 </mapper>

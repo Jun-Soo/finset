@@ -269,6 +269,7 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .list01 .item .top p.text span.circle.green { background: #89c11c; }
 .list01 .item .top p.text span.circle.blue { background: #6993f3; }
 .list01 .item .top p.text span.circle.purple { background: #bf65f3; }
+.list01 .item .top p.text em { padding-left: 10px; }
 .list01 .item .top p.corp { font-weight: 700; color: #222; }
 .list01 .item .top p:last-child { text-align: right; }
 .list01 .item .number-wrap { display: flex; align-items: center; margin-top: 15px; }
@@ -320,6 +321,7 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .list01 .item .btn-expand.on { background-position: bottom center; }
 .list01 .item.expand { padding-bottom: 0; }
 .list01 .item .goods-name { font-size: 14px; color: #222; font-weight: 700; margin-top: 10px; }
+.list01 .item .text-result { font-size: 14px; color: #333; margin-top: 15px; }
 .list01 .item .goods-cate { margin-top: 10px; }
 .list01 .item .goods-cate em { color: #62c1d0; font-weight: 700; padding-left: 5px; margin-left: 5px; border-left: 1px solid #e5e5e5; }
 .list01 .item .goods-cate em:first-child { padding-left: 0; margin-left: 0; border-left: none; }
@@ -381,6 +383,7 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .con-top { height: 200px; padding: 0 21px; }
 .con-top p { font-size: 20px; color: #222; font-weight: 700; padding-top: 40px; line-height: 27px; }
 .con-top p em { font-size: inherit; color: inherit; font-weight: 400; }
+.con-top p em.red { font-weight: 700; color: #e52638; }
 .con-top a { font-size: 14px; color: #9b9489; padding-right: 10px; background: url("../images/common/btn_contop_arrow.png") no-repeat right center/7px; font-weight: 700; display: inline-block; margin-top: 15px; }
 .con-top ul { margin-top: 25px; }
 .con-top ul li { margin-bottom: 10px; display: flex; }
@@ -392,6 +395,7 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .con-top.counsel-top { background: url("../images/credit/con_top_counsel.png") no-repeat top center/contain; }
 .con-top.goal-top { background: url("../images/consume/con_top_goal.png") no-repeat top center/contain; }
 .con-top.share-top { background: url("../images/share/con_top_share.png") no-repeat top center/contain; }
+.con-top.credit-up { background: url("../images/credit/con_top_creditup.png") no-repeat top center/contain; }
 
 /*   Main   */
 .owl-theme .owl-dots { text-align: center; margin-top: 10px; line-height: 0; font-size: 0; -webkit-tap-highlight-color: transparent; }

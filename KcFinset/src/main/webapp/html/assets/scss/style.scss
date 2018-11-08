@@ -453,6 +453,9 @@ aside.search-wrap{
                             background: #bf65f3;
                         } 
                     }
+                    em{
+                        padding-left: 10px;
+                    }
                 }
                 &.corp{
                     font-weight: 700;
@@ -697,6 +700,11 @@ aside.search-wrap{
             color: #222;
             font-weight: 700;
             margin-top: 10px;
+        }
+        .text-result{
+            font-size: 14px;
+            color: #333;
+            margin-top: 15px;
         }
         .goods-cate{
             margin-top: 10px;
@@ -983,7 +991,11 @@ aside.search-wrap{
         em{
             font-size: inherit;
             color: inherit;
-            font-weight: 400; 
+            font-weight: 400;
+            &.red{
+                font-weight: 700;
+                color: $col1;
+            }
         }
     }
     a{
@@ -1031,6 +1043,9 @@ aside.search-wrap{
     }
     &.share-top{
         background: url("../images/share/con_top_share.png") no-repeat top center / contain;
+    }
+    &.credit-up{
+        background: url("../images/credit/con_top_creditup.png") no-repeat top center / contain;
     }
 }
 

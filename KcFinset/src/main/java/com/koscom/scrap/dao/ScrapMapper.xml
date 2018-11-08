@@ -3,6 +3,204 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.koscom.scrap.dao.ScrapMapper">
+	<insert id="insertStockSummary" parameterType="com.koscom.scrap.model.StockSummaryVO">
+		INSERT INTO STOCK_SUMMARY
+		(
+			  NO_PERSON
+			, CD_FC
+			, ACCNO
+			, CASHBALANCE
+			, D1
+			, D2
+			, SUBSTITUTE
+			, RECEIVABLE
+			, SUBSMARGIN
+			, LOANCREDIT
+			, VALATTRADE
+			, VALUEATCUR
+			, PROLOSS
+			, TOTALACCVAL
+			, CASHAVWITHDRAW
+			, ID_FRT
+			, DT_FRT
+		) VALUES (
+			#{no_person				, jdbcType=NUMERIC}
+			, #{cd_fc				, jdbcType=VARCHAR}
+			, #{accno				, jdbcType=VARCHAR}
+			, #{cashbalance			, jdbcType=NUMERIC}
+			, #{d1					, jdbcType=VARCHAR}
+			, #{d2					, jdbcType=VARCHAR}
+			, #{substitute			, jdbcType=VARCHAR}
+			, #{receivable			, jdbcType=VARCHAR}
+			, #{subsmargin			, jdbcType=VARCHAR}
+			, #{loancredit			, jdbcType=VARCHAR}
+			, #{valattrade			, jdbcType=VARCHAR}
+			, #{valueatcur			, jdbcType=VARCHAR}
+			, #{proloss				, jdbcType=VARCHAR}
+			, #{totalaccval			, jdbcType=VARCHAR}
+			, #{cashavwithdraw		, jdbcType=VARCHAR}
+			, #{id_frt				, jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<delete id="deleteStockSummary"  parameterType="com.koscom.scrap.model.StockSummaryVO">
+		 DELETE
+	     FROM STOCK_SUMMARY
+	     WHERE NO_PERSON = #{no_person, jdbcType=NUMERIC}
+	     	AND CD_FC = #{cd_fc, jdbcType=NUMERIC}
+    </delete>
+    
+    <insert id="insertStockEquitylist" parameterType="com.koscom.scrap.model.StockEquitylistVO">
+		INSERT INTO STOCK_EQUITYLIST
+		(
+			  NO_PERSON
+			, CD_FC
+			, ACCNO
+			, ISINCODE
+			, ASSETTYPE
+			, QTY
+			, TRADETYPE
+			, VALATTRADE
+			, VALATCUR
+			, PROLOSS
+			, EARNINGRATE
+			, ID_FRT
+			, DT_FRT
+		) VALUES (
+			#{no_person				, jdbcType=NUMERIC}
+			, #{cd_fc				, jdbcType=VARCHAR}
+			, #{accno				, jdbcType=VARCHAR}
+			, #{isincode			, jdbcType=NUMERIC}
+			, #{assettype			, jdbcType=VARCHAR}
+			, #{qty					, jdbcType=VARCHAR}
+			, #{tradetype			, jdbcType=VARCHAR}
+			, #{valattrade			, jdbcType=VARCHAR}
+			, #{valatcur			, jdbcType=VARCHAR}
+			, #{proloss				, jdbcType=VARCHAR}
+			, #{earningrate			, jdbcType=VARCHAR}
+			, #{id_frt				, jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<delete id="deleteStockEquitylist"  parameterType="com.koscom.scrap.model.StockEquitylistVO">
+		 DELETE
+	     FROM STOCK_EQUITYLIST
+	     WHERE NO_PERSON = #{no_person, jdbcType=NUMERIC}
+	     	AND CD_FC = #{cd_fc, jdbcType=NUMERIC}
+    </delete>
+    
+    <insert id="insertStockFundlist" parameterType="com.koscom.scrap.model.StockFundlistVO">
+		INSERT INTO STOCK_FUNDLIST
+		(
+			  NO_PERSON
+			, CD_FC
+			, ACCNO
+			, FUNDCODE
+			, FUNDNAME
+			, VALATTRADE
+			, VALATCUR
+			, PROLOSS
+			, FIRSTDATEBUY
+			, LASTDATEBUY
+			, MATURITY
+			, EARNINGRATE
+			, ID_FRT
+			, DT_FRT
+		) VALUES (
+			#{no_person				, jdbcType=NUMERIC}
+			, #{cd_fc				, jdbcType=VARCHAR}
+			, #{accno				, jdbcType=VARCHAR}
+			, #{fundcode			, jdbcType=NUMERIC}
+			, #{fundname			, jdbcType=VARCHAR}
+			, #{valattrade			, jdbcType=VARCHAR}
+			, #{valatcur			, jdbcType=VARCHAR}
+			, #{proloss				, jdbcType=VARCHAR}
+			, #{firstdatebuy		, jdbcType=VARCHAR}
+			, #{lastdatebuy			, jdbcType=VARCHAR}
+			, #{maturity			, jdbcType=VARCHAR}
+			, #{earningrate			, jdbcType=VARCHAR}
+			, #{id_frt				, jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<delete id="deleteStockFundlist"  parameterType="com.koscom.scrap.model.StockFundlistVO">
+		 DELETE
+	     FROM STOCK_FUNDLIST
+	     WHERE NO_PERSON = #{no_person, jdbcType=NUMERIC}
+	     	AND CD_FC = #{cd_fc, jdbcType=NUMERIC}
+    </delete>
+	
+	<insert id="insertStockEtclist" parameterType="com.koscom.scrap.model.StockEtclistVO">
+		INSERT INTO STOCK_ETCLIST
+		(
+			  NO_PERSON
+			, CD_FC
+			, ACCNO
+			, ASSETTYPE
+			, ASSETNAME
+			, ISINCODE
+			, QTY
+			, TRADETYPE
+			, VALATTRADE
+			, VALUEATCUR
+			, EARNINGRATE
+			, ID_FRT
+			, DT_FRT
+		) VALUES (
+			#{no_person				, jdbcType=NUMERIC}
+			, #{cd_fc				, jdbcType=VARCHAR}
+			, #{accno				, jdbcType=VARCHAR}
+			, #{assettype			, jdbcType=NUMERIC}
+			, #{assetname			, jdbcType=VARCHAR}
+			, #{isincode			, jdbcType=VARCHAR}
+			, #{qty					, jdbcType=VARCHAR}
+			, #{tradetype			, jdbcType=VARCHAR}
+			, #{valattrade			, jdbcType=VARCHAR}
+			, #{valatcur			, jdbcType=VARCHAR}
+			, #{earningrate			, jdbcType=VARCHAR}
+			, #{id_frt				, jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<delete id="deleteStockEtclist"  parameterType="com.koscom.scrap.model.StockEtclistVO">
+		 DELETE
+	     FROM STOCK_ETCLIST
+	     WHERE NO_PERSON = #{no_person, jdbcType=NUMERIC}
+	     	AND CD_FC = #{cd_fc, jdbcType=NUMERIC}
+    </delete>
+    
+    <insert id="insertStockInterestIsin" parameterType="com.koscom.scrap.model.StockInterestIsinVO">
+		INSERT INTO STOCK_INTEREST_ISIN
+		(
+			  NO_PERSON
+			, CD_FC
+			, ACCNO
+			, GROUP_NAME
+			, LIST_ISINCODE
+			, ID_FRT
+			, DT_FRT
+		) VALUES (
+			#{no_person				, jdbcType=NUMERIC}
+			, #{cd_fc				, jdbcType=VARCHAR}
+			, #{accno				, jdbcType=VARCHAR}
+			, #{group_name			, jdbcType=NUMERIC}
+			, #{list_isincode		, jdbcType=VARCHAR}
+			, #{id_frt				, jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<delete id="deleteStockInterestIsin"  parameterType="com.koscom.scrap.model.StockInterestIsinVO">
+		 DELETE
+	     FROM STOCK_INTEREST_ISIN
+	     WHERE NO_PERSON = #{no_person, jdbcType=NUMERIC}
+	     	AND CD_FC = #{cd_fc, jdbcType=NUMERIC}
+    </delete>
+	
 	<insert id="createStockList" parameterType="com.koscom.scrap.model.StockListVO">
 		MERGE INTO STOCK_LIST
 		USING DUAL
@@ -14,7 +212,8 @@
 		 SET
 		  	STATE			= #{state		,jdbcType=VARCHAR}
 		    ,ACC_TYPE		= #{acc_type	,jdbcType=VARCHAR}
-		 	,DT				= #{dt			,jdbcType=VARCHAR}
+		 	,REAL_ACCNO		= #{real_accno	,jdbcType=VARCHAR}
+		 	,ALIAS			= #{alias		,jdbcType=VARCHAR}
 			,ID_LST			= #{id_lst		,jdbcType=VARCHAR}
 			,DT_LST			= SYSDATE
 		WHEN NOT MATCHED THEN
@@ -42,7 +241,7 @@
 		)
 	</insert>
 	
-	<select id="listStockList" parameterType="com.koscom.scrap.model.StockListVO">
+	<select id="listStockList" parameterType="com.koscom.scrap.model.StockListVO" resultType="com.koscom.scrap.model.StockListVO">
 		SELECT NO_PERSON
 			, CD_FC
 			, ACCNO
@@ -54,7 +253,7 @@
 			, DT_FRT
 			, ID_FRT
 			, DT_FRT
-		FROM FC_LINK_INFO
+		FROM STOCK_LIST
 		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
 			AND CD_FC= #{cd_fc, jdbcType=VARCHAR} 
 			AND STATE = '사용'
@@ -66,21 +265,21 @@
 		</selectKey>
 
 		INSERT INTO SCR_RSLT_SCRAP
-			(
-			  	 NO_PERSON
-			  	, SEQ_SCRAPING_RESULT
-			  	, CD_SCRAP
-				, RSLT_SCRAPING
-				, NO_BIZ_COMP
-				, DT_FRT
-			) VALUES (
-				  #{no_person, jdbcType=VARCHAR}
-				  , #{seq_scraping_result, jdbcType=NUMERIC}
-				  , #{cd_scrap, jdbcType=NUMERIC}
-				  , #{rslt_scraping, jdbcType=NUMERIC}
-				  , #{no_biz_comp, jdbcType=NUMERIC}
-				  , SYSDATE
-			)
+		(
+		  	 NO_PERSON
+		  	, SEQ_SCRAPING_RESULT
+		  	, CD_SCRAP
+			, RSLT_SCRAPING
+			, NO_BIZ_COMP
+			, DT_FRT
+		) VALUES (
+			  #{no_person, jdbcType=VARCHAR}
+			  , #{seq_scraping_result, jdbcType=NUMERIC}
+			  , #{cd_scrap, jdbcType=NUMERIC}
+			  , #{rslt_scraping, jdbcType=NUMERIC}
+			  , #{no_biz_comp, jdbcType=NUMERIC}
+			  , SYSDATE
+		)
 	</insert>
 	
 	<update id="updateScrRsltScrap" parameterType="com.koscom.scrap.model.ScrRsltScrapVO">

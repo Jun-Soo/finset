@@ -63,9 +63,7 @@ export default {
             _this.$store.state.cardCode = response.data.card_code;
           }
           if (_this.$route.params.isCheckNts) {
-            var etcCode = new Array();
-            etcCode.push("nts");
-            _this.$store.state.etcCode = etcCode;
+            _this.$store.state.etcCode = "nts";
           }
 
           if (Constant.userAgent == "iOS") {

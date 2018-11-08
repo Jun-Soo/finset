@@ -69,7 +69,12 @@ import com.koscom.scrap.model.ScrRespIncomeDtlVO;
 import com.koscom.scrap.model.ScrRespPensionPaymentVO;
 import com.koscom.scrap.model.ScrRespPensionPaymentdtlVO;
 import com.koscom.scrap.model.ScrRsltScrapVO;
+import com.koscom.scrap.model.StockEquitylistVO;
+import com.koscom.scrap.model.StockEtclistVO;
+import com.koscom.scrap.model.StockFundlistVO;
+import com.koscom.scrap.model.StockInterestIsinVO;
 import com.koscom.scrap.model.StockListVO;
+import com.koscom.scrap.model.StockSummaryVO;
 import com.koscom.scrap.model.UserBankOutputVO;
 import com.koscom.scrap.model.UserCardOutputVO;
 import com.koscom.scrap.model.sub.AnAllListHistoryVO;
@@ -385,11 +390,7 @@ public class ScrapManagerImpl implements ScrapManager {
 		
 		for (int i= 0; i< stockList.size(); i++){
 			createFinanceAccount(no_person, uuid, dn, token, stockList.get(i));
-			
-			
-			
 		}
-
 		return null;
 	}
 	
@@ -489,6 +490,265 @@ public class ScrapManagerImpl implements ScrapManager {
 		}
 		return returnClass;
 	}
+	
+	public String getFinanceBalance(HashMap<String, String> headerMap, String body, StockSummaryVO stockSummaryVO, String type)	{
+		String com_alias = fincorpMapper.getComAliasCdByCdFc(stockSummaryVO.getCd_fc());
+		String financeUrl = String.format(environment.getProperty("account.apiUrl"), com_alias)+"/account/balance/search";
+		
+		String no_person = stockSummaryVO.getNo_person();
+		String cd_fc = stockSummaryVO.getCd_fc();
+		String accno = stockSummaryVO.getAccno();
+		
+		JsonParser jsonParser = new JsonParser();
+		JsonObject jsonSendRoot = (JsonObject) jsonParser.parse(body);
+		JsonObject jsonReqPram = new JsonObject();
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("assetType", type);
+		jsonObject.addProperty("count", 0);
+		jsonObject.addProperty("page", "null");
+		jsonReqPram.add("requestParameters", jsonObject);
+		jsonSendRoot.add("balanceRequestBody", jsonReqPram);
+		
+		logger.info("getFinanceBalance() : " + jsonSendRoot.toString());
+		
+		URLConnection url = new URLConnection();
+		ReturnClass returnClass = url.sendReqPOST_Direct(financeUrl, headerMap, jsonSendRoot.toString());
+		String data = returnClass.getDes_message();
+		logger.info("Receive Data : "+ data);
+		
+		JsonObject jsonRecvRoot = (JsonObject) jsonParser.parse(data);
+		
+		if(returnClass.getCd_result()  == Constant.SUCCESS)	{
+			JsonObject jsonBalance = (JsonObject)jsonRecvRoot.get("balanceList");
+			if(jsonBalance == null)	{
+				return Constant.FAILED;
+			}
+			JsonObject jsonSummary;
+			JsonArray jsonArry;
+			switch(type)
+			{
+				case "CASH":
+					jsonSummary = (JsonObject)jsonBalance.get("summary");
+					if(jsonSummary == null)	{
+						return Constant.FAILED;
+					}
+					if(jsonSummary.get("cashBalance") != null && !jsonSummary.get("cashBalance").isJsonNull())	{
+						stockSummaryVO.setCashbalance(jsonSummary.get("cashBalance").getAsString());
+					}
+					if(jsonSummary.get("d1") != null && !jsonSummary.get("d1").isJsonNull())	{
+						stockSummaryVO.setD1(jsonSummary.get("d1").getAsString());
+					}
+					if(jsonSummary.get("d2") != null && !jsonSummary.get("d2").isJsonNull())	{
+						stockSummaryVO.setD2(jsonSummary.get("d2").getAsString());
+					}
+					if(jsonSummary.get("substitute") != null && !jsonSummary.get("substitute").isJsonNull())	{
+						stockSummaryVO.setSubstitute(jsonSummary.get("substitute").getAsString());
+					}
+					if(jsonSummary.get("subsMargin") != null && !jsonSummary.get("subsMargin").isJsonNull())	{
+						stockSummaryVO.setSubsmargin(jsonSummary.get("subsMargin").getAsString());
+					}
+					if(jsonSummary.get("loanCredit") != null && !jsonSummary.get("loanCredit").isJsonNull())	{
+						stockSummaryVO.setLoancredit(jsonSummary.get("loanCredit").getAsString());
+					}
+					if(jsonSummary.get("valAtTrade") != null && !jsonSummary.get("valAtTrade").isJsonNull())	{
+						stockSummaryVO.setValattrade(jsonSummary.get("valAtTrade").getAsString());
+					}
+					if(jsonSummary.get("valueAtCur") != null && !jsonSummary.get("valueAtCur").isJsonNull())	{
+						stockSummaryVO.setValueatcur(jsonSummary.get("valueAtCur").getAsString());
+					}
+					if(jsonSummary.get("proLoss") != null && !jsonSummary.get("proLoss").isJsonNull())	{
+						stockSummaryVO.setProloss(jsonSummary.get("proLoss").getAsString());
+					}
+					if(jsonSummary.get("totalAccVal") != null && !jsonSummary.get("totalAccVal").isJsonNull())	{
+						stockSummaryVO.setTotalaccval(jsonSummary.get("totalAccVal").getAsString());
+					}
+					if(jsonSummary.get("cashAvWithdraw") != null && !jsonSummary.get("cashAvWithdraw").isJsonNull())	{
+						stockSummaryVO.setCashavwithdraw(jsonSummary.get("cashAvWithdraw").getAsString());
+					}
+					scrapMapper.insertStockSummary(stockSummaryVO);
+				break;
+				case "EQTY":
+					jsonArry = (JsonArray)jsonBalance.get("equityList");
+					if(jsonArry == null)	{
+						return Constant.FAILED;
+					}
+					for(int i=0; i<jsonArry.size(); i++)	{
+						JsonObject object = (JsonObject)jsonArry.get(i);
+						StockEquitylistVO stockEquitylistVO = new StockEquitylistVO();
+						stockEquitylistVO.setNo_person(no_person);
+						stockEquitylistVO.setCd_fc(cd_fc);
+						stockEquitylistVO.setAccno(accno);
+						if(object.get("assetType") != null && !object.get("assetType").isJsonNull())	{
+							stockEquitylistVO.setAssettype(object.get("assetType").getAsString());
+						}
+						if(object.get("isinCode") != null && !object.get("isinCode").isJsonNull())	{
+							stockEquitylistVO.setIsincode(object.get("isinCode").getAsString());
+						}
+						if(object.get("qty") != null && !object.get("qty").isJsonNull())	{
+							stockEquitylistVO.setQty(object.get("qty").getAsString());
+						}
+						if(object.get("tradeType") != null && !object.get("tradeType").isJsonNull())	{
+							stockEquitylistVO.setTradetype(object.get("tradeType").getAsString());
+						}
+						if(object.get("valAtTrade") != null && !object.get("valAtTrade").isJsonNull())	{
+							stockEquitylistVO.setValattrade(object.get("valAtTrade").getAsString());
+						}
+						if(object.get("valAtCur") != null && !object.get("valAtCur").isJsonNull())	{
+							stockEquitylistVO.setValatcur(object.get("valAtCur").getAsString());
+						}
+						if(object.get("proLoss") != null && !object.get("proLoss").isJsonNull())	{
+							stockEquitylistVO.setProloss(object.get("proLoss").getAsString());
+						}
+						if(object.get("earningRate") != null && !object.get("earningRate").isJsonNull())	{
+							stockEquitylistVO.setEarningrate(object.get("earningRate").getAsString());
+						}
+						scrapMapper.insertStockEquitylist(stockEquitylistVO);
+					}
+				break;
+				case "FUND":
+					jsonArry = (JsonArray)jsonBalance.get("fundList");
+					if(jsonArry == null)	{
+						return Constant.FAILED;
+					}
+					for(int i=0; i<jsonArry.size(); i++)	{
+						JsonObject object = (JsonObject)jsonArry.get(i);
+						StockFundlistVO stockFundlistVO = new StockFundlistVO();
+						stockFundlistVO.setNo_person(no_person);
+						stockFundlistVO.setCd_fc(cd_fc);
+						stockFundlistVO.setAccno(accno);
+						if(object.get("fundCode") != null && !object.get("fundCode").isJsonNull())	{
+							stockFundlistVO.setFundcode(object.get("fundCode").getAsString());
+						}
+						if(object.get("fundName") != null && !object.get("fundName").isJsonNull())	{
+							stockFundlistVO.setFundname(object.get("fundName").getAsString());
+						}
+						if(object.get("valAtTrade") != null && !object.get("valAtTrade").isJsonNull())	{
+							stockFundlistVO.setValattrade(object.get("valAtTrade").getAsString());
+						}
+						if(object.get("valAtCur") != null && !object.get("valAtCur").isJsonNull())	{
+							stockFundlistVO.setValatcur(object.get("valAtCur").getAsString());
+						}
+						if(object.get("proLoss") != null && !object.get("proLoss").isJsonNull())	{
+							stockFundlistVO.setProloss(object.get("proLoss").getAsString());
+						}
+						if(object.get("firstDateBuy") != null && !object.get("firstDateBuy").isJsonNull())	{
+							stockFundlistVO.setFirstdatebuy(object.get("firstDateBuy").getAsString());
+						}
+						if(object.get("lastDateBuy") != null && !object.get("lastDateBuy").isJsonNull())	{
+							stockFundlistVO.setLastdatebuy(object.get("lastDateBuy").getAsString());
+						}
+						if(object.get("maturity") != null && !object.get("maturity").isJsonNull())	{
+							stockFundlistVO.setMaturity(object.get("maturity").getAsString());
+						}
+						if(object.get("earningRate") != null && !object.get("earningRate").isJsonNull())	{
+							stockFundlistVO.setEarningrate(object.get("earningRate").getAsString());
+						}
+						scrapMapper.insertStockFundlist(stockFundlistVO);
+					}
+				break;
+				case "ETC":
+					jsonArry = (JsonArray)jsonBalance.get("etcList");
+					if(jsonArry == null)	{
+						return Constant.FAILED;
+					}
+					for(int i=0; i<jsonArry.size(); i++)	{
+						JsonObject object = (JsonObject)jsonArry.get(i);
+						StockEtclistVO stockEtclistVO = new StockEtclistVO();
+						stockEtclistVO.setNo_person(no_person);
+						stockEtclistVO.setCd_fc(cd_fc);
+						stockEtclistVO.setAccno(accno);
+						if(object.get("assetType") != null && !object.get("assetType").isJsonNull())	{
+							stockEtclistVO.setAssettype(object.get("assetType").getAsString());
+						}
+						if(object.get("assetName") != null && !object.get("assetName").isJsonNull())	{
+							stockEtclistVO.setAssetname(object.get("assetName").getAsString());
+						}
+						if(object.get("isinCode") != null && !object.get("isinCode").isJsonNull())	{
+							stockEtclistVO.setIsincode(object.get("isinCode").getAsString());
+						}
+						if(object.get("qty") != null && !object.get("qty").isJsonNull())	{
+							stockEtclistVO.setQty(object.get("qty").getAsString());
+						}
+						if(object.get("tradeType") != null && !object.get("tradeType").isJsonNull())	{
+							stockEtclistVO.setTradetype(object.get("tradeType").getAsString());
+						}
+						if(object.get("valAtTrade") != null && !object.get("valAtTrade").isJsonNull())	{
+							stockEtclistVO.setValattrade(object.get("valAtTrade").getAsString());
+						}
+						if(object.get("valueAtCur") != null && !object.get("valueAtCur").isJsonNull())	{
+							stockEtclistVO.setValatcur(object.get("valueAtCur").getAsString());
+						}
+						if(object.get("earningRate") != null && !object.get("earningRate").isJsonNull())	{
+							stockEtclistVO.setEarningrate(object.get("earningRate").getAsString());
+						}
+						scrapMapper.insertStockEtclist(stockEtclistVO);
+					}
+				break;
+			}
+		}
+		else	{
+			logger.error("금융투자회사 계좌잔고 조회 를 실패하였습니다.");
+			return Constant.FAILED;
+		}
+		return Constant.SUCCESS;
+	}
+	
+	public String getFinanceInterest(HashMap<String, String> headerMap, String body, StockInterestIsinVO stockInterestIsinVO)	{
+		String com_alias = fincorpMapper.getComAliasCdByCdFc(stockInterestIsinVO.getCd_fc());
+		String financeUrl = String.format(environment.getProperty("account.apiUrl"), com_alias)+"/account/interest/search";
+		
+		String no_person = stockInterestIsinVO.getNo_person();
+		String cd_fc = stockInterestIsinVO.getCd_fc();
+		String accno = stockInterestIsinVO.getAccno();
+		
+		JsonParser jsonParser = new JsonParser();
+		JsonObject jsonSendRoot = (JsonObject) jsonParser.parse(body);
+		JsonObject jsonReqPram = new JsonObject();
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("assetType", "ALL"); //문서상 Type가 한개여서 ALL로 하드코딩
+		jsonObject.addProperty("count", 0);
+		jsonObject.addProperty("page", "null");
+		jsonReqPram.add("requestParameters", jsonObject);
+		jsonSendRoot.add("interestSymbolListRequestBody", jsonReqPram);
+		
+		logger.info("getFinanceInterest() : " + jsonSendRoot.toString());
+		
+		URLConnection url = new URLConnection();
+		ReturnClass returnClass = url.sendReqPOST_Direct(financeUrl, headerMap, jsonSendRoot.toString());
+		String data = returnClass.getDes_message();
+		logger.info("Receive Data : "+ data);
+		
+		JsonObject jsonRecvRoot = (JsonObject) jsonParser.parse(data);
+		
+		if(returnClass.getCd_result()  == Constant.SUCCESS)	{
+			JsonArray jsonGroupArray = (JsonArray)jsonRecvRoot.get("groupList");
+			if(jsonGroupArray == null)	{
+				return Constant.FAILED;
+			}
+			for(int i=0; i<jsonGroupArray.size(); i++)	{
+				JsonObject object = (JsonObject)jsonGroupArray.get(i);
+				StockInterestIsinVO stockInterestIsin = new StockInterestIsinVO();
+				stockInterestIsin.setNo_person(no_person);
+				stockInterestIsin.setCd_fc(cd_fc);
+				stockInterestIsin.setAccno(accno);
+				logger.info("Object  : "+ object.toString());
+				if(object.get("groupName") != null && !object.get("groupName").isJsonNull())	{
+					stockInterestIsin.setGroup_name(object.get("groupName").getAsString());
+				}
+				if(object.get("isinCode") != null && !object.get("isinCode").isJsonNull())	{
+					JsonArray jsonIsinArray = (JsonArray)object.get("isinCode");
+					stockInterestIsin.setList_isincode(jsonIsinArray.toString());
+				}
+				scrapMapper.insertStockInterestIsin(stockInterestIsin);
+			}
+		}
+		else	{
+			logger.error("금융투자회사 관심종목 조회 를 실패하였습니다.");
+			return Constant.FAILED;
+		}
+		return Constant.SUCCESS;
+	}
+	
 	public String startScrapFinance(String no_person, String uuid, String token)	{
 		PersonVO personVO = personMapper.getPersonInfo(no_person);
 		String ci = personVO.getKcb_ci();
@@ -511,25 +771,111 @@ public class ScrapManagerImpl implements ScrapManager {
 			logger.debug("com_alias	:" + com_alias);
 			logger.debug("dn		:" + dn);
 			
+			// 조회내역 저장 전 데이터 삭제
+			StockSummaryVO stockSummaryVO = new StockSummaryVO();
+			stockSummaryVO.setNo_person(no_person);
+			stockSummaryVO.setCd_fc(cd_fc);
+			scrapMapper.deleteStockSummary(stockSummaryVO);
+			StockEquitylistVO stockEquitylistVO = new StockEquitylistVO();
+			stockEquitylistVO.setNo_person(no_person);
+			stockEquitylistVO.setCd_fc(cd_fc);
+			scrapMapper.deleteStockEquitylist(stockEquitylistVO);
+			StockFundlistVO stockFundlistVO = new StockFundlistVO();
+			stockFundlistVO.setNo_person(no_person);
+			stockFundlistVO.setCd_fc(cd_fc);
+			scrapMapper.deleteStockFundlist(stockFundlistVO);
+			StockEtclistVO stockEtclistVO = new StockEtclistVO();
+			stockEtclistVO.setNo_person(no_person);
+			stockEtclistVO.setCd_fc(cd_fc);
+			scrapMapper.deleteStockEtclist(stockEtclistVO);
+			
+			StockInterestIsinVO stockInterestIsinVO = new StockInterestIsinVO();
+			stockInterestIsinVO.setNo_person(no_person);
+			stockInterestIsinVO.setCd_fc(cd_fc);
+			scrapMapper.deleteStockInterestIsin(stockInterestIsinVO);
+			
 			// 계좌 조회 전 가상계좌 발급으로 가상계좌 내역 갱신  (uuid 처리 여부)
-			createFinanceAccount(no_person, uuid, dn, token, com_alias);
-			
-			StockListVO stockListVO = new StockListVO();
-			stockListVO.setNo_person(no_person);
-			stockListVO.setCd_fc(cd_fc);
-			
-			List<StockListVO> stockList = scrapMapper.listStockList(stockListVO);
-			for (StockListVO stockListInfo : stockList) {
-				logger.debug("stockListInfo.getCd_fc	:" + stockListInfo.getCd_fc());
-				logger.debug("stockListInfo.getAccno	:" + stockListInfo.getAccno());
-				logger.debug("stockListInfo.getAcc_type	:" + stockListInfo.getAcc_type());
+			ReturnClass returnClass = createFinanceAccount(no_person, uuid, dn, token, com_alias);
+			if(returnClass.getCd_result()  == Constant.FAILED)	{
+				logger.error("가상계좌 생성 오류 :" + cd_fc);
+				String data = returnClass.getDes_message();
+				logger.info("data : "+ data);
+				JsonParser jsonParser = new JsonParser();
+				JsonObject jsonRecvRoot = (JsonObject) jsonParser.parse(data);
 				
+				//금융사 연동 정보 추가
+	        	fcLinkInfo.setYn_link("Y");
+	        	fcLinkInfo.setCd_link_stat("99");
+	        	fcLinkInfo.setId_frt(no_person);
+	        	fcLinkInfo.setId_lst(no_person);
+	        	scrapMapper.createFcLinkInfo(fcLinkInfoVO);
 			}
-
-			
+			else if(returnClass.getCd_result()  == Constant.SUCCESS)	{
+				StockListVO stockListVO = new StockListVO();
+				stockListVO.setNo_person(no_person);
+				stockListVO.setCd_fc(cd_fc);
+				
+				//테스트용 임시데이터=======================================================
+				uuid = "1866DA0D99D6";
+				dn = "testdn123";
+				token = "Bearer fbf794d3-9be6-4163-9df6-927d43736470";
+				ci = "1234567890";
+				hp = "192168010001";
+				//테스트용 임시데이터=======================================================
+				
+				//계좌 조회 공통 Request heder 생성			
+				HashMap<String, String> headerMap = new HashMap();
+				headerMap.put("Format", "JSON <application/json; charset=utf-8>");
+				headerMap.put("Content-Type", "Application/json");
+				headerMap.put("Authorization", token);
+				
+				//계좌 조회 공통 Request Body 생성
+				JsonObject jsonBody = new JsonObject();
+				JsonObject jsonPartnerInfo = new JsonObject();
+				jsonPartnerInfo.addProperty("comId", environment.getProperty("direct.comId"));
+				jsonPartnerInfo.addProperty("srvId", environment.getProperty("direct.srvId"));
+				jsonBody.add("partner", jsonPartnerInfo);
+				
+				JsonObject jsonCommonInfo = new JsonObject();
+				JsonObject jsonDevInfo = new JsonObject();
+				
+				jsonCommonInfo.addProperty("reqIdConsumer", "test");
+				jsonCommonInfo.addProperty("ci", ci);
+				jsonCommonInfo.addProperty("certDn", dn);
+				jsonBody.add("commonHeader", jsonCommonInfo);
+				
+				// uuid가 있을 경우 - 핸드폰 접속 , 없을 경우  - PC 접속
+				if(uuid != null && uuid.length() > 0)	{
+					jsonDevInfo.addProperty("ipAddr", hp);
+					jsonDevInfo.addProperty("macAddr", uuid);
+				}
+				else	{
+					jsonDevInfo.addProperty("ipAddr", "");
+					jsonDevInfo.addProperty("macAddr", "");
+				}
+				jsonBody.add("devInfo", jsonDevInfo);
+				
+				List<StockListVO> stockList = scrapMapper.listStockList(stockListVO);
+				for (StockListVO stockListInfo : stockList) {
+					logger.debug("stockListInfo.getCd_fc	:" + stockListInfo.getCd_fc());
+					logger.debug("stockListInfo.getAccno	:" + stockListInfo.getAccno());
+					logger.debug("stockListInfo.getAcc_type	:" + stockListInfo.getAcc_type());
+					
+					JsonObject jsonAccount = new JsonObject();
+					jsonAccount.addProperty("vtAccNo", stockListInfo.getAccno());
+					jsonBody.add("accInfo", jsonAccount);
+					
+					stockSummaryVO.setAccno(stockListInfo.getAccno());
+					getFinanceBalance(headerMap, jsonBody.toString(), stockSummaryVO, "CASH");
+					getFinanceBalance(headerMap, jsonBody.toString(), stockSummaryVO, "EQTY");
+					getFinanceBalance(headerMap, jsonBody.toString(), stockSummaryVO, "FUND");
+					getFinanceBalance(headerMap, jsonBody.toString(), stockSummaryVO, "ETC");
+					
+					stockInterestIsinVO.setAccno(stockListInfo.getAccno());
+					getFinanceInterest(headerMap, jsonBody.toString(), stockInterestIsinVO);
+				}
+			}
 		}
-		
-    	
 		return "";
 	}
 	

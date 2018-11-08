@@ -23,11 +23,77 @@ import com.koscom.scrap.model.ScrRespIncomeDtlVO;
 import com.koscom.scrap.model.ScrRespPensionPaymentVO;
 import com.koscom.scrap.model.ScrRespPensionPaymentdtlVO;
 import com.koscom.scrap.model.ScrRsltScrapVO;
+import com.koscom.scrap.model.StockEquitylistVO;
+import com.koscom.scrap.model.StockEtclistVO;
+import com.koscom.scrap.model.StockFundlistVO;
+import com.koscom.scrap.model.StockInterestIsinVO;
 import com.koscom.scrap.model.StockListVO;
+import com.koscom.scrap.model.StockSummaryVO;
 import com.koscom.scrap.model.sub.AnAllListHistoryVO;
 import com.koscom.scrap.model.sub.DepositAnListHistoryVO;
 
 public interface ScrapMapper { // com.koscom.scrap.dao.ScrapMapper
+
+	/**
+	 * 증권사 계좌잔고 저장
+	 * @param StockSummaryVO
+	 */
+	int insertStockSummary(StockSummaryVO stockSummaryVO);
+	
+	/**
+	 * 증권사 계좌잔고 삭제
+	 * @param StockSummaryVO
+	 */
+	int deleteStockSummary(StockSummaryVO stockSummaryVO);
+	
+	/**
+	 * 증권사 주식정보 저장
+	 * @param StockEquitylistVO
+	 */
+	int insertStockEquitylist(StockEquitylistVO stockEquitylistVO);
+	
+	/**
+	 * 증권사 주식정보 삭제
+	 * @param StockEquitylistVO
+	 */
+	int deleteStockEquitylist(StockEquitylistVO stockEquitylistVO);
+	
+	/**
+	 * 증권사 펀드정보 저장
+	 * @param StockFundlistVO
+	 */
+	int insertStockFundlist(StockFundlistVO stockFundlistVO);
+	
+	/**
+	 * 증권사 펀드정보 삭제
+	 * @param StockFundlistVO
+	 */
+	int deleteStockFundlist(StockFundlistVO stockFundlistVO);
+	
+	/**
+	 * 증권사 기타정보 저장
+	 * @param StockEtclistVO
+	 */
+	int insertStockEtclist(StockEtclistVO stockEtclistVO);
+	
+	/**
+	 * 증권사 기타정보 삭제
+	 * @param StockEtclistVO
+	 */
+	int deleteStockEtclist(StockEtclistVO stockEtclistVO);
+	
+	/**
+	 * 증권사 관심종목 저장
+	 * @param StockEtclistVO
+	 */
+	int insertStockInterestIsin(StockInterestIsinVO stockInterestIsinVO);
+	
+	/**
+	 * 증권사 관심종목 삭제
+	 * @param StockEtclistVO
+	 */
+	int deleteStockInterestIsin(StockInterestIsinVO stockInterestIsinVO);
+	
 	/**
 	 * 증권사 가상계좌 발급 정보 저장
 	 * @param StockListVO

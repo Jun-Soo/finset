@@ -68,7 +68,7 @@ export default {
           _this.listEvent = list;
         })
         .catch(e => {
-          this.$toast.center(ko.messages.error);
+          // this.$toast.center(ko.messages.error);
         });
     },
     //이벤트show,hide

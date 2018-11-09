@@ -127,7 +127,6 @@ export default {
     },
     // linkUrl 페이지로 전환
     pushUrlLink: function(linkUrl) {
-      debugger;
       this.$router.push(linkUrl);
     }
   }

@@ -22,7 +22,6 @@ export default {
       this.$toast.center("이미 로그인되어 있습니다. 다시 시도해주세요.");
       return;
     }
-    debugger;
     // hp
     this.$store.state.user.hp = Constant.params.hp;
     localStorage.setItem("hp", Constant.params.hp);

@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="credit-top">
       <div class="time">{{ currentDate }}</div>
       <div class="wrap">
@@ -117,6 +117,7 @@ export default {
   name: "creditMain",
   data() {
     return {
+      seen: false,
       currentDate: "", //현재일자
       //신용 기본정보
       baseInfo: "",
@@ -139,8 +140,10 @@ export default {
   //   computed() {},
   beforeCreate() {},
   created() {
+    // this.$store.state.isLoading = true;
     this.$store.state.header.type = "main";
     this.$store.state.header.active = "credit";
+
     this.getCreditInfoMain();
   },
   beforeMount() {},
@@ -183,9 +186,12 @@ export default {
           _this.debtSumAmtRemain = response.data.debtSumAmtRemain;
           _this.overdueSumAmt = response.data.overdueSumAmt;
           _this.guaranteeSumAmt = response.data.guaranteeSumAmt;
+
+          // _this.$store.state.isLoading = false;
+          this.seen = true;
         })
         .catch(e => {
-          this.$toast.center(ko.messages.error);
+          //this.$toast.center(ko.messages.error);
         });
     },
     formatNumber: function(data) {

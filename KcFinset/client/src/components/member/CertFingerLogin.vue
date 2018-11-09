@@ -61,7 +61,6 @@ export default {
   methods: {
     login: function() {
       var _this = this;
-      debugger;
       var querystring = require("querystring");
       var data = querystring.stringify({
         j_username: _this.username,

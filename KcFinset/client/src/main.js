@@ -60,10 +60,12 @@ axios.interceptors.response.use((response) => {
   debugger
   if (error.response.status === 401) {
     console.log('unauthorized, logging out ...')
-    router.replace('/mypage/logout')
+    router.push('/mypage/logout')
+    return false
   } else if (error.response.status === 403) {
     console.log('unauthorized, logging out ...')
-    router.replace('/mypage/logout')
+    router.push('/mypage/logout')
+    return false
   }
   return Promise.reject(error.response)
 })

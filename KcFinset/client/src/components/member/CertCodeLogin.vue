@@ -102,7 +102,6 @@ export default {
       if (_this.password.length > 3) {
         _this.classPass4 = "border-color: #111";
 
-        debugger;
         //validator
         if (this.$store.state.ynReload == "Y") {
           _this.passCheck();
@@ -180,7 +179,7 @@ export default {
             }
             _this.$store.state.user.authToken = null;
             _this.$store.commit("LOGIN", response.data);
-            debugger;
+
             if (_this.$store.state.linkUrl) {
               _this.$router.push(_this.$store.state.linkUrl);
             } else {

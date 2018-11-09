@@ -12,7 +12,7 @@ export default {
     localStorage.setItem('accessToken', '')
 
     Constant.userAgent = this.getMobileOperatingSystem()
-    Constant.params = this.getParams()
+    this.$store.state.params = this.getParams()
 
     // ios a, button 태그 이벤트
     $('body *').on('touchstart', function () { })

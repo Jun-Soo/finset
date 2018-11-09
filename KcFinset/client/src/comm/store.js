@@ -7,6 +7,7 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
+    params: [],
     title: 'FINSET',
     header: {
       type: 'sub',

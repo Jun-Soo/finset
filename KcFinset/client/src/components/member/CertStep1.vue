@@ -141,7 +141,7 @@ export default {
     _this.$store.state.header.type = "sub";
     frm.append("code_value", "1.0");
     frm.append("code_group", "OPENAPI_TERMS");
-    _this.$http.post("/m/comm/getAgreeTerm.json", frm).then(response => {
+    _this.$http.post("/m/login/getAgreeTerm.json", frm).then(response => {
       //정상, 에러 처리 필요
       _this.term_db = response.data.etc;
       _this.nm_code = response.data.nm_code;

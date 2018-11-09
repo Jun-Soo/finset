@@ -73,27 +73,5 @@ public class CommController implements Constant {
 	}
 
 
-	/**
-	 * openAPI 약관동의 가져오기
-	 * @param model
-	 * @param request
-	 * @param fcmVO
-	 * @return
-	 * @throws SQLException 
-	 */
-	@RequestMapping("/getAgreeTerm.json")
-	public String getOpenApiTerm (
-			HttpServletRequest request,
-			HttpSession session, 
-			CodeInfo codeInfo,
-			Model model) throws SQLException {
-		
-		codeInfo = codeManager.getAgreeTerm(codeInfo);
-		
-		logger.info("getAgreeTerm.json || codeInfo : "+codeInfo.toString());
-		model.addAttribute("nm_code", codeInfo.getNm_code());
-		model.addAttribute("etc", codeInfo.getEtc());
-					
-		return "jsonView";
-	}
+	
 }

@@ -1,7 +1,6 @@
 package com.koscom.login;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,14 +26,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.koscom.env.model.CodeInfo;
 import com.koscom.env.service.CodeManager;
 import com.koscom.login.service.SecureManager;
-import com.koscom.person.model.PersonForm;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
 import com.koscom.util.Constant;
-import com.koscom.util.DateUtil;
-import com.koscom.util.FinsetException;
 import com.koscom.util.LogUtil;
-import com.koscom.util.NumberUtil;
 import com.koscom.util.ReturnClass;
 import com.koscom.util.SessionUtil;
 import com.koscom.util.SkipLoginCheck;
@@ -586,6 +581,30 @@ public class LoginController {
 		
 		
 		
+		return "jsonView";
+	}
+	
+	/**
+	 * openAPI 약관동의 가져오기
+	 * @param model
+	 * @param request
+	 * @param fcmVO
+	 * @return
+	 * @throws SQLException 
+	 */
+	@RequestMapping("/getAgreeTerm.json")
+	public String getOpenApiTerm (
+			HttpServletRequest request,
+			HttpSession session, 
+			CodeInfo codeInfo,
+			Model model) throws SQLException {
+		
+		codeInfo = codeManager.getAgreeTerm(codeInfo);
+		
+		logger.info("getAgreeTerm.json || codeInfo : "+codeInfo.toString());
+		model.addAttribute("nm_code", codeInfo.getNm_code());
+		model.addAttribute("etc", codeInfo.getEtc());
+					
 		return "jsonView";
 	}
 }

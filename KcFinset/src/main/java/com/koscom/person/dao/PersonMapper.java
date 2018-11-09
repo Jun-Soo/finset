@@ -10,9 +10,9 @@ import com.koscom.person.model.PersonAgreeHistVO;
 import com.koscom.person.model.PersonAgreedtHistVO;
 import com.koscom.person.model.PersonCertificateInfoVO;
 import com.koscom.person.model.PersonShareInfoForm;
-import com.koscom.person.model.PersonShareInfoVO;
 import com.koscom.person.model.PersonSmsListVO;
 import com.koscom.person.model.PersonVO;
+import com.koscom.util.ReturnClass;
 
 /**
  * Person Dao Interface
@@ -21,21 +21,21 @@ import com.koscom.person.model.PersonVO;
  *
  */
 public interface PersonMapper {
-	
+
 	/**
 	 * 약관 동의 이력 저장
 	 * @param PersonAgreeHistVO
 	 * @return
 	 */
 	int createPersonAgreeHist(PersonAgreeHistVO personAgreeHistVO);
-	
+
 	/**
 	 * 약관 동의 이력 상세 저장
 	 * @param PersonAgreedtHistVO
 	 * @return
 	 */
 	int createPersonAgreedtHist(PersonAgreedtHistVO personAgreedtHistVO);
-	
+
 	/**
 	 * 휴대폰번호로 고객정보 조회
 	 *
@@ -172,40 +172,67 @@ public interface PersonMapper {
 
 	//공유관리
 	/**
-	 * 공유관리 SummaryList
+	 * 공유관리List
 	 * @param PersonShareInfoForm
-	 * @return List<PersonShareInfoVO>
+	 * @return List<PersonShareInfo>
 	 */
-	List<PersonShareInfoVO> listPersonShareInfoSummary(PersonShareInfoForm personShareInfoForm);
+	List<PersonShareInfo> listPersonShareInfo(PersonShareInfoForm personShareInfoForm);
 
 	/**
-	 * 공유관리 마이페이지List
+	 * 공유관리 이전내역보기List
 	 * @param PersonShareInfoForm
-	 * @return List<PersonShareInfoVO>
+	 * @return List<PersonShareInfo>
 	 */
-	List<PersonShareInfoVO> listPersonShareInfoMain(PersonShareInfoForm personShareInfoForm);
-	int listPersonShareInfoMainCount(PersonShareInfoForm personShareInfoForm);
+	List<PersonShareInfo> listPersonShareInfoHist(PersonShareInfoForm personShareInfoForm);
 
 	/**
 	 * 공유관리 모두해지하기 List
-	 * @param PersonShareInfoVO
-	 * @return List<PersonShareInfoVO>
+	 * @param PersonShareInfo
+	 * @return List<PersonShareInfo>
 	 */
-	List<PersonShareInfoVO> listShareInfoAllCancel(PersonShareInfoVO personShareInfoVO);
+	List<PersonShareInfo> listShareInfoAllCancel(PersonShareInfo personShareInfo);
+
+	/**
+	 * 공유관리 - hist정보
+	 * @param PersonShareInfo
+	 * @return PersonShareInfo
+	 */
+	PersonShareInfo getPersonShareInfoHist(PersonShareInfo personShareInfo);
 
 	/**
 	 * 공유관리상세 - 공유정보
-	 * @param PersonShareInfoVO
-	 * @return PersonShareInfoVO
+	 * @param PersonShareInfo
+	 * @return PersonShareInfo
 	 */
-	PersonShareInfoVO getPersonShareInfo(PersonShareInfoVO personShareInfoVO);
+	PersonShareInfo getPersonShareInfo(PersonShareInfo personShareInfo);
 
 	/**
 	 * 공유관리상세 - 소득정보
-	 * @param PersonShareInfoVO
-	 * @return PersonShareInfoVO
+	 * @param PersonShareInfo
+	 * @return PersonShareInfo
 	 */
-	PersonShareInfoVO getPersonShareEtmInfo(PersonShareInfoVO personShareInfoVO);
+	PersonShareInfo getPersonShareEtmInfo(PersonShareInfo personShareInfo);
+
+	/**
+	 * 공유관리 - 공유설정(자산정보 계좌list)
+	 * @param PersonShareInfo
+	 * @return List<PersonShareInfo>
+	 */
+	List<PersonShareInfo> listPersonShareInfoAsset(PersonShareInfo personShareInfo);
+
+	/**
+	 * 공유관리 - 공유설정(소비정보 계좌list)
+	 * @param PersonShareInfo
+	 * @return List<PersonShareInfo>
+	 */
+	List<PersonShareInfo> listPersonShareInfoConsume(PersonShareInfo personShareInfo);
+
+	/**
+	 * 공유관리 - 공유설정(부채정보 계좌list)
+	 * @param PersonShareInfo
+	 * @return List<PersonShareInfo>
+	 */
+	List<PersonShareInfo> listPersonShareInfoDebt(PersonShareInfo personShareInfo);
 
 	/**
 	 * 공유관리 등록
@@ -214,6 +241,27 @@ public interface PersonMapper {
 	 */
 	String getPersonShareInfoSeq();
 	int createPersonShareInfo(PersonShareInfo personShareInfo);
+
+	/**
+	 * 공유관리 - 공유설정(요청취소확인)
+	 * @param PersonShareInfo
+	 * @return ReturnClass
+	 */
+	int chkPersonShareInfoReqCancel(PersonShareInfo personShareInfo);
+
+	/**
+	 * 공유관리 - 공유설정(상태변경)
+	 * @param PersonShareInfo
+	 * @return ReturnClass
+	 */
+	int updatePersonShareInfoSetStatus(PersonShareInfo personShareInfo);
+
+	/**
+	 * 공유관리 - 공유설정(항목변경)
+	 * @param PersonShareInfo
+	 * @return ReturnClass
+	 */
+	int updatePersonShareInfoSetItems(PersonShareInfo personShareInfo);
 
 	/**
 	 * 공유관리 - 공유설정(중복체크)
@@ -267,67 +315,67 @@ public interface PersonMapper {
 
 	/**
 	 * 공유관리 업데이트요청 List
-	 * @param PersonShareInfoVO
-	 * @return List<PersonShareInfoVO>
+	 * @param PersonShareInfo
+	 * @return List<PersonShareInfo>
 	 */
-	List<PersonShareInfoVO> listPersonShareInfoReqUpdate(PersonShareInfoVO personShareInfoVO);
-	
+	List<PersonShareInfo> listPersonShareInfoReqUpdate(PersonShareInfo personShareInfo);
+
 	/**
 	 * 고유 CI번호를 통해 번호가 바뀐 회언인지 확인
 	 * @param kcb_ci - kcb 에서 사용하는 고유 판별 번호
 	 * @return
 	 */
 	String getPersonInfoDupCi(PersonVO personVO);
-	
+
 	/**
 	 * 핸드폰 번호 업데이트
 	 * @param personVO - hp, no_person 사용
 	 * @return
 	 */
 	int modifyPersonHp(PersonVO personVO);
-	
+
 	/**
 	 * 고객정보 조회 중복 체크
 	 * @param personVO
 	 * @return
 	 */
 	PersonVO getPersonInfoDup(PersonVO personVO);
-	
+
 	/**
 	 * 회원가입 insert
 	 * @param personVO
 	 * @return
 	 */
 	int insertPerson(PersonVO personVO);
-	
+
 	/**
 	 * 사용자 공인인증서 관리
 	 * @param PersonCertificateInfoVO
 	 * @return
 	 */
 	int createPersonCertificateInfo(PersonCertificateInfoVO personCertificateInfoVO);
-	
+
 	/**
 	 * 마이페이지 알람 설정정보 list조회
 	 * @param String
 	 * @return PersonVO
 	 */
 	List<PersonVO> getPushSettingInfo(String no_person);
-	
+
 	/**
 	 * 회원탈퇴 및 데이터 삭제
 	 * @param String
 	 * @return
 	 */
 	int procPersonInfoDelQuit(String no_person);
-	
+
 	/**
 	 * 회원탈퇴 내역 저장
 	 * @param PersonVO
 	 * @return
 	 */
 	void createPersonQuit(PersonVO personVO);
-	
+
 	/**
 	 * 개인설정 기본 값 설정
 	 * @param no_person

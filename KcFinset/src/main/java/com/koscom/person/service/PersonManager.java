@@ -10,7 +10,6 @@ import com.koscom.domain.PersonShareMessageInfo;
 import com.koscom.person.model.PersonActiveHistVO;
 import com.koscom.person.model.PersonCertificateInfoVO;
 import com.koscom.person.model.PersonShareInfoForm;
-import com.koscom.person.model.PersonShareInfoVO;
 import com.koscom.person.model.PersonSmsListVO;
 import com.koscom.person.model.PersonVO;
 import com.koscom.util.FinsetException;
@@ -149,47 +148,89 @@ public interface PersonManager {
 
 	//공유관리
 	/**
-	 * 공유관리 Summary List
+	 * 공유관리 List
 	 * @param PersonShareInfoForm
-	 * @return List<PersonShareInfoVO>
+	 * @return List<PersonShareInfo>
 	 */
-	List<PersonShareInfoVO> listPersonShareInfoSummary(PersonShareInfoForm personShareInfoForm);
+	List<PersonShareInfo> listPersonShareInfo(PersonShareInfoForm personShareInfoForm);
 
 	/**
-	 * 공유관리 마이페이지 List
+	 * 공유관리 이전내역보기 List
 	 * @param PersonShareInfoForm
-	 * @return List<PersonShareInfoVO>
+	 * @return List<PersonShareInfo>
 	 */
-	List<PersonShareInfoVO> listPersonShareInfoMain(PersonShareInfoForm personShareInfoForm);
-	int listPersonShareInfoMainCount(PersonShareInfoForm personShareInfoForm);
+	List<PersonShareInfo> listPersonShareInfoHist(PersonShareInfoForm personShareInfoForm);
 
 	/**
 	 * 공유관리 모두해지하기list
-	 * @param PersonShareInfoVO
-	 * @return List<PersonShareInfoVO>
+	 * @param PersonShareInfo
+	 * @return List<PersonShareInfo>
 	 */
-	List<PersonShareInfoVO> listShareInfoAllCancel(PersonShareInfoVO personShareInfoVO);
+	List<PersonShareInfo> listShareInfoAllCancel(PersonShareInfo personShareInfo);
+
+	/**
+	 * 공유관리 - hist정보
+	 * @param PersonShareInfo
+	 * @return PersonShareInfo
+	 */
+	PersonShareInfo getPersonShareInfoHist(PersonShareInfo personShareInfo);
 
 	/**
 	 * 공유관리상세 - 공유정보
-	 * @param PersonShareInfoVO
-	 * @return PersonShareInfoVO
+	 * @param PersonShareInfo
+	 * @return PersonShareInfo
 	 */
-	PersonShareInfoVO getPersonShareInfo(PersonShareInfoVO personShareInfoVO);
+	PersonShareInfo getPersonShareInfo(PersonShareInfo personShareInfo);
 
 	/**
 	 * 공유관리상세 - 소득정보
-	 * @param PersonShareInfoVO
-	 * @return PersonShareInfoVO
+	 * @param PersonShareInfo
+	 * @return PersonShareInfo
 	 */
-	PersonShareInfoVO getPersonShareEtmInfo(PersonShareInfoVO personShareInfoVO);
+	PersonShareInfo getPersonShareEtmInfo(PersonShareInfo personShareInfo);
 
 	/**
-	 * 공유관리 등록
+	 * 공유관리 - 공유설정(자산정보 계좌list)
+	 * @param PersonShareInfo
+	 * @return List<PersonShareInfo>
+	 */
+	List<PersonShareInfo> listPersonShareInfoAsset(PersonShareInfo personShareInfo);
+
+	/**
+	 * 공유관리 - 공유설정(소비정보 계좌list)
+	 * @param PersonShareInfo
+	 * @return List<PersonShareInfo>
+	 */
+	List<PersonShareInfo> listPersonShareInfoConsume(PersonShareInfo personShareInfo);
+
+	/**
+	 * 공유관리 - 공유설정(부채정보 계좌list)
+	 * @param PersonShareInfo
+	 * @return List<PersonShareInfo>
+	 */
+	List<PersonShareInfo> listPersonShareInfoDebt(PersonShareInfo personShareInfo);
+
+
+	/**
+	 * 공유관리 - 공유요청
 	 * @param PersonShareInfo
 	 * @return ReturnClass
 	 */
 	ReturnClass createPersonShareInfo(PersonShareInfo personShareInfo);
+
+	/**
+	 * 공유관리 - 공유설정(상태변경)
+	 * @param PersonShareInfo
+	 * @return ReturnClass
+	 */
+	ReturnClass updatePersonShareInfoSetStatus(PersonShareInfo personShareInfo);
+
+	/**
+	 * 공유관리 - 공유설정(항목변경)
+	 * @param PersonShareInfo
+	 * @return ReturnClass
+	 */
+	ReturnClass updatePersonShareInfoSetItems(PersonShareInfo personShareInfo);
 
 	/**
 	 * 공유관리 - 공유설정(공유재요청)
@@ -228,10 +269,10 @@ public interface PersonManager {
 
 	/**
 	 * 공유관리 업데이트요청 List
-	 * @param PersonShareInfoVO
-	 * @return List<PersonShareInfoVO>
+	 * @param PersonShareInfo
+	 * @return List<PersonShareInfo>
 	 */
-	List<PersonShareInfoVO> listPersonShareInfoReqUpdate(PersonShareInfoVO personShareInfoVO);
+	List<PersonShareInfo> listPersonShareInfoReqUpdate(PersonShareInfo personShareInfo);
 
 	/**
 	 * 고유 CI번호를 통해 번호가 바뀐 회언인지 확인

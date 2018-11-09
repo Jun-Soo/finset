@@ -32,7 +32,6 @@ import com.koscom.person.dao.PersonMapper;
 import com.koscom.person.model.PersonActiveHistVO;
 import com.koscom.person.model.PersonCertificateInfoVO;
 import com.koscom.person.model.PersonShareInfoForm;
-import com.koscom.person.model.PersonShareInfoVO;
 import com.koscom.person.model.PersonSmsListVO;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
@@ -54,7 +53,7 @@ public class PersonManagerImpl implements PersonManager {
 
 	@Autowired
 	private ConsumeMapper consumeMapper;
-	
+
 	@Autowired
 	private ConditioncreditMapper conditioncreditMapper;
 
@@ -235,32 +234,48 @@ public class PersonManagerImpl implements PersonManager {
 	}
 
 	@Override
-	public List<PersonShareInfoVO> listPersonShareInfoSummary(PersonShareInfoForm personShareInfoForm) {
-		return personMapper.listPersonShareInfoSummary(personShareInfoForm);
+	public List<PersonShareInfo> listPersonShareInfo(PersonShareInfoForm personShareInfoForm) {
+		return personMapper.listPersonShareInfo(personShareInfoForm);
 	}
 
 	@Override
-	public List<PersonShareInfoVO> listPersonShareInfoMain(PersonShareInfoForm personShareInfoForm) {
-		return personMapper.listPersonShareInfoMain(personShareInfoForm);
-	}
-	@Override
-	public int listPersonShareInfoMainCount(PersonShareInfoForm personShareInfoForm) {
-		return personMapper.listPersonShareInfoMainCount(personShareInfoForm);
+	public List<PersonShareInfo> listPersonShareInfoHist(PersonShareInfoForm personShareInfoForm) {
+		return personMapper.listPersonShareInfoHist(personShareInfoForm);
 	}
 
 	@Override
-	public List<PersonShareInfoVO> listShareInfoAllCancel(PersonShareInfoVO personShareInfoVO) {
-		return personMapper.listShareInfoAllCancel(personShareInfoVO);
+	public List<PersonShareInfo> listShareInfoAllCancel(PersonShareInfo personShareInfo) {
+		return personMapper.listShareInfoAllCancel(personShareInfo);
 	}
 
 	@Override
-	public PersonShareInfoVO getPersonShareInfo(PersonShareInfoVO personShareInfoVO) {
-		return personMapper.getPersonShareInfo(personShareInfoVO);
+	public PersonShareInfo getPersonShareInfoHist(PersonShareInfo personShareInfo) {
+		return personMapper.getPersonShareInfoHist(personShareInfo);
 	}
 
 	@Override
-	public PersonShareInfoVO getPersonShareEtmInfo(PersonShareInfoVO personShareInfoVO) {
-		return personMapper.getPersonShareEtmInfo(personShareInfoVO);
+	public PersonShareInfo getPersonShareInfo(PersonShareInfo personShareInfo) {
+		return personMapper.getPersonShareInfo(personShareInfo);
+	}
+
+	@Override
+	public PersonShareInfo getPersonShareEtmInfo(PersonShareInfo personShareInfo) {
+		return personMapper.getPersonShareEtmInfo(personShareInfo);
+	}
+
+	@Override
+	public List<PersonShareInfo> listPersonShareInfoAsset(PersonShareInfo personShareInfo) {
+		return personMapper.listPersonShareInfoAsset(personShareInfo);
+	}
+
+	@Override
+	public List<PersonShareInfo> listPersonShareInfoConsume(PersonShareInfo personShareInfo) {
+		return personMapper.listPersonShareInfoConsume(personShareInfo);
+	}
+
+	@Override
+	public List<PersonShareInfo> listPersonShareInfoDebt(PersonShareInfo personShareInfo) {
+		return personMapper.listPersonShareInfoDebt(personShareInfo);
 	}
 
 	@Override
@@ -274,6 +289,40 @@ public class PersonManagerImpl implements PersonManager {
 
 		personMapper.createPersonShareInfoHist(personShareInfo);
 		return new ReturnClass(Constant.SUCCESS,"정상 처리 하였습니다.", (Object) seq_share);
+	}
+
+	@Override
+	public ReturnClass updatePersonShareInfoSetStatus(PersonShareInfo personShareInfo) {
+
+		//거절일 경우 요청취소되었는지 확인
+		if("03".equals(personShareInfo.getShare_status()) && 1 != personMapper.chkPersonShareInfoReqCancel(personShareInfo)){
+			return new ReturnClass(Constant.FAILED,"이미 요청취소 되었습니다.");
+		}
+
+		if(1 != personMapper.updatePersonShareInfoSetStatus(personShareInfo)) {
+			return new ReturnClass(Constant.FAILED,"처리에 실패하였습니다.");
+		}
+
+		PersonShareInfo shareHistInfo = personMapper.getPersonShareInfo(personShareInfo);
+		personMapper.createPersonShareInfoHist(shareHistInfo);
+		return new ReturnClass(Constant.SUCCESS,"정상 처리 하였습니다.", (Object) personShareInfo.getSeq_share());
+	}
+
+	@Override
+	public ReturnClass updatePersonShareInfoSetItems(PersonShareInfo personShareInfo) {
+
+		//허용일 경우 요청취소되었는지 확인
+		if("02".equals(personShareInfo.getShare_status()) && 1 != personMapper.chkPersonShareInfoReqCancel(personShareInfo)){
+			return new ReturnClass(Constant.FAILED,"이미 요청취소 되었습니다.");
+		}
+
+		if(1 != personMapper.updatePersonShareInfoSetItems(personShareInfo)) {
+			return new ReturnClass(Constant.FAILED,"처리에 실패하였습니다.");
+		}
+
+		PersonShareInfo shareHistInfo = personMapper.getPersonShareInfo(personShareInfo);
+		personMapper.createPersonShareInfoHist(shareHistInfo);
+		return new ReturnClass(Constant.SUCCESS,"정상 처리 하였습니다.", (Object) personShareInfo.getSeq_share());
 	}
 
 	@Override
@@ -332,16 +381,16 @@ public class PersonManagerImpl implements PersonManager {
 
 	@Override
 	public ReturnClass mergePersonShareInfoMessage(PersonShareMessageInfo personShareMessageInfo) {
-			if(1 != personMapper.mergePersonShareInfoMessage(personShareMessageInfo)) {
-				return new ReturnClass(Constant.FAILED,"처리에 실패하였습니다.");
-			}
+		if(1 != personMapper.mergePersonShareInfoMessage(personShareMessageInfo)) {
+			return new ReturnClass(Constant.FAILED,"처리에 실패하였습니다.");
+		}
 
 		return new ReturnClass(Constant.SUCCESS,"정상처리하였습니다.", (Object) personShareMessageInfo.getSeq_share());
 	}
 
 	@Override
-	public List<PersonShareInfoVO> listPersonShareInfoReqUpdate(PersonShareInfoVO personShareInfoVO) {
-		return personMapper.listPersonShareInfoReqUpdate(personShareInfoVO);
+	public List<PersonShareInfo> listPersonShareInfoReqUpdate(PersonShareInfo personShareInfo) {
+		return personMapper.listPersonShareInfoReqUpdate(personShareInfo);
 	}
 
 	@Override
@@ -448,7 +497,7 @@ public class PersonManagerImpl implements PersonManager {
 			logger.info("회원 소비 분류 코드 세팅 시작");
 			consumeMapper.createDefaultConsumeClassInfo(personVO.getNo_person());
 			logger.info("회원 소비 분류 코드 세팅 완료");
-			
+
 			logger.info("회원 설정 세팅 시작");
 			personMapper.insertDefaultPersonSet(personVO.getNo_person());
 			logger.info("회원 설정 세팅 완료");

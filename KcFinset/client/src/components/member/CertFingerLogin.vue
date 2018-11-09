@@ -137,6 +137,14 @@ export default {
           }
           return false;
         } else {
+          if (Constant.userAgent == "iOS") {
+            Jockey.send("loginFlag", {
+              flag: "Y"
+            });
+          } else if (Constant.userAgent == "Android") {
+            window.Android.loginFlag("Y");
+          }
+
           _this.password = _this.$store.state.user.authToken;
           this.login();
         }

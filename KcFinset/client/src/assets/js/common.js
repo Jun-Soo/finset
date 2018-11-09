@@ -9,7 +9,7 @@ export default {
     this.$route.go(-1)
   },
   init: function () {
-    localStorage.setItem('accessToken', '')
+    // localStorage.setItem('accessToken', '')
 
     Constant.userAgent = this.getMobileOperatingSystem()
     Constant.params = this.getParams()

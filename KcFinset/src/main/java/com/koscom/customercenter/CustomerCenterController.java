@@ -11,7 +11,6 @@ import javax.servlet.http.HttpSession;
 import com.koscom.scrap.service.ScrapManager;
 import com.koscom.util.*;
 
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +39,6 @@ import com.koscom.goods.model.GoodsForm;
 import com.koscom.goods.model.GoodsVO;
 import com.koscom.goods.service.GoodsManager;
 import com.koscom.person.model.PersonShareInfoForm;
-import com.koscom.person.model.PersonShareInfoVO;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
 import com.koscom.pusheach.model.PushEachForm;
@@ -63,29 +61,30 @@ public class CustomerCenterController implements Constant {
 
 	@Autowired
 	DebtManager debtManager;
-	
+
 	@Autowired
 	FinsetManager finsetManager;
-	
+
 	@Autowired
 	GoodsManager goodsManager;
-	
+
 	@Autowired
 	ScrapManager scrapManager;
-	
+
 	@Autowired
 	BoardManager boardManager;
-	
+
 	@Autowired
 	CodeManager codeManager;
-	
+
 	@Autowired
 	CacheManager cacheManager;
-	
+
 	@Resource
 	Environment environment;
 
 	/**
+	 * VUE
 	 * 마이페이지 메인
 	 * @param request
 	 * @param session
@@ -93,7 +92,7 @@ public class CustomerCenterController implements Constant {
 	 * @return String
 	 * @throws FinsetException, IOException
 	 */
-	@RequestMapping("/frameCustomerCenterMain.crz")
+	@RequestMapping("/getCustomerCenterMain.json")
 	public String frameCustomerCenterMain(HttpServletRequest request, HttpSession session, Model model) throws FinsetException, IOException {
 		String no_person = (String) session.getAttribute("no_person");
 		PersonVO personVO = personManager.getPersonInfo(no_person);
@@ -127,48 +126,8 @@ public class CustomerCenterController implements Constant {
 
 	//공유관리
 	/**
-	 * 공유관리 summary list
-	 * @param request
-	 * @param session
-	 * @param model
-	 * @return String
-	 * @throws FinsetException, IOException
-	 */
-	@RequestMapping("/frameShareInfoSummary.crz")
-	public String frameShareInfoSummary(HttpServletRequest request, HttpSession session, Model model) throws FinsetException, IOException {
-		String no_person = (String)session.getAttribute("no_person");
-		PersonShareInfoForm personShareInfoForm = new PersonShareInfoForm();
-		personShareInfoForm.setNo_person(no_person);
-		personShareInfoForm.setType_list("offer"); //타인정보열람list
-		List<PersonShareInfoVO> offerList = personManager.listPersonShareInfoSummary(personShareInfoForm);
-		personShareInfoForm.setType_list("req"); //내정보공유list
-		List<PersonShareInfoVO> reqList = personManager.listPersonShareInfoSummary(personShareInfoForm);
-
-		model.addAttribute("offerList", offerList);
-		model.addAttribute("reqList", reqList);
-		model.addAttribute("currentDate",DateUtil.getCurrentDate());
-
-		logger.info("공유관리 summary list");
-		return "/customercenter/frameShareInfoSummary";
-	}
-
-	/**
-	 * 공유관리 신규요청
-	 * @param request
-	 * @param session
-	 * @param model
-	 * @return String
-	 * @throws FinsetException, IOException
-	 */
-	@RequestMapping("/frameShareInfoNewRequest.crz")
-	public String frameShareInfoNewRequest(HttpServletRequest request, HttpSession session, Model model) throws FinsetException, IOException {
-
-		logger.info("공유관리 신규요청");
-		return "/customercenter/frameShareInfoNewRequest";
-	}
-
-	/**
-	 * 공유관리 등록
+	 * VUE
+	 * 공유관리 - 공유요청
 	 * @param request
 	 * @param session
 	 * @param model
@@ -180,7 +139,7 @@ public class CustomerCenterController implements Constant {
 	public String createPersonShareInfo(HttpServletRequest request, HttpSession session, Model model, PersonShareInfo personShareInfo) throws FinsetException, IOException {
 		String req_no_person = (String) session.getAttribute("no_person");
 
-		PersonVO reqPersonVO = personManager.getPersonInfo(req_no_person);
+		PersonVO reqPersonVO = personManager.getPersonInfo(req_no_person); //요청회원정보
 
 		personShareInfo.setReq_no_person(req_no_person);
 		personShareInfo.setReq_nm_person(reqPersonVO.getNm_person());
@@ -188,7 +147,7 @@ public class CustomerCenterController implements Constant {
 		personShareInfo.setId_frt(req_no_person);
 		personShareInfo.setId_lst(req_no_person);
 
-		//전화번호로 회원정보조회
+		//전화번호로 정보제공 회원정보조회
 		PersonVO offerPersonVO = personManager.getPersonInfoHp(personShareInfo.getOffer_hp());
 		if(offerPersonVO != null) {
 			personShareInfo.setOffer_no_person(offerPersonVO.getNo_person());
@@ -201,7 +160,6 @@ public class CustomerCenterController implements Constant {
 
 		if("00".equals(rtnClass.getCd_result())) {
 			model.addAttribute("seq_share", (String)rtnClass.getReturnObj());
-
 		}
 
 		model.addAttribute("cdResult", rtnClass.getCd_result());
@@ -212,7 +170,8 @@ public class CustomerCenterController implements Constant {
 	}
 
 	/**
-	 * 마이페이지 공유관리 메인
+	 * VUE
+	 * 공유관리 - 메인
 	 * @param request
 	 * @param session
 	 * @param model
@@ -220,47 +179,54 @@ public class CustomerCenterController implements Constant {
 	 * @return String
 	 * @throws FinsetException, IOException
 	 */
-	@RequestMapping("/frameShareInfoMain.crz")
-	public String frameShareInfoMain(HttpServletRequest request, HttpSession session, Model model, PersonShareInfoForm personShareInfoForm) throws FinsetException, IOException {
-		String no_person = (String)session.getAttribute("no_person");
-		personShareInfoForm.setNo_person(no_person);
-
-		if(StringUtils.isEmpty(personShareInfoForm.getType_list())) {
-			personShareInfoForm.setType_list("offer");
-		}
-		personShareInfoForm.setPage(1);
-
-		Pagination pagedList = (Pagination) personShareInfoForm.setPagedList(personManager.listPersonShareInfoMain(personShareInfoForm), personManager.listPersonShareInfoMainCount(personShareInfoForm));
-		model.addAttribute("pagedList", pagedList);
-
-		model.addAttribute("currentDate",DateUtil.getCurrentDate());
-		model.addAttribute("type_list", personShareInfoForm.getType_list());
-
-		logger.info("공유관리 main list");
-		return "/customercenter/frameShareInfoMain";
-	}
-
-	/**
-	 * 마이페이지 공유관리 list조회
-	 * @param request
-	 * @param session
-	 * @param model
-	 * @param personShareInfoForm
-	 * @return String
-	 * @throws FinsetException, IOException
-	 */
-	@RequestMapping("/listShareInfoMain.crz")
+	@RequestMapping("/listShareInfoMain.json")
 	public String listShareInfoMain(HttpServletRequest request, HttpSession session, Model model, PersonShareInfoForm personShareInfoForm) throws FinsetException, IOException {
 		String no_person = (String)session.getAttribute("no_person");
 		personShareInfoForm.setNo_person(no_person);
 
-		Pagination pagedList = (Pagination) personShareInfoForm.setPagedList(personManager.listPersonShareInfoMain(personShareInfoForm), personManager.listPersonShareInfoMainCount(personShareInfoForm));
-		model.addAttribute("pagedList", pagedList);
+		personShareInfoForm.setType_list("req");
+		personShareInfoForm.setShare_status("01");
+		List<PersonShareInfo> reqSbList = personManager.listPersonShareInfo(personShareInfoForm);
+		personShareInfoForm.setType_list("req");
+		personShareInfoForm.setShare_status("02");
+		List<PersonShareInfo> reqPmList = personManager.listPersonShareInfo(personShareInfoForm);
+		personShareInfoForm.setType_list("offer");
+		personShareInfoForm.setShare_status("01");
+		List<PersonShareInfo> offerSbList = personManager.listPersonShareInfo(personShareInfoForm);
+		personShareInfoForm.setType_list("offer");
+		personShareInfoForm.setShare_status("02");
+		List<PersonShareInfo> offerPmList = personManager.listPersonShareInfo(personShareInfoForm);
 
 		model.addAttribute("currentDate",DateUtil.getCurrentDate());
-		model.addAttribute("type_list", personShareInfoForm.getType_list());
+		model.addAttribute("reqSbList",reqSbList); //요청list(대기)
+		model.addAttribute("reqPmList",reqPmList); //요청list(공유중)
+		model.addAttribute("offerSbList",offerSbList); //정보제공list(대기)
+		model.addAttribute("offerPmList",offerPmList); //정보제공list(공유중)
 
-		return "/customercenter/sub/listShareInfoMain";
+		logger.info("공유관리 main list");
+		return "jsonView";
+	}
+
+	/**
+	 * VUE
+	 * 공유관리 - 이전내역보기
+	 * @param request
+	 * @param session
+	 * @param model
+	 * @param personShareInfoForm
+	 * @return String
+	 * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/listShareInfoHist.json")
+	public String listShareInfoHist(HttpServletRequest request, HttpSession session, Model model, PersonShareInfoForm personShareInfoForm) throws FinsetException, IOException {
+		String no_person = (String)session.getAttribute("no_person");
+		personShareInfoForm.setNo_person(no_person);
+
+		List<PersonShareInfo> histList = personManager.listPersonShareInfoHist(personShareInfoForm);
+		model.addAttribute("histList", histList);
+
+		logger.info("공유관리 이전내역 list");
+		return "jsonView";
 	}
 
 	/**
@@ -274,10 +240,10 @@ public class CustomerCenterController implements Constant {
 	@RequestMapping("/updateShareInfoAllCancel.json")
 	public String updateShareInfoAllCancel(HttpServletRequest request, HttpSession session, Model model) throws FinsetException, IOException {
 		String no_person = (String)session.getAttribute("no_person");
-		PersonShareInfoVO personShareInfoVO = new PersonShareInfoVO();
-		personShareInfoVO.setOffer_no_person(no_person);
-		List<PersonShareInfoVO> cancelList = personManager.listShareInfoAllCancel(personShareInfoVO);
-		for(PersonShareInfoVO cancelItem : cancelList) {
+		PersonShareInfo personShareInfo = new PersonShareInfo();
+		personShareInfo.setOffer_no_person(no_person);
+		List<PersonShareInfo> cancelList = personManager.listShareInfoAllCancel(personShareInfo);
+		for(PersonShareInfo cancelItem : cancelList) {
 			 cancelItem.setShare_status("04"); //해지
 			 cancelItem.setId_frt(no_person);
 			 cancelItem.setId_lst(no_person);
@@ -316,24 +282,101 @@ public class CustomerCenterController implements Constant {
 	}
 
 	/**
-	 * 공유관리 - 공유설정(setting_mode 01-공유재요청. 02- 허용/거절, 03- 변경/해지)
+	 * VUE
+	 * 공유관리 - 공유설정 정보
 	 * @param request
 	 * @param session
 	 * @param model
-	 * @param personShareInfoVO
+	 * @param personShareInfo
 	 * @return String
 	 * @throws FinsetException, IOException
 	 */
-	@RequestMapping("/frameShareInfoSetting.crz")
-	public String frameShareInfoSetting(HttpServletRequest request, HttpSession session, Model model, PersonShareInfoVO personShareInfoVO) throws FinsetException, IOException {
-		PersonShareInfo shareInfo = personManager.getPersonShareInfo(personShareInfoVO);
+	@RequestMapping("/getShareInfoSetting.json")
+	public String getShareInfoSetting(HttpServletRequest request, HttpSession session, Model model, PersonShareInfo personShareInfo) throws FinsetException, IOException {
+		String no_person = (String) session.getAttribute("no_person");
 
+		PersonShareInfo shareInfo = personManager.getPersonShareInfo(personShareInfo);
 		model.addAttribute("shareInfo", shareInfo);
-		model.addAttribute("setting_mode", personShareInfoVO.getSetting_mode());
+
+		if("02".equals(shareInfo.getCd_share()) && no_person.equals(shareInfo.getOffer_no_person())){
+			//자산정보
+			if("Y".equals(shareInfo.getYn_asset_info())){
+				model.addAttribute("assetList", personManager.listPersonShareInfoAsset(shareInfo));
+			}
+			//소비정보
+			if("Y".equals(shareInfo.getYn_consume_info())){
+				model.addAttribute("consumeList", personManager.listPersonShareInfoConsume(shareInfo));
+			}
+			//부채정보
+			if("Y".equals(shareInfo.getYn_debt_info())){
+				model.addAttribute("debtList", personManager.listPersonShareInfoDebt(shareInfo));
+			}
+
+		}
+
 		logger.info("공유관리 공유설정");
 
-		return "/customercenter/frameShareInfoSetting";
+		return "jsonView";
 
+	}
+
+	/**
+	 * VUE
+	 * 공유관리 - 공유설정(상태변경)
+	 * @param request
+	 * @param session
+	 * @param model
+	 * @param personShareInfo
+	 * @return String
+	 * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/updatePersonShareInfoSetStatus.json")
+	public String updatePersonShareInfoSetStatus(HttpServletRequest request, HttpSession session, Model model, PersonShareInfo personShareInfo) throws FinsetException, IOException {
+		String no_person = (String) session.getAttribute("no_person");
+
+		if("05".equals(personShareInfo.getShare_status())){
+			//전화번호로 정보제공 회원정보조회
+			PersonVO offerPersonVO = personManager.getPersonInfoHp(personShareInfo.getOffer_hp());
+			if(offerPersonVO != null) {
+				personShareInfo.setOffer_no_person(offerPersonVO.getNo_person());
+				model.addAttribute("typeMessage", "push");
+			}else {
+				model.addAttribute("typeMessage", "sms");
+			}
+		}
+
+		personShareInfo.setId_lst(no_person);
+
+		ReturnClass rtnClass = personManager.updatePersonShareInfoSetStatus(personShareInfo);
+
+		model.addAttribute("cdResult", rtnClass.getCd_result());
+		model.addAttribute("message", rtnClass.getMessage());
+
+		return "jsonView";
+	}
+
+	/**
+	 * VUE
+	 * 공유관리 - 공유설정(항목변경)
+	 * @param request
+	 * @param session
+	 * @param model
+	 * @param personShareInfo
+	 * @return String
+	 * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/updatePersonShareInfoSetItems.json")
+	public String updatePersonShareInfoSetItems(HttpServletRequest request, HttpSession session, Model model, PersonShareInfo personShareInfo) throws FinsetException, IOException {
+		String no_person = (String) session.getAttribute("no_person");
+
+		personShareInfo.setId_lst(no_person);
+
+		ReturnClass rtnClass = personManager.updatePersonShareInfoSetItems(personShareInfo);
+
+		model.addAttribute("cdResult", rtnClass.getCd_result());
+		model.addAttribute("message", rtnClass.getMessage());
+
+		return "jsonView";
 	}
 
 	/**
@@ -427,73 +470,61 @@ public class CustomerCenterController implements Constant {
 	}
 
 	/**
+	 * VUE
 	 * 공유관리 - sms 정보입력
 	 * @param request
 	 * @param session
 	 * @param model
-	 * @param personShareInfoVO
+	 * @param personShareInfo
 	 * @return String
 	 * @throws FinsetException, IOException
 	 */
 	@RequestMapping("/createPersonShareInfoSms.json")
-	public String sendPersonShareInfoSms(HttpServletRequest request, HttpSession session, Model model, PersonShareInfoVO personShareInfoVO) throws FinsetException, IOException {
+	public String sendPersonShareInfoSms(HttpServletRequest request, HttpSession session, Model model, PersonShareInfo personShareInfo) throws FinsetException, IOException {
 		String no_person = (String) session.getAttribute("no_person");
-
-		String setting_mode = personShareInfoVO.getSetting_mode();
 
         String body = "";
 
-        PersonShareInfoVO personShareInfo = personManager.getPersonShareInfo(personShareInfoVO);
+        PersonShareInfo shareInfo = personManager.getPersonShareInfo(personShareInfo);
 
         PersonShareMessageInfo personShareMessageInfo = new PersonShareMessageInfo();
 
         personShareMessageInfo.setSeq_share(personShareInfo.getSeq_share());
         personShareMessageInfo.setType_message("01"); //sms
-
-        personShareMessageInfo.setId_lst(no_person); //최종수정아이디
+        personShareMessageInfo.setCd_message("01"); //공유요청
+        personShareMessageInfo.setReq_status("01"); //요청
 
         //요청메세지
-        body = personShareInfo.getReq_nm_person()+"님으로부터 공유요청이 왔습니다. \n";
+        body = shareInfo.getReq_nm_person()+"님으로부터 공유요청이 왔습니다. \n";
         body += "아래의 링크를 선택하여 FINSET을 \n";
         body += "설치하시기 바랍니다. \n";
         body += "https://play.google.com/store/apps/details?id=com.app.kc.koscom";
         personShareMessageInfo.setReq_message(body);
 
-        //sms 정보셋팅
-        if("00".equals(setting_mode)) { //공유 요청
-        	personShareMessageInfo.setCd_message("01"); //공유요청
-        	personShareMessageInfo.setReq_status("01"); //요청
-
-        	personShareMessageInfo.setId_frt(no_person); //최초입력아이디
-
-        }else if("01".equals(setting_mode)) { //공유재요청
-        	personShareMessageInfo.setCd_message("01"); //공유요청
-        	personShareMessageInfo.setReq_status("02"); //재요청
-
-        }
+        personShareMessageInfo.setId_frt(no_person); //최초입력아이디
+        personShareMessageInfo.setId_lst(no_person); //최종수정아이디
 
         ReturnClass rtnClass = personManager.mergePersonShareInfoMessage(personShareMessageInfo);
         model.addAttribute("cdResult",rtnClass.getCd_result());
-
 
         return "jsonView";
 	}
 
 	/**
+	 * VUE
 	 * 공유관리 - push전송
 	 * @param request
 	 * @param session
 	 * @param model
-	 * @param personShareInfoVO
+	 * @param personShareInfo
 	 * @return String
 	 * @throws FinsetException, IOException
 	 */
 	@RequestMapping("/sendPersonShareInfoPush.json")
-	public String sendPersonShareInfoPush(HttpServletRequest request, HttpSession session, Model model, PersonShareInfoVO personShareInfoVO) throws FinsetException, IOException {
+	public String sendPersonShareInfoPush(HttpServletRequest request, HttpSession session, Model model, PersonShareInfo personShareInfo) throws FinsetException, IOException {
 		String no_person = (String) session.getAttribute("no_person");
 
-		String setting_mode = personShareInfoVO.getSetting_mode();
-		String share_status = personShareInfoVO.getShare_status();
+		String share_status = personShareInfo.getShare_status();
 		String rec_no_person = "";
 		int chkTerm = 0;
 
@@ -504,20 +535,20 @@ public class CustomerCenterController implements Constant {
         String fcm_token = "";
 
         //push수신자 정보조회
-        PersonShareInfoVO personShareInfo = personManager.getPersonShareInfo(personShareInfoVO);
+        PersonShareInfo shareInfo = personManager.getPersonShareInfo(personShareInfo);
 
         //push 정보셋팅
         PersonShareMessageInfo personShareMessageInfo = new PersonShareMessageInfo();
 
-        personShareMessageInfo.setSeq_share(personShareInfo.getSeq_share());
+        personShareMessageInfo.setSeq_share(shareInfo.getSeq_share());
         personShareMessageInfo.setType_message("02"); //push
 
         personShareMessageInfo.setId_lst(no_person); //최종수정아이디
 
-        if("00".equals(setting_mode)) { //공유 요청
-        	rec_no_person = personShareInfo.getOffer_no_person();
-        	url = "/m/customercenter/frameShareInfoSetting.crz?setting_mode=02&seq_share="+personShareInfo.getSeq_share();
-        	body = personShareInfo.getReq_nm_person()+"님으로부터 공유요청이 왔습니다";
+        if("01".equals(share_status)) { //공유 요청
+        	rec_no_person = shareInfo.getOffer_no_person();
+        	url = "/m/customercenter/frameShareInfoSetting.crz?seq_share="+shareInfo.getSeq_share();
+        	body = shareInfo.getReq_nm_person()+"님으로부터 공유요청이 왔습니다";
 
         	personShareMessageInfo.setCd_message("01"); //공유요청
         	personShareMessageInfo.setReq_status("01"); //요청
@@ -525,43 +556,14 @@ public class CustomerCenterController implements Constant {
 
         	personShareMessageInfo.setId_frt(no_person); //최초입력아이디
 
-        }else if("01".equals(setting_mode)) { //공유재요청
-        	rec_no_person = personShareInfo.getOffer_no_person();
-        	url = "/m/customercenter/frameShareInfoSetting.crz?setting_mode=02&seq_share="+personShareInfo.getSeq_share();
-        	body = personShareInfo.getReq_nm_person()+"님으로부터 공유요청이 왔습니다";
+        }else if("05".equals(share_status)) { //공유 요청취소
+        	rec_no_person = shareInfo.getOffer_no_person();
+        	body = shareInfo.getReq_nm_person()+"님이 공유 요청을 취소하셨습니다";
 
-        	personShareMessageInfo.setCd_message("01"); //공유요청
-        	personShareMessageInfo.setReq_status("02"); //재요청
-        	personShareMessageInfo.setReq_message(body); //요청메세지
+        }else if("06".equals(share_status)) { //업데이트요청
+        	rec_no_person = shareInfo.getOffer_no_person();
 
-        	chkTerm = personManager.chkPersonShareInfoMessageTerm(personShareMessageInfo);
-        }else if("02".equals(setting_mode)) { //허용/거절
-        	rec_no_person = personShareInfo.getReq_no_person();
-        	if("02".equals(share_status)) {
-        		mode_nm = "수락";
-        	}else if("03".equals(share_status)) {
-        		mode_nm = "거절";
-        	}
-
-        	body = personShareInfo.getOffer_nm_person()+"님이 공유를 "+mode_nm+"하였습니다.";
-
-        	personShareMessageInfo.setReq_status("03"); //응답
-        	personShareMessageInfo.setRes_message(body); //응답메세지
-
-        }else if("03".equals(setting_mode)) { //변경/해지
-        	rec_no_person = personShareInfo.getReq_no_person();
-        	if("02".equals(share_status)) {
-        		mode_nm = "변경";
-        	}else if("04".equals(share_status)) {
-        		mode_nm = "해지";
-        	}
-
-        	body = personShareInfo.getOffer_nm_person()+"님이 공유를 "+mode_nm+"하였습니다.";
-
-        }else if("04".equals(setting_mode)) { //업데이트요청
-        	rec_no_person = personShareInfo.getOffer_no_person();
-
-        	body = personShareInfo.getReq_nm_person()+"님이 정보 업데이트 요청을 하였습니다. \n";
+        	body = shareInfo.getReq_nm_person()+"님이 정보 업데이트 요청을 하였습니다. \n";
         	body += "핀셋에 로그인 하시면 자동으로 공유정보가 업데이트 됩니다.";
 
         	personShareMessageInfo.setCd_message("02"); //정보업데이트
@@ -570,9 +572,30 @@ public class CustomerCenterController implements Constant {
 
         	chkTerm = personManager.chkPersonShareInfoMessageTerm(personShareMessageInfo);
 
+        }else if("04_1".equals(share_status)){ //공유종료
+        	rec_no_person = shareInfo.getOffer_no_person();
+
+        	body = shareInfo.getOffer_nm_person()+"님이 공유를 종료하였습니다.";
+
+        }else{ //허용/거절/변경/취소
+        	rec_no_person = shareInfo.getReq_no_person();
+        	if("07".equals(share_status)) {
+        		mode_nm = "변경";
+        	}else if("04".equals(share_status)){
+        		mode_nm = "취소";
+        	}else{
+        		mode_nm = codeManager.getCodeInfo("share_status", share_status).getNm_code();
+
+        		personShareMessageInfo.setReq_status("02"); //응답
+        	}
+
+        	body = shareInfo.getOffer_nm_person()+"님이 공유를 "+mode_nm+"하였습니다.";
+
+        	personShareMessageInfo.setRes_message(body); //응답메세지
+
         }
 
-        if(!(chkTerm == 1)) { //push기간설정, 공유재요청 / 업데이트요청하기 일때는 기간이 하루가 지난 경우에만 push발송
+        if(!(chkTerm == 1)) { //push기간설정, 정보업데이트요청하기 일때는 기간이 하루가 지난 경우에만 push발송
 
         	PersonVO recPersonVO = personManager.getPersonInfo(rec_no_person);
 
@@ -590,7 +613,7 @@ public class CustomerCenterController implements Constant {
 	                }
 
 	                //메세지 table insert / update
-	                if(!("03".equals(setting_mode))) { //변경 / 해지는 메세지table updateX
+	                if(!("".equals(personShareMessageInfo.getReq_status()))) { //요청, 정보업데이트, 허용, 거절일때만 메세지T insert, update
 		                ReturnClass rtnClass = personManager.mergePersonShareInfoMessage(personShareMessageInfo);
 		                model.addAttribute("cdResult",rtnClass.getCd_result());
 	                }else{
@@ -599,7 +622,7 @@ public class CustomerCenterController implements Constant {
 	            }
 	        }
         } else {
-        	model.addAttribute("cdResult", "01"); //공유재요청 / 업데이트요청하기에서 기간이 하루가 지나지 않은경우
+        	model.addAttribute("cdResult", "01"); //정보업데이트요청하기에서 기간이 하루가 지나지 않은경우
         }
 
         return "jsonView";
@@ -607,26 +630,27 @@ public class CustomerCenterController implements Constant {
 
 
 	/**
+	 * VUE
 	 * 공유관리 상세
 	 * @param request
 	 * @param session
 	 * @param model
-	 * @param personShareInfoVO
+	 * @param personShareInfo
 	 * @return String
 	 * @throws FinsetException, IOException
 	 */
-	@RequestMapping("/frameShareInfoDetail.crz")
-	public String frameShareInfoDetail(HttpServletRequest request, HttpSession session, Model model, PersonShareInfoVO personShareInfoVO) throws FinsetException, IOException {
+	@RequestMapping("/getShareInfoDetail.json")
+	public String getShareInfoDetail(HttpServletRequest request, HttpSession session, Model model, PersonShareInfo personShareInfo) throws FinsetException, IOException {
 		String no_person = "";
 
 		//공유정보
-        PersonShareInfo shareInfo = personManager.getPersonShareInfo(personShareInfoVO);
+        PersonShareInfo shareInfo = personManager.getPersonShareInfo(personShareInfo);
         model.addAttribute("shareInfo",shareInfo);
 
         no_person = shareInfo.getOffer_no_person();
 
 		//신용정보
-		model.addAttribute("baseInfo", creditManager.getCreditMainBaseInfo(no_person)); //등급, 점수
+		model.addAttribute("creditInfo", creditManager.getCreditMainBaseInfo(no_person)); //등급, 점수
 
         //최근 1년 연체List, 건수 조회
         CreditInfo creditInfoParam = new CreditInfo();
@@ -639,25 +663,25 @@ public class CustomerCenterController implements Constant {
         	overdueYearCnt = overdueList.get(0).getYear_cnt();
         }
         model.addAttribute("overdueCnt",overdueYearCnt);
-        model.addAttribute("overdueListData",overdueList);
+        model.addAttribute("overdueList",overdueList);
 
 
         //소득정보
-        personShareInfoVO.setOffer_no_person(no_person);
-        PersonShareInfoVO etmInfo = personManager.getPersonShareEtmInfo(personShareInfoVO);
-        model.addAttribute("etmInfo",etmInfo);
+//        personShareInfo.setOffer_no_person(no_person);
+//        PersonShareInfo etmInfo = personManager.getPersonShareEtmInfo(personShareInfo);
+//        model.addAttribute("etmInfo",etmInfo);
 
         //부채정보
         DebtForm debtForm = new DebtForm();
 		debtForm.setNo_person(no_person);
 		debtForm.setDisplay_yn("Y"); //display_yn 이 Y 인 것만 가져오도록
 		List<DebtVO> debtList = debtManager.listDebtPg(debtForm);
-		model.addAttribute("debtListData", debtList);
+		model.addAttribute("debtList", debtList);
 
 		logger.info("공유관리 상세");
-		return "/customercenter/frameShareInfoDetail";
+		return "jsonView";
 	}
-	
+
 	/**
 	 * 마이페이지 조회결과
 	 * @param request
@@ -673,7 +697,7 @@ public class CustomerCenterController implements Constant {
 		finsetForm.setPage(finsetForm.getPage());
 		finsetForm.setCd_goods_gubun("01");//Default 조회 설정
 		finsetForm.setCd_goods_gubun2("02");
-		
+
 		String site = (environment != null)?environment.getProperty("service.profile"):"";
 		model.addAttribute("site", site);
 
@@ -682,7 +706,7 @@ public class CustomerCenterController implements Constant {
 
 		return "/customercenter/frameCustomerViewResults";
 	}
-	
+
 	/**
      * 마이페이지 조회결과 리스트 페이징
      * @param model
@@ -695,7 +719,7 @@ public class CustomerCenterController implements Constant {
 	public String listCustomerViewResults(Model model, HttpServletRequest request, FinsetForm finsetForm, HttpSession session) {
 		String no_person = (String) session.getAttribute("no_person");
 		finsetForm.setNo_person(no_person);
-		
+
 		finsetForm.setCd_goods_gubun("01");//Default 조회 설정
 		finsetForm.setCd_goods_gubun2("02");//Default 조회 설정
 
@@ -706,7 +730,7 @@ public class CustomerCenterController implements Constant {
 
 		return "/customercenter/sub/listCustomerViewResults";
 	}
-	
+
 	/**
      * 마이페이지 조회결과 리스트 페이징
      * @param model
@@ -723,7 +747,7 @@ public class CustomerCenterController implements Constant {
 		model.addAttribute("count", count);
 		return JSON_VIEW;
 	}
-	
+
 	/**
 	 * 마이페이지 조회결과 상세
 	 * @param request
@@ -760,20 +784,20 @@ public class CustomerCenterController implements Constant {
 		personVO.setBirthday(personVO.getYmd_birth());
 		personVO.setSex(personVO.getC1_gender());
 		model.addAttribute("resultPerson", personVO);
-		
+
 		String site = (environment != null)?environment.getProperty("service.profile"):"";
 		model.addAttribute("site", site);
-		
+
 		int debtCount = debtManager.getDebtCount(no_person);
 		model.addAttribute("debtCount", debtCount);
-		
+
 		int linkedFcCount = scrapManager.getLinkedFcCount(no_person);
 		model.addAttribute("linkedFcCount", linkedFcCount);
-		
+
 		logger.info("resultPerson==========" + personVO.toString());
 		return "/customercenter/frameCustomerMyInfo";
 	}
-	
+
 	/**
 	 * 마이페이지 공지사항/이벤트
 	 * @param boardForm
@@ -799,7 +823,7 @@ public class CustomerCenterController implements Constant {
 		}
 		return "/customercenter/frameCustomerNotice";
 	}
-	
+
 	/**
 	 * 마이페이지 공지사항/이벤트 list
 	 * @param boardForm
@@ -807,10 +831,10 @@ public class CustomerCenterController implements Constant {
 	 * @return
 	 */
 	@RequestMapping("/listCustomerNotice.crz")
-	public String listCustomerNotice(Model model, HttpServletRequest request, BoardForm boardForm) {		
+	public String listCustomerNotice(Model model, HttpServletRequest request, BoardForm boardForm) {
 		boardForm.setPage(1);
 		Pagination pagedList = (Pagination) boardForm.setPagedList(boardManager.listBoardInfo(boardForm), boardManager.listBoardInfoCount(boardForm));
-	
+
 		logger.info(pagedList.toString());
 		model.addAttribute("pagedList", pagedList);
 		model.addAttribute("boardForm", boardForm);
@@ -820,10 +844,10 @@ public class CustomerCenterController implements Constant {
 				model.addAttribute("seq", boardInfoVO.getSeq());
 			}
 		}
-				
+
 		return "/customercenter/sub/listNotice";
 	}
-	
+
 	/**
 	 * 마이페이지 공지사항/이벤트 상세
 	 * @param request
@@ -847,7 +871,7 @@ public class CustomerCenterController implements Constant {
 					BoardInfoVO boardImgInfo = boardManager.getBoardFileInfo(boardInfoVO);
 					model.addAttribute("boardImgInfo", boardImgInfo);
 				}
-				
+
 				boardInfo = boardManager.getBoardInfo(boardInfoVO);
 				logger.info(boardInfo.toString());
 				model.addAttribute("boardInfo", boardInfo);
@@ -855,14 +879,15 @@ public class CustomerCenterController implements Constant {
 
 		return "/customercenter/frameCustomerNoticeDetail";
 	}
-	
+
 	/**
+	 * VUE
 	 * 마이페이지 알림설정
 	 * @param request
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/frameCustomerNotificationSetting.crz")
+	@RequestMapping("/getCustomerNotificationSetting.json")
 	public String frameCustomerNotificationSetting(HttpServletRequest request, Model model, HttpSession session) {
 
 		String no_person = (String) session.getAttribute("no_person");
@@ -874,10 +899,10 @@ public class CustomerCenterController implements Constant {
 		model.addAttribute("listCdPush", codeManager.listCodeInfo("cd_push"));
 
 		model.addAttribute("listPushSetting", personManager.getPushSettingInfo(no_person));
-		
+
 		return "jsonView";
 	}
-	
+
 	/**
 	 * 마이페이지 인증/보안
 	 * @param request
@@ -895,7 +920,7 @@ public class CustomerCenterController implements Constant {
 
 		return "/customercenter/frameCustomerAuthenticationSecurity";
 	}
-	
+
 	/**
 	 * 마이페이지 비밀번호 변경 본인인증
 	 * @param request
@@ -916,7 +941,7 @@ public class CustomerCenterController implements Constant {
 		logger.info(personVO.getHp());
 		return "/customercenter/frameChnagePwdCert";
 	}
-	
+
 	/**
 	 * 마이페이지 관심상품
 	 * @param request
@@ -933,7 +958,7 @@ public class CustomerCenterController implements Constant {
 		//Default 설정
 		if( StringUtil.isEmpty(goodsForm.getCd_goods_alliance()) ) goodsForm.setCd_goods_alliance("01");
 		if( StringUtil.isEmpty(goodsForm.getCd_goods_class()) ) goodsForm.setCd_goods_class("01");
-		
+
 		Pagination pagedList = null;
 		if( "01".equals(goodsForm.getCd_goods_alliance()) ){//일반상품
 			pagedList = (Pagination) goodsForm.setPagedList(goodsManager.listGoodsFavoriteNoAlliance(goodsForm), goodsManager.getGoodsFavoriteNoAllianceCount(goodsForm));
@@ -947,10 +972,10 @@ public class CustomerCenterController implements Constant {
 		model.addAttribute("pagedList", pagedList);
 		model.addAttribute("cd_goods_alliance",goodsForm.getCd_goods_alliance());
 		model.addAttribute("cd_goods_class",goodsForm.getCd_goods_class());
-		
+
 		return "/customercenter/frameCustomerGoodsFavorite";
 	}
-	
+
 	/**
 	 * 마이페이지 관심상품 리스트 페이징
 	 * @param goodsForm
@@ -974,7 +999,7 @@ public class CustomerCenterController implements Constant {
 		}
 		model.addAttribute("pagedList", pagedList);
 		model.addAttribute("cd_goods_alliance",goodsForm.getCd_goods_alliance());
-		
+
 		return "/customercenter/sub/listLoanAffiliates";
 	}
 
@@ -1008,7 +1033,7 @@ public class CustomerCenterController implements Constant {
 
 		return "/customercenter/frameCustomerGoodsFavoriteDetail";
 	}
-	
+
 	/**
 	 * 마이페이지 자주묻는질문
 	 * @param request
@@ -1019,7 +1044,7 @@ public class CustomerCenterController implements Constant {
 	public String frameCustomerFAQ(HttpServletRequest request, Model model) {
 		return "/customercenter/frameCustomerFAQ";
 	}
-	
+
 	/**
 	 * 마이페이지 자주묻는질문 검색
 	 * @param request
@@ -1030,10 +1055,10 @@ public class CustomerCenterController implements Constant {
 	public String frameCustomerFAQSearch(HttpServletRequest request, Model model, BoardForm boardForm) {
 		logger.info(boardForm.toString());
 		Pagination pagedList = (Pagination) boardForm.setPagedList(boardManager.SearchBoard(boardForm), boardManager.SearchBoardCount(boardForm));
-		
+
 		model.addAttribute("pagedList", pagedList);
 		model.addAttribute("boardForm", boardForm);
-		
+
 		return "/customercenter/frameCustomerFAQSearch";
 	}
 
@@ -1046,11 +1071,11 @@ public class CustomerCenterController implements Constant {
 	@RequestMapping("/listFaqSearch.crz")
 	public String listFaqSearch(HttpServletRequest request, Model model, BoardForm boardForm) {
 		logger.info(boardForm.toString());
-		
+
 		Pagination pagedList = (Pagination) boardForm.setPagedList(boardManager.SearchBoard(boardForm), boardManager.SearchBoardCount(boardForm));
-		
+
 		model.addAttribute("pagedList", pagedList);
-		
+
 		return "/customercenter/sub/listFaqSearch";
 	}
 
@@ -1064,11 +1089,11 @@ public class CustomerCenterController implements Constant {
 	public String frameCustomerFAQCredit(HttpServletRequest request, Model model, BoardForm boardForm) {
 		//공지사항 게시판
 				logger.info(boardForm.toString());
-				
+
 				model.addAttribute("nm_board", boardManager.getBoardNm(boardForm.getId_board()));
 				boardForm.setPage(1);
-				
-				
+
+
 				Pagination pagedList = (Pagination) boardForm.setPagedList(boardManager.listBoardInfo(boardForm), boardManager.listBoardInfoCount(boardForm));
 
 				logger.info(pagedList.toString());
@@ -1081,10 +1106,10 @@ public class CustomerCenterController implements Constant {
 						model.addAttribute("seq", boardInfoVO.getSeq());
 					}
 				}
-				
+
 		return "/customercenter/frameCustomerFAQDetail";
 	}
-	
+
 	/**
 	 * 자주묻는질문 리스트
 	 * @param request
@@ -1096,7 +1121,7 @@ public class CustomerCenterController implements Constant {
 		Pagination pagedList = (Pagination) boardForm.setPagedList(boardManager.listBoardInfo(boardForm), boardManager.listBoardInfoCount(boardForm));
 		logger.info(pagedList.toString());
 		model.addAttribute("pagedList", pagedList);
-		
+
 		return "/customercenter/sub/listFaq";
 	}
 
@@ -1125,13 +1150,13 @@ public class CustomerCenterController implements Constant {
 		} else {
 			codeInfo = codeManager.getCodeInfo("_CONF_SYSTEM", "ANDROID_VERSION");
 		}
-			
+
 		logger.info(codeInfo.getNm_code());
 		model.addAttribute("newest_version", codeInfo.getNm_code());
 
 		return "/customercenter/frameCustomerServiceCenter";
 	}
-	
+
 	/**
 	 * 마이페이지 이용약관및정책
 	 * @param request
@@ -1142,7 +1167,7 @@ public class CustomerCenterController implements Constant {
 	public String frameCustomerTerms(HttpServletRequest request, Model model) {
 		return "/customercenter/frameCustomerTerms";
 	}
-	
+
 	/**
 	 * 마이페이지 핀셋 이용약관
 	 * @param request
@@ -1164,7 +1189,7 @@ public class CustomerCenterController implements Constant {
 	public String frameCustomerPrivacyPolicy(HttpServletRequest request, Model model) {
 		return "/customercenter/frameCustomerPrivacyPolicy";
 	}
-	
+
 	/**
 	 * 마이페이지 회원탈퇴
 	 * @param request
@@ -1175,7 +1200,7 @@ public class CustomerCenterController implements Constant {
 	public String frameCustomerQuit(HttpServletRequest request, Model model) {
 		return "/customercenter/frameCustomerQuit";
 	}
-	
+
 	/**
 	 * 회원탈퇴(no_person 기준 데이터 삭제)
 	 * @param session
@@ -1187,7 +1212,7 @@ public class CustomerCenterController implements Constant {
 	public String frameCustomerQuitComp(HttpSession session, HttpServletRequest request, Model model) throws UnsupportedEncodingException, FinsetException, IOException {
 		String no_person = (String) session.getAttribute("no_person");
 
-		ReturnClass rc = personManager.procPersonInfoDelQuit(no_person); 
+		ReturnClass rc = personManager.procPersonInfoDelQuit(no_person);
 		model.addAttribute("result", Constant.SUCCESS);
 		model.addAttribute("message", rc.getMessage());
 

@@ -21,8 +21,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.koscom.base.BaseController;
 import com.koscom.env.model.CodeInfo;
 import com.koscom.env.service.CodeManager;
 import com.koscom.login.service.SecureManager;
@@ -443,19 +443,18 @@ public class LoginController {
                 model.addAttribute("result", Constant.SUCCESS);
                 int x = 0;
                 logger.debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ");
-                logger.debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ");
-                logger.debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ");
                 for (Object object : result) {
                     logger.debug("" + x++ + ":" +  object.toString());
                 }
                 logger.debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ");
-                logger.debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ");
-                logger.debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ");
-                logger.debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ");
-                logger.debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ");
                 model.addAttribute("kcb_di", result.get(4));
                 model.addAttribute("kcb_ci", result.get(5));
                 model.addAttribute("kcb_cp", result.get(2));
+                logger.debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ");
+
+                if(personManager.getPersonInfoHp(mbphnNo)!=null) {
+                	model.addAttribute("no_person", personManager.getPersonInfoHp(mbphnNo).getNo_person());
+                }
 
                 session.setAttribute("cert_result_value", Constant.SUCCESS);
             } else {

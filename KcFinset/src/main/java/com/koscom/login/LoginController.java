@@ -567,7 +567,6 @@ public class LoginController {
 	 * @return
 	 */
 	@RequestMapping("/getDecodedPassword.json")
-	@ResponseBody
 	public String getDecodedPassword(@RequestParam("encPwd") String encPwd, Model model) {
 		
 		ReturnClass returnClass = new ReturnClass();

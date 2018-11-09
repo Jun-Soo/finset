@@ -1434,7 +1434,7 @@ public class CreditController {
      * @return
      */
     @RequestMapping("/getCreditSsnInfo.json")
-    public String getCreditNhisSsn(HttpSession session, Model model, HttpServletRequest request) {
+    public String getCreditSsnInfo(HttpSession session, Model model, HttpServletRequest request) {
 		String no_person = (String) session.getAttribute("no_person");
         logger.debug("no_person : " + no_person);
 
@@ -1499,7 +1499,6 @@ public class CreditController {
 			model.addAttribute("nps_end_ym", npsEndYm);
 
 			model.addAttribute("inquiry_years", inquiryYears);
-			model.addAttribute("scrap_code", request.getParameter("scrap_code"));
 		}
 		return "jsonView";
     }
@@ -1511,7 +1510,7 @@ public class CreditController {
      * @return
      */
     @RequestMapping("/frameCreditSsnInfo.crz")
-    public String frameCreditNhisSsn(HttpSession session, Model model, HttpServletRequest request) {
+    public String frameCreditSsnInfo(HttpSession session, Model model, HttpServletRequest request) {
 		String no_person = (String) session.getAttribute("no_person");
         logger.debug("no_person : " + no_person);
 

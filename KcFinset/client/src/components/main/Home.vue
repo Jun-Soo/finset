@@ -18,19 +18,20 @@ export default {
     Common.init();
 
     // 중복 로그인
-    if (this.$store.state.params.denied == "92") {
+    if (Constant.params.denied == "92") {
       this.$toast.center("이미 로그인되어 있습니다. 다시 시도해주세요.");
       return;
     }
+
     // hp
-    this.$store.state.user.hp = this.$store.state.params.hp;
-    localStorage.setItem("hp", this.$store.state.params.hp);
+    this.$store.state.user.hp = Constant.params.hp;
+    localStorage.setItem("hp", Constant.params.hp);
 
     // url
-    this.$store.state.linkUrl = this.$store.state.params.url;
+    this.$store.state.linkUrl = Constant.params.url;
 
     // 비밀번호, 지문인증 재확인
-    this.$store.state.ynReload = this.$store.state.params.yn_reload;
+    this.$store.state.ynReload = Constant.params.yn_reload;
 
     // page call
     this.getUserPage();
@@ -39,7 +40,7 @@ export default {
     getUserPage: function() {
       var _this = this;
       var data = {
-        hp: this.$store.state.params.hp
+        hp: Constant.params.hp
       };
 
       this.$http

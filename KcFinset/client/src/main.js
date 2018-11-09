@@ -57,7 +57,6 @@ axios.interceptors.request.use(function (config) {
 axios.interceptors.response.use((response) => {
   return response
 }, function (error) {
-  debugger
   if (error.response.status === 401) {
     console.log('unauthorized, logging out ...')
     router.push('/mypage/logout')

@@ -202,7 +202,8 @@ export default {
 
             //기존 회원 여부 체크
             if (result.no_person) {
-              this.$store.state.params.hp = _this.hp;
+              Constant.params.hp = _this.hp;
+
               if (Constant.userAgent == "iOS") {
                 Jockey.send("setNoPerson", {
                   noPerson: result.no_person,

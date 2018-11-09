@@ -62,6 +62,7 @@ import CreditLoading from '@/components/credit/Loading'
 import CreditRaiseNhis from '@/components/credit/RaiseNhis'
 import CreditRaiseNps from '@/components/credit/RaiseNps'
 import CreditRaiseNts from '@/components/credit/RaiseNts'
+import CreditRaiseRetry from '@/components/credit/RaiseRetry'
 // import CreditRaiseMobile from '@/components/credit/RaiseMobile'
 import CreditRaiseResult from '@/components/credit/RaiseResult'
 // import CreditGradeAnalysis from '@/components/credit/GradeAnalysis'
@@ -568,9 +569,19 @@ export const routes = [{
     }
   },
   {
+    path: 'raiseRetry',
+    alias: '/raiseRetry',
+    component: CreditRaiseRetry,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
     path: 'raiseResult',
     alias: '/raiseResult',
     component: CreditRaiseResult,
+    name: 'creditRaiseResult',
     meta: {
       allowPath: true,
       requiresAuth: true

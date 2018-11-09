@@ -31,7 +31,7 @@ import com.koscom.util.ReturnClass;
 
 
 @Controller
-@RequestMapping("/kcb/*")
+@RequestMapping("/m/kcb/")
 @PropertySource("classpath:prop/webservice.properties")
 public class KcbController {
 

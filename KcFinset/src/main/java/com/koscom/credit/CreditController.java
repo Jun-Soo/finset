@@ -1590,11 +1590,6 @@ public class CreditController {
     public String getCreditRaiseNhis(HttpSession session, Model model, HttpServletRequest request) {
     	String no_person = (String) session.getAttribute("no_person");
 
-        PersonVO personVO = personManager.getPersonInfo(no_person);
-
-		logger.info("no_person : "+no_person);
-		logger.info("personVO.getNm_person() : "+personVO.getNm_person());
-
         ScrRespHealthPaymentdtlVO scrRespHealthPaymentdtlVO = new ScrRespHealthPaymentdtlVO();
         scrRespHealthPaymentdtlVO.setNo_person(no_person);
         scrRespHealthPaymentdtlVO.setPay_yyyymm(DateUtil.getFirstDateOfPrevMonth(DateUtil.getCurrentDate(),12).substring(0,6));
@@ -1626,7 +1621,6 @@ public class CreditController {
         		}
 
         	}
-        	model.addAttribute("name", personVO.getNm_person());
         	model.addAttribute("amt_year_income", lAmtYearIncome / 10000);
         	model.addAttribute("total_payment", lTotPayment / 10000);
         	model.addAttribute("payment_size", scrRespHealthPaymentdtlList.size());
@@ -1700,11 +1694,6 @@ public class CreditController {
     public String getCreditRaiseNts(HttpSession session, Model model, HttpServletRequest request) {
     	String no_person = (String) session.getAttribute("no_person");
 
-        PersonVO personVO = personManager.getPersonInfo(no_person);
-
-		logger.info("no_person : "+no_person);
-		logger.info("personVO.getNm_person() : "+personVO.getNm_person());
-
 		ScrRespIncomeDtlVO scrRespIncomeDtlVO = new ScrRespIncomeDtlVO();
 		scrRespIncomeDtlVO.setNo_person(no_person);
 
@@ -1735,8 +1724,6 @@ public class CreditController {
         	}
         	model.addAttribute("corp_name", scrRespIncomeDtl.getCorp_nm());
         }
-
-		model.addAttribute("name", personVO.getNm_person());
       	return "jsonView";
     }
 
@@ -1800,13 +1787,6 @@ public class CreditController {
     @RequestMapping("/getCreditRaiseNps.json")
     public String getCreditRaiseNps(HttpSession session, Model model, HttpServletRequest request) {
     	String no_person = (String) session.getAttribute("no_person");
-
-        PersonVO personVO = personManager.getPersonInfo(no_person);
-
-		logger.info("no_person : "+no_person);
-		logger.info("personVO.getNm_person() : "+personVO.getNm_person());
-
-		model.addAttribute("name", personVO.getNm_person());
 
 		ScrRespPensionPaymentVO scrRespPensionPaymentVO = new ScrRespPensionPaymentVO();
         scrRespPensionPaymentVO.setNo_person(no_person);

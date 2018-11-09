@@ -68,4 +68,10 @@ public interface CodeMapper {
 	 * @param codeVO
 	 */
 	int modifyListSeq(CodeVO codeVO);
+
+	/**
+	 * openAPI 약관동의를 가져옴
+	 * @return
+	 */
+	CodeInfo getAgreeTerm(CodeInfo codeInfo);
 }

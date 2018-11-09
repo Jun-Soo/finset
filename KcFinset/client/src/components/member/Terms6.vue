@@ -1,86 +1,217 @@
 <template>
   <div id="wrapper" class="pop-full">
-	<!-- Header -->
+	<!-- Header  -->
 	<div class="pop-top">
-		<p class="title">본인확인서비스 이용약관</p>
+		<p class="title">{{title_p}}</p>
 		<a class="btn-close" v-on:click="$emit('popclose')"></a> 
 	</div> 
 	<!-- Content -->
-	<div id="content" class="container pop-wrap">
-		<p class="date">update 2018.02.01</p>
-		<h3>제1조 (목적) </h3>	
-		<p class="mt15">이 약관은 본인확인서비스 대행기관인 주식회사 코리아크레딧뷰로(이하 '회사'라 합니다)와 본인확인서비스 이용자(이하 '이용자'라 합니다) 간에 본인확인서비스 이용에 관한 회사와 이용자의 권리와 의무, 기타 제반 사항을 정함을 목적으로 합니다. </p>
-		<h3>제2조 (용어의 정리) </h3>
-		<ol class="list-style03">
-			<li>"본인확인서비스"라 함은 이용자가 유무선 인터넷의 웹사이트 및 스마트폰 Application 등(이하 "사이트"라 합니다.)에서 본인 명의로 개통한 휴대폰을 이용하여, "본인확인정보"를 입력하고 인증 절차를 통하여 본인 여부와 본인이 등록한 정보의 정확성을 확인하여 주는 서비스를 말합니다. </li>
-			<li>"본인확인정보"라 함은 이용자가 입력한 본인의 생년월일, 성별, 성명, 내/외국인 여부, 이동통신사, 본인명의로 개통된 휴대폰번호, 기타 본인확인기관과 이용자간에 별도로 설정한 번호 등 "이용자"의 본인 여부 확인에 필요한 정보를 말합니다.</li>
-			<li>"이용자"라 함은 "사이트"에서 본인확인기관이 제공하는 "본인확인서비스"를 이용하는 자를 말합니다. </li>
-			<li>"본인확인기관"이라 함은 "본인확인서비스" 관련 법령에 따라 주민등록번호를 수집 이용하고, "사이트"에서 주민등록번호를 사용하지 아니하고 본인을 확인할 수 있도록 해주는 방법을 개발 제공 관리하는 업무를 담당하는 사업자를 말합니다.</li>
-			<li>"대행기관"은 본인확인기관을 대신하여 "이용자"가 "사이트"에서 "본인확인서비스"를 제공받을 수 있도록 "사이트"와 본인확인기관간의 "본인확인서비스"를 중계하고 "이용자"에게 이용방법의 안내와 문의 등 지원업무를 담당하여서, "사이트"에서 "이용자"에게 "본인확인서비스"를 대행하여 제공하는 사업자를 말합니다. </li>
-			<li>"사이트"라 함은 유무선 인터넷의 Web사이트, 스마트폰 Application(Apps)을 통하여 "이용자"에게 서비스, Contents, Point 등의 각종 재화와 용역을 유/무료로 제공하는 사업자 및 기관, 단체를 말합니다.</li>
-		</ol>
-		<h3>제3조 (약관의 명시 및 변경)</h3>
-		<ol class="list-style03">
-			<li>회사는 본 약관을 서비스 초기 화면에 게시하여 이용자가 본 약관의 내용을 확인할 수 있도록 합니다.</li>
-			<li>회사는 필요하다고 인정되는 경우 본 약관을 변경할 수 있으며, 회사가 약관을 변경할 경우에는 적용일자 및 변경사유를 명시하여 서비스 화면에 적용일자 14일 전부터 공지합니다.</li>
-			<li>회사가 전항에 따라 변경 약관을 공지 또는 통지하면서 이용자에게 약관 변경 적용일 까지 거부의사를 표시하지 않으면 약관의 변경에 동의한 것으로 간주한다는 내용을 명확하게 공지 또는 통지하였음에도 이용자가 명시적으로 약관 변경에 대한 거부의사를 표시하지 아니하면 이용자가 변경 약관에 동의한 것으로 간주합니다. </li>
-			<li>이용자 또는 사이트가 변경된 약관에 대한 내용을 알지 못하여 발생하는 손해 및 피해에 대해서는 회사는 일체 책임을 지지 않습니다.</li>
-			<li>회사의 약관은 개인정보보호 등을 규정한 정보통신 이용촉진 및 정보보호 등에 관한 법률 등 관련 법령에서 정한 절차와 범위 내에서만 유효합니다.</li>
-		</ol>
-		<h3>제4조 (본인확인서비스 제공시간)</h3>
-		<ol class="list-style03">
-			<li>본인확인서비스의 이용은 연중무휴 1일 24시간을 원칙으로 합니다. 다만, 정기 점검 및 기타 기술상의 이유, 기타 운영상의 사유와 목적에 따라 회사가 정한 기간에 일시 중지될 수 있으며, 각 사이트의 기술상, 운영상의 사유와 목적에 따라 일시 중지될 수 있습니다. </li>
-			<li>본인확인서비스의 이용은 연중무휴 1일 24시간을 원칙으로 합니다. 다만, 정기 점검 및 기타 기술상의 이유, 기타 운영상의 사유와 목적에 따라 회사가 정한 기간에 일시 중지될 수 있으며, 각 사이트의 기술상, 운영상의 사유와 목적에 따라 일시 중지될 수 있습니다. </li>
-		</ol>
-		<h3>제5조 (회사의 권리와 의무)</h3>
-		<ol class="list-style03">
-			<li>회사는 본인확인서비스 대행과 관련하여 인지한 이용자의 본인확인정보를 본인의 승낙 없이 제3자에게 누설하거나 배포하지 않습니다. 단, 국가기관의 요구가 있는 경우, 범죄에 대한 수사상의 목적이 있는 경우 등 기타 관계 법령에서 정한 절차에 따른 요청이 있는 경우에는 그러하지 않습니다.</li>
-			<li>회사는 이용자에게 안정적인 본인확인서비스 대행을 위하여 지속적으로 관련 시스템이나 절차, 기능 등의 예방점검, 유지보수 등을 이행하며, 본인확인서비스의 장애가 발생하는 경우, 이를 지체 없이 수리 및 복구합니다.</li>
-			<li>회사는 서비스의 안전성과 신뢰성, 보안성을 확보하기 위하여 개인정보 처리시스템의 해킹방지시스템 및 보안관리 체계 운영 등 기술적, 관리적 조치를 취합니다.</li>
-			<li>회사는 서버 및 통신기기의 정상작동여부 확인을 위하여 정보처리시스템 자원 상태의 감시, 경고 및 제어가 가능한 모니터링 체계를 갖춥니다 .</li>
-			<li>회사는 해킹 침해 방지를 위하여 다음 각 호의 시스템 및 프로그램을 설치하여 운영합니다. 
-				<ol class="list-style04">
-					<li><span>1)</span>침입 차단 및 탐지시스템 설치</li>
-					<li><span>2)</span>그 밖에 필요한 보호장비 또는 암호프로그램 등 정보보호시스템 설치</li>
+	<div class="container pop-wrap">
+		<p class="date">{{date_p}}</p>
+		<!-- tab1 v-for="explain in explains" v-bind:key="explain.value" -->
+		<div id="tab1">
+			<h2>{{subtitle_p}}</h2>
+			<div v-for="article in articles" v-bind:key='article.value'>
+				<h3>{{article.h3_c}}</h3> 
+				<p class="mt15" v-if="article.p_c && article.num!=8">{{article.p_c}}</p>
+				<ol class="list-style03">
+					<li class="mt15" v-for="listArg in listArgs" v-bind:key="listArg.key" v-if="article.num===listArg.num">   {{listArg.text}}</li>
+						<!-- <ol class="list-style04">
+							<li><span>{{listkey_p}}</span>{{sublistArg}}</li>
+						</ol>	 -->
+					<!-- <li>abcd</li>  -->
 				</ol>
-			</li>
-			<li>회사는 컴퓨터바이러스 감염을 방지하기 위하여 바이러스 방지 대책을 자체적으로 운영합니다.</li>
-		</ol>
-		<h3>제6조 (이용자의 권리와 의무)</h3>
-		<ol class="list-style03">
-			<li>이용자는 서비스를 이용함에 있어서 다음 각호에 해당하는 행위를 하여서는 안되며, 회사는 위반 행위에 따르는 일체의 법적 책임을 지지 않습니다.
-				<ol class="list-style04">
-					<li><span>1)</span>본인이 아닌 타인의 본인확인정보를 부정하게 사용 및 도용하는 행위 </li>
-					<li><span>2)</span>회사 및 본인확인기관, 사이트의 저작권, 제3자의 저작권 등 기타 권리를 침해하는 행위</li>
-					<li><span>3)</span>법령에 규정하는 제반 범죄 및 위법 행위</li>
+				<p class="mt15" v-if="article.p_c&& article.num===8">{{article.p_c}}</p>
+			</div>
+			<!-- <div>
+				<h3>제12조 (개인정보의 처리)</h3>  
+				<ol class="list-style03">
+					<li>회사는 서비스 제공을 위하여 수집된 본인확인정보의 취급 및 관리 등의 업무를 스스로 수행함을 원칙으로 하나, 필요한 경우 아래 표와 같이 회사가 선정한 사업자에게 위탁할 수 있습니다.
+						<div>
+							<table>
+								<caption>[개인정보의 취급 위탁]</caption>
+								<colgroup>
+									<col width="50%"><col width="50%">
+								</colgroup>
+								<thead>
+									<tr>
+										<th>수탁자</th>
+										<th>위탁업무내용</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<td>서울신용평가정보(주)</td>
+										<td>본인확인정보의 처리, 본인확인 업무대행</td>
+									</tr>
+									<tr>
+										<td>한국모바일인증(주)</td>
+										<td>본인확인 업무대행</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</li>
 				</ol>
-			</li>
-			<li>이용자는 본 약관에서 규정하는 사항과 서비스에 대한 이용안내 또는 주의사항 등을 준수하여야 합니다.</li>
-			<li>이용자는 이용자 본인의 접근매체, 본인확인정보의 분실, 유출, 누설없이 본인 스스로 성실히 관리하여야 합니다.</li>
-			<li>이용자는 회사의 서비스 고객센터를 통하여 관련 문의를 할 수 있습니다.《회사의 서비스 고객센터 연락처 : 02-708-1000, www.ok-name.co.kr》</li>
-			<li>이용자는 본인확인서비스가 자신의 의사에 반하여 특정 사이트에 제공되었음을 안 때에는 본인확인기관 또는 회사를 통하여 자신의 본인확인정보 삭제를 요구할 수 있으며, 본인확인기관 또는 회사는 그 정정요구를 받은 날부터 2주 이내에 처리 결과를 알려 주어야 합니다.《회사의 서비스 고객센터 연락처 : 02-708-1000, www.ok-name.co.kr</li>
-		</ol>
-		<h3>제7조 (이용자의 개인정보보호) </h3>
-		<ol class="list-style03">
-			<li>회사는 본인확인서비스를 대행함에 있어 취득한 이용자의 정보 또는 자료를 이용자의 동의 없이 제3자에게 제공, 누설하거나 업무상 목적 외에 사용하지 않습니다.</li>
-			<li>이용자의 개인정보 보호는 회사가 관련 법령과 회사가 수립하여 운영하는 개인정보 처리방침에 따릅니다. 자세한 회사의 개인정보 제공 범위와 보호 방침, 위탁은 서비스 홈페이지(www.ok-name.co.kr)에 제공되는 개인정보 처리방침을 참조하시기 바랍니다.</li>
-		</ol>
-		<h3>제8조 (약관 외 준칙)</h3>
-		<p class="mt15">본 약관에 명시되지 아니한 사항에 대해서는 정보통신망 이용 촉진 및 정보보호 등에 관한 법률 등 기타 관련 법령 또는 상관례에 따릅니다.</p>
-		<h3>부칙</h3>
-		<p class="mt15">(시행일) 이 약관은 공시한 날로부터 시행합니다.</p>
-	</div>	
+			</div> -->
+		</div>
+	</div>
 </div>
-	<!-- //Content -->
-
 </template>
 
 <script>
 export default {
   name: "Terms6",
+  data() {
+    return {
+      date_p: "",
+      title_p: "",
+      subtitle_p: "",
+      articles: [], //조항
+      //   explains,
+      data: "",
+      listArgs: [], //조항 안의 리스트 (조항num==listArg.num)
+      //   sublistArgs,
+      //   listkey_p,
+      //   list: [
+      //     {
+      //       num: 2,
+      //       h3_c: "",
+      //       p_c: "",
+      //       list_c: [
+      //         { key: "", text: "", num: 2 },
+      //         { key: "", text: "" },
+      //         {
+      //           key: "",
+      //           text: "",
+      //           sublist_c: [{ key: "", text: "" }, { key: "", text: "" }]
+      //         }
+      //       ]
+      //     }
+
+      //   ],
+      groupList: []
+    };
+  },
+  components: {},
+  beforeCreate() {},
+  created() {
+    let _this = this;
+    _this.data = _this.$parent.$parent.term_db;
+    _this.title_p = _this.$parent.$parent.nm_code;
+    _this.transfer(_this.data);
+  },
+  beforeMount() {},
+  mounted() {},
+  beforeUpdate() {},
+  updated() {},
+  beforeDestroy() {},
+  destroyed() {},
+  methods: {
+    transfer: function(str) {
+      let _this = this;
+      let tmp = str;
+      let tmplist = str.replace(/\\r/g, "\r").split("\\n");
+      var num = 1;
+      _this.subtitle_p = tmplist[0];
+      for (var key in tmplist) {
+        if (
+          tmplist[key] == null ||
+          tmplist[key] == "\r" ||
+          parseInt(key) === tmplist.length - 1
+        ) {
+          //마지막 data 걸러내기
+          continue;
+        }
+        //article
+        if (tmplist[key].startsWith("제") && !tmplist[key].endsWith(".\r")) {
+          //조항체크,
+          let tmpJson = {};
+          //tmplist[key].substring(1,2)
+          tmpJson["num"] = num;
+          tmpJson["h3_c"] = tmplist[key];
+          //   tmpJson["list_c"] = [];
+
+          for (
+            var i = parseInt(key) + 1;
+            tmplist[i].startsWith("제") == false;
+            i++
+          ) {
+            //다음조항까지 거르기
+            if (tmplist[i].indexOf("\\t") > 0) {
+              var _key = tmplist[i].substring(0, tmplist[i].indexOf("\\t"));
+              var _text = tmplist[i].substring(tmplist[i].indexOf("\\t") + 2);
+              var tJson = {};
+              tJson["key"] = _key;
+              tJson["text"] = _text;
+              tJson["num"] = num;
+              //   tmpJson["list_c"].push(tJson);
+              _this.listArgs.push(tJson);
+            } else if (tmplist[i] == "\r") {
+              break;
+            } else if (tmpJson["p_c"]) {
+              tmpJson["p_c"] += "\t" + tmplist[i];
+            } else {
+              tmpJson["p_c"] = tmplist[i];
+            }
+          }
+          //   if (tmpJson["list_c"].length === 0) {
+          //     delete tmpJson["list_c"];
+          //   }
+          //   else {
+          //     _this.listArgs = tmpJson["list_c"];
+          //   }
+          _this.groupList.push(tmpJson);
+          num++;
+        } else if (tmplist[key].length < 10) {
+          //부록 및 제목체크
+          let tmpJson = {};
+          tmpJson["num"] = num;
+          tmpJson["h3_c"] = tmplist[key];
+          //   tmpJson["list_c"] = [];
+          for (var i = parseInt(key) + 1; tmplist[i] != "\r"; i++) {
+            if (tmplist[i].indexOf("\\t") > 0) {
+              var __key = tmplist[i].substring(0, tmplist[i].indexOf("\\t"));
+              var __text = tmplist[i].substring(tmplist[i].indexOf("\\t") + 2);
+              var ttJson = {};
+              ttJson["key"] = __key;
+              ttJson["text"] = __text;
+              ttJson["num"] = num;
+              //   tmpJson["list_c"].push(ttJson);
+              _this.listArgs.push(ttJson);
+            } else if (tmplist[i] == "\r") {
+              break;
+            } else {
+              tmpJson["p_c"] = tmplist[i];
+            }
+          }
+          //   if (tmpJson["list_c"].length === 0) delete tmpJson["list_c"];
+          _this.groupList.push(tmpJson);
+          num++;
+        }
+      } //for
+      console.log(_this.groupList);
+      console.log(_this.listArgs);
+      _this.articles = _this.groupList;
+      //   tmp = tmp.replace(/\\r/g, "\r");
+      //   tmp = tmp.replace(/\\n/g, "\n");
+      //   tmp = tmp.replace(/\\t/g, "\t");
+      //   _this.explain = tmp;
+    },
+
+    makeListJson: function(n) {
+      if (tmplist[i].indexOf("\\t") > 0) {
+        var _key = tmplist[i].substring(0, tmplist[i].indexOf("\\t"));
+        var _text = tmplist[n].substring(tmplist[i].indexOf("\\t") + 2);
+        var tJson = {};
+        tJson["key"] = _key;
+        tJson["text"] = _text;
+        tmpJson["list_c"].push(tJson);
+      } else {
+        tmpJson["p_c"] = tmplist[n];
+      }
+    }
+  }
 };
 </script>
 
-<!-- Add 'scoped' attribute to limit CSS to this component only -->
-<style lang="scss">
-</style>

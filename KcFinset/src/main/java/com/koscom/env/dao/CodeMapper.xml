@@ -132,4 +132,15 @@
 		   AND code_value = #{code_value}
 </update>
 
+<!-- 코드그룹의 openAPI 약관동의를 가져온다  -->
+<select id="getAgreeTerm" parameterType="com.koscom.env.model.CodeInfo" resultType="com.koscom.env.model.CodeInfo">
+	SELECT   code_value
+			, code_group
+			, nm_code
+			, etc
+	FROM COMM_CD
+	WHERE etc IS NOT NULL
+		  AND code_group = #{code_group}
+</select>
+
 </mapper>      

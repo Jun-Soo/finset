@@ -1,9 +1,11 @@
 package com.koscom.comm;
 
-import com.koscom.env.model.CodeInfo;
-import com.koscom.env.service.CodeManager;
-import com.koscom.loanworker.LoanWorkerController;
-import com.koscom.util.Constant;
+import java.sql.SQLException;
+import java.util.List;
+
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,11 +16,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
+import com.koscom.env.model.CodeInfo;
+import com.koscom.env.service.CodeManager;
+import com.koscom.loanworker.LoanWorkerController;
+import com.koscom.util.Constant;
 
 @Controller
 @RequestMapping("/m/comm")
@@ -68,6 +69,31 @@ public class CommController implements Constant {
 
 		List<CodeInfo> codeList = codeManager.listCodeInfo(code_group);
 		model.addAttribute("codeList", codeList);
+		return "jsonView";
+	}
+
+
+	/**
+	 * openAPI 약관동의 가져오기
+	 * @param model
+	 * @param request
+	 * @param fcmVO
+	 * @return
+	 * @throws SQLException 
+	 */
+	@RequestMapping("/getAgreeTerm.json")
+	public String getOpenApiTerm (
+			HttpServletRequest request,
+			HttpSession session, 
+			CodeInfo codeInfo,
+			Model model) throws SQLException {
+		
+		codeInfo = codeManager.getAgreeTerm(codeInfo);
+		
+		logger.info("getAgreeTerm.json || codeInfo : "+codeInfo.toString());
+		model.addAttribute("nm_code", codeInfo.getNm_code());
+		model.addAttribute("etc", codeInfo.getEtc());
+					
 		return "jsonView";
 	}
 }

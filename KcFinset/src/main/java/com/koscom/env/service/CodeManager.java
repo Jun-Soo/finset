@@ -39,4 +39,12 @@ public interface CodeManager {
 	 * @return String
 	 */
 	public String getCodeName(String group, String id);
+	
+	/**
+	 * 코드그룹으로 약관동의를 가져옴 ()
+	 * 
+	 * @param codeInfo
+	 * @return
+	 */
+	public CodeInfo getAgreeTerm(CodeInfo codeInfo);	
 }

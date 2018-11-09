@@ -16,19 +16,20 @@
                 <li><a v-on:click="openPop('3')">KCB 올크레딧 이용약관</a></li>
                 <li><a v-on:click="openPop('4')">개인정보 수집·이용 동의</a></li>
                 <li><a v-on:click="openPop('5')">개인정보 제3자 제공 동의</a></li>
+                <li><a v-on:click="openPop('6')">{{nm_code}}</a></li>
               </ul>
             </div>
 
             <div class="box-agree">
               <p><input type="checkbox" name="checkbox2" id="checkbox2" v-model="chkBox2"><label for="checkbox2">[필수] 통신사/본인확인 서비스 이용 동의</label></p>
               <ul>
-                <li><a v-on:click="openPop('6')">본인확인서비스 이용약관</a>
+                <li><a v-on:click="openPop('7')">본인확인서비스 이용약관</a>
                 </li>
-                <li><a v-on:click="openPop('7')">개인정보 수집 · 이용/취급위탁 동의</a>
+                <li><a v-on:click="openPop('8')">개인정보 수집 · 이용/취급위탁 동의</a>
                 </li>
-                <li><a v-on:click="openPop('8')">고유식별정보처리 동의</a>
+                <li><a v-on:click="openPop('9')">고유식별정보처리 동의</a>
                 </li>
-                <li><a v-on:click="openPop('9')">통신사 본인확인 이용약관 동의</a>
+                <li><a v-on:click="openPop('10')">통신사 본인확인 이용약관 동의</a>
                 </li>
               </ul>
             </div>
@@ -36,7 +37,7 @@
             <div class="box-agree">
               <p><input type="checkbox" name="checkbox3" id="checkbox3" v-model="chkBox3"><label for="checkbox3">[선택] 마케팅 정보 수신 동의</label></p>
               <ul>
-                <li><a v-on:click="openPop('10')">마케팅 정보 수신 동의</a></li>
+                <li><a v-on:click="openPop('11')">마케팅 정보 수신 동의</a></li>
               </ul>
             </div>
         </div>
@@ -76,6 +77,9 @@
     <vue-modal transitionName="zoom-in" name="my-modal10" v-on:popclose="closePop('10')">
       <Terms10 slot="body" v-on:popclose="closePop('10')"></Terms10>
     </vue-modal>
+    <vue-modal transitionName="zoom-in" name="my-modal11" v-on:popclose="closePop('11')">
+      <Terms11 slot="body" v-on:popclose="closePop('11')"></Terms11>
+    </vue-modal>
   </div>
   
   
@@ -94,6 +98,7 @@ import Terms7 from "./Terms7.vue";
 import Terms8 from "./Terms8.vue";
 import Terms9 from "./Terms9.vue";
 import Terms10 from "./Terms10.vue";
+import Terms50 from "./Terms11.vue";
 import Popup from "./sub/Popup.vue";
 
 export default {
@@ -102,6 +107,8 @@ export default {
     return {
       errMsg: "",
       checked: "",
+      term_db: "",
+      nm_code: "",
       chkAll: false,
       chkBox1: false,
       chkBox2: false,
@@ -119,21 +126,25 @@ export default {
     Terms8: Terms8,
     Terms9: Terms9,
     Terms10: Terms10,
+    Terms50: Terms50,
     Popup: Popup
   },
   beforeCreate() {},
   created() {
+    let _this = this;
+    let frm = new FormData();
+
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
     }
-    this.$store.state.title = "약관동의";
-    this.$store.state.header.type = "sub";
-
-    var frm = new FormData();
+    _this.$store.state.title = "약관동의";
+    _this.$store.state.header.type = "sub";
     frm.append("code_value", "1.0");
     frm.append("code_group", "OPENAPI_TERMS");
-    this.$http.post("/m/comm/getOpenApiTerm.json", frm).then(response => {
-      debugger;
+    _this.$http.post("/m/comm/getAgreeTerm.json", frm).then(response => {
+      //정상, 에러 처리 필요
+      _this.term_db = response.data.etc;
+      _this.nm_code = response.data.nm_code;
     });
   },
   beforeMount() {},
@@ -194,7 +205,6 @@ export default {
     },
     openPop: function(gubun) {
       var _this = this;
-      alert('ss');
       _this.$modals.show("my-modal" + gubun);
     }
   }

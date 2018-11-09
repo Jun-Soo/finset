@@ -87,4 +87,9 @@ public class CodeManagerImpl implements CodeManager {
 
 		return StringUtil.nullToString(ci.getNm_code(), id);
 	}
+	
+	@Override
+	public CodeInfo getAgreeTerm(CodeInfo codeInfo) {
+		return codeMapper.getAgreeTerm(codeInfo);
+	}
 }

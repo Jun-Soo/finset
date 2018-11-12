@@ -76,7 +76,7 @@
           </li>
           <li>
             <p class="key">카테고리</p>
-            <p><button class="btn-cate btn-search" @click="showCategory" v-text="consumeVO.nm_class+'-'+consumeVO.nm_type"></button></p>
+            <p><button class="btn-cate btn-search" @click="showCategory" v-text="consumeVO.nm_class==null?'카테고리를 선택하세요':consumeVO.nm_class+'-'+consumeVO.nm_type"></button></p>
           </li>
           <li>
             <p class="key">결제처</p>
@@ -322,4 +322,11 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
+.vdp-datepicker__calendar {
+  font-size: 13px;
+  line-height: 40px;
+}
+.vdp-datepicker__calendar header {
+  position: static;
+}
 </style>

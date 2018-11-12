@@ -6,6 +6,7 @@ public class LinkedFcInfoVO implements Serializable{
 	private static final long serialVersionUID = -4159327904064889977L;
 	private String no_person = "";		//회원고유번호
 	private String cn = "";				//공인인증서일련번호
+	private String dn = "";				//공인인증서일련번호2
 	private String cd_agency = "";		//기관구분
 	private String cd_fc = "";			//금융기관코드
 	private String nm_fc = "";			//금융기관이름
@@ -27,6 +28,12 @@ public class LinkedFcInfoVO implements Serializable{
 	}
 	public void setCn(String cn) {
 		this.cn = cn;
+	}
+	public String getDn() {
+		return dn;
+	}
+	public void setDn(String dn) {
+		this.dn = dn;
 	}
 	public String getCd_agency() {
 		return cd_agency;

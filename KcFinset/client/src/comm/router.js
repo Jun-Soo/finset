@@ -27,12 +27,12 @@ import MemberCertFingerLogin from '@/components/member/CertFingerLogin'
 import ScrapHome from '@/components/scrap/Home'
 import ScrapCertStep from '@/components/scrap/CertStep'
 import ScrapFcLink from '@/components/scrap/FcLink'
-import ScrapSelectFcLink from '@/components/scrap/SelectFcLink'
 import ScrapResultFcLink from '@/components/scrap/ResultFcLink'
 import ScrapCtrlFcLink from '@/components/scrap/CtrlFcLink'
 import ScrapLoading from '@/components/scrap/Loading'
 import ScrapRegFcLink from '@/components/scrap/RegFcLink'
 import ScrapSelFcLink from '@/components/scrap/SelFcLink'
+import ScrapTerms from '@/components/scrap/Terms'
 
 import MemoHome from '@/components/memo/Home'
 import MemoRegister from '@/components/memo/Register'
@@ -227,14 +227,14 @@ export const routes = [{
     allowPath: true
   }
 },
-// {
-//  path: '/client/logout',
-//  name: 'logout',
-//  component: Logout,
-//  meta: {
-//    allowPath: true
-//  }
-// },
+  // {
+  //  path: '/client/logout',
+  //  name: 'logout',
+  //  component: Logout,
+  //  meta: {
+  //    allowPath: true
+  //  }
+  // },
 {
   path: '/error',
   name: 'error',
@@ -908,7 +908,7 @@ export const routes = [{
       requiresAuth: true
     }
   },
-  // -------------통합 이후 삭제되어야 하는 부분
+    // -------------통합 이후 삭제되어야 하는 부분
   {
     path: 'designMain',
     alias: '/designMain',
@@ -1099,15 +1099,6 @@ export const routes = [{
     }
   },
   {
-    path: 'selectFcLink',
-    alias: '/selectFcLink',
-    name: 'scrapSelectFcLink',
-    component: ScrapSelectFcLink,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
     path: 'resultFcLink',
     alias: '/resultFcLink',
     name: 'scrapResultFcLink',
@@ -1148,6 +1139,15 @@ export const routes = [{
     alias: '/selFcLink',
     name: 'scrapSelFcLink',
     component: ScrapSelFcLink,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'terms',
+    alias: '/terms',
+    name: 'scrapTerms',
+    component: ScrapTerms,
     meta: {
       allowPath: true
     }

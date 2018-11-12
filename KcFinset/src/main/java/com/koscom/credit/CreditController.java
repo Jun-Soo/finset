@@ -1615,7 +1615,7 @@ public class CreditController {
         	for(int i = 0; i < scrRespHealthPaymentdtlList.size(); i++)	{
         		ScrRespHealthPaymentdtlVO scrRespHealthPaymentdtl = scrRespHealthPaymentdtlList.get(i);
 
-        		lTotPayment += Integer.parseInt(scrRespHealthPaymentdtl.getAmt_pay_health_insu());
+        		lTotPayment += Integer.parseInt(scrRespHealthPaymentdtl.getAmt_nt_health_insu());
         		if(i+1 == nAveCnt)	{
         			lAmtYearIncome = (long)(((double)((lTotPayment/nAveCnt) / dInsuRate)) * (double)12);
         		}

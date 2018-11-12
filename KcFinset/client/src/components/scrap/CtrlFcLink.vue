@@ -2,15 +2,15 @@
   <section>
     <div class="con-top cert-top">
       <p>공인인증서로<em>한번에 등록하세요</em></p>
-      <a href="#" @click="checkExistCert()">바로가기</a>
+      <a @click="checkExistCert()">바로가기</a>
     </div>
 
     <div class="tab">
       <div class="wrap">
-        <a href="#" :class="{'on':curTab === 'bank'}" @click="tabOnClick('bank')">은행</a>
-        <a href="#" :class="{'on':curTab === 'card'}" @click="tabOnClick('card')">카드</a>
-        <a href="#" :class="{'on':curTab === 'stock'}" @click="tabOnClick('stock')">증권</a>
-        <a href="#" :class="{'on':curTab === 'etc'}" @click="tabOnClick('etc')">기타</a>
+        <a :class="{'on':curTab === 'bank'}" @click="tabOnClick('bank')">은행</a>
+        <a :class="{'on':curTab === 'card'}" @click="tabOnClick('card')">카드</a>
+        <a :class="{'on':curTab === 'stock'}" @click="tabOnClick('stock')">증권</a>
+        <a :class="{'on':curTab === 'etc'}" @click="tabOnClick('etc')">기타</a>
       </div>
     </div>
 
@@ -21,23 +21,23 @@
           <div class="btn-menu-wrap" :class="{'on':bank.isClickMenu}" v-if="bank.yn_link==='Y'">
             <button class="btn-menu-pop" @click="clickMenu(bank.cd_fc)"></button>
             <div class="menu" v-if="bank.isClickLink">
-              <a href="#" @click="clickCert(bank)">공인인증서</a>
-              <a href="#" @click="clickId(bank)">아이디/비번</a>
+              <a @click="clickCert(bank)">공인인증서</a>
+              <a @click="clickId(bank)">아이디/비번</a>
             </div>
             <div class="menu" v-else>
-              <a href="#" @click="clickUnlink(bank)">연결해제</a>
-              <a href="#" @click="clickLink(bank.cd_fc)">연동정보 변경</a>
+              <a @click="clickUnlink(bank)">연결해제</a>
+              <a @click="clickLink(bank.cd_fc)">연동정보 변경</a>
             </div>
           </div>
           <div class="btn-menu-wrap" :class="{'on':bank.isClickLink}" v-else>
-            <a href="#" class="btn-interlock" @click="clickLink(bank.cd_fc)">연동하기</a>
+            <a class="btn-interlock" @click="clickLink(bank.cd_fc)">연동하기</a>
             <div class="menu">
-              <a href="#" @click="clickCert(bank)">공인인증서</a>
-              <a href="#" @click="clickId(bank)">아이디/비번</a>
+              <a @click="clickCert(bank)">공인인증서</a>
+              <a @click="clickId(bank)">아이디/비번</a>
             </div>
           </div>
         </div>
-        <p class="warn" v-if="bank.cd_link_stat=='99' && bank.rsn_link_message != null"><a href="#">{{bank.rsn_link_message}}</a></p>
+        <p class="warn" v-if="bank.cd_link_stat=='99' && bank.rsn_link_message != null && bank.rsn_link_message.length > 0"><a>{{bank.rsn_link_message}}</a></p>
       </div>
     </div>
 
@@ -48,23 +48,23 @@
           <div class="btn-menu-wrap" :class="{'on':card.isClickMenu}" v-if="card.yn_link==='Y'">
             <button class="btn-menu-pop" @click="clickMenu(card.cd_fc)"></button>
             <div class="menu" v-if="card.isClickLink">
-              <a href="#" @click="clickCert(card)">공인인증서</a>
-              <a href="#" @click="clickId(card)">아이디/비번</a>
+              <a @click="clickCert(card)">공인인증서</a>
+              <a @click="clickId(card)">아이디/비번</a>
             </div>
             <div class="menu" v-else>
-              <a href="#" @click="clickUnlink(card)">연결해제</a>
-              <a href="#" @click="clickLink(card.cd_fc)">연동정보 변경</a>
+              <a @click="clickUnlink(card)">연결해제</a>
+              <a @click="clickLink(card.cd_fc)">연동정보 변경</a>
             </div>
           </div>
           <div class="btn-menu-wrap" :class="{'on':card.isClickLink}" v-else>
-            <a href="#" class="btn-interlock" @click="clickLink(card.cd_fc)">연동하기</a>
+            <a class="btn-interlock" @click="clickLink(card.cd_fc)">연동하기</a>
             <div class="menu">
-              <a href="#" @click="clickCert(card)">공인인증서</a>
-              <a href="#" @click="clickId(card)">아이디/비번</a>
+              <a @click="clickCert(card)">공인인증서</a>
+              <a @click="clickId(card)">아이디/비번</a>
             </div>
           </div>
         </div>
-        <p class="warn" v-if="card.cd_link_stat=='99' && card.rsn_link_message != null"><a href="#">{{card.rsn_link_message}}</a></p>
+        <p class="warn" v-if="card.cd_link_stat=='99' && card.rsn_link_message != null && card.rsn_link_message.length> 0"><a>{{card.rsn_link_message}}</a></p>
       </div>
     </div>
     <div class="box-list list02 noMG" v-else-if="'stock'==this.curTab && stockList">
@@ -74,14 +74,14 @@
           <div class="btn-menu-wrap" :class="{'on':stock.isClickMenu}" v-if="stock.yn_link==='Y'">
             <button class="btn-menu-pop" @click="clickMenu(stock.cd_fc)"></button>
             <div class="menu">
-              <a href="#" @click="clickUnlink(stock)">연결해제</a>
+              <a @click="clickUnlink(stock)">연결해제</a>
             </div>
           </div>
           <div class="btn-menu-wrap" :class="{'on':stock.isClickLink}" v-else>
-            <a href="#" class="btn-interlock" @click="clickLink(stock.cd_fc)">연동하기</a>
+            <a class="btn-interlock" @click="clickLink(stock.cd_fc)">연동하기</a>
           </div>
         </div>
-        <p class="warn" v-if="stock.cd_link_stat=='99' && stock.rsn_link_message != null"><a href="#">{{stock.rsn_link_message}}</a></p>
+        <p class="warn" v-if="stock.cd_link_stat=='99' && stock.rsn_link_message != null && stock.rsn_link_message.length> 0"><a>{{stock.rsn_link_message}}</a></p>
       </div>
     </div>
     <div class="box-list list02 noMG" v-else-if="'etc'==this.curTab && etcList">
@@ -91,23 +91,23 @@
           <div class="btn-menu-wrap" :class="{'on':etc.isClickMenu}" v-if="etc.yn_link==='Y'">
             <button class="btn-menu-pop" @click="clickMenu(etc.cd_fc)"></button>
             <div class="menu" v-if="etc.isClickLink">
-              <a href="#" @click="clickCert(etc)">공인인증서</a>
-              <a href="#" @click="clickId(etc)">아이디/비번</a>
+              <a @click="clickCert(etc)">공인인증서</a>
+              <a @click="clickId(etc)">아이디/비번</a>
             </div>
             <div class="menu" v-else>
-              <a href="#" @click="clickUnlink(etc)">연결해제</a>
-              <a href="#" @click="clickLink(etc.cd_fc)">연동정보 변경</a>
+              <a @click="clickUnlink(etc)">연결해제</a>
+              <a @click="clickLink(etc.cd_fc)">연동정보 변경</a>
             </div>
           </div>
           <div class="btn-menu-wrap" :class="{'on':etc.isClickLink}" v-else>
-            <a href="#" class="btn-interlock" @click="clickLink(etc.cd_fc)">연동하기</a>
+            <a class="btn-interlock" @click="clickLink(etc.cd_fc)">연동하기</a>
             <div class="menu">
-              <a href="#" @click="clickCert(etc)">공인인증서</a>
-              <a href="#" @click="clickId(etc)">아이디/비번</a>
+              <a @click="clickCert(etc)">공인인증서</a>
+              <a @click="clickId(etc)">아이디/비번</a>
             </div>
           </div>
         </div>
-        <p class="warn" v-if="etc.cd_link_stat=='99' && etc.rsn_link_message != null"><a href="#">{{etc.rsn_link_message}}</a></p>
+        <p class="warn" v-if="etc.cd_link_stat=='99' && etc.rsn_link_message != null && etc.rsn_link_message.length> 0"><a>{{etc.rsn_link_message}}</a></p>
       </div>
     </div>
     <div class="nodata" v-else>
@@ -126,6 +126,7 @@ export default {
       curTab: "bank",
       bankList: [],
       cardList: [],
+      stockList: [],
       etcList: []
     };
   },
@@ -177,6 +178,17 @@ export default {
             this.cardList[i].isClickLink = false;
           }
         }
+      } else if (this.curTab == "stock") {
+        for (var i = 0; i < this.stockList.length; i++) {
+          if (this.stockList[i].cd_fc == cd_fc) {
+            let stock = this.stockList[i];
+            stock.isClickMenu = !stock.isClickMenu;
+            this.$set(this.stockList, i, card);
+          } else {
+            this.stockList[i].isClickMenu = false;
+            this.stockList[i].isClickLink = false;
+          }
+        }
       } else if (this.curTab == "etc") {
         for (var i = 0; i < this.etcList.length; i++) {
           if (this.etcList[i].cd_fc == cd_fc) {
@@ -211,6 +223,17 @@ export default {
           } else {
             this.cardList[i].isClickLink = false;
             this.cardList[i].isClickMenu = false;
+          }
+        }
+      } else if (this.curTab == "stock") {
+        for (var i = 0; i < this.stockList.length; i++) {
+          if (this.stockList[i].cd_fc == cd_fc) {
+            let stock = this.stockList[i];
+            stock.isClickLink = !stock.isClickLink;
+            this.$set(this.stockList, i, card);
+          } else {
+            this.stockList[i].isClickLink = false;
+            this.stockList[i].isClickMenu = false;
           }
         }
       } else if (this.curTab == "etc") {
@@ -256,6 +279,8 @@ export default {
         agency = "bank";
       } else if (nm_code == "카드") {
         agency = "card";
+      } else if (nm_code == "증권") {
+        agency = "stock";
       } else if (nm_code == "기타") {
         agency = "etc";
       }
@@ -280,6 +305,8 @@ export default {
         agency = "bank";
       } else if (nm_code == "카드") {
         agency = "card";
+      } else if (nm_code == "증권") {
+        agency = "stock";
       } else if (nm_code == "기타") {
         agency = "etc";
       }
@@ -350,6 +377,7 @@ export default {
     // 공인인증서 유무 체크
     checkExistCert: function() {
       var _this = this;
+      console.log("userAgent::" + Constant.userAgent);
       if (Constant.userAgent == "iOS") {
         //공인인증서 유무 체크 결과 콜백 이벤트
         Jockey.on("resultCheckCert", function(param) {

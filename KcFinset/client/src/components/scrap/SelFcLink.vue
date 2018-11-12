@@ -1,37 +1,43 @@
 <template>
-  <section>
-    <div class="container mt30">
-      <h3>연동 금융사를 선택해주세요.</h3>
-      <div class="checks grid2 mt10">
-        <p><input type="checkbox" id="chk1" :checked="isCheckBank" @click="clickCheck('bank')"><label for="chk1">은행</label></p>
-        <p><input type="checkbox" id="chk2" :checked="isCheckCard" @click="clickCheck('card')"><label for="chk2">카드</label></p>
-        <p class="mt10"><input type="checkbox" id="chk3" :checked="isCheckStock" @click="clickCheck('stock')"><label for="chk3">증권</label></p>
-        <p class="mt10"><input type="checkbox" id="chk4" :checked="isCheckNts" @click="clickCheck('nts')"><label for="chk4">국세청</label></p>
-      </div>
+  <div>
+    <section>
+      <div class="container mt30">
+        <h3>연동 금융사를 선택해주세요.</h3>
+        <div class="checks grid2 mt10">
+          <p><input type="checkbox" id="chk1" :checked="isCheckBank" @click="clickCheck('bank')"><label for="chk1">은행</label></p>
+          <p><input type="checkbox" id="chk2" :checked="isCheckCard" @click="clickCheck('card')"><label for="chk2">카드</label></p>
+          <p class="mt10"><input type="checkbox" id="chk3" :checked="isCheckStock" @click="clickCheck('stock')"><label for="chk3">증권</label></p>
+          <p class="mt10"><input type="checkbox" id="chk4" :checked="isCheckNts" @click="clickCheck('nts')"><label for="chk4">국세청</label></p>
+        </div>
 
-      <div class="cert-wrap" v-if="isCheckStock">
-        <p class="mt40">증권사 연계를 위하여 이메일입력과 정보제공 동의가 필요합니다.</p>
-        <h3 class="mt15">이메일</h3>
-        <input type="text" class="mt15" v-model="emailtext" v-validate="'required'" autocomplete="off" placeholder="이메일을 입력하세요" data-vv-name='이메일'>
-        <p class="warn" v-if="errors.has('이메일')">{{errors.first('이메일')}}</p>
+        <div class="cert-wrap" v-if="isCheckStock">
+          <p class="mt40">증권사 연계를 위하여 이메일입력과 정보제공 동의가 필요합니다.</p>
+          <h3 class="mt15">이메일</h3>
+          <input type="text" class="mt15" v-model="emailtext" v-validate="'required'" autocomplete="off" placeholder="이메일을 입력하세요" data-vv-name='이메일'>
+          <p class="warn" v-if="errors.has('이메일')">{{errors.first('이메일')}}</p>
 
-        <div class="checks">
-          <div class="box-agree solo">
-            <p><input type="checkbox" id="chk5" :checked="isCheckCert" @click="clickCheckCert()"><label for="chk5">[필수] 금융정보 제공동의서</label></p>
+          <div class="checks">
+            <div class="box-agree solo">
+              <p @click="clickShowCert()"><input type="checkbox" id="chk5" :checked="isCheckCert"><label for="chk5" @click="clickCheckCert($event)">[필수] 금융정보 제공동의서</label></p>
+            </div>
           </div>
         </div>
       </div>
-    </div>
 
-    <div class="btn-wrap float">
-      <a href="#" class="btn-next" @click="clickNext()">다음</a>
-    </div>
-  </section>
+      <div class="btn-wrap float">
+        <a href="#" class="btn-next" @click="clickNext()">다음</a>
+      </div>
+    </section>
+    <vue-modal transitionName="zoom-in" name="my-modal" v-on:popclose="closePop()">
+      <Terms slot="body" v-on:popclose="closePop()" :text="financeTermsText"></Terms>
+    </vue-modal>
+  </div>
 </template>
 
 <script>
 import ko from "vee-validate/dist/locale/ko.js";
 import Constant from "./../../assets/js/constant.js";
+import Terms from "./Terms.vue";
 
 export default {
   name: "",
@@ -45,10 +51,13 @@ export default {
       isGetCertContent: false,
       emailtext: "",
       uuid: "",
-      financeTerms: ""
+      financeTerms: "",
+      financeTermsText: ""
     };
   },
-  components: {},
+  components: {
+    Terms: Terms
+  },
   computed: {},
   beforeCreate() {
     this.$store.state.header.type = "sub";
@@ -82,13 +91,29 @@ export default {
           break;
       }
     },
-    clickCheckCert: function(type) {
+    clickCheckCert: function(event) {
+      event.stopPropagation();
+      console.log(event);
       var _this = this;
-      this.isCheckCert = !this.isCheckCert;
+      this.$validator.validateAll().then(res => {
+        if (res) {
+          this.isCheckCert = !this.isCheckCert;
+          if (_this.isCheckCert && !_this.isGetCertContent) {
+            _this.getTermsContent(false);
+          }
+        } else {
+          this.$toast.center(ko.messages.require);
+        }
+      });
+    },
+    clickShowCert: function() {
+      var _this = this;
       this.$validator.validateAll().then(res => {
         if (res) {
           if (_this.isCheckCert && !_this.isGetCertContent) {
-            _this.getTermsContent();
+            _this.getTermsContent(true);
+          } else {
+            _this.openPop();
           }
         } else {
           this.$toast.center(ko.messages.require);
@@ -120,7 +145,7 @@ export default {
       });
     },
     //금융정보제공동의서 조회
-    getTermsContent: function() {
+    getTermsContent: function(isShow) {
       var _this = this;
       var formData = new FormData();
       formData.append("no_person", this.$store.state.user.noPerson);
@@ -134,10 +159,15 @@ export default {
           if (response.data) {
             _this.isGetCertContent = true;
             _this.financeTerms = response.data.financeTerms;
+            var financeTerms = JSON.parse(_this.financeTerms);
+            _this.financeTermsText = financeTerms.text;
+            _this.spinnerIsVisible = false;
+            if (isShow) {
+              _this.openPop();
+            }
           } else {
             this.$toast.center(ko.messages.error);
           }
-          _this.spinnerIsVisible = false;
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);
@@ -178,6 +208,14 @@ export default {
           isCheckNts: _this.isCheckNts
         }
       });
+    },
+    closePop: function() {
+      var _this = this;
+      _this.$modals.hide("my-modal");
+    },
+    openPop: function() {
+      var _this = this;
+      _this.$modals.show("my-modal");
     },
     // 인증정보 가져오기
     getCertSignInfo: function() {

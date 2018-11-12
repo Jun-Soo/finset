@@ -660,7 +660,7 @@
 			, LK.TYPE_LOGIN
 		FROM FC_LINK_INFO LK, FC_INFO FC, COMM_CD CD
 		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR} 
-			AND CN = #{cn, jdbcType=VARCHAR}
+			AND CN IN ( #{cn, jdbcType=VARCHAR}, #{dn, jdbcType=VARCHAR} )
 			AND LK.YN_LINK = 'Y'  AND LK.CD_FC = FC.CD_FC AND CD.CODE_GROUP = 'cd_fin' AND CD.CODE_VALUE = FC.CD_FIN
 		ORDER BY CD_FIN, NM_FC
 	</select>

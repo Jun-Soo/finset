@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="seen">
     <section>
       <div class="con-top credit-up">
         <p><em>몇번의 클릭으로</em><br><em class="red">신용점수를 UP하세요</em></p>
@@ -43,6 +43,7 @@ export default {
   name: "CreditRaiseMain",
   data() {
     return {
+      seen: false,
       nts_button: "",
       nhis_button: "",
       nps_button: "",
@@ -96,6 +97,7 @@ export default {
           } else {
             this.$toast.center(ko.messages.error);
           }
+          _this.seen = true;
         });
     },
     clickItem: function(type) {

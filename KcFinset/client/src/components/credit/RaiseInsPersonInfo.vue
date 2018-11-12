@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="cert-check-wrap" v-if="scrap_code=='nhis' || scrap_code=='nps'">
       <p class="text">본인 확인을 위해<br>주민 등록 번호 뒷자리를 입력하여 주세요</p>
       <p class="title">이름</p>
@@ -36,6 +36,7 @@ export default {
   name: "CreditRaiseInsPersonInfo",
   data() {
     return {
+      seen: false,
       scrap_code: this.$route.params.scrap_code,
       isShowButton: false,
       encPwd: "",
@@ -65,15 +66,15 @@ export default {
     window.resultKeypad = this.resultKeypad;
     window.resultCheckCert = this.resultCheckCert;
     window.resultCreditRatingUpgrade = this.resultCreditRatingUpgrade;
-  },
-  beforeMount() {},
-  mounted() {
+
     // 국세청의 경우 확인 버튼 활성화
     if (this.scrap_code == "nts") {
       this.isShowButton = true;
     }
     this.getCreditSsnInfo();
   },
+  beforeMount() {},
+  mounted() {},
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
@@ -98,6 +99,7 @@ export default {
 
             _this.inquiry_years = result.inquiry_years;
             _this.inquiry_year = result.inquiry_years[0];
+            _this.seen = true;
           } else {
             this.$toast.center(ko.messages.error);
           }
@@ -126,6 +128,7 @@ export default {
     },
     creditRatingUpgrade: function(ssnPerson) {
       var _this = this;
+      console.log("userAgent::" + Constant.userAgent);
       if (Constant.userAgent == "iOS") {
         Jockey.on("resultCreditRatingUpgrade", function(param) {
           resultCreditRatingUpgrade(param.result, param.scrapCode);

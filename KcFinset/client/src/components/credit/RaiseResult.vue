@@ -7,8 +7,8 @@
       <em>조회내역이 없습니다.</em><br>금융기관에 납부내역이 없거나<br />납부내역을 불러올 수 없습니다.
     </div>
     <div class="btn-wrap col2">
-      <a href="#" class="btn-solid">재전송</a>
-      <a href="#" class="btn-stroke">홈으로</a>
+      <a class="btn-solid">재전송</a>
+      <a class="btn-stroke">홈으로</a>
     </div>
   </section>
 </template>

@@ -89,7 +89,7 @@ public interface ScrapManager {
 	 * @param String
 	 * @return LinkedFcInfoVO
 	 */
-	List<LinkedFcInfoVO> frameFcLinkList(String no_person, String cn);
+	List<LinkedFcInfoVO> listFcLinkList(String no_person, String cn, String dn);
 	
 	/**
 	 * 스크래핑 연동 금융사 수정

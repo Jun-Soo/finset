@@ -1080,13 +1080,15 @@ public class ScrapManagerImpl implements ScrapManager {
 	}
 	
 	@Override
-	public List<LinkedFcInfoVO> frameFcLinkList(String no_person, String cn)	{
+	public List<LinkedFcInfoVO> listFcLinkList(String no_person, String cn, String dn)	{
 		logger.debug("no_person : "+ no_person);
 		logger.debug("cn        : "+ cn);
+		logger.debug("dn        : "+ dn);
 		LinkedFcInfoVO linkedFcInfo = new LinkedFcInfoVO();
 		
 		linkedFcInfo.setNo_person(no_person);
 		linkedFcInfo.setCn(cn);
+		linkedFcInfo.setDn(dn);
 		
 		List<LinkedFcInfoVO> linkedFcInfoList = scrapMapper.getLinkedFcInfo(linkedFcInfo);
 		for (LinkedFcInfoVO linkedFcInfoVO : linkedFcInfoList) {

@@ -227,12 +227,10 @@ public class ScrapController {
 			HttpSession session, 
 			Model model,
 			String no_person,
-			String cn)	{ 
+			String cn,
+			String dn)	{ 
 		
-		logger.debug("================= no_person : " + no_person);
-		logger.debug("================= cn : " + cn);
-		
-		List<LinkedFcInfoVO> linkedFcInfoList = scrapManager.frameFcLinkList(no_person, cn);
+		List<LinkedFcInfoVO> linkedFcInfoList = scrapManager.listFcLinkList(no_person, cn, dn);
 
 		model.addAttribute("linkedFcInfoList", linkedFcInfoList);
 		return "jsonView";
@@ -256,6 +254,8 @@ public class ScrapController {
 				
 		ReturnClass returnClass = scrapManager.updateFcLinkInfoList(linkedFcInfoList);
 		model.addAttribute("code", returnClass.getCd_result());
+		
+		logger.debug("code : "+returnClass.getCd_result());
 		
 		return "jsonView";
 	}
@@ -501,8 +501,9 @@ public class ScrapController {
 	public String frameFcLinkList(HttpServletRequest request, Model model, HttpSession session) throws FinsetException {
 		String no_person = (String) session.getAttribute("no_person");
 		String cn = request.getParameter("cn");
+		String dn = request.getParameter("dn");
 		
-		List<LinkedFcInfoVO> linkedFcInfoList = scrapManager.frameFcLinkList(no_person, cn);
+		List<LinkedFcInfoVO> linkedFcInfoList = scrapManager.listFcLinkList(no_person, cn, dn);
 
 		model.addAttribute("linkedFcInfoList", linkedFcInfoList);
 		return "/scrap/frameFcLinkList";

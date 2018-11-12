@@ -44,7 +44,8 @@ export default {
       this.$router.push({
         name: "scrapRegFcLink",
         params: {
-          cn: this.$route.params.cn
+          cn: this.$route.params.cn,
+          dn: this.$route.params.dn
         }
       });
     },

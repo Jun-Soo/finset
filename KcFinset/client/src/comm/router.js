@@ -144,9 +144,9 @@ import MypageEmail from '@/components/mypage/Email'
 import MypageLogout from '@/components/mypage/Logout'
 import MypageRegAlarm from '@/components/mypage/RegAlarm'
 import MypageCert from '@/components/mypage/Cert'
-// import MypageRegCertLogin from '@/components/mypage/RegCertLogin'
-// import MypageCertPerson from '@/components/mypage/CertPerson'
-// import MypageChgPwd from '@/components/mypage/ChgPwd'
+import MypageRegCertLogin from '@/components/mypage/RegCertLogin'
+import MypageCertPerson from '@/components/mypage/CertPerson'
+import MypageChgPwd from '@/components/mypage/ChgPwd'
 import MypageFavGoods from '@/components/mypage/FavGoods'
 // import MypageFavList from '@/components/mypage/FavList'
 // import MypageFavDetail from '@/components/mypage/FavDetail'
@@ -227,14 +227,14 @@ export const routes = [{
     allowPath: true
   }
 },
-  // {
-  //  path: '/client/logout',
-  //  name: 'logout',
-  //  component: Logout,
-  //  meta: {
-  //    allowPath: true
-  //  }
-  // },
+// {
+//  path: '/client/logout',
+//  name: 'logout',
+//  component: Logout,
+//  meta: {
+//    allowPath: true
+//  }
+// },
 {
   path: '/error',
   name: 'error',
@@ -908,7 +908,7 @@ export const routes = [{
       requiresAuth: true
     }
   },
-    // -------------통합 이후 삭제되어야 하는 부분
+  // -------------통합 이후 삭제되어야 하는 부분
   {
     path: 'designMain',
     alias: '/designMain',
@@ -1215,6 +1215,33 @@ export const routes = [{
     path: 'cert',
     alias: '/cert',
     component: MypageCert,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'regCertLogin',
+    alias: '/regCertLogin',
+    component: MypageRegCertLogin,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'certPerson',
+    alias: '/certPerson',
+    component: MypageCertPerson,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'chgPwd',
+    alias: '/chgPwd',
+    component: MypageChgPwd,
     meta: {
       allowPath: true,
       requiresAuth: true

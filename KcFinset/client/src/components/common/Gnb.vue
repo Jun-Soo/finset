@@ -15,7 +15,7 @@
         <div class="info">
           <p class="name">{{this.$store.state.user.nmPerson}}</p>
           <p class="date">최근 접속 {{connectTime}} </p>
-          <a href="" @click="clickButton('/mypage/info')">MYPAGE</a>
+          <a @click="clickButton('/mypage/info')">MYPAGE</a>
         </div>
         <div class="links">
           <a href="#">고객센터</a>

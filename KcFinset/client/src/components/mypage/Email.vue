@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="cert-wrap">
       <p class="title">이메일</p>
       <input id="emailInput" type="text" v-model="email">
@@ -18,7 +18,8 @@ export default {
   data() {
     return {
       email:'',
-      errMsg:''
+      errMsg:'',
+      seen:false
     };
   },
   components: {},
@@ -31,7 +32,14 @@ export default {
   },
   beforeMount() {},
   mounted() {
-    $('#emailInput').attr("value", localStorage.getItem('email'));
+    var _this=this;
+    var tEmail = localStorage.getItem('email');
+    if(tEmail != null && tEmail != ""){
+      _this.email = tEmail;
+    }else{
+      _this.email = "";
+    }
+    _this.seen=true;
   },
   beforeUpdate() {},
   updated() {},

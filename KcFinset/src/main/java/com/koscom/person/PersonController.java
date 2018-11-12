@@ -377,6 +377,40 @@ public class PersonController {
 	public String frameSecurityCodeFingerSet() {
 		return "/person/frameSecurityCodeFingerSet";
 	}
+	
+	/**VUE
+	 * 지문인증설정 (비밀번호확인)
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/fingerChkCode.json")
+	public String fingerChkCode(HttpSession session, Model model, HttpServletRequest request, PersonVO personVO) {
+
+		String pass_person 	= "";
+
+		for(int i=0; i < personVO.getPass_number().size(); i++){
+			pass_person += personVO.getPass_number().get(i);
+		}
+
+		String no_person = (String) session.getAttribute("no_person");
+		personVO.setNo_person(no_person);
+		personVO.setPass_person(pass_person);
+		int pwdCheck = personManager.checkPersonPass(personVO);
+		
+		if(pwdCheck > 0) {	//암호화 비밀번호 체크
+			personVO.setYn_fingerprint("Y");
+			ReturnClass returnClass = personManager.modifyFingerPrint((PersonVO)SessionUtil.setUser(personVO, session));
+			logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
+			
+			model.addAttribute("result", Constant.SUCCESS);
+		} else {
+			model.addAttribute("message", "비밀번호가 일치하지 않습니다.");
+			model.addAttribute("result", Constant.FAILED);
+		}
+		return "jsonView";
+	}
+	
 	/**
 	 * 이메일 업데이트
 	 * @param model

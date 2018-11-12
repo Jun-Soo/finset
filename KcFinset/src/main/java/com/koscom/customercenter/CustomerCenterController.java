@@ -847,7 +847,7 @@ public class CustomerCenterController implements Constant {
 	 * @return
 	 */
 	@RequestMapping("/getCustomerNotificationSetting.json")
-	public String frameCustomerNotificationSetting(HttpServletRequest request, Model model, HttpSession session) {
+	public String getCustomerNotificationSetting(HttpServletRequest request, Model model, HttpSession session) {
 
 		String no_person = (String) session.getAttribute("no_person");
 

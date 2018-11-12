@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="mypage-top">
       <p class="key">이름</p>
       <p class="value">{{nm_person}}</p>
@@ -37,7 +37,8 @@ export default {
       no_person: this.$store.state.user.noPerson,
       nm_person: this.$store.state.user.nmPerson,
       hp: this.$store.state.user.hp,
-      email: ""
+      email: "",
+      seen:false
       /**
       amt_etm_income: null
       bgn: "199104112"
@@ -138,11 +139,18 @@ export default {
     frm.append("no_person", _this.no_person);
     frm.append("hp", _this.hp);
     _this.$http
-      .post("/m/customercenter/frameCustomerCenterMain.crz", frm)
+      .post("/m/customercenter/getCustomerCenterMain.json", frm)
       .then(response => {
         personInfo = response.data.personVO;
-        _this.email = personInfo.email;
-        localStorage.setItem('email', _this.email);
+        var tEmail =personInfo.email;
+        if( tEmail != null && tEmail != "" ){
+          _this.email = tEmail;
+          localStorage.removeItem("email");
+          localStorage.setItem("email", tEmail);
+        }else{
+          _this.email = "등록안됨";
+        }
+        _this.seen=true;
       });
   },
   beforeMount() {},

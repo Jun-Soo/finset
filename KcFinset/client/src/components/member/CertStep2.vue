@@ -217,7 +217,7 @@ export default {
                 "고객님은 기존 회원이므로 로그인 페이지로 이동합니다."
               );
               setTimeout(function() {
-                this.$router.push("/home");
+                _this.$router.push("/home?hp=" + _this.hp);
               }, 700);
             } else {
               this.insertPerson();

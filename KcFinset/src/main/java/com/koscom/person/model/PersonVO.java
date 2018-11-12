@@ -29,7 +29,6 @@ public class PersonVO extends PersonInfo implements Serializable {
 	private String changePwd;			//변경할비밀번호
 	private String ChangePwdConfirm;	//변경할비밀번호 확인
 	private int chk_pwd;
-	private List<String> pass_number;	
 	
 	private String	seq; 					//push_setting seq값
 	private	String	type_push; 				//push_setting type
@@ -452,11 +451,4 @@ public class PersonVO extends PersonInfo implements Serializable {
 		this.yn_installment = yn_installment;
 	}
 	
-	public List<String> getPass_number() {
-		return pass_number;
-	}
-
-	public void setPass_number(List<String> pass_number) {
-		this.pass_number = pass_number;
-	}
 }

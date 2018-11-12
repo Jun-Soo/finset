@@ -389,9 +389,7 @@ public class PersonController {
 
 		String pass_person 	= "";
 
-		for(int i=0; i < personVO.getPass_number().size(); i++){
-			pass_person += personVO.getPass_number().get(i);
-		}
+		pass_person = personVO.getCurrentPwd();
 
 		String no_person = (String) session.getAttribute("no_person");
 		personVO.setNo_person(no_person);

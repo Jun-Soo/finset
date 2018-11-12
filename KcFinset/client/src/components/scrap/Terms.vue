@@ -25,31 +25,28 @@ export default {
     }
   },
   data() {
-    return{
-      articles:new Array()
-    }
+    return {
+      articles: new Array()
+    };
   },
   created() {
-    var _this =this;
+    var _this = this;
     _this.transfer(this.text);
-    
-
   },
-  methods:{
-    transfer(str){
+  methods: {
+    transfer(str) {
       let _this = this;
       let tmplist = str.split("\n");
       debugger;
-      for(var i =0; i<tmplist.length;i++){
-        if(tmplist[i]=='\n')  continue;
-        var tJson = {}
+      for (var i = 0; i < tmplist.length; i++) {
+        if (tmplist[i] == "\n") continue;
+        var tJson = {};
         tJson["text"] = tmplist[i];
         tJson["key"] = i;
-        _this.articles.push(tJson); 
+        _this.articles.push(tJson);
       }
     }
   }
-
 };
 </script>
 

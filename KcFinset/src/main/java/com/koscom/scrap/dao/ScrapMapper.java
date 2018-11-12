@@ -29,6 +29,7 @@ import com.koscom.scrap.model.StockFundlistVO;
 import com.koscom.scrap.model.StockInterestIsinVO;
 import com.koscom.scrap.model.StockListVO;
 import com.koscom.scrap.model.StockSummaryVO;
+import com.koscom.scrap.model.StockTransactionVO;
 import com.koscom.scrap.model.sub.AnAllListHistoryVO;
 import com.koscom.scrap.model.sub.DepositAnListHistoryVO;
 
@@ -84,15 +85,27 @@ public interface ScrapMapper { // com.koscom.scrap.dao.ScrapMapper
 	
 	/**
 	 * 증권사 관심종목 저장
-	 * @param StockEtclistVO
+	 * @param StockInterestIsinVO
 	 */
 	int insertStockInterestIsin(StockInterestIsinVO stockInterestIsinVO);
 	
 	/**
 	 * 증권사 관심종목 삭제
-	 * @param StockEtclistVO
+	 * @param StockInterestIsinVO
 	 */
 	int deleteStockInterestIsin(StockInterestIsinVO stockInterestIsinVO);
+	
+	/**
+	 * 증권사 거래내역 저장
+	 * @param StockTransactionVO
+	 */
+	String getMaxDateStockTransaction(StockTransactionVO stockTransactionVO);
+	
+	/**
+	 * 증권사 거래내역 저장
+	 * @param StockTransactionVO
+	 */
+	int insertStockTransaction(StockTransactionVO stockTransactionVO);
 	
 	/**
 	 * 증권사 가상계좌 발급 정보 저장

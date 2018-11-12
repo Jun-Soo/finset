@@ -75,6 +75,7 @@ import com.koscom.scrap.model.StockFundlistVO;
 import com.koscom.scrap.model.StockInterestIsinVO;
 import com.koscom.scrap.model.StockListVO;
 import com.koscom.scrap.model.StockSummaryVO;
+import com.koscom.scrap.model.StockTransactionVO;
 import com.koscom.scrap.model.UserBankOutputVO;
 import com.koscom.scrap.model.UserCardOutputVO;
 import com.koscom.scrap.model.sub.AnAllListHistoryVO;
@@ -749,6 +750,94 @@ public class ScrapManagerImpl implements ScrapManager {
 		return Constant.SUCCESS;
 	}
 	
+	public String getFinanceTransaction(HashMap<String, String> headerMap, String body, StockTransactionVO stockTransactionVO)	{
+		String com_alias = fincorpMapper.getComAliasCdByCdFc(stockTransactionVO.getCd_fc());
+		String financeUrl = String.format(environment.getProperty("account.apiUrl"), com_alias)+"/account/transaction/search";
+		
+		String no_person = stockTransactionVO.getNo_person();
+		String cd_fc = stockTransactionVO.getCd_fc();
+		String accno = stockTransactionVO.getAccno();
+		
+		// 기존 조회된 내역에서 
+		String toDay = DateUtil.getCurrentYMD();
+		String fromDate;
+		String maxDate = scrapMapper.getMaxDateStockTransaction(stockTransactionVO);
+		if(maxDate != null && maxDate.length()==8)	{
+			fromDate = DateUtil.addDays(scrapMapper.getMaxDateStockTransaction(stockTransactionVO), 1);
+		}
+		else	{
+			//fromDate = DateUtil.addMonths(toDay, -3);
+			fromDate = "20150801";
+		}
+		String toDate = DateUtil.addDays(toDay, -1);
+
+		// 조회된 내역이 이미 있으므로 종료
+		if(Long.parseLong(fromDate) >= Long.parseLong(toDate))	{
+			return Constant.SUCCESS;
+		}
+		
+		JsonParser jsonParser = new JsonParser();
+		JsonObject jsonSendRoot = (JsonObject) jsonParser.parse(body);
+		JsonObject jsonReqPram = new JsonObject();
+		JsonObject jsonObject = new JsonObject();
+		jsonObject.addProperty("fromDate", fromDate);
+		jsonObject.addProperty("toDate", toDate);
+		jsonObject.addProperty("isinCode", "");
+		jsonObject.addProperty("side", "ALL");
+		jsonObject.addProperty("count", 0);
+		jsonObject.addProperty("page", "null");
+		jsonReqPram.add("requestParameters", jsonObject);
+		jsonSendRoot.add("transactionHistoryRequestBody", jsonReqPram);
+		
+		logger.info("getFinanceTransaction() : " + jsonSendRoot.toString());
+		
+		URLConnection url = new URLConnection();
+		ReturnClass returnClass = url.sendReqPOST_Direct(financeUrl, headerMap, jsonSendRoot.toString());
+		String data = returnClass.getDes_message();
+		logger.info("Receive Data : "+ data);
+		
+		JsonObject jsonRecvRoot = (JsonObject) jsonParser.parse(data);
+		
+		if(returnClass.getCd_result()  == Constant.SUCCESS)	{
+			JsonArray jsonGroupArray = (JsonArray)jsonRecvRoot.get("transList");
+			if(jsonGroupArray == null)	{
+				return Constant.FAILED;
+			}
+			for(int i=0; i<jsonGroupArray.size(); i++)	{
+				JsonObject object = (JsonObject)jsonGroupArray.get(i);
+				StockTransactionVO stockTransaction = new StockTransactionVO();
+				stockTransaction.setNo_person(no_person);
+				stockTransaction.setCd_fc(cd_fc);
+				stockTransaction.setAccno(accno);
+				logger.info("Object  : "+ object.toString());
+				if(object.get("isinCode") != null && !object.get("isinCode").isJsonNull())	{
+					stockTransaction.setIsincode(object.get("isinCode").getAsString());
+				}
+				if(object.get("transDate") != null && !object.get("transDate").isJsonNull())	{
+					stockTransaction.setTransdate(object.get("transDate").getAsString());
+				}
+				if(object.get("transType") != null && !object.get("transType").isJsonNull())	{
+					stockTransaction.setTranstype(object.get("transType").getAsString());
+				}
+				if(object.get("changeAmt") != null && !object.get("changeAmt").isJsonNull())	{
+					stockTransaction.setChangeamt(object.get("changeAmt").getAsString());
+				}
+				if(object.get("changeQty") != null && !object.get("changeQty").isJsonNull())	{
+					stockTransaction.setChangeqty(object.get("changeQty").getAsString());
+				}
+				if(object.get("qty") != null && !object.get("qty").isJsonNull())	{
+					stockTransaction.setQty(object.get("qty").getAsString());
+				}
+				scrapMapper.insertStockTransaction(stockTransaction);
+			}
+		}
+		else	{
+			logger.error("금융투자회사 거래내역  조회 를 실패하였습니다.");
+			return Constant.FAILED;
+		}
+		return Constant.SUCCESS;
+	}
+	
 	public String startScrapFinance(String no_person, String uuid, String token)	{
 		PersonVO personVO = personMapper.getPersonInfo(no_person);
 		String ci = personVO.getKcb_ci();
@@ -793,6 +882,10 @@ public class ScrapManagerImpl implements ScrapManager {
 			stockInterestIsinVO.setNo_person(no_person);
 			stockInterestIsinVO.setCd_fc(cd_fc);
 			scrapMapper.deleteStockInterestIsin(stockInterestIsinVO);
+			
+			StockTransactionVO stockTransactionVO = new StockTransactionVO();
+			stockTransactionVO.setNo_person(no_person);
+			stockTransactionVO.setCd_fc(cd_fc);
 			
 			// 계좌 조회 전 가상계좌 발급으로 가상계좌 내역 갱신  (uuid 처리 여부)
 			ReturnClass returnClass = createFinanceAccount(no_person, uuid, dn, token, com_alias);
@@ -873,6 +966,9 @@ public class ScrapManagerImpl implements ScrapManager {
 					
 					stockInterestIsinVO.setAccno(stockListInfo.getAccno());
 					getFinanceInterest(headerMap, jsonBody.toString(), stockInterestIsinVO);
+					
+					stockTransactionVO.setAccno(stockListInfo.getAccno());
+					getFinanceTransaction(headerMap, jsonBody.toString(), stockTransactionVO);
 				}
 			}
 		}

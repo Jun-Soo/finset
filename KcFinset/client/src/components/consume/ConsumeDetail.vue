@@ -12,9 +12,12 @@
         <ul class="consume-detail">
           <li>
             <p class="key">입금</p>
-            <p v-if="($route.query.seq_consume||'')==''">
+            <p v-if="isNew">
               <select>
-                <option>신한카드</option>
+                <option>입출금계좌</option>
+                <option>계좌조회</option>
+                <option>카드</option>
+                <option>현금</option>
               </select>
             </p>
             <p readonly v-else><input type="text" :value="formatNmCard(consumeVO.nm_card)" :readonly="!isNew"></p>
@@ -33,7 +36,7 @@
           </li>
           <li>
             <p class="key">날짜</p>
-            <p v-if="($route.query.seq_consume||'')==''">
+            <p v-if="isNew">
               <select>
                 <option>데이트피커 넣어야대</option>
               </select>
@@ -60,7 +63,7 @@
         <ul class="consume-detail">
           <li>
             <p class="key">결제수단</p>
-            <p v-if="($route.query.seq_consume||'')==''">
+            <p v-if="isNew">
               <select>
                 <option>신한카드</option>
               </select>
@@ -73,7 +76,7 @@
           </li>
           <li>
             <p class="key">카테고리</p>
-            <p><button class="btn-cate btn-search" @click="showCategory">{{consumeVO.nm_class}}</button></p>
+            <p><button class="btn-cate btn-search" @click="showCategory" v-text="consumeVO.nm_class+'-'+consumeVO.nm_type"></button></p>
           </li>
           <li>
             <p class="key">결제처</p>
@@ -82,11 +85,14 @@
           <li>
             <p class="key">날짜</p>
             <p v-if="($route.query.seq_consume||'')==''">
-              <select>
+              <!-- <select>
                 <option>데이트피커 넣어야대</option>
-              </select>
+              </select> -->
+              <datepicker></datepicker>
             </p>
-            <p v-else readonly><input type="text" :value="formatDateDot(consumeVO.dt_trd)" :readonly="!isNew"></p>
+            <p v-else readonly>
+              <input type="text" :value="formatDateDot(consumeVO.dt_trd)" :readonly="!isNew">
+            </p>
           </li>
           <li class="memo">
             <p class="key">메모</p>
@@ -136,12 +142,13 @@
 
 <script>
 import Common from "@/assets/js/common.js";
+import datepicker from "vuejs-datepicker";
 
 export default {
   name: "ConsumeConsumeDetail",
   data() {
     return {
-      curTab: "",
+      curTab: "02",
       consumeCategory: {},
       orgClass: "",
       orgType: "",
@@ -152,7 +159,9 @@ export default {
       isShowCategory: false
     };
   },
-  components: {},
+  components: {
+    datepicker
+  },
   computed: {},
   beforeCreate() {
     this.$store.state.header.type = "sub";
@@ -161,7 +170,6 @@ export default {
   created() {
     this.isNew = (this.$route.query.seq_consume || "") == "";
     this.listPersonConsumeClassInfo();
-    this.getConsumeInfo();
   },
   beforeMount() {},
   mounted() {},
@@ -181,6 +189,9 @@ export default {
         })
         .then(function(response) {
           _this.consumeVO = response.data.consumeVO;
+          _this.consumeVO.dt_trd = new Date(
+            Common.formatDate(_this.consumeVO.dt_trd)
+          );
           _this.curTab = _this.consumeVO.type_in_out;
           if (_this.curTab == "02") {
             _this.curClass = _this.consumeVO.cd_class;
@@ -201,16 +212,18 @@ export default {
         .then(function(response) {
           var list = response.data.listPersonConsumeClassInfo;
           var listCdClass = new Object();
-          for (var cd_class in list) {
+          for (var eachClass of list) {
+            var cd_class = "";
             var nm_class = "";
             var listCdType = new Array();
-            for (var idx in list[cd_class]) {
+            for (var idx in eachClass) {
               if (idx == 0) {
-                nm_class = list[cd_class][idx].nm_class;
+                cd_class = eachClass[idx].cd_class;
+                nm_class = eachClass[idx].nm_class;
               }
               listCdType.push({
-                cd_type: list[cd_class][idx].cd_type,
-                nm_type: list[cd_class][idx].nm_type
+                cd_type: eachClass[idx].cd_type,
+                nm_type: eachClass[idx].nm_type
               });
             }
             listCdClass[cd_class] = {
@@ -220,6 +233,9 @@ export default {
             };
           }
           _this.consumeCategory = listCdClass;
+          if (!_this.isNew) {
+            _this.getConsumeInfo();
+          }
         });
     },
     formatNumber: function(number) {
@@ -260,6 +276,13 @@ export default {
         "nm_class",
         this.consumeCategory[this.orgClass].nm_class
       );
+      this.$set(
+        this.consumeVO,
+        "nm_type",
+        this.consumeCategory[this.orgClass].listCdType.filter(
+          eachType => eachType.cd_type == this.orgType
+        )[0].nm_type
+      );
     },
     clickConfirm: function() {
       this.consumeVO.cd_class;
@@ -270,6 +293,13 @@ export default {
         this.consumeCategory[this.curClass].nm_class
       );
       this.$set(this.consumeVO, "cd_type", this.curType);
+      this.$set(
+        this.consumeVO,
+        "nm_type",
+        this.consumeCategory[this.curClass].listCdType.filter(
+          eachType => eachType.cd_type == this.curType
+        )[0].nm_type
+      );
 
       this.isShowCategory = false;
     },

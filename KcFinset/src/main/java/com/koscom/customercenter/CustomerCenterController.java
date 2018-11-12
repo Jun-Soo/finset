@@ -1150,7 +1150,7 @@ public class CustomerCenterController implements Constant {
 	}
 
 	/**
-	 * 마이페이지 회원탈퇴
+	 * 마이페이지 회원탈퇴 페이지
 	 * @param request
 	 * @param model
 	 * @return
@@ -1160,21 +1160,21 @@ public class CustomerCenterController implements Constant {
 		return "/customercenter/frameCustomerQuit";
 	}
 
-	/**
+	/** VUE
 	 * 회원탈퇴(no_person 기준 데이터 삭제)
 	 * @param session
 	 * @param model
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/frameCustomerQuitComp.crz")
-	public String frameCustomerQuitComp(HttpSession session, HttpServletRequest request, Model model) throws UnsupportedEncodingException, FinsetException, IOException {
+	@RequestMapping("/customerQuitComp.json")
+	public String customerQuitComp(HttpSession session, HttpServletRequest request, Model model) throws UnsupportedEncodingException, FinsetException, IOException {
 		String no_person = (String) session.getAttribute("no_person");
 
 		ReturnClass rc = personManager.procPersonInfoDelQuit(no_person);
 		model.addAttribute("result", Constant.SUCCESS);
 		model.addAttribute("message", rc.getMessage());
 
-		return "/customercenter/frameCustomerQuitComp";
+		return "jsonView";
 	}
 }

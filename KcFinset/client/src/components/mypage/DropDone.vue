@@ -5,7 +5,7 @@
     </div>
 
     <div class="btn-wrap float">
-      <a href="#" class="solid box blue">앱 종료하기</a>
+      <a @click="appQuit" class="solid box blue">앱 종료하기</a>
     </div>
   </section>
 </template>
@@ -29,7 +29,11 @@ export default {
   updated() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    appQuit: function(){
+      window.Android.exitApp(); //앱종료
+    }
+  }
 };
 </script>
 

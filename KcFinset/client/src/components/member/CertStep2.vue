@@ -315,7 +315,6 @@ export default {
             _this.time--;
             _this.timer = this.prettyTime();
           } else if (_this.time == 0) {
-            debugger;
             $("#smsCertNo").attr("readonly", "true");
             // _this.smsCertNo="";
           } else {

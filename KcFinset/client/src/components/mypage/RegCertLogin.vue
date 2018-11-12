@@ -46,11 +46,8 @@ export default {
     return {
       errMsg: "",
       cntFailPwd: 0,
-      // cntFailFinger: this.$store.state.user.cntFailFinger,
       ynFingerprint: this.$store.state.user.ynFingerprint,
-      username: this.$store.state.user.noPerson,
       password: "",
-      hp: this.$store.state.user.hp,
       //class
       classPass1: "",
       classPass2: "",

@@ -463,6 +463,28 @@ public class PersonController {
 		model.addAttribute("result" , returnClass.getCd_result());
 		return "jsonView";
 	}
+	
+	/** VUE 
+	 * 로그아웃 업데이트
+	 * @param model
+	 * @param request
+	 * @param fcmVO
+	 * @return
+	 */
+	@RequestMapping("/modifyYnUseAndLogout.json")
+	public String modifyYnUseAndLogout(Model model, HttpServletRequest request, PersonVO personVO, HttpSession session) {
+		
+		String no_person = (String) session.getAttribute("no_person");
+		logger.info("no_person : "+no_person);
+		personVO.setNo_person(no_person);
+		ReturnClass returnClass = personManager.modifyYnUseAndLogout((PersonVO)SessionUtil.setUser(personVO, session));
+		
+		logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
+		model.addAttribute("result" , returnClass.getCd_result());
+		model.addAttribute("message" , returnClass.getMessage());
+		
+		return "jsonView";
+	}
 
 	/**
 	 * 문자내역 저장

@@ -180,6 +180,7 @@ export default {
             _this.$store.state.user.authToken = null;
             _this.$store.commit("LOGIN", response.data);
 
+            _this.modifyPersonLogout();
             if (_this.$store.state.linkUrl) {
               _this.$router.push(_this.$store.state.linkUrl);
             } else {
@@ -208,6 +209,7 @@ export default {
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);
+          this.initClassPass();
         });
     },
     passCheck: function() {
@@ -234,62 +236,84 @@ export default {
         .catch(e => {
           this.$toast.center(ko.messages.error);
         });
-    }
-  },
-  /***
-   * Native Call function
-   **/
-  resultFingerPrint: function(result) {
-    var _this = this;
-    if (result == true || result == 1) {
-      //지문인식 성공
-      if (Constant.userAgent == "Android") {
-        window.Android.closeFingerPrint();
-      }
+    },
+    //로그아웃 변수 변경
+    modifyPersonLogout: function() {
+      var _this = this;
+      var formData = new FormData();
+      formData.append("yn_logout", "N");
+      formData.append("yn_use", "Y");
 
-      if (this.$store.state.ynReload == "Y") {
-        if (Constant.userAgent == "Android") {
-          window.Android.closeWebView();
-        } else if (Constant.userAgent == "iOS") {
-          Jockey.send("closeWebView", {});
-        }
-        return false;
-      } else {
-        _this.password = _this.$store.state.user.authToken;
-        _this.login();
-      }
-    } else {
-      //지문 틀린 누적횟수 증가
-      _this.cntFailFinger += 1;
-      this.modifyPwdFailCnt("finger", _this.cntFailFinger);
-
-      if (_this.cntFailFinger < 5) {
-        _this.errMsg =
-          "지문이 일치하지 않습니다. (" + _this.cntFailFinger + "/5)";
-      } else if (_this.cntFailFinger == 5) {
-        //지문인식 5번 모두 틀린 경우
-        _this.errMsg = "지문이 비활성화 됩니다.";
-        this.$toast.center(_this.errMsg);
+      _this.$http
+        .post("/m/person/modifyYnUseAndLogout.json", formData)
+        .then(response => {
+          var result = response.data;
+          var noPerson = result.returnData;
+          debugger;
+          if (result.result != "00") {
+            this.$toast.center(result.messages);
+            debugger;
+          }
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+        });
+    },
+    /***
+     * Native Call function
+     **/
+    resultFingerPrint: function(result) {
+      var _this = this;
+      if (result == true || result == 1) {
+        //지문인식 성공
         if (Constant.userAgent == "Android") {
           window.Android.closeFingerPrint();
         }
 
-        var data = {
-          yn_fingerprint: "N",
-          no_person: _this.username
-        };
-        this.$http
-          .get("/m/person/modifyFingerPrint.json", {
-            params: data
-          })
-          .then(response => {
-            this.$store.state.user.ynFingerprint = "N";
-          })
-          .catch(e => {
-            this.$toast.center(ko.messages.error);
-          });
+        if (this.$store.state.ynReload == "Y") {
+          if (Constant.userAgent == "Android") {
+            window.Android.closeWebView();
+          } else if (Constant.userAgent == "iOS") {
+            Jockey.send("closeWebView", {});
+          }
+          return false;
+        } else {
+          _this.password = _this.$store.state.user.authToken;
+          _this.login();
+        }
+      } else {
+        //지문 틀린 누적횟수 증가
+        _this.cntFailFinger += 1;
+        this.modifyPwdFailCnt("finger", _this.cntFailFinger);
+
+        if (_this.cntFailFinger < 5) {
+          _this.errMsg =
+            "지문이 일치하지 않습니다. (" + _this.cntFailFinger + "/5)";
+        } else if (_this.cntFailFinger == 5) {
+          //지문인식 5번 모두 틀린 경우
+          _this.errMsg = "지문이 비활성화 됩니다.";
+          this.$toast.center(_this.errMsg);
+          if (Constant.userAgent == "Android") {
+            window.Android.closeFingerPrint();
+          }
+
+          var data = {
+            yn_fingerprint: "N",
+            no_person: _this.username
+          };
+          this.$http
+            .get("/m/person/modifyFingerPrint.json", {
+              params: data
+            })
+            .then(response => {
+              this.$store.state.user.ynFingerprint = "N";
+            })
+            .catch(e => {
+              this.$toast.center(ko.messages.error);
+            });
+        }
+        return false;
       }
-      return false;
     }
   }
 };

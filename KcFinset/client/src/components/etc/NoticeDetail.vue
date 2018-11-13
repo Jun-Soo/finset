@@ -1,13 +1,14 @@
 <template>
   <section>
     <div class="board">
-      <ul class="view">
+      <ul class="view" v-if="seen">
         <li>
-          <p class="subject">2%대 주택대출 확인…은행별 아파트 담보 대출 금리 비교 최저금리 활용</p>
-          <p class="date">2018-04-11</p>
+          <p class="subject">{{boardInfo.title}}</p>
+          <p class="date">{{boardInfo.dt_frt}}</p>
         </li>
         <li>
-          게시판 본문영역
+          <p v-html="boardInfo.content"></p>
+          <!-- {{boardInfo.content}} -->
         </li>
       </ul>
     </div>
@@ -19,7 +20,14 @@
 export default {
   name: "EtcNoticeDetail",
   data() {
-    return {};
+    return {
+      seq: "",
+      id_board: "",
+      boardInfo: {},
+      boardImgInfo: {},
+      boardForm: {},
+      seen: false
+    };
   },
   components: {},
   computed: {},
@@ -27,14 +35,32 @@ export default {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "공지";
   },
-  created() {},
+  created() {
+    this.seq = this.$route.query.seq;
+    this.id_board = this.$route.query.id_board;
+    this.getEventDatail(this.seq, this.id_board);
+  },
   beforeMount() {},
   mounted() {},
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    getEventDatail: function(seq, id_board) {
+      let _this = this;
+      let url = "/m/customercenter/getCustomerNoticeDetail.json";
+      let frm = new FormData();
+      frm.append("seq", seq);
+      frm.append("id_board", id_board);
+      this.$http.post(url, frm).then(response => {
+        debugger;
+        _this.boardForm = response.data.boardForm;
+        _this.boardInfo = response.data.boardInfo;
+        _this.content = _this.seen = true;
+      });
+    }
+  }
 };
 </script>
 

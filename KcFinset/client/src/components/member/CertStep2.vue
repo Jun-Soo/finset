@@ -271,7 +271,7 @@ export default {
             _this.$router.push("/member/certCode");
           } else if (result.result == "11") {
             //loginSuccess
-            // modifyPersonLogout(); //로그아웃 변수 변경** 추가해야하는지 확인필요
+            //  modifyPersonLogout(); 
             if (Constant.userAgent == "iOS") {
               Jockey.send("setNoPerson", {
                 noPerson: noPerson,
@@ -282,22 +282,6 @@ export default {
             }
             _this.$router.push("/home?hp=" + _this.hp);
           }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
-        });
-    },
-    //로그아웃 변수 변경
-    modifyPersonLogout: function() {
-      var _this = this;
-      _this.yn_logout = "N";
-      _this.yn_use = "Y";
-      _this.$http
-        .post("/m/person/modifyYnUseAndLogout.json", formData)
-        .then(response => {
-          var result = response.data;
-          var noPerson = result.returnData;
-          // if (result.result == "00") {}
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);

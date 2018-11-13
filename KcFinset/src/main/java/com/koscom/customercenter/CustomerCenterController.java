@@ -101,7 +101,7 @@ public class CustomerCenterController implements Constant {
 		return "jsonView";
 	}
 
-	/**
+	/** VUE
 	 * 마이페이지 알림
 	 * @param request
 	 * @param session
@@ -110,8 +110,8 @@ public class CustomerCenterController implements Constant {
 	 * @return String
 	 * @throws FinsetException, IOException
 	 */
-	@RequestMapping("/frameCustomerNotification.crz")
-	public String frameInDebtDetail(HttpServletRequest request, HttpSession session, Model model, PushEachForm pushEachForm) throws FinsetException, IOException {
+	@RequestMapping("/getCustomerNotification.json")
+	public String getCustomerNotification(HttpServletRequest request, HttpSession session, Model model, PushEachForm pushEachForm) throws FinsetException, IOException {
 		String no_person = (String) session.getAttribute("no_person");
 		pushEachForm.setNo_person(no_person);
 		pushEachForm.setPage(pushEachForm.getPage());
@@ -121,7 +121,7 @@ public class CustomerCenterController implements Constant {
 		logger.info("pagedList========="+pagedList.toString());
 		model.addAttribute("pushEachForm", pushEachForm);
 
-		return "/customercenter/frameCustomerNotification";
+		return "jsonView";
 	}
 
 	//공유관리
@@ -790,7 +790,7 @@ public class CustomerCenterController implements Constant {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/listCustomerNotice.crz")
+	@RequestMapping("/listCustomerNotice.json")
 	public String listCustomerNotice(Model model, HttpServletRequest request, BoardForm boardForm) {
 		boardForm.setPage(1);
 		Pagination pagedList = (Pagination) boardForm.setPagedList(boardManager.listBoardInfo(boardForm), boardManager.listBoardInfoCount(boardForm));
@@ -805,7 +805,7 @@ public class CustomerCenterController implements Constant {
 			}
 		}
 
-		return "/customercenter/sub/listNotice";
+		return "jsonView";
 	}
 
 	/**
@@ -814,8 +814,8 @@ public class CustomerCenterController implements Constant {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/frameCustomerNoticeDetail.crz")
-	public String frameCustomerNoticeDetail(HttpServletRequest request, Model model, BoardForm boardForm) {
+	@RequestMapping("/getCustomerNoticeDetail.json")
+	public String getCustomerNoticeDetail(HttpServletRequest request, Model model, BoardForm boardForm) {
 		logger.info(boardForm.toString());
 
 			BoardInfoVO boardInfo = new BoardInfoVO();
@@ -837,7 +837,7 @@ public class CustomerCenterController implements Constant {
 				model.addAttribute("boardInfo", boardInfo);
 			}
 
-		return "/customercenter/frameCustomerNoticeDetail";
+		return "jsonView";
 	}
 
 	/**
@@ -860,6 +860,23 @@ public class CustomerCenterController implements Constant {
 
 		model.addAttribute("listPushSetting", personManager.getPushSettingInfo(no_person));
 
+		return "jsonView";
+	}
+	
+	/** VUE
+	 * 마이페이지 알림 리스트
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/listNotification.json")
+	public String listNotification(Model model, HttpServletRequest request, PushEachForm pushEachForm, HttpSession session) {
+		String no_person = (String) session.getAttribute("no_person");
+		pushEachForm.setNo_person(no_person);
+		Pagination pagedList = (Pagination) pushEachForm.setPagedList(pushEachManager.listPushNotification(pushEachForm), pushEachManager.listPushNotificationCount(pushEachForm));
+		model.addAttribute("pagedList", pagedList);
+		model.addAttribute("pushEachForm", pushEachForm);
+		
 		return "jsonView";
 	}
 

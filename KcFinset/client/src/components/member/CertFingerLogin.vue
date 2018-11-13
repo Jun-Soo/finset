@@ -85,6 +85,7 @@ export default {
             }
             _this.$store.state.user.authToken = null;
             _this.$store.commit("LOGIN", response.data);
+            _this.modifyPersonLogout(); 
             _this.$router.push("/main");
           } else {
             this.$toast.center(ko.messages.loginErr);
@@ -113,6 +114,50 @@ export default {
         .then(response => {
           var result = response.data;
           console.log(result);
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+        });
+    },
+    //로그아웃 변수 변경
+    modifyPersonLogout: function() {
+      var _this = this;
+      var formData = new FormData();
+      formData.append("yn_logout", "N");
+      formData.append("yn_use", "Y");
+
+      _this.$http
+        .post("/m/person/modifyYnUseAndLogout.json", formData)
+        .then(response => {
+          var result = response.data;
+          var noPerson = result.returnData;
+          debugger;
+          if (result.result != "00") {
+            this.$toast.center(result.messages);
+            debugger;
+          }
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+        });
+    },
+    //로그아웃 변수 변경
+    modifyPersonLogout: function() {
+      var _this = this;
+      var formData = new FormData();
+      formData.append("yn_logout", "N");
+      formData.append("yn_use", "Y");
+
+      _this.$http
+        .post("/m/person/modifyYnUseAndLogout.json", formData)
+        .then(response => {
+          var result = response.data;
+          var noPerson = result.returnData;
+          debugger;
+          if (result.result != "00") {
+            this.$toast.center(result.messages);
+            debugger;
+          }
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);
@@ -183,11 +228,3 @@ export default {
   }
 };
 </script>
-
-<!-- Add 'scoped' attribute to limit CSS to this component only -->
-<style lang="scss">
-.memberMain {
-  background-color: #283593;
-  height: 100%;
-}
-</style>

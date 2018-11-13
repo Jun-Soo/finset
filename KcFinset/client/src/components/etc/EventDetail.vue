@@ -1,20 +1,23 @@
 <template>
   <section>
     <div class="board event">
-      <ul class="view">
+      <ul class="view" v-if="seen">
         <li>
-          <p class="subject">2%대 주택대출 확인…은행별 아파트 담보 대출 금리 비교 최저금리 활용</p>
+          <p class="subject">{{boardInfo.title}}</p>
           <div class="flex">
             <div>
-              <p class="date">2018-04-11</p>
+              <p class="date">{{boardInfo.ymd_post_strt}} ~ {{boardInfo.ymd_post_end}}</p>
             </div>
             <div>
-              <p class="state ing">진행중</p>
+              <p class="state pre" v-if="boardInfo.cd_event_proc==='01'">예정</p>
+              <p class="state ing" v-else-if="boardInfo.cd_event_proc==='02'">진행중</p>
+              <p class="state done" v-else>종료</p>
             </div>
           </div>
         </li>
         <li>
-          게시판 본문영역
+          <img v-if="boardImgInfo.img_files!=null" :src="getImgUrl(boardImgInfo)" v-bind:alt="boardImgInfo" width="80" />
+          {{boardInfo.content}}
         </li>
       </ul>
     </div>
@@ -24,24 +27,63 @@
 
 <script>
 export default {
-  name: "EtcNoticeDetail",
+  name: "EtcEventDetail",
   data() {
-    return {};
+    return {
+      seq: "",
+      id_board: "",
+      boardInfo: {},
+      boardImgInfo: {},
+      boardForm: {},
+      seen: false
+    };
   },
   components: {},
   computed: {},
   beforeCreate() {
     this.$store.state.header.type = "sub";
-    this.$store.state.title = "공지";
+    this.$store.state.title = "이벤트";
   },
-  created() {},
+  created() {
+    this.seq = this.$route.query.seq;
+    this.id_board = this.$route.query.id_board;
+    this.getEventDatail(this.seq, this.id_board);
+  },
   beforeMount() {},
   mounted() {},
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    getEventDatail: function(seq, id_board) {
+      let _this = this;
+      let url = "/m/customercenter/getCustomerNoticeDetail.json";
+      let frm = new FormData();
+      frm.append("seq", seq);
+      frm.append("id_board", id_board);
+      this.$http.post(url, frm).then(response => {
+        debugger;
+        _this.boardForm = response.data.boardForm;
+        if(response.data.boardImgInfo){
+          _this.boardImgInfo = response.data.boardImgInfo;
+        }else{
+          _this.boardImgInfo.img_files = null;
+        }
+        _this.boardInfo = response.data.boardInfo;
+        _this.seen = true;
+      });
+    },
+    getImgUrl: function(page) {
+      return (
+        "/m/board/getBoardImg.json?id_board=" +
+        page.id_board +
+        "&seq=" +
+        page.seq +
+        "&file_type=02"
+      );
+    }
+  }
 };
 </script>
 

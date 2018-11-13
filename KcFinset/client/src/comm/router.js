@@ -172,7 +172,6 @@ import EtcHome from '@/components/etc/Home'
 import EtcAlarmHistory from '@/components/etc/AlarmHistory'
 // import EtcCustomerCenter from '@/components/etc/CustomerCenter'
 import EtcNoticeMain from '@/components/etc/NoticeMain'
-import EtcNoticeMain2 from '@/components/etc/NoticeMain_2'
 import EtcNoticeDetail from '@/components/etc/NoticeDetail'
 import EtcEventDetail from '@/components/etc/EventDetail'
 import EtcFaqMain from '@/components/etc/FaqMain'
@@ -927,15 +926,6 @@ export const routes = [{
     alias: '/noticeMain',
     name: 'etcNoticeMain',
     component: EtcNoticeMain,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'noticeMain_2',
-    alias: '/noticeMain_2',
-    name: 'etcNoticeMain_2',
-    component: EtcNoticeMain2,
     meta: {
       allowPath: true
     }

@@ -20,7 +20,7 @@
         <div class="links">
           <a href="#">고객센터</a>
           <a href="#">인증보안</a>
-          <a href="#">공지/이벤트</a>
+          <a @click="$router.push('/etc/noticeMain')">공지/이벤트</a>
           <a href="#">개인설정</a>
           <a href="#">금융달력</a>
           <a @click="clickButton('/share/main')">정보공유관리</a>

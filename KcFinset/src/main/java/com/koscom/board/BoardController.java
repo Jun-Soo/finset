@@ -27,12 +27,12 @@ public class BoardController {
 	@Autowired
 	private BoardManager boardManager;
 
-	/**
+	/** VUE
 	 * BLOB 이미지 변환
 	 * @param String
 	 * @return ResponseEntity<byte[]>
 	 */
-	@RequestMapping("/getBoardImg.crz")
+	@RequestMapping("/getBoardImg.json")
 	public void getBoardImg(HttpServletRequest request, HttpServletResponse response, BoardInfoVO boardInfoVO){
 		
 		byte[] img_files = null;

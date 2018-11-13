@@ -7,6 +7,7 @@ public class StockEquitylistVO implements Serializable{
 	String no_person = "";			//회원관리번호
 	String cd_fc = "";				//금융사코드
 	String accno = "";				//가상계좌번호
+	long seq = 0;					//일련번호
 	String isincode = "";			//종목코드
 	String assettype = "";			//상품구분자
 	String qty = "";				//수량 또는 비중
@@ -36,6 +37,12 @@ public class StockEquitylistVO implements Serializable{
 	}
 	public void setAccno(String accno) {
 		this.accno = accno;
+	}
+	public long getSeq() {
+		return seq;
+	}
+	public void setSeq(long seq) {
+		this.seq = seq;
 	}
 	public String getIsincode() {
 		return isincode;

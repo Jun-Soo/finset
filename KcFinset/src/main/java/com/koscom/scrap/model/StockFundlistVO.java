@@ -7,6 +7,7 @@ public class StockFundlistVO implements Serializable{
 	String no_person = "";			//회원관리번호
 	String cd_fc = "";				//금융사코드
 	String accno = "";				//가상계좌번호
+	long seq = 0;				//일련번호
 	String fundcode = "";			//펀드표준코드
 	String fundname = "";			//펀드이름
 	String valattrade = "";			//매수금액
@@ -37,6 +38,12 @@ public class StockFundlistVO implements Serializable{
 	}
 	public void setAccno(String accno) {
 		this.accno = accno;
+	}
+	public long getSeq() {
+		return seq;
+	}
+	public void setSeq(long seq) {
+		this.seq = seq;
 	}
 	public String getFundcode() {
 		return fundcode;

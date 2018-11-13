@@ -3,6 +3,55 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.koscom.scrap.dao.ScrapMapper">
+	<insert id="insertStockSummaryHist" parameterType="com.koscom.scrap.model.StockSummaryVO">
+		<selectKey keyProperty="seq" resultType="java.lang.Integer" order="BEFORE">
+			(SELECT NVL(MAX(SEQ),0)+1 FROM STOCK_SUMMARY_HIST)
+		</selectKey>
+		INSERT INTO STOCK_SUMMARY_HIST
+        (
+			 NO_PERSON
+			, CD_FC
+			, ACCNO
+			, SEQ
+			, CASHBALANCE
+			, D1
+			, D2
+			, SUBSTITUTE
+			, RECEIVABLE
+			, SUBSMARGIN
+			, LOANCREDIT
+			, VALATTRADE
+			, VALUEATCUR
+			, PROLOSS
+			, TOTALACCVAL
+			, CASHAVWITHDRAW
+			, ID_FRT
+			, DT_FRT
+		)
+		SELECT
+			NO_PERSON
+			, CD_FC
+			, ACCNO
+			, #{seq	,jdbcType=NUMERIC}
+			, CASHBALANCE
+			, D1
+			, D2
+			, SUBSTITUTE
+			, RECEIVABLE
+			, SUBSMARGIN
+			, LOANCREDIT
+			, VALATTRADE
+			, VALUEATCUR
+			, PROLOSS
+			, TOTALACCVAL
+			, CASHAVWITHDRAW
+			, ID_FRT
+			, DT_FRT
+		FROM STOCK_SUMMARY
+		WHERE NO_PERSON		= #{no_person	,jdbcType=VARCHAR}
+			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR}
+	</insert>
+	
 	<insert id="insertStockSummary" parameterType="com.koscom.scrap.model.StockSummaryVO">
 		INSERT INTO STOCK_SUMMARY
 		(
@@ -47,9 +96,50 @@
 	<delete id="deleteStockSummary"  parameterType="com.koscom.scrap.model.StockSummaryVO">
 		 DELETE
 	     FROM STOCK_SUMMARY
-	     WHERE NO_PERSON = #{no_person, jdbcType=NUMERIC}
-	     	AND CD_FC = #{cd_fc, jdbcType=NUMERIC}
+	     WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	     	AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
     </delete>
+    
+    <insert id="insertStockEquitylistHist" parameterType="com.koscom.scrap.model.StockEquitylistVO">
+		<selectKey keyProperty="seq" resultType="java.lang.Integer" order="BEFORE">
+			(SELECT NVL(MAX(SEQ),0)+1 FROM STOCK_EQUITYLIST_HIST)
+		</selectKey>
+		INSERT INTO STOCK_EQUITYLIST_HIST
+        (
+			 NO_PERSON
+			, CD_FC
+			, ACCNO
+			, SEQ
+			, ISINCODE
+			, ASSETTYPE
+			, QTY
+			, TRADETYPE
+			, VALATTRADE
+			, VALATCUR
+			, PROLOSS
+			, EARNINGRATE
+			, ID_FRT
+			, DT_FRT
+		)
+		SELECT
+			NO_PERSON
+			, CD_FC
+			, ACCNO
+			, #{seq	,jdbcType=NUMERIC}
+			, ISINCODE
+			, ASSETTYPE
+			, QTY
+			, TRADETYPE
+			, VALATTRADE
+			, VALATCUR
+			, PROLOSS
+			, EARNINGRATE
+			, ID_FRT
+			, DT_FRT
+		FROM STOCK_EQUITYLIST
+		WHERE NO_PERSON		= #{no_person	,jdbcType=VARCHAR}
+			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR}
+	</insert>
     
     <insert id="insertStockEquitylist" parameterType="com.koscom.scrap.model.StockEquitylistVO">
 		INSERT INTO STOCK_EQUITYLIST
@@ -87,9 +177,52 @@
 	<delete id="deleteStockEquitylist"  parameterType="com.koscom.scrap.model.StockEquitylistVO">
 		 DELETE
 	     FROM STOCK_EQUITYLIST
-	     WHERE NO_PERSON = #{no_person, jdbcType=NUMERIC}
-	     	AND CD_FC = #{cd_fc, jdbcType=NUMERIC}
+	     WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	     	AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
     </delete>
+    
+    <insert id="insertStockFundlistHist" parameterType="com.koscom.scrap.model.StockFundlistVO">
+		<selectKey keyProperty="seq" resultType="java.lang.Integer" order="BEFORE">
+			(SELECT NVL(MAX(SEQ),0)+1 FROM STOCK_FUNDLIST_HIST)
+		</selectKey>
+		INSERT INTO STOCK_FUNDLIST_HIST
+        (
+			 NO_PERSON
+			, CD_FC
+			, ACCNO
+			, SEQ
+			, FUNDCODE
+			, FUNDNAME
+			, VALATTRADE
+			, VALATCUR
+			, PROLOSS
+			, FIRSTDATEBUY
+			, LASTDATEBUY
+			, MATURITY
+			, EARNINGRATE
+			, ID_FRT
+			, DT_FRT
+		)
+		SELECT
+			NO_PERSON
+			, CD_FC
+			, ACCNO
+			, #{seq	,jdbcType=NUMERIC}
+			, FUNDCODE
+			, FUNDNAME
+			, VALATTRADE
+			, VALATCUR
+			, PROLOSS
+			, FIRSTDATEBUY
+			, LASTDATEBUY
+			, MATURITY
+			, EARNINGRATE
+			, ID_FRT
+			, DT_FRT
+		FROM STOCK_FUNDLIST
+		WHERE NO_PERSON		= #{no_person	,jdbcType=VARCHAR}
+			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR}
+	</insert>
     
     <insert id="insertStockFundlist" parameterType="com.koscom.scrap.model.StockFundlistVO">
 		INSERT INTO STOCK_FUNDLIST
@@ -129,9 +262,50 @@
 	<delete id="deleteStockFundlist"  parameterType="com.koscom.scrap.model.StockFundlistVO">
 		 DELETE
 	     FROM STOCK_FUNDLIST
-	     WHERE NO_PERSON = #{no_person, jdbcType=NUMERIC}
-	     	AND CD_FC = #{cd_fc, jdbcType=NUMERIC}
+	     WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	     	AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
     </delete>
+    
+    <insert id="insertStockEtclistHist" parameterType="com.koscom.scrap.model.StockEtclistVO">
+		<selectKey keyProperty="seq" resultType="java.lang.Integer" order="BEFORE">
+			(SELECT NVL(MAX(SEQ),0)+1 FROM STOCK_ETCLIST_HIST)
+		</selectKey>
+		INSERT INTO STOCK_ETCLIST_HIST
+        (
+			NO_PERSON
+			, CD_FC
+			, ACCNO
+			, SEQ
+			, ASSETTYPE
+			, ASSETNAME
+			, ISINCODE
+			, QTY
+			, TRADETYPE
+			, VALATTRADE
+			, VALUEATCUR
+			, EARNINGRATE
+			, ID_FRT
+			, DT_FRT
+		)
+		SELECT
+			NO_PERSON
+			, CD_FC
+			, ACCNO
+			, #{seq	,jdbcType=NUMERIC}
+			, ASSETTYPE
+			, ASSETNAME
+			, ISINCODE
+			, QTY
+			, TRADETYPE
+			, VALATTRADE
+			, VALUEATCUR
+			, EARNINGRATE
+			, ID_FRT
+			, DT_FRT
+		FROM STOCK_ETCLIST
+		WHERE NO_PERSON		= #{no_person	,jdbcType=VARCHAR}
+			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR}
+	</insert>
 	
 	<insert id="insertStockEtclist" parameterType="com.koscom.scrap.model.StockEtclistVO">
 		INSERT INTO STOCK_ETCLIST
@@ -169,9 +343,38 @@
 	<delete id="deleteStockEtclist"  parameterType="com.koscom.scrap.model.StockEtclistVO">
 		 DELETE
 	     FROM STOCK_ETCLIST
-	     WHERE NO_PERSON = #{no_person, jdbcType=NUMERIC}
-	     	AND CD_FC = #{cd_fc, jdbcType=NUMERIC}
+	     WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	     	AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
     </delete>
+    
+    <insert id="insertStockInterestIsinHist" parameterType="com.koscom.scrap.model.StockInterestIsinVO">
+		<selectKey keyProperty="seq" resultType="java.lang.Integer" order="BEFORE">
+			(SELECT NVL(MAX(SEQ),0)+1 FROM STOCK_INTEREST_ISIN_HIST)
+		</selectKey>
+		INSERT INTO STOCK_INTEREST_ISIN_HIST
+        (
+			NO_PERSON
+			, CD_FC
+			, ACCNO
+			, SEQ
+			, GROUP_NAME
+			, LIST_ISINCODE
+			, ID_FRT
+			, DT_FRT
+		)
+		SELECT
+			NO_PERSON
+			, CD_FC
+			, ACCNO
+			, #{seq	,jdbcType=NUMERIC}
+			, GROUP_NAME
+			, LIST_ISINCODE
+			, ID_FRT
+			, DT_FRT
+		FROM STOCK_INTEREST_ISIN
+		WHERE NO_PERSON		= #{no_person	,jdbcType=VARCHAR}
+			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR}
+	</insert>
     
     <insert id="insertStockInterestIsin" parameterType="com.koscom.scrap.model.StockInterestIsinVO">
 		INSERT INTO STOCK_INTEREST_ISIN
@@ -197,8 +400,8 @@
 	<delete id="deleteStockInterestIsin"  parameterType="com.koscom.scrap.model.StockInterestIsinVO">
 		 DELETE
 	     FROM STOCK_INTEREST_ISIN
-	     WHERE NO_PERSON = #{no_person, jdbcType=NUMERIC}
-	     	AND CD_FC = #{cd_fc, jdbcType=NUMERIC}
+	     WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	     	AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
     </delete>
     
      <insert id="insertStockTransaction" parameterType="com.koscom.scrap.model.StockTransactionVO">

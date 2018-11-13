@@ -7,6 +7,7 @@ public class StockInterestIsinVO implements Serializable{
 	String no_person = "";			//회원관리번호
 	String cd_fc = "";				//금융사코드
 	String accno = "";				//가상계좌번호
+	long seq = 0;					//일련번호
 	String group_name = "";			//관심종목그룹명
 	String list_isincode = "";		//종목코드리스트
 	String id_frt = "";				//최초입력아이디
@@ -28,6 +29,12 @@ public class StockInterestIsinVO implements Serializable{
 	}
 	public void setAccno(String accno) {
 		this.accno = accno;
+	}
+	public long getSeq() {
+		return seq;
+	}
+	public void setSeq(long seq) {
+		this.seq = seq;
 	}
 	public String getGroup_name() {
 		return group_name;

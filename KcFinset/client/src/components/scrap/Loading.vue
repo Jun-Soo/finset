@@ -12,6 +12,7 @@ export default {
   name: "loading",
   data() {
     return {
+      noPerson: this.$store.state.user.noPerson,
       dn: this.$route.params.dn,
       normalMessage: this.$route.params.normalMessage,
       smallMessage: this.$route.params.smallMessage,
@@ -102,7 +103,6 @@ export default {
         .then(function(response) {
           var returnData = response.data;
           _this.isScrapStList = true;
-          _this.$store.state.token = returnData.token;
           if (_this.isScrapFcList && _this.isScrapStList) {
             _this.nextStep();
           }

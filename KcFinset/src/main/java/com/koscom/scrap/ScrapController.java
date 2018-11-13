@@ -77,11 +77,11 @@ public class ScrapController {
 			HttpSession session, 
 			Model model,
 			String no_person,
-			String uuid,
-			String token) {
+			String uuid) {
+		
+		String token = scrapManager.getAccessToken();
 		
 		scrapManager.startScrapFinance(no_person, uuid, token);
-		
 		
 		model.addAttribute("result", Constant.SUCCESS);
 		return "jsonView";

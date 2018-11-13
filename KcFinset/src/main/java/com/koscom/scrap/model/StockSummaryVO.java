@@ -7,6 +7,7 @@ public class StockSummaryVO implements Serializable{
 	String no_person = "";			//회원관리번호
 	String cd_fc = "";				//금융사코드
 	String accno = "";				//가상계좌번호
+	long seq = 0;					//일련번호
 	String cashbalance = "";		//현금잔고
 	String d1 = "";					//D+1잔고
 	String d2 = "";					//D+2잔고
@@ -40,6 +41,12 @@ public class StockSummaryVO implements Serializable{
 	}
 	public void setAccno(String accno) {
 		this.accno = accno;
+	}
+	public long getSeq() {
+		return seq;
+	}
+	public void setSeq(long seq) {
+		this.seq = seq;
 	}
 	public String getCashbalance() {
 		return cashbalance;

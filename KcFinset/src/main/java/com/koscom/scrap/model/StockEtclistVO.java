@@ -7,6 +7,7 @@ public class StockEtclistVO implements Serializable{
 	String no_person = "";			//회원관리번호
 	String cd_fc = "";				//금융사코드
 	String accno = "";				//가상계좌번호
+	long seq = 0;					//일련번호
 	String assettype = "";			//상품구분자
 	String assetname = "";			//상품명
 	String isincode = "";			//종목코드
@@ -36,6 +37,12 @@ public class StockEtclistVO implements Serializable{
 	}
 	public void setAccno(String accno) {
 		this.accno = accno;
+	}
+	public long getSeq() {
+		return seq;
+	}
+	public void setSeq(long seq) {
+		this.seq = seq;
 	}
 	public String getAssettype() {
 		return assettype;

@@ -36,6 +36,12 @@ import com.koscom.scrap.model.sub.DepositAnListHistoryVO;
 public interface ScrapMapper { // com.koscom.scrap.dao.ScrapMapper
 
 	/**
+	 * 증권사 계좌잔고 이력정보  저장
+	 * @param StockSummaryVO
+	 */
+	int insertStockSummaryHist(StockSummaryVO stockSummaryVO);
+	
+	/**
 	 * 증권사 계좌잔고 저장
 	 * @param StockSummaryVO
 	 */
@@ -46,6 +52,12 @@ public interface ScrapMapper { // com.koscom.scrap.dao.ScrapMapper
 	 * @param StockSummaryVO
 	 */
 	int deleteStockSummary(StockSummaryVO stockSummaryVO);
+	
+	/**
+	 * 증권사 주식정보 이력정보  저장
+	 * @param StockEquitylistVO
+	 */
+	int insertStockEquitylistHist(StockEquitylistVO stockEquitylistVO);
 	
 	/**
 	 * 증권사 주식정보 저장
@@ -60,6 +72,12 @@ public interface ScrapMapper { // com.koscom.scrap.dao.ScrapMapper
 	int deleteStockEquitylist(StockEquitylistVO stockEquitylistVO);
 	
 	/**
+	 * 증권사 펀드정보 이력정보 저장
+	 * @param StockFundlistVO
+	 */
+	int insertStockFundlistHist(StockFundlistVO stockFundlistVO);
+	
+	/**
 	 * 증권사 펀드정보 저장
 	 * @param StockFundlistVO
 	 */
@@ -72,6 +90,12 @@ public interface ScrapMapper { // com.koscom.scrap.dao.ScrapMapper
 	int deleteStockFundlist(StockFundlistVO stockFundlistVO);
 	
 	/**
+	 * 증권사 기타정보 이력정보 저장
+	 * @param StockEtclistVO
+	 */
+	int insertStockEtclistHist(StockEtclistVO stockEtclistVO);
+	
+	/**
 	 * 증권사 기타정보 저장
 	 * @param StockEtclistVO
 	 */
@@ -82,6 +106,12 @@ public interface ScrapMapper { // com.koscom.scrap.dao.ScrapMapper
 	 * @param StockEtclistVO
 	 */
 	int deleteStockEtclist(StockEtclistVO stockEtclistVO);
+	
+	/**
+	 * 증권사 관심종목 이력정보 저장
+	 * @param StockInterestIsinVO
+	 */
+	int insertStockInterestIsinHist(StockInterestIsinVO stockInterestIsinVO);
 	
 	/**
 	 * 증권사 관심종목 저장

@@ -374,9 +374,11 @@ public class ScrapManagerImpl implements ScrapManager {
 			logger.info("data : "+ data);
 			JsonParser jsonParser = new JsonParser();
 			JsonObject jsonRecvRoot = (JsonObject) jsonParser.parse(data);
-			logger.info("access_token  : " +jsonRecvRoot.get("access_token").toString());
 			
-			return jsonRecvRoot.get("access_token").toString();
+			String token = jsonRecvRoot.get("token_type").toString() + " " + jsonRecvRoot.get("access_token").toString();
+					logger.info("token  : " +token);
+						
+			return token;
 		}
 		else	{
 			logger.error("금융투자회사 Access Token 조회를 실패하였습니다.");
@@ -438,7 +440,7 @@ public class ScrapManagerImpl implements ScrapManager {
 		logger.info("jsonRoot.toString() : " +jsonSendRoot.toString());
 			
 		URLConnection url = new URLConnection();
-		logger.info("getAccessToken  : URL[" + financeUrl +"], token : "+token);
+		logger.info("createFinanceAccount  : URL[" + financeUrl +"], token : "+token);
 		
 		HashMap<String, String> headerMap = new HashMap();
 		headerMap.put("Format", "JSON <application/json; charset=utf-8>");
@@ -864,23 +866,28 @@ public class ScrapManagerImpl implements ScrapManager {
 			StockSummaryVO stockSummaryVO = new StockSummaryVO();
 			stockSummaryVO.setNo_person(no_person);
 			stockSummaryVO.setCd_fc(cd_fc);
+			scrapMapper.insertStockSummaryHist(stockSummaryVO);
 			scrapMapper.deleteStockSummary(stockSummaryVO);
 			StockEquitylistVO stockEquitylistVO = new StockEquitylistVO();
 			stockEquitylistVO.setNo_person(no_person);
 			stockEquitylistVO.setCd_fc(cd_fc);
+			scrapMapper.insertStockEquitylistHist(stockEquitylistVO);
 			scrapMapper.deleteStockEquitylist(stockEquitylistVO);
 			StockFundlistVO stockFundlistVO = new StockFundlistVO();
 			stockFundlistVO.setNo_person(no_person);
 			stockFundlistVO.setCd_fc(cd_fc);
+			scrapMapper.insertStockFundlistHist(stockFundlistVO);
 			scrapMapper.deleteStockFundlist(stockFundlistVO);
 			StockEtclistVO stockEtclistVO = new StockEtclistVO();
 			stockEtclistVO.setNo_person(no_person);
 			stockEtclistVO.setCd_fc(cd_fc);
+			scrapMapper.insertStockEtclistHist(stockEtclistVO);
 			scrapMapper.deleteStockEtclist(stockEtclistVO);
 			
 			StockInterestIsinVO stockInterestIsinVO = new StockInterestIsinVO();
 			stockInterestIsinVO.setNo_person(no_person);
 			stockInterestIsinVO.setCd_fc(cd_fc);
+			scrapMapper.insertStockInterestIsinHist(stockInterestIsinVO);
 			scrapMapper.deleteStockInterestIsin(stockInterestIsinVO);
 			
 			StockTransactionVO stockTransactionVO = new StockTransactionVO();

@@ -107,7 +107,6 @@ export default {
       var formData = new FormData();
       formData.append("no_person", this.$store.state.user.noPerson);
       formData.append("uuid", uuid);
-      formData.append("token", this.$store.state.token);
       this.$http
         .post("/m/scrap/startScrapSt.json", formData)
         .then(function(response) {

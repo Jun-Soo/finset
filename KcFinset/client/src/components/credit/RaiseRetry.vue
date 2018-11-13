@@ -11,7 +11,9 @@
 </template>
 
 <script>
+import Common from "@/assets/js/common.js";
 import Constant from "./../../assets/js/constant.js";
+
 export default {
   name: "CreditRaiseRetry",
   data() {
@@ -26,6 +28,7 @@ export default {
     this.$store.state.title = "";
   },
   created() {
+    Common.init();
     var params = Common.getParams();
 
     console.log(params);
@@ -41,6 +44,7 @@ export default {
   destroyed() {},
   methods: {
     clickRetry: function() {
+      console.log("Constant.userAgent : " + Constant.userAgent);
       if (Constant.userAgent == "iOS") {
         Jockey.send("creditRatingUpgradeRetry");
       } else if (Constant.userAgent == "Android") {

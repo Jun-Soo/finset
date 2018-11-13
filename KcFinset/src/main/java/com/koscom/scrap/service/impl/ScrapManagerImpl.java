@@ -375,8 +375,8 @@ public class ScrapManagerImpl implements ScrapManager {
 			JsonParser jsonParser = new JsonParser();
 			JsonObject jsonRecvRoot = (JsonObject) jsonParser.parse(data);
 			
-			String token = jsonRecvRoot.get("token_type").toString() + " " + jsonRecvRoot.get("access_token").toString();
-					logger.info("token  : " +token);
+			String token = jsonRecvRoot.get("token_type").getAsString() + " " + jsonRecvRoot.get("access_token").getAsString();
+			logger.info("token  : " + token);
 						
 			return token;
 		}

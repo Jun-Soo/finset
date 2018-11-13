@@ -1,21 +1,23 @@
 <template>
-    <section>
-        <div class="container">
-            <textarea></textarea>
-        </div>
-        
-        <div class="btn-wrap float">
-            <a href="#" class="blue box solid">등록</a>
-        </div>
-        
-    </section>
+  <section>
+    <div class="container">
+      <textarea id="memo_text" v-model="memo_text" wrap="hard" :style="'resize:none;wrap:physical'"></textarea>
+    </div>
+
+    <div class="btn-wrap float">
+      <a @click="createMemo" class="blue box solid">등록</a>
+    </div>
+
+  </section>
 </template>
 
 <script>
 export default {
-  name: "",
+  name: "MemoRegister",
   data() {
-    return {};
+    return {
+      memo_text: ""
+    };
   },
   components: {},
   computed: {},
@@ -30,7 +32,19 @@ export default {
   updated() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    createMemo: function() {
+      var _this = this;
+      var formData = new FormData();
+      formData.append("memo_text", _this.memo_text);
+      formData.append("no_manage_info", _this.$route.query.no_manage_info);
+      this.$http
+        .post("/m/memo/createMemo.json", formData)
+        .then(function(response) {
+          _this.$router.go(-1);
+        });
+    }
+  }
 };
 </script>
 

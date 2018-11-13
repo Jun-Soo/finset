@@ -23,6 +23,14 @@ public class MemoController {
 	@Autowired
 	MemoManager memoManager;
 	
+	/**
+	 * VUE
+	 * @param session
+	 * @param model
+	 * @param request
+	 * @return
+	 * @throws FinsetException
+	 */
 	@RequestMapping("/createMemo.json")
 	public String createMemo(HttpSession session, Model model, HttpServletRequest request) throws FinsetException {
 		String no_person = (String) session.getAttribute("no_person");
@@ -42,12 +50,35 @@ public class MemoController {
 		return "jsonView";
 	}
 	
+	/**
+	 * VUE
+	 * @param session
+	 * @param model
+	 * @param memoVO
+	 * @return
+	 */
 	@RequestMapping("/listMemo.json")
 	public String listMemo(HttpSession session, Model model, MemoVO memoVO) {
 		String no_person = (String) session.getAttribute("no_person");
 		memoVO.setRecordCount(5);
 		memoVO.setNo_person(no_person);
 		model.addAttribute("listMemo",memoManager.listMemo(memoVO));
+		return "jsonView";
+	}
+	
+	/**
+	 * VUE
+	 * @param session
+	 * @param model
+	 * @param memoVO
+	 * @return
+	 */
+	@RequestMapping("/getMemo.json")
+	public String getMemoDetail(HttpSession session, Model model, MemoVO memoVO) {
+		String no_person = (String) session.getAttribute("no_person");
+		memoVO.setNo_person(no_person);
+		model.addAttribute("memoVO", memoManager.getMemoDetail(memoVO));
+		
 		return "jsonView";
 	}
 	

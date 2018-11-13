@@ -59,7 +59,7 @@
       <div class="wrap">
         <a @click="$router.push('/credit/raiseMain')">신용등급<br>올리기</a>
         <a @click="$router.push('/credit/smartReport')">신용<br>리포트</a>
-        <a @click="$router.push('/share/main')">정보<br>공유하기</a>
+        <a @click="goShareInfoMain();">정보<br>공유하기</a>
       </div>
     </div>
     <FinsetBottom></FinsetBottom>
@@ -188,6 +188,13 @@ export default {
         .catch(e => {
           this.$toast.center(ko.messages.error);
         });
+    },
+    //공유관리 메인으로 이동
+    goShareInfoMain: function() {
+      this.$router.push({
+        name: "shareMain",
+        params: { cd_share: "02" }
+      });
     }
   }
 };

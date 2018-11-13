@@ -36,10 +36,10 @@
           </a>
         </slide>
         <slide class="item">
-          <a @click="$router.push(' ')">
+          <a @click="goShareInfoMain('01')">
             <div class="banner">
               <div class="left">
-                <p class="key">우리가족 가계부</p>
+                <p class="key">공유관리 - 신용</p>
                 <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
               </div>
               <div class="right">
@@ -49,10 +49,10 @@
           </a>
         </slide>
         <slide class="item">
-          <a @click="$router.push(' ')">
+          <a @click="goShareInfoMain('02')">
             <div class="banner">
               <div class="left">
-                <p class="key">우리가족 가계부</p>
+                <p class="key">공유관리 - 금융</p>
                 <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
               </div>
               <div class="right">
@@ -196,6 +196,14 @@ export default {
     },
     formatNumber: function(data) {
       return Common.formatNumber(data);
+    },
+    //공유관리 메인으로 이동
+    goShareInfoMain: function(cd_share) {
+      this.$router.push({
+        path: "/share/main",
+        // query: { cd_share: "01" }
+        query: { cd_share: cd_share }
+      });
     }
   }
 };

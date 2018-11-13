@@ -2,9 +2,11 @@ package com.koscom.person.service.impl;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,6 +17,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.koscom.conditionbiz.dao.ConditionbizMapper;
 import com.koscom.conditionbiz.model.ConditionbizVO;
 import com.koscom.conditioncredit.dao.ConditioncreditMapper;
@@ -295,7 +299,7 @@ public class PersonManagerImpl implements PersonManager {
 	public ReturnClass updatePersonShareInfoSetStatus(PersonShareInfo personShareInfo) {
 
 		//거절일 경우 요청취소되었는지 확인
-		if("03".equals(personShareInfo.getShare_status()) && 1 != personMapper.chkPersonShareInfoReqCancel(personShareInfo)){
+		if("03".equals(personShareInfo.getShare_status()) && 1 == personMapper.chkPersonShareInfoReqCancel(personShareInfo)){
 			return new ReturnClass(Constant.FAILED,"이미 요청취소 되었습니다.");
 		}
 
@@ -309,11 +313,55 @@ public class PersonManagerImpl implements PersonManager {
 	}
 
 	@Override
-	public ReturnClass updatePersonShareInfoSetItems(PersonShareInfo personShareInfo) {
+	public ReturnClass updatePersonShareInfoSetItems(PersonShareInfo personShareInfo) throws FinsetException {
 
 		//허용일 경우 요청취소되었는지 확인
-		if("02".equals(personShareInfo.getShare_status()) && 1 != personMapper.chkPersonShareInfoReqCancel(personShareInfo)){
+		if("02".equals(personShareInfo.getShare_status()) && 1 == personMapper.chkPersonShareInfoReqCancel(personShareInfo)){
 			return new ReturnClass(Constant.FAILED,"이미 요청취소 되었습니다.");
+		}
+
+		//변경일 경우 delete후 insert
+		if("07".equals(personShareInfo.getShare_status())){
+			personMapper.deletePsersonShareInfoDetail(personShareInfo);
+		}
+
+		//계좌list insert
+		PersonShareInfo detailShareInfo = new PersonShareInfo();
+		detailShareInfo.setSeq_share(personShareInfo.getSeq_share());
+		detailShareInfo.setYn_share("Y");
+		detailShareInfo.setId_frt(personShareInfo.getId_frt());
+		detailShareInfo.setId_lst(personShareInfo.getId_lst());
+        Gson gson = new Gson();
+        Type type = new TypeToken<ArrayList<PersonShareInfo>>() {}.getType();
+		String addDetailStr = "";
+        ArrayList<PersonShareInfo> addDetailList = new ArrayList<PersonShareInfo>();
+
+
+		//자산
+		addDetailStr = personShareInfo.getAddAssetList();
+        addDetailList = gson.fromJson(addDetailStr, type);
+		for(PersonShareInfo addAssetInfo : addDetailList){
+			detailShareInfo.setCd_info("02");
+			detailShareInfo.setCd_type(addAssetInfo.getCd_assets_class());
+			detailShareInfo.setNo_card_acc(addAssetInfo.getNo_account());
+			personMapper.createPersonShareInfoDetail(detailShareInfo);
+		}
+		//소비
+        addDetailStr = personShareInfo.getAddConsumeList();
+		addDetailList = gson.fromJson(addDetailStr, type);
+		for(PersonShareInfo addConsumeInfo : addDetailList){
+			detailShareInfo.setCd_info("03");
+			detailShareInfo.setCd_type(addConsumeInfo.getCode_value());
+			detailShareInfo.setNo_card_acc(addConsumeInfo.getNo_card());
+			personMapper.createPersonShareInfoDetail(detailShareInfo);
+		}
+		//부채
+		addDetailStr = personShareInfo.getAddDebtList();
+		addDetailList = gson.fromJson(addDetailStr, type);
+		for(PersonShareInfo addDebtInfo : addDetailList){
+			detailShareInfo.setCd_info("01");
+			detailShareInfo.setNo_manage_info(addDebtInfo.getNo_manage_info());
+			personMapper.createPersonShareInfoDetail(detailShareInfo);
 		}
 
 		if(1 != personMapper.updatePersonShareInfoSetItems(personShareInfo)) {
@@ -327,10 +375,8 @@ public class PersonManagerImpl implements PersonManager {
 
 	@Override
 	public ReturnClass updatePersonShareInfoSet01(PersonShareInfo personShareInfo) {
-		if(1 != personMapper.duplChkPersonShareInfo(personShareInfo)){ //변경할 내용이 있는지 체크
-			if(1 != personMapper.updatePersonShareInfoSet01(personShareInfo)) {
-				return new ReturnClass(Constant.FAILED,"처리에 실패하였습니다.");
-			}
+		if(1 != personMapper.updatePersonShareInfoSet01(personShareInfo)) {
+			return new ReturnClass(Constant.FAILED,"처리에 실패하였습니다.");
 		}
 
 		return new ReturnClass(Constant.SUCCESS,"공유 재요청 되었습니다.", (Object) personShareInfo.getSeq_share());
@@ -362,12 +408,8 @@ public class PersonManagerImpl implements PersonManager {
 			mode_nm = "해지";
 		}
 
-		if("02".equals(personShareInfo.getShare_status()) && 1 == personMapper.duplChkPersonShareInfo(personShareInfo)){
-			return new ReturnClass(Constant.FAILED,"변경할 내용이 없습니다.");
-		}else{
-			if(1 != personMapper.updatePersonShareInfoSet03(personShareInfo)) {
-				return new ReturnClass(Constant.FAILED,"처리에 실패하였습니다.");
-			}
+		if(1 != personMapper.updatePersonShareInfoSet03(personShareInfo)) {
+			return new ReturnClass(Constant.FAILED,"처리에 실패하였습니다.");
 		}
 
 		personMapper.createPersonShareInfoHist(personShareInfo);

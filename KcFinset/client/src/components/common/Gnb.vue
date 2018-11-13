@@ -23,7 +23,7 @@
           <a href="#">공지/이벤트</a>
           <a href="#">개인설정</a>
           <a href="#">금융달력</a>
-          <a href="#">정보공유</a>
+          <a @click="clickButton('/share/main')">정보공유관리</a>
           <a href="#">금융계산기</a>
           <a href="#">뉴스</a>
         </div>
@@ -33,6 +33,7 @@
           <dd><a href="#">신용등급올리기</a></dd>
           <dd><a href="#">스마트리포트</a></dd>
           <dd><a href="#">신용상담</a></dd>
+          <dd><a href="#">신용정보제공</a></dd>
 
           <dt>부채</dt>
           <dd><a href="#">부채현황</a></dd>

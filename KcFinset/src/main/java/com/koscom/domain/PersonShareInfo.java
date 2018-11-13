@@ -19,11 +19,11 @@ public class PersonShareInfo implements Serializable {
 	private String offer_hp; //정보제공회원전화번호
 	private String share_status; //공유상태(01요청, 02승인(허용), 03거절, 04해지(공유취소,공유종료), 05요청취소)
 	private String relations; //관계
-	private String yn_credit_info; //신용정보여부
-	private String yn_debt_info; //부채정보여부
-	private String yn_income_info; //소득정보여부
-	private String yn_asset_info; //자산정보여부
-	private String yn_consume_info; //소비정보여부
+	private String yn_credit_info=""; //신용정보여부
+	private String yn_debt_info=""; //부채정보여부
+	private String yn_income_info=""; //소득정보여부
+	private String yn_asset_info=""; //자산정보여부
+	private String yn_consume_info=""; //소비정보여부
 	private String dt_stt_offer; //정보제공시작일
 	private String dt_end_offer; //정보제공종료일
 	private String id_frt; //최초입력아이디
@@ -35,6 +35,7 @@ public class PersonShareInfo implements Serializable {
 	private String rnum; //idx
 	private String yn_share; //공유여부
 	//자산
+	private String cd_assets_class; //자산분류코드
 	private String no_account; //계좌번호
 	private String nm_account; //계좌명
 	//소비
@@ -48,6 +49,14 @@ public class PersonShareInfo implements Serializable {
 	private String nm_fc; //금융사명
 	private String debt_type; //대출종류
 	private String amt_remain; //잔액
+
+	//share_detail
+	private String cd_info; //정보구분
+	private String cd_type; //항목구분
+	private String no_card_acc; //카드/계좌번호
+	private String addAssetList; //자산 추가list
+	private String addConsumeList; //소비 추가list
+	private String addDebtList; //부채 추가list
 
 	public String getSeq_share() {
 		return seq_share;
@@ -187,6 +196,12 @@ public class PersonShareInfo implements Serializable {
 	public void setYn_share(String yn_share) {
 		this.yn_share = yn_share;
 	}
+	public String getCd_assets_class() {
+		return cd_assets_class;
+	}
+	public void setCd_assets_class(String cd_assets_class) {
+		this.cd_assets_class = cd_assets_class;
+	}
 	public String getNo_account() {
 		return no_account;
 	}
@@ -253,6 +268,41 @@ public class PersonShareInfo implements Serializable {
 	public void setAmt_remain(String amt_remain) {
 		this.amt_remain = amt_remain;
 	}
-
+	public String getCd_info() {
+		return cd_info;
+	}
+	public void setCd_info(String cd_info) {
+		this.cd_info = cd_info;
+	}
+	public String getCd_type() {
+		return cd_type;
+	}
+	public void setCd_type(String cd_type) {
+		this.cd_type = cd_type;
+	}
+	public String getNo_card_acc() {
+		return no_card_acc;
+	}
+	public void setNo_card_acc(String no_card_acc) {
+		this.no_card_acc = no_card_acc;
+	}
+	public String getAddAssetList() {
+		return addAssetList;
+	}
+	public void setAddAssetList(String addAssetList) {
+		this.addAssetList = addAssetList;
+	}
+	public String getAddConsumeList() {
+		return addConsumeList;
+	}
+	public void setAddConsumeList(String addConsumeList) {
+		this.addConsumeList = addConsumeList;
+	}
+	public String getAddDebtList() {
+		return addDebtList;
+	}
+	public void setAddDebtList(String addDebtList) {
+		this.addDebtList = addDebtList;
+	}
 
 }

@@ -245,30 +245,31 @@ public interface PersonMapper {
 	/**
 	 * 공유관리 - 공유설정(요청취소확인)
 	 * @param PersonShareInfo
-	 * @return ReturnClass
+	 * @return int
 	 */
 	int chkPersonShareInfoReqCancel(PersonShareInfo personShareInfo);
 
 	/**
 	 * 공유관리 - 공유설정(상태변경)
 	 * @param PersonShareInfo
-	 * @return ReturnClass
+	 * @return int
 	 */
 	int updatePersonShareInfoSetStatus(PersonShareInfo personShareInfo);
 
 	/**
-	 * 공유관리 - 공유설정(항목변경)
-	 * @param PersonShareInfo
-	 * @return ReturnClass
-	 */
-	int updatePersonShareInfoSetItems(PersonShareInfo personShareInfo);
-
-	/**
-	 * 공유관리 - 공유설정(중복체크)
+	 * 공유관리 - 공유설정(계좌추가)
 	 * @param PersonShareInfo
 	 * @return int
 	 */
-	int duplChkPersonShareInfo(PersonShareInfo personShareInfo);
+	int deletePsersonShareInfoDetail(PersonShareInfo personShareInfo);
+	int createPersonShareInfoDetail(PersonShareInfo personShareInfo);
+
+	/**
+	 * 공유관리 - 공유설정(항목변경)
+	 * @param PersonShareInfo
+	 * @return int
+	 */
+	int updatePersonShareInfoSetItems(PersonShareInfo personShareInfo);
 
 	/**
 	 * 공유관리 - 공유설정(공유재요청)

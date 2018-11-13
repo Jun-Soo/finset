@@ -374,6 +374,7 @@ public class CustomerCenterController implements Constant {
 	public String updatePersonShareInfoSetItems(HttpServletRequest request, HttpSession session, Model model, PersonShareInfo personShareInfo) throws FinsetException, IOException {
 		String no_person = (String) session.getAttribute("no_person");
 
+		personShareInfo.setId_frt(no_person);
 		personShareInfo.setId_lst(no_person);
 
 		ReturnClass rtnClass = personManager.updatePersonShareInfoSetItems(personShareInfo);
@@ -439,7 +440,7 @@ public class CustomerCenterController implements Constant {
 	 * @throws FinsetException, IOException
 	 */
 	@RequestMapping("/createPersonShareInfoSms.json")
-	public String sendPersonShareInfoSms(HttpServletRequest request, HttpSession session, Model model, PersonShareInfo personShareInfo) throws FinsetException, IOException {
+	public String createPersonShareInfoSms(HttpServletRequest request, HttpSession session, Model model, PersonShareInfo personShareInfo) throws FinsetException, IOException {
 		String no_person = (String) session.getAttribute("no_person");
 
         String body = "";
@@ -506,7 +507,7 @@ public class CustomerCenterController implements Constant {
 
         if("01".equals(share_status)) { //공유 요청
         	rec_no_person = shareInfo.getOffer_no_person();
-        	url = "/m/customercenter/frameShareInfoSetting.crz?seq_share="+shareInfo.getSeq_share();
+        	url = "/share/offerSetting?cd_share="+shareInfo.getCd_share()+"&seq_share="+shareInfo.getSeq_share();
         	body = shareInfo.getReq_nm_person()+"님으로부터 공유요청이 왔습니다";
 
         	personShareMessageInfo.setCd_message("01"); //공유요청
@@ -571,8 +572,8 @@ public class CustomerCenterController implements Constant {
 	                        , StringUtil.nullToString(recPersonVO.getCd_push(), ""))){
 	                }
 
-	                //메세지 table insert / update
-	                if(!("".equals(personShareMessageInfo.getReq_status()))) { //요청, 정보업데이트, 허용, 거절일때만 메세지T insert, update
+	                //메세지 table insert / update( 요청, 허용, 거절, 정보업데이트일때만 메세지T insert, update )
+	                if(personShareMessageInfo.getReq_status() != null && !("".equals(personShareMessageInfo.getReq_status()))) {
 		                ReturnClass rtnClass = personManager.mergePersonShareInfoMessage(personShareMessageInfo);
 		                model.addAttribute("cdResult",rtnClass.getCd_result());
 	                }else{

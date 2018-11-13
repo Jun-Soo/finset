@@ -424,9 +424,9 @@
 			ID_LST,
 			TO_CHAR(DT_LST, 'YYYYMMDD') AS DT_LST
 		FROM
-			SHARE_INFO
+			SHARE_INFO SI
 		<include refid="listPersonShareInfo_WHERE"/>
-		ORDER BY DT_FRT DESC
+		ORDER BY SI.DT_FRT DESC
 	</select>
 
 	<sql id="listPersonShareInfoHist_WHERE">
@@ -469,9 +469,9 @@
 			ID_FRT,
 			TO_CHAR(DT_FRT, 'YYYYMMDD') AS DT_FRT
 		FROM
-			SHARE_INFO_HIST
+			SHARE_INFO_HIST SIH
 		<include refid="listPersonShareInfoHist_WHERE"/>
-		ORDER BY DT_FRT DESC
+		ORDER BY SIH.DT_FRT DESC
 	</select>
 
 	<!-- personMapper.listShareInfoAllCancel 공유관리 모두해지하기list -->
@@ -601,18 +601,21 @@
 	    SELECT
 	    	ROWNUM AS RNUM,
 			TB.YN_SHARE,
+			TB.CD_ASSETS_CLASS,
 	    	TB.NO_ACCOUNT,
 	    	TB.NM_ACCOUNT
 	    FROM (
 	    		SELECT
 					SID.YN_SHARE,
+					AI.CD_ASSETS_CLASS,
 					AI.NO_ACCOUNT,
 					AI.NM_ACCOUNT
 				FROM
 					ASSETS_INFO AI
 				LEFT OUTER JOIN SHARE_INFO_DETAIL SID
 						ON (
-								SID.CD_INFO = '02'
+								SID.SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+								AND SID.CD_INFO = '02'
 								AND AI.CD_ASSETS_CLASS = SID.CD_TYPE
 								AND AI.NO_ACCOUNT = SID.NO_CARD_ACC
 								AND AI.NO_PERSON = SID.ID_FRT
@@ -635,48 +638,62 @@
 			TB.NM_CARD
 		FROM (
 				SELECT
-					SID.YN_SHARE,
+					ASD.YN_SHARE,
 					A.NM_CODE,
 					A.CODE_VALUE,
-					B.NO_CARD,
-					B.NM_CARD
+					'' AS NO_CARD,
+					'' AS NM_CARD
 				FROM
 					COMM_CD A
-				LEFT OUTER JOIN(
+				LEFT OUTER JOIN SHARE_INFO_DETAIL ASD
+				ON (
+						ASD.SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+						AND ASD.CD_INFO = '03'
+						AND A.CODE_VALUE = ASD.CD_TYPE
+						AND ASD.ID_FRT = #{offer_no_person, jdbcType=VARCHAR}
+					)
+				WHERE
+					A.CODE_GROUP = 'cd_consume'
+					AND (A.CODE_VALUE = '02' OR A.CODE_VALUE = '03')
+				UNION ALL
+					SELECT
+						BSD.YN_SHARE,
+						B.NM_CODE,
+						B.CODE_VALUE,
+						B.NO_CARD,
+						B.NM_CARD
+					FROM(
 						SELECT
-							NO_PERSON,
+							(SELECT NM_CODE FROM COMM_CD WHERE CODE_GROUP = 'cd_consume' AND CODE_VALUE='01') AS NM_CODE,
+							'01' AS CODE_VALUE,
 							NO_CARD,
-							NM_CARD,
-							'01' AS CODE_VALUE
+							NM_CARD
 						FROM
 							SCR_CARD_INFO
 						WHERE
 							NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
 					UNION ALL
 						SELECT
-							NO_PERSON,
+							(SELECT NM_CODE FROM COMM_CD WHERE CODE_GROUP = 'cd_consume' AND CODE_VALUE='04') AS NM_CODE,
+							'04' AS CODE_VALUE,
 							AN AS NO_CARD,
-							NM_AN AS NM_CARD,
-							'04' AS CODE_VALUE
+							NM_AN AS NM_CARD
 						FROM
 							SCR_BANK_API_AN_INFO
 						WHERE
 							NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
 							AND TYPE_AN = '01'
 					) B
-				ON A.CODE_VALUE = B.CODE_VALUE
-				LEFT OUTER JOIN SHARE_INFO_DETAIL SID
+				LEFT OUTER JOIN SHARE_INFO_DETAIL BSD
 				ON (
-						SID.CD_INFO = '03'
-						AND A.CODE_VALUE = SID.CD_TYPE
-						AND B.NO_CARD = SID.NO_CARD_ACC
-						AND B.NO_PERSON = SID.ID_FRT
+						BSD.SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+						AND BSD.CD_INFO = '03'
+						AND B.CODE_VALUE = BSD.CD_TYPE
+						AND B.NO_CARD = BSD.NO_CARD_ACC
+						AND BSD.ID_FRT = #{offer_no_person, jdbcType=VARCHAR}
 					)
-				WHERE
-					A.CODE_GROUP = 'cd_consume'
-					AND A.YN_SYSTEM_CODE IS NULL
-				ORDER BY A.NM_CODE
 			) TB
+			ORDER BY TB.NM_CODE
 	</select>
 
 	<!-- personMapper.listPersonShareInfoDebt 공유관리 - 공유설정(부채정보 계좌list) -->
@@ -711,14 +728,15 @@
 						WHEN A.CD_TYPE_DEAL IN('A') THEN '리스'
 						ELSE ''
 					END AS DEBT_TYPE,
-					AMT_REMAIN
+					A.AMT_REMAIN
 				FROM
 					DEBT_PERSONAL_INFO A
 				LEFT OUTER JOIN FC_INFO B
 				ON ( B.CD_FC = A.CD_FC )
 				LEFT OUTER JOIN SHARE_INFO_DETAIL SID
 				ON (
-						SID.CD_INFO = '01'
+						SID.SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+						AND SID.CD_INFO = '01'
 						AND A.NO_MANAGE_INFO = SID.NO_MANAGE_INFO
 						AND A.NO_PERSON = SID.ID_FRT
 					)
@@ -738,7 +756,7 @@
 							ELSE TO_NUMBER( A.AMT_REMAIN )
 						END
 					) DESC
-			)
+			) TB
 	</select>
 
 	<!-- personMapper.createPersonShareInfo 공유관리 요청 -->
@@ -824,6 +842,39 @@
 			SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
 	</update>
 
+	<!-- personMapper.updatePersonShareInfoSetStatus 공유관리 - 공유설정(계좌추가) -->
+	<delete id="deletePsersonShareInfoDetail" parameterType="com.koscom.domain.PersonShareInfo">
+	    /* com.koscom.person.dao.PersonMapper.deletePsersonShareInfoDetail : 공유관리 - 공유설정(계좌삭제) */
+		DELETE FROM SHARE_INFO_DETAIL
+		WHERE SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+	</delete>
+	<insert id="createPersonShareInfoDetail" parameterType="com.koscom.domain.PersonShareInfo">
+	    /* com.koscom.person.dao.PersonMapper.createPersonShareInfoDetail : 공유관리 - 공유설정(계좌추가) */
+		INSERT INTO SHARE_INFO_DETAIL(
+			SEQ_SHARE,
+			CD_INFO,
+			CD_TYPE,
+			NO_MANAGE_INFO,
+			NO_CARD_ACC,
+			YN_SHARE,
+			ID_FRT,
+			DT_FRT,
+			ID_LST,
+			DT_LST
+		) VALUES (
+			#{seq_share, jdbcType=NUMERIC},
+			#{cd_info, jdbcType=VARCHAR},
+			#{cd_type, jdbcType=VARCHAR},
+			#{no_manage_info, jdbcType=VARCHAR},
+			#{no_card_acc, jdbcType=VARCHAR},
+			#{yn_share, jdbcType=VARCHAR},
+			#{id_frt, jdbcType=VARCHAR},
+			SYSDATE,
+			#{id_lst, jdbcType=VARCHAR},
+			SYSDATE
+		)
+	</insert>
+
 	<!-- personMapper.updatePersonShareInfoSetItems 공유관리 - 공유설정(항목변경) -->
 	<update id="updatePersonShareInfoSetItems" parameterType="com.koscom.domain.PersonShareInfo">
 		/* com.koscom.person.dao.PersonMapper.updatePersonShareInfoSetItems : 공유관리 - 공유설정(항목변경) */
@@ -844,26 +895,6 @@
 		WHERE
 			SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
 	</update>
-
-	<!-- personMapper.duplChkPersonShareInfo 공유관리 동일정보여부 체크 -->
-	<select id="duplChkPersonShareInfo" parameterType="com.koscom.domain.PersonShareInfo" resultType="int">
-		/* com.koscom.person.dao.PersonMapper.duplChkPersonShareInfo : 공유관리 동일정보여부 체크  */
-		SELECT
-			CASE
-				WHEN YN_CREDIT_OFFER = #{yn_credit_offer, jdbcType=VARCHAR}
-				AND YN_DEBT_OFFER = #{yn_debt_offer, jdbcType=VARCHAR}
-				AND YN_INCOME_OFFER = #{yn_income_offer, jdbcType=VARCHAR}
-				AND YN_DEBT_ITGT_MNGM = #{yn_debt_itgt_mngm, jdbcType=VARCHAR}
-				AND YN_ASSET_ITGT_MNGM = #{yn_asset_itgt_mngm, jdbcType=VARCHAR}
-				AND YN_CONSUME_ITGT_MNGM = #{yn_consume_itgt_mngm, jdbcType=VARCHAR}
-				THEN 1
-				ELSE 0
-			END DUPL_CHK
-		FROM
-			SHARE_INFO
-		WHERE
-			SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
-	</select>
 
 	<!-- personMapper.updatePersonShareInfoSet01 공유관리 공유설정(공유재요청) -->
 	<update id="updatePersonShareInfoSet01" parameterType="com.koscom.domain.PersonShareInfo">

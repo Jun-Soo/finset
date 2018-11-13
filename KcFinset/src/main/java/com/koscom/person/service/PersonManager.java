@@ -229,8 +229,9 @@ public interface PersonManager {
 	 * 공유관리 - 공유설정(항목변경)
 	 * @param PersonShareInfo
 	 * @return ReturnClass
+	 * @throws FinsetException
 	 */
-	ReturnClass updatePersonShareInfoSetItems(PersonShareInfo personShareInfo);
+	ReturnClass updatePersonShareInfoSetItems(PersonShareInfo personShareInfo) throws FinsetException;
 
 	/**
 	 * 공유관리 - 공유설정(공유재요청)

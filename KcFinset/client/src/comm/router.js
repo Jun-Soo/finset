@@ -162,21 +162,11 @@ import MypageDropDone from '@/components/mypage/DropDone'
 
 import ShareHome from '@/components/share/Home'
 import ShareMain from '@/components/share/Main'
+import ShareHistory from '@/components/share/History'
 import ShareNewRequest from '@/components/share/NewRequest'
-import ShareSetting from '@/components/share/Setting'
+import ShareReqSetting from '@/components/share/ReqSetting'
+import ShareOfferSetting from '@/components/share/OfferSetting'
 import ShareDetail from '@/components/share/Detail'
-// import ShareHistory from '@/components/share/History'
-import ShareSumMain from '@/components/share/SumMain'
-
-// --------------------통합 이후 삭제되어야 하는 부분
-import ShareDesignMain from '@/components/share/design/Main'
-import ShareDesignNewRequest from '@/components/share/design/NewRequest'
-import ShareDesignSetting from '@/components/share/design/Setting'
-import ShareDesignSetting2 from '@/components/share/design/Setting_2'
-import ShareDesignSetting3 from '@/components/share/design/Setting_3'
-import ShareDesignDetail from '@/components/share/design/Detail'
-import ShareDesignHistory from '@/components/share/design/History'
-// --------------------통합 이후 삭제되어야 하는 부분
 
 import EtcHome from '@/components/etc/Home'
 import EtcAlarmHistory from '@/components/etc/AlarmHistory'
@@ -859,20 +849,50 @@ export const routes = [{
   name: 'share',
   component: ShareHome,
   children: [{
-    path: 'sumMain',
-    alias: '/sumMain',
-    name: 'shareSumMain',
-    component: ShareSumMain,
+    path: 'main',
+    alias: '/main',
+    name: 'shareMain',
+    component: ShareMain,
     meta: {
       allowPath: true,
       requiresAuth: true
     }
   },
   {
-    path: 'setting',
-    alias: '/setting',
-    name: 'shareSetting',
-    component: ShareSetting,
+    path: 'history',
+    alias: '/history',
+    name: 'shareHistory',
+    component: ShareHistory,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'newRequest',
+    alias: '/newRequest',
+    name: 'shareNewRequest',
+    component: ShareNewRequest,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'reqSetting',
+    alias: '/reqSetting',
+    name: 'shareReqSetting',
+    component: ShareReqSetting,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'offerSetting',
+    alias: '/offerSetting',
+    name: 'shareOfferSetting',
+    component: ShareOfferSetting,
     meta: {
       allowPath: true,
       requiresAuth: true
@@ -887,99 +907,7 @@ export const routes = [{
       allowPath: true,
       requiresAuth: true
     }
-  },
-  {
-    path: 'newRequest',
-    alias: '/newRequest',
-    name: 'shareNewRquest',
-    component: ShareNewRequest,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'main',
-    alias: '/main',
-    name: 'shareMain',
-    component: ShareMain,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-    // -------------통합 이후 삭제되어야 하는 부분
-  {
-    path: 'designMain',
-    alias: '/designMain',
-    name: 'shareDesignMain',
-    component: ShareDesignMain,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'designNewRequest',
-    alias: '/designNewRequest',
-    name: 'shareDesignNewRequest',
-    component: ShareDesignNewRequest,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'designSetting',
-    alias: '/designSetting',
-    name: 'shareDesignSetting',
-    component: ShareDesignSetting,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'designSetting_2',
-    alias: '/designSetting_2',
-    name: 'shareDesignSetting_2',
-    component: ShareDesignSetting2,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'designSetting_3',
-    alias: '/designSetting_3',
-    name: 'shareDesignSetting_3',
-    component: ShareDesignSetting3,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'designDetail',
-    alias: '/designDetail',
-    name: 'shareDesignDetail',
-    component: ShareDesignDetail,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'designHistory',
-    alias: '/designHistory',
-    name: 'shareDesignHistory',
-    component: ShareDesignHistory,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
   }
-    // -------------통합 이후 삭제되어야 하는 부분
   ]
 },
 {

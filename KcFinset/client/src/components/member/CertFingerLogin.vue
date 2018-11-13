@@ -85,7 +85,7 @@ export default {
             }
             _this.$store.state.user.authToken = null;
             _this.$store.commit("LOGIN", response.data);
-            _this.modifyPersonLogout(); 
+            _this.modifyPersonLogout();
             _this.$router.push("/main");
           } else {
             this.$toast.center(ko.messages.loginErr);

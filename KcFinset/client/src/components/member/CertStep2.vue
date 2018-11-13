@@ -271,7 +271,7 @@ export default {
             _this.$router.push("/member/certCode");
           } else if (result.result == "11") {
             //loginSuccess
-            //  modifyPersonLogout(); 
+            //  modifyPersonLogout();
             if (Constant.userAgent == "iOS") {
               Jockey.send("setNoPerson", {
                 noPerson: noPerson,

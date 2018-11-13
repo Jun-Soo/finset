@@ -54,7 +54,6 @@ export default {
       frm.append("seq", seq);
       frm.append("id_board", id_board);
       this.$http.post(url, frm).then(response => {
-        debugger;
         _this.boardForm = response.data.boardForm;
         _this.boardInfo = response.data.boardInfo;
         _this.content = _this.seen = true;

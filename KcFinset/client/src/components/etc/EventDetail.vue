@@ -63,7 +63,6 @@ export default {
       frm.append("seq", seq);
       frm.append("id_board", id_board);
       this.$http.post(url, frm).then(response => {
-        debugger;
         _this.boardForm = response.data.boardForm;
         if(response.data.boardImgInfo){
           _this.boardImgInfo = response.data.boardImgInfo;

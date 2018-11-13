@@ -206,7 +206,6 @@ public class ScrapController {
 		String token = scrapManager.getAccessToken();
 		logger.debug("================= token : " + token);
 		
-		token = "Bearer fbf794d3-9be6-4163-9df6-927d43736470";
 		scrapManager.checkAllFinance(no_person, uuid, dn, token);
 
 		model.addAttribute("token", token);

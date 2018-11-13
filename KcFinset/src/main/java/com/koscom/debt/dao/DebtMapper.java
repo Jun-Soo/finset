@@ -175,4 +175,16 @@ public interface DebtMapper {
 	 * @return
 	 */
 	List<DebtSummaryVO> listStatDebtSummary(DebtForm debtForm);
+	
+	/**
+	 * 부채 상환금 입력
+	 * @param debtVO
+	 */
+	void createRepayment(DebtVO debtVO);
+	
+	/**
+	 * 부채 상환에 따른 부채 잔액 업데이트
+	 * @param debtVO
+	 */
+	void updateAmtRemain(DebtVO debtVO); 
 }

@@ -24,10 +24,12 @@
             <div class="item">
               <p class="key">상환능력<em>(소득대비)</em></p>
               <div class="text-wrap">
-                <p class="big">{{calDsr(debtSummary.cur_mon_mid_rpy, debtSummary.amt_etm_income)}}<em>%</em></p>
+                <!-- <p class="big">{{calDsr(debtSummary.cur_mon_mid_rpy, debtSummary.amt_etm_income)}}<em>%</em></p> -->
+                <p class="big">0<em>%</em></p>
               </div>
               <div class="bar">
-                <p class="active" :style="debtSummary.dsrStyle"></p>
+                <!-- <p class="active" :style="debtSummary.dsrStyle"></p> -->
+                <p class="active"></p>
               </div>
             </div>
           </div>
@@ -121,6 +123,7 @@
             <div class="left">
               <p class="key">잔액</p>
               <p class="number">{{formatNumber(vo.amt_remain * 10000)}}<em>원</em></p>
+              <p v-text="vo.no_manage_info"></p>
             </div>
           </div>
           <div class="bar">

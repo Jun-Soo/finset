@@ -157,4 +157,10 @@ public class DebtManagerImpl implements DebtManager {
 		summaryMap.put("dateList", dateList);
 		return summaryMap;
 	}
+
+	@Override
+	public void createRepayment(DebtVO debtVO) {
+		debtMapper.createRepayment(debtVO);
+		debtMapper.updateAmtRemain(debtVO);
+	}
 }

@@ -40,54 +40,7 @@
           </div>
         </div>
       </div>
-
-      <!-- <div class="item">
-        <div class="top">
-          <p class="symbol"><img src="../../assets/images/common/bu_kb.png" alt=""/>국민은행</p>
-          <p class="circle red"><span class="red">준수</span></p>
-        </div>
-        <div class="number-wrap">
-          <div class="left">
-            <p class="key">결제금액</p>
-            <p class="number">2,450,000<em>원</em></p>
-          </div>
-        </div>
-        <div class="text-wrap">
-          <div class="left">
-            <p class="key">카드번호</p>
-            <p class="value">1234-1234-1234-****</p>
-          </div>
-          <div class="right">
-            <p class="key">결제일</p>
-            <p class="value">2018.04.15</p>
-          </div>
-        </div>
-      </div>
-      <div class="item">
-        <div class="top">
-          <p class="symbol"><img src="../../assets/images/common/bu_kb.png" alt=""/>국민은행</p>
-          <p class="circle"><span class="blue">준수</span></p>
-        </div>
-        <div class="number-wrap">
-          <div class="left">
-            <p class="key">결제금액</p>
-            <p class="number">2,450,000<em>원</em></p>
-          </div>
-        </div>
-        <div class="text-wrap">
-          <div class="left">
-            <p class="key">카드번호</p>
-            <p class="value">1234-1234-1234-****</p>
-          </div>
-          <div class="right">
-            <p class="key">결제일</p>
-            <p class="value">2018.04.15</p>
-          </div>
-        </div>
-      </div> -->
-
     </div>
-
   </section>
 </template>
 

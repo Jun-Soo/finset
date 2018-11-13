@@ -12,6 +12,7 @@ import store from './comm/store'
 import toast from 'vue2-toast'
 import VueCarousel from 'vue-carousel'
 import VueModal from './components/member/sub/index'
+import DebtModal from './components/debt/sub/index'
 
 import 'jquery'
 import 'vue2-toast/lib/toast.css'
@@ -45,9 +46,10 @@ Vue.use(VueCarousel)
 Vue.use(window.VueCharts)
 
 Vue.use(VueModal)
+Vue.use(DebtModal)
 
 Vue.config.debug = true
-Vue.config.devtools = false
+Vue.config.devtools = true
 Vue.config.productionTip = false
 
 axios.interceptors.request.use(function (config) {

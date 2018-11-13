@@ -81,11 +81,6 @@
           </div>
         </div>
         <div v-for="(subList, index) in consumeList" :key="index" class="list-wrap">
-          <!-- <div v-if="index==0" class="filter-wrap">
-            <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
-              <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
-            </div>
-          </div> -->
           <p class="date">{{formatDate(subList[0].dt_trd,"mmdd")}}</p>
           <div v-for="vo in subList" :key="vo.index" class="item" @click="clickConsumeList(vo.seq_consume, vo.no_person)">
             <div class="left">
@@ -99,7 +94,7 @@
             </div>
           </div>
         </div>
-        <button class="btn-spend-add"></button>
+        <button @click="regConsume" class="btn-spend-add"></button>
       </div>
     </section>
   </div>
@@ -155,7 +150,10 @@ export default {
         .get("/m/consume/listConsumeSharePersonInfo.json", { params: {} })
         .then(function(response) {
           var list = response.data.listConsumeSharePersonInfo;
-
+          var test = new Object();
+          test.no_person = "P000000109";
+          test.nm_person = "테스트";
+          list.push(test);
           for (var idx in list) {
             list[idx].isShow = true;
           }
@@ -272,6 +270,9 @@ export default {
         path: "/consume/consumeDetail",
         query: { seq_consume: seq_consume, no_person: no_person }
       });
+    },
+    regConsume: function() {
+      this.$router.push("/consume/consumeDetail");
     }
   }
 };

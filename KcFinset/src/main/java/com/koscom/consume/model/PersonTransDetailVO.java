@@ -11,6 +11,7 @@ public class PersonTransDetailVO implements Serializable{
 	private static final long serialVersionUID = 5967402064922491315L;
 
 	private String 	an;			//게좌번호
+	private String	nm_an;		//계좌명
 	private String 	dt_trd;		//날짜
 	private String 	tm_trd;		//시간
 	private String 	amt_wdrl;	//출금액
@@ -27,11 +28,12 @@ public class PersonTransDetailVO implements Serializable{
 	
 	public PersonTransDetailVO() {
 	}
-	public PersonTransDetailVO(String an, String dt_trd, String tm_trd,
-			String amt_wdrl, String amt_dep, String doc1, String doc2,
-			String cd_fc, String nm_fc, String id_frt, Date dt_frt,
-			String id_lst, Date dt_lst) {
+	public PersonTransDetailVO(String an, String nm_an, String dt_trd,
+			String tm_trd, String amt_wdrl, String amt_dep, String doc1,
+			String doc2, String cd_fc, String nm_fc, String id_frt,
+			Date dt_frt, String id_lst, Date dt_lst) {
 		this.an = an;
+		this.nm_an = nm_an;
 		this.dt_trd = dt_trd;
 		this.tm_trd = tm_trd;
 		this.amt_wdrl = amt_wdrl;
@@ -51,6 +53,12 @@ public class PersonTransDetailVO implements Serializable{
 	}
 	public void setAn(String an) {
 		this.an = an;
+	}
+	public String getNm_an() {
+		return nm_an;
+	}
+	public void setNm_an(String nm_an) {
+		this.nm_an = nm_an;
 	}
 	public String getDt_trd() {
 		return dt_trd;
@@ -124,6 +132,7 @@ public class PersonTransDetailVO implements Serializable{
 	public void setDt_lst(Date dt_lst) {
 		this.dt_lst = dt_lst;
 	}
+	
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}

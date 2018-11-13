@@ -227,4 +227,22 @@ public interface ConsumeManager {
 	 * @param personConsumeClassVO
 	 */
 	void createPersonConsumeClassIncome(PersonConsumeClassVO personConsumeClassVO);
+	
+	/**
+	 * 소비 정보 업데이트
+	 * @param consumeVO
+	 */
+	void modifyConsumeInfo(ConsumeVO consumeVO);
+	
+	/**
+	 * 소비 삭제
+	 * @param consumeForm
+	 */
+	void deleteConsumeInfo(ConsumeForm consumeForm);
+	
+	/**
+	 * 소비지출내역 생성
+	 * @param consumeVO
+	 */
+	void createConsumeInfo(ConsumeVO consumeVO);
 }

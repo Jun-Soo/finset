@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.koscom.consume.model.ConsumeDetailGoalInfoVO;
 import com.koscom.consume.model.ConsumeForm;
-import com.koscom.consume.model.ConsumeGoalInfoVO;
 import com.koscom.consume.model.ConsumeVO;
 import com.koscom.consume.model.PaymentForm;
 import com.koscom.consume.model.PersonConsumeClassVO;
@@ -164,20 +163,7 @@ public class ConsumeController {
     	consumeManager.modifyPersonSetInfo(personSetInfoVO);
     	return "jsonView";
     }
-    
-    @RequestMapping("/modifyConsumeInfo.json")
-    public String modifyConsumeInfo(Model model, HttpSession session, ConsumeVO consumeVO) throws FinsetException {
-    	logger.debug("modifyConsumeInfo");
-    	model.addAttribute("result","00");
-    	return "jsonView";
-    }
-    
-    @RequestMapping("/registerGoal")
-    public String registerGoal(HttpSession session, Model model, ConsumeGoalInfoVO consumeGoalInfoVO) throws FinsetException {
-    	logger.debug("registerGoal");
-    	return "jsonView";
-    }
-    
+
     /**
      * VUE
      * @param session
@@ -496,6 +482,55 @@ public class ConsumeController {
     	String no_person = (String) session.getAttribute("no_person");
     	personConsumeClassVO.setNo_person(no_person);
     	consumeManager.createPersonConsumeClassIncome(personConsumeClassVO);
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE
+     * @param session
+     * @param model
+     * @param consumeVO
+     * @return
+     */
+    @RequestMapping("/modifyConsumeInfo.json")
+    public String modifyConsumeInfo(HttpSession session, Model model, ConsumeVO consumeVO) {
+    	logger.debug("modifyConsumeInfo");
+    	String no_person = (String) session.getAttribute("no_person");
+    	consumeVO.setNo_person(no_person);
+    	consumeManager.modifyConsumeInfo(consumeVO);
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE
+     * @param session
+     * @param model
+     * @param consumeForm
+     * @return
+     */
+    @RequestMapping("/deleteConsumeInfo.json")
+    public String deleteConsumeInfo(HttpSession session, Model model, ConsumeForm consumeForm) {
+    	logger.debug("deleteConsumeInfo");
+    	String no_person = (String) session.getAttribute("no_person");
+    	consumeForm.setNo_person(no_person);
+    	consumeManager.deleteConsumeInfo(consumeForm);
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE
+     * @param session
+     * @param model
+     * @param consumeVO
+     * @return
+     */
+    @RequestMapping("/createConsumeInfo.json")
+    public String createConsumeInfo(HttpSession session, Model model, ConsumeVO consumeVO) {
+    	logger.debug("createConsumeInfo");
+    	logger.debug(consumeVO.toString());
+    	String no_person = (String) session.getAttribute("no_person");
+    	consumeVO.setNo_person(no_person);
+    	consumeManager.createConsumeInfo(consumeVO);
     	return "jsonView";
     }
     

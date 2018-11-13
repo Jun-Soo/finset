@@ -262,25 +262,16 @@ public class DebtController {
 		return "/debt/frameInDebtDetail";
 	}
 	
-//	@RequestMapping("/getDebtInfo.json")
-	public String getDebtInfo(HttpSession session, Model model, String no_manage_info) throws FinsetException{
-		String no_person = (String) session.getAttribute("no_person"); 
-		
-		DebtForm debtForm = new DebtForm();
-		debtForm.setNo_person(no_person);
-		debtForm.setNo_manage_info(no_manage_info);
-		model.addAttribute("debtVO", debtManager.getDebtInfo(debtForm));
-		
-		return "jsonView";
-	}
-	
+	/**
+	 * 
+	 * @param session
+	 * @param model
+	 * @param debtForm
+	 * @return
+	 */
 	@RequestMapping("/getDebtInfoForUpdate.json")
-	public String getDebtInfoForUpdate(HttpSession session, HttpServletRequest request, Model model, String no_manage_info) throws FinsetException{
-		String no_person = (String) session.getAttribute("no_person"); 
-		
-		DebtForm debtForm = new DebtForm();
-		debtForm.setNo_person(no_person);
-		debtForm.setNo_manage_info(no_manage_info);
+	public String getDebtInfoForUpdate(HttpSession session, Model model, DebtForm debtForm) {
+//		String no_person = (String) session.getAttribute("no_person");
 		model.addAttribute("debtVO", debtManager.getDebtInfoForUpdate(debtForm));
 		return "jsonView";
 	}
@@ -315,14 +306,14 @@ public class DebtController {
 	}
 	
 	/**
-	 * 부채 수정
+	 * VUE
 	 * @param request
 	 * @param debtVO
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping("/updateDebtInfo.json")
-	public String updateDebtInfo(HttpSession session,DebtVO debtVO, Model model) throws FinsetException {
+	public String updateDebtInfo(HttpSession session, Model model, DebtVO debtVO) throws FinsetException {
 		String no_person = (String) session.getAttribute("no_person");
 		if(debtVO == null){
 			model.addAttribute("code","99");
@@ -439,9 +430,6 @@ public class DebtController {
 	@RequestMapping("/getCalendarData.json")
 	public String getCalendarData(HttpSession session, Model model, String ym) throws FinsetException {
 		String no_person = (String) session.getAttribute("no_person");
-		if(ym == null || ym.equals("")){
-			ym = "201808";	
-		}
 		ConsumeForm consumeForm = new ConsumeForm();
 		consumeForm.setNo_person(no_person);
 		consumeForm.setYm_trd(ym);
@@ -543,6 +531,14 @@ public class DebtController {
 		int sumTotal = incomeTotal-consumeTotal-debtTotal;
 		model.addAttribute("sumTotal", sumTotal);
 		
+		return "jsonView";
+	}
+	
+	@RequestMapping("/createRepayment.json")
+	public String createRepayment(HttpSession session, Model model, DebtVO debtVO) {
+		String no_person = (String) session.getAttribute("no_person");
+		debtVO.setNo_person(no_person);
+//		debtManager.createRepayment(debtVO);
 		return "jsonView";
 	}
 }

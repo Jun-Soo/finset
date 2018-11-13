@@ -145,6 +145,7 @@
 			AND CI.TYPE_IN_OUT				=		#{type_in_out, jdbcType=VARCHAR}
 			</if>
 			AND YN_CANCEL 					=		'N'
+			AND YN_DELETE					=		'N'
 			AND YN_BUDGET_EXCEPT			=		'N'
 				ORDER BY CI.DT_TRD DESC, CI.TM_TRD DESC
 	</select>
@@ -233,7 +234,8 @@
 	</update>
 	<select id="listPersonTransDetail" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.PersonTransDetailVO">
 		SELECT
-			STD.AN
+			 STD.AN
+			,SBAAI.NM_AN
 			,STD.DT_TRD
 			,STD.TM_TRD
 			,STD.AMT_WDRL
@@ -245,11 +247,13 @@
     			FROM 	 SCR_TRANSACTION_DETAIL STD
     					,SCR_BANK_API_AN_INFO SBAAI
     					,FC_INFO FI
+    					,PERSON_SET_INFO PSI
 		WHERE 		STD.NO_PERSON = 					 #{no_person, jdbcType=VARCHAR}
         		AND STD.NO_PERSON = 					 SBAAI.NO_PERSON
-        		AND TO_NUMBER(STD.DT_TRD) <![CDATA[>=]]> #{dt_from	, jdbcType=VARCHAR}
-        		AND TO_NUMBER(STD.DT_TRD) <![CDATA[<=]]> #{dt_to	, jdbcType=VARCHAR}
+        		AND STD.NO_PERSON = 					 PSI.NO_PERSON
         		AND SBAAI.CD_FC = 						 FI.CD_FC
+        		AND TO_NUMBER(STD.DT_TRD) BETWEEN		 TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DECODE( LENGTH( PSI.DT_BASIC ), 1, '0' || PSI.DT_BASIC, PSI.DT_BASIC )
+        											 AND TO_CHAR( SYSDATE, 'YYYYMM' )|| DECODE( LENGTH( PSI.DT_BASIC ), 1, '0' || PSI.DT_BASIC, PSI.DT_BASIC )
         		AND STD.AN = 							 SBAAI.AN
             		ORDER BY STD.DT_TRD DESC
 	</select>
@@ -1069,5 +1073,96 @@
 						NO_PERSON	= #{no_person, jdbcType = VARCHAR}
 					AND CD_CLASS <![CDATA[<=]]> 10
 			)
+	</insert>
+	<update id="modifyConsumeInfo" parameterType="com.koscom.consume.model.ConsumeVO">
+		UPDATE
+			CONSUME_INFO
+		SET
+			 CD_CLASS	= #{cd_class	, jdbcType = VARCHAR}
+			,CD_TYPE	= #{cd_type		, jdbcType = VARCHAR}
+			,MEMO		= #{memo		, jdbcType = VARCHAR}
+		WHERE
+				NO_PERSON	= #{no_person	, jdbcType = VARCHAR}
+			AND SEQ_CONSUME = #{seq_consume	, jdbcType = VARCHAR}
+	</update>
+	<update id="deleteConsumeInfo" parameterType="com.koscom.consume.model.ConsumeForm">
+		UPDATE
+			CONSUME_INFO
+		SET
+			YN_DELETE = 'Y'
+		WHERE
+				NO_PERSON		= #{no_person	, jdbcType = VARCHAR}
+			AND SEQ_CONSUME		= #{seq_consume	, jdbcType = VARCHAR}
+	</update>
+	
+	<insert id="createConsumeInfo" parameterType="com.koscom.consume.model.ConsumeVO">
+		<selectKey keyProperty="seq_consume" resultType="java.lang.Integer" order="BEFORE">
+			(SELECT NVL(MAX(SEQ_CONSUME),0)+1 FROM CONSUME_INFO)
+		</selectKey>
+			INSERT INTO
+				CONSUME_INFO(
+					 NO_PERSON
+					,SEQ_CONSUME
+					,TYPE_IN_OUT
+					,MEANS_CONSUME
+					,CD_FC
+					,NM_CARD
+					,NO_CARD
+					,TYPE_CARD
+					,DT_TRD
+					,TM_TRD
+					,NO_BIZ
+					,NM_BIZ
+					,CD_CLASS
+					,CD_TYPE
+					,CONTENTS
+					,MEMO
+					,GRADE
+					,AMT_IN_OUT
+					,NO_APPROVAL
+					,MON_INSTALLMENT
+					,MON_REMAINING
+					,YN_PAY_INSTALLMENT
+					,YN_CANCEL
+					,YN_DELETE
+					,YN_AUTO
+					,YN_BUDGET_EXCEPT
+					,ID_FRT
+					,DT_FRT
+					,ID_LST
+					,DT_LST
+				)
+				VALUES (
+					 #{no_person			, jdbcType = VARCHAR}
+					,#{seq_consume}
+					,#{type_in_out			, jdbcType = VARCHAR}
+					,#{means_consume		, jdbcType = VARCHAR}
+					,#{cd_fc				, jdbcType = VARCHAR}
+					,#{nm_card				, jdbcType = VARCHAR}
+					,#{no_card				, jdbcType = VARCHAR}
+					,#{type_card			, jdbcType = VARCHAR}
+					,#{dt_trd				, jdbcType = VARCHAR}
+					,#{tm_trd				, jdbcType = VARCHAR}
+					,#{no_biz				, jdbcType = VARCHAR}
+					,#{nm_biz				, jdbcType = VARCHAR}
+					,#{cd_class				, jdbcType = VARCHAR}
+					,#{cd_type				, jdbcType = VARCHAR}
+					,#{contents				, jdbcType = VARCHAR}
+					,#{memo					, jdbcType = VARCHAR}
+					,#{grade				, jdbcType = VARCHAR}
+					,#{amt_in_out			, jdbcType = VARCHAR}
+					,#{no_approval			, jdbcType = VARCHAR}
+					,#{mon_installment		, jdbcType = VARCHAR}
+					,#{mon_remaining		, jdbcType = VARCHAR}
+					,#{yn_pay_installment	, jdbcType = VARCHAR}
+					,#{yn_cancel			, jdbcType = VARCHAR}
+					,#{yn_delete			, jdbcType = VARCHAR}
+					,#{yn_auto				, jdbcType = VARCHAR}
+					,#{yn_budget_except		, jdbcType = VARCHAR}
+					,#{no_person			, jdbcType = VARCHAR}
+					,SYSDATE
+					,#{no_person			, jdbcType = VARCHAR}
+					,SYSDATE
+				)
 	</insert>
 </mapper>

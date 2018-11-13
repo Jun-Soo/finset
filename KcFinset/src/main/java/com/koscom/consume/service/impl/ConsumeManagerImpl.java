@@ -312,8 +312,27 @@ public class ConsumeManagerImpl implements ConsumeManager {
 		consumeMapper.createPersonConsumeClassType(personConsumeClassVO);
 	}
 	
+	@Override
 	public void createPersonConsumeClassIncome(PersonConsumeClassVO personConsumeClassVO) {
 		logger.debug("createPersonConsumeClassIncome");
 		consumeMapper.createPersonConsumeClassIncome(personConsumeClassVO);
+	}
+	
+	@Override
+	public void modifyConsumeInfo(ConsumeVO consumeVO) {
+		logger.debug("modifyConsumeInfo");
+		consumeMapper.modifyConsumeInfo(consumeVO);
+	}
+	
+	@Override
+	public void deleteConsumeInfo(ConsumeForm consumeForm) {
+		logger.debug("deleteConsumeInfo");
+		consumeMapper.deleteConsumeInfo(consumeForm);
+	}
+	
+	@Override
+	public void createConsumeInfo(ConsumeVO consumeVO) {
+		logger.debug("createConsumeInfo");
+		consumeMapper.createConsumeInfo(consumeVO);
 	}
 }

@@ -140,4 +140,10 @@ public interface DebtManager {
 	 * @return
 	 */
 	Map<String, List<String>> listStatDebtSummary(DebtForm debtForm);
+	
+	/**
+	 * 부채 상환금 입력
+	 * @param debtVO
+	 */
+	void createRepayment (DebtVO debtVO);
 }

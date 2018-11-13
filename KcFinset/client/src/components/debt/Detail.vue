@@ -28,7 +28,9 @@
           </div>
           <div class="bar-text-wrap">
             <p class="bar-text">원금상환비율 <em>{{debtVO.rate_amt_contract}}%</em></p>
-            <p class="bar-card">금리<em>{{debtVO.ever_interest}}%</em><button class="btn-info"></button></p>
+            <p class="bar-card">금리<em>{{debtVO.ever_interest}}%</em>
+              <!--<button class="btn-info"></button>-->
+            </p>
           </div>
         </div>
       </div>
@@ -48,11 +50,11 @@
           </li>
           <li>
             <p class="key">개설일자</p>
-            <p class="value">{{formatDate(debtVO.ymd_loan)}}</p>
+            <p class="value">{{formatDateDot(debtVO.ymd_loan)}}</p>
           </li>
           <li>
             <p class="key">만기일자</p>
-            <p class="value">{{formatDate(debtVO.ymd_loanend)}}</p>
+            <p class="value">{{formatDateDot(debtVO.ymd_loanend)}}</p>
           </li>
           <li>
             <p class="key">금리</p>
@@ -60,7 +62,7 @@
           </li>
           <li>
             <p class="key">대출원금</p>
-            <p class="value">{{formatNumber(debtVO.amt_contract/1000)}}만원</p>
+            <p class="value">{{formatNumber(debtVO.amt_contract/10000)}}만원</p>
           </li>
           <li>
             <p class="key">대출기간</p>
@@ -72,7 +74,7 @@
           </li>
           <li>
             <p class="key">대출잔액</p>
-            <p class="value">{{formatNumber(debtVO.amt_remain/1000)}}만원</p>
+            <p class="value">{{formatNumber(debtVO.amt_remain/10000)}}만원</p>
           </li>
           <li>
             <p class="key">잔여기간</p>
@@ -86,41 +88,30 @@
           <p class="normal">정상</p>
           <p class="overdue">연체</p>
           <p class="etc">기타</p>
-          <p></p>
         </div>
 
         <ul class="list">
-          <!-- <li class="normal" data-modal="modal01">18.02</li>
-          <li class="overdue" data-modal="modal01">18.02</li>
-          <li class="normal" data-modal="modal01">18.02</li>
-          <li class="etc" data-modal="modal01">18.02</li>
-          <li class="normal" data-modal="modal01">18.02</li>
-          <li class="normal" data-modal="modal01">18.02</li>
-          <li class="normal" data-modal="modal01">18.02</li>
-          <li class="normal" data-modal="modal01">18.02</li>
-          <li class="normal" data-modal="modal01">18.02</li>
-          <li class="normal" data-modal="modal01">18.02</li>
-          <li class="normal" data-modal="modal01">18.02</li>
-          <li class="normal" data-modal="modal01">18.02</li> -->
-          <li class="normal" data-modal="modal01" v-for="(debtRepay, index) in listDebtRepay" :key="index">{{debtRepay.req_yyyymm}}</li>
+          <li :class="getCdStateColor(debtRepay.cd_state)" @click="openRepPop(index)" v-for="(debtRepay, index) in listDebtRepay" :key="index">{{debtRepay.req_yyyymm}}</li>
         </ul>
       </div>
 
     </section>
-    <div id="modal-wrap">
-      <div class="modal-con" data-modal-con="modal01">
-        <div class="top">
-          {{formatDate(curRepay.req_yyyymm,"yyyymm")}}
-          <button class="modal-close"></button>
+    <debt-modal transitionName="zoom-in" name="repModal">
+      <div id="modal-wrap" slot="body" style="background:transparent; display:block; text-align:center">
+        <div class="modal-con" style="display:block; left:calc(50% - 204px);">
+          <div class="top">
+            {{curRepay.req_yyyymm}}
+            <button @click="closeRepPop" class="modal-close"></button>
+          </div>
+          <div class="debt-modal-body">
+            <p class="number">{{formatNumber(curRepay.amt_repay)}} <em> 원</em></p>
+            <p class="text"><em>원금 </em> {{formatNumber(curRepay.amt_repay_p)}} 원</p>
+            <p class="text"><em>이자 </em> {{formatNumber(curRepay.amt_repay_i)}} 원</p>
+          </div>
+          <a @click="closeRepPop" class="btn-confirm">확인</a>
         </div>
-        <div class="debt-modal-body">
-          <p class="number">{{formatNumber(curRepay.amt_repay)}}<em>원</em></p>
-          <p class="text"><em>원금</em> {{formatNumber(curRepay.amt_repay_p)}}원</p>
-          <p class="text"><em>이자</em>{{formatNumber(curRepay.amt_repay_i)}} 원</p>
-        </div>
-        <a href="#" class="btn-confirm">확인</a>
       </div>
-    </div>
+    </debt-modal>
   </div>
 </template>
 
@@ -173,9 +164,6 @@ export default {
     formatNumber: function(number) {
       return Common.formatNumber(number);
     },
-    formatDate: function(date) {
-      return Common.formatDate(date);
-    },
     clickTab: function(key) {
       if (key == this.curTab) {
         return;
@@ -193,11 +181,19 @@ export default {
           path: "/debt/modify",
           query: {
             no_person: _this.$route.query.no_person,
-            no_manage_info: _this.$route.query.no_manage_info
+            no_manage_info: _this.$route.query.no_manage_info,
+            interest: _this.debtVO.ever_interest
           }
         });
       } else if (key == "delete") {
-        console.log("delete");
+        var formData = new FormData();
+        formData.append("no_person", this.$route.query.no_person);
+        formData.append("no_manage_info", this.$route.query.no_manage_info);
+        this.$http
+          .post("/m/debt/deleteDebt.json", formData)
+          .then(function(response) {
+            _this.$router.push("/debt/main");
+          });
       } else if (key == "memo") {
         this.$router.push({
           path: "/memo/list",
@@ -214,6 +210,34 @@ export default {
     },
     closeMenu: function() {
       this.isOpen = false;
+    },
+    openRepPop: function(index) {
+      this.curRepay = this.listDebtRepay[index];
+      this.$modals.show("repModal");
+    },
+    closeRepPop: function() {
+      this.$modals.hide("repModal");
+    },
+    getCdStateColor: function(cd_state) {
+      switch (cd_state) {
+        case "0":
+          return "normal";
+          break;
+        case "2":
+        case "3":
+          return "overdue";
+          break;
+        case "1":
+        case "4":
+        case "5":
+          return "etc";
+      }
+    },
+    formatDateDot: function(date) {
+      if ((date || "") == "") {
+        return;
+      }
+      return Common.formatDateDot(date.replace("-", ""));
     }
   }
 };

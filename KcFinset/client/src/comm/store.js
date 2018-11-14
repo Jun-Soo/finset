@@ -24,6 +24,10 @@ const store = new Vuex.Store({
       authToken: '',
       noManageInfo: ''
     },
+    scListParam: {
+      scKeyword: [],
+      orderby: '01'
+    },
     returnUrl: '',
     proxyUrl: '',
     accessToken: null,

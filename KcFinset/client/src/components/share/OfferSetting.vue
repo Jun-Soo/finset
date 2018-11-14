@@ -151,7 +151,7 @@ export default {
   beforeCreate() {},
   created() {
     var cd_share;
-    if(Constant.params.cd_share != null){
+    if("" != Constant.params.cd_share && Constant.params.cd_share != null){
       cd_share = Constant.params.cd_share;
     }else{
       cd_share = this.$route.query.cd_share;
@@ -164,7 +164,7 @@ export default {
     }
     this.cd_share = cd_share;
 
-    if(Constant.params.seq_share != null){
+    if("" != Constant.params.seq_share && Constant.params.seq_share != null){
       this.seq_share = Constant.params.seq_share;
     }else{
       this.seq_share = this.$route.query.seq_share;

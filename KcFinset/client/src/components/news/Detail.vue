@@ -1,14 +1,21 @@
 <template>
-  <div id="newsDetail">
-  <div style="font-size:20pt;">제목:{{title}}</div>
-  <div style="font-size:20pt;">뉴스원:{{newsCompany}}</div>
-  <div style="font-size:20pt;">일자:{{pubDate}}</div>
-  <div style="font-size:20pt;">연계링크메세지:{{localLinkText}}</div>
-  <div style="font-size:20pt;">연계링크:{{localLink}}</div>
-  <div style="font-size:20pt;"><a @click="goLocalLink(localLink)">{{localLinkText}}</a></div>
-  <div style="font-size:20pt;"><img :src="bodyImg"/></div>
-  <div style="font-size:20pt;">내용:{{contents}}</div>
-  </div>
+  <section v-if="seen">
+    <div class="board event">
+      <ul class="view">
+        <li>
+          <p class="subject" v-html="title"></p>
+          <p class="date"><em>{{newsCompany}}</em>{{pubDate}}</p>
+        </li>
+        <li>
+          <img :src="bodyImg"/><br/>
+          {{contents}}
+        </li>
+      </ul>
+    </div>
+    <div v-if="localLink!=null" class="btn-wrap float">
+      <a @click="goLocalLink(localLink)" class="solid blue box">{{localLinkText!=null? localLinkText : "연계링크이동"}}</a>
+    </div>
+  </section>
 </template>
 
 <script>
@@ -21,6 +28,7 @@ export default {
   data() {
     return {
       errMsg: "",
+      seen: false,
       title: "", //제목
       newsCompany: "", //뉴스원
       pubDate: "", //일자
@@ -35,7 +43,7 @@ export default {
   beforeCreate() {},
   created() {
     this.$store.state.header.type = "sub";
-    this.$store.state.title = "뉴스 상세";
+    this.$store.state.title = "뉴스";
     this.getNewsInfo();
   },
   beforeMount() {},
@@ -49,7 +57,7 @@ export default {
       var _this = this;
       this.$http
         .get("/m/news/getNewsInfo.json", {
-          params: { seq_news: this.$route.params.seq_news }
+          params: { seq_news: this.$route.query.seq_news }
         })
         .then(response => {
           var newsInfo = response.data.newsInfo;
@@ -64,9 +72,11 @@ export default {
             _this.bodyImg =
               "/m/news/getApiNewsImg.json?seq_news=" + newsInfo.seq_news + "&file_type=02";
           }
+
+          _this.seen = true;
         })
         .catch(e => {
-          this.$toast.center(ko.messages.error);
+          _this.$toast.center(ko.messages.error);
         });
     },
     //연계링크 이동

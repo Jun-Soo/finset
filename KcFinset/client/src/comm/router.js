@@ -44,7 +44,6 @@ import MemoCreate from '@/components/memo/Create'
 import NewsHome from '@/components/news/Home'
 import NewsMain from '@/components/news/Main'
 import NewsDetail from '@/components/news/Detail'
-import NewsDesignDetail from '@/components/news/design/Detail'
 
 import CreditHome from '@/components/credit/Home'
 import CreditMain from '@/components/credit/Main'
@@ -1271,16 +1270,6 @@ export const routes = [{
         alias: '/detail',
         name: 'newsDetail',
         component: NewsDetail,
-        meta: {
-          allowPath: true,
-          requiresAuth: true
-        }
-      },
-      {
-        path: 'designDetail',
-        alias: '/designDetail',
-        name: 'newsDesignDetail',
-        component: NewsDesignDetail,
         meta: {
           allowPath: true,
           requiresAuth: true

@@ -148,7 +148,14 @@
 		UPDATE
 			API_NEWS_RESULT
 		SET
-			NVL( MAX( HITS ), 0 )+ 1
+			HITS =(
+				SELECT
+					NVL( MAX( HITS ), 0 )+ 1
+				FROM
+					API_NEWS_RESULT
+				WHERE
+					SEQ_NEWS = #{seq_news, jdbcType = NUMERIC}
+			)
 		WHERE
 			SEQ_NEWS = #{seq_news, jdbcType = NUMERIC}
 	</update>

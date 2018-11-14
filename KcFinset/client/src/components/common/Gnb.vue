@@ -25,7 +25,7 @@
           <a href="#">금융달력</a>
           <a @click="clickButton('/share/main')">정보공유관리</a>
           <a href="#">금융계산기</a>
-          <a href="#">뉴스</a>
+          <a @click="clickButton('/news/main')">뉴스</a>
         </div>
         <dl id="gnb">
           <dt>신용</dt>

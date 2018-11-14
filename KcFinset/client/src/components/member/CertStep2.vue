@@ -47,7 +47,6 @@
 </template>
 
 <script>
-import Multiselect from "vue-multiselect";
 import Common from "./../../assets/js/common.js";
 import Constant from "./../../assets/js/constant.js";
 
@@ -105,9 +104,7 @@ export default {
       yn_use: ""
     };
   },
-  components: {
-    Multiselect
-  },
+  components: {},
   computed: {},
   beforeCreate() {},
   created() {

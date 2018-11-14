@@ -249,10 +249,8 @@ export default {
         .then(response => {
           var result = response.data;
           var noPerson = result.returnData;
-          debugger;
           if (result.result != "00") {
             this.$toast.center(result.messages);
-            debugger;
           }
         })
         .catch(e => {

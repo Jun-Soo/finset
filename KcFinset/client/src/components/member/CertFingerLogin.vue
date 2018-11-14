@@ -131,32 +131,8 @@ export default {
         .then(response => {
           var result = response.data;
           var noPerson = result.returnData;
-          debugger;
           if (result.result != "00") {
             this.$toast.center(result.messages);
-            debugger;
-          }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
-        });
-    },
-    //로그아웃 변수 변경
-    modifyPersonLogout: function() {
-      var _this = this;
-      var formData = new FormData();
-      formData.append("yn_logout", "N");
-      formData.append("yn_use", "Y");
-
-      _this.$http
-        .post("/m/person/modifyYnUseAndLogout.json", formData)
-        .then(response => {
-          var result = response.data;
-          var noPerson = result.returnData;
-          debugger;
-          if (result.result != "00") {
-            this.$toast.center(result.messages);
-            debugger;
           }
         })
         .catch(e => {

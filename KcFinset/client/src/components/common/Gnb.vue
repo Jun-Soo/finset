@@ -18,7 +18,7 @@
           <a @click="clickButton('/mypage/info')">MYPAGE</a>
         </div>
         <div class="links">
-          <a href="#">고객센터</a>
+          <a @click="$router.push('/etc/faqMain')">고객센터</a>
           <a href="#">인증보안</a>
           <a @click="$router.push('/etc/noticeMain')">공지/이벤트</a>
           <a href="#">개인설정</a>

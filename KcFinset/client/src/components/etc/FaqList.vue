@@ -7,11 +7,11 @@
     </div>
 
     <div class="cs-links">
-      <p><a @click="$router.push('')">신용관리</a></p>
-      <p><a @click="$router.push('')">부채관리</a></p>
-      <p><a @click="$router.push('')">상품조회</a></p>
-      <p><a @click="$router.push('')">보안</a></p>
-      <p><a @click="$router.push('')">기타</a></p>
+      <p><a @click="$router.push('/etc/faqDetail?id_board=credit')">신용관리</a></p>
+      <p><a @click="$router.push('/etc/faqDetail?id_board=debt')">부채관리</a></p>
+      <p><a @click="$router.push('/etc/faqDetail?id_board=goods')">상품조회</a></p>
+      <p><a @click="$router.push('/etc/faqDetail?id_board=security')">보안</a></p>
+      <p><a @click="$router.push('/etc/faqDetail?id_board=etc')">기타</a></p>
     </div>
   </section>
 </template>

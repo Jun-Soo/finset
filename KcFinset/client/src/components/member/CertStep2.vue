@@ -9,7 +9,7 @@
         <div class="grid">
           <div class="number"><input type="number" placeholder="생년월일6자리" name="ssn_birth" id="ssn_birth" v-model="ssn_birth" v-validate="'required|length:6|max:6'" v-on:keyup="nextFocus('birth')" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='생년월일'></div>
           <div class="dash">-</div>
-          <div class="number last"><input type="password" pattern="[0-9]*" name="sex" id="sex" v-model="sex" inputmode="numeric" maxlength="1" style="-webkit-text-security:disc" v-validate="'required|length:1|max:1'" v-on:blur="nextFocus('sex')" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='성별'>******</div>
+          <div class="number last"><input type="password" pattern="[0-9]*" name="sex" id="sex" v-model="sex" inputmode="numeric" maxlength="1" style="-webkit-text-security:disc" v-validate="'required|length:1|max:1'" v-on:change="nextFocus('sex')" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='성별'>******</div>
         </div>
         <p class="warn" v-if="errors.has('생년월일')">{{errors.first('생년월일')}}</p>
         <p class="warn" v-if="errors.has('성별')">{{errors.first('성별')}}</p>
@@ -22,12 +22,7 @@
               {{ option.text }}
             </option>
           </select> -->
-          <!-- <div>
-            <input class="select select-location" v-model="telComCd" type="text" name="telComCd" id="telComCd" placeholder="통신사" @click.stop="open('locationModal',$event)">
-            <v-cascade v-model="locationModal" :data="location" :title="['통신사']" scrollable addClass="cascade-location" @success="locationSuccess" />
-          </div> -->
-          <!-- <multiselect v-model="telComCd" :options="options" :searchable="false" :close-on-select="false" :show-labels="false" placeholder="Pick a value"></multiselect> -->
-          <multiselect v-model="telComCd" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @open="open()">
+          <multiselect v-model="telComCd" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false">
             <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
           </multiselect>
           <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
@@ -125,17 +120,12 @@ export default {
     locationSuccess: function() {
       this.locationValue = data.pathName.join(",");
     },
-    open: function(modal) {
-      event.target.blur();
-      this[modal] = true;
-    },
     nextFocus: function(val) {
       var _this = this;
       if (val == "birth" && _this.ssn_birth.length == 6) $("#sex").focus();
       if (val == "sex" && _this.sex.length == 1) {
-        console.log("1");
-        // $("#telComCd").focus();
-        this.isOpen = true;
+        $("#telComCd").focus();
+        this.$children[0].isOpen = true;
       }
       if (val == "telComCd" && _this.telComCd) $("#hp").focus();
       if (val == "hp" && _this.hp) $("").focus();

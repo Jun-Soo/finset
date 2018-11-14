@@ -5,41 +5,41 @@
       <div class="container mt30">
         <div class="checks">
           <!-- <div v-bind:class="checked"> -->
-            <!--전체약관동의-->
-            <input type="checkbox" id="check-all" v-model="chkAll" v-on:click="allChecked()"><label for="check-all">전체 약관 동의</label>
-            
-            <div class="box-agree">
-              <p><input type="checkbox" name="checkbox1" id="checkbox1" v-model="chkBox1"><label for="checkbox1">[필수] 서비스 이용동의</label></p>
-              <ul>
-                <li><a v-on:click="openPop('1')">서비스 이용약관</a></li>
-                <li><a v-on:click="openPop('2')">개인정보 처리방침</a></li>
-                <li><a v-on:click="openPop('3')">KCB 올크레딧 이용약관</a></li>
-                <li><a v-on:click="openPop('4')">개인정보 수집·이용 동의</a></li>
-                <li><a v-on:click="openPop('5')">개인정보 제3자 제공 동의</a></li>
-                <li><a v-on:click="openPop('6')">{{nm_code}}</a></li>
-              </ul>
-            </div>
+          <!--전체약관동의-->
+          <input type="checkbox" id="check-all" v-model="chkAll" v-on:click="allChecked()"><label for="check-all">전체 약관 동의</label>
 
-            <div class="box-agree">
-              <p><input type="checkbox" name="checkbox2" id="checkbox2" v-model="chkBox2"><label for="checkbox2">[필수] 통신사/본인확인 서비스 이용 동의</label></p>
-              <ul>
-                <li><a v-on:click="openPop('7')">본인확인서비스 이용약관</a>
-                </li>
-                <li><a v-on:click="openPop('8')">개인정보 수집 · 이용/취급위탁 동의</a>
-                </li>
-                <li><a v-on:click="openPop('9')">고유식별정보처리 동의</a>
-                </li>
-                <li><a v-on:click="openPop('10')">통신사 본인확인 이용약관 동의</a>
-                </li>
-              </ul>
-            </div>
+          <div class="box-agree">
+            <p><input type="checkbox" name="checkbox1" id="checkbox1" v-model="chkBox1"><label for="checkbox1">[필수] 서비스 이용동의</label></p>
+            <ul>
+              <li><a v-on:click="openPop('1')">서비스 이용약관</a></li>
+              <li><a v-on:click="openPop('2')">개인정보 처리방침</a></li>
+              <li><a v-on:click="openPop('3')">KCB 올크레딧 이용약관</a></li>
+              <li><a v-on:click="openPop('4')">개인정보 수집·이용 동의</a></li>
+              <li><a v-on:click="openPop('5')">개인정보 제3자 제공 동의</a></li>
+              <li><a v-on:click="openPop('6')">{{nm_code}}</a></li>
+            </ul>
+          </div>
 
-            <div class="box-agree">
-              <p><input type="checkbox" name="checkbox3" id="checkbox3" v-model="chkBox3"><label for="checkbox3">[선택] 마케팅 정보 수신 동의</label></p>
-              <ul>
-                <li><a v-on:click="openPop('11')">마케팅 정보 수신 동의</a></li>
-              </ul>
-            </div>
+          <div class="box-agree">
+            <p><input type="checkbox" name="checkbox2" id="checkbox2" v-model="chkBox2"><label for="checkbox2">[필수] 통신사/본인확인 서비스 이용 동의</label></p>
+            <ul>
+              <li><a v-on:click="openPop('7')">본인확인서비스 이용약관</a>
+              </li>
+              <li><a v-on:click="openPop('8')">개인정보 수집 · 이용/취급위탁 동의</a>
+              </li>
+              <li><a v-on:click="openPop('9')">고유식별정보처리 동의</a>
+              </li>
+              <li><a v-on:click="openPop('10')">통신사 본인확인 이용약관 동의</a>
+              </li>
+            </ul>
+          </div>
+
+          <div class="box-agree">
+            <p><input type="checkbox" name="checkbox3" id="checkbox3" v-model="chkBox3"><label for="checkbox3">[선택] 마케팅 정보 수신 동의</label></p>
+            <ul>
+              <li><a v-on:click="openPop('11')">마케팅 정보 수신 동의</a></li>
+            </ul>
+          </div>
         </div>
       </div>
       <!-- next button -->
@@ -81,8 +81,7 @@
       <Terms11 slot="body" v-on:popclose="closePop('11')"></Terms11>
     </vue-modal>
   </div>
-  
-  
+
 </template>
 
 <script>
@@ -167,7 +166,9 @@ export default {
     });
   },
   beforeUpdate() {},
-  updated() {},
+  updated() {
+    if (this.chkAll) window.scrollTo(0, window.innerHeight);
+  },
   beforeDestroy() {},
   destroyed() {},
   methods: {

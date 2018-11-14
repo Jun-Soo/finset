@@ -542,7 +542,7 @@ fieldset[disabled] .multiselect {
 .multiselect__select:before {
   position: relative;
   right: 0;
-  top: 65%;
+  top: 55%;
   color: #999;
   margin-top: 4px;
   border-style: solid;
@@ -572,9 +572,9 @@ fieldset[disabled] .multiselect {
   max-height: 240px;
   overflow: auto;
   border: 1px solid #e8e8e8;
-  border-top: none;
-  border-bottom-left-radius: 5px;
-  border-bottom-right-radius: 5px;
+  /* border-top: none; */
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
   z-index: 1;
   -webkit-overflow-scrolling: touch;
 }
@@ -653,12 +653,12 @@ fieldset[disabled] .multiselect {
 }
 
 .multiselect__option--selected.multiselect__option--highlight {
-  background: #ff6a6a;
+  background: #62c1d0;
   color: #fff;
 }
 
 .multiselect__option--selected.multiselect__option--highlight:after {
-  background: #ff6a6a;
+  background: #62c1d0;
   content: attr(data-deselect);
   color: #fff;
 }
@@ -700,12 +700,12 @@ fieldset[disabled] .multiselect {
 }
 
 .multiselect__option--group-selected.multiselect__option--highlight {
-  background: #ff6a6a;
+  background: #62c1d0;
   color: #fff;
 }
 
 .multiselect__option--group-selected.multiselect__option--highlight:after {
-  background: #ff6a6a;
+  background: #62c1d0;
   content: attr(data-deselect);
   color: #fff;
 }

@@ -22,7 +22,7 @@
               {{ option.text }}
             </option>
           </select> -->
-          <multiselect v-model="telComCd" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false">
+          <multiselect v-model="telComCd" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @select="onSelect">
             <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
           </multiselect>
           <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
@@ -117,8 +117,9 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    locationSuccess: function() {
-      this.locationValue = data.pathName.join(",");
+    onSelect: function(option) {
+      this.telComCd = option.value;
+      console.log(this.telComCd)
     },
     nextFocus: function(val) {
       var _this = this;

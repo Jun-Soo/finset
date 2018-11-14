@@ -19,7 +19,7 @@ public class MybatisUtil {
 		else return obj==null;
 	}
 
-	public static boolean isNotEmpty(String s){
+	public static boolean isNotEmpty(Object s){
 		return !isEmpty(s);
 	}
 	

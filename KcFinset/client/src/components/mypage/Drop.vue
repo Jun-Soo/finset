@@ -66,19 +66,8 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    test: function(){
-      let _this = this;
-       let bool = confirm("정말로 탈퇴 하시겠습니까?");
-      if(bool){
-        alert('true');
-        //_this.dropPerson();
-      }else{
-        return false;
-      }
-    },
     quitChkYn: function() {
       let _this = this;
-      debugger;
       if (!_this.chk1 || !_this.chk2 || !_this.chk3 || !_this.chk4 || !_this.chk5) {
         this.$toast.center("필수 약관을 모두 동의해주세요");
         setTimeout(function() {}, 2000);
@@ -91,7 +80,6 @@ export default {
         return false;
       }
     },
-
     dropPerson: function() {
       let url = "/m/customercenter/customerQuitComp.json";
       let _this = this;

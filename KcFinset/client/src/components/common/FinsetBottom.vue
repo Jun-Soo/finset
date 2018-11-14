@@ -59,7 +59,7 @@ export default {
           var list = response.data.listEvent;
           for (var i = 0; i < list.length; i++) {
             list[i].thumImg =
-              "/m/board/getBoardImg.crz?id_board=" +
+              "/m/board/getBoardImg.json?id_board=" +
               list[i].id_board +
               "&seq=" +
               list[i].seq +

@@ -49,7 +49,6 @@ export default {
   methods: {
     modifyEmail : function(){
       let _this = this;
-      debugger;
       var frm = new FormData();
       frm.append("no_person", _this.no_person);
       frm.append("email", _this.email)

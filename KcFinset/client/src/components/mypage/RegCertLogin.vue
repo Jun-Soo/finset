@@ -119,7 +119,6 @@ export default {
         .post(url, frm)
         .then(response => {
           var result = response.data.result;
-          debugger;
           if (result == "00") {
             this.$toast.center("지문인증이 설정되었습니다.");
             _this.$store.state.user.ynFingerprint = "Y";

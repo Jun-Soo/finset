@@ -98,8 +98,7 @@ import Terms7 from "./Terms7.vue";
 import Terms8 from "./Terms8.vue";
 import Terms9 from "./Terms9.vue";
 import Terms10 from "./Terms10.vue";
-import Terms50 from "./Terms11.vue";
-import Popup from "./sub/Popup.vue";
+import Terms11 from "./Terms11.vue";
 
 export default {
   name: "certStep1",
@@ -126,8 +125,7 @@ export default {
     Terms8: Terms8,
     Terms9: Terms9,
     Terms10: Terms10,
-    Terms50: Terms50,
-    Popup: Popup
+    Terms11: Terms11
   },
   beforeCreate() {},
   created() {

@@ -66,14 +66,11 @@ export default {
     this.$store.state.title = "뉴스";
     this.listSearchKeyword();
 
-    console.log(this.$store.state.scListParam.scKeyword.length);
-    console.log(this.$route.query.scKeyword.length);
-
-    if(this.$store.state.scListParam.scKeyword.length != 0){
+    if(this.$store.state.scListParam.scKeyword != null){
       for (var i = 0; i < this.$store.state.scListParam.scKeyword.length; i++) {
         this.scKeyword.push(this.$store.state.scListParam.scKeyword[i]);
       }
-    }else if(this.$route.query.scKeyword.length != 0){
+    }else if(this.$route.query.scKeyword != null){
       for (var i = 0; i < this.$route.query.scKeyword.length; i++) {
         this.scKeyword.push(this.$route.query.scKeyword[i]);
       }

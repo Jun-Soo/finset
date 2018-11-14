@@ -85,8 +85,12 @@ export default {
       return rtnDate;
     },
     //이벤트 상세
-    viewDetail: function(formDate) {
+    viewDetail: function(seq_board) {
       //TODO 상세페이지 이동
+      this.$router.push({
+        name: "etcEventDetail",
+        query: { id_board: "event", seq: seq_board }
+      });
     }
   }
 };

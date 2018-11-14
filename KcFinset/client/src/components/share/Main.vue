@@ -124,10 +124,10 @@ export default {
   computed: {},
   beforeCreate() {},
   created() {
-    if ("undefined" != typeof this.$route.query.cd_share) {
+    if ("" != this.$route.query.cd_share && this.$route.query.cd_share != null) {
       this.cd_share = this.$route.query.cd_share;
     }
-    if ("undefined" != typeof this.$route.query.type_list) {
+    if ("" != this.$route.query.type_list && this.$route.query.type_list != null) {
       this.type_list = this.$route.query.type_list;
     }
 

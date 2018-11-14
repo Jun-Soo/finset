@@ -18,14 +18,14 @@
           <a @click="clickButton('/mypage/info')">MYPAGE</a>
         </div>
         <div class="links">
-          <a href="#">고객센터</a>
+          <a @click="$router.push('/etc/faqMain')">고객센터</a>
           <a href="#">인증보안</a>
           <a @click="$router.push('/etc/noticeMain')">공지/이벤트</a>
           <a href="#">개인설정</a>
           <a href="#">금융달력</a>
           <a @click="clickButton('/share/main')">정보공유관리</a>
           <a href="#">금융계산기</a>
-          <a href="#">뉴스</a>
+          <a @click="clickButton('/news/main')">뉴스</a>
         </div>
         <dl id="gnb">
           <dt>신용</dt>

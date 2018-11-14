@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="cs-top">
       <div class="cs-search">
         <input type="search" placeholder="자주 묻는 질문 검색">
@@ -24,7 +24,14 @@
 export default {
   name: "EtcFaqDetail",
   data() {
-    return {};
+    return {
+      id_board: "",
+      boardForm:"",
+      nm_board:"",
+      pagedList:"",
+      seq:"",
+      seen:false,
+    };
   },
   components: {},
   computed: {},
@@ -32,7 +39,18 @@ export default {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "자주 묻는 질문";
   },
-  created() {},
+  created() {
+    this.id_board = this.$route.query.id_board;
+    this.$http.get('/m/customercenter/getCustomerFAQDetail.json?id_board='+this.id_board)
+    .then(response=>{
+      // debugger;
+      this.boardForm = response.data.boardForm
+      this.nm_board = response.data.nm_board
+      this.pagedList = response.data.pagedList.source
+      this.seq = response.data.seq
+      this.seen=true;
+    })
+  },
   beforeMount() {},
   mounted() {},
   beforeUpdate() {},

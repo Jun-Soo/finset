@@ -23,10 +23,10 @@
     <div class="banner-wrap owl-carousel">
       <carousel :perPage=1>
         <slide class="item">
-          <a @click="$router.push(' ')">
+          <a @click="goMenu('news')">
             <div class="banner">
               <div class="left">
-                <p class="key">우리가족 가계부</p>
+                <p class="key">신용 뉴스</p>
                 <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
               </div>
               <div class="right">
@@ -197,10 +197,19 @@ export default {
     formatNumber: function(data) {
       return Common.formatNumber(data);
     },
+    //메뉴이동
+    goMenu: function(menu){
+      if("news" == menu){
+        this.$router.push({
+          name: "newsMain",
+          query: { scKeyword: ["04"] }
+        });
+      }
+    },
     //공유관리 메인으로 이동
     goShareInfoMain: function(cd_share) {
       this.$router.push({
-        path: "/share/main",
+        name: "shareMain",
         // query: { cd_share: "01" }
         query: { cd_share: cd_share }
       });

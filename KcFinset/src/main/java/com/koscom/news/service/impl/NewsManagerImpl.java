@@ -34,9 +34,9 @@ public class NewsManagerImpl implements NewsManager {
 
 	@Override
 	public NewsVO getApiNewsInfo(NewsVO newsVO){
-
+		
 		//조회수 증가
-//		newsMapper.updateApiNewsHits(newsVO);
+		newsMapper.updateApiNewsHits(newsVO);
 
 		return newsMapper.getApiNewsInfo(newsVO);
 	}

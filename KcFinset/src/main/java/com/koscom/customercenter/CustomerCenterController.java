@@ -1056,14 +1056,14 @@ public class CustomerCenterController implements Constant {
 		return "/customercenter/sub/listFaqSearch";
 	}
 
-	/**
+	/** VUE
 	 * 마이페이지 자주묻는질문
 	 * @param request
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/frameCustomerFAQDetail.crz")
-	public String frameCustomerFAQCredit(HttpServletRequest request, Model model, BoardForm boardForm) {
+	@RequestMapping("/getCustomerFAQDetail.json")
+	public String getCustomerFAQCredit(HttpServletRequest request, Model model, BoardForm boardForm) {
 		//공지사항 게시판
 				logger.info(boardForm.toString());
 
@@ -1084,7 +1084,7 @@ public class CustomerCenterController implements Constant {
 					}
 				}
 
-		return "/customercenter/frameCustomerFAQDetail";
+		return "jsonView";
 	}
 
 	/**

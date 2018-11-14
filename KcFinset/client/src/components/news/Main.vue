@@ -1,22 +1,26 @@
 <template>
-  <section>
+  <section v-if="seen">
       <div class="container">
           <div class="search">
-              <div class="left">
-                <select v-model="orderby" @change="orderbyOnChange()">
-                    <option v-for="option in options" :key="option.index" :value="option.value">
-                        {{ option.text }}
-                    </option>
-                </select>
+              <div class="left checks search-check">
+                <template v-for="scKeywordInfo in scKeywordList">
+                  <input type="checkbox" v-model="scKeyword" :key="scKeywordInfo.index" :id="'news'+scKeywordInfo.code_value" :value="scKeywordInfo.code_value" @change="searchList()">
+                  <label :key="scKeywordInfo.index" :for="'news'+scKeywordInfo.code_value">{{scKeywordInfo.nm_code}}</label>
+                </template>
               </div>
               <div class="right">
-                  <button class="btn-search" @click="clickSearch()"></button>
+                <select v-model="orderby" @change="searchList()">
+                  <option v-for="option in orderByOptions" :key="option.index" :value="option.value">
+                    {{ option.text }}
+                  </option>
+                </select>
               </div>
           </div>
-          <div class="board-list">
+          <div v-if="newsList.length == 0" class="nodata">등록 내역이 없습니다</div>
+          <div v-else class="board-list">
               <div v-for="newsInfo in newsList" :key="newsInfo.index" class="list">
                   <div class="left">
-                      <p class="title"><a @click="viewDetail(newsInfo.seq_news)">{{newsInfo.title}}</a></p>
+                      <p class="title"><a @click="viewDetail(newsInfo.seq_news)" v-html="newsInfo.title"></a></p>
                       <div class="sub">
                           <p>{{newsInfo.news_company}}</p>
                           <p>{{newsInfo.pub_date}}</p>
@@ -28,18 +32,6 @@
               </div>
           </div>
       </div>
-      <aside class="search-wrap" :class="{'on':isSearch}">
-          <div class="top" @click="clickSearch()">
-              <button>검색</button>
-          </div>
-          <div class="wrap">
-            <div class="btns">
-              <template v-for="scKeywordInfo in scKeywordList">
-                  <button :key="scKeywordInfo.index" @click="setSearchKeyword(scKeywordInfo.code_value)">{{scKeywordInfo.nm_code}}</button>
-              </template>
-            </div>
-        </div>
-      </aside>
   </section>
 </template>
 
@@ -53,14 +45,14 @@ export default {
   name: "NewsMain",
   data() {
     return {
-      options: [
+      seen: false,
+      scKeywordList: [],
+      scKeyword: [],
+      orderByOptions: [
         { text: "최신날짜", value: "01" },
         { text: "많이 본 뉴스", value: "02" }
       ],
       orderby: "01",
-      scKeywordList: [],
-      scKeyword: "",
-      isSearch: false,
       newsList: [],
       totalPage: "",
       page: 1
@@ -73,44 +65,54 @@ export default {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "뉴스";
     this.listSearchKeyword();
+
+    console.log(this.$store.state.scListParam.scKeyword.length);
+    console.log(this.$route.query.scKeyword.length);
+
+    if(this.$store.state.scListParam.scKeyword.length != 0){
+      for (var i = 0; i < this.$store.state.scListParam.scKeyword.length; i++) {
+        this.scKeyword.push(this.$store.state.scListParam.scKeyword[i]);
+      }
+    }else if(this.$route.query.scKeyword.length != 0){
+      for (var i = 0; i < this.$route.query.scKeyword.length; i++) {
+        this.scKeyword.push(this.$route.query.scKeyword[i]);
+      }
+    }
+
+    if("" != this.$store.state.scListParam.orderby && this.$store.state.scListParam.orderby != null){
+        this.orderby = this.$store.state.scListParam.orderby
+    }else if("" != this.$route.query.orderby && this.$route.query.orderby != null){
+        this.orderby = this.$route.query.orderby
+    }
+
+    //store 검색조건 초기화
+    this.$store.state.scListParam.scKeyword = [];
+    this.$store.state.scListParam.orderby = "";
+
   },
   beforeMount() {},
   mounted() {
-    this.orderbyOnChange();
+    this.searchList();
   },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    //검색키워드 목록조회
+    //검색키워드list 조회
     listSearchKeyword: function() {
       var _this = this;
       _this.scKeywordList = Common.getCodeList("news_search_query");
     },
-    //검색버튼 클릭
-    clickSearch: function() {
-      var _this = this;
-      _this.isSearch = !_this.isSearch;
-    },
-    //정렬순서 변경
-    orderbyOnChange: function() {
-      var _this = this;
-      _this.page = 1;
-      _this.listNews();
-      Common.pagination(_this.listNews);
-    },
-    //검색키워드setting
-    setSearchKeyword: function(codeVal) {
-      var _this = this;
-      _this.scKeyword = codeVal;
-      _this.page = 1;
-      _this.listNews();
-      Common.pagination(_this.listNews);
-    },
     //뉴스목록 조회
+    searchList: function() {
+      var _this = this;
+      _this.page = 1;
+      Common.pagination(_this.listNews);
+    },
     listNews: function(callback) {
       var _this = this;
+
       console.log("orderby" + _this.orderby);
       console.log("scKeyword" + _this.scKeyword);
 
@@ -118,6 +120,7 @@ export default {
       formData.append("page", _this.page);
       formData.append("orderby", _this.orderby);
       formData.append("scKeyword", _this.scKeyword);
+
       this.$http
         .post("/m/news/listNews.json", formData)
         .then(function(response) {
@@ -129,14 +132,13 @@ export default {
                 "/m/news/getApiNewsImg.json?seq_news=" +
                 list[i].seq_news +
                 "&file_type=01";
-            } else {
-              list[i].thumImg = defThumImg;
             }
           }
 
           //pagination
           if (list.length === 0) {
             callback();
+            _this.seen = true;
             return;
           }
           //스크롤시 계속 페이지 추가되도록
@@ -151,18 +153,24 @@ export default {
           _this.page++;
           //pagination
 
+          _this.seen = true;
         })
         .catch(e => {
-          this.$toast.center(ko.messages.error);
+          _this.$toast.center(ko.messages.error);
         });
     },
     //상세페이지로 이동
     viewDetail: function(seq_news) {
+      var _this = this;
+
+      this.$store.state.scListParam.scKeyword = _this.scKeyword;
+      this.$store.state.scListParam.orderby = _this.orderby;
+
       this.$router.push({
         name: "newsDetail",
-        params: { seq_news: seq_news }
+        query: { seq_news: seq_news }
       });
-    },
+    }
   }
 };
 </script>

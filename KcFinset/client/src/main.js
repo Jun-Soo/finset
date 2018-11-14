@@ -26,7 +26,7 @@ import 'hchs-vue-charts'
 import 'vue2-toast/lib/toast.css'
 import './assets/css/reset.css'
 import './assets/css/style.css'
-import 'vue-multiselect/dist/vue-multiselect.min.css'
+// import 'vue-multiselect/dist/vue-multiselect.min.css'
 
 Vue.use(VeeValidate, {
   locale: 'ko',

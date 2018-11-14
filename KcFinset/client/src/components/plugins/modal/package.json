@@ -1,0 +1,54 @@
+{
+  "_args": [
+    [
+      "vue2-modal@1.4.0",
+      "C:\\Users\\Hyo\\git\\finset\\KcFinset\\client"
+    ]
+  ],
+  "_from": "vue2-modal@1.4.0",
+  "_id": "vue2-modal@1.4.0",
+  "_inBundle": false,
+  "_integrity": "sha512-NRnqh3W44xHLALYFj2Cn9ti9XvMDpHktGTQH5WRl1mAXOMBcKBDVh9AqXGxSqtLfT3SI8pinhK+B9g5yLfH7xQ==",
+  "_location": "/vue2-modal",
+  "_phantomChildren": {},
+  "_requested": {
+    "type": "version",
+    "registry": true,
+    "raw": "vue2-modal@1.4.0",
+    "name": "vue2-modal",
+    "escapedName": "vue2-modal",
+    "rawSpec": "1.4.0",
+    "saveSpec": null,
+    "fetchSpec": "1.4.0"
+  },
+  "_requiredBy": [
+    "/"
+  ],
+  "_resolved": "https://registry.npmjs.org/vue2-modal/-/vue2-modal-1.4.0.tgz",
+  "_spec": "1.4.0",
+  "_where": "C:\\Users\\Hyo\\git\\finset\\KcFinset\\client",
+  "author": {
+    "name": "David Buss"
+  },
+  "bugs": {
+    "url": "https://github.com/kotarCreative/vue2-modal/issues"
+  },
+  "description": "An easy to use vue 2 modal component for showing and hiding modals",
+  "homepage": "https://github.com/kotarCreative/vue2-modal#readme",
+  "keywords": [
+    "vue2",
+    "modal",
+    "vue2js"
+  ],
+  "license": "MIT",
+  "main": "index.js",
+  "name": "vue2-modal",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kotarCreative/vue2-modal.git"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.4.0"
+}

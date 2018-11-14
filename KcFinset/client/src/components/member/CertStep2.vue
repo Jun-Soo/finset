@@ -9,7 +9,7 @@
         <div class="grid">
           <div class="number"><input type="number" placeholder="생년월일6자리" name="ssn_birth" id="ssn_birth" v-model="ssn_birth" v-validate="'required|length:6|max:6'" v-on:keyup="nextFocus('birth')" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='생년월일'></div>
           <div class="dash">-</div>
-          <div class="number last"><input type="password" pattern="[0-9]*" name="sex" id="sex" v-model="sex" inputmode="numeric" style="-webkit-text-security:disc" v-validate="'required|length:1|max:1'" v-on:keyup="nextFocus('sex')" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='성별'>******</div>
+          <div class="number last"><input type="password" pattern="[0-9]*" name="sex" id="sex" v-model="sex" inputmode="numeric" maxlength="1" style="-webkit-text-security:disc" v-validate="'required|length:1|max:1'" v-on:blur="nextFocus('sex')" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='성별'>******</div>
         </div>
         <p class="warn" v-if="errors.has('생년월일')">{{errors.first('생년월일')}}</p>
         <p class="warn" v-if="errors.has('성별')">{{errors.first('성별')}}</p>
@@ -17,11 +17,19 @@
       <div class="cert-wrap">
         <p class="title">휴대폰인증</p>
         <div class="grid phone">
-          <select id="telComCd" name="telComCd" v-model="telComCd" v-validate="'required'" v-on:change="nextFocus('telComCd')" v-bind:disabled="isDisabled" placeholder="통신사" data-vv-name='통신사'>
+          <!-- <select id="telComCd" name="telComCd" v-model="telComCd" v-validate="'required'" v-on:change="nextFocus('telComCd')" v-bind:disabled="isDisabled" placeholder="통신사" data-vv-name='통신사'>
             <option v-for="option in options" v-bind:key="option.value" v-bind:value="option.value">
               {{ option.text }}
             </option>
-          </select>
+          </select> -->
+          <!-- <div>
+            <input class="select select-location" v-model="telComCd" type="text" name="telComCd" id="telComCd" placeholder="통신사" @click.stop="open('locationModal',$event)">
+            <v-cascade v-model="locationModal" :data="location" :title="['통신사']" scrollable addClass="cascade-location" @success="locationSuccess" />
+          </div> -->
+          <!-- <multiselect v-model="telComCd" :options="options" :searchable="false" :close-on-select="false" :show-labels="false" placeholder="Pick a value"></multiselect> -->
+          <multiselect v-model="telComCd" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @open="open()">
+            <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
+          </multiselect>
           <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
         </div>
         <button id="req_certification" v-on:click="kcmRequestCertNo()">인증번호 전송</button>
@@ -39,6 +47,7 @@
 </template>
 
 <script>
+import Multiselect from "vue-multiselect";
 import Common from "./../../assets/js/common.js";
 import Constant from "./../../assets/js/constant.js";
 
@@ -67,7 +76,6 @@ export default {
       smsReSndYn: "",
       nation: "1",
       options: [
-        { text: "통신사", value: "" },
         { text: "SKT", value: "01" },
         { text: "KT", value: "02" },
         { text: "LG", value: "03" },
@@ -75,6 +83,15 @@ export default {
         { text: "KT알뜰폰", value: "05" },
         { text: "LG알뜰폰", value: "06" }
       ],
+      location: [
+        { label: "SKT", key: "01" },
+        { label: "KT", key: "02" },
+        { label: "LG", key: "03" },
+        { label: "SK알뜰폰", key: "04" },
+        { label: "KT알뜰폰", key: "05" },
+        { label: "LG알뜰폰", key: "06" }
+      ],
+      locationModal: false,
       timeId: "",
       timerObj: null,
       timer: null,
@@ -88,7 +105,9 @@ export default {
       yn_use: ""
     };
   },
-  component: {},
+  components: {
+    Multiselect
+  },
   computed: {},
   beforeCreate() {},
   created() {
@@ -106,10 +125,21 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    locationSuccess: function() {
+      this.locationValue = data.pathName.join(",");
+    },
+    open: function(modal) {
+      event.target.blur();
+      this[modal] = true;
+    },
     nextFocus: function(val) {
       var _this = this;
       if (val == "birth" && _this.ssn_birth.length == 6) $("#sex").focus();
-      if (val == "sex" && _this.sex.length == 1) $("#telComCd").focus();
+      if (val == "sex" && _this.sex.length == 1) {
+        console.log("1");
+        // $("#telComCd").focus();
+        this.isOpen = true;
+      }
       if (val == "telComCd" && _this.telComCd) $("#hp").focus();
       if (val == "hp" && _this.hp) $("").focus();
     },

@@ -66,7 +66,7 @@ export default {
     this.$store.state.title = "뉴스";
     this.listSearchKeyword();
 
-    if(this.$store.state.scListParam.scKeyword != null){
+    if(this.$store.state.scListParam.scKeyword.length != 0){
       for (var i = 0; i < this.$store.state.scListParam.scKeyword.length; i++) {
         this.scKeyword.push(this.$store.state.scListParam.scKeyword[i]);
       }
@@ -76,7 +76,7 @@ export default {
       }
     }
 
-    if("" != this.$store.state.scListParam.orderby && this.$store.state.scListParam.orderby != null){
+    if("" != this.$store.state.scListParam.orderby){
         this.orderby = this.$store.state.scListParam.orderby
     }else if("" != this.$route.query.orderby && this.$route.query.orderby != null){
         this.orderby = this.$route.query.orderby
@@ -135,6 +135,7 @@ export default {
           //pagination
           if (list.length === 0) {
             callback();
+            _this.newsList = [];
             _this.seen = true;
             return;
           }

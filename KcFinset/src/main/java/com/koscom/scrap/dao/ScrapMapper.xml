@@ -440,7 +440,6 @@
 		GROUP BY NO_PERSON, CD_FC
 	</select>
 	
-	
 	<insert id="createStockList" parameterType="com.koscom.scrap.model.StockListVO">
 		MERGE INTO STOCK_LIST
 		USING DUAL
@@ -454,6 +453,7 @@
 		    ,ACC_TYPE		= #{acc_type	,jdbcType=VARCHAR}
 		 	,REAL_ACCNO		= #{real_accno	,jdbcType=VARCHAR}
 		 	,ALIAS			= #{alias		,jdbcType=VARCHAR}
+		 	,YN_DELETE		= #{yn_delete	,jdbcType=VARCHAR}
 			,ID_LST			= #{id_lst		,jdbcType=VARCHAR}
 			,DT_LST			= SYSDATE
 		WHEN NOT MATCHED THEN
@@ -466,6 +466,7 @@
 			,STATE
 			,ACC_TYPE
 			,ALIAS
+			,YN_DELETE
 			,ID_FRT
 			,DT_FRT
 		) VALUES (
@@ -476,10 +477,18 @@
 			,#{state			,jdbcType=VARCHAR}
 			,#{acc_type			,jdbcType=VARCHAR}
 			,#{alias			,jdbcType=VARCHAR}
+			,#{yn_delete		,jdbcType=VARCHAR}
 			,#{id_frt			,jdbcType=VARCHAR}
 			,SYSDATE
 		)
 	</insert>
+	
+	<update id="updateStockList" parameterType="com.koscom.scrap.model.StockListVO">
+		UPDATE STOCK_LIST
+		   SET YN_DELETE = 'Y'
+		 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+	</update>
 	
 	<select id="listStockList" parameterType="com.koscom.scrap.model.StockListVO" resultType="com.koscom.scrap.model.StockListVO">
 		SELECT NO_PERSON
@@ -497,6 +506,7 @@
 		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
 			AND CD_FC= #{cd_fc, jdbcType=VARCHAR} 
 			AND STATE = '사용'
+			AND YN_DELETE = 'N'
 	</select>
 
 	<insert id="insertScrRsltScrap" parameterType="com.koscom.scrap.model.ScrRsltScrapVO">
@@ -982,7 +992,7 @@
 			,PROFIT_RATE	= #{profit_rate    ,jdbcType=VARCHAR}
 			,FEW_DAYS		= #{few_days       ,jdbcType=VARCHAR}
 			,INTEREST_DATE	= #{interest_date  ,jdbcType=VARCHAR}
-			,YN_USE			= #{yn_use         ,jdbcType=VARCHAR}
+			,YN_DELETE		= #{yn_delete       ,jdbcType=VARCHAR}
 		WHEN NOT MATCHED THEN
         INSERT
         (
@@ -1003,7 +1013,7 @@
 			,PROFIT_RATE
 			,FEW_DAYS
 			,INTEREST_DATE
-			,YN_USE
+			,YN_DELETE
 			,DT_FRT
 		) VALUES (
 			 #{no_person , jdbcType=VARCHAR}
@@ -1023,16 +1033,24 @@
 			,#{profit_rate    ,jdbcType=VARCHAR}
 			,#{few_days		  ,jdbcType=VARCHAR}
 			,#{interest_date  ,jdbcType=VARCHAR}
-			,#{yn_use		  ,jdbcType=VARCHAR}
+			,#{yn_delete	  ,jdbcType=VARCHAR}
 			,SYSDATE
 		)
 	</insert>
 	
+	<update id="updateScrBankApiAnInfo" parameterType="com.koscom.scrap.model.ScrBankApiAnInfoVO">
+		UPDATE SCR_BANK_API_AN_INFO
+		   SET YN_DELETE = 'Y'
+		 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+	</update>
+	
 	<insert id="createScrCardInfo" parameterType="com.koscom.scrap.model.ScrCardInfoVO">
 		MERGE INTO SCR_CARD_INFO
 		USING DUAL
-		ON (no_person = #{no_person, jdbcType=VARCHAR}
-			AND no_card = #{no_card, jdbcType=VARCHAR} )
+		ON (NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+			AND NO_CARD = #{no_card, jdbcType=VARCHAR} )
 		WHEN MATCHED THEN
 		UPDATE
 		 SET
@@ -1040,6 +1058,8 @@
 		    ,DT_PAYMENT 	= #{dt_payment     ,jdbcType=VARCHAR}
 		    ,AMT_PAYMENT	= #{amt_payment    ,jdbcType=VARCHAR}
 		 	,FC_MEMBER		= #{fc_member      ,jdbcType=VARCHAR}
+		 	,YN_DELETE		= #{yn_delete      ,jdbcType=VARCHAR}
+		 	,DT_LST			= SYSDATE
 		WHEN NOT MATCHED THEN
         INSERT
         (
@@ -1050,6 +1070,8 @@
 			,DT_PAYMENT
 			,AMT_PAYMENT
 			,FC_MEMBER
+			,YN_DELETE
+			,DT_FRT
 		) VALUES (
 			 #{no_person      ,jdbcType=VARCHAR}
 			,#{cd_fc		  ,jdbcType=VARCHAR}
@@ -1058,6 +1080,126 @@
 			,#{dt_payment	  ,jdbcType=VARCHAR}
 			,#{amt_payment	  ,jdbcType=VARCHAR}
 			,#{fc_member      ,jdbcType=VARCHAR}
+			,#{yn_delete      ,jdbcType=VARCHAR}
+			,SYSDATE
+		)
+	</insert>
+	
+	<update id="updateScrCardInfo" parameterType="com.koscom.scrap.model.ScrCardInfoVO">
+		UPDATE SCR_CARD_INFO
+		   SET YN_DELETE = 'Y'
+		 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+	</update>
+	
+	<insert id="createScrCardLimitInfo" parameterType="com.koscom.scrap.model.ScrCardLimitInfoVO">
+		MERGE INTO SCR_CARD_LIMIT_INFO
+		USING DUAL
+		ON (NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+			AND TYPE_CARD = #{type_card, jdbcType=VARCHAR} )
+		WHEN MATCHED THEN
+		UPDATE
+		 SET
+		    AMT_CARD_LIMIT		    = #{amt_card_limit       ,jdbcType=VARCHAR}
+		    ,AMT_CARD_USE 			= #{amt_card_use         ,jdbcType=VARCHAR}
+		    ,AMT_CARD_RESIDUAL		= #{amt_card_residual    ,jdbcType=VARCHAR}
+		 	,AMT_LUMPSUM_LIMIT		= #{amt_lumpsum_limit    ,jdbcType=VARCHAR}
+		 	,AMT_LUMPSUM_USE		= #{amt_lumpsum_use      ,jdbcType=VARCHAR}
+		 	,AMT_LUMPSUM_RESIDUAL	= #{amt_lumpsum_residual ,jdbcType=VARCHAR}
+		 	,AMT_ISTM_LIMIT			= #{amt_istm_limit       ,jdbcType=VARCHAR}
+		 	,AMT_ISTM_USE			= #{amt_istm_use         ,jdbcType=VARCHAR}
+		 	,AMT_ISTM_RESIDUAL		= #{amt_istm_residual    ,jdbcType=VARCHAR}
+		 	,AMT_OVERSEA_LIMIT		= #{amt_oversea_limit    ,jdbcType=VARCHAR}
+		 	,AMT_OVERSEA_USE		= #{amt_oversea_use      ,jdbcType=VARCHAR}
+		 	,AMT_OVERSEA_RESIDUAL	= #{amt_oversea_residual ,jdbcType=VARCHAR}
+		 	,AMT_CASH_LIMIT			= #{amt_cash_limit       ,jdbcType=VARCHAR}
+		 	,AMT_CASH_USE			= #{amt_cash_use         ,jdbcType=VARCHAR}
+		 	,AMT_CASH_RESIDUAL		= #{amt_cash_residual    ,jdbcType=VARCHAR}
+		 	,CD_CURRENCY			= #{cd_currency          ,jdbcType=VARCHAR}
+		 	,YN_DELETE				= #{yn_delete            ,jdbcType=VARCHAR}
+		 	,DT_LST					= SYSDATE
+		WHEN NOT MATCHED THEN
+        INSERT
+        (
+			 NO_PERSON
+			,CD_FC
+			,TYPE_CARD
+			,AMT_CARD_LIMIT
+			,AMT_CARD_USE
+			,AMT_CARD_RESIDUAL
+			,AMT_LUMPSUM_LIMIT
+			,AMT_LUMPSUM_USE
+			,AMT_LUMPSUM_RESIDUAL
+			,AMT_ISTM_LIMIT
+			,AMT_ISTM_USE
+			,AMT_ISTM_RESIDUAL
+			,AMT_OVERSEA_LIMIT
+			,AMT_OVERSEA_USE
+			,AMT_OVERSEA_RESIDUAL
+			,AMT_CASH_LIMIT
+			,AMT_CASH_USE
+			,AMT_CASH_RESIDUAL
+			,CD_CURRENCY
+			,YN_DELETE
+			,DT_FRT
+		) VALUES (
+			 #{no_person      		,jdbcType=VARCHAR}
+			,#{cd_fc		 		,jdbcType=VARCHAR}
+			,#{type_card			,jdbcType=VARCHAR}
+			,#{amt_card_limit		,jdbcType=VARCHAR}
+			,#{amt_card_use	  		,jdbcType=VARCHAR}
+			,#{amt_card_residual	,jdbcType=VARCHAR}
+			,#{amt_lumpsum_limit    ,jdbcType=VARCHAR}
+			,#{amt_lumpsum_use      ,jdbcType=VARCHAR}
+			,#{amt_lumpsum_residual ,jdbcType=VARCHAR}
+			,#{amt_istm_limit      	,jdbcType=VARCHAR}
+			,#{amt_istm_use      	,jdbcType=VARCHAR}
+			,#{amt_istm_residual    ,jdbcType=VARCHAR}
+			,#{amt_oversea_limit    ,jdbcType=VARCHAR}
+			,#{amt_oversea_use      ,jdbcType=VARCHAR}
+			,#{amt_oversea_residual ,jdbcType=VARCHAR}
+			,#{amt_cash_limit      	,jdbcType=VARCHAR}
+			,#{amt_cash_use      	,jdbcType=VARCHAR}
+			,#{amt_cash_residual    ,jdbcType=VARCHAR}
+			,#{cd_currency      	,jdbcType=VARCHAR}
+			,#{yn_delete   			,jdbcType=VARCHAR}
+			,SYSDATE
+		)
+	</insert>
+	
+	<update id="updateScrCardLimitInfo" parameterType="com.koscom.scrap.model.ScrCardLimitInfoVO">
+		UPDATE SCR_CARD_LIMIT_INFO
+		   SET YN_DELETE = 'Y'
+		 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+	</update>
+	
+	<insert id="createScrCardPointInfo" parameterType="com.koscom.scrap.model.ScrCardPointInfoVO">
+		MERGE INTO SCR_CARD_POINT_INFO
+		USING DUAL
+		ON (NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+			AND TYPE_POINT = #{type_point, jdbcType=VARCHAR} )
+		WHEN MATCHED THEN
+		UPDATE
+		 SET
+		    HOLD_POINT		= #{hold_point     ,jdbcType=VARCHAR}
+		    ,DT_LST			= SYSDATE
+		WHEN NOT MATCHED THEN
+        INSERT
+        (
+			 NO_PERSON
+			,CD_FC
+			,TYPE_POINT
+			,HOLD_POINT
+			,DT_FRT
+		) VALUES (
+			 #{no_person      ,jdbcType=VARCHAR}
+			,#{cd_fc		  ,jdbcType=VARCHAR}
+			,#{type_point	  ,jdbcType=VARCHAR}
+			,#{hold_point	  ,jdbcType=VARCHAR}
+			,SYSDATE
 		)
 	</insert>
 	

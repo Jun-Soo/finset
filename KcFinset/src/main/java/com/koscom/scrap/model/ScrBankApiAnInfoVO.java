@@ -21,7 +21,7 @@ public class ScrBankApiAnInfoVO implements Serializable{
 	protected String profit_rate= "";			//수익율
 	protected String few_days= "";				//최종이수일자
 	protected String interest_date= "";			//이자납입일
-	protected String yn_use= "";				//사용여부
+	protected String yn_delete= "";				//삭제여부
 	protected String dt_frt= "";				//최초입력시간
 	public String getNo_person() {
 		return no_person;
@@ -125,11 +125,11 @@ public class ScrBankApiAnInfoVO implements Serializable{
 	public void setInterest_date(String interest_date) {
 		this.interest_date = interest_date;
 	}
-	public String getYn_use() {
-		return yn_use;
+	public String getYn_delete() {
+		return yn_delete;
 	}
-	public void setYn_use(String yn_use) {
-		this.yn_use = yn_use;
+	public void setYn_delete(String yn_delete) {
+		this.yn_delete = yn_delete;
 	}
 	public String getDt_frt() {
 		return dt_frt;

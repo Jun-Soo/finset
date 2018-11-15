@@ -18,6 +18,7 @@ public class ScrCardInfoVO implements Serializable{
 	protected String amt_payment= "";			//당월결제액
 	@SerializedName("FC_MEMBER")
 	protected String fc_member= "";				//회원사
+	protected String yn_delete= "";				//삭제여부
 	public String getNo_person() {
 		return no_person;
 	}
@@ -59,5 +60,11 @@ public class ScrCardInfoVO implements Serializable{
 	}
 	public void setFc_member(String fc_member) {
 		this.fc_member = fc_member;
+	}
+	public String getYn_delete() {
+		return yn_delete;
+	}
+	public void setYn_delete(String yn_delete) {
+		this.yn_delete = yn_delete;
 	}
 }

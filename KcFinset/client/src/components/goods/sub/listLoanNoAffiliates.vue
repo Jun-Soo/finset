@@ -1,30 +1,30 @@
 <template>
-<div v-if="goodsList.length" >
-   <div class="item" @click="loanGoodsBankDetail(goods.cd_fc, goods.cd_non_goods)" v-for="goods in goodsList" :key="goods.index">
-    <a href="#">
-      <div class="top">
-        <p class="symbol"><img :src="goods.icon" alt=""/>{{goods.nm_fc}}</p>
-        <p class="text blue" v-html=goods.nm_goods></p>
-      </div>
-      <div class="goods-benefit">
-        <div>{{goods.rto_interest_from}}~{{goods.rto_interest_to}}<em> %</em></div>
-        <div><em>최대 </em>{{Common.formatNumber(goods.desc_max_limit)}}<em> 만원</em></div>
-      </div>
-      <p class="goods-text1" v-html=goods.desc_feature></p>
-      <p class="goods-text2">저축은행중앙회 심의필 2018-00404호(2018.8.12)</p>
-    </a>
+  <div v-if="goodsList.length">
+    <div class="item" v-for="goods in goodsList" :key="goods.index">
+      <a @click="loanGoodsBankDetail(goods.cd_fc, goods.cd_non_goods)">
+        <div class="top">
+          <p class="symbol"><img :src="goods.icon" alt="" />{{goods.nm_fc}}</p>
+          <p class="text blue" v-html=goods.nm_goods></p>
+        </div>
+        <div class="goods-benefit">
+          <div>{{goods.rto_interest_from}}~{{goods.rto_interest_to}}<em> %</em></div>
+          <div><em>최대 </em>{{Common.formatNumber(goods.desc_max_limit)}}<em> 만원</em></div>
+        </div>
+        <p class="goods-text1" v-html=goods.desc_feature></p>
+        <p class="goods-text2">저축은행중앙회 심의필 2018-00404호(2018.8.12)</p>
+      </a>
     </div>
-</div>
-<div v-else class="data-none">
-	<p>신청 가능한 상품이 없습니다.</p>
-</div>
+  </div>
+  <div class="nodata" v-else>
+    <p>신청 가능한 상품이 없습니다.</p>
+  </div>
 </template>
+
 <script>
 import Common from "./../../../assets/js/common.js";
-
 export default {
   name: "listLoanNoAffiliates",
-  props: ['item'],
+  props: ["item"],
   data() {
     return {
       goodsList: [],
@@ -53,7 +53,7 @@ export default {
       formData.append("cd_goods_class_m", _parent.cd_goods_class_m);
       formData.append("orderby", _parent.orderby);
       this.$http
-        .post("/m/loanworker/listLoanNoAffiliates.json", formData)
+        .post(_parent.urlPath + "listLoanNoAffiliates.json", formData)
         .then(function(response) {
           var list = response.data.pagedList.source;
           for (var i = 0; i < list.length; i++) {
@@ -100,7 +100,16 @@ export default {
           var returnData = response.data.returnData;
         });
     },
-    loanGoodsBankDetail: function(cd_fc, cd_non_goods)  {
+    loanGoodsBankDetail: function(cd_fc, cd_non_goods) {
+      this.$router.push({
+        name: "GoodsDetail",
+        params: {
+          cd_fc: cd_fc,
+          cd_goods: cd_non_goods,
+          urlPath: this.$parent.urlPath,
+          isAffiliates: false
+        }
+      });
     }
   }
 };

@@ -177,7 +177,7 @@ public class ScrapManagerImpl implements ScrapManager {
 		}
 	}
 	
-	public String getFinanceTerms(String no_person, String uuid, String dn, String email)	{
+	public String getFinanceTerms(String no_person, String cd_fc, String uuid, String dn, String email)	{
 		JsonObject jsonSendRoot = new JsonObject();
 		
 		String site = environment.getProperty("service.profile");
@@ -186,7 +186,7 @@ public class ScrapManagerImpl implements ScrapManager {
 		String directKey = environment.getProperty("direct.apiKey");
 		
 		URLConnection url = new URLConnection();
-		logger.info("getDirectFinanceSearch  : URL[" + directUrl +"], APIkey : "+directKey);
+		logger.info("getDirectFinanceSearch  : URL[" + directUrl +"], APIkey : "+directKey +"FC "+cd_fc);
 		
 		PersonVO personVO = null;
 		personVO = personMapper.getPersonInfo(no_person);
@@ -224,9 +224,15 @@ public class ScrapManagerImpl implements ScrapManager {
 		jsonReqParamInfo.addProperty("customerPhone", personVO.getHp());
 		jsonReqParamInfo.addProperty("customerUserNm", personVO.getNm_person());
 		JsonArray list = new JsonArray();
-		List<String> stockList = fincorpMapper.listCooconFcCd(codeManager.getCodeId("cd_fin","증권"));
-		for (int i = 0; i < stockList.size(); i++) {
-			list.add(stockList.get(i));
+		if(cd_fc != null && cd_fc.length() > 0)	{
+			list.add(cd_fc);
+		}
+		else	{
+			
+			List<String> stockList = fincorpMapper.listCooconFcCd(codeManager.getCodeId("cd_fin","증권"));
+			for (int i = 0; i < stockList.size(); i++) {
+				list.add(stockList.get(i));
+			}
 		}
 		jsonReqParamInfo.add("companyList",list);
 		jsonBodyInfo.add("requestParameters", jsonReqParamInfo);
@@ -249,33 +255,6 @@ public class ScrapManagerImpl implements ScrapManager {
 		
 			logger.info("jsonBodyObject : "+ jsonBodyObject.toString());
 			
-			PersonAgreeHistVO personAgreeHistVO = new PersonAgreeHistVO();
-			personAgreeHistVO.setNo_person(noPerson);
-			personAgreeHistVO.setDt_agree(DateUtil.getCurrentYMD());
-			personAgreeHistVO.setCd_agree("04"); // 01:서비스 이용동의(금투사포함), 02:휴대전화 본인인증 동의, 03:마케팅 정보 수신동의, 04:금투사 정보제공동의 전자서명
-			personAgreeHistVO.setTerms_content(jsonBodyObject.get("text").getAsString());
-			personAgreeHistVO.setTerms_version(jsonBodyObject.get("version").getAsString());
-			personAgreeHistVO.setTerms_date(jsonBodyObject.get("termsDate").getAsString());
-			personAgreeHistVO.setTerms_start_date(jsonBodyObject.get("termsStartDate").getAsString());
-			personAgreeHistVO.setTerms_end_date(jsonBodyObject.get("termsEndDate").getAsString());
-			personAgreeHistVO.setId_frt("SYS");
-			personMapper.createPersonAgreeHist(personAgreeHistVO);
-			//JsonArray jsonArray = (JsonArray)jsonObject.get("financeList");
-			JsonArray jsonkArr = (JsonArray)jsonBodyObject.get("companyList");
-			//JsonObject jsonkArr = (JsonObject)jsonBodyObject.get("companyList");
-			//List<String> fcList = (List)jsonkArr.toString();
-			
-			for (int i = 0; i < jsonkArr.size(); i++) {
-				PersonAgreedtHistVO personAgreedtHistVO = new PersonAgreedtHistVO();
-				String cd_fc =  fincorpMapper.getCdFcByCooconFcCd(jsonkArr.get(i).getAsString());
-				personAgreedtHistVO.setNo_person(noPerson);
-				personAgreedtHistVO.setDt_agree(DateUtil.getCurrentYMD());
-				personAgreedtHistVO.setCd_agree("04"); // 01:서비스 이용동의(금투사포함), 02:휴대전화 본인인증 동의, 03:마케팅 정보 수신동의, 04:금투사 정보제공동의 전자서명
-				personAgreedtHistVO.setCd_fc(cd_fc);
-				personAgreedtHistVO.setId_frt("SYS");
-				personMapper.createPersonAgreedtHist(personAgreedtHistVO);
-				
-			}
 			return jsonBodyObject.toString();
 		}
 		else	{
@@ -345,6 +324,41 @@ public class ScrapManagerImpl implements ScrapManager {
 		ReturnClass returnClass = url.sendReqPOST_Direct(directUrl, headerMap, jsonSendRoot.toString());
 		
 		if(returnClass.getCd_result()  == Constant.SUCCESS)	{
+			String data = returnClass.getDes_message();
+			logger.info("data : "+ data);
+			JsonObject jsonRecvRoot = (JsonObject) jsonParser.parse(data);
+			JsonObject jsonTemp = (JsonObject) jsonRecvRoot.get("finanaceTermsTransmitResponseBody");
+			JsonObject jsonBodyObject = (JsonObject) jsonTemp.get("requestParameters");
+		
+			logger.info("jsonBodyObject : "+ jsonBodyObject.toString());
+			
+			PersonAgreeHistVO personAgreeHistVO = new PersonAgreeHistVO();
+			personAgreeHistVO.setNo_person(noPerson);
+			personAgreeHistVO.setDt_agree(DateUtil.getCurrentYMD());
+			personAgreeHistVO.setCd_agree("04"); // 01:서비스 이용동의(금투사포함), 02:휴대전화 본인인증 동의, 03:마케팅 정보 수신동의, 04:금투사 정보제공동의 전자서명
+			personAgreeHistVO.setTerms_content(jsonBodyObject.get("text").getAsString());
+			personAgreeHistVO.setTerms_version(jsonBodyObject.get("version").getAsString());
+			personAgreeHistVO.setTerms_date(jsonBodyObject.get("termsDate").getAsString());
+			personAgreeHistVO.setTerms_start_date(jsonBodyObject.get("termsStartDate").getAsString());
+			personAgreeHistVO.setTerms_end_date(jsonBodyObject.get("termsEndDate").getAsString());
+			personAgreeHistVO.setId_frt("SYS");
+			personMapper.createPersonAgreeHist(personAgreeHistVO);
+			//JsonArray jsonArray = (JsonArray)jsonObject.get("financeList");
+			JsonArray jsonkArr = (JsonArray)jsonBodyObject.get("companyList");
+			//JsonObject jsonkArr = (JsonObject)jsonBodyObject.get("companyList");
+			//List<String> fcList = (List)jsonkArr.toString();
+			
+			for (int i = 0; i < jsonkArr.size(); i++) {
+				PersonAgreedtHistVO personAgreedtHistVO = new PersonAgreedtHistVO();
+				String cd_fc =  fincorpMapper.getCdFcByCooconFcCd(jsonkArr.get(i).getAsString());
+				personAgreedtHistVO.setNo_person(noPerson);
+				personAgreedtHistVO.setDt_agree(DateUtil.getCurrentYMD());
+				personAgreedtHistVO.setCd_agree("04"); // 01:서비스 이용동의(금투사포함), 02:휴대전화 본인인증 동의, 03:마케팅 정보 수신동의, 04:금투사 정보제공동의 전자서명
+				personAgreedtHistVO.setCd_fc(cd_fc);
+				personAgreedtHistVO.setId_frt("SYS");
+				personMapper.createPersonAgreedtHist(personAgreedtHistVO);
+				
+			}
 		}
 		return null;
 	}
@@ -389,14 +403,21 @@ public class ScrapManagerImpl implements ScrapManager {
 		return null;
 	}
 	
-	public String checkAllFinance(String no_person, String uuid, String dn, String token)	{
+	public ReturnClass checkFinance(String no_person, String cd_fc, String uuid, String dn, String token)	{
+		ReturnClass returnClass = null;
+		if(cd_fc != null && cd_fc.length() > 0)	{
 
-		List<String> stockList = fincorpMapper.listComAlias(codeManager.getCodeId("cd_fin", "증권"));
-		
-		for (int i= 0; i< stockList.size(); i++){
-			createFinanceAccount(no_person, uuid, dn, token, stockList.get(i));
+			String comAlias = fincorpMapper.getComAliasCdByCdFc(fincorpMapper.getCdFcByCooconFcCd(cd_fc));
+			returnClass = createFinanceAccount(no_person, uuid, dn, token, comAlias);
 		}
-		return null;
+		else	{
+			List<String> stockList = fincorpMapper.listComAlias(codeManager.getCodeId("cd_fin", "증권"));
+			
+			for (int i= 0; i< stockList.size(); i++){
+				createFinanceAccount(no_person, uuid, dn, token, stockList.get(i));
+			}
+		}
+		return returnClass;
 	}
 	
 	public ReturnClass createFinanceAccount(String no_person, String uuid, String dn, String token, String com_alias)	{

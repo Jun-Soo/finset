@@ -33,7 +33,7 @@ public interface ScrapManager {
 	 * @param
 	 * @return 
 	 */
-	String getFinanceTerms(String no_person, String uuid, String dn, String email);
+	String getFinanceTerms(String no_person, String cd_fc, String uuid, String dn, String email);
 	
 	/**
 	 * 금융투자회사 금융정보제공동의서 전송 (오픈플랫폼)
@@ -51,10 +51,10 @@ public interface ScrapManager {
 	
 	/**
 	 * 금융투자회사 계좌 개설 가능 체크 (오픈플랫폼)
-	 * @param
-	 * @return 
+	 * @param String
+	 * @return ReturnClass
 	 */
-	String checkAllFinance(String no_person, String uuid, String dn, String token);
+	ReturnClass checkFinance(String no_person, String cd_fc, String uuid, String dn, String token);
 	
 	/**
 	 * 금융투자회사 가상 계좌 개설 (오픈플랫폼)

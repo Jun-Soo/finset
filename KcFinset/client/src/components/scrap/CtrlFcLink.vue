@@ -2,7 +2,7 @@
   <section>
     <div class="con-top cert-top">
       <p>공인인증서로<em>한번에 등록하세요</em></p>
-      <a @click="checkExistCert()">바로가기</a>
+      <a @click="checkExistCert(false)">바로가기</a>
     </div>
 
     <div class="tab">
@@ -78,7 +78,7 @@
             </div>
           </div>
           <div class="btn-menu-wrap" :class="{'on':stock.isClickLink}" v-else>
-            <a class="btn-interlock" @click="clickLink(stock.cd_fc)">연동하기</a>
+            <a class="btn-interlock" @click="clickCert(stock)">연동하기</a>
           </div>
         </div>
         <p class="warn" v-if="stock.cd_link_stat=='99' && stock.rsn_link_message != null && stock.rsn_link_message.length> 0"><a>{{stock.rsn_link_message}}</a></p>
@@ -127,7 +127,12 @@ export default {
       bankList: [],
       cardList: [],
       stockList: [],
-      etcList: []
+      etcList: [],
+      //단일 update 용 Data
+      isSingle: true,
+      dn: "",
+      agency: "",
+      cd_coocon: ""
     };
   },
   components: {},
@@ -139,6 +144,7 @@ export default {
     // Native 연동 스크립트 등록
     window.resultCheckCert = this.resultCheckCert;
     window.resultCheckPasswordCert = this.resultCheckPasswordCert;
+    window.resultCheckPasswordCertForUpdate = this.resultCheckPasswordCertForUpdate;
     window.resultUpdateScrapInfo = this.resultUpdateScrapInfo;
   },
   beforeMount() {},
@@ -183,7 +189,7 @@ export default {
           if (this.stockList[i].cd_fc == cd_fc) {
             let stock = this.stockList[i];
             stock.isClickMenu = !stock.isClickMenu;
-            this.$set(this.stockList, i, card);
+            this.$set(this.stockList, i, stock);
           } else {
             this.stockList[i].isClickMenu = false;
             this.stockList[i].isClickLink = false;
@@ -225,17 +231,6 @@ export default {
             this.cardList[i].isClickMenu = false;
           }
         }
-      } else if (this.curTab == "stock") {
-        for (var i = 0; i < this.stockList.length; i++) {
-          if (this.stockList[i].cd_fc == cd_fc) {
-            let stock = this.stockList[i];
-            stock.isClickLink = !stock.isClickLink;
-            this.$set(this.stockList, i, card);
-          } else {
-            this.stockList[i].isClickLink = false;
-            this.stockList[i].isClickMenu = false;
-          }
-        }
       } else if (this.curTab == "etc") {
         for (var i = 0; i < this.etcList.length; i++) {
           if (this.etcList[i].cd_fc == cd_fc) {
@@ -247,8 +242,6 @@ export default {
             this.etcList[i].isClickMenu = false;
           }
         }
-      } else if (this.curTab == "stock") {
-        // 공인인증서 연동(증권 전용)
       }
     },
     clickUnlink: function(bank) {
@@ -269,10 +262,10 @@ export default {
           }
         });
     },
-    clickCert: function(bank) {
+    clickCert: function(fcInfo) {
       var no_person = this.$store.state.user.noPerson;
-      var cd_coocon = bank.cd_coocon;
-      var nm_code = bank.nm_code;
+      var cd_coocon = fcInfo.cd_coocon;
+      var nm_code = fcInfo.nm_code;
       var nm_person = this.$store.state.user.nmPerson;
       var agency = null;
       if (nm_code == "은행") {
@@ -284,18 +277,32 @@ export default {
       } else if (nm_code == "기타") {
         agency = "etc";
       }
-      if (Constant.userAgent == "IOS") {
-        // do nothing
-      } else if (Constant.userAgent == "Android") {
-        window.Android.updateAvaliableCertScrapInfo(
-          no_person,
-          agency,
-          cd_coocon,
-          nm_person
-        );
-      }
+
+      this.agency = agency;
+      this.cd_coocon = cd_coocon;
+
+      this.checkExistCert(true);
+
+      // if (Constant.userAgent == "IOS") {
+      //   Jockey.on("updateAvaliableCertScrapInfo", function(param) {
+      //     _this.resultUpdateScrapInfo(param.cd_err, param.msg_err);
+      //   });
+      //   Jockey.send("updateAvaliableCertScrapInfo", {
+      //     noPerson: no_person,
+      //     nmPerson: agency,
+      //     cd_coocon: cd_coocon
+      //   });
+      // } else if (Constant.userAgent == "Android") {
+      //   window.Android.updateAvaliableCertScrapInfo(
+      //     no_person,
+      //     agency,
+      //     cd_coocon,
+      //     nm_person
+      //   );
+      // }
     },
     clickId: function(bank) {
+      var _this = this;
       var no_person = this.$store.state.user.noPerson;
       var cd_coocon = bank.cd_coocon;
       var nm_code = bank.nm_code;
@@ -312,8 +319,8 @@ export default {
       }
 
       if (Constant.userAgent == "IOS") {
-        Jockey.on("checkPasswordCert", function(param) {
-          resultCheckPasswordCert();
+        Jockey.on("updateAvaliableLoginScrapInfo", function(param) {
+          _this.resultUpdateScrapInfo(param.cd_err, param.msg_err);
         });
         Jockey.send("updateAvaliableLoginScrapInfo", {
           noPerson: no_person,
@@ -375,8 +382,9 @@ export default {
         });
     },
     // 공인인증서 유무 체크
-    checkExistCert: function() {
+    checkExistCert: function(isSingle) {
       var _this = this;
+      this.isSingle = isSingle;
       console.log("userAgent::" + Constant.userAgent);
       if (Constant.userAgent == "iOS") {
         //공인인증서 유무 체크 결과 콜백 이벤트
@@ -393,22 +401,43 @@ export default {
     //공인인증서 유무 결과 (모바일에서 호출)
     resultCheckCert: function(isCert) {
       var _this = this;
+      // 공인인증서가 있을 경우
       if (isCert) {
-        // 공인인증서가 있을 경우
-        if (Constant.userAgent == "iOS") {
-          Jockey.on("checkPasswordCert", function(param) {
-            _this.resultCheckPasswordCert();
-          });
-          Jockey.send("checkPasswordCert", {
-            noPerson: this.$store.state.user.noPerson,
-            nmPerson: this.$store.state.user.nmPerson
-          });
-          //do nothing
-        } else if (Constant.userAgent == "Android") {
-          window.Android.checkPasswordCert(
-            this.$store.state.user.noPerson,
-            this.$store.state.user.nmPerson
-          );
+        console.log("this.isSingle  : " + this.isSingle);
+        // 한개 금융사의 경우
+        if (this.isSingle) {
+          if (Constant.userAgent == "iOS") {
+            Jockey.on("checkPasswordCertForUpdate", function(param) {
+              _this.resultCheckPasswordCertForUpdate(param.cn, param.dn);
+            });
+            Jockey.send("checkPasswordCertForUpdate", {
+              noPerson: this.$store.state.user.noPerson,
+              nmPerson: this.$store.state.user.nmPerson
+            });
+          } else if (Constant.userAgent == "Android") {
+            window.Android.checkPasswordCertForUpdate(
+              this.$store.state.user.noPerson,
+              this.$store.state.user.nmPerson
+            );
+          }
+        }
+        // 전체 금융사의 경우
+        else {
+          if (Constant.userAgent == "iOS") {
+            Jockey.on("checkPasswordCert", function(param) {
+              _this.resultCheckPasswordCert(param.cn, param.dn);
+            });
+            Jockey.send("checkPasswordCert", {
+              noPerson: this.$store.state.user.noPerson,
+              nmPerson: this.$store.state.user.nmPerson
+            });
+            //do nothing
+          } else if (Constant.userAgent == "Android") {
+            window.Android.checkPasswordCert(
+              this.$store.state.user.noPerson,
+              this.$store.state.user.nmPerson
+            );
+          }
         }
       } else {
         // 공인인증서가 없을 경우
@@ -418,7 +447,41 @@ export default {
     },
     resultCheckPasswordCert: function(dn, cn) {
       // 금융정보제공동의서 확인여부 체크 필요
-      this.$router.push({ name: "scrapSelFcLink", params: { dn: dn, cn: cn } });
+      this.$router.push({
+        name: "scrapSelFcLink",
+        params: { isSingle: false, dn: dn, cn: cn }
+      });
+    },
+    resultCheckPasswordCertForUpdate: function(dn, cn) {
+      // 증권인 경우 금융정보제공동의서 화면으로 이동
+      console.log("this.agency  : " + this.agency);
+      if (this.agency == "stock") {
+        this.$router.push({
+          name: "scrapSelFcLink",
+          params: {
+            isSingle: true,
+            dn: dn,
+            cn: cn,
+            agency: this.agency,
+            cd_coocon: this.cd_coocon
+          }
+        });
+      }
+      // 증권이 아닌 경우 스크래핑 로딩 화면으로 이동
+      else {
+        this.$router.push({
+          name: "scrapLoading",
+          params: {
+            isSingle: true,
+            dn: dn,
+            cn: cn,
+            normalMessage: "금융사 연동 가능여부를<br>확인 중 입니다.",
+            smallMessage: "잠시만 기다려주세요.",
+            agency: this.agency,
+            cd_coocon: this.cd_coocon
+          }
+        });
+      }
     },
     resultUpdateScrapInfo: function(cd_err, msg_err) {
       // 금융정보제공동의서 확인여부 체크 필요

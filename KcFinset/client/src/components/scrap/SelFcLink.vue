@@ -2,8 +2,8 @@
   <div>
     <section>
       <div class="container mt30">
-        <h3>연동 금융사를 선택해주세요.</h3>
-        <div class="checks grid2 mt10">
+        <h3 v-if="isSingle!=true">연동 금융사를 선택해주세요.</h3>
+        <div class="checks grid2 mt10" v-if="isSingle!=true">
           <p><input type="checkbox" id="chk1" :checked="isCheckBank" @click="clickCheck('bank')"><label for="chk1">은행</label></p>
           <p><input type="checkbox" id="chk2" :checked="isCheckCard" @click="clickCheck('card')"><label for="chk2">카드</label></p>
           <p class="mt10"><input type="checkbox" id="chk3" :checked="isCheckStock" @click="clickCheck('stock')"><label for="chk3">증권</label></p>
@@ -52,7 +52,11 @@ export default {
       emailtext: "",
       uuid: "",
       financeTerms: "",
-      financeTermsText: ""
+      financeTermsText: "",
+      //단일 금융사 관련
+      isSingle: this.$route.params.isSingle,
+      agency: this.$route.params.agency,
+      cd_coocon: this.$route.params.cd_coocon
     };
   },
   components: {
@@ -69,7 +73,14 @@ export default {
     this.checkUUID();
   },
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    if (this.isSingle) {
+      this.isCheckBank = false;
+      this.isCheckCard = false;
+      this.isCheckEtc = false;
+      this.isCheckStock = true;
+    }
+  },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
@@ -152,6 +163,10 @@ export default {
       formData.append("uuid", this.uuid);
       formData.append("dn", this.$route.params.dn);
       formData.append("email", this.emailtext);
+      //단일 금융사 조회 일 경우에만 추가
+      if (this.isSingle) {
+        formData.append("cd_fc", this.cd_coocon);
+      }
       this.spinnerIsVisible = true; // 시작시 Spinner 보여주기
       this.$http
         .post("/m/scrap/getTermsContent.json", formData)
@@ -179,7 +194,7 @@ export default {
       formData.append("no_person", this.$store.state.user.noPerson);
       formData.append("uuid", this.uuid);
       formData.append("dn", this.$route.params.dn);
-      formData.append("email", "test@gmail.com");
+      formData.append("email", this.emailtext);
       formData.append("financeTerms", this.financeTerms);
       formData.append("jwsInfo", jwsInfo);
 
@@ -205,7 +220,11 @@ export default {
           isCheckBank: _this.isCheckBank,
           isCheckCard: _this.isCheckCard,
           isCheckStock: _this.isCheckStock,
-          isCheckNts: _this.isCheckNts
+          isCheckNts: _this.isCheckNts,
+          //단일 금융사 관련
+          isSingle: _this.isSingle,
+          agency: _this.agency,
+          cd_coocon: _this.cd_coocon
         }
       });
     },

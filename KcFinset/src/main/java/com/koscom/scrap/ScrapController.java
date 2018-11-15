@@ -130,6 +130,7 @@ public class ScrapController {
 			HttpSession session, 
 			Model model,
 			String no_person,
+			String cd_fc,
 			String uuid,
 			String dn,
 			String email) {
@@ -141,7 +142,7 @@ public class ScrapController {
 		no_person = (String) session.getAttribute("no_person");
 		//scrapManager.getDirectFinanceSearch();
 		
-		String financeTerms = scrapManager.getFinanceTerms(no_person, uuid, dn, email);
+		String financeTerms = scrapManager.getFinanceTerms(no_person, cd_fc, uuid, dn, email);
 		
 		logger.debug("financeTerms : " + financeTerms);
 		model.addAttribute("financeTerms", financeTerms);
@@ -166,11 +167,6 @@ public class ScrapController {
 			String email,
 			String financeTerms,
 			String jwsInfo) {
-		logger.debug("================= no_person : " + no_person);
-		logger.debug("================= uuid : " + uuid);
-		logger.debug("================= dn : " + dn);
-		logger.debug("================= financeTerms : " + financeTerms);
-		logger.debug("================= jwsInfo : " + jwsInfo);
 		
 		logger.info("service.profile :" +environment.getProperty("service.profile"));
 		
@@ -197,6 +193,7 @@ public class ScrapController {
 			HttpSession session, 
 			Model model,
 			String no_person,
+			String cd_fc,
 			String uuid,
 			String dn) {
 		logger.debug("================= no_person : " + no_person);
@@ -206,8 +203,14 @@ public class ScrapController {
 		String token = scrapManager.getAccessToken();
 		logger.debug("================= token : " + token);
 		
-		scrapManager.checkAllFinance(no_person, uuid, dn, token);
-
+		ReturnClass returnClass = scrapManager.checkFinance(no_person, cd_fc, uuid, dn, token);
+		
+		if(returnClass != null)	{
+			model.addAttribute("cd_err", returnClass.getCd_result());
+			model.addAttribute("msg_err", returnClass.getCd_result());
+		}
+			
+		//model.addAttribute("token", token);
 		model.addAttribute("token", token);
 		return "jsonView";
 	}

@@ -11,6 +11,7 @@ public class StockListVO implements Serializable{
 	String state = "";				//상태
 	String acc_type = "";			//계좌종류
 	String alias = "";				//가상계좌Alias
+	String yn_delete = "";			//삭제여부
 	String id_frt = "";				//최초입력아이디
 	String dt_frt = "";				//최초입력시간
 	String id_lst = "";				//최종수정아이디
@@ -56,6 +57,12 @@ public class StockListVO implements Serializable{
 	}
 	public void setAlias(String alias) {
 		this.alias = alias;
+	}
+	public String getYn_delete() {
+		return yn_delete;
+	}
+	public void setYn_delete(String yn_delete) {
+		this.yn_delete = yn_delete;
 	}
 	public String getId_frt() {
 		return id_frt;

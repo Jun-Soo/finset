@@ -95,6 +95,74 @@ public class LoanHomeMortgageController implements Constant {
 		return "jsonView";
 	}
 	
+	/** VUE
+	 * 상품 상세 조회 (제휴)
+	 * @param goodsForm
+	 * @param model
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/getLoanAffiliatesDetail.json")
+	public String getLoanAffiliatesDetail(Model model, HttpServletRequest request, GoodsForm goodsForm, HttpSession session) {
+        /**
+         * 접근제어 : start
+         */
+        boolean isAuth = AuthUtil.isHaveAuth(request,"/frameLoanHomeMortgageStep1.crz", environment);
+        if(isAuth == false) {return NOT_AUTH_PAGE;}
+        /**
+         * 접근제어 : end
+         */
+		String no_person = (String) session.getAttribute("no_person");
+		goodsForm.setNo_person(no_person);
+		GoodsVO goodsInfo = new GoodsVO();
+		GoodsVO goodsVO = new GoodsVO();
+		
+		if(goodsForm.getCd_fc() != null && goodsForm.getCd_goods() != null){
+			goodsVO.setCd_fc(goodsForm.getCd_fc());
+			goodsVO.setCd_goods(goodsForm.getCd_goods());
+			goodsVO.setNo_person(no_person);
+			goodsInfo = goodsManager.getGoodsFavorite(goodsVO);
+			logger.info("goodsInfo.toString() : "+goodsInfo.toString());
+			model.addAttribute("goodsInfo", goodsInfo);
+		}
+		return "jsonView";
+	}
+	
+	/** VUE
+	 * 상품 상세 조회 (비제휴)
+	 * @param goodsbankForm
+	 * @param model
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/getLoanNoAffiliatesDetail.json")
+	public String getLoanNoAffiliatesDetail(Model model, HttpServletRequest request, GoodsbankForm goodsbankForm, HttpSession session) {
+        /**
+         * 접근제어 : start
+         */
+        boolean isAuth = AuthUtil.isHaveAuth(request,"/frameLoanHomeMortgageStep1.crz", environment);
+        if(isAuth == false) {return NOT_AUTH_PAGE;}
+        /**
+         * 접근제어 : end
+         */
+		String no_person = (String) session.getAttribute("no_person");
+		goodsbankForm.setNo_person(no_person);
+		GoodsbankVO goodsInfo = new GoodsbankVO();
+		GoodsbankVO goodsVO = new GoodsbankVO();
+		
+		if(goodsbankForm.getCd_fc() != null && goodsbankForm.getCd_goods() != null){
+			goodsVO.setCd_fc(goodsbankForm.getCd_fc());
+			goodsVO.setCd_goods(goodsbankForm.getCd_goods());
+			goodsVO.setNo_person(no_person);
+			goodsInfo = goodsbankManager.getGoodsBankFavorite(goodsVO);
+			logger.info("goodsInfo.toString() : "+goodsInfo.toString());
+			model.addAttribute("goodsInfo", goodsInfo);
+		}
+		return "jsonView";
+	}
+	
 	/**
 	 * 상품리스트 메인
 	 * @param goodsForm

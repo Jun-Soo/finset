@@ -1,14 +1,10 @@
 <template>
   <div>
     <section>
-      <!-- <div class="sub-top">
-      <a href="#" class="btn-back"  @click="goBack"></a>
-      <p class="title">추천상품</p>
-    </div> -->
       <div class="goods-wrap goods" v-if="goodsList.length">
         <carousel :perPage=1>
           <slide class="item" v-for="goods in goodsList" :key="goods.index">
-            <a href="#">
+            <a @click="loanGoodsDetail(goods.cd_fc, goods.cd_goods)">
               <div class="top">
                 <p class="symbol"><img :src="goods.icon" alt="" />{{goods.nm_fc}}</p>
                 <p class="text blue" v-html=goods.nm_goods></p>
@@ -23,14 +19,14 @@
           </slide>
         </carousel>
       </div>
-      <div v-else class="data-none">
-        <p>신청 가능한 상품이 없습니다.</p>
+      <div class="nodata" v-else>
+        신청 가능한 상품이 없습니다.
       </div>
       <div class="tab mt40">
         <div class="wrap">
-          <a href="#" :class="{'on':curTab === 'loanWorker'}" @click="tabOnClick('loanWorker')">신용대출</a>
-          <a href="#" :class="{'on':curTab === 'loanHome'}" @click="tabOnClick('loanHome')">주택담보</a>
-          <a href="#" :class="{'on':curTab === 'loanStock'}" @click="tabOnClick('loanStock')">스탁론</a>
+          <a :class="{'on':curTab === 'loanWorker'}" @click="tabOnClick('loanWorker')">신용대출</a>
+          <a :class="{'on':curTab === 'loanHome'}" @click="tabOnClick('loanHome')">주택담보</a>
+          <a :class="{'on':curTab === 'loanStock'}" @click="tabOnClick('loanStock')">스탁론</a>
         </div>
       </div>
       <div class="box-list goods goods-list">
@@ -70,8 +66,8 @@
         </div>
       </div>
       <div class="action">
-        <a href="#" class="stroke" @click="clickStroke()">초기화</a>
-        <a href="#" class="solid" @click="clickSolid()">적용</a>
+        <a class="stroke" @click="clickStroke()">초기화</a>
+        <a class="solid" @click="clickSolid()">적용</a>
       </div>
     </aside>
   </div>
@@ -214,17 +210,28 @@ export default {
     goBack: function() {
       this.$router.push("/goods/main");
     },
-    showSpinner: async function() {
-      this.spinnerIsVisible = true; // 시작시 Spinner 보여주기
+    // showSpinner: async function() {
+    //   this.spinnerIsVisible = true; // 시작시 Spinner 보여주기
 
-      this.secondsLeft = 3;
-      var interval = setInterval(() => {
-        this.secondsLeft--;
-        if (this.secondsLeft <= 0) {
-          clearInterval(interval);
-          this.spinnerIsVisible = false; // 0초되면 숨기기
+    //   this.secondsLeft = 3;
+    //   var interval = setInterval(() => {
+    //     this.secondsLeft--;
+    //     if (this.secondsLeft <= 0) {
+    //       clearInterval(interval);
+    //       this.spinnerIsVisible = false; // 0초되면 숨기기
+    //     }
+    //   }, 1000);
+    // },
+    loanGoodsDetail: function(cd_fc, cd_non_goods) {
+      this.$router.push({
+        name: "GoodsDetail",
+        params: {
+          cd_fc: cd_fc,
+          cd_goods: cd_non_goods,
+          urlPath: this.urlPath,
+          isAffiliates: true
         }
-      }, 1000);
+      });
     }
   }
 };

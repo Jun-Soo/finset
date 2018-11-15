@@ -11,6 +11,8 @@ import com.koscom.scrap.model.ScrCardApprovalInfoVO;
 import com.koscom.scrap.model.ScrCardChargeDetailVO;
 import com.koscom.scrap.model.ScrCardChargeInfoVO;
 import com.koscom.scrap.model.ScrCardInfoVO;
+import com.koscom.scrap.model.ScrCardLimitInfoVO;
+import com.koscom.scrap.model.ScrCardPointInfoVO;
 import com.koscom.scrap.model.ScrReqBankVO;
 import com.koscom.scrap.model.ScrReqCardVO;
 import com.koscom.scrap.model.ScrReqCertificationVO;
@@ -142,6 +144,12 @@ public interface ScrapMapper { // com.koscom.scrap.dao.ScrapMapper
 	 * @param StockListVO
 	 */
 	int createStockList(StockListVO stockListVO);
+
+	/**
+	 * 증권사 가상계좌 발급 정보 갱신(삭제상태)
+	 * @param StockListVO
+	 */
+	int updateStockList(StockListVO stockListVO);
 	
 	/**
 	 * 증권사 가상계좌 발급 정보 조회
@@ -310,6 +318,13 @@ public interface ScrapMapper { // com.koscom.scrap.dao.ScrapMapper
 	 * @return 
 	 */
 	int createScrBankApiAnInfo(ScrBankApiAnInfoVO scrBankApiAnInfo);
+	
+	/**
+	 * 계좌 내역 update(삭제상태)
+	 * @param BankApiAnInfo
+	 * @return 
+	 */
+	int updateScrBankApiAnInfo(ScrBankApiAnInfoVO scrBankApiAnInfo);
 
 	/**
 	 * 입출금 계좌 상세 내역 마지막 조회 일자/시간 조회
@@ -341,21 +356,49 @@ public interface ScrapMapper { // com.koscom.scrap.dao.ScrapMapper
 	
 	/**
 	 * 카드 내역 insert
-	 * @param BankApiAnInfo
+	 * @param ScrCardInfoVO
 	 * @return 
 	 */
 	int createScrCardInfo(ScrCardInfoVO scrCardInfoVO);
 	
 	/**
+	 * 카드 내역 update(삭제상태)
+	 * @param ScrCardInfoVO
+	 * @return 
+	 */
+	int updateScrCardInfo(ScrCardInfoVO scrCardInfoVO);
+	
+	/**
+	 * 카드 한도내역 insert
+	 * @param ScrCardLimitInfoVO
+	 * @return 
+	 */
+	int createScrCardLimitInfo(ScrCardLimitInfoVO scrCardLimitInfoVO);
+	
+	/**
+	 * 카드 한도내역 update(삭제상태)
+	 * @param ScrCardLimitInfoVO
+	 * @return 
+	 */
+	int updateScrCardLimitInfo(ScrCardLimitInfoVO scrCardLimitInfoVO);
+	
+	/**
+	 * 카드 포인트내역 insert
+	 * @param ScrCardPointInfoVO
+	 * @return 
+	 */
+	int createScrCardPointInfo(ScrCardPointInfoVO scrCardPointInfoVO);
+	
+	/**
 	 * 카드승인 내역 insert
-	 * @param BankApiAnInfo
+	 * @param ScrCardApprovalInfoVO
 	 * @return 
 	 */
 	int createScrCardApprovalInfo(ScrCardApprovalInfoVO scrCardApprovalInfoVO);
 	
 	/**
 	 * 카드승인 내역 마지막 조회 일자/시간 조회
-	 * @param ScrBankApiAnInfoVO
+	 * @param Map
 	 * @return String
 	 */
 	String getMaxDateScrCardApprovalInfo(Map<String, Object> parmMap);

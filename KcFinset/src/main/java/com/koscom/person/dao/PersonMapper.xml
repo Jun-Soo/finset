@@ -671,7 +671,8 @@
 						FROM
 							SCR_CARD_INFO
 						WHERE
-							NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
+							YN_DELETE = 'N'
+							AND NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
 					UNION ALL
 						SELECT
 							(SELECT NM_CODE FROM COMM_CD WHERE CODE_GROUP = 'cd_consume' AND CODE_VALUE='04') AS NM_CODE,
@@ -681,7 +682,8 @@
 						FROM
 							SCR_BANK_API_AN_INFO
 						WHERE
-							NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
+							YN_DELETE = 'N'
+							AND NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
 							AND TYPE_AN = '01'
 					) B
 				LEFT OUTER JOIN SHARE_INFO_DETAIL BSD

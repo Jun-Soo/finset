@@ -57,6 +57,8 @@ import com.koscom.scrap.model.ScrCardApprovalInfoVO;
 import com.koscom.scrap.model.ScrCardChargeDetailVO;
 import com.koscom.scrap.model.ScrCardChargeInfoVO;
 import com.koscom.scrap.model.ScrCardInfoVO;
+import com.koscom.scrap.model.ScrCardLimitInfoVO;
+import com.koscom.scrap.model.ScrCardPointInfoVO;
 import com.koscom.scrap.model.ScrReqBankVO;
 import com.koscom.scrap.model.ScrReqCardVO;
 import com.koscom.scrap.model.ScrReqCertificationVO;
@@ -458,6 +460,12 @@ public class ScrapManagerImpl implements ScrapManager {
 			JsonArray jsonArry = (JsonArray)jsonRecvRoot.get("accountList");
 			if(jsonArry != null && jsonArry.size() > 0)	{
 				String cd_fc = fincorpMapper.getCdFcByComAlias(com_alias);
+				
+				//계좌 내역 추가 전 계좌 삭제상태로 변경
+				StockListVO stockListVO = new StockListVO();
+				stockListVO.setNo_person(no_person);
+				stockListVO.setCd_fc(cd_fc);
+				scrapMapper.updateStockList(stockListVO);
 				//계좌 내역 추가
 				for(int i=0; i<jsonArry.size(); i++)	{
 					JsonObject object = (JsonObject)jsonArry.get(i);
@@ -469,8 +477,8 @@ public class ScrapManagerImpl implements ScrapManager {
 					stockList.setReal_accno(object.get("realAccNo").getAsString());
 					stockList.setAcc_type(object.get("accType").getAsString());
 					stockList.setState(object.get("status").getAsString());
+					stockList.setYn_delete("N");
 					scrapMapper.createStockList(stockList);
-					
 				}
 				//금융사 연동 정보 추가
 				FcLinkInfoVO fcLinkInfoVO = new FcLinkInfoVO();
@@ -1274,6 +1282,12 @@ public class ScrapManagerImpl implements ScrapManager {
                     }
                     scrapMapper.updateFcLinkInfo(fcLinkInfoVO);
                     
+                    //계좌 내역 저장 전 전체 계좌 삭제상태로 변경
+                    ScrBankApiAnInfoVO scrBankApiAnInfoVO = new ScrBankApiAnInfoVO();
+                    scrBankApiAnInfoVO.setNo_person(no_person);
+                    scrBankApiAnInfoVO.setCd_fc(cd_fc);
+                    scrapMapper.updateScrBankApiAnInfo(scrBankApiAnInfoVO);
+                    
                     List<AnAllListHistoryVO> anAllhistList = new ArrayList<AnAllListHistoryVO>();
                     List<DepositAnListHistoryVO> depositAnhistList = new ArrayList<DepositAnListHistoryVO>();
                     //입출금 계좌 내역
@@ -1304,6 +1318,7 @@ public class ScrapManagerImpl implements ScrapManager {
                                 scrBankApiAnInfo.setCurrent_balance(anAllListVO.getBALANCE());
                                 scrBankApiAnInfo.setDt_new(anAllListVO.getDATE());
                                 scrBankApiAnInfo.setNm_an(anAllListVO.getNAME());
+                                scrBankApiAnInfo.setYn_delete("N");
                                 scrapMapper.createScrBankApiAnInfo(scrBankApiAnInfo);
                                 
                                 ScrReqBankVO scrReqBankVO = new ScrReqBankVO();
@@ -1394,6 +1409,7 @@ public class ScrapManagerImpl implements ScrapManager {
                             	scrBankApiAnInfo.setDt_end(depositAnListVO.getLAST_DATE());
                             	scrBankApiAnInfo.setNm_an(depositAnListVO.getTYPE());
                             	scrBankApiAnInfo.setInterest_rate(depositAnListVO.getINTEREST());
+                            	scrBankApiAnInfo.setYn_delete("N");
                             	scrapMapper.createScrBankApiAnInfo(scrBankApiAnInfo);
                                 
                                 ScrReqBankVO scrReqBankVO = new ScrReqBankVO();
@@ -1482,6 +1498,7 @@ public class ScrapManagerImpl implements ScrapManager {
                             	scrBankApiAnInfo.setDt_end(fundAnListVO.getLAST_DATE());
                             	scrBankApiAnInfo.setNm_an(fundAnListVO.getTYPE());
                             	scrBankApiAnInfo.setProfit_rate(fundAnListVO.getYIELD());
+                            	scrBankApiAnInfo.setYn_delete("N");
                             	scrapMapper.createScrBankApiAnInfo(scrBankApiAnInfo);
                             }
                         }
@@ -1518,6 +1535,7 @@ public class ScrapManagerImpl implements ScrapManager {
                             	scrBankApiAnInfo.setInterest_rate(loanAnListVO.getLENDING_RATE());
                             	scrBankApiAnInfo.setFew_days(loanAnListVO.getFEW_DAYS());
                             	scrBankApiAnInfo.setInterest_date(loanAnListVO.getINTEREST_DATE());
+                            	scrBankApiAnInfo.setYn_delete("N");
                             	scrapMapper.createScrBankApiAnInfo(scrBankApiAnInfo);
                             }
                         }
@@ -1525,7 +1543,6 @@ public class ScrapManagerImpl implements ScrapManager {
                 }
             }
         }
-        
         ScrRsltScrapVO scrRsltScrapVO = new ScrRsltScrapVO();
         scrRsltScrapVO.setNo_person(no_person);
         scrRsltScrapVO.setSeq_scraping_result(seq_scrap);
@@ -1572,7 +1589,13 @@ public class ScrapManagerImpl implements ScrapManager {
                 	fcLinkInfoVO.setCd_link_stat("99");
                 }
                 scrapMapper.updateFcLinkInfo(fcLinkInfoVO);
-            	
+                
+                //카드내역 저장 전 삭제상태로 변경
+                ScrCardInfoVO scrCardInfoVO = new ScrCardInfoVO();
+                scrCardInfoVO.setNo_person(no_person);
+                scrCardInfoVO.setCd_fc(cd_fc);
+                scrapMapper.updateScrCardInfo(scrCardInfoVO);
+                
             	//카드내역 저장
             	List<ScrCardInfoVO> ScrCardInfoList = userCardOutputVO.getCARD_INFO();
             	if(ScrCardInfoList != null && ScrCardInfoList.size() > 0){
@@ -1584,6 +1607,7 @@ public class ScrapManagerImpl implements ScrapManager {
                         
                         scrCardInfo.setNo_person(no_person);
                         scrCardInfo.setCd_fc(cd_fc);
+                        scrCardInfo.setYn_delete("N");
                         scrapMapper.createScrCardInfo(scrCardInfo);
             		}
             	}
@@ -1591,13 +1615,67 @@ public class ScrapManagerImpl implements ScrapManager {
             	ScrReqCardVO scrReqCardVO = new ScrReqCardVO();
             	scrReqCardVO.setNo_person(no_person);
             	scrReqCardVO.setCd_fc(cd_fc);
-            	scrReqCardVO.setCd_type("01"); //01 보유카드현황, 02 승인내역, 03 청구내역, 	04 한도조회, 05 포인트조회
+            	scrReqCardVO.setCd_type("01"); //01 보유카드현황, 02 승인내역, 03 청구내역, 04 한도조회, 05 포인트조회
             	scrReqCardVO.setSeq_scraping_result(seq_scrap);
             	scrReqCardVO.setError_cd(userCardOutputVO.getCARD_ERROR_CODE());
             	scrReqCardVO.setError_msg(userCardOutputVO.getCARD_ERROR_MESSAGE());
                 scrapMapper.insertScrReqCardHist(scrReqCardVO);
                 scrapMapper.createScrReqCard(scrReqCardVO);
+                
+                //카드 한도내역 저장 전 삭제상태로 변경
+                ScrCardLimitInfoVO scrCardLimitInfoVO = new ScrCardLimitInfoVO();
+                scrCardLimitInfoVO.setNo_person(no_person);
+                scrCardLimitInfoVO.setCd_fc(cd_fc);
+                scrapMapper.updateScrCardLimitInfo(scrCardLimitInfoVO);
+                //카드 한도내역 저장
+            	List<ScrCardLimitInfoVO> ScrCardLimitInfoList = userCardOutputVO.getCARD_LIMIT();
+            	if(ScrCardLimitInfoList != null && ScrCardLimitInfoList.size() > 0){
+            		for (ScrCardLimitInfoVO scrCardLimitInfo : ScrCardLimitInfoList) {		
+            			logger.debug("scrCardLimitInfo.getType_card      : "+ scrCardLimitInfo.getType_card());
+                        logger.debug("scrCardLimitInfo.getAmt_cash_limit : "+ scrCardLimitInfo.getAmt_cash_limit());
+                        logger.debug("scrCardLimitInfo.getAmt_card_limit : "+ scrCardLimitInfo.getAmt_card_limit());
+                        
+                        scrCardLimitInfo.setNo_person(no_person);
+                        scrCardLimitInfo.setCd_fc(cd_fc);
+                        scrCardLimitInfo.setYn_delete("N");
+//                        if(scrCardLimitInfo.getType_card() == null || scrCardLimitInfo.getType_card().length() == 0){
+//                        	scrCardLimitInfo.setType_card("defalut");
+//                        }
+                        scrapMapper.createScrCardLimitInfo(scrCardLimitInfo);
+            		}
+            	}
+            	//카드 내역 History 저장 및 갱신
+            	scrReqCardVO.setNo_person(no_person);
+            	scrReqCardVO.setCd_fc(cd_fc);
+            	scrReqCardVO.setCd_type("04"); //01 보유카드현황, 02 승인내역, 03 청구내역, 04 한도조회, 05 포인트조회
+            	scrReqCardVO.setSeq_scraping_result(seq_scrap);
+            	scrReqCardVO.setError_cd(userCardOutputVO.getLIMIT_ERROR_CODE());
+            	scrReqCardVO.setError_msg(userCardOutputVO.getLIMIT_ERROR_MESSAGE());
+                scrapMapper.insertScrReqCardHist(scrReqCardVO);
+                scrapMapper.createScrReqCard(scrReqCardVO);
             	
+              //카드 한도내역 저장
+            	List<ScrCardPointInfoVO> ScrCardPointInfoList = userCardOutputVO.getCARD_POINT();
+            	if(ScrCardPointInfoList != null && ScrCardPointInfoList.size() > 0){
+            		for (ScrCardPointInfoVO ScrCardPointInfo : ScrCardPointInfoList) {		
+            			logger.debug("ScrCardPointInfo.getType_card      : "+ ScrCardPointInfo.getType_point());
+                        logger.debug("ScrCardPointInfo.getAmt_cash_limit : "+ ScrCardPointInfo.getHold_point());
+                        
+                        ScrCardPointInfo.setNo_person(no_person);
+                        ScrCardPointInfo.setCd_fc(cd_fc);
+                        scrapMapper.createScrCardPointInfo(ScrCardPointInfo);
+            		}
+            	}
+            	//카드 내역 History 저장 및 갱신
+            	scrReqCardVO.setNo_person(no_person);
+            	scrReqCardVO.setCd_fc(cd_fc);
+            	scrReqCardVO.setCd_type("05"); //01 보유카드현황, 02 승인내역, 03 청구내역, 04 한도조회, 05 포인트조회
+            	scrReqCardVO.setSeq_scraping_result(seq_scrap);
+            	scrReqCardVO.setError_cd(userCardOutputVO.getPOINT_ERROR_CODE());
+            	scrReqCardVO.setError_msg(userCardOutputVO.getPOINT_ERROR_MESSAGE());
+                scrapMapper.insertScrReqCardHist(scrReqCardVO);
+                scrapMapper.createScrReqCard(scrReqCardVO);
+                
             	//카드 승인내역 마지막 조회 내역 조회
             	Map<String, Object> paramMap = new HashMap<String, Object>();
             	paramMap.put("no_person", no_person);
@@ -1637,7 +1715,7 @@ public class ScrapManagerImpl implements ScrapManager {
             	}
 
             	//카드조회 내역 History 저장 및 갱신  - 승인내역
-            	scrReqCardVO.setCd_type("02"); //01 보유카드현황, 02 승인내역, 03 청구내역, 	04 한도조회, 05 포인트조회
+            	scrReqCardVO.setCd_type("02"); //01 보유카드현황, 02 승인내역, 03 청구내역, 04 한도조회, 05 포인트조회
             	scrReqCardVO.setSeq_scraping_result(seq_scrap);
             	scrReqCardVO.setYmd_stt(userCardOutputVO.getDT_APPROVAL_START());
             	scrReqCardVO.setYmd_end(userCardOutputVO.getDT_APPROVAL_END());

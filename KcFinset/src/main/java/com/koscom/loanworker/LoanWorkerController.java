@@ -103,6 +103,58 @@ public class LoanWorkerController implements Constant{
 	}
 	
 	/**
+	 * 상품상세 (제휴) VUE
+	 * @param goodsForm
+	 * @param model
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/getLoanAffiliatesDetail.json")
+	public String getLoanAffiliatesDetail(Model model, HttpServletRequest request, GoodsForm goodsForm, HttpSession session) {
+     	String no_person = (String) session.getAttribute("no_person");
+		goodsForm.setNo_person(no_person);
+		GoodsVO goodsInfo = new GoodsVO();
+		GoodsVO goodsVO = new GoodsVO();
+
+		if(goodsForm.getCd_fc() != null && goodsForm.getCd_goods() != null){
+			goodsVO.setCd_fc(goodsForm.getCd_fc());
+			goodsVO.setCd_goods(goodsForm.getCd_goods());
+			goodsVO.setNo_person(no_person);
+			goodsInfo = goodsManager.getGoodsFavorite(goodsVO);
+			logger.debug("goodsInfo.toString() : "+goodsInfo.toString());
+			model.addAttribute("goodsInfo", goodsInfo);
+		}
+		return "jsonView";
+	}
+
+	/** VUE
+	 * 상품상세 (비제휴)
+	 * @param goodsbankForm
+	 * @param model
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/getLoanNoAffiliatesDetail.json")
+	public String getLoanNoAffiliatesDetail(Model model, HttpServletRequest request, GoodsbankForm goodsbankForm, HttpSession session) {
+		String no_person = (String) session.getAttribute("no_person");
+		goodsbankForm.setNo_person(no_person);
+		GoodsbankVO goodsInfo = new GoodsbankVO();
+		GoodsbankVO goodsVO = new GoodsbankVO();
+		if(goodsbankForm.getCd_fc() != null && goodsbankForm.getCd_goods() != null){
+			goodsVO.setCd_fc(goodsbankForm.getCd_fc());
+			goodsVO.setCd_goods(goodsbankForm.getCd_goods());
+			goodsVO.setNo_person(no_person);
+			goodsInfo = goodsbankManager.getGoodsBankFavorite(goodsVO);
+			goodsInfo.setNm_fc(goodsInfo.getNm_fc().trim());
+			logger.debug("goodsInfo.toString() : "+goodsInfo.toString());
+			model.addAttribute("goodsInfo", goodsInfo);
+		}
+		return "jsonView";
+	}
+	
+	/**
 	 * 대출상품조회(직장인, 사업자, 주택) 선택
 	 * @param model
 	 * @param request

@@ -8,7 +8,7 @@
             <p class="value">{{formatNumber(debtSummary.amt_remain * 10000)}}<em>원</em></p>
           </div>
           <div class="graph">
-            <chartjs-line :labels="mylabels" :datasets="mydatasets" :option="myoption" :bind="true"></chartjs-line>
+            <chartjs-line v-if="!isNone" :labels="mylabels" :datasets="mydatasets" :option="myoption" :bind="true"></chartjs-line>
           </div>
           <div class="flex2 bar-graph">
             <div class="item">
@@ -123,7 +123,6 @@
             <div class="left">
               <p class="key">잔액</p>
               <p class="number">{{formatNumber(vo.amt_remain * 10000)}}<em>원</em></p>
-              <p v-text="vo.no_manage_info"></p>
             </div>
           </div>
           <div class="bar">
@@ -154,7 +153,7 @@ export default {
   name: "DebtMain",
   data() {
     return {
-      isTest: true,
+      isNone: true,
       debtList: [],
       debtSummary: "",
       dataList: [1, 2, 3, 4, 5, 6, 7],
@@ -267,18 +266,27 @@ export default {
           _this.debtList = debtList;
 
           var debtSummary = response.data.debtSummary;
+
+          if ((debtSummary || "") != "") {
+            debtSummary.repayStyle =
+              "width:" + debtSummary.rate_amt_contract + "%";
+            debtSummary.dsrStyle =
+              "width:" +
+              _this.calDsr(
+                debtSummary.cur_mon_mid_rpy,
+                debtSummary.amt_etm_income
+              ) +
+              "%";
+            _this.mylabels = response.data.dateList;
+            _this.$set(_this.mydatasets[0], "data", response.data.dataList);
+            _this.isNone = false;
+          } else {
+            debtSummary = new Object();
+            debtSummary.rate_amt_contract = "0";
+            debtSummary.repayStyle = "width:0%";
+            debtSummary.dsrStyle = "width:0%";
+          }
           _this.debtSummary = debtSummary;
-          _this.debtSummary.repayStyle =
-            "width:" + debtSummary.rate_amt_contract + "%";
-          _this.debtSummary.dsrStyle =
-            "width:" +
-            _this.calDsr(
-              debtSummary.cur_mon_mid_rpy,
-              debtSummary.amt_etm_income
-            ) +
-            "%";
-          _this.mylabels = response.data.dateList;
-          _this.$set(_this.mydatasets[0], "data", response.data.dataList);
         });
     },
     formatNumber: function(number) {

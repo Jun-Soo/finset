@@ -78,7 +78,7 @@
             </a>
           </slide>
           <slide class="item">
-            <a href="#">
+            <a @click="clickBanner('news')">
               <div class="banner">
                 <div class="left">
                   <p class="key">뉴스</p>
@@ -91,7 +91,7 @@
             </a>
           </slide>
           <slide class="item">
-            <a href="#">
+            <a @click="clickBanner('reqIntrCut')">
               <div class="banner">
                 <div class="left">
                   <p class="key">금리인하요구</p>
@@ -323,7 +323,15 @@ export default {
         case "goods":
           _this.$router.push("/goods/list");
           break;
-
+        case "news":
+          _this.$router.push({
+            name: "newsMain",
+            query: { scKeyword: ["02"] }
+          });
+          break;
+        case "reqIntrCut":
+           _this.$router.push("/debt/reqIntrCut");
+          break;
         default:
           break;
       }

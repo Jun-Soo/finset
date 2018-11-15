@@ -83,6 +83,33 @@ $(function(){
         
     });
     
+    $(document).on("click","[data-acco]",function(e){
+        
+       if($(this).hasClass("on")){
+           $(this).closest("li").find(".body").slideUp(500,"easeInOutExpo");
+           $(this).removeClass("on");
+       }else{
+           $(this).closest("li").find(".body").slideDown(500,"easeInOutExpo");
+           $(this).addClass("on");
+       }
+        e.preventDefault();
+        
+    });
+    
+    $(document).on("click",".gray-search-box .acco",function(e){
+        
+       if($(this).hasClass("on")){
+           $(this).closest(".gray-search-box").find(".wrap").slideUp(500,"easeInOutExpo");
+           $(this).removeClass("on");
+       }else{
+           $(this).closest(".gray-search-box").find(".wrap").slideDown(500,"easeInOutExpo");
+           $(this).addClass("on");
+       }
+        e.preventDefault();
+        
+    });
+    
+    
     
     ////////////////////     설정버튼     ////////////////////
     
@@ -173,6 +200,27 @@ $(function(){
            
             $(this).closest(".calc-acco").find(".acco-body-wrap").slideDown(500,"easeInOutExpo");
             $(this).addClass("on");
+            
+        }
+        
+    });
+    
+    
+    ////////////////////     상품신청현황     ////////////////////
+    
+    $(document).on("click",".goods-state .item .top a",function(e){
+        
+        if($(this).hasClass("on")){
+         
+            $(this).closest(".item").find(".step").slideUp(500,"easeInOutExpo");
+            $(this).removeClass("on");
+            e.preventDefault();
+            
+        }else{
+           
+            $(this).closest(".item").find(".step").slideDown(500,"easeInOutExpo");
+            $(this).addClass("on");
+            e.preventDefault();
             
         }
         

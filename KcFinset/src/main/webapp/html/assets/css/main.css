@@ -134,6 +134,8 @@ aside .wrap .list-wrap a .banner .left p.key { font-size: 12px; color: #e52638; 
 aside .wrap .list-wrap a .banner .left p.value { color: #222; font-size: 16px; font-weight: 700; margin-top: 10px; line-height: 22px; }
 aside .wrap .list-wrap a .banner .right { width: 27.8787; display: table-cell; vertical-align: middle; text-align: center; }
 aside .wrap .list-wrap a .banner .right img { width: 62px; }
+aside .wrap .hash { display: grid; grid-template-columns: 1fr 1fr; grid-gap: 10px; padding-bottom: 20px; }
+aside .wrap .hash a { line-height: 28px; border: 1px solid #e5e5e5; text-align: center; }
 aside.on:before { display: block; }
 aside.on button { background-position: right bottom; }
 aside.on .wrap { height: auto; }

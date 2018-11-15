@@ -5,7 +5,7 @@ export const defaultLabels = {
 export const defaultViews = ['month']
 
 let config = {
-  locale: 'ko',
+  locale: 'en',
   labels: defaultLabels,
   initialDate: new Date(),
   initialView: 'month',

@@ -1,6 +1,6 @@
 <template>
-  <div class="v-cal">
-    <header class="v-cal-header">
+  <div>
+    <!-- <header class="v-cal-header">
       <div class="v-cal-header__actions">
         <div class="actions-left">
           <div @click="changeType">
@@ -8,19 +8,34 @@
             <h3 class="v-cal-header__title font-year">{{ calendarYear }}</h3>
           </div>
           <button class="v-cal-button today-button" @click="goToToday" :class="{ 'v-cal-button--is-active': activeDate && activeDate.isSame( today, 'day' )}">{{ labels.today }}</button>
-				</div>
+        </div>
         <div class="actions-right">
           <button class="v-cal-button income-button" :class="{ active:isActiveIncome }" @click="clickIncome">수입</button>
           <button class="v-cal-button consume-button" :class="{ active:isActiveConsume }" @click="clickConsume">지출</button>
           <button class="v-cal-button debt-button" :class="{ active:isActiveDebt }" @click="clickDebt">대출</button>
         </div>
       </div>
-    </header>
-    <component
-      :is="activeView"
-      :class="'v-cal-content--' + activeView"
-      v-bind="activeViewProps"
-    ></component>
+    </header> -->
+    <div class="spend-top">
+      <div class="date-wrap">
+        <button class="prev" @click="prev"></button>
+        <p>{{calendarYear}}.{{calendarMonth}}</p>
+        <button class="next" @click="next"></button>
+        <button class="setting"></button>
+      </div>
+    </div>
+    <div class="check-flex">
+      <div>
+        <button class="today" @click="goToToday">TODAY</button>
+      </div>
+      <div class="wrap">
+        <button class="income" :class="{ 'on':isActiveIncome }" @click="clickIncome">수입</button>
+        <button class="debt" :class="{ 'on':isActiveConsume }" @click="clickConsume">지출</button>
+        <button class="loan" :class="{ 'on':isActiveDebt }" @click="clickDebt">대출</button>
+      </div>
+    </div>
+
+    <component :is="activeView" :class="'v-cal-content--' + activeView" v-bind="activeViewProps"></component>
     <footer class="v-cal-footer"></footer>
   </div>
 </template>
@@ -81,10 +96,10 @@ export default {
     };
   },
   mounted() {
-    moment.locale("ko");
+    moment.locale("en");
     //  Initial setup
     this.activeView = this.initialView;
-    this.activeDate = moment(this.initialDate).locale("ko");
+    this.activeDate = moment(this.initialDate).locale("en");
 
     //화면 이동 로직
     var _this = this;
@@ -165,11 +180,10 @@ export default {
       }
     },
     changeType() {
-      console.log('cahnge')
+      console.log("cahnge");
     }
   },
-  filters: {
-  },
+  filters: {},
   watch: {
     initialDate() {
       this.activeDate = moment(this.initialDate);
@@ -205,14 +219,14 @@ export default {
       if (this.activeDate === null) return "";
 
       if (this.activeView === "month") {
-        return this.activeDate.format("YYYY년");
+        return this.activeDate.format("YYYY");
       }
     },
     calendarMonth() {
       if (this.activeDate === null) return "";
 
       if (this.activeView === "month") {
-        return this.activeDate.format("MMMM");
+        return this.activeDate.format("MM");
       }
     },
     getPrevMoment() {
@@ -226,28 +240,4 @@ export default {
 </script>
 
 <style scoped>
-.font-mon {
-  font-size: 21px;
-  color: #0000ff;
-  font-weight: 600;
-}
-.font-year {
-  font-size: 14px;
-}
-.today-button {
-  border: none;
-  box-shadow: none;
-}
-.income-button.active {
-  background-color: #3b86ff;
-  color: #fff;
-}
-.consume-button.active {
-  background-color: #47d147;
-  color: #fff;
-}
-.debt-button.active {
-  background-color: #ff3333;
-  color: #fff;
-}
 </style>

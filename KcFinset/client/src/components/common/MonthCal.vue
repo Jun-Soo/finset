@@ -1,284 +1,282 @@
 <template>
-  <section>
-    <div class="spend-top">
-      <div class="date-wrap">
-        <button class="prev"></button>
-        <p>2018.07</p>
-        <button class="next"></button>
-        <button class="setting"></button>
+  <div id="wrapper">
+    <VueScheduler :events="events" event-display="name" @event-clicked="openDetail" @curYM="curYM" />
+    <vue-modal name="my-modal" transitionName="zoom-in" theme="width:100% !important; max-height: 80%; top: 134px; position:absolute">
+      <h2 slot="header" @click="hide">FINSET</h2>
+      <div class="modal-subHeader">
+        <p class="left">{{modalDate}}</p>
+        <p class="right">{{sumTotal}} 원</p><br />
+        <div class="modal-eachTotal">
+          <p v-if="incomeTotal!=0" class="left modal-label label-income">수입</p>
+          <p v-if="incomeTotal!=0" class="left modal-amt amt-income"> {{incomeTotal}} 원</p>
+          <p v-if="consumeTotal!=0" class="left modal-label label-consume">지출</p>
+          <p v-if="consumeTotal!=0" class="left modal-amt amt-consume"> {{consumeTotal}} 원</p>
+          <p v-if="debtTotal!=0" class="left modal-label label-debt">부채</p>
+          <p v-if="debtTotal!=0" class="left modal-amt amt-debt"> {{debtTotal}} 원</p>
+        </div>
       </div>
-    </div>
-
-    <div class="check-flex">
-      <div>
-        <button class="today">TODAY</button>
+      <div class="modal-income" v-if="incomeList!=null">
+        <div class="modal-list" v-for="incomeVO in incomeList" :key="incomeVO.index">
+          <p class="left modal-label label-income">수입</p>
+          <p class="left list-text">{{incomeVO.contents}}</p>
+          <p class="right">{{formatNumber(incomeVO.amt_in_out)}} 원</p>
+        </div>
       </div>
-      <div class="wrap">
-        <button class="income">수입</button>
-        <button class="debt">지출</button>
-        <button class="loan">대출</button>
+      <div class="modal-consume" v-if="consumeList!=null">
+        <div class="modal-list" v-for="consumeVO in consumeList" :key="consumeVO.index">
+          <p class="left modal-label label-consume">지출</p>
+          <p class="left list-text">{{consumeVO.contents}}</p>
+          <p class="right">{{formatNumber(consumeVO.amt_in_out)}} 원</p>
+        </div>
       </div>
-    </div>
-
-    <div class="calendar">
-      <div class="wrap">
-        <table>
-          <caption></caption>
-          <colgroup>
-            <col width="14.28%">
-            <col width="14.28%">
-            <col width="14.28%">
-            <col width="14.28%">
-            <col width="14.28%">
-            <col width="14.28%">
-            <col width="14.28%">
-          </colgroup>
-          <thead>
-            <tr>
-              <th>SUN</th>
-              <th>MON</th>
-              <th>TUE</th>
-              <th>WED</th>
-              <th>THU</th>
-              <th>FRI</th>
-              <th>SAT</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>
-                <a href="#">
-                  <p class="day"><span>1</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>2</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>3</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>4</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>5</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>6</span></p>
-                  <em class="income">465,000</em>
-                  <em class="debt">32,000</em>
-                  <em class="loan">100,000,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>7</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <a href="#">
-                  <p class="day"><span>8</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#" class="on">
-                  <p class="day"><span>9</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>10</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>11</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>12</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span class="today">13</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>14</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <a href="#">
-                  <p class="day"><span>15</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>16</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>17</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>18</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>19</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>20</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>21</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <a href="#">
-                  <p class="day"><span>22</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>23</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>24</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>25</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>26</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>27</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>28</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-            </tr>
-            <tr>
-              <td>
-                <a href="#">
-                  <p class="day"><span>29</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>30</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td>
-                <a href="#">
-                  <p class="day"><span>31</span></p>
-                  <em class="debt">32,000</em>
-                </a>
-              </td>
-              <td></td>
-              <td></td>
-              <td></td>
-              <td></td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="modal-debt" v-if="debtList!=null">
+        <div class="modal-list" v-for="debtVO in debtList" :key="debtVO.index">
+          <p class="left modal-label label-debt">부채</p>
+          <p class="left list-text">{{debtVO.nm_biz}}</p>
+          <p class="right">{{formatNumber(debtVO.amt_repay)}} 원</p>
+        </div>
       </div>
-    </div>
-    <button class="btn-spend-add"></button>
-
-  </section>
+    </vue-modal>
+  </div>
 </template>
 
 <script>
+import Common from "../../assets/js/common.js";
+import VueScheduler from "../plugins/calendar/components/VueScheduler";
+import "../plugins/calendar/lib/main.css";
+
 export default {
-  name: "CommonMonthCal",
+  name: "CommonCalendar",
   data() {
-    return {};
+    return {
+      events: [],
+      modalDate: "",
+      sumTotal: 0,
+      incomeTotal: 0,
+      consumeTotal: 0,
+      debtTotal: 0,
+      incomeList: null,
+      consumeList: null,
+      debtList: null
+    };
   },
-  components: {},
-  computed: {},
-  beforeCreate() {
-    this.$store.state.header.type = "sub";
-    this.$store.state.title = "습관달력";
+  components: {
+    VueScheduler
   },
+  // computed: {
+  // },
+  beforeCreate() {},
   created() {},
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    this.getCalendarData(
+      Common.formatDate(new Date())
+        .replace(/[-]/g, "")
+        .substr(0, 6)
+    );
+  },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    openDetail(params) {
+      this.modalDate = this.formatModalDate(params.date);
+      var ymd = Common.formatDate(params.date, "yyyymmdd").replace(/-/g, "");
+      this.listCalendarData(
+        ymd,
+        params.isActiveIncome,
+        params.isActiveConsume,
+        params.isActiveDebt
+      );
+    },
+    makeEvent(vo, type) {
+      var date, name, contents, amt, color;
+      switch (type) {
+        case "income":
+          var ymd = vo.dt_trd;
+          date = new Date(
+            ymd.substring(0, 4),
+            parseInt(ymd.substring(4, 6)) - 1,
+            ymd.substring(6, 8)
+          );
+          name = Common.formatNumber(vo.amt_in_out);
+          amt = vo.amt_in_out;
+          color = "#4f82d6";
+          type = type;
+          break;
+        case "consume":
+          var ymd = vo.dt_trd;
+          date = new Date(
+            ymd.substring(0, 4),
+            parseInt(ymd.substring(4, 6)) - 1,
+            ymd.substring(6, 8)
+          );
+          name = Common.formatNumber(vo.amt_in_out);
+          amt = vo.amt_in_out;
+          color = "#25bdd5";
+          type = type;
+          break;
+        case "debt":
+          var ymd = vo.req_yyyymmdd;
+          date = new Date(
+            ymd.substring(0, 4),
+            parseInt(ymd.substring(4, 6)) - 1,
+            ymd.substring(6, 8)
+          );
+          name = Common.formatNumber(vo.amt_repay);
+          amt = vo.amt_repay;
+          color = "#e52638";
+          type = type;
+          break;
+      }
+      this.events.push({
+        date: date,
+        name: name,
+        amt: amt,
+        color: color,
+        type: type
+      });
+    },
+    getCalendarData(ym) {
+      var _this = this;
+      this.$http
+        .get("/m/debt/getCalendarData.json", {
+          params: { ym: ym }
+        })
+        .then(function(response) {
+          _this.events = [];
+          var data = response.data;
+
+          var incomeList = data.incomeList;
+          var consumeList = data.consumeList;
+          var debtList = data.debtList;
+
+          for (var idx in incomeList) {
+            _this.makeEvent(incomeList[idx], "income");
+          }
+          for (var idx in consumeList) {
+            _this.makeEvent(consumeList[idx], "consume");
+          }
+          for (var idx in debtList) {
+            _this.makeEvent(debtList[idx], "debt");
+          }
+        });
+    },
+    listCalendarData(ymd, isActiveIncome, isActiveConsume, isActiveDebt) {
+      var _this = this;
+      this.$http
+        .get("/m/debt/listCalendarData.json", {
+          params: {
+            ymd: ymd,
+            isActiveIncome: isActiveIncome,
+            isActiveConsume: isActiveConsume,
+            isActiveDebt: isActiveDebt
+          }
+        })
+        .then(function(response) {
+          _this.sumTotal = Common.formatNumber(response.data.sumTotal);
+          if (isActiveIncome) {
+            _this.incomeTotal = Common.formatNumber(response.data.incomeTotal);
+            _this.incomeList = response.data.incomeList;
+          } else {
+            _this.incomeTotal = 0;
+            _this.incomeList = null;
+          }
+          if (isActiveConsume) {
+            _this.consumeTotal = Common.formatNumber(
+              response.data.consumeTotal
+            );
+            _this.consumeList = response.data.consumeList;
+          } else {
+            _this.consumeTotal = 0;
+            _this.consumeList = null;
+          }
+          if (isActiveDebt) {
+            _this.debtTotal = Common.formatNumber(response.data.debtTotal);
+            _this.debtList = response.data.debtList;
+          } else {
+            _this.debtTotal = 0;
+            _this.debtList = null;
+          }
+
+          _this.$modals.show("my-modal");
+        });
+    },
+    curYM(ym) {
+      this.getCalendarData(ym);
+    },
+    formatModalDate(date) {
+      var mm = date.getMonth() + 1;
+      var dd = date.getDate();
+
+      var weekdays = new Array(7);
+      weekdays[0] = "월요일";
+      weekdays[1] = "화요일";
+      weekdays[2] = "수요일";
+      weekdays[3] = "목요일";
+      weekdays[4] = "금요일";
+      weekdays[5] = "토요일";
+      weekdays[6] = "일요일";
+
+      var weekday = weekdays[date.getDay()];
+      return mm + "." + dd + ". " + weekday;
+    },
+    formatNumber(number) {
+      return Common.formatNumber(number);
+    },
+    hide() {
+      console.log("ab");
+      debugger;
+      this.$modals.hide("my-modal");
+
+      console.log("cd");
+    }
+  }
 };
 </script>
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
-<style lang="scss">
+<style scoped>
+.modal-subHeader {
+  margin: 15px 0;
+}
+.modal-list .left,
+.modal-subHeader .left {
+  display: inline;
+}
+.modal-list .right,
+.modal-subHeader .right {
+  float: right;
+  margin: 0 auto;
+}
+.modal-eachTotal {
+  margin-top: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #666;
+}
+.modal-label {
+  color: #fff;
+}
+.modal-amt + .modal-label {
+  margin-left: 20px;
+}
+.label-income {
+  background: #3b86ff;
+}
+.label-consume {
+  background: #47d147;
+}
+.label-debt {
+  background: #ff3333;
+}
+.modal-list {
+  margin: 4px;
+  padding: 4px;
+  border: thin solid #bbb;
+  border-radius: 6px;
+}
+.list-text {
+  margin-left: 14px;
+}
 </style>

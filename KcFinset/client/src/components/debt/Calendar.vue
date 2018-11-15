@@ -1,39 +1,39 @@
 <template>
-	<div id="wrapper">
-    <VueScheduler
-    :events="events"
-    event-display="name"
-    @event-clicked="openDetail"
-    @curYM="curYM"
-    />
-    <vue-modal 
-    name="my-modal"
-    transitionName="zoom-in"
-    theme="width:100% !important; max-height: 80%; top: 134px; position:absolute"
-    >
+  <div id="wrapper">
+    <VueScheduler :events="events" event-display="name" @event-clicked="openDetail" @curYM="curYM" />
+    <vue-modal name="my-modal" transitionName="zoom-in" theme="width:100% !important; max-height: 80%; top: 134px; position:absolute">
       <h2 slot="header" @click="hide">FINSET</h2>
       <div class="modal-subHeader">
         <p class="left">{{modalDate}}</p>
-        <p class="right">{{sumTotal}} 원</p><br/>
+        <p class="right">{{sumTotal}} 원</p><br />
         <div class="modal-eachTotal">
-          <p v-if="incomeTotal!=0" class="left modal-label label-income">수입</p><p v-if="incomeTotal!=0" class="left modal-amt amt-income"> {{incomeTotal}} 원</p>
-          <p v-if="consumeTotal!=0" class="left modal-label label-consume">지출</p><p v-if="consumeTotal!=0" class="left modal-amt amt-consume"> {{consumeTotal}} 원</p>
-          <p v-if="debtTotal!=0" class="left modal-label label-debt">부채</p><p v-if="debtTotal!=0" class="left modal-amt amt-debt"> {{debtTotal}} 원</p>
+          <p v-if="incomeTotal!=0" class="left modal-label label-income">수입</p>
+          <p v-if="incomeTotal!=0" class="left modal-amt amt-income"> {{incomeTotal}} 원</p>
+          <p v-if="consumeTotal!=0" class="left modal-label label-consume">지출</p>
+          <p v-if="consumeTotal!=0" class="left modal-amt amt-consume"> {{consumeTotal}} 원</p>
+          <p v-if="debtTotal!=0" class="left modal-label label-debt">부채</p>
+          <p v-if="debtTotal!=0" class="left modal-amt amt-debt"> {{debtTotal}} 원</p>
         </div>
       </div>
       <div class="modal-income" v-if="incomeList!=null">
         <div class="modal-list" v-for="incomeVO in incomeList" :key="incomeVO.index">
-          <p class="left modal-label label-income">수입</p><p class="left list-text">{{incomeVO.contents}}</p><p class="right">{{formatNumber(incomeVO.amt_in_out)}} 원</p>
+          <p class="left modal-label label-income">수입</p>
+          <p class="left list-text">{{incomeVO.contents}}</p>
+          <p class="right">{{formatNumber(incomeVO.amt_in_out)}} 원</p>
         </div>
       </div>
       <div class="modal-consume" v-if="consumeList!=null">
         <div class="modal-list" v-for="consumeVO in consumeList" :key="consumeVO.index">
-          <p class="left modal-label label-consume">지출</p><p class="left list-text">{{consumeVO.contents}}</p><p class="right">{{formatNumber(consumeVO.amt_in_out)}} 원</p>
+          <p class="left modal-label label-consume">지출</p>
+          <p class="left list-text">{{consumeVO.contents}}</p>
+          <p class="right">{{formatNumber(consumeVO.amt_in_out)}} 원</p>
         </div>
       </div>
       <div class="modal-debt" v-if="debtList!=null">
         <div class="modal-list" v-for="debtVO in debtList" :key="debtVO.index">
-          <p class="left modal-label label-debt">부채</p><p class="left list-text">{{debtVO.nm_biz}}</p><p class="right">{{formatNumber(debtVO.amt_repay)}} 원</p>
+          <p class="left modal-label label-debt">부채</p>
+          <p class="left list-text">{{debtVO.nm_biz}}</p>
+          <p class="right">{{formatNumber(debtVO.amt_repay)}} 원</p>
         </div>
       </div>
     </vue-modal>
@@ -42,8 +42,8 @@
 
 <script>
 import Common from "../../assets/js/common.js";
-import VueScheduler from "../../assets/calendar/components/VueScheduler.vue";
-import "../../assets/calendar/lib/main.css";
+import VueScheduler from "../plugins/calendar/components/VueScheduler";
+import "../plugins/calendar/lib/main.css";
 
 export default {
   name: "debtCalendar",
@@ -69,7 +69,11 @@ export default {
   created() {},
   beforeMount() {},
   mounted() {
-    this.getCalendarData();
+    this.getCalendarData(
+      Common.formatDate(new Date())
+        .replace(/[-]/g, "")
+        .substr(0, 6)
+    );
   },
   beforeUpdate() {},
   updated() {},
@@ -98,7 +102,7 @@ export default {
           );
           name = Common.formatNumber(vo.amt_in_out);
           amt = vo.amt_in_out;
-          color = "#3B86FF";
+          color = "#4f82d6";
           type = type;
           break;
         case "consume":
@@ -110,7 +114,7 @@ export default {
           );
           name = Common.formatNumber(vo.amt_in_out);
           amt = vo.amt_in_out;
-          color = "#47D147";
+          color = "#25bdd5";
           type = type;
           break;
         case "debt":
@@ -122,7 +126,7 @@ export default {
           );
           name = Common.formatNumber(vo.amt_repay);
           amt = vo.amt_repay;
-          color = "#FF3333";
+          color = "#e52638";
           type = type;
           break;
       }

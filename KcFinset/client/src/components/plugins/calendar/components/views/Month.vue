@@ -1,29 +1,23 @@
 <template>
-    <section class="v-cal-content">
-        <div class="v-cal-weekdays">
-            <div class="v-cal-weekday-item" v-for="weekday in weekdays" :key="weekday.index">{{ weekday }}</div>
-        </div>
-        <div class="v-cal-days" v-for="row in calendar" :key="row.index">
-            <div :ref="'days.day_' + day.d.format('DDD')" class="v-cal-day v-cal-day--month"
-                 @click="dayClicked"
-                 :class="{
+  <section class="v-cal-content">
+    <div class="v-cal-weekdays">
+      <div class="v-cal-weekday-item" v-for="weekday in weekdays" :key="weekday.index">{{ weekday }}</div>
+    </div>
+    <div class="v-cal-days" v-for="row in calendar" :key="row.index">
+      <div :ref="'days.day_' + day.d.format('DDD')" class="v-cal-day v-cal-day--month" @click="dayClicked" :class="{
                  'is-today': day.isToday,
                  'is-past': day.isPast,
-                 'is-different-month': day.isDifferentMonth }" v-for="day in row" :key = day.index>
-                <span class="v-cal-day__number">{{ day.d.date() }}</span>
-                <div class="v-cal-event-list">
-                    <event-item
-                            v-for="event in day.events"
-                            :key="event.index"
-                            :has-dynamic-size="false"
-                            :event="event"
-                            
-                    >
-                    </event-item>
-                </div>
-            </div>
-        </div>
-    </section>
+                 'is-different-month': day.isDifferentMonth }" v-for="day in row" :key=day.index>
+        <a>
+          <p class="v-cal-day__outer"><span class="v-cal-day__number">{{ day.d.date() }}</span></p>
+          <div class="v-cal-event-list">
+            <event-item v-for="event in day.events" :key="event.index" :has-dynamic-size="false" :event="event">
+            </event-item>
+          </div>
+        </a>
+      </div>
+    </div>
+  </section>
 </template>
 
 <script>

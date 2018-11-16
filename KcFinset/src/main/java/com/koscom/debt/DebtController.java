@@ -1,5 +1,6 @@
 package com.koscom.debt;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -23,10 +24,14 @@ import com.koscom.debt.model.DebtCalendarVO;
 import com.koscom.debt.model.DebtDetail12RepVO;
 import com.koscom.debt.model.DebtForm;
 import com.koscom.debt.model.DebtVO;
+import com.koscom.debt.model.ReqIntrCutForm;
 import com.koscom.debt.service.DebtManager;
+import com.koscom.domain.PersonShareInfo;
+import com.koscom.person.model.PersonShareInfoForm;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
 import com.koscom.util.Constant;
+import com.koscom.util.DateUtil;
 import com.koscom.util.FinsetException;
 import com.koscom.util.ResUtil;
 
@@ -36,16 +41,16 @@ import com.koscom.util.ResUtil;
 public class DebtController {
 
 	private static final Logger logger = LoggerFactory.getLogger(DebtController.class);
-	
+
 	@Autowired
 	private DebtManager debtManager;
-	
+
 	@Autowired
 	private PersonManager personManager;
-	
+
 	@Autowired
 	private ConsumeManager consumeManager;
-	
+
 	/**
 	 * 부채관리 진입 (풋터에서 호출)
 	 * @param request
@@ -58,7 +63,7 @@ public class DebtController {
 		String no_person = (String) session.getAttribute("no_person");
         logger.debug("no_person : " + no_person);
 		String path = ResUtil.getPath(request);
-		
+
 		if(no_person != null && !no_person.equals("")){
 			/**
 			 * IF 부채가 있으면
@@ -112,7 +117,7 @@ public class DebtController {
 				debtManager.modifySeqNewDeptReg(no_person);
 			}
 		}
-		
+
 		//test
         logger.debug("no_person : " + no_person);
 		if(no_person != null && !no_person.equals("")){
@@ -122,7 +127,7 @@ public class DebtController {
 			//부채메인 리스트
 			DebtForm debtForm = new DebtForm();
 			debtForm.setNo_person(no_person);
-			
+
 			//display_yn 이 Y 인 것만 가져오도록
 			debtForm.setDisplay_yn("Y");
 			List<DebtVO> debtList = debtManager.listDebtPg(debtForm);
@@ -130,10 +135,10 @@ public class DebtController {
 			model.addAttribute("debtListData", debtList);
 		}
 		//end test
-		
+
 		return "/debt/frameDebtInfoMain";
 	}
-	
+
 	/**
 	 * VUE
 	 * @param model
@@ -148,7 +153,7 @@ public class DebtController {
 		model.addAttribute("listDebtSharePersonInfo",debtManager.listDebtSharePersonInfo(no_person));
 		return "jsonView";
 	}
-	
+
 	/** VUE
 	 * 부채메인 데이터 조회
 	 * @param model
@@ -165,16 +170,16 @@ public class DebtController {
 		debtForm.setNo_person(no_person);
 		debtForm.setNo_person_list(no_person_list);
 		debtForm.setDisplay_yn("Y");
-		
+
 		model.addAttribute("debtSummary", debtManager.getDebtSummary(debtForm));
 		Map<String, List<String>> summaryMap = debtManager.listStatDebtSummary(debtForm);
 		model.addAttribute("dataList",summaryMap.get("dataList"));
 		model.addAttribute("dateList",summaryMap.get("dateList"));
 		model.addAttribute("debtList",debtManager.listDebtPg(debtForm));
-		
+
 		return "jsonView";
 	}
-	
+
 	/**
 	 * VUE
 	 * @param session
@@ -189,13 +194,13 @@ public class DebtController {
 			no_person = (String) session.getAttribute("no_person");
 		}
 		debtForm.setNo_person(no_person);
-		
+
 		model.addAttribute("debtVO", debtManager.getDebtInfo(debtForm));
 		model.addAttribute("listDebtRepay", debtManager.listDebtLast12BizDay(debtForm));
-		
+
 		return "jsonView";
 	}
-	
+
 	/**
 	 * 부채관리 캘린더
 	 * @param request
@@ -206,7 +211,7 @@ public class DebtController {
 	public String frameDebtCalendar(HttpServletRequest request, Model model, HttpSession session) throws FinsetException {
 		return "/debt/frameDebtCalendar";
 	}
-	
+
 	/**
 	 * 부채 내역 조회-에러 처리는 페이지에서 한다
 	 * @param req_yyyymm 날짜 형태가 String이고, yyyymm 형식으로 붙어서 온다
@@ -223,12 +228,12 @@ public class DebtController {
 			DebtForm debtForm = new DebtForm();
 			debtForm.setNo_person(no_person);
 			debtForm.setReq_yyyymm(req_yyyymm);
-			
+
 			List<DebtCalendarVO> listDebtCalendar = debtManager.listDebtCalendar(debtForm);
-			
+
 			model.addAttribute("code","00");
 			model.addAttribute("listDebtCalendar", listDebtCalendar);
-			
+
 			return "jsonView";
 		}
 	}
@@ -244,7 +249,7 @@ public class DebtController {
 
 		String no_person = (String) session.getAttribute("no_person");
         logger.debug("no_person : " + no_person);
-        
+
 		String no_manage_info = request.getParameter("no_manage_info");
 
 		if(no_person != null && !no_person.equals("") &&
@@ -261,9 +266,9 @@ public class DebtController {
 		}
 		return "/debt/frameInDebtDetail";
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @param session
 	 * @param model
 	 * @param debtForm
@@ -275,7 +280,7 @@ public class DebtController {
 		model.addAttribute("debtVO", debtManager.getDebtInfoForUpdate(debtForm));
 		return "jsonView";
 	}
-	
+
 	/**
 	 * 부채 상세정보 수정
 	 * @param session
@@ -288,23 +293,23 @@ public class DebtController {
 		String no_person = (String) session.getAttribute("no_person");
 		String interest = request.getParameter("interest");
 		String no_manage_info = request.getParameter("no_manage_info");
-		
+
 		DebtForm debtForm = new DebtForm();
 		debtForm.setNo_person(no_person);
 		debtForm.setNo_manage_info(no_manage_info);
-		
+
 		DebtVO debtVO = debtManager.getDebtInfoForUpdate(debtForm);
 		//여기서 debtVO가 null이라면 에러가 발생할텐데, 절대로 null이 되면 안되기 때문에 예외처리는 없음
 		debtVO.setInterest(interest);
-		
+
 		debtVO.setNo_person(no_person);
 		debtVO.setNo_manage_info(no_manage_info);
-		
+
 		model.addAttribute("debtVO",debtVO);
-		
+
 		return "/debt/frameInDebtUpdate";
 	}
-	
+
 	/**
 	 * VUE
 	 * @param request
@@ -324,7 +329,7 @@ public class DebtController {
 		}
 		return "jsonView";
 	}
-	
+
 	/**
 	 * 부채 삭제, 삭제 취소 처리
 	 * @param session
@@ -356,7 +361,7 @@ public class DebtController {
         }
 		return "jsonView";
 	}
-	
+
 	/**
 	 * 대출정보 없을 시 페이지
 	 * @param request
@@ -369,9 +374,9 @@ public class DebtController {
         logger.debug("no_person : " + no_person);
 		return "/debt/frameNoDebtInfo";
 	}
-	
+
 	/**
-	 * 부채 삭제 취소 처리 
+	 * 부채 삭제 취소 처리
 	 * @param request
 	 * @param model
 	 * @param session
@@ -391,7 +396,7 @@ public class DebtController {
 		model.addAttribute("debtList",debtList);
 		return "/debt/frameDebtCancelDelete";
 	}
-	
+
 	@RequestMapping("/updateDebtDisplayList.json")
 	public String updateDebtDisplayList(HttpSession session, DebtForm debtForm, Model model) throws FinsetException {
 		String no_person = (String) session.getAttribute("no_person");
@@ -405,19 +410,19 @@ public class DebtController {
 		}
 		return "jsonView";
 	}
-	
+
 	@RequestMapping("/frameDebtSecurityCode.crz")
 	public String frameDebtSecurityCode() throws FinsetException {
 		return "/debt/frameDebtSecurityCode";
 	}
-	
+
 	@RequestMapping("/debtChkCode.json")
 	public String debtChkCode(HttpSession session, Model model, HttpServletRequest request, PersonVO personVO) {
 
 		String no_person = (String) session.getAttribute("no_person");
 		personVO.setNo_person(no_person);
 		int pwdCheck = personManager.checkPersonPass(personVO);
-		
+
 		if(pwdCheck > 0) {	//암호화 비밀번호 체크
 			model.addAttribute("result", Constant.SUCCESS);
 		} else {
@@ -426,19 +431,19 @@ public class DebtController {
 		}
 		return "jsonView";
 	}
-	
+
 	@RequestMapping("/getCalendarData.json")
 	public String getCalendarData(HttpSession session, Model model, String ym) throws FinsetException {
 		String no_person = (String) session.getAttribute("no_person");
 		ConsumeForm consumeForm = new ConsumeForm();
 		consumeForm.setNo_person(no_person);
 		consumeForm.setYm_trd(ym);
-		
+
 		List<ConsumeVO> incomeList = new ArrayList<ConsumeVO>();
 		List<ConsumeVO> consumeList = new ArrayList<ConsumeVO>();
-		
-		List<ConsumeVO> rawConsumeList = consumeManager.getCalendarConsumeData(consumeForm);		
-		
+
+		List<ConsumeVO> rawConsumeList = consumeManager.getCalendarConsumeData(consumeForm);
+
 		for(ConsumeVO vo : rawConsumeList) {
 			String type = vo.getType_in_out();
 			if(type.equals("01")) {
@@ -447,24 +452,24 @@ public class DebtController {
 				consumeList.add(vo);
 			}
 		}
-		
+
 		model.addAttribute("incomeList", incomeList);
 		model.addAttribute("consumeList", consumeList);
-		
+
 		DebtForm debtForm = new DebtForm();
 		debtForm.setNo_person(no_person);
 		debtForm.setReq_yyyymm(ym);
-		
+
 		List<DebtCalendarVO> debtList = debtManager.getCalendarDebtData(debtForm);
-		
+
 		for(DebtCalendarVO vo : debtList) {
 			vo.setReq_yyyymmdd(vo.getReq_yyyymm() + vo.getInter_pay_day());
 		}
 		model.addAttribute("debtList", debtList);
-		
+
 		return "jsonView";
 	}
-	
+
 	@RequestMapping("/listCalendarData.json")
 	public String listCalendarData(
 			HttpSession session,
@@ -479,17 +484,17 @@ public class DebtController {
 		int incomeTotal = 0;
 		int consumeTotal = 0;
 		int debtTotal = 0;
-		
+
 		if(isActiveIncome||isActiveConsume){
 			ConsumeForm consumeForm = new ConsumeForm();
 			consumeForm.setNo_person(no_person);
 			consumeForm.setYmd_trd(ymd);
-			
+
 			List<ConsumeVO> incomeList = new ArrayList<ConsumeVO>();
 			List<ConsumeVO> consumeList = new ArrayList<ConsumeVO>();
-			
+
 			List<ConsumeVO> rawConsumeList = consumeManager.listCalendarConsumeData(consumeForm);
-			
+
 			for(ConsumeVO vo : rawConsumeList) {
 				String type = vo.getType_in_out();
 				if(type.equals("01")) {
@@ -506,34 +511,34 @@ public class DebtController {
 			}
 			if(isActiveIncome){
 				model.addAttribute("incomeTotal", incomeTotal);
-				model.addAttribute("incomeList", incomeList);	
+				model.addAttribute("incomeList", incomeList);
 			}
 			if(isActiveConsume){
 				model.addAttribute("consumeTotal", consumeTotal);
-				model.addAttribute("consumeList", consumeList);	
+				model.addAttribute("consumeList", consumeList);
 			}
 		}
 		if(isActiveDebt){
 			DebtForm debtForm = new DebtForm();
 			debtForm.setNo_person(no_person);
 			debtForm.setReq_yyyymmdd(ymd);
-			
+
 			List<DebtCalendarVO> debtList = debtManager.listCalendarDebtData(debtForm);
-			
+
 			for(DebtCalendarVO vo : debtList) {
 				vo.setReq_yyyymmdd(vo.getReq_yyyymm() + vo.getInter_pay_day());
 				debtTotal += Integer.parseInt(vo.getAmt_repay());
 			}
-			
+
 			model.addAttribute("debtTotal", debtTotal);
 			model.addAttribute("debtList", debtList);
 		}
 		int sumTotal = incomeTotal-consumeTotal-debtTotal;
 		model.addAttribute("sumTotal", sumTotal);
-		
+
 		return "jsonView";
 	}
-	
+
 	@RequestMapping("/createRepayment.json")
 	public String createRepayment(HttpSession session, Model model, DebtVO debtVO) {
 		String no_person = (String) session.getAttribute("no_person");
@@ -541,4 +546,72 @@ public class DebtController {
 //		debtManager.createRepayment(debtVO);
 		return "jsonView";
 	}
+
+	/**
+	 * VUE
+	 * 금리인하요구
+	 * @param request
+	 * @param session
+	 * @param model
+	 * @param personShareInfoForm
+	 * @return String
+	 * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/listReqIntrCut.json")
+	public String listReqIntrCut(HttpServletRequest request, HttpSession session, Model model, ReqIntrCutForm reqIntCutForm) throws FinsetException, IOException {
+		String no_person = (String)session.getAttribute("no_person");
+		reqIntCutForm.setNo_person(no_person);
+
+		List<DebtVO> debtList = new ArrayList<DebtVO>();
+		List<DebtVO> reqIntrCutList = new ArrayList<DebtVO>();
+		List<String> cutItems = new ArrayList<String>();
+		for (int i = 0; i < reqIntCutForm.getCutItems().size(); i++) {
+			if("03".equals(reqIntCutForm.getCutItems().get(i))){ //연소득기준
+				reqIntrCutList = debtManager.listReqIntrCutIncome(reqIntCutForm);
+			}else{ //기준일 기준
+				if("01".equals(reqIntCutForm.getCutItems().get(i))){ //신용
+					reqIntCutForm.setFixDate(reqIntCutForm.getCreditFixDate());
+				}else if("02".equals(reqIntCutForm.getCutItems().get(i))){ //이직
+					reqIntCutForm.setFixDate(reqIntCutForm.getTurnoverDate());
+				}else if("04".equals(reqIntCutForm.getCutItems().get(i))){ //부채
+					reqIntCutForm.setFixDate(reqIntCutForm.getDebtFixDate());
+				}else if("05".equals(reqIntCutForm.getCutItems().get(i))){ //직위
+					reqIntCutForm.setFixDate(reqIntCutForm.getPosFixDate());
+				}else if("06".equals(reqIntCutForm.getCutItems().get(i))){ //자격증
+					reqIntCutForm.setFixDate(reqIntCutForm.getCertFixDate());
+				}
+
+				reqIntrCutList = debtManager.listReqIntrCutFixDate(reqIntCutForm);
+			}
+
+			if(0==debtList.size()){
+				for (int j = 0; j < reqIntrCutList.size(); j++) {
+					cutItems.add(reqIntCutForm.getCutItems().get(i));
+					reqIntrCutList.get(j).setCutItems(cutItems);
+					debtList.add(reqIntrCutList.get(j));
+				}
+			}else{
+				for (int j = 0; j < debtList.size(); j++) {
+					for (int k = 0; k < reqIntrCutList.size(); k++) {
+						if(debtList.get(j).getNo_manage_info().equals(reqIntrCutList.get(k).getNo_manage_info())){
+							reqIntrCutList.remove(k);
+							break;
+						}
+					}
+				}
+
+				for (int j = 0; j < reqIntrCutList.size(); j++) {
+					cutItems = reqIntrCutList.get(j).getCutItems();
+					cutItems.add(reqIntCutForm.getCutItems().get(i));
+					reqIntrCutList.get(j).setCutItems(cutItems);
+					debtList.add(reqIntrCutList.get(j));
+				}
+			}
+		}
+
+		model.addAttribute("debtList", debtList);
+
+		return "jsonView";
+	}
+
 }

@@ -20,7 +20,7 @@
             <p><input type="checkbox" id="cDebt" v-model="yn_debt_info" true-value="Y" false-value=""><label for="cDebt">대출개설 및 잔고 현황</label></p>
           </div>
         </div>
-      </div> 
+      </div>
       <div v-else-if="this.cd_share=='02'" class="item pb10">
         <div class="checks">
           <p class="title">정보 통합 관리 항목</p>
@@ -92,13 +92,12 @@ export default {
   methods: {
     //사용자검색
     srcPerson: function() {
-      if (Constant.userAgent == "Android") {
+      if (Constant.userAgent == "iOS") {
+        Jockey.on("getAddressList", function(param) {
+          resultAddress(param.src_nm_person, param.src_hp);
+        });
+      } else if (Constant.userAgent == "Android") {
         window.Android.getAddressList();
-      } else if (Constant.userAgent == "iOS") {
-        //TODO ios 사용자검색 추가
-        // Jockey.on("getAddressList" , function (param) {
-        // resultAddress(param.src_nm_person, param.src_hp);
-        // });
       }
     },
     //사용자 검색결과 셋팅
@@ -193,10 +192,13 @@ export default {
         msg +=
           "https://play.google.com/store/apps/details?id=com.app.kc.koscom";
 
-        if (Constant.userAgent == "Android") {
+        if (Constant.userAgent == "iOS") {
+          Jockey.send("sendSms", {
+            offer_hp: offer_hp,
+            msg: msg
+          });
+        } else if (Constant.userAgent == "Android") {
           window.Android.sendSms(offer_hp, msg);
-        } else if (Constant.userAgent == "iOS") {
-          //TODO ios sms문자발송 추가
         }
       } else if ("push" == typeMessage) {
         console.log("share_status" + _this.share_status);

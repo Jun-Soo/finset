@@ -61,7 +61,7 @@
     <div v-if="this.cd_share=='02' && shareInfo.share_status=='02'" class="btn-wrap">
       <a @click="reqUpdate();" class="stroke blue">업데이트 요청하기</a>
     </div>
-    
+
     <div class="btn-wrap float">
       <!-- 공유상태에 따라 달라짐-->
       <a v-if="shareInfo.share_status=='01'" @click="settingReq('05');" class="solid blue box">요청 취소</a>
@@ -180,10 +180,13 @@ export default {
 
         msg = _this.shareInfo.req_nm_person + "님이 공유를 취소하셨습니다.";
 
-        if (Constant.userAgent == "Android") {
+        if (Constant.userAgent == "iOS") {
+          Jockey.send("sendSms", {
+            offer_hp: offer_hp,
+            msg: msg
+          });
+        } else if (Constant.userAgent == "Android") {
           window.Android.sendSms(offer_hp, msg);
-        } else if (Constant.userAgent == "iOS") {
-          //TODO ios sms문자발송 추가
         }
       } else if ("push" == typeMessage) {
         console.log("share_status" + _this.share_status);

@@ -261,6 +261,9 @@ aside.search-wrap{
                 }
             }
         }
+        &.one{
+            grid-template-columns: 1fr;
+        }
     }
     .action{
         padding: 20px 21px 40px;
@@ -378,6 +381,25 @@ aside.search-wrap{
     background: #efeeec;
     padding: 21px;
     margin-top: 40px;
+    .guide-box{
+        padding: 15px 50px 15px 15px;
+        border: 1px solid $lineColor;
+        position: relative;
+        background: #fff;
+        border-radius: 10px;
+        margin-bottom: 10px;
+        p{
+            line-height: 17px;
+        }
+        .close{
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            width: 30px;
+            height: 30px;
+            background: url("../images/common/btn_search_close.png") no-repeat center / 13px;
+        }
+    }
 }
 
 .list01{
@@ -414,6 +436,10 @@ aside.search-wrap{
                         margin-right: 5px;
                     }
                     label{
+                        height: 30px;
+                    }
+                    .x{
+                        width: 30px;
                         height: 30px;
                     }
                 }
@@ -455,6 +481,12 @@ aside.search-wrap{
                     }
                     em{
                         padding-left: 10px;
+                        &.blue{
+                            color: $col4;
+                        }
+                        &.bold{
+                            font-weight: 700;
+                        }
                     }
                 }
                 &.corp{
@@ -617,6 +649,11 @@ aside.search-wrap{
                             font-size: 14px;
                         }
                     }
+                    .number{
+                        font-size: 24px;
+                        font-weight: 700;
+                        color: #222;
+                    }
                 }
             }
         }
@@ -661,6 +698,15 @@ aside.search-wrap{
                         text-align: right;
                         font-size: 14px;
                         color: #666;
+                        .state{
+                            display: inline-block;
+                            color: $col4;
+                            border: 1px solid $col4;
+                            line-height: 18px;
+                            padding: 0 9px;
+                            border-radius: 10px;
+                            margin-right: 5px;
+                        }
                     }
                 }
             }
@@ -871,6 +917,71 @@ aside.search-wrap{
     }
 }
 
+.nobox-list{
+    .date{
+        color: $col2;
+        margin-top: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid $lineColor;
+    }
+    .item{
+        padding: 5px 15px 15px 15px;
+        border-bottom: 1px solid $lineColor;
+        .flex{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 10px;
+            p{
+                flex-grow: 1;
+                em{
+                    display: inline-block;
+                    margin-right: 5px;
+                    &.circle{
+                        line-height: 20px;
+                        padding: 0 10px;
+                        color: #fff;
+                        font-weight: 700;
+                        border-radius: 10px;
+                        &.red{
+                            background: #e95071;
+                        }
+                        &.orange{
+                            background: #ef903c;
+                        } 
+                        &.green{
+                            background: #89c11c;
+                        } 
+                        &.blue{
+                            background: #6993f3;
+                        } 
+                        &.purple{
+                            background: #bf65f3;
+                        }
+                        
+                    }
+                    &.number{
+                        font-size: 19px;
+                        font-weight: 700;
+                        &.red{
+                            color: $col1;
+                        }
+                        &.blue{
+                            color: $col4;
+                        }
+                    }
+                }
+                &:last-child{
+                    text-align: right;
+                }
+                &.key{
+                    color: $col2;
+                }
+            }
+        }
+    }
+}
+
 .block-list{
     background: #efeeec;
     padding: 21px;
@@ -995,7 +1106,7 @@ aside.search-wrap{
             &.red{
                 font-weight: 700;
                 color: $col1;
-            } 
+            }
         }
     }
     a{
@@ -1698,6 +1809,31 @@ aside.search-wrap{
     }
 }
 
+.detail-list{
+    dt{
+        margin-top: 30px;
+        line-height: 30px;
+        background: #f0efed;
+        text-indent: 21px;
+    }
+    dd{
+        display: flex;
+        padding: 0 21px;
+        p{
+            line-height: 35px;
+            border-bottom: 1px solid $lineColor;
+            flex-grow: 1;
+            padding: 0 21px;
+            color: #888;
+            &:last-child{
+                color: #333;
+                font-size: 13px;
+                text-align: right;
+            }
+        }
+    }
+}
+ 
 
 //   지출   //
 
@@ -1766,7 +1902,7 @@ aside.search-wrap{
 }
 
 
-//   자산   //
+/*   자산   */
 
 .assets-top{
     .wrap{
@@ -1801,7 +1937,432 @@ aside.search-wrap{
     }
 }
 
+.assets-bank{
+   padding: 30px 21px 0;
+    text-align: center;
+    .key{
+        color: $col2;
+        font-size: 14px;
+        font-weight: 700;
+        margin-top: 10px;
+    }
+    .value{
+        font-size: 14px;
+        color: #222;
+        margin-bottom: 50px;
+        margin-top: 10px;
+        em{
+            font-size: 24px;
+            font-weight: 700;
+            color: #222;
+        }
+    }
+}
 
+.assets-bank-recent{
+    border-top: 1px solid $lineColor;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 21px;
+    p{
+        flex-grow: 1;
+        &:first-child{
+            color: $col2;
+            em{
+                font-size: 14px;
+                color: #222;
+                margin-left: 10px;
+            }
+        }
+        &:last-child{
+            text-align: right;
+            em{
+                font-size: 19px;
+                color: $col1;
+                font-weight: 700;   
+            }
+            color: #222;
+        }
+    }
+}
+
+.assets-bank-detail-top{
+    margin-top: 30px;
+    padding: 0 21px;
+    .item{
+        border: 1px solid $lineColor;
+        border-radius: 10px;
+        padding: 20px;
+        .top{
+            display: flex;
+            p{
+                width: 50%;
+                line-height: 24px;
+                font-size: 12px;
+                &.symbol{
+                    height: 24px;
+                    margin-right: 8px;
+                    vertical-align: middle;
+                    font-size: 12px;
+                    font-weight: 700;
+                    text-align: left !important;
+                    img{
+                        height: 100%;
+                        vertical-align: middle;
+                        margin-right: 5px;
+                    }
+                    label{
+                        height: 30px;
+                    }
+                }
+                &.text{
+                    text-align: right;
+                    &.blue{
+                        color: $col4;
+                    }
+                    &.red{
+                        color: $col1;
+                    }
+                    span.circle{
+                        display: inline-block;
+                        line-height: 24px;
+                        text-align: center;
+                        border-radius: 20px;
+                        color: #fff;
+                        padding:0 9px;
+                        min-width: 18px;
+                        min-height: 18px;
+                        vertical-align: middle;
+                        margin-left: 5px;
+                        @include box-sizing(border-box);
+                        &.red{
+                            background: #e95071;
+                        }
+                        &.orange{
+                            background: #ef903c;
+                        } 
+                        &.green{
+                            background: #89c11c;
+                        } 
+                        &.blue{
+                            background: #6993f3;
+                        } 
+                        &.purple{
+                            background: #bf65f3;
+                        } 
+                    }
+                    em{
+                        padding-left: 10px;
+                        &.blue{
+                            color: $col4;
+                        }
+                        &.bold{
+                            font-weight: 700;
+                        }
+                    }
+                }
+                &:last-child{
+                    text-align: right;
+                }
+            }
+        }
+        .text-wrap{
+            display: flex;
+            align-items: center;
+            margin-top: 15px;
+            .left{
+                width: 50%;
+                .key{
+                    font-size: 12px;
+                    color: $col2;
+                    span{
+                        font-size: inherit;
+                        display: inline-block;
+                        margin-left: 5px;
+                        padding-left: 5px;
+                        border-left: 1px solid $lineColor;
+                        color: $col2;
+                        &:first-child{
+                            margin-left: 0;
+                            padding-left: 0;
+                            border-left: none;
+                        }
+                    }
+                }
+                .value{
+                    font-size: 14px;
+                    color: #666;
+                    //margin-top: 10px;
+                    span{
+                        font-size: inherit;
+                        color: #666;
+                        margin-left: 5px;
+                        padding-left: 5px;
+                        border-left: 1px solid $lineColor;
+                        &:first-child{
+                            margin-left: 0;
+                            padding-left: 0;
+                            border-left: none;
+                        }
+                        em{
+                            margin-left: 2px;
+                            font-size: 14px;
+                        }
+                    }
+                }
+            }
+            .right{
+                width: 50%;
+                .key{
+                    text-align: right;
+                    font-size: 12px;
+                    color: $col2;
+                    span{
+                        font-size: inherit;
+                        color: $col2;
+                    }
+                }
+                .value{
+                    margin-top: 10px;
+                    text-align: right;
+                    color: #222;
+                    font-weight: 700;
+                    span{
+                        font-size: 14px;
+                        color: #666;
+                        margin-left: 5px;
+                        padding-left: 5px;
+                        border-left: 1px solid $lineColor;
+                        &:first-child{
+                            margin-left: 0;
+                            padding-left: 0;
+                            border-left: none;
+                        }
+                        em{
+                            margin-left: 2px;
+                            font-size: 14px;
+                        }
+                    }
+                    .number{
+                        font-size: 24px;
+                        font-weight: 700;
+                        color: #222;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.bank-detail{
+    padding: 20px 21px;
+    margin-top: 50px;
+    border-top: 1px solid $lineColor;
+    .select{
+        display: flex;
+        margin-bottom: 10px;
+        div{
+            width: 50%;
+            &.right{
+                text-align: right;
+                button{
+                    width: 35px;
+                    height: 35px;
+                    background: url("../images/common/btn-search.png") no-repeat center / contain;
+                }
+            }
+        }
+    }
+    .inout{
+        display: flex;
+        border-bottom: 1px solid $lineColor;
+        padding: 30px 0;
+        div{
+            flex-grow: 1;
+            text-align: center;
+            .key{
+                font-size: 14px;
+                font-weight: 700;
+                &.red{
+                    color: $col1;
+                    em{
+                        color: $col1;
+                        font-size: 14px;
+                    }
+                }
+                &.blue{
+                    color: $col4;
+                    em{
+                        color: $col4;
+                        font-size: 14px;
+                    }
+                }
+                em{
+                    font-weight: 400;
+                }
+            }
+            .number{
+                font-size: 24px;
+                color: #222;
+                font-weight: 700;
+                margin-top: 10px;
+            }
+            &:last-child{
+                border-left: 1px solid $lineColor;
+            }
+        }
+    }
+}
+
+.gray-search-box{
+    padding: 25px 21px;
+    background: #efeeec;
+    .search{
+        display: flex;
+        .left{
+            button{
+                line-height: 28px;
+                border: 1px solid $col4;
+                text-align: center;
+                font-size: 14px;
+                color: $col4;
+                font-weight: 700; 
+                margin-right: 5px;
+                background: #fff;
+                border-radius: 30px;
+                width: 70px;
+                &.on{
+                    background: $col4;
+                    color: #fff;
+                }
+            }
+        }
+        .right{
+            .acco{
+                padding: 0 30px 0 15px;
+                border: 1px solid $col2;
+                color: $col2;
+                font-weight: 700;
+                background: url("../images/assets/search_arrow.png") no-repeat 65px 0 / 9px;
+                border-radius: 30px;
+                width: auto;
+                line-height: 28px;
+                height: auto;
+                &.on{
+                    background-position: 65px 100%;
+                }
+            }
+        }
+    }
+    .form{
+        display: flex;
+        align-items: center;
+        p{
+            &:first-child{
+                 flex-grow: 1;
+                font-size: 13px;
+                font-weight: 700;
+            }
+            &:last-child{
+                flex-grow: 4;
+                select{
+                    width: 100%;
+                }
+            }
+        }
+    }
+    .wrap{
+        margin-top: 15px;
+        padding-top: 15px;
+        border-top: 1px solid $lineColor;
+        display: none;
+    }
+    .date-pick{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 5px;
+        align-items: center;
+        p{
+            border: 1px solid $lineColor;
+            background: #fff;
+            input[type="text"]{
+                width: calc(100% - 33px);
+                border: none;
+                vertical-align: middle;
+                line-height: 33px;
+            }
+            button{
+                width: 33px;
+                height: 33px;
+                background: url("../images/assets/ico_cal.png") no-repeat center / contain;
+                vertical-align: middle;
+            }
+        }
+    }
+}
+
+.inout-list{
+    margin-top: 30px;
+    border-bottom: 1px solid $lineColor;
+    padding: 0 21px;
+    padding-bottom: 30px;
+    .flex{
+        display: flex;
+        justify-content: space-between;
+        li{
+            line-height: 35px;
+            border-bottom: 1px solid $lineColor;
+            flex-grow: 1;
+            padding: 0 15px;
+            &.symbol{
+                vertical-align: middle;
+                font-weight: 700;
+                img{
+                    height: 24px;
+                    vertical-align: middle;
+                    margin-right: 5px;
+                }
+                label{
+                    height: 30px;
+                }
+            }
+            &.num{
+                color: $col2 !important;
+            }
+           &:first-child{
+                color: #888;
+            }
+            &:last-child{
+                font-size: 13px;
+                color: #333;
+                text-align: right;
+            } 
+        }
+    }
+}
+
+.inout-setting{
+    margin-top: 30px;
+    padding: 0 21px 30px;
+    border-bottom: 1px solid $lineColor;
+    .flex{
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        li{
+            line-height: 40px;
+            select{
+                border: none;
+            }
+           &:first-child{
+                font-size: 14px;
+                color: #222;
+                font-weight: 700;
+            } 
+        }
+    }
+}
 
 
 //   button   //
@@ -2565,7 +3126,7 @@ button.cal{
 
 
 /*   부채   */
-//금리인하요구
+//   금리인하요구   //
 
 .cut-result-top{
     padding: 0 21px;
@@ -2764,6 +3325,9 @@ button.cal{
     }
 }
 
+//   기타부채등록   //
+
+
 
 
 /*   상품   */
@@ -2849,6 +3413,25 @@ button.cal{
                 color: #888;
                 font-size: 10px;
             }
+            .stock{
+                text-align: center;
+                p{
+                    font-size: 18px;
+                    line-height: 22px;
+                    color: #222;
+                    em{
+                        font-size: 18px;
+                        display: block;
+                        font-weight: 700;
+                        color: $col1;
+                    }
+                }
+                img{
+                    display: inline-block;
+                    width: 66px;
+                    margin-top: 25px;
+                }
+            }
         }
     }
 }
@@ -2919,6 +3502,25 @@ button.cal{
                 margin-left: 0;
                 padding-left: 0;
                 border: none;
+            }
+        }
+    }
+    .spec{
+        margin-top: 15px;
+        span{
+            margin-left: 10px;
+            padding-left: 10px;
+            color: $col2;
+            border-left: 1px solid $lineColor;
+            &:first-child{
+                margin-left: 0;
+                padding-left: 0;
+                border: none;
+            }
+            em{
+                font-size: 14px;
+                color: #666;
+                margin-left: 5px;
             }
         }
     }
@@ -3093,6 +3695,10 @@ button.cal{
             padding-bottom: 20px;
         }
     }
+}
+
+.graph-wrapper{
+    padding: 0 21px;
 }
 
 
@@ -3471,6 +4077,147 @@ button.cal{
 
 //   금융사연동관리   //
 
+.debt-regist{
+    .title{
+        color: #222;
+        font-size: 20px;
+        line-height: 27px;
+        em{
+            font-weight: 700; 
+            font-size: 20px;
+            color: #222;
+        }
+    }
+    .list{
+        margin-top: 25px;
+        border-top: 1px solid $lineColor;
+        .flex{
+            display: flex;
+            border-bottom: 1px solid $lineColor;
+            justify-content: space-between;
+            align-items: center;
+            .key{
+                flex-grow: 2;
+                font-size: 13px;
+                color: $col2;
+                padding-left: 15px;
+                line-height: 49px;
+            }
+            .value{
+                flex-grow: 3;
+                text-align: right;
+                padding-right: 15px;
+                input[type="text"]{
+                    line-height: 49px;
+                    width: 200px;
+                    border: none;
+                    text-align: right;
+                }
+                em{
+                    margin-left: 10px;
+                    color: #333;
+                }
+                button{
+                    vertical-align: middle;
+                    &.human{
+                        width: 29px;
+                        height: 49px;
+                        background: url("../images/debt/btn-human.png") no-repeat center / contain;
+                    }
+                    &.onoff{
+                        border: 1px solid $col2;
+                        color: $col2;
+                        font-size: 14px;
+                        font-weight: 700;
+                        background: #fff;
+                        line-height: 28px;
+                        &.per{
+                            border-top-left-radius: 20px;
+                            border-bottom-left-radius: 20px;
+                            padding-left: 8px;
+                            padding-right: 5px;
+                            border-right: none;
+                            margin-left: 10px;
+                        }
+                        &.won{
+                            border-top-right-radius: 20px;
+                            border-bottom-right-radius: 20px;
+                            padding-left: 5px;
+                            padding-right: 8px;
+                            border-left: none;
+                        }
+                        &.on{
+                            background: $col2;
+                            color: #fff;
+                        }
+                    }
+                    &.search{
+                        width: 49px;
+                        height: 49px;
+                        background: url("../images/assets/btn_search.png") no-repeat center / contain;
+                        margin: 0;
+                        display: inline-block;
+                    }
+                }
+                select{
+                    border: none;
+                }
+            }
+        }
+        .block{
+            .key{
+                flex-grow: 2;
+                font-size: 13px;
+                color: $col2;
+                padding-left: 15px;
+                line-height: 49px;
+            }
+            .value{
+                border-bottom: 1px solid $lineColor;
+                padding-bottom: 15px;
+            }
+        }
+    }
+    .debt-acco{
+        border: 1px solid $lineColor;
+        margin-top: 30px;
+        .top{
+            a{
+                display: block;
+                padding-left: 20px;
+                background: url("../images/debt/acco_arrow.png") no-repeat right top / 38px;
+                color: #333;
+                font-size: 15px;
+                font-weight: 700;
+                line-height: 45px;
+                &.on{
+                    background-position: right bottom;
+                }
+            }
+        }
+        .body{
+            border-top: 1px solid $lineColor;
+            padding: 20px;
+            display: none;
+            .flex{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 5px 0;
+                p{
+                    font-size: 14px;
+                    color: #222;
+                    font-weight: 700;
+                    flex-grow: 1;
+                    width: 50%;
+                    select{
+                        width: 100%;
+                    }
+                }
+            }
+        }
+    }
+}
 
 
 
@@ -3825,6 +4572,160 @@ button.cal{
 }
 
 
+//   상품신청현황   //
+
+.goods-state{
+    .number{
+        line-height: 30px;
+        background: #f0efed;
+        padding: 0 21px;
+        margin-top: 30px;
+    }
+    .item{
+        border: 1px solid $lineColor;
+        border-radius: 10px;
+        margin:15px 21px 0;
+        padding-bottom: 20px;
+        .num{
+            padding: 15px 20px;
+            border-bottom: 1px solid $lineColor;
+        }
+        .wrap{
+            padding: 0 20px;
+            border-bottom: 1px solid $lineColor;
+            .top{
+                padding-left:55px;
+                &.deposit{
+                    background: url("../images/mypage/ico_deposit.png") no-repeat left center / 40px;
+                }
+                &.cancel{
+                    background: url("../images/mypage/ico_cancel.png") no-repeat left center / 40px;
+                }
+                &.reject{
+                    background: url("../images/mypage/ico_reject.png") no-repeat left center / 40px;
+                }
+                a{
+                    display: block;
+                    background: url("../images/mypage/accodion_arrow.png") no-repeat right top / 74px;
+                    .title{
+                        font-size: 14px;
+                        color: #333;
+                        font-weight: 700;
+                        padding-top: 17px;
+                    }
+                    .text{
+                        color: #888;
+                        margin-top: 10px;
+                        padding-bottom: 17px;
+                    } 
+                    &.on{
+                        background-position: right bottom;
+                    }
+                }
+            }
+        }
+        .step{
+            background: #f5f5f5;
+            padding: 20px 33px;
+            display: none;
+            .step-wrap{
+                display: table;
+                width: 100%;
+                table-layout: fixed;
+                background: url("../images/mypage/line.png") repeat-x 0 19px;
+                background-size: 75% 1px;
+                justify-content: space-between;
+                p{
+                    display: inline-block;
+                    display: table-cell;
+                    width: 25%;
+                    text-align: center;
+                    padding-top: 50px;
+                    position: relative;
+                    word-break: keep-all;
+                    &:before{
+                        display: block;
+                        position: absolute;
+                        content: "";
+                        width: 40px;
+                        height: 40px;
+                        left: 50%;
+                        top: 0;
+                        margin-left: -20px;
+                    }
+                    &:nth-child(1){
+                        &:before{
+                            background: url("../images/mypage/ico_request.png") no-repeat center top / 40px;
+                        }
+                    }
+                    &:nth-child(2){
+                        &:before{
+                            background: url("../images/mypage/ico_ask.png") no-repeat center top / 40px;
+                        }
+                    }
+                    &:nth-child(3){
+                        &:before{
+                            background: url("../images/mypage/ico_audit.png") no-repeat center top / 40px;
+                        }
+                    }
+                    &:nth-child(4){
+                        &:before{
+                            background: url("../images/mypage/ico_deposit2.png") no-repeat center top / 40px;
+                        }
+                    }
+                    &.on{
+                        &:before{
+                            background-position: left bottom;
+                        }
+                    }
+                }
+            }
+        }
+        .flex{
+            display: flex;
+            justify-content: space-between;
+            padding: 0 21px;
+            margin-top: 15px;
+            .symbol{
+                height: 24px;
+                margin-right: 8px;
+                vertical-align: middle;
+                font-size: 12px;
+                font-weight: 700;
+                text-align: left !important;
+                img{
+                    height: 100%;
+                    vertical-align: middle;
+                    margin-right: 5px;
+                }
+            }
+            a{
+                line-height: 24px;
+                font-weight: 700;
+                color: $col2;
+                background: url("../images/common/btn_contop_arrow.png") no-repeat right center / 7px;
+                padding-right: 10px;
+            }
+            .key{
+                color: $col2;
+            }
+            .value{
+                font-size: 14px;
+                em{
+                    display: inline-block;
+                    color: $col4;
+                    border: 1px solid $col4;
+                    line-height: 18px;
+                    padding: 0 9px;
+                    border-radius: 10px;
+                    margin-right: 5px;
+                }
+            }
+        }
+    }
+}
+
+
 
 /*   기타   */
 
@@ -3851,11 +4752,15 @@ button.cal{
             color: #000;
             padding-top: 70px;
             margin: 0 20px;
+            min-width: 60px;
             &.kakao{
                 background: url("../images/etc/kakao.png") no-repeat center top / 60px;
             }
             &.email{
                 background: url("../images/etc/email.png") no-repeat center top / 60px;
+            }
+            &.copy{
+                background: url("../images/assets/copy.png") no-repeat center top / 60px;
             }
         }
     }

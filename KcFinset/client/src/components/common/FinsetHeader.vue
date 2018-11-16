@@ -43,7 +43,10 @@ export default {
   // },
   beforeCreate() {},
   created() {
-    if (location.href.indexOf("alarmHistory") > -1) {
+    if (
+      location.href.indexOf("alarmHistory") > -1 ||
+      location.href.indexOf("mypage/state") > -1
+    ) {
       this.isSetting = true;
       console.log(this.isSetting);
     }

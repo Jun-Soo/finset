@@ -75,9 +75,9 @@ import DebtDetail2 from '@/components/debt/Detail_2'
 import DebtRepayment from '@/components/debt/Repayment'
 import DebtModify from '@/components/debt/Modify'
 import DebtCalc from '@/components/debt/Calc'
-// import DebtCalcSearch from '@/components/debt/CalcSearch'
-// import DebtRegister from '@/components/debt/Register'
-// import DebtRegDetail from '@/components/debt/RegDetail'
+import DebtCalcSearch from '@/components/debt/CalcSearch'
+import DebtRegister from '@/components/debt/Register'
+import DebtRegDetail from '@/components/debt/RegDetail'
 // import DebtIntrInfo from '@/components/debt/IntrInfo'
 // import DebtCreditLoan from '@/components/debt/CreditLoan'
 // import DebtMortgageLoan from '@/components/debt/MortgageLoan'
@@ -88,7 +88,7 @@ import DebtUpdate from '@/components/debt/Update'
 import GoodsHome from '@/components/goods/Home'
 import GoodsList from '@/components/goods/List'
 import GoodsDetail from '@/components/goods/Detail'
-// import GoodsStockDetail from '@/components/goods/StockDetail'
+import GoodsStockDetail from '@/components/goods/StockDetail'
 // import GoodsCreditTerm1 from '@/components/goods/CreditTerm1'
 // import GoodsCreditTerm2 from '@/components/goods/CreditTerm2'
 // import GoodsCreditCertPerson from '@/components/goods/CreditCertPerson'
@@ -122,19 +122,21 @@ import ConsumePaymentDetail from '@/components/consume/PaymentDetail'
 // import ConsumeSettlement from '@/components/consume/Settlement'
 // import ConsumeStats from '@/components/consume/Stats'
 // import ConsumePeriodStats from '@/components/consume/PeriodStats'
-// import ConsumeAnalysis from '@/components/consume/Analysis'
+import ConsumeIncomeAnalyze from '@/components/consume/IncomeAnalyze'
+// import ConsumeConsumeAnalyze from '@/components/consume/ConsumeAnalyze'
 import ConsumeDraggable from '@/components/consume/Draggable'
 
 import AssetsHome from '@/components/assets/Home'
 import AssetsMain from '@/components/assets/Main'
-// import AssetsAccountInfo from '@/components/assets/AccountInfo'
-// import AssetsDepWdrlDetail from '@/components/assets/DepWdrlDetail'
-// import AssetsAccountWdrlDetail from '@/components/assets/AccountWdrlDetail'
-// import AssetsAccountDepDetail from '@/components/assets/AccountDepDetail'
+import AssetsAccountInfo from '@/components/assets/AccountInfo'
+import AssetsDepWdrlDetail from '@/components/assets/DepWdrlDetail'
+import AssetsAccountWdrlDetail from '@/components/assets/AccountWdrlDetail'
+import AssetsAccountDepDetail from '@/components/assets/AccountDepDetail'
 // import AssetsStockInfo from '@/components/assets/StockInfo'
 // import AssetsStockBalcDetail from '@/components/assets/StockBalcDetail'
 // import AssetsStockDelDetail from '@/components/assets/StockDelDetail'
 // import AssetsStockAnsDetail from '@/components/assets/StockAnsDetail'
+import AssetsEtc from '@/components/assets/Etc'
 
 import MypageHome from '@/components/mypage/Home'
 // import MypageMain from '@/components/mypage/Main'
@@ -149,11 +151,11 @@ import MypageChgPwd from '@/components/mypage/ChgPwd'
 import MypageFavGoods from '@/components/mypage/FavGoods'
 // import MypageFavList from '@/components/mypage/FavList'
 // import MypageFavDetail from '@/components/mypage/FavDetail'
-// import MypageRstlInqGoods from '@/components/mypage/RstlInqGoods'
+import MypageRstlInqGoods from '@/components/mypage/RstlInqGoods'
 // import MypageGoodsList from '@/components/mypage/GoodsList'
 // import MypageGoodsDetail from '@/components/mypage/GoodsDetail'
 // import MypageRstlReqGoods from '@/components/mypage/RstlReqGoods'
-// import MypageState from '@/components/mypage/State'
+import MypageState from '@/components/mypage/State'
 // import MypageStateList from '@/components/mypage/StateList'
 import MypageDrop from '@/components/mypage/Drop'
 import MypageDropDone from '@/components/mypage/DropDone'
@@ -215,14 +217,14 @@ export const routes = [{
     allowPath: true
   }
 },
-// {
-//  path: '/client/logout',
-//  name: 'logout',
-//  component: Logout,
-//  meta: {
-//    allowPath: true
-//  }
-// },
+  // {
+  //  path: '/client/logout',
+  //  name: 'logout',
+  //  component: Logout,
+  //  meta: {
+  //    allowPath: true
+  //  }
+  // },
 {
   path: '/error',
   name: 'error',
@@ -660,6 +662,33 @@ export const routes = [{
     }
   },
   {
+    path: 'calcSearch',
+    alias: '/calcSearch',
+    name: 'debtCalcSearch',
+    component: DebtCalcSearch,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'register',
+    alias: '/register',
+    name: 'debtRegister',
+    component: DebtRegister,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'regDetail',
+    alias: '/regDetail',
+    name: 'debtRegDetail',
+    component: DebtRegDetail,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
     path: 'update',
     alias: '/update',
     name: 'debtUpdate',
@@ -752,6 +781,14 @@ export const routes = [{
     }
   },
   {
+    path: 'incomeAnalyze',
+    alias: '/incomeAnalyze',
+    component: ConsumeIncomeAnalyze,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
     path: 'setting',
     alias: '/setting',
     component: ConsumeSetting,
@@ -811,7 +848,48 @@ export const routes = [{
     meta: {
       allowPath: true
     }
-  }]
+  },
+  {
+    path: 'accountInfo',
+    alias: '/accountInfo',
+    component: AssetsAccountInfo,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'depWdrlDetail',
+    alias: '/depWdrlDetail',
+    component: AssetsDepWdrlDetail,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'accountWdrlDetail',
+    alias: '/accountWdrlDetail',
+    component: AssetsAccountWdrlDetail,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'accountDepDetail',
+    alias: '/accountDepDetail',
+    component: AssetsAccountDepDetail,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'etc',
+    alias: '/etc',
+    component: AssetsEtc,
+    meta: {
+      allowPath: true
+    }
+  }
+  ]
 },
 {
   path: '/goods',
@@ -829,6 +907,15 @@ export const routes = [{
     alias: '/detail',
     name: 'GoodsDetail',
     component: GoodsDetail,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'stockDetail',
+    alias: '/stockDetail',
+    name: 'GoodsStockDetail',
+    component: GoodsStockDetail,
     meta: {
       allowPath: true
     }
@@ -1169,6 +1256,24 @@ export const routes = [{
     path: 'favGoods',
     alias: '/favGoods',
     component: MypageFavGoods,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'rstlInqGoods',
+    alias: '/rstlInqGoods',
+    component: MypageRstlInqGoods,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'state',
+    alias: '/state',
+    component: MypageState,
     meta: {
       allowPath: true,
       requiresAuth: true

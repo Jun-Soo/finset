@@ -1,25 +1,25 @@
 <template>
   <section>
-        <div class="alarm-setting">
-            <ul>
-                <li>
-                    <a @click="importCert" class="block">
-                        <p><em>인증서 가져오기</em>PC에 있는 인증서를 휴대폰으로 복사</p>
-                    </a>
-                </li>
-                <li>
-                    <a @click="goChangePwd" class="block">
-                        <p><em>비밀번호 변경</em>휴대폰 보인 확인 필요</p>
-                    </a>
-                </li>
-                <li v-if="fingerSettingSeen">
-                    <p><em>지문인증 설정</em>비밀번호없이 지문으로 인증</p>
-                    <p><button v-bind:class="yn_fingerprint=='Y'?btnOn:btnOff" @click="modifyFingerPrint"></button></p>
-                </li>
-            </ul>
-        </div>
-        
-    </section>
+    <div class="alarm-setting">
+      <ul>
+        <li>
+          <a @click="importCert" class="block">
+            <p><em>인증서 가져오기</em>PC에 있는 인증서를 휴대폰으로 복사</p>
+          </a>
+        </li>
+        <li>
+          <a @click="goChangePwd" class="block">
+            <p><em>비밀번호 변경</em>휴대폰 보인 확인 필요</p>
+          </a>
+        </li>
+        <li v-if="fingerSettingSeen">
+          <p><em>지문인증 설정</em>비밀번호없이 지문으로 인증</p>
+          <p><button v-bind:class="yn_fingerprint=='Y'?btnOn:btnOff" @click="modifyFingerPrint"></button></p>
+        </li>
+      </ul>
+    </div>
+
+  </section>
 </template>
 
 <script>
@@ -44,7 +44,6 @@ export default {
     this.$store.state.title = "인증/보안";
   },
   created() {
-    //constant error
     if (Constant.userAgent == "Android") {
       window.Android.checkFingerPrint();
     } else if (Constant.userAgent == "iOS") {

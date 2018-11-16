@@ -2,35 +2,47 @@
   <section v-if="seen">
     <div class="cs-top">
       <div class="cs-search">
-        <input type="search" placeholder="자주 묻는 질문 검색">
+        <input type="search" id="txtDetail" v-on:keyup.enter="goSearch" v-model="txt_detail" placeholder="자주 묻는 질문 검색">
       </div>
     </div>
 
-    <div class="faq-list">
-      <p class="title">납부내역</p>
-      <div class="list">
-        <p><a href="#">신용정보 조회를 하면 신용등급이 떨어지지 않나요</a></p>
-        <p>본인의 신용정보를 조회하는 것은 신용등급에 영향을 주지 않습니다.</p>
+    <div class="faq-list" v-if="pageGubun != 'search'">
+      <p class="title">{{nm_board}}</p>
+      <div v-if="pagedList.length == 0" class="nodata">등록 내역이 없습니다</div>
+      <div v-else class="list" v-for="page in pagedList" :key="page.board_idx">
+        <p><a v-html="page.title"></a></p>
+        <p v-html="page.content"></p>
       </div>
-      <div class="list">
-        <p><a href="#">신용정보 조회를 하면 신용등급이 떨어지지 않나요</a></p>
-        <p>본인의 신용정보를 조회하는 것은 신용등급에 영향을 주지 않습니다.</p>
+    </div>
+
+    <div class="faq-list" v-else>
+      <div v-if="pagedList.length == 0" class="nodata">검색 내역이 없습니다</div>
+      <div v-else class="list" v-for="page in pagedList" :key="page.board_idx">
+        <p><a v-html="page.title"></a></p>
+        <p v-html="page.content"></p>
       </div>
     </div>
   </section>
 </template>
 
 <script>
+import Constant from "./../../assets/js/constant.js";
+// import Common from "./../../assets/js/common.js";
+
 export default {
   name: "EtcFaqDetail",
   data() {
     return {
       id_board: "",
-      boardForm:"",
-      nm_board:"",
-      pagedList:"",
-      seq:"",
-      seen:false,
+      boardForm: "",
+      nm_board: "",
+      pagedList: [],
+      seq: "",
+      txt_detail: "",
+      pageGubun: "",
+      page: 1,
+      totalPage: "",
+      seen: false
     };
   },
   components: {},
@@ -40,24 +52,119 @@ export default {
     this.$store.state.title = "자주 묻는 질문";
   },
   created() {
-    this.id_board = this.$route.query.id_board;
-    this.$http.get('/m/customercenter/getCustomerFAQDetail.json?id_board='+this.id_board)
-    .then(response=>{
-      // debugger;
-      this.boardForm = response.data.boardForm
-      this.nm_board = response.data.nm_board
-      this.pagedList = response.data.pagedList.source
-      this.seq = response.data.seq
-      this.seen=true;
-    })
+    this.init();
+    if (this.$route.query.txt_detail != null) {
+      this.txt_detail = this.$route.query.txt_detail;
+      this.goSearch();
+      // Common.pagination();
+    } else {
+      this.id_board = this.$route.query.id_board;
+      this.getIdBoardDetail();
+    }
   },
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    let _this = this;
+    $(window).scroll(function() {
+      if ($(document).height() <= $(window).scrollTop() + $(window).height()) {
+        console.log(
+          _this.txt_detail + " " + _this.totalPage + " " + _this.page
+        );
+        if (_this.totalPage > _this.page) {
+          _this.jumpPage();
+          // _this.page++;
+        }
+      }
+    });
+  },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    init: function() {
+      let _this = this;
+      _this.id_board = "";
+      _this.boardForm = "";
+      _this.nm_board = "";
+      _this.pagedList = [];
+      _this.seq = "";
+      _this.txt_detail = "";
+      _this.page = 1;
+      _this.totalPage = 1;
+    },
+    getIdBoardDetail: function() {
+      this.pageGubun = "getList";
+      this.$http
+        .get(
+          "/m/customercenter/getCustomerFAQDetail.json?id_board=" +
+            this.id_board
+        )
+        .then(response => {
+          this.boardForm = response.data.boardForm;
+          this.nm_board = response.data.nm_board;
+          this.pagedList = response.data.pagedList.source;
+          this.totalPage = response.data.pagedList.pageCount;
+          this.page = response.data.pagedList.page;
+          this.seq = response.data.seq;
+
+          this.seen = true;
+        });
+    },
+    goSearch: function() {
+      this.pageGubun = "search";
+      let url = "/m/customercenter/getCustomerFAQSearch.json";
+      let _this = this;
+      let boardForm = new FormData();
+      boardForm.append("txt_detail", _this.txt_detail);
+      boardForm.append("page", _this.page);
+      _this.$http.post(url, boardForm).then(response => {
+        //list init
+        _this.nm_board = "";
+        _this.pagedList = [];
+        _this.totalPage = response.data.pagedList.pageCount;
+        _this.pagedList = response.data.pagedList.source;
+        _this.page = response.data.pagedList.page;
+        // Common.pagination();
+        _this.seen = true;
+      });
+    },
+    jumpPage: function() {
+      //test 필요
+      var _this = this;
+      var pageIndex = Number(_this.page);
+      var url = "/m/customercenter/listFaqSearch.json";
+      _this.page = pageIndex + 1;
+      var data = new FormData();
+      data.append("txt_detail", _this.txt_detail);
+      data.append("page", _this.page);
+      data.append("totalPage", _this.totalPage);
+      if (data == null) {
+        //test 필요
+        return false;
+      }
+      if (Constant.userAgent == "Android") {
+        window.Android.loading("Y");
+      } else if (Constant.userAgent == "iOS") {
+        Jockey.send("showLoading");
+      }
+
+      _this.$http.post(url, data).then(response => {
+        _this.totalPage = response.data.pagedList.pageCount;
+        //append
+        _this.pagedList.concat(response.data.pagedList.source);
+        _this.page = response.data.pagedList.page;
+
+        // Common.pagination();
+        _this.seen = true;
+        if (Constant.userAgent == "Android") {
+          window.Android.loading("N");
+        } else if (Constant.userAgent == "iOS") {
+          Jockey.send("stopLoading");
+        }
+      });
+    }
+  }
 };
 </script>
 

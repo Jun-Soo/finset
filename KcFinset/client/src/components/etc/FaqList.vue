@@ -2,7 +2,7 @@
   <section>
     <div class="cs-top">
       <div class="cs-search">
-        <input type="search" placeholder="자주 묻는 질문 검색">
+        <input type="search" id="txtDetail" v-on:keyup.enter="goSearch" v-model="txt_detail" placeholder="자주 묻는 질문 검색">
       </div>
     </div>
 
@@ -20,7 +20,9 @@
 export default {
   name: "EtcFaqList",
   data() {
-    return {};
+    return {
+      txt_detail: ""
+    };
   },
   components: {},
   computed: {},
@@ -35,10 +37,11 @@ export default {
   updated() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    goSearch: function() {
+      let _this = this;
+      _this.$router.push("/etc/faqDetail?txt_detail=" + _this.txt_detail);
+    }
+  }
 };
 </script>
-
-<!-- Add 'scoped' attribute to limit CSS to this component only -->
-<style lang="scss">
-</style>

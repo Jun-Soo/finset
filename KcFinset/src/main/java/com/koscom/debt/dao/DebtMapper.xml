@@ -407,10 +407,27 @@
 		                      ,SUM(CASE WHEN A.CD_TYPE_DEAL NOT IN ('3','6') THEN TO_NUMBER(A.AMT_CONTRACT) ELSE 0 END) OVER(PARTITION BY A.NO_PERSON)   AS SUM_AMT_CONTRACT2
 		                      ,SUM(CASE WHEN A.CD_TYPE_DEAL NOT IN ('3','6') THEN TO_NUMBER(A.AMT_REMAIN) ELSE 0 END)   OVER(PARTITION BY A.NO_PERSON)   AS SUM_AMT_REMAIN2
 		                FROM   DEBT_PERSONAL_INFO A
-		                      LEFT OUTER JOIN KCB_CREDIT_INFO C
-		                      ON   (
-		                         C.NO_PERSON   =   A.NO_PERSON
-		                      )
+		                      LEFT OUTER JOIN KCB_CREDIT_INFO C ON C.NO_PERSON   =   A.NO_PERSON
+		                      INNER JOIN (
+		                      			  SELECT
+		                      			  	 NO_PERSON
+		                      				,NO_MANAGE_INFO
+		                      			  FROM DEBT_PERSONAL_INFO
+		                      			  WHERE NO_PERSON = #{no_person, jdbcType = VARCHAR}
+			                      			  UNION ALL
+				                      			  SELECT
+				                      			  	 AA.OFFER_NO_PERSON
+				                      			  	,BB.NO_MANAGE_INFO
+				                      			  FROM SHARE_INFO AA INNER JOIN SHARE_INFO_DETAIL BB
+			                      			  ON AA.SEQ_SHARE = BB.SEQ_SHARE
+			                      			  WHERE
+			                      			  		AA.REQ_NO_PERSON = #{no_person, jdbcType = VARCHAR}
+			                      			  	AND AA.CD_SHARE = '02'
+			                      			  	AND AA.SHARE_STATUS = '02'
+			                      			  	AND AA.YN_DEBT_INFO = 'Y'
+		                      			  ) D
+		                      ON		A.NO_PERSON = D.NO_PERSON
+		                      		AND A.NO_MANAGE_INFO = D.NO_MANAGE_INFO
 		                WHERE   A.NO_PERSON   IN 
 							<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
 								#{each_person}
@@ -567,6 +584,26 @@
 	             C.NO_PERSON         =   A.NO_PERSON
 	          AND C.NO_MANAGE_INFO   =   A.NO_MANAGE_INFO
 	          )
+             INNER JOIN (
+             			  SELECT
+             			  	 NO_PERSON
+             				,NO_MANAGE_INFO
+             			  FROM DEBT_PERSONAL_INFO
+             			  WHERE NO_PERSON = #{no_person, jdbcType = VARCHAR}
+              			  UNION ALL
+               			  SELECT
+               			  	 AA.OFFER_NO_PERSON
+               			  	,BB.NO_MANAGE_INFO
+               			  FROM SHARE_INFO AA INNER JOIN SHARE_INFO_DETAIL BB
+              			  ON AA.SEQ_SHARE = BB.SEQ_SHARE
+              			  WHERE
+              			  		AA.REQ_NO_PERSON = #{no_person, jdbcType = VARCHAR}
+              			  	AND AA.CD_SHARE = '02'
+              			  	AND AA.SHARE_STATUS = '02'
+              			  	AND AA.YN_DEBT_INFO = 'Y'
+             			  ) D
+             ON		A.NO_PERSON = D.NO_PERSON
+             		AND A.NO_MANAGE_INFO = D.NO_MANAGE_INFO
 	    WHERE
            	<choose>
            		<when test="@com.koscom.util.MybatisUtil@isNotEmpty(no_person_list)">

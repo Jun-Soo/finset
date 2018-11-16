@@ -3,16 +3,16 @@
     <!-- Content -->
     <section id="content">
       <div class="cert-finger">
-        <p class="text">지문인증을 사용 하시겠습니까?</p>        
+        <p class="text">지문인증을 사용 하시겠습니까?</p>
       </div>
-      
+
       <div class="btn-wrap col2">
         <a v-on:click="chkFinger('N')" class="btn-stroke">아니오</a>
         <a v-on:click="chkFinger('Y')" class="btn-solid">네</a>
       </div>
 
-	</section>
-  	<!-- //Content -->
+    </section>
+    <!-- //Content -->
   </div>
 </template>
 
@@ -51,6 +51,7 @@ export default {
     window.resultFingerPrint = this.resultFingerPrint;
     window.resultCheckCert = this.resultCheckCert;
     window.resultCheckPasswordCert = this.resultCheckPasswordCert;
+    window.resultCheckAvaliableScrapList = this.resultCheckAvaliableScrapList;
   },
   beforeMount() {},
   mounted() {},
@@ -140,8 +141,8 @@ export default {
       if (Constant.userAgent == "iOS") {
         //공인인증서 유무 체크 결과 콜백 이벤트
         Jockey.on("resultCheckCert", function(param) {
-          var iscert = false;
-          if (param.isCert == 1) iscert = true;
+          var iscert = "false";
+          if (param.isCert == 1) iscert = "true";
           resultCheckCert(iscert);
         });
         Jockey.send("checkExistCert");
@@ -189,7 +190,7 @@ export default {
     },
     //공인인증서 유무 결과 (모바일에서 호출)
     resultCheckCert: function(isCert) {
-      if (isCert) {
+      if (isCert == "true") {
         // 공인인증서가 있을 경우
         //this.frmFcCertList();
         if (Constant.userAgent == "iOS") {
@@ -217,6 +218,10 @@ export default {
     resultCheckPasswordCert: function(dn, cn) {
       // 금융정보제공동의서 확인여부 체크 필요
       this.$router.push({ name: "scrapSelFcLink", params: { dn: dn, cn: cn } });
+    },
+    // Native에서 건너뛰기 눌렀을 경우 호출
+    resultCheckAvaliableScrapList: function() {
+      this.login();
     }
   }
 };

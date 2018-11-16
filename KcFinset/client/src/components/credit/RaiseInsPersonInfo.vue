@@ -164,12 +164,11 @@ export default {
     },
     checkExistCert: function() {
       var scrapCode = this.scrap_code;
-
       if (Constant.userAgent == "iOS") {
         //공인인증서 유무 체크 결과 콜백 이벤트
         Jockey.on("resultCheckCert", function(param) {
-          var iscert = false;
-          if (param.isCert == 1) iscert = true;
+          var iscert = "false";
+          if (param.isCert == 1) iscert = "true";
           resultCheckCert(iscert);
         });
         Jockey.send("checkExistCert");
@@ -204,7 +203,7 @@ export default {
       this.isShowButton = true;
     },
     resultCheckCert: function(isCert) {
-      if (isCert) {
+      if (isCert == "true") {
         // 공인인증서가 있을 경우
         this.frmSimpleDoc();
       } else {

@@ -70,6 +70,38 @@
         <a class="solid" @click="clickSolid()">적용</a>
       </div>
     </aside>
+    <aside class="search-wrap" :class="{'on':isSearch}" v-if="'loanHome' === this.curTab">
+      <div class="top" @click="clickSearch()">
+        <button>검색</button>
+      </div>
+      <div class="wrap">
+        <div class="check-wrap">
+          <div class="key">종류</div>
+          <div class="search-check">
+            <div><input type="checkbox" id="chk1" :checked="isCheckApart" @click="clickCheckApart()"><label for="chk1">아파트</label></div>
+            <div><input type="checkbox" id="chk2" :checked="isCheckEtc" @click="clickCheckEtc()"><label for="chk2">아파트외</label></div>
+          </div>
+        </div>
+        <div class="check-wrap">
+          <div class="key">금리방식</div>
+          <div class="search-check">
+            <div><input type="checkbox" id="chk3" :checked="isCheckFixed" @click="clickCheckFixed()"><label for="chk3">고정금리</label></div>
+            <div><input type="checkbox" id="chk4" :checked="isCheckFloating" @click="clickCheckFloating()"><label for="chk4">변동금리</label></div>
+          </div>
+        </div>
+        <div class="check-wrap">
+          <div class="key">상환방식</div>
+          <div class="search-check">
+            <div><input type="checkbox" id="chk5" :checked="isCheckDiv" @click="clickCheckDiv()"><label for="chk5">분할상환</label></div>
+            <div><input type="checkbox" id="chk6" :checked="isCheckBullet" @click="clickCheckBullet()"><label for="chk6">만기일시</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="action">
+        <a href="#" class="stroke">초기화</a>
+        <a href="#" class="solid">적용</a>
+      </div>
+    </aside>
   </div>
 </template>
 
@@ -86,6 +118,12 @@ export default {
       isSearch: false,
       isCheckWorker: true,
       isCheckSelf: true,
+      isCheckApart: true,
+      isCheckEtc: true,
+      isCheckFixed: true,
+      isCheckFloating: true,
+      isCheckDiv: true,
+      isCheckBullet: true,
       item: {},
       Common: Common,
       urlPath: "/m/loanworker/",

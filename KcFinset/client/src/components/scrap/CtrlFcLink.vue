@@ -389,8 +389,8 @@ export default {
       if (Constant.userAgent == "iOS") {
         //공인인증서 유무 체크 결과 콜백 이벤트
         Jockey.on("resultCheckCert", function(param) {
-          var iscert = false;
-          if (param.isCert == 1) iscert = true;
+          var iscert = "false";
+          if (param.isCert == 1) iscert = "true";
           _this.resultCheckCert(iscert);
         });
         Jockey.send("checkExistCert");
@@ -402,7 +402,7 @@ export default {
     resultCheckCert: function(isCert) {
       var _this = this;
       // 공인인증서가 있을 경우
-      if (isCert) {
+      if (isCert == "true") {
         console.log("this.isSingle  : " + this.isSingle);
         // 한개 금융사의 경우
         if (this.isSingle) {

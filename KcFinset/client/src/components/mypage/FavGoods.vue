@@ -93,7 +93,41 @@ export default {
   updated() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    // listGoodsFavorite: function() {
+    //   var _this = this;
+    //   this.$http
+    //     .post("/m/customercenter/listCustomerGoodsFavorite.json")
+    //     .then(function(response) {
+    //       var list = response.data.pagedList.source;
+    //       if (list.length === 0) {
+    //         _this.seen = true;
+    //         callback();
+    //         return;
+    //       }
+    //       for (var i = 0; i < list.length; i++) {
+    //         list[i].icon =
+    //           "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + list[i].cd_fc;
+    //         if (list[i].yn_favorite == "Y") {
+    //           list[i].isChecked = true;
+    //         } else {
+    //           list[i].isChecked = false;
+    //         }
+    //       }
+    //       _this.seen = true;
+    //       if (_parent.page == 1) {
+    //         _this.goodsList = list;
+    //       } else {
+    //         for (var key in list) {
+    //           _this.goodsList.push(list[key]);
+    //         }
+    //       }
+    //       _parent.totalPage = response.data.pagedList.pageCount;
+    //       _parent.count = response.data.count;
+    //       _parent.page++;
+    //     });
+    // }
+  }
 };
 </script>
 

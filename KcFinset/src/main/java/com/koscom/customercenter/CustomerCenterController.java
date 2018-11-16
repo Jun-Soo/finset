@@ -879,6 +879,40 @@ public class CustomerCenterController implements Constant {
 		
 		return "jsonView";
 	}
+	
+	/** VUE
+	 * 마이페이지 관심상품
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/listCustomerGoodsFavorite.json")
+	public String listCustomerGoodsFavorite(HttpServletRequest request, Model model, HttpSession session, GoodsForm goodsForm) {
+
+		String no_person = (String) session.getAttribute("no_person");
+		goodsForm.setNo_person(no_person);
+		goodsForm.setPage(goodsForm.getPage());
+
+		//Default 설정
+		if( StringUtil.isEmpty(goodsForm.getCd_goods_alliance()) ) goodsForm.setCd_goods_alliance("01");
+		if( StringUtil.isEmpty(goodsForm.getCd_goods_class()) ) goodsForm.setCd_goods_class("01");
+
+		Pagination pagedList = null;
+		if( "01".equals(goodsForm.getCd_goods_alliance()) ){//일반상품
+			pagedList = (Pagination) goodsForm.setPagedList(goodsManager.listGoodsFavoriteNoAlliance(goodsForm), goodsManager.getGoodsFavoriteNoAllianceCount(goodsForm));
+		}else if( "02".equals(goodsForm.getCd_goods_alliance()) ){//제휴상품
+			pagedList = (Pagination) goodsForm.setPagedList(goodsManager.listGoodsFavoriteAlliance(goodsForm), goodsManager.getGoodsFavoriteAllianceCount(goodsForm));
+		}
+
+		if(pagedList != null){
+			logger.info(pagedList.toString());
+		}
+		model.addAttribute("pagedList", pagedList);
+		model.addAttribute("cd_goods_alliance",goodsForm.getCd_goods_alliance());
+		model.addAttribute("cd_goods_class",goodsForm.getCd_goods_class());
+
+		return "jsonView";
+	}
 
 	/**
 	 * 마이페이지 인증/보안

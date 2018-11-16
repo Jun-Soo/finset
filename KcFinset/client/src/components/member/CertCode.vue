@@ -64,6 +64,7 @@ export default {
     window.resultCheckFingerPrint = this.resultCheckFingerPrint;
     window.resultCheckCert = this.resultCheckCert;
     window.resultCheckPasswordCert = this.resultCheckPasswordCert;
+    window.resultCheckAvaliableScrapList = this.resultCheckAvaliableScrapList;
 
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
@@ -102,7 +103,7 @@ export default {
     btnClick: function(val) {
       var _this = this;
       var type = "confirmPage";
-      if(_this.password.length < 4){
+      if (_this.password.length < 4) {
         _this.password += val;
       }
       if (_this.password.length > 0) _this.classPass1 = "active";
@@ -153,7 +154,6 @@ export default {
           })
           .then(response => {
             var result = response.data;
-            console.log(result);
             if (result.result == "00") {
               if (_this.chkFingerPrint == "Y") {
                 setTimeout(function() {
@@ -182,7 +182,6 @@ export default {
     },
     login: function() {
       var _this = this;
-
       var querystring = require("querystring");
       var data = querystring.stringify({
         j_username: _this.noPerson,
@@ -195,6 +194,7 @@ export default {
           }
         })
         .then(response => {
+          console.log("login result");
           if (response.data.result == "10") {
             //정상
             localStorage.removeItem("tempPwd");
@@ -214,8 +214,8 @@ export default {
       if (Constant.userAgent == "iOS") {
         //공인인증서 유무 체크 결과 콜백 이벤트
         Jockey.on("resultCheckCert", function(param) {
-          var iscert = false;
-          if (param.isCert == 1) iscert = true;
+          var iscert = "false";
+          if (param.isCert == 1) iscert = "true";
           resultCheckCert(iscert);
         });
         Jockey.send("checkExistCert");
@@ -236,7 +236,8 @@ export default {
     },
     //공인인증서 유무 결과 (모바일에서 호출)
     resultCheckCert: function(isCert) {
-      if (isCert) {
+      console.log("isCert : " + isCert);
+      if (isCert == "true") {
         // 공인인증서가 있을 경우
         if (Constant.userAgent == "iOS") {
           Jockey.on("checkPasswordCert", function(param) {
@@ -262,6 +263,10 @@ export default {
     resultCheckPasswordCert: function(dn, cn) {
       // 금융정보제공동의서 확인여부 체크 필요
       this.$router.push({ name: "scrapSelFcLink", params: { dn: dn, cn: cn } });
+    },
+    // Native에서 건너뛰기 눌렀을 경우 호출
+    resultCheckAvaliableScrapList: function() {
+      this.login();
     }
   }
 };

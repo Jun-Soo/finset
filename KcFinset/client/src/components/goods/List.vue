@@ -1,13 +1,13 @@
 <template>
   <div>
     <section>
-      <div class="goods-wrap goods" v-if="goodsList.length">
+      <div class="goods-wrap goods" v-if="goodsList.length && seen">
         <carousel :perPage=1>
           <slide class="item" v-for="goods in goodsList" :key="goods.index">
             <a @click="loanGoodsDetail(goods.cd_fc, goods.cd_goods)">
               <div class="top">
                 <p class="symbol"><img :src="goods.icon" alt="" />{{goods.nm_fc}}</p>
-                <p class="text blue" v-html=goods.nm_goods></p>
+                <p class="text blue">{{goods.nm_goods}} <button class="btn-star" :class="{'on':goods.isChecked}" @click="loanGoodsChoice(goods, $event)"></button></p>
               </div>
               <div class="goods-benefit">
                 <div>{{goods.rto_interest_from}}~{{goods.rto_interest_to}}<em> %</em></div>
@@ -19,7 +19,7 @@
           </slide>
         </carousel>
       </div>
-      <div class="nodata" v-else>
+      <div class="nodata" v-else-if="seen">
         신청 가능한 상품이 없습니다.
       </div>
       <div class="tab mt40">
@@ -70,6 +70,38 @@
         <a class="solid" @click="clickSolid()">적용</a>
       </div>
     </aside>
+    <aside class="search-wrap" :class="{'on':isSearch}" v-if="'loanHome' === this.curTab">
+      <div class="top" @click="clickSearch()">
+        <button>검색</button>
+      </div>
+      <div class="wrap">
+        <div class="check-wrap">
+          <div class="key">종류</div>
+          <div class="search-check">
+            <div><input type="checkbox" id="chk1" :checked="isCheckApart" @click="clickCheckApart()"><label for="chk1">아파트</label></div>
+            <div><input type="checkbox" id="chk2" :checked="isCheckEtc" @click="clickCheckEtc()"><label for="chk2">아파트외</label></div>
+          </div>
+        </div>
+        <div class="check-wrap">
+          <div class="key">금리방식</div>
+          <div class="search-check">
+            <div><input type="checkbox" id="chk3" :checked="isCheckFixed" @click="clickCheckFixed()"><label for="chk3">고정금리</label></div>
+            <div><input type="checkbox" id="chk4" :checked="isCheckFloating" @click="clickCheckFloating()"><label for="chk4">변동금리</label></div>
+          </div>
+        </div>
+        <div class="check-wrap">
+          <div class="key">상환방식</div>
+          <div class="search-check">
+            <div><input type="checkbox" id="chk5" :checked="isCheckDiv" @click="clickCheckDiv()"><label for="chk5">분할상환</label></div>
+            <div><input type="checkbox" id="chk6" :checked="isCheckBullet" @click="clickCheckBullet()"><label for="chk6">만기일시</label></div>
+          </div>
+        </div>
+      </div>
+      <div class="action">
+        <a class="stroke">초기화</a>
+        <a class="solid">적용</a>
+      </div>
+    </aside>
   </div>
 </template>
 
@@ -83,9 +115,16 @@ export default {
   name: "List",
   data() {
     return {
+      seen: false,
       isSearch: false,
       isCheckWorker: true,
       isCheckSelf: true,
+      isCheckApart: true,
+      isCheckEtc: true,
+      isCheckFixed: true,
+      isCheckFloating: true,
+      isCheckDiv: true,
+      isCheckBullet: true,
       item: {},
       Common: Common,
       urlPath: "/m/loanworker/",
@@ -112,7 +151,6 @@ export default {
   created() {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "추천상품";
-
     window.resultCheckCert = this.resultCheckCert;
     window.resultCheckPasswordCert = this.resultCheckPasswordCert;
   },
@@ -195,9 +233,14 @@ export default {
           for (var i = 0; i < list.length; i++) {
             list[i].icon =
               "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + list[i].cd_fc;
-            list[i].checkId = "z" + list[i].cd_fc + list[i].cd_non_goods;
+            if (list[i].yn_favorite == "Y") {
+              list[i].isChecked = true;
+            } else {
+              list[i].isChecked = false;
+            }
           }
           _this.goodsList = list;
+          _this.seen = true;
           // Timeout for the animation complete before destroying
         });
     },
@@ -231,6 +274,24 @@ export default {
           urlPath: this.urlPath,
           isAffiliates: true
         }
+      });
+    },
+    loanGoodsChoice: function(goods, event) {
+      var _this = this;
+      var url = "";
+      event.stopPropagation();
+      goods.isChecked = !goods.isChecked;
+      var formData = new FormData();
+      formData.append("cd_fc", goods.cd_fc);
+      formData.append("cd_goods", goods.cd_goods);
+      formData.append("yn_alliance", "Y");
+      if (goods.isChecked) {
+        url = "/m/loan/insertLoanGoodsChoice.json";
+      } else {
+        url = "/m/loan/deleteLoanGoodsChoice.json";
+      }
+      this.$http.post(url, formData).then(function(response) {
+        var returnData = response.data.returnData;
       });
     }
   }

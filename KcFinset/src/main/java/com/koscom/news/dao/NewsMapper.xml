@@ -8,7 +8,7 @@
 		<where>
 		    ANR.SEQ_SEARCH = AN.SEQ_SEARCH
 			AND ANR.YN_USE = 'Y'
-		<!-- 	AND ANR.NEWS_STATUS='02' 임시 주석-->
+			AND ANR.NEWS_STATUS='02'
 			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(scKeyword)">
 			AND(
 				SELECT

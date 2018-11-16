@@ -27,7 +27,7 @@ public class LoanController implements Constant {
 	@Autowired
 	LoanManager loanManager;
 	
-	/**
+	/** VUE
 	 * 즐겨찾기 추가
 	 * @param request
 	 * @param model
@@ -52,7 +52,7 @@ public class LoanController implements Constant {
 		return "jsonView";
 	}
 
-	/**
+	/** VUE
 	 * 즐겨찾기 삭제
 	 * @param model
 	 * @return

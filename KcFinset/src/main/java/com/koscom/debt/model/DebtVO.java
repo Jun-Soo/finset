@@ -1,6 +1,7 @@
 package com.koscom.debt.model;
 
 import java.io.Serializable;
+import java.util.List;
 
 import com.koscom.kcb.model.seg.Kcb_Segment030;
 
@@ -41,7 +42,7 @@ public class DebtVO extends Kcb_Segment030 implements Serializable{
     private String rate_amt_contract ;    /*상환비율(%)*/
     private String type_deal         ;    /*대출구분*/
     private String rep_method        ;    /*상환방식*/
-    
+
     private String yn_credit         ;    /*신용여부*/
     private String yn_loan           ;    /*담보여부*/
     private String ymd_loan          ;    /*개설일*/
@@ -65,7 +66,10 @@ public class DebtVO extends Kcb_Segment030 implements Serializable{
     private String rem_amt_repay_p   ;    /*잔여원금*/
 
     private String display_yn		 ;	  /*화면 표시 여부 20180612 김휘경*/
-    
+
+    //금리인하
+    private List<String> cutItems; //항목
+
     @Override
     public String getNo_manage_info() {
         return no_manage_info;
@@ -210,7 +214,7 @@ public class DebtVO extends Kcb_Segment030 implements Serializable{
     public void setNm_fc(String nm_fc) {
         this.nm_fc = nm_fc;
     }
-    
+
     public String getTel() {
         return tel;
     }
@@ -334,11 +338,11 @@ public class DebtVO extends Kcb_Segment030 implements Serializable{
     public String getInter_pay_cycle(){
     	return inter_pay_cycle;
     }
-    
+
     public void setInter_pay_cycle(String inter_pay_cycle){
     	this.inter_pay_cycle = inter_pay_cycle;
     }
-    
+
     @Override
     public String getAmt_contract() {
         return amt_contract;
@@ -436,7 +440,7 @@ public class DebtVO extends Kcb_Segment030 implements Serializable{
     public void setModerate_fee(String moderate_fee) {
         this.moderate_fee = moderate_fee;
     }
-    
+
     public String getDisplay_yn() {
         return display_yn;
     }
@@ -445,7 +449,15 @@ public class DebtVO extends Kcb_Segment030 implements Serializable{
         this.display_yn = display_yn;
     }
 
-    @Override
+    public List<String> getCutItems() {
+		return cutItems;
+	}
+
+	public void setCutItems(List<String> cutItems) {
+		this.cutItems = cutItems;
+	}
+
+	@Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }

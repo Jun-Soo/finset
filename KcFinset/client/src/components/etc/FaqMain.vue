@@ -13,7 +13,8 @@
       <p><a @click="$router.push('/etc/term')">이용약관 및 정책</a></p>
       <p>
         <em>버전정보</em>
-        <em>{{app_version}}</em>
+        <em v-if="update" id="update" @click="updateApp()" class="underline">업데이트</em>
+        <em v-else>{{app_version}}</em>
       </p>
       <p>
         <em>제휴 문의</em>
@@ -31,7 +32,9 @@ export default {
   name: "EtcFaqMain",
   data() {
     return {
-      app_version: "1.1"
+      app_version: "1.1.0",
+      newest_version: "",
+      update: ""
     };
   },
   components: {},
@@ -43,12 +46,12 @@ export default {
   created() {
     if (Constant.userAgent == "Android") {
       this.app_version = window.Android.checkAppVersion();
-      //checkAppVersion(this.app_version);
+      this.checkAppVersion(this.app_version);
     } else if (Constant.userAgent == "iOS") {
       //앱버전 조회결과 콜백
       Jockey.on("receiveAppVersion", function(param) {
         this.app_version = param.appVersion;
-        // checkAppVersion(param.appVersion);
+        this.checkAppVersion(param.appVersion);
       });
       //앱버전 조회 네이티브 호출
       Jockey.send("checkAppVersion");
@@ -71,8 +74,8 @@ export default {
         window.Android.sendEmail(code, addr);
       }
     },
-    //기능 미정 ** 물어봐야함
     updateApp: function() {
+      //test 필요
       if (Constant.userAgent == "Android") {
         window.Android.updateApp();
       } else if (Constant.userAgent == "iOS") {
@@ -81,21 +84,21 @@ export default {
         });
       }
     },
-    /**
-     * NATIVE CALL BACK
-     */
     checkAppVersion: function(appVersion) {
-      $("#app_version").html(appVersion);
-
-      var version = "${newest_version}";
-      var versionSplit = version.split("."); //최신버전
-      var chkVersionSplit = appVersion.split("."); //현재버전
-      // for (var i = 0; i < versionSplit.length; i++) {
-      //   if (Number(versionSplit[i]) > Number(chkVersionSplit[i])) {
-      //     $("#update").show();
-      //     break;
-      //   }
-      // }
+      let url = "/m/customercenter/getCustomerServiceCenter.json";
+      let _this = this;
+      _this.$http.get(url).then(response => {
+        _this.newest_version = response.data.newest_version;
+        var version = _this.newest_version;
+        var versionSplit = version.split("."); //최신버전
+        var chkVersionSplit = appVersion.split("."); //현재버전
+        for (var i = 0; i < versionSplit.length; i++) {
+          if (Number(versionSplit[i]) > Number(chkVersionSplit[i])) {
+            _this.update = "1";
+            break;
+          }
+        } //for
+      });
     }
   }
 };
@@ -103,4 +106,7 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
+.underline {
+  text-decoration: underline;
+}
 </style>

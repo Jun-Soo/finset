@@ -1028,15 +1028,15 @@ public class CustomerCenterController implements Constant {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/frameCustomerFAQSearch.crz")
-	public String frameCustomerFAQSearch(HttpServletRequest request, Model model, BoardForm boardForm) {
+	@RequestMapping("/getCustomerFAQSearch.json")
+	public String getCustomerFAQSearch(HttpServletRequest request, Model model, BoardForm boardForm) {
 		logger.info(boardForm.toString());
 		Pagination pagedList = (Pagination) boardForm.setPagedList(boardManager.SearchBoard(boardForm), boardManager.SearchBoardCount(boardForm));
 
 		model.addAttribute("pagedList", pagedList);
 		model.addAttribute("boardForm", boardForm);
 
-		return "/customercenter/frameCustomerFAQSearch";
+		return "jsonView";
 	}
 
 	/**
@@ -1045,7 +1045,7 @@ public class CustomerCenterController implements Constant {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/listFaqSearch.crz")
+	@RequestMapping("/listFaqSearch.json")
 	public String listFaqSearch(HttpServletRequest request, Model model, BoardForm boardForm) {
 		logger.info(boardForm.toString());
 
@@ -1053,7 +1053,7 @@ public class CustomerCenterController implements Constant {
 
 		model.addAttribute("pagedList", pagedList);
 
-		return "/customercenter/sub/listFaqSearch";
+		return "jsonView";
 	}
 
 	/** VUE
@@ -1108,7 +1108,7 @@ public class CustomerCenterController implements Constant {
 	 * @param model
 	 * @return
 	 */
-	@RequestMapping("/frameCustomerServiceCenter.crz")
+	@RequestMapping("/getCustomerServiceCenter.json")
 	public String frameCustomerServiceCenter(HttpServletRequest request, Model model, HttpSession session) {
 
 		String no_person = (String) session.getAttribute("no_person");
@@ -1131,7 +1131,7 @@ public class CustomerCenterController implements Constant {
 		logger.info(codeInfo.getNm_code());
 		model.addAttribute("newest_version", codeInfo.getNm_code());
 
-		return "/customercenter/frameCustomerServiceCenter";
+		return "jsonView";
 	}
 
 	/**

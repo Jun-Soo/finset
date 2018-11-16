@@ -151,7 +151,8 @@ export default {
 
       _this.$http.post(url, data).then(response => {
         _this.totalPage = response.data.pagedList.pageCount;
-        _this.pagedList = response.data.pagedList.source;
+        //append
+        _this.pagedList.concat(response.data.pagedList.source);
         _this.page = response.data.pagedList.page;
 
         // Common.pagination();

@@ -19,7 +19,7 @@
         </div>
         <div class="links">
           <a @click="clickButton('/etc/faqMain')">고객센터</a>
-          <a href="#">인증보안</a>
+          <a @click="clickButton('/mypage/cert')">인증보안</a>
           <a @click="clickButton('/etc/noticeMain')">공지/이벤트</a>
           <a href="#">개인설정</a>
           <a href="#">금융달력</a>

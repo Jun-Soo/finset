@@ -39,7 +39,7 @@
       <div class="banner-wrap owl-carousel">
         <carousel :perPage=1>
           <slide class="item">
-            <a href="#" @click="clickBanner('goods')">
+            <a @click="clickBanner('goods')">
               <div class="banner">
                 <div class="left">
                   <p class="key">추천 상품</p>
@@ -52,7 +52,7 @@
             </a>
           </slide>
           <slide class="item">
-            <a href="#">
+            <a>
               <div class="banner">
                 <div class="left">
                   <p class="key">계산기</p>
@@ -65,7 +65,7 @@
             </a>
           </slide>
           <slide class="item">
-            <a href="#">
+            <a>
               <div class="banner">
                 <div class="left">
                   <p class="key">캘린더</p>
@@ -330,7 +330,7 @@ export default {
           });
           break;
         case "reqIntrCut":
-           _this.$router.push("/debt/reqIntrCut");
+          _this.$router.push("/debt/reqIntrCut");
           break;
         default:
           break;

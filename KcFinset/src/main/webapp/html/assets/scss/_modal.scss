@@ -132,3 +132,45 @@
     }
 }
 
+.modal-confirm{
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    background: #fff;
+    width: 80%;
+    @include box-sizing(border-box);
+    .debt-modal-body{
+        padding: 25px;
+        padding-bottom: 80px;
+        background: #fff;
+        .text{
+            font-size: 14px;
+            color: #666;
+            line-height: 18px;
+        }
+    }
+    .modal-btns{
+        position: absolute;
+        left: 0;
+        bottom: 0;
+        display: flex;
+        border-top: 2px solid $col4;
+        margin-top: 25px;
+        width: 100%;
+        a{
+            line-height: 45px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 700;
+            flex-grow: 1;
+            &.stroke{
+                color: $col4;
+                background: #fff;
+            }
+            &.solid{
+                background: $col4;
+                color: #fff;
+            }
+        }
+    }
+}

@@ -5,7 +5,7 @@ select { /*padding: .58em .5em;  */ padding-left: 14px; padding-right: 40px; fon
 
 select::-ms-expand { display: none; }
 
-input[type="text"], input[type="password"], input[type="tel"], input[type="email"] { line-height: 38px; height: 40px; text-indent: 10px; width: 100%; font-size: 14px; border: 1px solid #ccc; vertical-align: middle; padding-left: 5px; -moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0; -moz-appearance: none; -webkit-appearance: none; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+input[type="text"], input[type="password"], input[type="tel"], input[type="email"], input[type="number"] { line-height: 38px; height: 40px; text-indent: 10px; width: 100%; font-size: 14px; border: 1px solid #ccc; vertical-align: middle; padding-left: 5px; -moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0; -moz-appearance: none; -webkit-appearance: none; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
 
 input[type="tel"] { width: 110px; }
 
@@ -78,6 +78,7 @@ table td button { line-height: 16px; background: #7c7c7c; color: #fff; min-width
 .board .list li .subject a { font-size: 14px; font-weight: 500; color: #222; line-height: 18px; }
 .board .view li { border-bottom: 1px solid #e5e5e5; padding: 15px 0; }
 .board .view li .subject { font-size: 14px; font-weight: 500; color: #222; line-height: 18px; }
+.board .view li .subject b { font-size: inherit; color: inherit; }
 .board .view li .date { color: #666; font-size: 12px; margin-top: 10px; }
 .board .view li .date em { display: inline-block; padding-right: 5px; margin-right: 5px; border-right: 1px solid #e5e5e5; }
 
@@ -182,6 +183,14 @@ header .gnb-wrap.on { transform: translateX(0); width: 100%; overflow: auto; }
 .modal-con .debt-modal-body .text { margin-top: 10px; font-size: 14px; color: #666; }
 .modal-con .debt-modal-body .text em { color: #9b9489; font-size: 14px; }
 .modal-con .btn-confirm { line-height: 45px; text-align: center; color: #fff; font-size: 15px; background: #62c1d0; margin-top: 25px; display: block; }
+
+.modal-confirm { position: absolute; left: 50%; top: 50%; background: #fff; width: 80%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+.modal-confirm .debt-modal-body { padding: 25px; padding-bottom: 80px; background: #fff; }
+.modal-confirm .debt-modal-body .text { font-size: 14px; color: #666; line-height: 18px; }
+.modal-confirm .modal-btns { position: absolute; left: 0; bottom: 0; display: flex; border-top: 2px solid #62c1d0; margin-top: 25px; width: 100%; }
+.modal-confirm .modal-btns a { line-height: 45px; text-align: center; font-size: 15px; font-weight: 700; flex-grow: 1; }
+.modal-confirm .modal-btns a.stroke { color: #62c1d0; background: #fff; }
+.modal-confirm .modal-btns a.solid { background: #62c1d0; color: #fff; }
 
 /*   Event   */
 aside { position: fixed; left: 0; bottom: 0; width: 100%; z-index: 3; }
@@ -482,6 +491,10 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .my-main-list .list .item .right p.plus { color: #e52638; }
 .my-main-list .list .item .right p.minus { color: #62c1d0; }
 .my-main-list .list .item .right p em { font-size: 12px; margin-left: 5px; }
+.my-main-list .list.no .item { display: block; }
+.my-main-list .list.no .item .left { width: 100%; }
+.my-main-list .list.no .item .right { width: 100%; text-align: center; }
+.my-main-list .list.no .item .right a { width: auto; height: auto; text-indent: 0; border-radius: 0; background: url("../images/mypage/ico_nodata.png") no-repeat right center/20px; line-height: 20px; padding-right: 30px; font-size: 18px; color: #222; margin-top: 15px; }
 
 .my-links { padding: 0 21px; margin-top: 40px; padding-bottom: 95px; }
 .my-links .wrap { display: flex; margin-left: -8px; }
@@ -598,6 +611,9 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .spend-top .wrap .item p.key { font-size: 14px; font-weight: 700; color: #9b9489; }
 .spend-top .wrap .item p.key em { font-size: 14px; font-weight: 300; }
 .spend-top .wrap .item p.value { font-size: 24px; font-weight: 700; color: #222; margin-top: 10px; }
+.spend-top .progress { margin-top: 30px; }
+.spend-top .progress a { line-height: 40px; background: #62c1d0; color: #fff; border: 1px solid #62c1d0; font-size: 13px; font-weight: 700; text-align: center; display: block; border-radius: 50px; }
+.spend-top .progress a.on { background: #fff; color: #62c1d0; }
 
 /*   자산   */
 .assets-top .wrap { display: flex; }
@@ -753,7 +769,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .accodion ul li .con .flex p:first-child { font-size: 14px; font-weight: 700; color: #222; }
 .accodion ul li .con .flex p:last-child { text-align: right; line-height: 0; }
 .accodion ul li .con .flex p:last-child button { display: inline-block; width: 33px; height: 33px; border: 1px solid #e5e5e5; background: url("../images/common/btn_accodion_search.png") no-repeat center/contain; margin: 0; }
-.accodion ul li .con .flex p:last-child input[type="text"] { line-height: 35px; height: 33px; width: 126px; font-size: 15px; text-align: right; padding: 0 15px; }
+.accodion ul li .con .flex p:last-child input[type="text"], .accodion ul li .con .flex p:last-child input[type="number"] { line-height: 35px; height: 33px; width: 126px; font-size: 15px; text-align: right; padding: 0 15px; }
 .accodion ul li .con .text { font-size: 12px; line-height: 16px; color: #888; }
 .accodion ul li.on .top { border-bottom: 1px solid #e5e5e5; }
 .accodion ul li.on .top:after { background-position: left bottom; }
@@ -815,7 +831,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .calendar td a.on { border: 1px solid #213e6a; }
 
 /*   신용   */
-.nodata { background: url("../images/common/nodata.png") no-repeat center top/330px; padding-top: 195px; text-align: center; font-size: 14px; color: #888; }
+.nodata { height: 50vh; background: url("../images/common/nodata.png") no-repeat center/75px; text-align: center; padding-top: 35vh; line-height: 20px; font-size: 15px; color: #888; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
 
 .bar-top { margin-top: 40px; }
 .bar-top .top { display: flex; margin-bottom: 15px; }
@@ -1052,12 +1068,12 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .certcode-wrap .pass-wrap { margin-top: 30px; display: grid; grid-column-gap: 15px; justify-content: center; grid-template-columns: 40px 40px 40px 40px; }
 .certcode-wrap .pass-wrap input[type="password"] { border: none; border-bottom: 1px solid #e5e5e5; font-size: 40px; width: 100%; text-align: center; padding: 0; text-indent: 0; }
 .certcode-wrap .number { display: grid; grid-column-gap: 35px; grid-row-gap: 15px; justify-content: center; margin: 30px auto 0; grid-template-columns: 75px 75px 75px; }
-.certcode-wrap .number button { width: 75px; line-height: 75px; font-size: 30px; color: #333; font-weight: 700; border-radius: 100%; background: none; }
-.certcode-wrap .number button:active { background: #62c1d0; color: #fff; }
-.certcode-wrap .number button.del { background: url("../images/member/btn_delete.png") no-repeat center top/75px; }
-.certcode-wrap .number button.del:active { background: url("../images/member/btn_delete.png") no-repeat center bottom #62c1d0; background-size: 75px; }
-.certcode-wrap .number button.finger { background: url("../images/member/btn_fingerprint.png") no-repeat center top/75px; }
-.certcode-wrap .number button.finger:active { background: url("../images/member/btn_fingerprint.png") no-repeat center bottom #62c1d0; background-size: 75px; }
+.certcode-wrap .number a { text-align: center; width: 75px; line-height: 75px; font-size: 30px; color: #333; font-weight: 700; border-radius: 100%; background: none; }
+.certcode-wrap .number a:active { background: #62c1d0; color: #fff; }
+.certcode-wrap .number a.del { background: url("../images/member/btn_delete.png") no-repeat center top/75px; }
+.certcode-wrap .number a.del:active { background: url("../images/member/btn_delete.png") no-repeat center bottom #62c1d0; background-size: 75px; }
+.certcode-wrap .number a.finger { background: url("../images/member/btn_fingerprint.png") no-repeat center top/75px; }
+.certcode-wrap .number a.finger:active { background: url("../images/member/btn_fingerprint.png") no-repeat center bottom #62c1d0; background-size: 75px; }
 
 .cert-finger { padding-top: 305px; background: url("../images/member/fingerprint.png") no-repeat 50% 150px; background-size: 117px; }
 .cert-finger p { text-align: center; font-size: 15px; }

@@ -75,9 +75,9 @@ $(function () {
   //   $(this).toggleClass('on')
   // })
 
-  $(document).on('click', '.btn-onoff,.btn-star,.check-flex .wrap button', function (e) {
-    $(this).toggleClass('on')
-  })
+  // $(document).on('click', '.btn-onoff,.btn-star,.check-flex .wrap button', function (e) {
+  //   $(this).toggleClass('on')
+  // })
 
   function modal () {
     var openBtn = '[data-modal]'

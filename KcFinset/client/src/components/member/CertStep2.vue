@@ -106,6 +106,7 @@ export default {
   created() {
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
+      window.Android.reqSMSPermission();
     }
     this.$store.state.title = "본인확인";
     this.$store.state.header.type = "sub";
@@ -118,6 +119,17 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    //native call back
+    setCertNumber: function(number) {
+      number = number + "";
+      if (this.smsCertNo.length == 0) {
+        this.smsCertNo = number;
+      }
+    },
+    //native call back
+    setRequestPhoneNumber: function(phoneNumber) {
+      this.hp = phoneNumber;
+    },
     onSelect: function(option) {
       this.telComCd = option.value;
       console.log(this.telComCd);

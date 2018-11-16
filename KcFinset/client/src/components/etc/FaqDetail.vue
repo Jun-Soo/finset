@@ -115,6 +115,11 @@ export default {
       this.pageGubun = "search";
       let url = "/m/customercenter/getCustomerFAQSearch.json";
       let _this = this;
+      if (_this.txt_detail.length >= 2) {
+        _this.$router.push("/etc/faqDetail?txt_detail=" + _this.txt_detail);
+      } else {
+        this.$toast.center("검색어를 두자이상 입력하세요.");
+      }
       let boardForm = new FormData();
       boardForm.append("txt_detail", _this.txt_detail);
       boardForm.append("page", _this.page);

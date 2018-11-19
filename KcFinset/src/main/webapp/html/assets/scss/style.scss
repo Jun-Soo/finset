@@ -4331,6 +4331,10 @@ button.cal{
                     color: #222;
                     line-height: 18px;
                     @include multiline_ellipsis(2);
+                    b{
+                        font-size: inherit;
+                        color: inherit;
+                    }
                 }
                 
             }

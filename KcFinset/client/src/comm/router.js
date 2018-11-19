@@ -150,7 +150,7 @@ import MypageCertPerson from '@/components/mypage/CertPerson'
 import MypageChgPwd from '@/components/mypage/ChgPwd'
 import MypageFavGoods from '@/components/mypage/FavGoods'
 // import MypageFavList from '@/components/mypage/FavList'
-// import MypageFavDetail from '@/components/mypage/FavDetail'
+import MypageFavDetail from '@/components/mypage/FavDetail'
 import MypageRstlInqGoods from '@/components/mypage/RstlInqGoods'
 // import MypageGoodsList from '@/components/mypage/GoodsList'
 // import MypageGoodsDetail from '@/components/mypage/GoodsDetail'
@@ -1256,6 +1256,16 @@ export const routes = [{
     path: 'favGoods',
     alias: '/favGoods',
     component: MypageFavGoods,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'favDetail',
+    alias: '/favDetail',
+    name: 'MypageFavDetail',
+    component: MypageFavDetail,
     meta: {
       allowPath: true,
       requiresAuth: true

@@ -564,7 +564,7 @@ public class DebtController {
 
 		List<DebtVO> debtList = new ArrayList<DebtVO>();
 		List<DebtVO> reqIntrCutList = new ArrayList<DebtVO>();
-		List<String> cutItems = new ArrayList<String>();
+
 		for (int i = 0; i < reqIntCutForm.getCutItems().size(); i++) {
 			if("03".equals(reqIntCutForm.getCutItems().get(i))){ //연소득기준
 				reqIntrCutList = debtManager.listReqIntrCutIncome(reqIntCutForm);
@@ -584,28 +584,23 @@ public class DebtController {
 				reqIntrCutList = debtManager.listReqIntrCutFixDate(reqIntCutForm);
 			}
 
-			if(0==debtList.size()){
-				for (int j = 0; j < reqIntrCutList.size(); j++) {
-					cutItems.add(reqIntCutForm.getCutItems().get(i));
-					reqIntrCutList.get(j).setCutItems(cutItems);
-					debtList.add(reqIntrCutList.get(j));
-				}
-			}else{
-				for (int j = 0; j < debtList.size(); j++) {
-					for (int k = 0; k < reqIntrCutList.size(); k++) {
-						if(debtList.get(j).getNo_manage_info().equals(reqIntrCutList.get(k).getNo_manage_info())){
-							reqIntrCutList.remove(k);
-							break;
-						}
+			for (int j = 0; j < debtList.size(); j++) {
+				for (int k = 0; k < reqIntrCutList.size(); k++) {
+					if(debtList.get(j).getNo_manage_info().equals(reqIntrCutList.get(k).getNo_manage_info())){
+						List<String> cutItems = debtList.get(j).getCutItems();
+						cutItems.add(reqIntCutForm.getCutItems().get(i));
+						debtList.get(j).setCutItems(cutItems);
+						reqIntrCutList.remove(k);
+						break;
 					}
 				}
+			}
 
-				for (int j = 0; j < reqIntrCutList.size(); j++) {
-					cutItems = reqIntrCutList.get(j).getCutItems();
-					cutItems.add(reqIntCutForm.getCutItems().get(i));
-					reqIntrCutList.get(j).setCutItems(cutItems);
-					debtList.add(reqIntrCutList.get(j));
-				}
+			for (int j = 0; j < reqIntrCutList.size(); j++) {
+				List<String> cutItems = new ArrayList<String>();
+				cutItems.add(reqIntCutForm.getCutItems().get(i));
+				reqIntrCutList.get(j).setCutItems(cutItems);
+				debtList.add(reqIntrCutList.get(j));
 			}
 		}
 

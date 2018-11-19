@@ -2,7 +2,7 @@
   <section id="content">
     <div class="cert-finger">
       <p class="text">지문을 입력해 주세요.</p>
-      <p class="textred" id="err_message" v-if="cntFailFinger> 0">{{ errMsg }}</p>
+      <div class="red" id="err_message" v-if="cntFailFinger> 0">{{ errMsg }}</div>
     </div>
     <div class="certcode-wrap">
       <p class="text">
@@ -204,3 +204,13 @@ export default {
   }
 };
 </script>
+
+<!-- Add 'scoped' attribute to limit CSS to this component only -->
+<style lang="scss">
+.red {
+  color: #e52638;
+  font-size: 12px;
+  margin-top: 10px;
+  text-align: center;
+}
+</style>

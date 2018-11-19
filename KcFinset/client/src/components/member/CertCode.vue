@@ -13,18 +13,18 @@
           <input type="password" v-bind:style="classPass4" name="pass_number" v-model="classPass4" id="pass_number4" maxlength="1" readonly />
         </div>
         <div class="number">
-          <button v-on:click="btnClick('1')">1</button>
-          <button v-on:click="btnClick('2')">2</button>
-          <button v-on:click="btnClick('3')">3</button>
-          <button v-on:click="btnClick('4')">4</button>
-          <button v-on:click="btnClick('5')">5</button>
-          <button v-on:click="btnClick('6')">6</button>
-          <button v-on:click="btnClick('7')">7</button>
-          <button v-on:click="btnClick('8')">8</button>
-          <button v-on:click="btnClick('9')">9</button>
-          <button disabled="disabled">&nbsp;</button>
-          <button v-on:click="btnClick('0')">0</button>
-          <button class="del" v-on:click="backClick()"></button>
+          <a v-on:click="btnClick('1')">1</a>
+          <a v-on:click="btnClick('2')">2</a>
+          <a v-on:click="btnClick('3')">3</a>
+          <a v-on:click="btnClick('4')">4</a>
+          <a v-on:click="btnClick('5')">5</a>
+          <a v-on:click="btnClick('6')">6</a>
+          <a v-on:click="btnClick('7')">7</a>
+          <a v-on:click="btnClick('8')">8</a>
+          <a v-on:click="btnClick('9')">9</a>
+          <a disabled="disabled">&nbsp;</a>
+          <a v-on:click="btnClick('0')">0</a>
+          <a class="del" v-on:click="backClick()"></a>
         </div>
       </div>
     </section>

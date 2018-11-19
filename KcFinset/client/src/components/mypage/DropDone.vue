@@ -19,10 +19,15 @@ export default {
   components: {},
   computed: {},
   beforeCreate() {
-    this.$store.state.header.type = "sub";
+    this.$store.state.header.type = "other";
     this.$store.state.title = "서비스 탈퇴";
   },
-  created() {},
+  created() {
+    localStorage.clear();
+    this.$store.state.isLoggedIn = false;
+    this.$store.state.accessToken = null;
+    this.$store.state.site = null;
+  },
   beforeMount() {},
   mounted() {},
   beforeUpdate() {},
@@ -30,7 +35,7 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    appQuit: function(){
+    appQuit: function() {
       window.Android.exitApp(); //앱종료
     }
   }

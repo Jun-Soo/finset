@@ -15,19 +15,19 @@
           <input type="password" v-bind:style="classPass4" v-model="classPass4" id="pass_number4" maxlength="1" readonly />
         </div>
         <div class="number">
-          <button v-on:click="btnClick('1')">1</button>
-          <button v-on:click="btnClick('2')">2</button>
-          <button v-on:click="btnClick('3')">3</button>
-          <button v-on:click="btnClick('4')">4</button>
-          <button v-on:click="btnClick('5')">5</button>
-          <button v-on:click="btnClick('6')">6</button>
-          <button v-on:click="btnClick('7')">7</button>
-          <button v-on:click="btnClick('8')">8</button>
-          <button v-on:click="btnClick('9')">9</button>
-          <button v-if="ynFingerprint === 'Y'" v-on:click="gotoFingerPrint()" class="finger"></button>
-          <button v-else disabled="disabled">&nbsp;</button>
-          <button v-on:click="btnClick('0')">0</button>
-          <button class="del" v-on:click="backClick()"></button>
+          <a v-on:click="btnClick('1')">1</a>
+          <a v-on:click="btnClick('2')">2</a>
+          <a v-on:click="btnClick('3')">3</a>
+          <a v-on:click="btnClick('4')">4</a>
+          <a v-on:click="btnClick('5')">5</a>
+          <a v-on:click="btnClick('6')">6</a>
+          <a v-on:click="btnClick('7')">7</a>
+          <a v-on:click="btnClick('8')">8</a>
+          <a v-on:click="btnClick('9')">9</a>
+          <a v-if="ynFingerprint === 'Y'" v-on:click="gotoFingerPrint()" class="finger"></a>
+          <a v-else disabled="disabled">&nbsp;</a>
+          <a v-on:click="btnClick('0')">0</a>
+          <a class="del" v-on:click="backClick()"></a>
         </div>
         <p class="text"><a href=""><u>비밀번호를 재설정 하시겠습니까?</u></a></p>
       </div>
@@ -208,8 +208,10 @@ export default {
           }
         })
         .catch(e => {
-          this.$toast.center(ko.messages.error);
+          // this.$toast.center(ko.messages.error);
+          this.$toast.center(e);
           this.initClassPass();
+          _this.password = "";
         });
     },
     passCheck: function() {

@@ -84,7 +84,7 @@ export default {
           }
 
           if (Constant.userAgent == "iOS") {
-            Jockey.on("checkAvaliableScrapList", function(param) {
+            Jockey.on("resultCheckAvaliableScrapList", function(param) {
               _this.resultCheckAvaliableScrapList();
             });
             Jockey.send("checkAvaliableScrapList", {
@@ -128,15 +128,17 @@ export default {
     },
     checkFcUpdate: function() {
       var _this = this;
-      if (Constant.userAgent == "IOS") {
-        Jockey.on("updateAvaliableCertScrapInfo", function(param) {
+      console.log("checkFcUpdate start1");
+      if (Constant.userAgent == "iOS") {
+        console.log("checkFcUpdate start2");
+        Jockey.on("resultUpdateScrapInfo", function(param) {
           _this.resultUpdateScrapInfo(param.cd_err, param.msg_err);
         });
         Jockey.send("updateAvaliableCertScrapInfo", {
           noPerson: _this.noPerson,
           agency: _this.$route.params.agency,
-          cd_coocon: _this.$route.params.cd_coocon,
-          nmPerson: _this.$route.params.agency
+          cdCoocon: _this.$route.params.cd_coocon,
+          nmPerson: _this.nmPerson
         });
       } else if (Constant.userAgent == "Android") {
         window.Android.updateAvaliableCertScrapInfo(

@@ -53,7 +53,7 @@
       </div>
     </div>
     <div class="btn-wrap float" v-if="cd_goods_alliance=='02' && selectedCount > 0">
-      <a href="#" class="solid box blue">금리/한도 조회하기</a>
+      <a class="solid box blue">금리/한도 조회하기</a>
     </div>
   </section>
 </template>

@@ -97,7 +97,7 @@ export default {
         } else if (Constant.userAgent == "iOS") {
           //지문인식 결과 콜백 이벤트
           Jockey.on("resultFingerPrint", function(param) {
-            resultFingerPrint(param.result);
+            _this.resultFingerPrint(param.result);
           });
           Jockey.send("initFingerPrint");
         }
@@ -138,12 +138,13 @@ export default {
     },
     // 공인인증서 유무 체크
     checkExistCert: function() {
+      var _this = this;
       if (Constant.userAgent == "iOS") {
         //공인인증서 유무 체크 결과 콜백 이벤트
         Jockey.on("resultCheckCert", function(param) {
           var iscert = "false";
           if (param.isCert == 1) iscert = "true";
-          resultCheckCert(iscert);
+          _this.resultCheckCert(iscert);
         });
         Jockey.send("checkExistCert");
       } else if (Constant.userAgent == "Android") {
@@ -152,20 +153,22 @@ export default {
     },
     //자동스크래핑 가능 금융사 조회
     frmFcCertList: function() {
+      var _this = this;
       var noPerson = this.$store.state.user.noPerson;
       var nmPerson = this.$store.state.user.nmPerson;
       var bankCode = this.$store.state.bankCode;
       var cardCode = this.$store.state.cardCode;
 
       if (Constant.userAgent == "iOS") {
-        /* Jockey.on("frmFcListNextFromMobile" , function(param) {
-          frmFcListNextFromMobile();
+        Jockey.on("resultCheckAvaliableScrapList", function(param) {
+          _this.resultCheckAvaliableScrapList();
         });
-        Jockey.send("checkAvaliableScrapList" , {
-          noPerson : noPerson,
-          bankCode : bankCode
-        }); */
-        //do nothing
+        Jockey.send("checkAvaliableScrapList", {
+          noPerson: noPerson,
+          bankCode: bankCode,
+          cardCode: cardCode,
+          nmPerson: nmPerson
+        });
       } else if (Constant.userAgent == "Android") {
         window.Android.checkAvaliableScrapList(
           noPerson,
@@ -190,12 +193,13 @@ export default {
     },
     //공인인증서 유무 결과 (모바일에서 호출)
     resultCheckCert: function(isCert) {
+      var _this = this;
       if (isCert == "true") {
         // 공인인증서가 있을 경우
         //this.frmFcCertList();
         if (Constant.userAgent == "iOS") {
-          Jockey.on("checkPasswordCert", function(param) {
-            resultCheckPasswordCert();
+          Jockey.on("resultCheckPasswordCert", function(param) {
+            _this.resultCheckPasswordCert(param.dn, param.cn);
           });
           Jockey.send("checkPasswordCert", {
             noPerson: this.$store.state.user.noPerson,

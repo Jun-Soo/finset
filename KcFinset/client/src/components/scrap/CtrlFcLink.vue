@@ -319,7 +319,7 @@ export default {
       }
 
       if (Constant.userAgent == "IOS") {
-        Jockey.on("updateAvaliableLoginScrapInfo", function(param) {
+        Jockey.on("resultUpdateScrapInfo", function(param) {
           _this.resultUpdateScrapInfo(param.cd_err, param.msg_err);
         });
         Jockey.send("updateAvaliableLoginScrapInfo", {
@@ -407,8 +407,8 @@ export default {
         // 한개 금융사의 경우
         if (this.isSingle) {
           if (Constant.userAgent == "iOS") {
-            Jockey.on("checkPasswordCertForUpdate", function(param) {
-              _this.resultCheckPasswordCertForUpdate(param.cn, param.dn);
+            Jockey.on("resultCheckPasswordCertForUpdate", function(param) {
+              _this.resultCheckPasswordCertForUpdate(param.dn, param.cn);
             });
             Jockey.send("checkPasswordCertForUpdate", {
               noPerson: this.$store.state.user.noPerson,
@@ -424,8 +424,9 @@ export default {
         // 전체 금융사의 경우
         else {
           if (Constant.userAgent == "iOS") {
-            Jockey.on("checkPasswordCert", function(param) {
-              _this.resultCheckPasswordCert(param.cn, param.dn);
+            Jockey.on("resultCheckPasswordCert", function(param) {
+              console.log("param.dn : " + param.dn + " param.cn : " + param.cn);
+              _this.resultCheckPasswordCert(param.dn, param.cn);
             });
             Jockey.send("checkPasswordCert", {
               noPerson: this.$store.state.user.noPerson,

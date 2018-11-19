@@ -27,7 +27,7 @@
           <p class="value" v-html="goodsInfo.desc_etc"></p>
         </div>
         <div class="btn-wrap">
-          <a href="#" class="solid blue">조회하기</a>
+          <a class="solid blue">조회하기</a>
         </div>
       </div>
     </div>
@@ -70,7 +70,7 @@
           <p class="value" v-html="goodsInfo.desc_etc"></p>
         </div>
         <div class="btn-wrap">
-          <a href="#" class="solid blue">조회하기</a>
+          <a class="solid blue">조회하기</a>
         </div>
       </div>
     </div>

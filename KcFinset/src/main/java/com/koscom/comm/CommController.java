@@ -42,7 +42,7 @@ public class CommController implements Constant {
         }
     }
 
-    /**
+    /** VUE
 	 * 코드명을 반환합니다.
 	 * @param group
 	 * @param id
@@ -58,7 +58,7 @@ public class CommController implements Constant {
 		return "jsonView";
 	}
 
-	/**
+	/** VUE
 	 * 코드목록을 반환합니다.
 	 * @param code_group
 	 * @return String

@@ -85,7 +85,7 @@ export default {
 
           if (Constant.userAgent == "iOS") {
             Jockey.on("checkAvaliableScrapList", function(param) {
-              _this.frmFcListNextFromMobile();
+              _this.resultCheckAvaliableScrapList();
             });
             Jockey.send("checkAvaliableScrapList", {
               noPerson: _this.$store.state.user.noPerson,

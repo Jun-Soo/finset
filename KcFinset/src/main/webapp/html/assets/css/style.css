@@ -983,9 +983,13 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .consume-cate-list li .wrap .links button.modify { background: url("../images/consume/consume_cate_modify_ico.png") no-repeat center/33px; }
 .consume-cate-list li ul { padding-left: 30px; display: none; }
 .consume-cate-list li ul li .wrap { margin-top: 5px; background: #fff; }
+.consume-cate-list li ul li .wrap .links { padding-right: 0; }
 .consume-cate-list li ul .add-cate { background: #62c1d0; }
 .consume-cate-list li.on .wrap { background-position: right bottom; }
-.consume-cate-list .add-cate { border-radius: 50px; line-height: 45px; text-align: center; font-size: 15px; color: #fff; font-weight: 700; background: #213e6a; display: block; width: 100%; margin-top: 10px; }
+.consume-cate-list li.nosub .wrap { background: #fff; }
+.consume-cate-list li.nosub .wrap .links { padding-right: 0; }
+
+.box-list .add-cate { border-radius: 50px; line-height: 45px; text-align: center; font-size: 15px; color: #fff; font-weight: 700; background: #213e6a; display: block; width: 100%; margin-top: 10px; }
 
 .goal-list-wrap { padding-bottom: 50px; }
 .goal-list-wrap dl { border: 1px solid #e5e5e5; }

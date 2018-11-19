@@ -29,7 +29,7 @@
         <li>
           <p class="key">이자납입주기</p>
           <p>
-            <select v-model="debtVO.inter_pay_day">
+            <select v-model="debtVO.inter_pay_cycle">
               <option value="01">매월</option>
               <option value="02">분기</option>
               <option value="03">년</option>
@@ -41,7 +41,7 @@
         <li>
           <p class="key">이자납입일</p>
           <p>
-            <select v-model="debtVO.inter_pay_cycle">
+            <select v-model="debtVO.inter_pay_day">
               <option v-for="(n, index) in 31" :key="index" :value="(n+'').length == 1? '0'+ n : n">{{n}} 일</option>
               <!-- <option v-for="(n, index) in 31" :key="index" :value="(n+'').length">{{n}} 일</option> -->
             </select>

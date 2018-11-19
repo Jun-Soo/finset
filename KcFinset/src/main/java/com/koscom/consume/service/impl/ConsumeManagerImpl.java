@@ -94,9 +94,28 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	}
 
 	@Override
-	public List<PersonTransDetailVO> listPersonTransDetail(ConsumeForm consumeForm) {
+	public List<List<PersonTransDetailVO>> listPersonTransDetail(ConsumeForm consumeForm) {
 		logger.debug("listPersonTransDetail");
-		return consumeMapper.listPersonTransDetail(consumeForm);
+		List<List<PersonTransDetailVO>> returnList = new ArrayList<List<PersonTransDetailVO>>();
+		List<PersonTransDetailVO> subList = new ArrayList<PersonTransDetailVO>();
+		String dt_trd = "";
+		
+		List<PersonTransDetailVO> rawList = consumeMapper.listPersonTransDetail(consumeForm);
+		for(PersonTransDetailVO vo: rawList) {
+			if(vo.getDt_trd().equals(dt_trd)) {
+				subList.add(vo);
+			} else {
+				if(!dt_trd.equals("")) {
+					returnList.add(subList);
+					subList = new ArrayList<PersonTransDetailVO>();
+				}
+				dt_trd = vo.getDt_trd();
+				subList.add(vo);
+			}
+		}
+		returnList.add(subList);
+		
+		return returnList;
 	}
 
 	@Override
@@ -334,5 +353,24 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	public void createConsumeInfo(ConsumeVO consumeVO) {
 		logger.debug("createConsumeInfo");
 		consumeMapper.createConsumeInfo(consumeVO);
+	}
+
+	@Override
+	public int getBannerDataConsume(ConsumeVO consumeVO) {
+		logger.debug("getBannerDataConsume");
+		return consumeMapper.getBannerDataConsume(consumeVO);
+	}
+
+	@Override
+	public int getBannerDataIncome(ConsumeVO consumeVO) {
+		logger.debug("getBannerDataIncome");
+		List<ConsumeVO> list = consumeMapper.getBannerDataIncome(consumeVO);
+		if(list == null || list.size() != 2) {
+			return 0;
+		} else {
+			ConsumeVO firstVO = list.get(0);
+			ConsumeVO secondVO = list.get(1);
+			return Integer.parseInt(secondVO.getAmt_in_out()) - Integer.parseInt(firstVO.getAmt_in_out());
+		}
 	}
 }

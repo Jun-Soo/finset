@@ -140,7 +140,7 @@
           </div>
         </div>
         <div class="btn-wrap">
-          <a href="#" class="solid">부채등록</a>
+          <a @click="registerDebt" class="solid">부채등록</a>
         </div>
       </div>
     </section>
@@ -337,10 +337,22 @@ export default {
       }
     },
     goDetail: function(no_person, no_manage_info) {
+      var _this = this;
+
       this.$router.push({
         path: "/debt/detail",
-        query: { no_person: no_person, no_manage_info: no_manage_info }
+        query: {
+          no_person: no_person,
+          no_manage_info: no_manage_info,
+          isMine:
+            _this.shareList.findIndex(
+              person => person.no_person === no_person
+            ) == 0
+        }
       });
+    },
+    registerDebt: function() {
+      this.$router.push("/debt/register");
     }
   }
 };

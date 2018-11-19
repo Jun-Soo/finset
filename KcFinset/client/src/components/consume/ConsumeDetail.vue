@@ -3,97 +3,51 @@
     <section>
       <div class="tab">
         <div class="wrap">
-          <a @click="clickTab" :class="{'on':curTab === '02'}">지출</a>
-          <a @click="clickTab" :class="{'on':curTab === '01'}">수입</a>
+          <a @click="clickTab('02')" :class="{'on':curTab === '02'}">지출</a>
+          <a @click="clickTab('01')" :class="{'on':curTab === '01'}">수입</a>
         </div>
       </div>
-
-      <div class="container pb90" v-if="curTab === '01'">
+      <div class="container pb90">
         <ul class="consume-detail">
           <li>
-            <p class="key">입금</p>
-            <p v-if="isNew">
-              <select>
-                <option>입출금계좌</option>
-                <option>계좌조회</option>
-                <option>카드</option>
-                <option>현금</option>
-              </select>
-            </p>
-            <p readonly v-else><input type="text" v-model="consumeVO.nm_card" :readonly="!isNew"></p>
-          </li>
-          <li>
-            <p class="key">금액</p>
-            <p><input type="text" v-model="consumeVO.amt_in_out" :readonly="!isNew"><em>원</em></p>
-          </li>
-          <li>
-            <p class="key">카테고리</p>
-            <p><button class="btn-cate btn-search" @click="showCategory">{{consumeVO.nm_class}}</button></p>
-          </li>
-          <li>
-            <p class="key">출처</p>
-            <p><input type="text" :value="consumeVO.contents" :readonly="!isNew"></p>
-          </li>
-          <li>
-            <p class="key">날짜</p>
-            <p v-if="isNew">
-              <select>
-                <option>데이트피커 넣어야대</option>
-              </select>
-            </p>
-            <p v-else readonly><input type="text" :value="formatDateDot(consumeVO.dt_trd)" :readonly="!isNew"></p>
-          </li>
-          <li class="memo">
-            <p class="key">메모</p>
-            <p><input type="text"></p>
-          </li>
-        </ul>
-
-        <div class="consume-comment">
-          <a href="#">이번달에 <em>#번 5300원</em> 소비하였네요</a>
-        </div>
-
-        <div class="btn-wrap col2">
-          <a href="#">삭제</a>
-          <a href="#" class="btn-solid">저장</a>
-        </div>
-      </div>
-
-      <div class="container pb90" v-if="curTab === '02'">
-        <ul class="consume-detail">
-          <li>
-            <p class="key">결제수단</p>
-            <p v-if="isNew">
-              <select id="sel-means_consume" @change="selectMeans" v-model="consumeVO.means_consume">
+            <p class="key" v-text="curTab=='01'?'입금':'결제수단'"></p>
+            <p v-if="isNew||!isAuto">
+              <select v-if="!isAuto&&!isModifyAuto" class="sel-means_consume" @change="selectMeans" v-model="consumeVO.means_consume">
                 <option value="default" disabled="disabled">선택</option>
                 <option value="04">입출금계좌</option>
                 <option value="00">계좌조회</option>
-                <option value="01">카드</option>
+                <option v-if="curTab == '02'" value="01">카드</option>
                 <option value="02">현금</option>
               </select>
+              <select v-if="isAuto||isModifyAuto" disabled="disabled" class="sel-means_consume" v-model="consumeVO.means_consume">
+              </select>
             </p>
-            <p readonly v-else><input type="text" v-model="consumeVO.nm_card" :readonly="!isNew"></p>
+            <p v-if="!isNew&&isAuto">
+              <input v-if="!isModifyAuto" type="text" v-model="consumeVO.nm_card" :readonly="!isNew">
+              <select v-if="isModifyAuto" disabled="disabled" class="sel-means_consume" v-model="consumeVO.means_consume">
+              </select>
+            </p>
           </li>
           <li>
             <p class="key">금액</p>
-            <p><input type="text" v-model="consumeVO.amt_in_out" :readonly="!isNew&&!isMine&&!isTransfer"><em>원</em></p>
+            <p><input type="text" v-model="consumeVO.amt_in_out" :readonly="chkReadonly"><em>원</em></p>
           </li>
           <li>
             <p class="key">카테고리</p>
             <p>
-              <button class="btn-cate btn-search" @click="showCategory" :disabled="!isMine" v-text="consumeVO.nm_class==null?'카테고리를 선택하세요':consumeVO.nm_class+'-'+consumeVO.nm_type"></button>
+              <button class="btn-cate btn-search" @click="showCategory" :disabled="!isMine" v-text="categoryText"></button>
             </p>
           </li>
           <li>
-            <p class="key">결제처</p>
-            <p><input type="text" v-model="consumeVO.contents" :readonly="!isNew&&!isMine&&!isTransfer"></p>
+            <p class="key" v-text="curTab=='01'?'출처':'결제처'"></p>
+            <p><input type="text" v-model="consumeVO.contents" :readonly="chkReadonly"></p>
           </li>
           <li>
             <p class="key">날짜</p>
-            <p v-if="isNew">
-              <datepicker v-model="consumeVO.dt_trd" :language="ko" :format="formatDateDot" class="div-date"></datepicker>
+            <p v-if="isNew||!isAuto">
+              <datepicker v-model="consumeVO.dt_trd" :language="ko" :format="formatDateDot" class="div-date" :readonly="chkReadonly"></datepicker>
             </p>
-            <p v-else readonly>
+            <p v-if="!isNew&&isAuto" readonly>
               <input type="text" :value="formatDateDot(consumeVO.dt_trd)" readonly="readonly">
             </p>
           </li>
@@ -103,14 +57,10 @@
           </li>
         </ul>
 
-        <div v-if="!isNew" class="consume-comment">
-          <a href="#">이번달에 <em>#번 5300원</em> 소비하였네요</a>
-        </div>
-
-        <div v-if="isNew" class="btn-wrap float">
+        <div v-if="isNew&&isMine" class="btn-wrap float">
           <a @click="clickSave" class="solid blue box">저장</a>
         </div>
-        <div v-else class="btn-wrap col2">
+        <div v-if="!isNew&&isMine" class="btn-wrap col2">
           <a @click="clickDelete">삭제</a>
           <a @click="clickSave" class="btn-solid">저장</a>
         </div>
@@ -118,16 +68,12 @@
 
     </section>
 
-    <select v-if="isShowTrans" @change="transChange">
-      <option v-for="(vo, index) in listTrans" :key="index" :value="index">{{vo.doc1}} - {{vo.an}} - {{vo.dt_trd}}</option>
-    </select>
-
     <aside class="search-wrap" :class="{'on':isShowCategory}">
       <div class="top" @click="closeCategory">
         <button>카테고리</button>
         <a class="btn-setting"></a>
       </div>
-      <div class="select-cate">
+      <div v-if="curTab == '02'" class="select-cate">
         <div class="cate-wrap">
           <ul>
             <li v-for="eachClass in consumeCategory" :key="eachClass.cd_class" :class="{'on':eachClass.cd_class==curClass}" @click="clickCategory(eachClass.cd_class,'class')">
@@ -143,10 +89,46 @@
           </ul>
         </div>
       </div>
+      <div v-if="curTab == '01'" class="select-cate one">
+        <div class="cate-wrap">
+          <ul>
+            <li v-for="eachClass in consumeCategory" :key="eachClass.cd_class" :class="{'on':eachClass.cd_class==curClass}" @click="clickCategory(eachClass.cd_class,'class')">
+              {{eachClass.nm_class}}
+            </li>
+          </ul>
+        </div>
+      </div>
       <div class="action btn1">
         <a @click="clickConfirm" class="solid">확인</a>
       </div>
     </aside>
+    <vue-modal transitionName="fade" name="transModal">
+      <div slot="body" class="container pop-wrap">
+        <div class="pop-top">
+          <p class="title" v-text="curTab=='01'?'입금내역':'출금내역'"></p>
+          <a class="btn-close" @click="closeTransModal"></a>
+        </div>
+        <div class="nobox-list">
+          <div v-for="(subList, index) in listTrans" :key="index">
+            <p class="date">{{formatDateDot(listTrans[index][0].dt_trd,"mmdd")}}</p>
+            <div v-for="(vo, subIndex) in subList" :key="subIndex" @click="selectTrans(index, subIndex)" class="item">
+              <div class="flex">
+                <p>{{vo.contents}}</p>
+                <p><em class="number" :class="vo.type_in_out == '01'? 'blue':'red'">{{vo.amt}}</em>원</p>
+              </div>
+              <div class="flex">
+                <p class="key">{{vo.nm_fc}}</p>
+                <p class="key">{{vo.an}}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </vue-modal>
+    <vue-modal transitionName="fade" name="confirmModal">
+      <Confirm slot="body" :modalText="'정말 삭제하시겠습니까?'" :confirm="deleteConsume" :cancel="closeModal" :isSingle="false" />
+    </vue-modal>
+
   </div>
 </template>
 
@@ -154,6 +136,7 @@
 import Common from "@/assets/js/common.js";
 import datepicker from "vuejs-datepicker";
 import { ko } from "vuejs-datepicker/dist/locale";
+import Confirm from "../common/Confirm.vue";
 
 export default {
   name: "ConsumeConsumeDetail",
@@ -169,19 +152,56 @@ export default {
         dt_trd: new Date(),
         means_consume: "default"
       },
+      bannerData: "",
       isNew: true,
       isMine: true,
-      isTransfer: false,
+      isAuto: false,
+      isModifyAuto: false,
+      isShowBanner: false,
       isShowCategory: false,
       isShowTrans: false,
       listTrans: {},
-      ko: ko
+      ko: ko,
+      dt_trans: ""
     };
   },
   components: {
-    datepicker
+    datepicker,
+    Confirm
   },
-  computed: {},
+  computed: {
+    categoryText: function() {
+      if ((this.consumeVO.cd_class || "") == "") {
+        return "카테고리를 선택하세요";
+      } else {
+        if (this.curTab == "02") {
+          return this.consumeVO.nm_class + "-" + this.consumeVO.nm_type;
+        } else {
+          return this.consumeVO.nm_class;
+        }
+      }
+    },
+    chkReadonly: function() {
+      if (!this.isMine) {
+        return true;
+      } else if (this.isNew && !this.isAuto) {
+        return false;
+      } else if (!this.isNew && !this.isAuto) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+  },
+  watch: {
+    isShowTrans: function(key) {
+      if (key == true) {
+        this.$modals.show("transModal");
+      } else {
+        this.$modals.hide("transModal");
+      }
+    }
+  },
   beforeCreate() {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "정보수정";
@@ -190,7 +210,18 @@ export default {
     this.consumeVO.dt_trd = new Date();
     this.ko.ymd = true;
     this.isNew = (this.$route.query.seq_consume || "") == "";
-    this.listPersonConsumeClassInfo();
+    if (this.isNew) {
+      this.isAuto = false;
+      this.curTab = "02";
+      this.isMine = true;
+    } else {
+      this.curTab = this.$route.query.type_in_out;
+      this.isMine =
+        this.$route.query.isMine == "true" || this.$route.query.isMine == true;
+      this.isAuto =
+        this.$route.query.isAuto == "true" || this.$route.query.isAuto == true;
+    }
+    this.setDefault();
   },
   beforeMount() {},
   mounted() {},
@@ -203,8 +234,8 @@ export default {
     formatNumber: function(number) {
       return Common.formatNumber(number);
     },
-    formatDateDot: function(date) {
-      return Common.formatDateDot(date);
+    formatDateDot: function(date, pattern) {
+      return Common.formatDateDot(date, pattern);
     },
     formatNmCard: function(nm_card) {
       if ((nm_card || "") == "") {
@@ -214,18 +245,12 @@ export default {
       }
     },
     //화면 컨트롤 부분
-    clickTab: function() {
-      if (!this.isNew) {
+    clickTab: function(key) {
+      if (!this.isNew || this.isAuto || this.curTab == key) {
         return;
       }
-      switch (this.curTab) {
-        case "01":
-          this.curTab = "02";
-          break;
-        case "02":
-          this.curTab = "01";
-          break;
-      }
+      this.curTab = key;
+      this.setDefault();
     },
     clickCategory: function(code, key) {
       switch (key) {
@@ -250,34 +275,67 @@ export default {
           "nm_class",
           this.consumeCategory[this.orgClass].nm_class
         );
+        if (this.curTab == "02") {
+          this.$set(
+            this.consumeVO,
+            "nm_type",
+            this.consumeCategory[this.orgClass].listCdType.filter(
+              eachType => eachType.cd_type == this.orgType
+            )[0].nm_type
+          );
+        }
+      } else {
+        this.isShowCategory = false;
+        this.curClass = this.orgClass;
+        this.curType = this.orgType;
+        if (this.orgClass == "") {
+          return;
+        }
         this.$set(
           this.consumeVO,
-          "nm_type",
-          this.consumeCategory[this.orgClass].listCdType.filter(
-            eachType => eachType.cd_type == this.orgType
-          )[0].nm_type
+          "nm_class",
+          this.consumeCategory[this.orgClass].nm_class
         );
-      } else {
+        if (this.curTab == "02") {
+          this.$set(
+            this.consumeVO,
+            "nm_type",
+            this.consumeCategory[this.orgClass].listCdType.filter(
+              eachType => eachType.cd_type == this.orgType
+            )[0].nm_type
+          );
+        }
       }
     },
     clickConfirm: function() {
-      this.$set(this.consumeVO, "cd_class", this.curClass);
-      this.$set(
-        this.consumeVO,
-        "nm_class",
-        this.consumeCategory[this.curClass].nm_class
-      );
-      this.$set(this.consumeVO, "cd_type", this.curType);
-      this.$set(
-        this.consumeVO,
-        "nm_type",
-        this.consumeCategory[this.curClass].listCdType.filter(
-          eachType => eachType.cd_type == this.curType
-        )[0].nm_type
-      );
-      this.orgClass = this.curClass;
-      this.orgType = this.curClass;
-      this.isShowCategory = false;
+      if (this.curTab == "02") {
+        this.$set(this.consumeVO, "cd_class", this.curClass);
+        this.$set(
+          this.consumeVO,
+          "nm_class",
+          this.consumeCategory[this.curClass].nm_class
+        );
+        this.$set(this.consumeVO, "cd_type", this.curType);
+        this.$set(
+          this.consumeVO,
+          "nm_type",
+          this.consumeCategory[this.curClass].listCdType.filter(
+            eachType => eachType.cd_type == this.curType
+          )[0].nm_type
+        );
+        this.orgClass = this.curClass;
+        this.orgType = this.curType;
+        this.isShowCategory = false;
+      } else {
+        this.$set(this.consumeVO, "cd_class", this.curClass);
+        this.$set(
+          this.consumeVO,
+          "nm_class",
+          this.consumeCategory[this.curClass].nm_class
+        );
+        this.orgClass = this.curClass;
+        this.isShowCategory = false;
+      }
     },
     clickSave: function() {
       if (this.isNew) {
@@ -286,57 +344,54 @@ export default {
         this.modifyConsume();
       }
     },
-    transChange: function(e) {
-      if (this.curTab == "02") {
-        var transVO = this.listTrans[e.target.value];
+    selectTrans: function(index, subIndex) {
+      var transVO = this.listTrans[index][subIndex];
 
-        this.consumeVO.means_consume = "04";
-        this.consumeVO.cd_fc = transVO.cd_fc;
-        this.consumeVO.nm_fc = transVO.nm_trd;
-        this.consumeVO.cd_card = transVO.an;
-        this.consumeVO.nm_card = transVO.nm_an;
-        this.consumeVO.type_in_out = this.curTab;
-        this.consumeVO.amt_in_out = Common.formatNumber(
-          parseInt(transVO.amt_dep) + parseInt(transVO.amt_wdrl) + ""
-        );
-        var regexp = /^[0-9]*$/;
-        this.consumeVO.contents = transVO.doc1;
-        if (regexp.test(transVO.doc1) && (transVO.doc2 || "") != "") {
-          this.consumeVO.contents = transVO.doc2;
-        }
-        this.consumeVO.dt_trd = new Date(Common.formatDateDot(transVO.dt_trd));
-        this.consumeVO.tm_trd = transVO.tm_trd;
+      this.consumeVO.means_consume = "04";
+      this.consumeVO.cd_fc = transVO.cd_fc;
+      this.consumeVO.nm_fc = transVO.nm_trd;
+      this.consumeVO.cd_card = transVO.an;
+      this.consumeVO.nm_card = transVO.nm_an;
+      this.consumeVO.type_in_out = this.curTab;
+      this.consumeVO.amt_in_out = Common.formatNumber(
+        parseInt(transVO.amt_dep) + parseInt(transVO.amt_wdrl) + ""
+      );
+      var regexp = /^[0-9]*$/;
+      this.consumeVO.contents = this.getTransText(transVO);
+      this.consumeVO.dt_trd = new Date(Common.formatDateDot(transVO.dt_trd));
+      this.consumeVO.tm_trd = transVO.tm_trd;
 
-        this.isTransfer = true;
-
-        var means_consume = document.getElementById("sel-means_consume");
-        means_consume.innerHTML =
-          "<option value='04'>(" +
-          transVO.nm_fc +
-          ")" +
-          transVO.an +
-          "</option>";
-      } else {
+      this.isAuto = true;
+      if (!this.isNew) {
+        this.isModifyAuto = true;
       }
+
+      var means_consume = document.getElementsByClassName(
+        "sel-means_consume"
+      )[0];
+      means_consume.innerHTML =
+        "<option value='04'>(" + transVO.nm_fc + ")" + transVO.an + "</option>";
+      this.isShowTrans = false;
     },
     clickDelete: function() {
-      var _this = this;
-
-      var formData = new FormData();
-      formData.append("seq_consume", this.consumeVO.seq_consume);
-      this.$http
-        .post("/m/consume/deleteConsumeInfo.json", formData)
-        .then(function(response) {
-          _this.$router.go(-1);
-        });
+      this.$modals.show("confirmModal");
+    },
+    closeModal: function() {
+      this.$modals.hide("confirmModal");
     },
     selectMeans: function(e) {
       if (e.target.value == "00") {
         this.listPersonTransDetail();
+      } else {
+        this.isShowTrans = false;
       }
     },
     showCategory: function() {
       this.isShowCategory = true;
+    },
+    closeTransModal: function() {
+      this.consumeVO.means_consume = "04";
+      this.isShowTrans = false;
     },
     //데이터 이동부분
     getConsumeInfo: function() {
@@ -352,11 +407,12 @@ export default {
           var vo = response.data.consumeVO;
           vo.dt_trd = new Date(Common.formatDateDot(vo.dt_trd));
           vo.nm_card = _this.formatNmCard(vo.nm_card);
-          vo.amt_in_out = _this.formatNumber(vo.amt_in_out);
+          vo.amt_in_out = _this.chkReadonly
+            ? _this.formatNumber(vo.amt_in_out)
+            : vo.amt_in_out;
 
           _this.consumeVO = vo;
 
-          _this.curTab = vo.type_in_out;
           if (_this.curTab == "02") {
             _this.curClass = vo.cd_class;
             _this.curType = vo.cd_type;
@@ -366,6 +422,8 @@ export default {
             _this.curClass = vo.cd_class;
             _this.orgClass = vo.cd_class;
           }
+
+          _this.getBannerData();
         });
     },
     listPersonConsumeClassInfo: function() {
@@ -405,6 +463,26 @@ export default {
           }
         });
     },
+    listPersonIncomeClassInfo: function() {
+      var _this = this;
+      this.$http
+        .get("/m/consume/listPersonIncomeClassInfo.json", {
+          params: {
+            no_person: this.$route.query.no_person
+          }
+        })
+        .then(function(response) {
+          var list = response.data.listPersonIncomeClassInfo;
+          var listCdClass = new Object();
+          for (var eachClass of list) {
+            listCdClass[eachClass.cd_class] = eachClass;
+          }
+          _this.consumeCategory = listCdClass;
+          if (!_this.isNew) {
+            _this.getConsumeInfo();
+          }
+        });
+    },
     createConsume: function() {
       this.consumeVO.type_in_out = this.curTab;
 
@@ -413,7 +491,7 @@ export default {
 
       formData.append("type_in_out", this.consumeVO.type_in_out);
       formData.append("means_consume", this.consumeVO.means_consume);
-      var target = document.getElementById("sel-means_consume");
+      var target = document.getElementsByClassName("sel-means_consume")[0];
       formData.append(
         "nm_card",
         this.consumeVO.nm_card == undefined
@@ -429,22 +507,35 @@ export default {
         this.consumeVO.tm_trd == undefined ? "000000" : this.consumeVO.tm_trd
       );
       formData.append("cd_class", this.consumeVO.cd_class);
-      formData.append("cd_type", this.consumeVO.cd_type);
+      formData.append(
+        "cd_type",
+        this.curTab == "02" ? this.consumeVO.cd_type : "000"
+      );
       formData.append("contents", this.consumeVO.contents);
-      formData.append("memo", this.consumeVO.memo);
-      formData.append("amt_in_out", this.consumeVO.amt_in_out);
+      formData.append(
+        "memo",
+        this.consumeVO.memo == undefined ? "" : this.consumeVO.memo
+      );
+      formData.append(
+        "amt_in_out",
+        this.consumeVO.amt_in_out.replace(/[,]/g, "")
+      );
       formData.append("mon_installment", "0");
       formData.append("mon_remaining", "0");
-      formData.append("yn_pay_installmnet", "N");
+      formData.append("yn_pay_installment", "N");
       formData.append("yn_cancel", "N");
       formData.append("yn_delete", "N");
-      formData.append("yn_auto", "N");
+      if (this.isAuto) {
+        formData.append("yn_auto", "Y");
+      } else {
+        formData.append("yn_auto", "N");
+      }
       formData.append("yn_budget_except", "N");
 
       this.$http
         .post("/m/consume/createConsumeInfo.json", formData)
         .then(function(response) {
-          alert("ㅎㅎ");
+          _this.$router.go(-1);
         });
     },
     modifyConsume: function() {
@@ -452,24 +543,125 @@ export default {
 
       var formData = new FormData();
       formData.append("seq_consume", this.consumeVO.seq_consume);
+      formData.append("nm_card", this.consumeVO.nm_card);
+      formData.append(
+        "dt_trd",
+        Common.formatDate(this.consumeVO.dt_trd).replace(/[-]/g, "")
+      );
       formData.append("cd_class", this.consumeVO.cd_class);
       formData.append("cd_type", this.consumeVO.cd_type);
-      formData.append("memo", this.consumeVO.memo);
+      formData.append("contents", this.consumeVO.contents);
+      formData.append(
+        "amt_in_out",
+        this.consumeVO.amt_in_out.replace(/[,]/g, "")
+      );
+      formData.append(
+        "memo",
+        this.consumeVO.memo == undefined ? "" : this.consumeVO.memo
+      );
+      formData.append("yn_auto", this.isAuto == true ? "Y" : "N");
 
       this.$http
         .post("/m/consume/modifyConsumeInfo.json", formData)
-        .then(function(response) {});
+        .then(function(response) {
+          _this.$router.go(-1);
+        });
     },
-
     listPersonTransDetail: function() {
       var _this = this;
       this.$http
-        .get("/m/consume/listPersonTransDetail.json")
+        .get("/m/consume/listPersonTransDetail.json", {
+          params: {
+            type_in_out: _this.curTab
+          }
+        })
         .then(function(response) {
-          console.log(response.data.listPersonTransDetail);
+          var list = response.data.listPersonTransDetail;
+          for (var idx in list) {
+            for (var subIdx in list[idx]) {
+              if (list[idx][subIdx].amt_dep == "0") {
+                list[idx][subIdx].type_in_out = "02";
+                list[idx][subIdx].amt = Common.formatNumber(
+                  list[idx][subIdx].amt_wdrl,
+                  true,
+                  false
+                );
+              } else if (list[idx][subIdx].amt_wdrl == "0") {
+                list[idx][subIdx].type_in_out = "01";
+                list[idx][subIdx].amt = Common.formatNumber(
+                  list[idx][subIdx].amt_dep,
+                  false,
+                  true
+                );
+              }
+              list[idx][subIdx].contents = _this.getTransText(
+                list[idx][subIdx]
+              );
+            }
+          }
+
+          _this.listTrans = list;
           _this.isShowTrans = true;
-          _this.listTrans = response.data.listPersonTransDetail;
         });
+    },
+    deleteConsume: function() {
+      var _this = this;
+
+      var formData = new FormData();
+      formData.append("seq_consume", this.consumeVO.seq_consume);
+      this.$http
+        .post("/m/consume/deleteConsumeInfo.json", formData)
+        .then(function(response) {
+          _this.closeModal();
+          _this.$router.go(-1);
+        });
+    },
+    getBannerData: function() {
+      var _this = this;
+
+      var formData = new FormData();
+      formData.append("type_in_out", _this.curTab);
+      formData.append("nm_card", _this.consumeVO.nm_card);
+      formData.append("contents", _this.consumeVO.contents);
+
+      this.$http
+        .post("/m/consume/getBannerData.json", formData)
+        .then(function(response) {
+          var data = response.data.bannerData;
+          if (data == 0) {
+            _this.isShowBanner = false;
+          } else {
+            _this.isShowBanner = true;
+          }
+          _this.bannerData = data;
+        });
+    },
+    //기타 편의를 위해 함수로 구현한 부분
+    setDefault: function() {
+      this.consumeVO = {
+        dt_trd: new Date(),
+        means_consume: "default"
+      };
+      this.curClass = "";
+      this.curType = "";
+      this.dt_trans = "";
+      if (this.curTab == "01") {
+        this.listPersonIncomeClassInfo();
+      } else {
+        this.listPersonConsumeClassInfo();
+      }
+    },
+    getTransText: function(vo) {
+      var regexp = /^[0-9]*$/;
+      if (regexp.test(vo.doc1) || (vo.doc1 || "") == "") {
+        if (regexp.test(vo.doc2) || (vo.doc2 || "") == "") {
+          return vo.nm_an;
+        } else {
+          return vo.doc2;
+        }
+      } else {
+        return vo.doc1;
+      }
     }
   }
 };

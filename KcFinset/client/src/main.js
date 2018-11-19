@@ -13,6 +13,7 @@ import toast from 'vue2-toast'
 import VueCarousel from 'vue-carousel'
 import VueModal from './components/plugins/modal/index'
 import Multiselect from './components/plugins/vue-multiselect/src/index'
+import SlimDialog from 'v-slim-dialog'
 
 import 'jquery'
 
@@ -24,9 +25,9 @@ import 'chart.js'
 import 'hchs-vue-charts'
 
 import 'vue2-toast/lib/toast.css'
+import './assets/css/v-slim-dialog.css'
 import './assets/css/reset.css'
 import './assets/css/style.css'
-// import 'vue-multiselect/dist/vue-multiselect.min.css'
 
 Vue.use(VeeValidate, {
   locale: 'ko',
@@ -44,7 +45,7 @@ Vue.use(toast, {
 Vue.use(VueCarousel)
 Vue.use(VueModal)
 Vue.use(window.VueCharts)
-
+Vue.use(SlimDialog)
 Vue.component('multiselect', Multiselect)
 
 Vue.config.debug = true

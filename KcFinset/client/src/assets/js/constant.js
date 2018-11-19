@@ -3,5 +3,8 @@
  */
 export default {
   userAgent: '',
-  params: {}
+  params: {},
+  options: {
+    cancelLabel: '취소'
+  }
 }

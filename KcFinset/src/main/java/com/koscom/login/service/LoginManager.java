@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -16,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
@@ -66,6 +68,9 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 	@Autowired
 	private KcbManager kcbManager;
 
+	@Resource
+	Environment environment;
+	
 	private static final Logger logger = LoggerFactory.getLogger(LoginManager.class);
 
 	@Override
@@ -282,7 +287,8 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 				                 , body
 				                 , url
 				                 , StringUtil.nullToString(recPersonVO.getYn_os(), "1")
-				                 , StringUtil.nullToString(recPersonVO.getCd_push(), ""))){
+				                 , StringUtil.nullToString(recPersonVO.getCd_push(), "")
+				                 , environment.getProperty("push.fcm"))){
 				         }
 				         ReturnClass rtnClass = personManager.mergePersonShareInfoMessage(personShareMessageInfo);
 				     }

@@ -431,7 +431,7 @@ public class ScrapController {
 		logger.info(">>> FCM OS : " + os + ", type : "+ type + ", sFcmToken : " + sFcmToken);
 
 		//push 발송
-		isSendPushResult = FcmUtil.sendFcm(sFcmToken, push_msg, push_msg, "", os, type);
+		isSendPushResult = FcmUtil.sendFcm(sFcmToken, push_msg, push_msg, "", os, type, environment.getProperty("push.fcm"));
 		logger.info("푸시 보내기 isSendPushResult  : " + isSendPushResult);
 		
 		if(isSendPushResult)	{

@@ -26,8 +26,8 @@
           <p class="key">유의사항</p>
           <p class="value" v-html="goodsInfo.desc_etc"></p>
         </div>
-        <div class="btn-wrap">
-          <a class="solid blue">조회하기</a>
+        <div class="btn-wrap" v-if="yn_alliance=='Y'">
+          <a class="solid blue">금리/한도 조회하기</a>
         </div>
       </div>
     </div>
@@ -69,8 +69,8 @@
           <p class="key">유의사항</p>
           <p class="value" v-html="goodsInfo.desc_etc"></p>
         </div>
-        <div class="btn-wrap">
-          <a class="solid blue">조회하기</a>
+        <div class="btn-wrap" v-if="yn_alliance=='Y'">
+          <a class="solid blue">금리/한도 조회하기</a>
         </div>
       </div>
     </div>
@@ -84,6 +84,7 @@ export default {
   data() {
     return {
       seen: false,
+      yn_alliance: this.$route.params.yn_alliance,
       curTab: "interest",
       goodsInfo: "",
       keyword_list: ""

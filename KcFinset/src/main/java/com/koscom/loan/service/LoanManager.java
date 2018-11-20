@@ -5,6 +5,12 @@ import com.koscom.finance.model.TxFcTransmitVO;
 import com.koscom.util.ReturnClass;
 
 public interface LoanManager {
+	/**
+	 * 신청정보 insert
+	 * @param txFcTransmitVO
+	 * @return
+	 */
+	ReturnClass insertLoanInfo(TxFcTransmitVO txFcTransmitVO);
 	
 	/**
 	 * 즐겨찾기 insert

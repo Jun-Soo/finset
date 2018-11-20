@@ -15,7 +15,9 @@
 					FROM
 						CONSUME_INFO
 					WHERE
-						DT_TRD BETWEEN TO_CHAR( TRUNC( SYSDATE, 'MM' ), 'YYYYMMDD' )
+						YN_CANCEL = 'N'
+						AND YN_DELETE = 'N'
+						AND DT_TRD BETWEEN TO_CHAR( TRUNC( SYSDATE, 'MM' ), 'YYYYMMDD' )
 									AND TO_CHAR( SYSDATE, 'YYYYMMDD' )
 						AND NO_PERSON = PSI.NO_PERSON
 				)
@@ -26,7 +28,9 @@
 					FROM
 						CONSUME_INFO
 					WHERE
-						DT_TRD BETWEEN TO_CHAR( SYSDATE, 'YYYYMM' )|| PSI.DT_BASIC
+						YN_CANCEL = 'N'
+						AND YN_DELETE = 'N'
+						AND DT_TRD BETWEEN TO_CHAR( SYSDATE, 'YYYYMM' )|| PSI.DT_BASIC
 									AND TO_CHAR( SYSDATE, 'YYYYMMDD' )
 						AND NO_PERSON = PSI.NO_PERSON
 				)
@@ -37,7 +41,9 @@
 					FROM
 						CONSUME_INFO
 					WHERE
-						DT_TRD = TO_CHAR( SYSDATE, 'YYYYMMDD' )
+						YN_CANCEL = 'N'
+						AND YN_DELETE = 'N'
+						AND DT_TRD = TO_CHAR( SYSDATE, 'YYYYMMDD' )
 						AND NO_PERSON = PSI.NO_PERSON
 				)
 				WHEN PSI.DT_BASIC > TO_CHAR( SYSDATE, 'DD' )
@@ -47,7 +53,9 @@
 					FROM
 						CONSUME_INFO
 					WHERE
-						DT_TRD BETWEEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| PSI.DT_BASIC
+						YN_CANCEL = 'N'
+						AND YN_DELETE = 'N'
+						AND DT_TRD BETWEEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| PSI.DT_BASIC
 									AND TO_CHAR( SYSDATE, 'YYYYMMDD' )
 						AND NO_PERSON = PSI.NO_PERSON
 				)
@@ -78,6 +86,7 @@
 					ASSETS_INFO
 				WHERE
 					DT_EXPIRE IS NULL
+					AND YN_USE = 'Y'
 					AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
 			) TB
 	</select>
@@ -85,7 +94,7 @@
 	<select id="getMainDebtSumAmt" parameterType="java.lang.String" resultType="java.lang.String">
 		/* com.koscom.main.dao.MainMapper.getMainDebtSumAmt */
 		SELECT
-			NVL( SUM( AMT_REMAIN ), 0 ) AS SUM_AMT
+			DECODE( NVL( SUM( AMT_REMAIN ), 0 ), 0, '-', SUM( AMT_REMAIN )) AS SUM_AMT
 		FROM
 			DEBT_PERSONAL_INFO
 		WHERE

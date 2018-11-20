@@ -149,6 +149,9 @@ export default {
   },
   beforeMount() {},
   mounted() {
+    if (this.$route.params.tab) {
+      this.curTab = this.$route.params.tab;
+    }
     this.tabOnClick(this.curTab);
     this.listFcLinkInfo();
   },

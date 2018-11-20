@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.kbrealestate.dao.KbRealEstateMapper">
+	<select id="listAddrRegion1" parameterType="com.koscom.kbrealestate.model.KbRealEstateForm" resultType="com.koscom.env.model.CodeInfo">
+		SELECT
+			 CODE_VALUE
+			,NM_CODE
+			,ORD
+		FROM
+			(
+				SELECT
+					 DISTINCT REGION1_CODE AS CODE_VALUE
+					,REGION1_NAME AS NM_CODE
+					,(
+						CASE
+							WHEN REGION1_NAME LIKE '%특별시%' THEN 0
+							WHEN REGION1_NAME LIKE '%광역시%' THEN 1
+							WHEN REGION1_NAME LIKE '%특별자치%' THEN 2
+							ELSE 3
+						END
+					) ORD
+				FROM
+					ADDR_DONG_INFO
+				WHERE
+					BUILDING_TYPE = #{building_type, jdbcType = VARCHAR}
+			)
+		ORDER BY
+			 ORD
+			,NM_CODE
+	</select>
+	<select id="listAddrRegion2" parameterType="com.koscom.kbrealestate.model.KbRealEstateForm" resultType="com.koscom.env.model.CodeInfo">
+		SELECT
+			 DISTINCT REGION2_CODE AS CODE_VALUE
+			,REGION2_NAME AS NM_CODE
+		FROM
+			ADDR_DONG_INFO
+		WHERE
+			REGION1_CODE = #{region1_code, jdbcType = VARCHAR}
+		ORDER BY
+			REGION2_NAME
+	</select>
+	<select id="listAddrRegion3" parameterType="com.koscom.kbrealestate.model.KbRealEstateForm" resultType="com.koscom.env.model.CodeInfo">
+		SELECT
+			 DISTINCT REGION3_CODE AS CODE_VALUE
+			,REGION3_NAME AS NM_CODE
+		FROM
+			ADDR_DONG_INFO
+		WHERE
+			REGION2_CODE = #{region2_code, jdbcType = VARCHAR}
+		ORDER BY
+			REGION3_NAME
+
+	</select>
+	<select id="listSrchApartmentInfo" parameterType="com.koscom.kbrealestate.model.KbRealEstateForm" resultType="com.koscom.kbrealestate.model.KbDongAptVO">       
+		SELECT
+			 APARTMENT_NAME AS AUTO_COM_TXT
+			,APARTMENT
+			,APARTMENT_NAME
+			,REGION3_CODE
+		FROM
+			ADDR_DONG_INFO
+		WHERE
+			(
+				APARTMENT_NAME LIKE '%' || #{apartment, jdbcType = VARCHAR} || '%'
+			)
+			AND REGION1_CODE = #{region1_code, jdbcType = VARCHAR}
+			AND REGION2_CODE = #{region2_code, jdbcType = VARCHAR}
+			<if test = "@com.koscom.util.MybatisUtil@isNotEmpty(region3_code)" >
+				AND REGION3_CODE = #{region3_code, jdbcType = VARCHAR}
+			</if>
+			AND BUILDING_TYPE = #{building_type, jdbcType = VARCHAR}
+		ORDER BY
+			APARTMENT_NAME ASC
+	</select>
+</mapper>

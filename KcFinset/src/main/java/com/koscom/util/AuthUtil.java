@@ -1,16 +1,14 @@
 package com.koscom.util;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
 public class AuthUtil {
     private static final Logger logger = LoggerFactory.getLogger(AuthUtil.class);
-    @Resource
-    Environment environment;
+
     /**
      * 접근 경로 제어
      * 여러개의 페이지에서 접근 할경우 사용하며,

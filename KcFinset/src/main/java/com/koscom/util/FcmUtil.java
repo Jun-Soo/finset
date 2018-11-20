@@ -14,26 +14,13 @@ import org.apache.http.util.EntityUtils;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.PropertySource;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-@PropertySource("classpath:prop/webservice.properties")
 public class FcmUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(FcmUtil.class);
 	
-	private static FcmUtil _fcmUtil;
-	
-	static {
-		if(_fcmUtil == null)
-			_fcmUtil = new FcmUtil();
-	}
-	
-	public static FcmUtil getFcmUtil() {
-		return _fcmUtil;
-	}
-
 	/**
 	 * FCM 메세지 전송
 	 * @param sendTo: Constant.FCM_TOPIC : 전체, 개인 보낼때는 token 값
@@ -42,11 +29,10 @@ public class FcmUtil {
 	 * return true: 성공, false: 실패
 	 * @param type2 
 	 */
-	@SuppressWarnings("unchecked")
-	public static boolean sendFcm(String sendTo, String title, String msg, String linkAddr, String os, String type) {
+	public static boolean sendFcm(String sendTo, String title, String msg, String linkAddr, String os, String type, String fcmUrl) {
 		
 		HttpClient 	client 	= HttpClientBuilder.create().build();
-		HttpPost 	post 	= new HttpPost("https://fcm.googleapis.com/fcm/send");
+		HttpPost 	post 	= new HttpPost(fcmUrl);
 		
 		post.setHeader("Content-type", "application/json");
 		post.setHeader("Authorization", Constant.FCM_SERVER_KEY);

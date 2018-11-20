@@ -42,30 +42,30 @@
     <div class="credit-info pb90">
       <p class="title">대출정보</p>
       <div class="wrap">
-      <template v-for="debtInfo in debtList">
-        <p :key="debtInfo.index" class="key"><img :src="debtInfo.fcImg" alt=""/>{{debtInfo.nm_fc}}</p>
-        <ul :key="debtInfo.index" class="left">
-          <li>
-            <p>계약정보</p>
-            <p>대출형태 : {{debtInfo.debt_type}}<br>
-              개설일자 : {{formatDateDot(debtInfo.ymd_loan)}}<br>
-              만기일자 : {{formatDateDot(debtInfo.ymd_loanend)}}<br>
-              <template v-if="debtInfo.cd_type_deal != '3' && debtInfo.cd_type_deal != '6'">대출원금 : </template>
-              <template v-else>대출한도 : </template>
-               {{debtInfo.amt_contract}} 만원
-            </p>
-          </li>
-          <li>
-            <p>이용현황</p>
-            <p>잔액 : {{debtInfo.amt_remain}} 만원<br>
-              금리 :  {{debtInfo.ever_interest}} %<br>
-              월상환액 : 
-              <template v-if="debtInfo.cd_type_deal != '3' && debtInfo.cd_type_deal != '6'">{{debtInfo.amt_repay}} 만원</template>
-              <template v-else>-</template>
-            </p>
-          </li>
-        </ul>
-      </template>
+        <template v-for="debtInfo in debtList">
+          <p :key="debtInfo.index" class="key">{{debtInfo.nm_fc}}</p>
+          <ul :key="debtInfo.index" class="left">
+            <li>
+              <p>계약정보</p>
+              <p>대출형태 : {{debtInfo.debt_type}}<br>
+                개설일자 : {{formatDateDot(debtInfo.ymd_loan)}}<br>
+                만기일자 : {{formatDateDot(debtInfo.ymd_loanend)}}<br>
+                <template v-if="debtInfo.cd_type_deal != '3' && debtInfo.cd_type_deal != '6'">대출원금 : </template>
+                <template v-else>대출한도 : </template>
+                {{debtInfo.amt_contract}} 만원
+              </p>
+            </li>
+            <li>
+              <p>이용현황</p>
+              <p>잔액 : {{debtInfo.amt_remain}} 만원<br>
+                금리 : {{debtInfo.ever_interest}} %<br>
+                월상환액 :
+                <template v-if="debtInfo.cd_type_deal != '3' && debtInfo.cd_type_deal != '6'">{{debtInfo.amt_repay}} 만원</template>
+                <template v-else>-</template>
+              </p>
+            </li>
+          </ul>
+        </template>
       </div>
     </div>
 
@@ -130,20 +130,15 @@ export default {
           params: { seq_share: _this.seq_share }
         })
         .then(response => {
-          this.$store.state.title = response.data.shareInfo.offer_nm_person + this.$store.state.title; //title 정보제공자명 setting
+          this.$store.state.title =
+            response.data.shareInfo.offer_nm_person + this.$store.state.title; //title 정보제공자명 setting
           _this.shareInfo = response.data.shareInfo;
           _this.creditInfo = response.data.creditInfo;
           _this.c_grade_credit = response.data.creditInfo.grade_credit;
           _this.c_rating_credit = response.data.creditInfo.rating_credit;
           _this.overdueCnt = response.data.overdueCnt;
           _this.overdueList = response.data.overdueList;
-          //대출list - 금융사ICON 셋팅
-          var dtList = response.data.debtList;
-          for (var i = 0; i < dtList.length; i++) {
-            dtList[i].fcImg =
-              "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + dtList[i].cd_fc;
-          }
-          _this.debtList = dtList;
+          _this.debtList = response.data.debtList;
 
           _this.seen = true;
         })

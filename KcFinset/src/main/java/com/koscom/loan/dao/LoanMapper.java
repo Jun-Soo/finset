@@ -1,11 +1,25 @@
 package com.koscom.loan.dao;
 
-import java.util.List;
+
 
 import com.koscom.domain.CooconGoodsFavoriteInfo;
 import com.koscom.finance.model.TxFcTransmitVO;
+import com.koscom.goods.model.GoodsVO;
 
 public interface LoanMapper {
+	
+	/**
+	 * 신청정보 insert
+	 * @param txFcTransmitVO
+	 * @return
+	 */
+	int insertLoanInfo(TxFcTransmitVO txFcTransmitVO);
+	/**
+	 * 신청정보 상품 insert
+	 * @param goodsVO
+	 * @return
+	 */
+	int insertLoanGoodsInfo(GoodsVO goodsVO);
 
 	/**
 	 * 즐겨찾기   insert

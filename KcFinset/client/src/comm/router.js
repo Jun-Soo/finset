@@ -132,10 +132,11 @@ import AssetsBankMain from '@/components/assets/BankMain'
 import AssetsBankActDetail from '@/components/assets/BankActDetail'
 import AssetsBankDepWdrlList from '@/components/assets/BankDepWdrlList'
 import AssetsBankDepWdrlDetail from '@/components/assets/BankDepWdrlDetail'
-// import AssetsStockInfo from '@/components/assets/StockInfo'
+// import AssetsStockMain from '@/components/assets/StockMain'
 // import AssetsStockBalcDetail from '@/components/assets/StockBalcDetail'
-// import AssetsStockDelDetail from '@/components/assets/StockDelDetail'
-// import AssetsStockAnsDetail from '@/components/assets/StockAnsDetail'
+// import AssetsStockActDetail from '@/components/assets/StockActDetail'
+// import AssetsStockShrDetail from '@/components/assets/StockShrDetail'
+// import AssetsStockFndDetail from '@/components/assets/StockFndDetail'
 import AssetsDirInput from '@/components/assets/DirInput'
 
 import MypageHome from '@/components/mypage/Home'
@@ -852,6 +853,7 @@ export const routes = [{
       {
         path: 'bankMain',
         alias: '/bankMain',
+        name: 'AssetsbankMain',
         component: AssetsBankMain,
         meta: {
           allowPath: true

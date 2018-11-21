@@ -10,7 +10,7 @@
           <div class="number"><input type="number" placeholder="생년월일6자리" name="ssn_birth" id="ssn_birth" v-model="ssn_birth" v-validate="'required|length:6|max:6'" v-on:keyup="nextFocus('birth')" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='생년월일'></div>
           <div class="dash">-</div>
           <!-- <div class="number last"><input type="password" pattern="[0-9]*" name="sex" id="sex" v-model="sex" inputmode="numeric" maxlength="1" style="-webkit-text-security:disc" v-on:change="nextFocus('sex')" v-bind:disabled="isDisabled" autocomplete="off" v-validate="'required|between:0,9|length:1|max:1'" data-vv-name='성별'>******</div> -->
-          <div class="number last"><input type="password" name="ssn2" id="ssn2" @click="showSecureKeypad()" placeholder="주민번호뒷자리" maxlength="7" autocomplete="off" readonly="readonly" v-validate="'required|length:7|max:7'" data-vv-name='주민번호 뒷자리'></div>
+          <div class="number"><input type="password" name="ssn2" id="ssn2" @click="showSecureKeypad()" placeholder="주민번호뒷자리" maxlength="7" autocomplete="off" readonly="readonly" v-validate="'required|length:7|max:7'" data-vv-name='주민번호 뒷자리'></div>
         </div>
         <p class="warn" v-if="errors.has('생년월일')">{{errors.first('생년월일')}}</p>
         <p class="warn" v-if="errors.has('성별')">{{errors.first('성별')}}</p>
@@ -23,14 +23,14 @@
               {{ option.text }}
             </option>
           </select> -->
-          <select v-model="telComCd" placeholder="통신사" @select="onSelect">
+          <!-- <select v-model="telComCd" placeholder="통신사" @select="onSelect">
             <option v-for="option in options" :key="option.index" v-bind:value="option.value">
               {{ option.text }}
             </option>
-          </select>
-          <!-- <multiselect v-model="telComCd" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @select="onSelect">
+          </select> -->
+          <multiselect v-model="telComCd" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @select="onSelect">
             <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
-          </multiselect> -->
+          </multiselect>
           <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
         </div>
         <button id="req_certification" v-on:click="kcmRequestCertNo()">인증번호 전송</button>
@@ -68,7 +68,7 @@ export default {
       ssn_birth: "",
       birthday: "",
       sex: "",
-      telComCd: "",
+      telComCd: {},
       telComNm: "",
       hp: "",
       kcb_ci: "",
@@ -77,6 +77,7 @@ export default {
       bgn: "",
       smsCertNo: "",
       svcTxSeqno: "",
+      ssn_person: "",
       /* form etc */
       smsReSndYn: "",
       nation: "1",
@@ -154,7 +155,12 @@ export default {
           _this.nm_person = result.nm_person;
           _this.ssn_birth = result.birthDay;
           _this.sex = result.sex;
-          _this.telComCd = result.telComCd;
+          for (var i = 0; i < _this.options.length; i++) {
+            if (_this.options[i].value == result.telComCd) {
+              _this.telComCd = _this.options[i];
+            }
+          }
+          //_this.telComCd.value = result.telComCd;
           _this.hp = result.hp;
         })
         .catch(e => {
@@ -162,7 +168,7 @@ export default {
         });
     },
     onSelect: function(option) {
-      this.telComCd = option.value;
+      this.telComCd = option;
       console.log(this.telComCd);
     },
     nextFocus: function(val) {
@@ -172,7 +178,7 @@ export default {
         $("#telComCd").focus();
         this.$children[0].isOpen = true;
       }
-      if (val == "telComCd" && _this.telComCd) $("#hp").focus();
+      if (val == "telComCd" && _this.telComCd.value) $("#hp").focus();
       if (val == "hp" && _this.hp) $("").focus();
     },
     /**
@@ -192,7 +198,7 @@ export default {
           formData.append("nm_person", _this.nm_person);
           formData.append("birthday", _this.birthday);
           formData.append("sex", _this.sex);
-          formData.append("telComCd", _this.telComCd);
+          formData.append("telComCd", _this.telComCd.value);
           formData.append("hp", _this.hp);
           formData.append("smsReSndYn", _this.smsReSndYn);
           formData.append("nation", _this.nation);
@@ -280,13 +286,27 @@ export default {
       formData.append("cd_fc", this.cd_fc);
       formData.append("cd_goods", this.cd_goods);
       formData.append("encPwd", this.encPwd);
+      formData.append("nm_person", _this.nm_person);
+      formData.append("ymd_birth", _this.birthday);
+      formData.append("cd_sex", _this.sex);
+      formData.append("hp1", _this.hp);
       this.$http
         .post("/m/loan/insertTxFc.json", formData)
         .then(function(response) {
           var result = response.data;
           if (result.result == "00") {
             _this.no_bunch = result.no_bunch;
-            alert("test");
+            _this.ssn_person = result.ssn_person;
+            this.$router.push({
+              name: "GoodsCreditReqInfo",
+              params: {
+                cd_fc: _this.cd_fc,
+                cd_goods: _this.cd_goods,
+                no_bunch: _this.no_bunch,
+                kcb_di: _this.kcb_di,
+                ssn_person: _this.ssn_person
+              }
+            });
           }
         })
         .catch(e => {

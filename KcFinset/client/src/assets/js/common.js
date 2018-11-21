@@ -301,7 +301,45 @@ export default {
     })
     return cdList
   },
-  makeOptions: function (cdGroup, defaultText, selectValue, pType) {
+  // makeOptions: function (cdGroup, defaultText, selectValue, pType) {
+  //   var type = pType
+  //   var data = {
+  //     'code_group': cdGroup
+  //   }
+  //   var cdList
+  //   $.ajax({
+  //     url: '/m/comm/getCodeList.json',
+  //     data: data,
+  //     contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+  //     type: 'GET',
+  //     async: false,
+  //     success: function (result) {
+  //       cdList = result.codeList
+  //     }
+  //   })
+  //   var result = ''
+  //   if ((defaultText || '') !== '') {
+  //     result += "<option value=''>" + defaultText + '</option>'
+  //     result += "<option data-divider='true' disabled></option>"
+  //   }
+  //   if (cdList != null && cdList.length > 0) {
+  //     for (var i = 0; i < cdList.length; i++) {
+  //       var value = cdList[i].code_value
+  //       // 기본선택 설정
+  //       if ((cdList[i].code_value || '') !== '' && cdList[i].code_value === selectValue) {
+  //         value += "' selected='selected"
+  //       }
+
+  //       if ((type || '') !== '' && type === 'ID.NM') {
+  //         result += "<option value='" + value + "'>" + cdList[i].code_value + '.' + cdList[i].nm_code + '</option>'
+  //       } else {
+  //         result += "<option value='" + value + "'>" + cdList[i].nm_code + '</option>'
+  //       }
+  //     }
+  //   }
+  //   return result
+  // },
+  makeOptions: function (cdGroup, pType) {
     var type = pType
     var data = {
       'code_group': cdGroup
@@ -317,24 +355,19 @@ export default {
         cdList = result.codeList
       }
     })
-    var result = ''
-    if ((defaultText || '') !== '') {
-      result += "<option value=''>" + defaultText + '</option>'
-      result += "<option data-divider='true' disabled></option>"
-    }
+    var result = []
     if (cdList != null && cdList.length > 0) {
       for (var i = 0; i < cdList.length; i++) {
+        result[i] = {}
         var value = cdList[i].code_value
-        // 기본선택 설정
-        if ((cdList[i].code_value || '') !== '' && cdList[i].code_value === selectValue) {
-          value += "' selected='selected"
-        }
-
+        var name
         if ((type || '') !== '' && type === 'ID.NM') {
-          result += "<option value='" + value + "'>" + cdList[i].code_value + '.' + cdList[i].nm_code + '</option>'
+          name = cdList[i].code_value + '.' + cdList[i].nm_code
         } else {
-          result += "<option value='" + value + "'>" + cdList[i].nm_code + '</option>'
+          name = cdList[i].nm_code
         }
+        result[i].text = name
+        result[i].value = value
       }
     }
     return result

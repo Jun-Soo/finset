@@ -14,6 +14,14 @@ public interface LoanMapper {
 	 * @return
 	 */
 	int insertLoanInfo(TxFcTransmitVO txFcTransmitVO);
+	
+	/**
+	 * 부가정보  update 
+	 * @param txFcTransmitVO
+	 * @return
+	 */
+	int modifyLoanAdditional(TxFcTransmitVO txFcTransmitVO);
+	
 	/**
 	 * 신청정보 상품 insert
 	 * @param goodsVO

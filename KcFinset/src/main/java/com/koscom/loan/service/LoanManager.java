@@ -13,6 +13,13 @@ public interface LoanManager {
 	ReturnClass insertLoanInfo(TxFcTransmitVO txFcTransmitVO);
 	
 	/**
+	 * 부가정보  update
+	 * @param txFcTransmitVO
+	 * @return
+	 */
+	ReturnClass modifyLoanAdditional(TxFcTransmitVO txFcTransmitVO);
+	
+	/**
 	 * 즐겨찾기 insert
 	 * @param CooconGoodsFavoriteInfo
 	 * @return ReturnClass

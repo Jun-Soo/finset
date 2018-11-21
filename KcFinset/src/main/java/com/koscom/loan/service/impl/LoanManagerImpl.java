@@ -50,6 +50,14 @@ public class LoanManagerImpl implements LoanManager{
         LogUtil.debugLn(logger, "LoanManagerImpl.insertLoanInfo:resultClass="+resultClass);
         return resultClass;
 	}
+	
+	@Override
+	public ReturnClass modifyLoanAdditional(TxFcTransmitVO txFcTransmitVO) {
+		if(1 != loanMapper.modifyLoanAdditional(txFcTransmitVO)){
+			new ReturnClass(Constant.FAILED, "처리 실패하였습니다.");
+		}
+		return new ReturnClass(Constant.SUCCESS, "처리 성공하였습니다");
+	}
 
 	@Override
 	public ReturnClass insertLoanGoodsChoice(CooconGoodsFavoriteInfo cooconGoodsFavoriteInfo) {

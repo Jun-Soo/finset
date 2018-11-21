@@ -11,8 +11,8 @@
 		<selectKey keyProperty="no_bunch" resultType="string" order="BEFORE">
 			(SELECT LPAD(NVL(TX_FC_TRANSMIT_SEQUENCE.NEXTVAL,0),20,'0') FROM DUAL)
 		</selectKey>
-		INSERT INTO tx_fc_transmit
-			(   no_bunch
+		INSERT INTO TX_FC_TRANSMIT
+			(   NO_BUNCH
               , NM_PERSON
               , SSN_PERSON
               , NO_PERSON
@@ -37,6 +37,7 @@
 				, SYSDATE
 			)
 	</insert>
+	
 	<insert id="insertLoanGoodsInfo" >
 		/* com.koscom.loan.dao.LoanMapper.insertLoanGoodsInfo*/
         /* com.koscom.finance.dao.FinanceMapper.insertTxFcGoods : */
@@ -55,6 +56,18 @@
 	            ,SYSDATE      /* 등록일시       */
 	        )
 	</insert>
+	
+	<update id="modifyLoanAdditional">
+		/* com.koscom.loan.dao.LoanMapper.modifyLoanAdditional*/
+		UPDATE TX_FC_TRANSMIT
+		SET
+		   CD_LOAN_USE 			= #{cd_loan_use, jdbcType=VARCHAR}
+		  , CD_HOUSE_TYPE 		= #{cd_house_type, jdbcType=VARCHAR}
+		  , CD_LIVE_TYPE_HOME 	= #{cd_live_type_home, jdbcType=VARCHAR}
+		  , ID_LST              = #{id_lst, jdbcType=VARCHAR}
+		  , DT_LST              = SYSDATE
+		WHERE NO_BUNCH = #{no_bunch, jdbcType=VARCHAR}
+	</update>
 
 	<insert id="insertLoanGoodsChoice" >
 		/* com.koscom.loan.dao.LoanMapper.insertLoanGoodsChoice*/

@@ -203,4 +203,20 @@ public class LoanController implements Constant {
 
 		return JSON_VIEW;
 	}
+	
+	/**
+	 * 부가정보 update
+	 * @param request
+	 * @param model
+	 * @param txFcTransmitVO
+	 * @return
+	 */
+	@RequestMapping("/modifyLoanAdditional.json")
+	public String modifyLoanAdditional(HttpServletRequest request, Model model, TxFcTransmitVO txFcTransmitVO) {
+		logger.debug("==============txFcTransmitVO==============  "+ txFcTransmitVO.toString());
+		ReturnClass returnClass = loanManager.modifyLoanAdditional(txFcTransmitVO);
+		model.addAttribute("message", returnClass.getMessage());
+		model.addAttribute("result", returnClass.getCd_result());
+		return JSON_VIEW;
+	}
 }

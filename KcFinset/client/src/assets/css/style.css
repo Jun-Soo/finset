@@ -1057,7 +1057,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .cert-wrap .grid { display: grid; grid-template-columns: 5fr 1fr 5fr; align-items: center; text-align: center; margin-top: 15px; }
 .cert-wrap .grid .number { text-align: left; letter-spacing: 10px; }
 .cert-wrap .grid input { margin-top: 0; }
-.cert-wrap .grid input[type="password"] { width: 30%; margin-right: 10px; }
+.cert-wrap .grid .last input[type="password"] { width: 30%; margin-right: 10px; }
 .cert-wrap .grid select { line-height: 38px; height: 38px; }
 .cert-wrap .grid.phone { grid-template-columns: 3fr 7fr; grid-gap: 10px; }
 .cert-wrap button { line-height: 46px; border: 2px solid #62c1d0; text-align: center; font-size: 15px; font-weight: 700; width: 100%; background: #fff; color: #62c1d0; margin-top: 10px; }

@@ -2,6 +2,7 @@
  * common
  */
 import Constant from './constant.js'
+import { debug } from 'util'
 
 export default {
   back: function () {
@@ -15,7 +16,7 @@ export default {
     Constant.params = this.getParams()
 
     // ios a, button 태그 이벤트
-    $('body *').on('touchstart', function () {})
+    $('body *').on('touchstart', function () { })
 
     // Tab
     $('.tabs a').click(function (e) {
@@ -372,13 +373,23 @@ export default {
     }
     return result
   },
+  datepickerInit: function (classNm) {
+    if (document.getElementsByClassName(classNm)) {
+      for (var i = 0; i < document.getElementsByClassName(classNm).length; i++) {
+        for (var j = 1; j < document.getElementsByClassName(classNm)[i].children.length; j++) {
+          let leftMargin = document.getElementsByClassName(classNm)[i].offsetWidth - 300
+          document.getElementsByClassName(classNm)[i].children[j].style.marginLeft = leftMargin + 'px'
+        }
+      }
+    }
+  },
   // pagination 사용법
   // 필요한 함수를 작성하되, 함수 파라미터로 callback을 선언
   pagination: function (callback) {
     Constant._this = this
     Constant._callback = callback
     Constant._this.addScroll()
-    Constant._callback(function () {})
+    Constant._callback(function () { })
   },
   handleScroll: function () {
     var html = document.documentElement

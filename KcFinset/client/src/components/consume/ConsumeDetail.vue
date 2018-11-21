@@ -193,6 +193,7 @@ export default {
       }
     }
   },
+
   watch: {
     isShowTrans: function(key) {
       if (key == true) {
@@ -226,7 +227,9 @@ export default {
   beforeMount() {},
   mounted() {},
   beforeUpdate() {},
-  updated() {},
+  updated() {
+    Common.datepickerInit("div-date");
+  },
   beforeDestroy() {},
   destroyed() {},
   methods: {

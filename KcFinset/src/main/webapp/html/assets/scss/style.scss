@@ -536,6 +536,12 @@ aside.search-wrap{
                         font-size: 14px;
                         margin-left: 2px;
                     }
+                    &.red{
+                        color: $col1;
+                    }
+                    &.blue{
+                        color: $col4;
+                    }
                 }
                 .number{
                     font-size: 24px;
@@ -556,6 +562,14 @@ aside.search-wrap{
                 .right{
                     width: 70%;
                     text-align: right;
+                }
+            }
+            &.bi{
+                .left{
+                    width: 50%;
+                }
+                .right{
+                    width: 50%;
                 }
             }
         }
@@ -745,7 +759,7 @@ aside.search-wrap{
             font-size: 14px;
             color: #222;
             font-weight: 700;
-            margin-top: 10px;
+            margin-top: 20px;
         }
         .text-result{
             font-size: 14px;
@@ -764,6 +778,12 @@ aside.search-wrap{
                     padding-left: 0;
                     margin-left: 0;
                     border-left: none;
+                }
+            }
+            &.nor{
+                em{
+                    color: $col2;
+                    font-weight: 400;
                 }
             }
         }
@@ -793,6 +813,21 @@ aside.search-wrap{
                             font-weight: 700;
                         }
                     }
+                }
+            }
+        }
+    }
+    .select{
+        display: flex;
+        margin-bottom: 10px;
+        div{
+            width: 50%;
+            &.right{
+                text-align: right;
+                button{
+                    width: 35px;
+                    height: 35px;
+                    background: url("../images/common/btn-search.png") no-repeat center / contain;
                 }
             }
         }
@@ -1108,6 +1143,12 @@ aside.search-wrap{
                 color: $col1;
             }
         }
+        &.text{
+            font-size: 13px;
+            line-height: 18px;
+            font-weight: 400;
+            color: #666;
+        }
     }
     a{
         font-size: 14px;
@@ -1157,6 +1198,9 @@ aside.search-wrap{
     }
     &.credit-up{
         background: url("../images/credit/con_top_creditup.png") no-repeat top center / contain;
+    }
+    &.counsel-info{
+        background: url("../images/credit/con_top_counsel_info.png") no-repeat top center / contain;
     }
 }
 
@@ -1854,6 +1898,10 @@ aside.search-wrap{
                 font-size: 13px;
                 text-align: right;
             }
+            input[type="text"]{
+                border: none;
+                text-align: right;
+            }
         }
     }
 }
@@ -1891,6 +1939,20 @@ aside.search-wrap{
             right: 21px;
             top: 0;
             background: url(../images/main/ico_setting.png) no-repeat center / contain;
+        }
+        .today{
+            height: auto;
+            width: auto;
+            line-height: 28px;
+            border: 1px solid $col2;
+            padding: 0 13px;
+            color: $col2;
+            font-weight: 700;
+            background: #fff;
+            border-radius: 50px;
+            position: absolute;
+            left: 0;
+            top: -5px;
         }
     } 
     .wrap{
@@ -2819,45 +2881,78 @@ button.cal{
 //   칼렌다   //
 
 .check-flex{
-    display: flex;
+    display: grid;
     justify-content: space-between;
+    grid-template-columns: 1fr 1fr 1fr;
     padding: 0 21px;
     margin-top: 30px;
-    .today{
-        line-height: 28px;
-        border: 1px solid $col2;
-        padding: 0 13px;
-        color: $col2;
-        font-weight: 700;
-        background: #fff;
-        border-radius: 50px;
-    }
-    .wrap{
-        button{
-            margin-left: 6px;
-            width: 68px;
-            height: 30px;
-            line-height: 30px;
-            text-indent: 23px;
-            &.income{
-                background: url("../images/common/btn_income.png") no-repeat left top / 68px;
+    grid-gap: 6px;
+    div{
+        text-align: center;
+        &.income{
+            button{
+                background: url("../images/common/btn_income.png") no-repeat center top / 107px;
+                color: #4f82d6;
+                border: 1px solid #4f82d6;
+                border-radius: 50px;
+                &.on{
+                    background-position: center bottom;
+                    color: #fff;
+                    background-color: #4f82d6;
+                }
+            }
+            em{
                 color: #4f82d6;
                 font-weight: 700;
+                margin-top: 10px;
+                display: inline-block;
             }
-            &.debt{
-                background: url("../images/common/btn_debt.png") no-repeat left top / 68px;
+        }
+        &.debt{
+            button{
+                background: url("../images/common/btn_debt.png") no-repeat center top / 107px;
+                color: #25bdd5;
+                border: 1px solid #25bdd5;
+                border-radius: 50px;
+                &.on{
+                    background-position: center bottom;
+                    color: #fff;
+                    background-color: #25bdd5;
+                }
+            }
+            em{
                 color: #25bdd5;
                 font-weight: 700;
+                margin-top: 10px;
+                display: inline-block;
             }
-            &.loan{
-                background: url("../images/common/btn_loan.png") no-repeat left top / 68px;
+        }
+        &.loan{
+            button{
+                background: url("../images/common/btn_loan.png") no-repeat center top / 107px;
+                color: #e52638;
+                border: 1px solid #e52638;
+                border-radius: 50px;
+                &.on{
+                    background-position: center bottom;
+                    color: #fff;
+                    background-color: #e52638;
+                }
+            }
+            em{
                 color: #e52638;
                 font-weight: 700;
+                margin-top: 10px;
+                display: inline-block;
             }
-            &.on{
-                background-position: left bottom;
-                color: #fff;
-            }
+        }
+        button{
+            width: 68px;
+            height: 29px;
+            line-height: 30px;
+            text-indent: 23px;
+            font-weight: 700;
+            width: 100%;
         }
     }
 }
@@ -2878,6 +2973,7 @@ button.cal{
         background: #fff;
         border-right: none;
         padding: 0;
+        background: #f5f5f5;
     }
     td{
         border-right: none;
@@ -2888,7 +2984,7 @@ button.cal{
             display: block;
             padding: 5px 0 0 0;
             border: 1px solid #fff;
-            min-height: 80px;
+            min-height: 60px;
             .day{
                 line-height: 20px;
                 margin-bottom: 5px;
@@ -2923,6 +3019,47 @@ button.cal{
             }
             &.on{
                 border: 1px solid #213e6a;
+            }
+        }
+    }
+    .year{
+        padding-bottom: 100px;
+        margin-top: 20px;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-gap: 10px;
+        div{
+            border: 1px solid $lineColor;
+            padding: 4px;
+            min-height: 120px;
+            .mon{
+                color: #111;
+                text-indent: 5px;
+                line-height: 30px;
+            }
+            em{
+                display: block;
+                text-align: right;
+                padding-right: 10px;
+                color: #fff;
+                line-height: 20px;
+                margin-bottom: 2px;
+                &.debt{
+                background: #25bdd5;
+                }
+                &.income{
+                    background: #4f82d6;
+                }
+                &.loan{
+                    background: $col1;
+                }
+            }
+            .sum{
+                line-height: 30px;
+                color: #333;
+                font-weight: 700;
+                text-align: right;
+                padding-right: 10px;
             }
         }
     }
@@ -3120,6 +3257,27 @@ button.cal{
     }
 }
 
+//   신용상담 결과   //
+
+.reg-counsel{
+    margin-top: 30px;
+    dl{
+        dt{
+            display: flex;
+            justify-content: space-between;
+            background: #f0efed;
+            padding: 0 21px;
+            p{
+                line-height: 30px;
+            }
+        }
+        dd{
+            line-height: 18px;
+            padding: 21px;
+        }
+    }
+}
+
 
 //   본인확인   //
 
@@ -3166,6 +3324,55 @@ button.cal{
         }
         input{
             margin-top: 0;
+        }
+    }
+}
+
+//   신용상담   //
+
+.counsel-list{
+    .item{
+        border-radius: 10px;
+        border: 1px solid $lineColor;
+        padding: 0;
+        .top{
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid $lineColor;
+            p{
+                line-height: 40px;
+                padding: 0 21px;
+                &:last-child{
+                    text-align: right;
+                    a{
+                        color: $col2;
+                        font-weight: 700;
+                        padding-right: 15px;
+                        background: url("../images/common/btn_contop_arrow.png") no-repeat right center / 7px;
+                    }
+                }
+            }
+        }
+        .result{
+            padding: 20px;
+            padding-left: 75px;
+            .title{
+                color: #333;
+                font-weight: 700;
+                font-size: 14px;
+            }
+            .text{
+                margin-top: 10px;
+            }
+            &.apply{
+                background: url("../images/credit/ico_apply.png") no-repeat 20px 50% /  40px;
+            }
+            &.ing{
+                background: url("../images/credit/ico_ing.png") no-repeat 20px 50% /  40px;
+            }
+            &.done{
+                background: url("../images/credit/ico_done.png") no-repeat 20px 50% /  40px;
+            }
         }
     }
 }
@@ -3265,6 +3472,12 @@ button.cal{
                     width: 80%;
                     border: none;
                 }
+            }
+            .btn-search{
+                width: 49px;
+                height: 49px;
+                background: url("../images/common/btn_search_write.png") no-repeat center / 49px;
+                vertical-align: middle;
             }
             select{
                 border: none;
@@ -3591,6 +3804,72 @@ button.cal{
 }
 
 
+//  직장명 검색  //
+
+.company-list{
+    margin-top: 20px;
+    .item{
+        margin-bottom: 15px;
+        a{
+            display: block;
+            border: 1px solid $lineColor;
+            border-radius: 10px;
+            padding: 20px;
+            .title{
+                color: #333;
+                font-size: 14px;
+                font-weight: 700;
+            }
+            .text{
+                line-height: 19px;
+                margin-top: 10px;
+            }
+        }
+        &.on{
+            a{
+                border-color: $col1;
+            }
+        }
+    }
+}
+
+//  신청인 조건  //
+
+.yesno{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 5px;
+    margin-top: 20px;
+    a{
+        font-size: 15px;
+        font-weight: 700;
+        text-align: center;
+        border-radius: 50px;
+        border: 1px solid $col4;
+        line-height: 43px;
+        &.solid{
+            background: $col4;
+            color: #fff;
+        }
+        &.stroke{
+            color: $col4;
+        }
+    }
+}
+
+//  신청완료  //
+
+
+.apply-done{
+    height: 200px;
+    font-size: 20px;
+    text-align: center;
+    color: #333;
+    padding-top: 135px;
+    background: url("../images/common/loading_success.png") no-repeat 50% 40px / 75px;
+    @include box-sizing(border-box);
+}
+
 
 /*   소비   */
 //   환경설정    //
@@ -3626,6 +3905,31 @@ button.cal{
             button{
                 margin-top: 8px;
             }
+            em{
+                width: 12px;
+                height: 12px;
+                display: inline-block;
+                margin-right: 5px;
+                border-radius: 100%;
+                &.red{
+                    background: #e95071;
+                }
+                &.orange{
+                    background: #ef903c;
+                } 
+                &.green{
+                    background: #89c11c;
+                } 
+                &.blue{
+                    background: #6993f3;
+                } 
+                &.purple{
+                    background: #bf65f3;
+                }
+            }
+        }
+        &.bobtm{
+            border-bottom: 1px solid $lineColor;
         }
     }
 }
@@ -3957,6 +4261,32 @@ button.cal{
                     }
                 }
             }
+        }
+    }
+}
+
+/*  자산  */
+
+//  증권  //
+
+.stock-number{
+    height: 120px;
+    text-align: center;
+    .key{
+        font-size: 14px;
+        font-weight: 700;
+        color: $col2;
+        padding-top: 30px;
+    }
+    .value{
+        margin-top: 10px;
+        font-size: 24px;
+        font-weight: 700;
+        color: #222;
+        em{
+            font-size: 14px;
+            font-weight: 400;
+            margin-left: 5px;
         }
     }
 }
@@ -4627,6 +4957,21 @@ button.cal{
                 line-height: 24px;
                 &.alarm{
                     background: url("../images/etc/alarm.png") no-repeat left center / 24px;
+                }
+                &.alarm-credit{
+                    background: url("../images/etc/alarm2.png") no-repeat left center / 24px;
+                }
+                &.alarm-debt{
+                    background: url("../images/etc/alarm3.png") no-repeat left center / 24px;
+                }
+                &.alarm-goods{
+                    background: url("../images/etc/alarm4.png") no-repeat left center / 24px;
+                }
+                &.alarm-consume{
+                    background: url("../images/etc/alarm5.png") no-repeat left center / 24px;
+                }
+                &.alarm-change{
+                    background: url("../images/etc/alarm6.png") no-repeat left center / 24px;
                 }
             }
             .text{

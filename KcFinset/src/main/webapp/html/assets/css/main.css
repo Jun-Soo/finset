@@ -36,6 +36,10 @@ textarea { width: 100%; height: 70vh; padding: 20px; border: 1px solid #e5e5e5; 
 .checks.search-check input[type="checkbox"] + label { padding: 0 12px; color: #62c1d0; font-size: 14px; line-height: 28px; text-align: center; border: 1px solid #62c1d0; border-radius: 20px; }
 .checks.search-check input[type="checkbox"] + label:before { display: none; }
 .checks.search-check input[type="checkbox"]:checked + label { background: #62c1d0; color: #fff; }
+.checks.round input[type="radio"] + label { display: inline-block; position: relative; padding-left: 0; color: #62c1d0; border: 1px solid #62c1d0; font-weight: 700; font-size: 14px; line-height: 28px; text-align: center; margin-right: 0; margin-right: 5px; padding: 0 13px; border-radius: 20px; }
+.checks.round input[type="radio"] + label:before { display: none; }
+.checks.round input[type="radio"] + label:last-of-type { margin: 0; }
+.checks.round input[type="radio"]:checked + label { background: #62c1d0; color: #fff; }
 
 .filter-wrap { display: table; margin-bottom: 15px; }
 .filter-wrap .filter { display: table-cell; padding-right: 10px; }

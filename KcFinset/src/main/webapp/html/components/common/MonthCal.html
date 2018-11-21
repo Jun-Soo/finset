@@ -39,17 +39,22 @@
                 <p>2018.07</p>
                 <button class="next"></button>
                 <button class="setting"></button>
+                <button class="today">TODAY</button>
             </div>
         </div>
         
         <div class="check-flex">
-            <div>
-                <button class="today">TODAY</button>
+            <div class="income">
+                <button class="on">수입</button>
+                <em>1,234,565,000</em>
             </div>
-            <div class="wrap">
-                <button class="income">수입</button>
-                <button class="debt">지출</button>
-                <button class="loan">대출</button>
+            <div class="debt">
+                <button class="on">지출</button>
+                <em>1,234,565,000</em>
+            </div>
+            <div class="loan">
+                <button>대출</button>
+                <em>1,234,565,000</em>
             </div>
         </div>
         
@@ -281,6 +286,55 @@
         <button class="btn-spend-add"></button>
         
     </section>
+    
+    <div class="modal-con" data-modal-con="modal01">
+        <div class="top">
+            07.12 수요일
+            <button class="modal-close"></button>
+        </div>
+        <div class="cal-con">
+            <div class="cal-top">
+                <div>
+                    <em class="income">수입</em>
+                    <p>5000,000 원</p>
+                </div>
+                <div>
+                    <em class="debt">지출</em>
+                    <p>5000,000 원</p>
+                </div>
+                <div>
+                    <em class="loan">대출</em>
+                    <p>5000,000 원</p>
+                </div>
+            </div>
+            <div class="body">
+                <div class="list">
+                    <div>
+                        <em class="red">준수</em>
+                        <em class="debt">지출</em>
+                        <em class="text">여의도 떡볶이</em>
+                    </div>
+                    <div class="won">650,000 원</div>
+                </div>
+                <div class="list">
+                    <div>
+                        <em class="orange">길동</em>
+                        <em class="debt">지출</em>
+                        <em class="text">파리크라상</em>
+                    </div>
+                    <div class="won">650,000 원</div>
+                </div>
+                <div class="list">
+                    <div>
+                        <em class="red">준수</em>
+                        <em class="debt">수입</em>
+                        <em class="text">과외비</em>
+                    </div>
+                    <div class="won">650,000 원</div>
+                </div>
+            </div>
+        </div>
+    </div>
 	
 </body>
 </html>

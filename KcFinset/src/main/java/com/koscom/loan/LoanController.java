@@ -149,7 +149,7 @@ public class LoanController implements Constant {
 		TxFcTransmitVO txFcTransmitVO = pTxFcTransmitVO;
 		String encPwd = request.getParameter("encPwd");
         LogUtil.debugLn(logger,"==============insertTxFc:no_person="+ no_person);
-        logger.debug("==============insertTxFc:txFcTransmitVO=  "+ txFcTransmitVO.toString());
+        //logger.debug("==============insertTxFc:txFcTransmitVO=  "+ txFcTransmitVO.toString());
         String ssn_person = null;
 		String site = (environment != null)?environment.getProperty("service.profile"):"";
 		if (!"LOCAL".equals(site) && StringUtil.isNotEmpty( encPwd ) ) {
@@ -159,7 +159,7 @@ public class LoanController implements Constant {
             ssn_person = String.format("%1$s%2$s", ssn1, decPwd);
             txFcTransmitVO.setSsn_person(ssn_person);
 		}
-		logger.debug("==============insertTxFc:txFcTransmitVO=  "+ txFcTransmitVO.toString());
+		//logger.debug("==============insertTxFc:txFcTransmitVO=  "+ txFcTransmitVO.toString());
         //대출 금리/한도조회 상품 목록
         String[] cd_fc = null;
         String[] cd_goods = null;
@@ -171,6 +171,8 @@ public class LoanController implements Constant {
             cd_fc = _cd_fc.split(",");
             cd_goods = _cd_goods.split(",");
         }
+        logger.debug("------------------_cd_fc---------------  : "  + _cd_fc);
+        logger.debug("------------------_cd_goods---------------  : "  + _cd_goods);
         txFcTransmitVO.setId_frt(no_person);
         txFcTransmitVO.setId_lst(no_person);
         if(cd_fc != null && cd_fc.length > 0 && cd_goods != null && cd_goods.length > 0) {

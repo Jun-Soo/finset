@@ -25,7 +25,7 @@ public class LoanManagerImpl implements LoanManager{
 	
 	@Override
 	public ReturnClass insertLoanInfo(TxFcTransmitVO txFcTransmitVO) {
-        LogUtil.debugLn(logger, "LoanManagerImpl.insertLoanInfo:txFcTransmitVO="+txFcTransmitVO);
+        //LogUtil.debugLn(logger, "LoanManagerImpl.insertLoanInfo:txFcTransmitVO="+txFcTransmitVO);
         ReturnClass resultClass = null;
         int result = loanMapper.insertLoanInfo(txFcTransmitVO);
 		List<GoodsVO> listGoods = null; //대출신청상품정보

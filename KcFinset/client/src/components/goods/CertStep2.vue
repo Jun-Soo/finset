@@ -10,7 +10,7 @@
           <div class="number"><input type="number" placeholder="생년월일6자리" name="ssn_birth" id="ssn_birth" v-model="ssn_birth" v-validate="'required|length:6|max:6'" v-on:keyup="nextFocus('birth')" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='생년월일'></div>
           <div class="dash">-</div>
           <!-- <div class="number last"><input type="password" pattern="[0-9]*" name="sex" id="sex" v-model="sex" inputmode="numeric" maxlength="1" style="-webkit-text-security:disc" v-on:change="nextFocus('sex')" v-bind:disabled="isDisabled" autocomplete="off" v-validate="'required|between:0,9|length:1|max:1'" data-vv-name='성별'>******</div> -->
-          <div class="number last"><input type="password" name="ssn2" id="ssn2" @click="showSecureKeypad()" placeholder="주민번호뒷자리" maxlength="7" autocomplete="off" readonly="readonly" v-validate="'required|between:0,9|length:7|max:7'" data-vv-name='주민번호 뒷자리'></div>
+          <div class="number last"><input type="password" name="ssn2" id="ssn2" @click="showSecureKeypad()" placeholder="주민번호뒷자리" maxlength="7" autocomplete="off" readonly="readonly" v-validate="'required|length:7|max:7'" data-vv-name='주민번호 뒷자리'></div>
         </div>
         <p class="warn" v-if="errors.has('생년월일')">{{errors.first('생년월일')}}</p>
         <p class="warn" v-if="errors.has('성별')">{{errors.first('성별')}}</p>
@@ -23,14 +23,14 @@
               {{ option.text }}
             </option>
           </select> -->
-          <!-- <select v-model="telComCd" placeholder="통신사" @select="onSelect">
+          <select v-model="telComCd" placeholder="통신사" @select="onSelect">
             <option v-for="option in options" :key="option.index" v-bind:value="option.value">
               {{ option.text }}
             </option>
-          </select> -->
-          <multiselect v-model="telComCd" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @select="onSelect">
+          </select>
+          <!-- <multiselect v-model="telComCd" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @select="onSelect">
             <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
-          </multiselect>
+          </multiselect> -->
           <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
         </div>
         <button id="req_certification" v-on:click="kcmRequestCertNo()">인증번호 전송</button>
@@ -110,6 +110,7 @@ export default {
   computed: {},
   beforeCreate() {},
   created() {
+    window.resultKeypad = this.resultKeypad;
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
       window.Android.reqSMSPermission();
@@ -274,6 +275,7 @@ export default {
         });
     },
     insertTxFc: function() {
+      var _this = this;
       var formData = new FormData();
       formData.append("cd_fc", this.cd_fc);
       formData.append("cd_goods", this.cd_goods);
@@ -310,7 +312,6 @@ export default {
     },
     //native call
     resultKeypad: function(encPwd) {
-      alert(encPwd);
       if (encPwd != null && encPwd != "") {
         $("#ssn2").val("1111111"); // 임의의 숫자 7자 입력
         this.encPwd = encPwd;
@@ -318,7 +319,6 @@ export default {
         $("#ssn2").val("");
         this.encPwd = "";
       }
-      this.isShowButton = true;
     },
     start: function() {
       var _this = this;

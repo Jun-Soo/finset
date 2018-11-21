@@ -91,13 +91,13 @@ import GoodsDetail from '@/components/goods/Detail'
 import GoodsStockDetail from '@/components/goods/StockDetail'
 import GoodsCertStep1 from '@/components/goods/CertStep1'
 import GoodsCertStep2 from '@/components/goods/CertStep2'
-// import GoodsCreditReqInfo from '@/components/goods/CreditReqInfo'
-// import GoodsCreditJobIncome from '@/components/goods/CreditJobIncome'
-// import GoodsCreditSrcJobNm from '@/components/goods/CreditSrcJobNm'
-// import GoodsCreditInsJobNm from '@/components/goods/CreditInsJobNm'
-// import GoodsCreditInsJobIncome from '@/components/goods/CreditInsJobIncome'
-// import GoodsCreditResult from '@/components/goods/CreditResult'
-// import GoodsCreditReqDone from '@/components/goods/CreditReqDone'
+import GoodsCreditReqInfo from '@/components/goods/CreditReqInfo'
+import GoodsCreditJobIncome from '@/components/goods/CreditJobIncome'
+import GoodsCreditSrcJobNm from '@/components/goods/CreditSrcJobNm'
+import GoodsCreditInsJobNm from '@/components/goods/CreditInsJobNm'
+import GoodsLoading from '@/components/goods/Loading'
+import GoodsResult from '@/components/goods/Result'
+import GoodsReqDone from '@/components/goods/ReqDone'
 // import GoodsHsnTerm from '@/components/goods/HsnTerm'
 // import GoodsHsnCertPerson from '@/components/goods/HsnCertPerson'
 // import GoodsHsnInsReqInfo from '@/components/goods/HsnInsReqInfo'
@@ -935,6 +935,69 @@ export const routes = [{
     alias: '/certStep2',
     name: 'GoodsCertStep2',
     component: GoodsCertStep2,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'creditReqInfo',
+    alias: '/creditReqInfo',
+    name: 'GoodsCreditReqInfo',
+    component: GoodsCreditReqInfo,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'creditJobIncome',
+    alias: '/creditJobIncome',
+    name: 'GoodsCreditJobIncome',
+    component: GoodsCreditJobIncome,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'creditSrcJobNm',
+    alias: '/creditSrcJobNm',
+    name: 'GoodsCreditSrcJobNm',
+    component: GoodsCreditSrcJobNm,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'creditInsJobNm',
+    alias: '/creditInsJobNm',
+    name: 'GoodsCreditInsJobNm',
+    component: GoodsCreditInsJobNm,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'loading',
+    alias: '/loading',
+    name: 'GoodsLoading',
+    component: GoodsLoading,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'result',
+    alias: '/result',
+    name: 'GoodsResult',
+    component: GoodsResult,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'reqDone',
+    alias: '/reqDone',
+    name: 'GoodsReqDone',
+    component: GoodsReqDone,
     meta: {
       allowPath: true
     }

@@ -272,4 +272,18 @@ public interface ConsumeMapper {
 	 * @param consumeVO
 	 */
 	void createConsumeInfo(ConsumeVO consumeVO);
+	
+	/**
+	 * 소비 배너 데이터 조회
+	 * @param consumeVO
+	 * @return
+	 */
+	int getBannerDataConsume(ConsumeVO consumeVO);
+	
+	/**
+	 * 수입 배너 데이터 조회
+	 * @param consumeVO
+	 * @return
+	 */
+	List<ConsumeVO> getBannerDataIncome(ConsumeVO consumeVO);
 }

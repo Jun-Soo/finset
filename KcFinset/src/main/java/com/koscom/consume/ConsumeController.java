@@ -113,19 +113,21 @@ public class ConsumeController {
     	return "jsonView";
     }
     
+    /**
+     * VUE
+     * @param model
+     * @param ym
+     * @param session
+     * @param consumeForm
+     * @return
+     * @throws FinsetException
+     */
     @RequestMapping("/listPersonTransDetail.json")
-    public String listTransDetail(Model model, String ym, HttpSession session) throws FinsetException {
+    public String listTransDetail(HttpSession session, Model model, String ym, ConsumeForm consumeForm) throws FinsetException {
     	logger.debug("listTransDetail");
     	String no_person = (String) session.getAttribute("no_person");
     	
-    	//DateUtil에서 yyyymmdd를 요구
-//    	String dt_from = DateUtil.getFirstDateOfMonth(ym+"01");
-//    	String dt_to = DateUtil.getLastDateOfMonth(ym+"01");
-    	
-    	ConsumeForm consumeForm = new ConsumeForm();
     	consumeForm.setNo_person(no_person);
-//    	consumeForm.setDt_from(dt_from);
-//    	consumeForm.setDt_to(dt_to);
     	
     	model.addAttribute("listPersonTransDetail",consumeManager.listPersonTransDetail(consumeForm));
     	return "jsonView";
@@ -527,11 +529,31 @@ public class ConsumeController {
     @RequestMapping("/createConsumeInfo.json")
     public String createConsumeInfo(HttpSession session, Model model, ConsumeVO consumeVO) {
     	logger.debug("createConsumeInfo");
-    	logger.debug(consumeVO.toString());
     	String no_person = (String) session.getAttribute("no_person");
     	consumeVO.setNo_person(no_person);
     	consumeManager.createConsumeInfo(consumeVO);
     	return "jsonView";
     }
     
+    /**
+     * VUE
+     * @param session
+     * @param model
+     * @param consumeVO
+     * @return
+     * @throws FinsetException 
+     */
+    @RequestMapping("/getBannerData.json")
+    public String getBannerData(HttpSession session, Model model, ConsumeVO consumeVO) throws FinsetException {
+    	logger.debug("getBannerData");
+    	String no_person = (String) session.getAttribute("no_person");
+    	consumeVO.setNo_person(no_person);
+    	
+    	if(consumeVO.getType_in_out() == "01") {
+    		model.addAttribute("bannerData", consumeManager.getBannerDataIncome(consumeVO));
+    	} else {
+    		model.addAttribute("bannerData", consumeManager.getBannerDataConsume(consumeVO));
+    	}
+    	return "jsonView";
+    }
 }

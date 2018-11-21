@@ -89,16 +89,15 @@ import GoodsHome from '@/components/goods/Home'
 import GoodsList from '@/components/goods/List'
 import GoodsDetail from '@/components/goods/Detail'
 import GoodsStockDetail from '@/components/goods/StockDetail'
-// import GoodsCreditTerm1 from '@/components/goods/CreditTerm1'
-// import GoodsCreditTerm2 from '@/components/goods/CreditTerm2'
-// import GoodsCreditCertPerson from '@/components/goods/CreditCertPerson'
-// import GoodsCreditReqInfo from '@/components/goods/CreditReqInfo'
-// import GoodsCreditJobIncome from '@/components/goods/CreditJobIncome'
-// import GoodsCreditSrcJobNm from '@/components/goods/CreditSrcJobNm'
-// import GoodsCreditInsJobNm from '@/components/goods/CreditInsJobNm'
-// import GoodsCreditInsJobIncome from '@/components/goods/CreditInsJobIncome'
-// import GoodsCreditResult from '@/components/goods/CreditResult'
-// import GoodsCreditReqDone from '@/components/goods/CreditReqDone'
+import GoodsCertStep1 from '@/components/goods/CertStep1'
+import GoodsCertStep2 from '@/components/goods/CertStep2'
+import GoodsCreditReqInfo from '@/components/goods/CreditReqInfo'
+import GoodsCreditJobIncome from '@/components/goods/CreditJobIncome'
+import GoodsCreditSrcJobNm from '@/components/goods/CreditSrcJobNm'
+import GoodsCreditInsJobNm from '@/components/goods/CreditInsJobNm'
+import GoodsLoading from '@/components/goods/Loading'
+import GoodsResult from '@/components/goods/Result'
+import GoodsReqDone from '@/components/goods/ReqDone'
 // import GoodsHsnTerm from '@/components/goods/HsnTerm'
 // import GoodsHsnCertPerson from '@/components/goods/HsnCertPerson'
 // import GoodsHsnInsReqInfo from '@/components/goods/HsnInsReqInfo'
@@ -128,15 +127,16 @@ import ConsumeDraggable from '@/components/consume/Draggable'
 
 import AssetsHome from '@/components/assets/Home'
 import AssetsMain from '@/components/assets/Main'
-import AssetsAccountInfo from '@/components/assets/AccountInfo'
-import AssetsDepWdrlDetail from '@/components/assets/DepWdrlDetail'
-import AssetsAccountWdrlDetail from '@/components/assets/AccountWdrlDetail'
-import AssetsAccountDepDetail from '@/components/assets/AccountDepDetail'
-// import AssetsStockInfo from '@/components/assets/StockInfo'
+import AssetsBankMain from '@/components/assets/BankMain'
+import AssetsBankActDetail from '@/components/assets/BankActDetail'
+import AssetsBankDepWdrlList from '@/components/assets/BankDepWdrlList'
+import AssetsBankDepWdrlDetail from '@/components/assets/BankDepWdrlDetail'
+// import AssetsStockMain from '@/components/assets/StockMain'
 // import AssetsStockBalcDetail from '@/components/assets/StockBalcDetail'
-// import AssetsStockDelDetail from '@/components/assets/StockDelDetail'
-// import AssetsStockAnsDetail from '@/components/assets/StockAnsDetail'
-import AssetsEtc from '@/components/assets/Etc'
+// import AssetsStockActDetail from '@/components/assets/StockActDetail'
+// import AssetsStockShrDetail from '@/components/assets/StockShrDetail'
+// import AssetsStockFndDetail from '@/components/assets/StockFndDetail'
+import AssetsDirInput from '@/components/assets/DirInput'
 
 import MypageHome from '@/components/mypage/Home'
 // import MypageMain from '@/components/mypage/Main'
@@ -850,41 +850,42 @@ export const routes = [{
     }
   },
   {
-    path: 'accountInfo',
-    alias: '/accountInfo',
-    component: AssetsAccountInfo,
+    path: 'bankMain',
+    alias: '/bankMain',
+    name: 'AssetsbankMain',
+    component: AssetsBankMain,
     meta: {
       allowPath: true
     }
   },
   {
-    path: 'depWdrlDetail',
-    alias: '/depWdrlDetail',
-    component: AssetsDepWdrlDetail,
+    path: 'bankActDetail',
+    alias: '/bankActDetail',
+    component: AssetsBankActDetail,
     meta: {
       allowPath: true
     }
   },
   {
-    path: 'accountWdrlDetail',
-    alias: '/accountWdrlDetail',
-    component: AssetsAccountWdrlDetail,
+    path: 'bankDepWdrlList',
+    alias: '/bankDepWdrlList',
+    component: AssetsBankDepWdrlList,
     meta: {
       allowPath: true
     }
   },
   {
-    path: 'accountDepDetail',
-    alias: '/accountDepDetail',
-    component: AssetsAccountDepDetail,
+    path: 'bankDepWdrlDetail',
+    alias: '/bankDepWdrlList',
+    component: AssetsBankDepWdrlDetail,
     meta: {
       allowPath: true
     }
   },
   {
-    path: 'etc',
-    alias: '/etc',
-    component: AssetsEtc,
+    path: 'dirInput',
+    alias: '/dirInput',
+    component: AssetsDirInput,
     meta: {
       allowPath: true
     }
@@ -916,6 +917,87 @@ export const routes = [{
     alias: '/stockDetail',
     name: 'GoodsStockDetail',
     component: GoodsStockDetail,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'certStep1',
+    alias: '/certStep1',
+    name: 'GoodsCertStep1',
+    component: GoodsCertStep1,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'certStep2',
+    alias: '/certStep2',
+    name: 'GoodsCertStep2',
+    component: GoodsCertStep2,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'creditReqInfo',
+    alias: '/creditReqInfo',
+    name: 'GoodsCreditReqInfo',
+    component: GoodsCreditReqInfo,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'creditJobIncome',
+    alias: '/creditJobIncome',
+    name: 'GoodsCreditJobIncome',
+    component: GoodsCreditJobIncome,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'creditSrcJobNm',
+    alias: '/creditSrcJobNm',
+    name: 'GoodsCreditSrcJobNm',
+    component: GoodsCreditSrcJobNm,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'creditInsJobNm',
+    alias: '/creditInsJobNm',
+    name: 'GoodsCreditInsJobNm',
+    component: GoodsCreditInsJobNm,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'loading',
+    alias: '/loading',
+    name: 'GoodsLoading',
+    component: GoodsLoading,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'result',
+    alias: '/result',
+    name: 'GoodsResult',
+    component: GoodsResult,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'reqDone',
+    alias: '/reqDone',
+    name: 'GoodsReqDone',
+    component: GoodsReqDone,
     meta: {
       allowPath: true
     }

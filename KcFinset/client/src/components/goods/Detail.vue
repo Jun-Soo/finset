@@ -42,8 +42,8 @@
           <p class="key">유의사항</p>
           <p class="value" v-html="goodsInfo.desc_etc"></p>
         </div>
-        <div class="btn-wrap">
-          <a href="#" class="solid blue">조회하기</a>
+        <div class="btn-wrap" v-if="isAffiliates">
+          <a class="solid blue" @click="clickSerchInterest()">금리/한도 조회하기</a>
         </div>
       </div>
     </div>
@@ -101,8 +101,8 @@
           <p class="key">유의사항</p>
           <p class="value" v-html="goodsInfo.desc_etc"></p>
         </div>
-        <div class="btn-wrap">
-          <a href="#" class="solid blue">조회하기</a>
+        <div class="btn-wrap" v-if="isAffiliates">
+          <a class="solid blue" @click="clickSerchInterest()">금리/한도 조회하기</a>
         </div>
       </div>
     </div>
@@ -117,6 +117,8 @@ export default {
     return {
       seen: false,
       isAffiliates: this.$route.params.isAffiliates,
+      cd_fc: this.$route.params.cd_fc,
+      cd_goods: this.$route.params.cd_goods,
       curTab: "interest",
       goodsInfo: "",
       keyword_list: ""
@@ -149,8 +151,8 @@ export default {
       }
       var formData = new FormData();
       formData.append("no_person", this.$store.state.user.noPerson);
-      formData.append("cd_fc", this.$route.params.cd_fc);
-      formData.append("cd_goods", this.$route.params.cd_goods);
+      formData.append("cd_fc", this.cd_fc);
+      formData.append("cd_goods", this.cd_goods);
       this.$http.post(url, formData).then(function(response) {
         _this.goodsInfo = response.data.goodsInfo;
         if (_this.goodsInfo) {
@@ -163,6 +165,15 @@ export default {
     },
     tabOnClick: function(type) {
       this.curTab = type;
+    },
+    clickSerchInterest: function() {
+      this.$router.push({
+        name: "GoodsCertStep1",
+        params: {
+          cd_fc: this.cd_fc,
+          cd_goods: this.cd_goods
+        }
+      });
     }
   }
 };

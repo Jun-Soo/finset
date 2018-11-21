@@ -49,7 +49,7 @@ public interface ConsumeManager {
 	 * @param person
 	 * @return
 	 */
-	List<PersonTransDetailVO> listPersonTransDetail(ConsumeForm consumeForm);
+	List<List<PersonTransDetailVO>> listPersonTransDetail(ConsumeForm consumeForm);
 	
 	/**
 	 * 소비 분류, 항목 기본생성
@@ -245,4 +245,18 @@ public interface ConsumeManager {
 	 * @param consumeVO
 	 */
 	void createConsumeInfo(ConsumeVO consumeVO);
+	
+	/**
+	 * 소비 배너 데이터 조회
+	 * @param consumeVO
+	 * @return
+	 */
+	int getBannerDataConsume(ConsumeVO consumeVO);
+	
+	/**
+	 * 수입 배너 데이터 조회
+	 * @param consumeVO
+	 * @return
+	 */
+	int getBannerDataIncome(ConsumeVO consumeVO);
 }

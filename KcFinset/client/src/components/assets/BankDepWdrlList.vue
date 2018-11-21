@@ -15,8 +15,9 @@
         <div class="form">
           <p>은행계좌선택</p>
           <p>
-            <select>
-              <option>전체</option>
+            <select v-for="account in accountList" :key="account.index" :value="account.no_account">
+              <!-- TODO accountList 가져올 때 하단에서 option명 '전체' 추가-->
+              <option>{{account.nm_fc}}({{account.no_account}})</option>
             </select>
           </p>
         </div>
@@ -38,8 +39,10 @@
       <div class="bank-detail noMG">
         <div class="select">
           <div class="left">
-            <select>
-              <option>금리순</option>
+            <select v-model="actType" @change="searchList()">
+              <option v-for="option in actTypeOptions" :key="option.index" :value="option.value">
+                {{ option.text }}
+              </option>
             </select>
           </div>
           <div class="right">
@@ -67,7 +70,7 @@
             </div>
             <div class="flex">
               <p class="key">신한은행</p>
-              <p class="key">8,560,000원</p>
+              <p class="key">116-01-01919</p>
             </div>
           </div>
           <div class="item">
@@ -77,7 +80,7 @@
             </div>
             <div class="flex">
               <p class="key">신한은행</p>
-              <p class="key">8,560,000원</p>
+              <p class="key">116-01-01919</p>
             </div>
           </div>
 
@@ -89,7 +92,7 @@
             </div>
             <div class="flex">
               <p class="key">신한은행</p>
-              <p class="key">8,560,000원</p>
+              <p class="key">116-01-01919</p>
             </div>
           </div>
           <div class="item">
@@ -99,7 +102,7 @@
             </div>
             <div class="flex">
               <p class="key">신한은행</p>
-              <p class="key">8,560,000원</p>
+              <p class="key">116-01-01919</p>
             </div>
           </div>
         </div>
@@ -139,7 +142,15 @@
 export default {
   name: "AssetsAccountWdrlDetail",
   data() {
-    return {};
+    return {
+      accountList: [{ nm_fc: "전체", no_account: "" }],
+      actTypeOptions: [
+        { text: "전체", value: "01" },
+        { text: "입금", value: "02" },
+        { text: "출금", value: "03" }
+      ],
+      actType: "01"
+    };
   },
   components: {},
   computed: {},
@@ -154,7 +165,69 @@ export default {
   updated() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    //목록 조회
+    searchList: function() {
+      var _this = this;
+      _this.page = 1;
+      Common.pagination(_this.listBankAct);
+    },
+    listBankAct: function(callback) {
+      var _this = this;
+
+      console.log("actType" + _this.actType);
+      console.log("scKeyword" + _this.scKeyword);
+
+      var formData = new FormData();
+      formData.append("page", _this.page);
+      formData.append("actType", _this.actType);
+      formData.append("scKeyword", _this.scKeyword);
+
+      this.$http
+        .post("/m/news/listNews.json", formData)
+        .then(function(response) {
+          var actList = response.data.accountList;
+          for (var i = 0; i < act.length; i++) {
+            _this.accountList.append(act[i]);
+          }
+
+          //썸네일 이미지 셋팅
+          var list = response.data.pagedList.source;
+          for (var i = 0; i < list.length; i++) {
+            if (list[i].seq_thum_file != null) {
+              list[i].thumImg =
+                "/m/news/getApiNewsImg.json?seq_news=" +
+                list[i].seq_news +
+                "&file_type=01";
+            }
+          }
+
+          //pagination
+          if (list.length === 0) {
+            callback();
+            _this.newsList = [];
+            _this.seen = true;
+            return;
+          }
+          //스크롤시 계속 페이지 추가되도록
+          if (_this.page == 1) {
+            _this.newsList = list;
+          } else {
+            for (var key in list) {
+              _this.newsList.push(list[key]);
+            }
+          }
+          _this.totalPage = response.data.pagedList.pageCount;
+          _this.page++;
+          //pagination
+
+          _this.seen = true;
+        })
+        .catch(e => {
+          _this.$toast.center(ko.messages.error);
+        });
+    }
+  }
 };
 </script>
 

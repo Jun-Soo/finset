@@ -61,6 +61,7 @@ export default {
   // },
   beforeCreate() {},
   created() {
+    var _this = this;
     window.resultCheckFingerPrint = this.resultCheckFingerPrint;
     window.resultCheckCert = this.resultCheckCert;
     window.resultCheckPasswordCert = this.resultCheckPasswordCert;
@@ -72,7 +73,7 @@ export default {
     } else if (Constant.userAgent == "iOS") {
       //지문인식 가능여부 체크 결과 콜백 이벤트
       Jockey.on("resultCheckFingerPrint", function(param) {
-        this.resultCheckFingerPrint(param.result);
+        _this.resultCheckFingerPrint(param.result);
       });
       Jockey.send("checkFingerPrint");
     }
@@ -211,12 +212,13 @@ export default {
     },
     // 공인인증서 유무 체크
     checkExistCert: function() {
+      var _this = this;
       if (Constant.userAgent == "iOS") {
         //공인인증서 유무 체크 결과 콜백 이벤트
         Jockey.on("resultCheckCert", function(param) {
           var iscert = "false";
           if (param.isCert == 1) iscert = "true";
-          resultCheckCert(iscert);
+          _this.resultCheckCert(iscert);
         });
         Jockey.send("checkExistCert");
       } else if (Constant.userAgent == "Android") {
@@ -237,11 +239,12 @@ export default {
     //공인인증서 유무 결과 (모바일에서 호출)
     resultCheckCert: function(isCert) {
       console.log("isCert : " + isCert);
+      var _this = this;
       if (isCert == "true") {
         // 공인인증서가 있을 경우
         if (Constant.userAgent == "iOS") {
-          Jockey.on("checkPasswordCert", function(param) {
-            resultCheckPasswordCert();
+          Jockey.on("resultCheckPasswordCert", function(param) {
+            _this.resultCheckPasswordCert(param.dn, param.cn);
           });
           Jockey.send("checkPasswordCert", {
             noPerson: this.$store.state.user.noPerson,

@@ -82,10 +82,13 @@
         </div>
         <div v-for="(subList, index) in consumeList" :key="index" class="list-wrap">
           <p class="date">{{formatDate(subList[0].dt_trd,"mmdd")}}</p>
-          <div v-for="vo in subList" :key="vo.index" class="item" @click="clickConsumeList(vo.seq_consume, vo.no_person)">
+          <div v-for="vo in subList" :key="vo.index" class="item" @click="clickConsumeList(vo.seq_consume, vo.no_person, vo.type_in_out, vo.yn_auto)">
             <div class="left">
               <p class="name">{{vo.contents}}</p>
-              <p class="cate"><img src="../../assets/images/common/bu_list_shopping.png" alt="" /><span>{{vo.nm_class}} - {{vo.nm_type}}</span></p>
+              <p class="cate">
+                <img src="../../assets/images/common/bu_list_shopping.png" alt="" />
+                <span v-text="vo.type_in_out == '02'?vo.nm_class+' - '+vo.nm_type:vo.nm_class"></span>
+              </p>
             </div>
             <div class="right">
               <p :class="chkType(vo.type_in_out)" class="number">{{formatNumber(vo.amt_in_out,vo.type_in_out=='02',vo.type_in_out=='01')}}<em>원</em></p>
@@ -215,6 +218,10 @@ export default {
           break;
 
         case "03":
+          return "현금영수증";
+          break;
+
+        case "04":
           return "입출금계좌";
           break;
 
@@ -265,10 +272,21 @@ export default {
     clickSetting: function() {
       this.$router.push("/consume/setting");
     },
-    clickConsumeList: function(seq_consume, no_person) {
+    clickConsumeList: function(seq_consume, no_person, type_in_out, yn_auto) {
+      var _this = this;
+
       this.$router.push({
         path: "/consume/consumeDetail",
-        query: { seq_consume: seq_consume, no_person: no_person }
+        query: {
+          seq_consume: seq_consume,
+          no_person: no_person,
+          type_in_out: type_in_out,
+          isMine:
+            _this.shareList.findIndex(
+              person => person.no_person === no_person
+            ) == 0,
+          isAuto: yn_auto == "Y"
+        }
       });
     },
     regConsume: function() {

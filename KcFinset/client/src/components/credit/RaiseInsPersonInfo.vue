@@ -177,6 +177,7 @@ export default {
       }
     },
     showSecureKeypad: function() {
+      var _this = this;
       if (Constant.userAgent == "iOS") {
         Jockey.send("showSecureKeypad", {
           keypadType: "numeric",
@@ -186,7 +187,7 @@ export default {
         });
         //보안키패드 결과값 수신 콜백 이벤
         Jockey.on("resultKeypad", function(param) {
-          resultKeypad(param.encPwd);
+          _this.resultKeypad(param.encPwd);
         });
       } else if (Constant.userAgent == "Android") {
         window.Android.showSecureKeypad("numeric", 7, "주민등록번호 뒷자리");

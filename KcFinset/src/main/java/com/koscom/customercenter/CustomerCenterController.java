@@ -569,7 +569,8 @@ public class CustomerCenterController implements Constant {
 	                        , body
 	                        , url
 	                        , StringUtil.nullToString(recPersonVO.getYn_os(), "1")
-	                        , StringUtil.nullToString(recPersonVO.getCd_push(), ""))){
+	                        , StringUtil.nullToString(recPersonVO.getCd_push(), "")
+	                        , environment.getProperty("push.fcm"))){
 	                }
 
 	                //메세지 table insert / update( 요청, 허용, 거절, 정보업데이트일때만 메세지T insert, update )

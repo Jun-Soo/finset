@@ -5,7 +5,7 @@
         <div class="bar-top noMG">
           <div class="top">
             <p class="symbol"><img :src="'/m/fincorp/getFinCorpIcon.crz?cd_fc='+debtVO.cd_fc" alt="" />{{debtVO.nm_fc}}</p>
-            <div class="btn-menu-wrap" :class="{'on':isOpen}">
+            <div class="btn-menu-wrap" :class="{'on':isOpen}" v-if="isMine">
               <button id="btn-menu-pop" class="btn-menu-pop" @click="openMenu"></button>
               <div class="menu">
                 <a @click="clickMenu('modify')">수정</a>
@@ -96,41 +96,37 @@
       </div>
 
     </section>
-    <debt-modal transitionName="zoom-in" name="repModal">
-      <div id="modal-wrap" slot="body" style="background:transparent; display:block; text-align:center">
-        <div class="modal-con" style="display:block; left:calc(50% - 204px);">
-          <div class="top">
-            {{curRepay.req_yyyymm}}
-            <button @click="closeRepPop" class="modal-close"></button>
-          </div>
-          <div class="debt-modal-body">
-            <p class="number">{{formatNumber(curRepay.amt_repay)}} <em> 원</em></p>
-            <p class="text"><em>원금 </em> {{formatNumber(curRepay.amt_repay_p)}} 원</p>
-            <p class="text"><em>이자 </em> {{formatNumber(curRepay.amt_repay_i)}} 원</p>
-          </div>
-          <a @click="closeRepPop" class="btn-confirm">확인</a>
-        </div>
-      </div>
-    </debt-modal>
+    <vue-modal transitionName="fade" name="repModal">
+      <RepPop slot="body" :curRepay="curRepay" :close="closeRepPop" />
+    </vue-modal>
+
+    <div v-if="!isAuto && isMine" class="btn-wrap float">
+      <a @click="repayment" class="blue box solid">상환금 입력</a>
+    </div>
   </div>
 </template>
 
 <script>
 import Common from "@/assets/js/common.js";
+import RepPop from "./sub/RepPop.vue";
 
 export default {
   name: "DebtDetail",
   data() {
     return {
       curTab: "contract",
+      isMine: true,
       debtVO: "",
       listDebtRepay: "",
       curIndex: "",
       curRepay: "",
-      isOpen: false
+      isOpen: false,
+      isAuto: true
     };
   },
-  components: {},
+  components: {
+    RepPop
+  },
   computed: {},
   beforeCreate() {
     this.$store.state.header.type = "sub";
@@ -138,6 +134,8 @@ export default {
   },
   created() {
     this.getDebtInfo();
+    this.isMine =
+      this.$route.query.isMine == "true" || this.$route.query.isMine == true;
   },
   beforeMount() {},
   mounted() {},
@@ -158,7 +156,7 @@ export default {
         .then(function(response) {
           _this.debtVO = response.data.debtVO;
           _this.listDebtRepay = response.data.listDebtRepay;
-          console.log(_this.listDebtRepay);
+          _this.isAuto = _this.debtVO.debt_yn == "Y" ? false : true;
         });
     },
     formatNumber: function(number) {
@@ -238,6 +236,16 @@ export default {
         return;
       }
       return Common.formatDateDot(date.replace("-", ""));
+    },
+    repayment: function() {
+      var _this = this;
+      this.$router.push({
+        path: "/debt/repayment",
+        query: {
+          no_person: _this.$route.query.no_person,
+          no_manage_info: _this.$route.query.no_manage_info
+        }
+      });
     }
   }
 };

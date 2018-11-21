@@ -3670,6 +3670,9 @@ button.cal{
                 .wrap{
                    margin-top: 5px;
                     background: #fff;
+                    .links{
+                        padding-right: 0;
+                    }
                 } 
             }
             .add-cate{
@@ -3681,7 +3684,18 @@ button.cal{
                  background-position: right bottom;   
             }
         }
+        &.nosub{
+            .wrap{
+                background: #fff;
+                .links{
+                    padding-right: 0;
+                }
+            }
+        }
     }
+}
+
+.box-list{
     .add-cate{
         border-radius: 50px;
         line-height: 45px;
@@ -4317,6 +4331,10 @@ button.cal{
                     color: #222;
                     line-height: 18px;
                     @include multiline_ellipsis(2);
+                    b{
+                        font-size: inherit;
+                        color: inherit;
+                    }
                 }
                 
             }

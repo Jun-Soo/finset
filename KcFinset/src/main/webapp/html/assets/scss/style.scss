@@ -4001,9 +4001,11 @@ button.cal{
         input{
             margin-top: 0;
         }
-        input[type="password"]{
-            width: 30%;
-            margin-right: 10px;
+        .last{
+             input[type="password"]{
+                width: 30%;
+                margin-right: 10px;
+            }   
         }
         select{
             line-height: 38px;

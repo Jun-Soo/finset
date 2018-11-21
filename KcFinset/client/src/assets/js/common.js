@@ -15,7 +15,7 @@ export default {
     Constant.params = this.getParams()
 
     // ios a, button 태그 이벤트
-    $('body *').on('touchstart', function () { })
+    $('body *').on('touchstart', function () {})
 
     // Tab
     $('.tabs a').click(function (e) {
@@ -301,13 +301,51 @@ export default {
     })
     return cdList
   },
+  makeOptions: function (cdGroup, defaultText, selectValue, pType) {
+    var type = pType
+    var data = {
+      'code_group': cdGroup
+    }
+    var cdList
+    $.ajax({
+      url: '/m/comm/getCodeList.json',
+      data: data,
+      contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+      type: 'GET',
+      async: false,
+      success: function (result) {
+        cdList = result.codeList
+      }
+    })
+    var result = ''
+    if ((defaultText || '') !== '') {
+      result += "<option value=''>" + defaultText + '</option>'
+      result += "<option data-divider='true' disabled></option>"
+    }
+    if (cdList != null && cdList.length > 0) {
+      for (var i = 0; i < cdList.length; i++) {
+        var value = cdList[i].code_value
+        // 기본선택 설정
+        if ((cdList[i].code_value || '') !== '' && cdList[i].code_value === selectValue) {
+          value += "' selected='selected"
+        }
+
+        if ((type || '') !== '' && type === 'ID.NM') {
+          result += "<option value='" + value + "'>" + cdList[i].code_value + '.' + cdList[i].nm_code + '</option>'
+        } else {
+          result += "<option value='" + value + "'>" + cdList[i].nm_code + '</option>'
+        }
+      }
+    }
+    return result
+  },
   // pagination 사용법
   // 필요한 함수를 작성하되, 함수 파라미터로 callback을 선언
   pagination: function (callback) {
     Constant._this = this
     Constant._callback = callback
     Constant._this.addScroll()
-    Constant._callback(function () { })
+    Constant._callback(function () {})
   },
   handleScroll: function () {
     var html = document.documentElement

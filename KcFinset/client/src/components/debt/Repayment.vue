@@ -6,7 +6,6 @@
           <p class="key">상환일</p>
           <p>
             <datepicker v-model="req_yyyymm" :language="ko" :format="formatDate"></datepicker>
-            <!-- <Datetime v-model="temp"></Datetime> -->
             <button class="cal"></button>
           </p>
         </li>
@@ -26,7 +25,6 @@
 <script>
 import Common from "@/assets/js/common.js";
 import datepicker from "vuejs-datepicker";
-import { Datetime } from "vue-datetime";
 import { ko } from "vuejs-datepicker/dist/locale";
 
 export default {
@@ -40,8 +38,7 @@ export default {
     };
   },
   components: {
-    datepicker,
-    Datetime
+    datepicker
   },
   computed: {},
   beforeCreate() {

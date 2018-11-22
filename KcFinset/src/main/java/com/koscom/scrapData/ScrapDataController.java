@@ -38,8 +38,8 @@ public class ScrapDataController {
     	
     	try{
     		scrapDataManager.saveScrapData(no_person);
-    		logger.info("cd_err","00");
-    		logger.info("msg_err","데이터 저장에 성공했습니다");
+    		logger.info("cd_err,00");
+    		logger.info("msg_err,데이터 저장에 성공했습니다");
     		model.addAttribute("cd_err","00");
     		model.addAttribute("msg_err","데이터 저장에 성공했습니다");
     	} catch(Exception e) {

@@ -200,6 +200,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 										id_lst,
 										dt_lst
 										);
+						logger.debug(consumeVO.toString());
 						if(type_sales.equals("2")) {
 							List<ConsumeDataVO> installmentList = getInstallmentList(consumeVO);
 							consumeList.addAll(installmentList);

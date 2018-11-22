@@ -31,6 +31,20 @@ public interface ConsumeMapper {
 	List<String> chkScrapCard(String no_person);
 	
 	/**
+	 * 설정된 예산 조회
+	 * @param no_person
+	 * @return
+	 */
+	List<ConsumeDetailGoalInfoVO> getConsumeGoal(ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO);
+	
+	/**
+	 * 해당 월 지출 합계
+	 * @param consumeForm
+	 * @return
+	 */
+	String getConsumeInfoAmt(ConsumeForm consumeForm);
+	
+	/**
 	 * 조회 기간 전체의 수입이나 지출의 합을 조회
 	 * @param consumeForm
 	 * @return
@@ -218,12 +232,24 @@ public interface ConsumeMapper {
 	 * @param personConsumeClassVO
 	 */
 	void deletePersonConsumeClass(PersonConsumeClassVO personConsumeClassVO);
+
+	/**
+	 * 분류 미사용처리에 따른 소비 업데이트
+	 * @param personConsumeClassVO
+	 */
+	void modifyConsumeInfoClass(PersonConsumeClassVO personConsumeClassVO);
 	
 	/**
 	 * 항목 미사용 처리
 	 * @param personConsumeClassVO
 	 */
 	void deletePersonConsumeClassType(PersonConsumeClassVO personConsumeClassVO);
+
+	/**
+	 * 항목 미사용처리에 따른 소비 업데이트
+	 * @param personConsumeClassVO
+	 */
+	void modifyConsumeInfoType(PersonConsumeClassVO personConsumeClassVO);
 	
 	/**
 	 * 분류명 변경

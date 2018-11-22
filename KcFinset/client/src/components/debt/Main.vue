@@ -114,7 +114,8 @@
         </div>
         <div class="item" v-for="vo in debtList" :key="vo.no_manage_info" @click="goDetail(vo.no_person, vo.no_manage_info)">
           <div class="top">
-            <p class="symbol"><img :src="vo.imgSrc" alt="" />{{vo.nm_fc}}</p>
+            <p v-if="vo.debt_yn == null || vo.debt_yn == 'N'" class="symbol"><img :src="vo.imgSrc" alt="" />{{vo.nm_fc}}</p>
+            <p v-if="vo.debt_yn == 'Y'" class="symbol"><img :src="vo.imgSrc" alt="" />{{vo.creditor}}</p>
             <p class="text blue">{{vo.debt_type}}
               <span class="circle" :class="settingList[shareList.findIndex(person => person.no_person === vo.no_person)].color"></span>
             </p>
@@ -209,7 +210,7 @@ export default {
       settingList: [
         { color: "red", id: "chk1" },
         { color: "orange", id: "chk2" },
-        { color: "greend", id: "chk3" },
+        { color: "green", id: "chk3" },
         { color: "blue", id: "chk4" },
         { color: "purple", id: "chk5" }
       ]

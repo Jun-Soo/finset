@@ -18,6 +18,11 @@
             <p class="value">{{formatNumber(income)}}</p>
           </div>
         </div>
+        <!-- <div class="progress">
+          <a href="#">예산을 설정하여 목표를 이루세요</a>
+          <a href="#" class="on">예산을 설정하여 목표를 이루세요</a>
+        </div> -->
+        <Progress :max="progressOption.max" :text="progressOption.text" :click="clickProgress" />
       </div>
 
       <div class="banner-wrap owl-carousel">
@@ -105,6 +110,7 @@
 
 <script>
 import Common from "@/assets/js/common.js";
+import Progress from "@/components/plugins/progress/Progress.vue";
 
 export default {
   name: "ConsumeMain",
@@ -114,6 +120,7 @@ export default {
       consumeList: [],
       shareList: [],
       isScrap: false,
+      isGoal: false,
       curDate: "",
       curTab: "00",
       standardDt: new Date(),
@@ -122,15 +129,33 @@ export default {
       settingList: [
         { color: "red", id: "chk1" },
         { color: "orange", id: "chk2" },
-        { color: "greend", id: "chk3" },
+        { color: "green", id: "chk3" },
         { color: "blue", id: "chk4" },
         { color: "purple", id: "chk5" }
-      ]
+      ],
+      progressOption: {
+        text: "예산을 설정하여 목표를 이루세요",
+        max: 0
+      }
     };
   },
-  components: {},
+  components: {
+    Progress
+  },
   // computed () {
   // },
+  watch: {
+    isScrap: function() {},
+    isGoal: function(param) {
+      if (this.isScrap == true) {
+      } else {
+        this.progressOption = {
+          text: "공인 인증서를 등록하여 소비내역을 관리하세요",
+          max: 0
+        };
+      }
+    }
+  },
   beforeCreate() {
     this.$store.state.header.type = "main";
     this.$store.state.header.active = "consume";
@@ -175,10 +200,38 @@ export default {
           }
         })
         .then(function(response) {
-          _this.consumeList = response.data.listConsumeInfo;
           _this.income = response.data.income;
           _this.consume = response.data.consume;
+          var consumeGoal = response.data.consumeGoal;
+          if ((consumeGoal || "") == "") {
+            _this.isGoal = false;
+            _this.progressOption = {
+              text: "설정된 예산이 없습니다",
+              max: 0
+            };
+          } else {
+            _this.isGoal = true;
+            _this.progressOption.text =
+              consumeGoal.amt_expense / consumeGoal.amt_budget > 1
+                ? Common.formatNumber(
+                    consumeGoal.amt_expense - consumeGoal.amt_budget + ""
+                  ) +
+                  "원 초과 (" +
+                  Common.formatNumber(consumeGoal.amt_budget) +
+                  "원)"
+                : Common.formatNumber(
+                    consumeGoal.amt_expense - consumeGoal.amt_budget
+                  ) +
+                  "원 (" +
+                  Common.formatNumber(consumeGoal.amt_budget) +
+                  "원)";
+            _this.progressOption.max =
+              consumeGoal.amt_expense / consumeGoal.amt_budget > 1
+                ? 1
+                : consumeGoal.amt_expense / consumeGoal.amt_budget;
+          }
           _this.isScrap = response.data.isScrap;
+          _this.consumeList = response.data.listConsumeInfo;
         });
     },
     formatHead: function(dateStr) {
@@ -291,7 +344,8 @@ export default {
     },
     regConsume: function() {
       this.$router.push("/consume/consumeDetail");
-    }
+    },
+    clickProgress: function() {}
   }
 };
 </script>

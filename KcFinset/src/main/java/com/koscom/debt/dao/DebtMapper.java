@@ -202,5 +202,11 @@ public interface DebtMapper {
 	 * @return
 	 */
 	List<DebtVO> listReqIntrCutIncome(ReqIntrCutForm reqIntCutForm);
+	
+	/**
+	 * 부채 정보 등록
+	 * @param debtVO
+	 */
+	void createDebtPersonalInfo(DebtVO debtVO);
 
 }

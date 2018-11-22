@@ -107,6 +107,7 @@ public class ConsumeController {
     		String key = iter.next();
     		model.addAttribute(key, summaryMap.get(key));
     	}
+    	model.addAttribute("consumeGoal", consumeManager.getConsumeGoalData(no_person, ym));
     	model.addAttribute("isScrap", consumeManager.chkScrapCard(no_person));
     	model.addAttribute("listConsumeInfo", consumeManager.listConsumeInfo(consumeForm));
     	

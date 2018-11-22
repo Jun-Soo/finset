@@ -52,6 +52,56 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	}
 	
 	@Override
+	public ConsumeGoalInfoVO getConsumeGoalData(String no_person, String ym) {
+		ConsumeForm consumeForm = new ConsumeForm();
+		consumeForm.setNo_person(no_person);
+		consumeForm.setYm_trd(ym);
+		String consumeAmt = consumeMapper.getConsumeInfoAmt(consumeForm);
+		
+		ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO = new ConsumeDetailGoalInfoVO();
+		consumeDetailGoalInfoVO.setNo_person(no_person);
+		consumeDetailGoalInfoVO.setReq_yyyymm(ym);
+		List<ConsumeDetailGoalInfoVO> listGoal = consumeMapper.getConsumeGoal(consumeDetailGoalInfoVO);
+		
+		ConsumeGoalInfoVO consumeGoalInfoVO = new ConsumeGoalInfoVO();
+		consumeGoalInfoVO.setAmt_expense(consumeAmt);
+		
+		if(listGoal == null) {
+			return null;
+		}
+		int key = listGoal.size();
+		switch (key) {
+		case 0:
+			return null;
+		case 1:
+			if(listGoal.get(0).getAmt_budget().equals("0")) {
+				return null;
+			} else {
+				consumeGoalInfoVO.setAmt_budget(listGoal.get(0).getAmt_budget());
+			}
+			break;
+		case 2:
+			String classAmt_budget = listGoal.get(0).getAmt_budget();  
+			String meansAmt_budget = listGoal.get(1).getAmt_budget();
+			if(classAmt_budget.equals("0") && meansAmt_budget.equals("0")) {
+				return null;
+			} else if(!classAmt_budget.equals("0") && !meansAmt_budget.equals("0")) {
+				consumeGoalInfoVO.setAmt_budget(classAmt_budget);
+			} else {
+				if(classAmt_budget.equals("0")) {
+					consumeGoalInfoVO.setAmt_budget(meansAmt_budget);
+				} else {
+					consumeGoalInfoVO.setAmt_budget(classAmt_budget);
+				}
+			}
+			break;
+		default:
+			return null;
+		}
+		return consumeGoalInfoVO;
+	}
+	
+	@Override
 	public Map<String, String> listConsumeInfoAmt(ConsumeForm consumeForm) {
 		logger.debug("getConsumeInfoAmt");
 		Map<String, String> summaryMap = new HashMap<String, String>();
@@ -298,13 +348,26 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	@Override
 	public void deletePersonConsumeClass(PersonConsumeClassVO personConsumeClassVO) {
 		logger.debug("deletePersonConsumeClass");
-		consumeMapper.deletePersonConsumeClass(personConsumeClassVO);
+		try{
+			consumeMapper.deletePersonConsumeClass(personConsumeClassVO);
+			consumeMapper.modifyConsumeInfoClass(personConsumeClassVO);
+		} catch(Exception e) {
+			e.printStackTrace();
+			return;
+		}
 	}
 	
 	@Override
 	public void deletePersonConsumeClassType(PersonConsumeClassVO personConsumeClassVO) {
 		logger.debug("deletePersonConsumeClassType");
-		consumeMapper.deletePersonConsumeClassType(personConsumeClassVO);
+		try {
+			consumeMapper.deletePersonConsumeClassType(personConsumeClassVO);
+			consumeMapper.modifyConsumeInfoType(personConsumeClassVO);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return;
+		}
+		
 	}
 	
 	@Override

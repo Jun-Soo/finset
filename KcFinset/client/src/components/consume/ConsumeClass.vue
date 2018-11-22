@@ -3,7 +3,6 @@
     <section>
       <div class="box-list noMG">
         <ul class="consume-cate-list">
-          <!-- <draggable v-model="consumeCategory" @start="drag=true" @end="drag=false" :options="draggableOptions" :move="changeClass"> -->
           <draggable v-model="consumeCategory" @start="drag=true" :options="draggableOptions" @update="changeClass">
             <li v-for="(eachClass, index) in consumeCategory" :key="index" class="liClass" @click="toggleSlide">
               <div class="wrap each-class">

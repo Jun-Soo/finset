@@ -31,6 +31,13 @@ public interface ConsumeManager {
 	boolean chkScrapCard(String no_person);
 	
 	/**
+	 * 배너에 뿌려진 예산 확인
+	 * @param no_person
+	 * @return
+	 */
+	ConsumeGoalInfoVO getConsumeGoalData(String no_person, String ym);
+	
+	/**
 	 * 조회 기간 전체의 수입이나 지출의 합을 조회
 	 * @param consumeForm
 	 * @return

@@ -13,6 +13,7 @@ public class PersonConsumeClassVO implements Serializable{
 	
 	private String 	no_person;							// 회원관리번호
 	private String 	cd_consume_class;					// 소비항목코드
+	private String	type_in_out;						// 수입지출구분
 	private String 	cd_class;							// 분류코드
 	private String 	nm_class;							// 분류명
 	private String 	cd_type;							// 항목코드
@@ -30,12 +31,13 @@ public class PersonConsumeClassVO implements Serializable{
 	public PersonConsumeClassVO() {
 	}
 	public PersonConsumeClassVO(String no_person, String cd_consume_class,
-			String cd_class, String nm_class, String cd_type, String nm_type,
-			String yn_default, String yn_use, String sort_class,
-			String sort_type, String id_frt, Date dt_frt, String id_lst,
-			Date dt_lst, List<PersonConsumeClassVO> list) {
+			String type_in_out, String cd_class, String nm_class,
+			String cd_type, String nm_type, String yn_default, String yn_use,
+			String sort_class, String sort_type, String id_frt, Date dt_frt,
+			String id_lst, Date dt_lst, List<PersonConsumeClassVO> list) {
 		this.no_person = no_person;
 		this.cd_consume_class = cd_consume_class;
+		this.type_in_out = type_in_out;
 		this.cd_class = cd_class;
 		this.nm_class = nm_class;
 		this.cd_type = cd_type;
@@ -50,7 +52,7 @@ public class PersonConsumeClassVO implements Serializable{
 		this.dt_lst = dt_lst;
 		this.list = list;
 	}
-
+	
 	public String getNo_person() {
 		return no_person;
 	}
@@ -62,6 +64,12 @@ public class PersonConsumeClassVO implements Serializable{
 	}
 	public void setCd_consume_class(String cd_consume_class) {
 		this.cd_consume_class = cd_consume_class;
+	}
+	public String getType_in_out() {
+		return type_in_out;
+	}
+	public void setType_in_out(String type_in_out) {
+		this.type_in_out = type_in_out;
 	}
 	public String getCd_class() {
 		return cd_class;

@@ -24,7 +24,6 @@ public class ConsumeGoalInfoVO implements Serializable{
 	public ConsumeGoalInfoVO(String no_person, String req_yyymm,
 			String amt_budget, String amt_expense, String id_frt, Date dt_frt,
 			String id_lst, Date dt_lst) {
-		super();
 		this.no_person = no_person;
 		this.req_yyymm = req_yyymm;
 		this.amt_budget = amt_budget;

@@ -7,7 +7,7 @@
           <ul class="flex">
             <li class="key">이름</li>
             <li class="value">
-              <input type="text" placeholder="친구를 검색하세요" v-model="debtVO.name">
+              <input type="text" placeholder="친구를 검색하세요" v-model="debtVO.creditor">
               <button @click="getAddressList" class="human"></button>
             </li>
           </ul>
@@ -21,7 +21,8 @@
           <ul class="flex">
             <li class="key">이자</li>
             <li class="value">
-              <input type="text" placeholder="이자를 입력하세요" v-model="debtVO.interest">
+              <input v-if="inter_type == 'percent'" type="text" placeholder="이자를 입력하세요" v-model="debtVO.interest">
+              <input v-if="inter_type == 'won'" type="text" placeholder="이자를 입력하세요" v-model="debtVO.all_amt_repay_i">
               <button @click="changeInterType('percent')" class="onoff per" :class="{'on':inter_type == 'percent'}">%</button>
               <button @click="changeInterType('won')" class="onoff won" :class="{'on':inter_type == 'won'}">원</button>
             </li>
@@ -29,14 +30,16 @@
           <ul class="flex">
             <li class="key">계약일</li>
             <li class="value">
-              <input type="text" placeholder="계약일을 입력하세요" v-model="debtVO.ymd_loan">
+              <!-- <input type="text" placeholder="계약일을 입력하세요" v-model="debtVO.ymd_loan"> -->
+              <datepicker v-model="debtVO.ymd_loan" :language="ko" :format="Common.formatDateDot" class="div-date" :placeholder="'계약일을 입력하세요'"></datepicker>
               <button class="cal"></button>
             </li>
           </ul>
           <ul class="flex">
             <li class="key">만기일</li>
             <li class="value">
-              <input type="text" placeholder="만기일을 입력하세요" v-model="debtVO.ymd_loanend">
+              <!-- <input type="text" placeholder="만기일을 입력하세요" v-model="debtVO.ymd_loanend"> -->
+              <datepicker v-model="debtVO.ymd_loanend" :language="ko" :format="Common.formatDateDot" class="div-date" :placeholder="'계약일을 입력하세요'"></datepicker>
               <button class="cal"></button>
             </li>
           </ul>
@@ -46,17 +49,17 @@
           <ul>
             <li>
               <div class="top">
-                <a href="#" data-acco="0">추가 항목</a>
+                <a @click="toggleAcco">추가 항목</a>
               </div>
               <div class="body">
                 <div class="flex">
                   <p>상환방법</p>
                   <p>
-                    <select v-model="debtVO.rep_method">
+                    <select @change="chgRepMethod" v-model="debtVO.rep_method">
                       <option value="00" disabled="disabled">선택</option>
-                      <option value="01">만기일시상환</option>
-                      <option value="02">원리금분할상환</option>
-                      <option value="03">원금분할상환</option>
+                      <option value="03">만기일시상환</option>
+                      <option value="01">원리금분할상환</option>
+                      <option value="02">원금분할상환</option>
                     </select>
                   </p>
                 </div>
@@ -98,20 +101,27 @@
 
 <script>
 import Constant from "@/assets/js/constant.js";
+import Common from "@/assets/js/common.js";
+import datepicker from "vuejs-datepicker";
+import { ko } from "vuejs-datepicker/dist/locale";
 
 export default {
   name: "DebtRegister",
   data() {
     return {
+      ko: ko,
       debtVO: {
         rep_method: "00",
         inter_pay_cycle: "00",
         inter_pay_day: "00"
       },
-      inter_type: "percent"
+      inter_type: "percent",
+      Common: Common
     };
   },
-  components: {},
+  components: {
+    datepicker
+  },
   computed: {},
   beforeCreate() {
     this.$store.state.header.type = "sub";
@@ -119,6 +129,7 @@ export default {
   },
   created() {
     window.resultAddress = this.resultAddress;
+    this.ko.ymd = true;
   },
   beforeMount() {},
   mounted() {},
@@ -128,7 +139,16 @@ export default {
   destroyed() {},
   methods: {
     saveDebt: function() {
-      console.log(this.debtVO);
+      var _this = this;
+
+      this.debtVO.ymd_loan = Common.formatDate(this.debtVO.ymd_loan);
+      this.debtVO.ymd_loanend = Common.formatDate(this.debtVO.ymd_loanend);
+      this.debtVO.inter_type = this.inter_type;
+
+      this.$router.push({
+        path: "/debt/regDetail",
+        query: { debtVO: _this.debtVO }
+      });
     },
     changeInterType: function(type) {
       if (type == this.inter_type) {
@@ -147,6 +167,29 @@ export default {
     },
     resultAddress: function(nm_person, hp) {
       this.debtVO.name = nm_person;
+    },
+    toggleAcco: function(param) {
+      var btn = $(param.target);
+      if (btn.hasClass("on")) {
+        btn
+          .closest("li")
+          .find(".body")
+          .slideUp(500, "easeInOutExpo");
+        btn.removeClass("on");
+      } else {
+        btn
+          .closest("li")
+          .find(".body")
+          .slideDown(500, "easeInOutExpo");
+        btn.addClass("on");
+      }
+      param.preventDefault();
+    },
+    chgRepMethod: function() {
+      var key = this.debtVO.rep_method;
+      if (key == "03") {
+        this.debtVO.inter_pay_cycle = "04";
+      }
     }
   }
 };
@@ -154,4 +197,15 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
+.vdp-datepicker__calendar {
+  position: fixed;
+  font-size: 13px;
+  line-height: 40px;
+}
+.vdp-datepicker__calendar header {
+  position: static;
+}
+.div-date {
+  text-align: right;
+}
 </style>

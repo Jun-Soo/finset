@@ -204,7 +204,7 @@
 				REQ_NO_PERSON			= #{no_person, jdbcType=VARCHAR}
 			AND SHARE_STATUS			= '02'
 			AND YN_DEBT_INFO			= 'Y'
-			AND DT_END_OFFER			> TO_CHAR( SYSDATE, 'YYYYMMDD' )
+			AND DT_END_OFFER			IS NULL
 		UNION(
 			SELECT
 				 NO_PERSON
@@ -546,6 +546,8 @@
 	                ELSE
 	                   ROUND(C.CUR_MM_AMT_REPAY/(FN_ETM_INCOME_AMT(A.NO_PERSON)/12),3) * 100
 	              END,'990.9'))                                            AS REPAY_PER_INCOME /*원리금 상환/소득*/
+	         ,A.DEBT_YN
+	         ,A.CREDITOR
 	         ,DISPLAY_YN
 	   FROM   DEBT_PERSONAL_INFO A
 	         LEFT OUTER JOIN FC_INFO B
@@ -758,6 +760,8 @@
 		                        0
 		                END                                                         AS TERM_REMAIN
 		        ,C.TEL AS TEL
+		        ,A.CREDITOR
+		        ,A.DEBT_YN
 		FROM    DEBT_PERSONAL_INFO A
 		        INNER JOIN
 		        (
@@ -1067,5 +1071,56 @@
 			AND(T.AMT_ETM_INCOME * 1.15) <![CDATA[<=]]> #{income, jdbcType = VARCHAR}
 		ORDER BY T.YMD_LOAN DESC
 	</select>
+	
+	<insert id="createDebtPersonalInfo" parameterType="com.koscom.debt.model.DebtVO">
+		<selectKey keyProperty="no_manage_info" resultType="string" order="BEFORE">
+			(SELECT TO_CHAR(SEQ_DEBT_PERSONAL_INFO.NEXTVAL) FROM DUAL)
+		</selectKey>
+		INSERT INTO DEBT_PERSONAL_INFO
+		   ( NO_MANAGE_INFO
+			,NO_PERSON
+			,YMD_LOAN
+			,YMD_LOANEND
+			,INTER_PAY_DAY
+			,INTER_PAY_CYCLE
+			,AMT_CONTRACT
+			,AMT_REMAIN
+			,INTEREST
+			,REPAYMENT
+			,CD_TYPE_DEAL
+			,AMT_TOTAL_I
+			,YN_CREDIT
+			,YN_LOAN
+			,YN_GUARANTOR
+			,CREDITOR
+			,DEBT_YN
+			,ID_FRT
+			,DT_FRT
+			,ID_LST
+			,DT_LST
+		) VALUES (
+			 #{no_manage_info, 	jdbcType=VARCHAR}
+			,#{no_person, 		jdbcType=VARCHAR}
+			,#{ymd_loan, 		jdbcType=VARCHAR}
+			,#{ymd_loanend, 	jdbcType=VARCHAR}
+			,#{inter_pay_day,	jdbcType=VARCHAR}
+			,#{inter_pay_cycle,	jdbcType=VARCHAR}
+			,#{amt_contract, 	jdbcType=VARCHAR}
+			,#{amt_remain,		jdbcType=VARCHAR}
+			,#{interest,		jdbcType=VARCHAR}
+			,#{rep_method,		jdbcType=VARCHAR}
+			,#{cd_type_deal,	jdbcType=VARCHAR}
+			,#{all_amt_repay_i,	jdbcType=VARCHAR}
+			,#{yn_credit, 		jdbcType=VARCHAR}
+			,#{yn_loan, 		jdbcType=VARCHAR}
+			,#{yn_guarantor, 	jdbcType=VARCHAR}
+			,#{creditor,		jdbcType=VARCHAR}
+			,#{debt_yn,			jdbcType=VARCHAR}
+			,#{no_person, 		jdbcType=VARCHAR}
+			,SYSDATE
+			,#{no_person, 		jdbcType=VARCHAR}
+			,SYSDATE
+		)
+	</insert>
 
 </mapper>

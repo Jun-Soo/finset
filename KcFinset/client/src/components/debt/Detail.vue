@@ -154,9 +154,14 @@ export default {
           }
         })
         .then(function(response) {
-          _this.debtVO = response.data.debtVO;
-          _this.listDebtRepay = response.data.listDebtRepay;
-          _this.isAuto = _this.debtVO.debt_yn == "Y" ? false : true;
+          if ((response.data.debtVO || "") != "") {
+            _this.debtVO = response.data.debtVO;
+            _this.listDebtRepay = response.data.listDebtRepay;
+            _this.isAuto =
+              _this.debtVO.debt_yn == null || _this.debtVO.debt_yn == "N"
+                ? true
+                : false;
+          }
         });
     },
     formatNumber: function(number) {

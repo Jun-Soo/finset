@@ -175,4 +175,9 @@ public class DebtManagerImpl implements DebtManager {
 		return debtMapper.listReqIntrCutIncome(reqIntCutForm);
 	}
 
+	@Override
+	public void createDebtPersonalInfo(DebtVO debtVO) {
+		debtMapper.createDebtPersonalInfo(debtVO);
+	}
+
 }

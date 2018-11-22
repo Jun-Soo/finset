@@ -26,12 +26,9 @@ import com.koscom.debt.model.DebtForm;
 import com.koscom.debt.model.DebtVO;
 import com.koscom.debt.model.ReqIntrCutForm;
 import com.koscom.debt.service.DebtManager;
-import com.koscom.domain.PersonShareInfo;
-import com.koscom.person.model.PersonShareInfoForm;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
 import com.koscom.util.Constant;
-import com.koscom.util.DateUtil;
 import com.koscom.util.FinsetException;
 import com.koscom.util.ResUtil;
 
@@ -606,6 +603,27 @@ public class DebtController {
 
 		model.addAttribute("debtList", debtList);
 
+		return "jsonView";
+	}
+	
+	/**
+	 * VUE
+	 * @param session
+	 * @param debtVO
+	 * @return
+	 */
+	@RequestMapping("/createDebtPersonalInfo.json")
+	public String createDebtPersonalInfo(HttpSession session, DebtVO debtVO) {
+		String no_person = (String)session.getAttribute("no_person");
+		debtVO.setNo_person(no_person);
+		if(debtVO.getRep_method() == null || debtVO.getRep_method().equals("null") || debtVO.getRep_method().equals("")) {
+			debtVO.setRep_method(null);
+		}
+		
+		logger.debug(debtVO.toString());
+		
+		debtManager.createDebtPersonalInfo(debtVO);
+		
 		return "jsonView";
 	}
 

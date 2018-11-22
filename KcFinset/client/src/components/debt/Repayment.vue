@@ -6,6 +6,7 @@
           <p class="key">상환일</p>
           <p>
             <datepicker v-model="req_yyyymm" :language="ko" :format="formatDate"></datepicker>
+            <!-- <Datetime v-model="temp"></Datetime> -->
             <button class="cal"></button>
           </p>
         </li>
@@ -25,6 +26,7 @@
 <script>
 import Common from "@/assets/js/common.js";
 import datepicker from "vuejs-datepicker";
+import { Datetime } from "vue-datetime";
 import { ko } from "vuejs-datepicker/dist/locale";
 
 export default {
@@ -33,11 +35,13 @@ export default {
     return {
       ko: ko,
       req_yyyymm: new Date(),
-      amt_repay: ""
+      amt_repay: "",
+      temp: "20180111"
     };
   },
   components: {
-    datepicker
+    datepicker,
+    Datetime
   },
   computed: {},
   beforeCreate() {

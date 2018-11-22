@@ -15,7 +15,7 @@ public class DebtVO extends Kcb_Segment030 implements Serializable{
      * 리스트
 */
     private String cd_fc              ;    /*금융사코드*/
-    private String path_file         ;    /*은행 CI*/
+    private String path_file          ;    /*은행 CI*/
     private String amt_remain         ;    /*대출잔액*/
     private String rate_repay         ;    /*원금상환비율*/
     private String rate_mm_repay_i    ;    /*이자상환비율(당월)*/
@@ -30,6 +30,7 @@ public class DebtVO extends Kcb_Segment030 implements Serializable{
     private String amt_repay_i_by_year;    /*이자상환(년)*/
     private String ever_interest      ;    /*이자*/
     private String repay_per_income   ;    /*원리금 상환/소득*/
+    private String creditor			  ;	   /*채권자*/
 
     /**
      * 상세
@@ -66,6 +67,7 @@ public class DebtVO extends Kcb_Segment030 implements Serializable{
     private String rem_amt_repay_p   ;    /*잔여원금*/
 
     private String display_yn		 ;	  /*화면 표시 여부 20180612 김휘경*/
+    private String debt_yn			 ;	  /*수기등록여부*/
 
     //금리인하
     private List<String> cutItems; //항목
@@ -104,6 +106,14 @@ public class DebtVO extends Kcb_Segment030 implements Serializable{
 		this.repay_per_income = repay_per_income;
 	}
 
+	public String getCreditor() {
+		return creditor;
+	}
+	
+	public void setCreditor(String creditor) {
+		this.creditor = creditor;
+	}
+	
 	public String getAmt_repay_p() {
 		return amt_repay_p;
 	}
@@ -448,8 +458,16 @@ public class DebtVO extends Kcb_Segment030 implements Serializable{
     public void setDisplay_yn(String display_yn) {
         this.display_yn = display_yn;
     }
+   
+    public String getDebt_yn() {
+		return debt_yn;
+	}
 
-    public List<String> getCutItems() {
+	public void setDebt_yn(String debt_yn) {
+		this.debt_yn = debt_yn;
+	}
+
+	public List<String> getCutItems() {
 		return cutItems;
 	}
 

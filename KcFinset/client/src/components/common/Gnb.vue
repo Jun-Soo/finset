@@ -5,7 +5,7 @@
       <div class="top">
         <div class="left">
           <button class="alarm" @click="clickButton('/etc/alarmHistory')"></button>
-          <button class="logout" @click="$router.push('/mypage/logout')"></button>
+          <button class="logout" @click="chkLogout"></button>
         </div>
         <div class="right">
           <button class="gnb-close"></button>
@@ -58,6 +58,8 @@
 </template>
 
 <script>
+import Constant from "./../../assets/js/constant.js";
+
 export default {
   name: "error",
   data() {
@@ -80,6 +82,19 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    //logout 확인여부
+    chkLogout: function() {
+      let _this = this;
+      _this.$dialogs
+        .confirm("로그아웃 하시겠습니까", Constant.options)
+        .then(res => {
+          if (res.ok) {
+            _this.$router.push("/mypage/logout");
+          } else {
+            return false;
+          }
+        });
+    },
     // 최근접속시간 조회
     getConnectTime: function() {
       var _this = this;

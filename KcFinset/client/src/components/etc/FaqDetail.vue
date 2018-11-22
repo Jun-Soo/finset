@@ -71,7 +71,7 @@ export default {
           _this.txt_detail + " " + _this.totalPage + " " + _this.page
         );
         if (_this.totalPage > _this.page) {
-          _this.jumpPage();
+          Common.pagination(_this.jumpPage);
           // _this.page++;
         }
       }
@@ -157,10 +157,14 @@ export default {
       _this.$http.post(url, data).then(response => {
         _this.totalPage = response.data.pagedList.pageCount;
         //append
-        _this.pagedList.concat(response.data.pagedList.source);
+        var plist = response.data.pagedList.source;
+        if (plist.length != 0) {
+          for (var k in plist) {
+            _this.pagedList.push(plist[k]);
+          }
+        }
         _this.page = response.data.pagedList.page;
 
-        // Common.pagination();
         _this.seen = true;
         if (Constant.userAgent == "Android") {
           window.Android.loading("N");

@@ -95,7 +95,7 @@ export default {
       time: 0,
       /* class */
       isDisabled: false,
-      /* modifyPersonLogout 함수 사용시 필요 */
+      /* changeLoginDB 함수 사용시 필요 */
       yn_logout: "",
       yn_use: ""
     };
@@ -262,7 +262,7 @@ export default {
           }
         })
         .catch(e => {
-          this.$toast.center(ko.messages.error);
+          this.$toast.center(e);
         });
     },
     insertPerson: function() {
@@ -304,7 +304,7 @@ export default {
             _this.$router.push("/member/certCode");
           } else if (result.result == "11") {
             //loginSuccess
-            //  modifyPersonLogout();
+            //  changeLoginDB();
             if (Constant.userAgent == "iOS") {
               Jockey.send("setNoPerson", {
                 noPerson: noPerson,

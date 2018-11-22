@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import Constant from "./../../assets/js/constant.js";
 export default {
   name: "MypageDrop",
   data() {
@@ -68,33 +69,46 @@ export default {
   methods: {
     quitChkYn: function() {
       let _this = this;
-      if (!_this.chk1 || !_this.chk2 || !_this.chk3 || !_this.chk4 || !_this.chk5) {
+      if (
+        !_this.chk1 ||
+        !_this.chk2 ||
+        !_this.chk3 ||
+        !_this.chk4 ||
+        !_this.chk5
+      ) {
         this.$toast.center("필수 약관을 모두 동의해주세요");
         setTimeout(function() {}, 2000);
         return false;
       }
-      let bool = confirm("정말로 탈퇴 하시겠습니까?");
-      if(bool){
-        _this.dropPerson();
-      }else{
-        return false;
-      }
+
+      this.$dialogs
+        .confirm("정말로 탈퇴 하시겠습니까?", Constant.options)
+        .then(res => {
+          if (res.ok) {
+            _this.dropPerson();
+          } else {
+            return false;
+          }
+        });
     },
     dropPerson: function() {
       let url = "/m/customercenter/customerQuitComp.json";
       let _this = this;
 
       var frm = new FormData();
-      _this.$http.post(url, frm).then(response => {
-         if (response.data.result == "00") {
+      _this.$http
+        .post(url, frm)
+        .then(response => {
+          if (response.data.result == "00") {
             //정상
-            _this.$router.push('/mypage/dropDone');
-          }else {
+            _this.$router.push("/mypage/dropDone");
+          } else {
             _this.$toast.center(response.data.message);
           }
-      }).catch(e => {
-        _this.$toast.center(ko.messages.error);
-      });
+        })
+        .catch(e => {
+          _this.$toast.center(ko.messages.error);
+        });
     },
     chkAll: function() {
       var _this = this;

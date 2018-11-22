@@ -85,7 +85,7 @@ export default {
             }
             _this.$store.state.user.authToken = null;
             _this.$store.commit("LOGIN", response.data);
-            _this.modifyPersonLogout();
+            _this.changeLoginDB();
             _this.$router.push("/main");
           } else {
             this.$toast.center(ko.messages.loginErr);
@@ -119,8 +119,8 @@ export default {
           this.$toast.center(ko.messages.error);
         });
     },
-    //로그아웃 변수 변경
-    modifyPersonLogout: function() {
+    //로그인값 db 변경
+    changeLoginDB: function() {
       var _this = this;
       var formData = new FormData();
       formData.append("yn_logout", "N");

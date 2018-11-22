@@ -4,7 +4,7 @@
       <ul class="view" v-if="seen">
         <li>
           <p class="subject">{{boardInfo.title}}</p>
-          <p class="date">{{boardInfo.dt_frt}}</p>
+          <p class="date">{{formatDate(boardInfo.dt_frt)}}</p>
         </li>
         <li>
           <p v-html="boardInfo.content"></p>
@@ -12,11 +12,10 @@
         </li>
       </ul>
     </div>
-
   </section>
 </template>
-
 <script>
+import Common from "./../../assets/js/common.js";
 export default {
   name: "EtcNoticeDetail",
   data() {
@@ -58,6 +57,9 @@ export default {
         _this.boardInfo = response.data.boardInfo;
         _this.content = _this.seen = true;
       });
+    },
+    formatDate: function(date) {
+      return Common.formatDate(date);
     }
   }
 };

@@ -6,7 +6,7 @@
           <p class="subject">{{boardInfo.title}}</p>
           <div class="flex">
             <div>
-              <p class="date">{{boardInfo.ymd_post_strt}} ~ {{boardInfo.ymd_post_end}}</p>
+              <p v-if="boardInfo.ymd_post_strt!=null" class="date">{{formatDateDot(boardInfo.ymd_post_strt)}} ~ {{formatDateDot(boardInfo.ymd_post_end)}}</p>
             </div>
             <div>
               <p class="state pre" v-if="boardInfo.cd_event_proc==='01'">예정</p>
@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import Common from "./../../assets/js/common.js";
 export default {
   name: "EtcEventDetail",
   data() {
@@ -56,6 +57,9 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    formatDateDot: function(date) {
+      return Common.formatDateDot(date);
+    },
     getEventDatail: function(seq, id_board) {
       let _this = this;
       let url = "/m/customercenter/getCustomerNoticeDetail.json";
@@ -64,9 +68,9 @@ export default {
       frm.append("id_board", id_board);
       this.$http.post(url, frm).then(response => {
         _this.boardForm = response.data.boardForm;
-        if(response.data.boardImgInfo){
+        if (response.data.boardImgInfo) {
           _this.boardImgInfo = response.data.boardImgInfo;
-        }else{
+        } else {
           _this.boardImgInfo.img_files = null;
         }
         _this.boardInfo = response.data.boardInfo;

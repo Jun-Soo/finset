@@ -793,7 +793,7 @@ public class CustomerCenterController implements Constant {
 	 */
 	@RequestMapping("/listCustomerNotice.json")
 	public String listCustomerNotice(Model model, HttpServletRequest request, BoardForm boardForm) {
-		boardForm.setPage(1);
+		//boardForm.setPage(1);
 		Pagination pagedList = (Pagination) boardForm.setPagedList(boardManager.listBoardInfo(boardForm), boardManager.listBoardInfoCount(boardForm));
 
 		logger.info(pagedList.toString());

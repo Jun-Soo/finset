@@ -47,16 +47,16 @@ $(function () {
     e.preventDefault()
   })
 
-  $(document).on('click', '[data-acco]', function (e) {
-    if ($(this).hasClass('on')) {
-      $(this).closest('li').find('.body').slideUp(500, 'easeInOutExpo')
-      $(this).removeClass('on')
-    } else {
-      $(this).closest('li').find('.body').slideDown(500, 'easeInOutExpo')
-      $(this).addClass('on')
-    }
-    e.preventDefault()
-  })
+  // $(document).on('click', '[data-acco]', function (e) {
+  //   if ($(this).hasClass('on')) {
+  //     $(this).closest('li').find('.body').slideUp(500, 'easeInOutExpo')
+  //     $(this).removeClass('on')
+  //   } else {
+  //     $(this).closest('li').find('.body').slideDown(500, 'easeInOutExpo')
+  //     $(this).addClass('on')
+  //   }
+  //   e.preventDefault()
+  // })
 
   $(document).on('click', '.gray-search-box .acco', function (e) {
     if ($(this).hasClass('on')) {

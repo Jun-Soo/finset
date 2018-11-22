@@ -234,6 +234,34 @@ textarea{
             color: #fff;
         }
     }
+    
+    &.round{
+        input[type="radio"] + label{
+            display: inline-block;
+            position: relative;
+            padding-left:0;
+            color:$col4;
+            border: 1px solid $col4;
+            font-weight: 700;
+            font-size: 14px;
+            line-height:28px;
+            text-align:center;
+            margin-right: 0;
+            margin-right: 5px;
+            padding: 0 13px;
+            border-radius: 20px;
+            &:before{
+                display: none;
+            }
+            &:last-of-type{
+                margin: 0;
+            }
+        }
+        input[type="radio"]:checked + label{
+            background: $col4;
+            color: #fff;
+        }
+    }
 }
 
 .filter-wrap{

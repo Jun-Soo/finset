@@ -77,7 +77,7 @@
     top: 50%;
     background: #fff;
     display: none;
-    width: 80%;
+    width: 90%;
     @include box-sizing(border-box);
     .top{
         line-height: 45px;
@@ -129,6 +129,93 @@
         background: $col4;
         margin-top: 25px;
         display: block;
+    }
+    .cal-con{
+        padding: 20px;
+        .cal-top{
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            div{
+                text-align: center;
+                em{
+                    display: inline-block;
+                    line-height: 18px;
+                    padding: 0 8px;
+                    border-radius: 20px;
+                    font-weight: 700;
+                    &.debt{
+                        color: #25bdd5;
+                        border: 1px solid #25bdd5;
+                    }
+                    &.income{
+                        color: #4f82d6;
+                        border: 1px solid #4f82d6;
+                    }
+                    &.loan{
+                        color: $col1;
+                        border: 1px solid $col1;
+                    }
+                }
+                p{
+                    margin-top: 10px;
+                    font-size: 14px;
+                }
+            }
+        }
+        .body{
+            margin-top: 20px;
+            .list{
+                margin-bottom: 10px;
+                border: 1px solid $lineColor;
+                padding: 15px;
+                display: grid;
+                justify-content: space-between;
+                grid-template-columns: 3fr 1fr;
+                div{
+                    em{
+                        display: inline-block;
+                        line-height: 18px;
+                        padding: 0 8px;
+                        border-radius: 20px;
+                        font-weight: 700;
+                        color: #fff;
+                        margin-right: 5px;
+                        &.debt{
+                            color: #25bdd5;
+                            border: 1px solid #25bdd5;
+                        }
+                        &.income{
+                            color: #4f82d6;
+                            border: 1px solid #4f82d6;
+                        }
+                        &.loan{
+                            color: $col1;
+                            border: 1px solid $col1;
+                        }
+                        &.red{
+                            background: #e95071;
+                        }
+                        &.orange{
+                            background: #ef903c;
+                        } 
+                        &.green{
+                            background: #89c11c;
+                        } 
+                        &.blue{
+                            background: #6993f3;
+                        } 
+                        &.purple{
+                            background: #bf65f3;
+                        }
+                        &.text{
+                            padding: 0;
+                            margin: 0;
+                            color: #666;
+                        }
+                    }
+                }
+            }
+        }
     }
 }
 

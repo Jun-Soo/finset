@@ -65,6 +65,11 @@ import CreditRaiseRetry from '@/components/credit/RaiseRetry'
 // import CreditRaiseMobile from '@/components/credit/RaiseMobile'
 import CreditRaiseResult from '@/components/credit/RaiseResult'
 // import CreditGradeAnalysis from '@/components/credit/GradeAnalysis'
+import CreditCounselInfo from '@/components/credit/CounselInfo'
+import CreditCounselInfo2 from '@/components/credit/CounselInfo2'
+import CreditCounselInfo3 from '@/components/credit/CounselInfo3'
+import CreditCounselInfo4 from '@/components/credit/CounselInfo4'
+import CreditCounselInfo5 from '@/components/credit/CounselInfo5'
 import CreditRegCounsel from '@/components/credit/RegCounsel'
 import CreditCounselResult from '@/components/credit/CounselResult'
 
@@ -131,7 +136,7 @@ import AssetsBankMain from '@/components/assets/BankMain'
 import AssetsBankActDetail from '@/components/assets/BankActDetail'
 import AssetsBankDepWdrlList from '@/components/assets/BankDepWdrlList'
 import AssetsBankDepWdrlDetail from '@/components/assets/BankDepWdrlDetail'
-// import AssetsStockMain from '@/components/assets/StockMain'
+import AssetsStockMain from '@/components/assets/StockMain'
 // import AssetsStockBalcDetail from '@/components/assets/StockBalcDetail'
 // import AssetsStockActDetail from '@/components/assets/StockActDetail'
 // import AssetsStockShrDetail from '@/components/assets/StockShrDetail'
@@ -187,6 +192,8 @@ import ProxyPage from '@/components/common/ProxyPage'
 import Spinner from '@/components/common/Spinner'
 import Loading from '@/components/common/Loading'
 import CommonMonthCal from '@/components/common/MonthCal'
+import CommonYearCal from '@/components/common/YearCal'
+import CommonCalSetting from '@/components/common/CalSetting'
 
 import Swiper from '@/components/_sample/Swiper'
 import Gauge from '@/components/_sample/Gauge'
@@ -274,6 +281,22 @@ export const routes = [{
     path: 'monthCal',
     alias: '/monthCal',
     component: CommonMonthCal,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'yearCal',
+    alias: '/yearCal',
+    component: CommonYearCal,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'calSetting',
+    alias: '/calSetting',
+    component: CommonCalSetting,
     meta: {
       allowPath: true
     }
@@ -572,6 +595,56 @@ export const routes = [{
     alias: '/raiseResult',
     component: CreditRaiseResult,
     name: 'creditRaiseResult',
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'counselInfo',
+    alias: '/counselInfo',
+    component: CreditCounselInfo,
+    name: 'creditCounselInfo',
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'counselInfo2',
+    alias: '/counselInfo2',
+    component: CreditCounselInfo2,
+    name: 'creditCounselInfo2',
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'counselInfo3',
+    alias: '/counselInfo3',
+    component: CreditCounselInfo3,
+    name: 'creditCounselInfo3',
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'counselInfo4',
+    alias: '/counselInfo4',
+    component: CreditCounselInfo4,
+    name: 'creditCounselInfo4',
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'counselInfo5',
+    alias: '/counselInfo5',
+    component: CreditCounselInfo5,
+    name: 'creditCounselInfo5',
     meta: {
       allowPath: true,
       requiresAuth: true
@@ -878,6 +951,14 @@ export const routes = [{
     path: 'bankDepWdrlDetail',
     alias: '/bankDepWdrlList',
     component: AssetsBankDepWdrlDetail,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'stockMain',
+    alias: '/stockMain',
+    component: AssetsStockMain,
     meta: {
       allowPath: true
     }

@@ -1,24 +1,22 @@
 package com.koscom.env.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.koscom.env.dao.CodeMapper;
+import com.koscom.env.model.CodeForm;
 import com.koscom.env.model.CodeInfo;
+import com.koscom.env.model.CodeVO;
 import com.koscom.env.service.CodeManager;
 import com.koscom.util.SpringApplicationContext;
 import com.koscom.util.StringUtil;
 
 @Service("codeManager")
 public class CodeManagerImpl implements CodeManager {
-
-	private static final Logger logger = LoggerFactory.getLogger(CodeManagerImpl.class);
-
 	@Autowired
 	private CodeMapper codeMapper;
 	
@@ -45,7 +43,12 @@ public class CodeManagerImpl implements CodeManager {
 	public List<CodeInfo> listCodeInfo(CodeInfo codeInfo) {
 		return codeMapper.listCodeInfo(codeInfo);
 	}
-
+	
+	@Override
+	public List<CodeVO> listCode(CodeForm codeForm) {
+		return codeMapper.listCode(codeForm);
+	}
+	
 	@Override
 	@Cacheable(value="CacheListCode")
 	public List<CodeInfo> listCodeInfo(String group) {
@@ -91,5 +94,37 @@ public class CodeManagerImpl implements CodeManager {
 	@Override
 	public CodeInfo getAgreeTerm(CodeInfo codeInfo) {
 		return codeMapper.getAgreeTerm(codeInfo);
+	}
+	
+	@Override
+	public String getNvlCodeName(String group, String id, String defaultStr) {
+
+		if (StringUtil.isEmpty(group) || StringUtil.isEmpty(id)) {
+			return defaultStr;
+		}
+
+		String returnValue = getCodeName(group, id);
+
+		// codeValue 와 returnValue 가 같다는 의미는
+		// code name이 null 이란 의미이다
+		if(StringUtil.isEmpty(returnValue) || id.equals(returnValue))
+			return defaultStr;
+
+		return returnValue;
+	}
+	
+	@Override
+	public HashMap<String, CodeVO> getCodeMapInfo(String code_group){
+		HashMap<String, CodeVO> codeMap = new HashMap<String, CodeVO>();
+
+		CodeForm codeForm = new CodeForm();
+		codeForm.setCode_group(code_group);
+		List<CodeVO> codeList = codeMapper.listCode(codeForm);
+
+		for(CodeVO info : codeList){
+			codeMap.put(info.getCode_value(), info);
+		}
+
+		return codeMap;
 	}
 }

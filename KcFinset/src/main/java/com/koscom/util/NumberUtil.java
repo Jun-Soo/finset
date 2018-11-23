@@ -889,4 +889,59 @@ public final class NumberUtil {
 		return result;
 
 	}
+	
+	/**
+	 * 문자열을 long으로 파싱하고, null일 경우 0을 리턴한다.
+	 * 
+	 * @param pVal
+	 * @return
+	 */
+	public static long parseLong(String pVal) {
+		String val = pVal;
+		if (StringUtil.isEmpty(val))
+			return 0;
+
+		val = val.trim().replace(",", "");
+
+		return Long.parseLong(val);
+	}
+	
+	/**
+	 * 문자열을 long으로 파싱하고, null일 경우 0을 리턴한다.
+	 *
+	 * @param pVal
+	 * @return
+	 */
+	public static double parseDouble(String pVal) {
+		String val = pVal;
+		if (StringUtil.isEmpty(val))
+			return 0;
+
+		val = val.trim().replace(",", "");
+        double dblVal = Double.parseDouble(val);
+
+		return dblVal;
+	}
+	
+	/**
+	 * 문자열을 long으로 파싱하고, null일 경우 0을 리턴한다.
+	 *
+	 * @param pVal
+	 * @return
+	 */
+	public static Object parseNumber(String pVal) {
+		String val = pVal;
+		if (StringUtil.isEmpty(val))
+			return 0;
+
+		val = val.trim().replace(",", "");
+		Object result = null;
+		if(val.contains(".")) {
+		    result = Double.parseDouble(val);
+        } else {
+            result = Long.parseLong(val);
+        }
+
+		return result;
+	}
 }

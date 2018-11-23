@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.apply.dao.ApplyMapper">
+	<select id="getApply" parameterType="com.koscom.apply.model.ApplyVO" resultType="com.koscom.apply.model.ApplyVO">
+		/* com.koscom.apply.dao.ApplyMapper.getApply : */
+		SELECT   NO_APPLY
+				,NO_PREPARE
+				,CD_APPLY_DOC_BOX
+				,CD_APPLY_COMP
+				,CD_GOODS
+				,CD_ADVERTISEMENT
+				,YMD_APPLY
+				,AMT_APPLY
+				,ID_APPLY
+				,ETC_APPLY_PATH
+				,AMT_APPROVAL
+				,YMD_APPROVAL
+				,YMD_LST_COMP
+				,HIS_LST_COMP
+				,ID_FRT
+				,DT_FRT
+				,ID_LST
+				,DT_LST
+				,NM_WRITER
+				,CD_COLLECT_PATH
+				,CD_CONTACT_PATH
+				,CD_COLLECT_METHOD
+				,ETC_MEMO
+				,NM_AGENCY
+				,NM_CEO_AGENCY
+				,URL_HOMEPAGE_AGENCY
+				,MEMO_TO_APPLY
+				,MEMO_FROM_APPLY
+				,NO_AGENCY_PERSON
+				,DT_AGENCY_FRT
+				,YMD_EARLY_REPAYMENT
+				,YEAR_TERM
+				,RTO_LOAN
+				,CD_FC
+				,NO_BUNCH
+				,LOAN_NO_APPLY
+				,NO_PERSON
+		  FROM apply_info
+		  <where>
+		  	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(no_apply)'>
+		  		no_apply = #{no_apply}
+		  	</if>
+		  	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(no_prepare)'>
+		  		AND no_prepare = #{no_prepare}
+		  	</if>
+		  	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+		  		AND cd_fc = #{cd_fc}
+		  	</if>
+		  </where>
+	</select>
+	
+	<update id="modifyApplyDoc" parameterType="com.koscom.apply.model.ApplyVO">
+		/* com.koscom.apply.dao.ApplyMapper.modifyApplyDoc : */
+		UPDATE apply_info
+		   SET    cd_apply_doc_box = #{cd_apply_doc_box, jdbcType=VARCHAR}
+				<choose>
+		   			<when test="@com.koscom.util.MybatisUtil@isNotEmpty(ymd_lst_comp)">
+		   				, ymd_lst_comp = #{ymd_lst_comp}
+		   			</when>
+		   			<otherwise>
+		   				, ymd_lst_comp = TO_CHAR(SYSDATE,'yyyyMMdd')
+		   			</otherwise>
+		   		</choose>
+		   		<choose>
+		   			<when test="@com.koscom.util.MybatisUtil@isNotEmpty(his_lst_comp)">
+		   				, his_lst_comp = #{his_lst_comp}
+		   			</when>
+		   			<otherwise>
+		   				, his_lst_comp = TO_CHAR(SYSDATE,'hh24miss')
+		   			</otherwise>
+		   		</choose>
+				, id_lst = #{id_lst, jdbcType=VARCHAR}
+				, dt_lst = SYSDATE
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods)'>
+				, cd_goods = #{cd_goods, jdbcType=VARCHAR}
+			</if>
+	   		<choose>
+	   			<when test='cd_apply_doc_box == "01"'>
+		   			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(amt_apply)'>
+					, amt_apply = #{amt_apply}
+					</if>
+				, amt_approval = ''
+				, ymd_approval = ''
+	   			</when>
+	   			<when test='cd_apply_doc_box == "10"'>
+		   			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(amt_apply)'>
+					, amt_apply = #{amt_apply}
+					</if>
+		   			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(id_apply)'>
+					, id_apply = #{id_apply}
+					</if>
+		   			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(ymd_apply)'>
+					, ymd_apply = #{ymd_apply}
+					</if>
+				, amt_approval = ''
+				, ymd_approval = ''
+	   			</when>
+	   			<when test='cd_apply_doc_box == "50"'>
+				, amt_approval = #{amt_approval, jdbcType=VARCHAR}
+					<if test='@com.koscom.util.MybatisUtil@isNotEmpty(ymd_approval)'>
+					, ymd_approval = #{ymd_approval, jdbcType=VARCHAR}
+					</if>
+					<if test='@com.koscom.util.MybatisUtil@isNotEmpty(rto_loan)'>
+					, rto_loan = #{rto_loan, jdbcType=NUMERIC}
+					</if>
+					<if test='@com.koscom.util.MybatisUtil@isNotEmpty(year_term)'>
+					, year_term = #{year_term, jdbcType=NUMERIC}
+					</if>
+	   			</when>
+	   			<otherwise>
+	   			, amt_approval = ''
+	   			, ymd_approval = ''
+	   			</otherwise>
+	   		</choose>
+		 WHERE no_apply = #{no_apply}
+	</update>
+	
+	<select id="listApplyByPrepare" parameterType="java.lang.String" resultType="com.koscom.apply.model.ApplyVO">
+		/* com.koscom.apply.dao.ApplyMapper.listApplyByPrepare : */
+		SELECT
+			    no_apply
+			  , no_prepare
+			  , ymd_apply
+			  , cd_goods
+			  , cd_fc
+			  , amt_approval
+			  , amt_apply
+			  , ymd_approval
+			  , ymd_lst_comp
+			  , cd_apply_doc_box
+			  , memo_from_apply
+			  , TO_CHAR(dt_lst, 'yyyyMMdd') AS ymd_lst
+			  , TO_CHAR(dt_lst, 'hh24:mi')AS his_lst
+			, year_term
+			, rto_loan
+		  FROM apply_info
+		 WHERE no_prepare = #{no_prepare}
+		   AND cd_apply_doc_box <![CDATA[<]]> 99
+		   AND cd_apply_doc_box <![CDATA[>]]> 0
+	  ORDER BY dt_frt
+	</select>
+	
+	<update id="modifyApplyMemo" parameterType="com.koscom.domain.ApplyInfo">
+		/* com.koscom.apply.dao.ApplyMapper.modifyApplyMemo : */
+		UPDATE apply_info
+		   SET   memo_to_apply = #{memo_to_apply, jdbcType=VARCHAR}
+		       , memo_from_apply = #{memo_from_apply, jdbcType=VARCHAR}
+		   	   , id_lst = #{id_lst, jdbcType=VARCHAR}
+			   , dt_lst = SYSDATE
+		 WHERE no_apply = #{no_apply}
+	</update>
+	
+	<update id="delApplyInfo" parameterType="com.koscom.domain.ApplyInfo">
+ 		/* com.koscom.apply.dao.ApplyMapper.delApplyInfo : */
+    	UPDATE apply_Info
+     		SET cd_apply_doc_box = '99'
+		   	 ,  id_lst = #{id_lst, jdbcType=VARCHAR}
+			 ,  dt_lst = SYSDATE
+     	 WHERE no_apply = #{no_apply}
+     </update>
+     
+     <insert id="insertApply">
+		/* com.koscom.apply.dao.ApplyMapper.insertApply : */
+<!-- 		<selectKey keyProperty="no_apply" resultType="string" order="BEFORE">
+			(SELECT TO_CHAR(SYSDATE,'yyyyMMdd')||LPAD(NVL(MAX(SUBSTR(no_apply,9,10)),0)+1,7,'0') FROM apply_info)
+		</selectKey> -->
+		<selectKey keyProperty="no_apply" resultType="string" order="BEFORE">
+			(SELECT TO_CHAR(SYSDATE,'yyyyMMdd')||LPAD(NVL(APPLY_SEQUENCE.NEXTVAL,0),7,'0') FROM DUAL)
+		</selectKey>
+
+		INSERT INTO apply_info
+			(	  no_apply
+				, no_prepare
+				, no_person
+				, no_agency_person
+				, cd_apply_doc_box
+				, cd_fc
+				, cd_goods
+				, amt_apply
+				, memo_to_apply
+				, etc_apply_path
+				, cd_collect_path
+				, cd_contact_path
+				, cd_collect_method
+				, etc_memo
+				, nm_agency
+				, nm_ceo_agency
+				, url_homepage_agency
+				, nm_writer
+				, year_term
+				, rto_loan
+				, no_bunch
+				, id_frt
+				, dt_frt
+				, id_lst
+				, dt_lst
+			) VALUES (
+				  #{no_apply}
+				, #{no_prepare, jdbcType=VARCHAR}
+				, #{no_person, jdbcType=VARCHAR}
+				, #{no_agency_person, jdbcType=VARCHAR}
+				, #{cd_apply_doc_box, jdbcType=VARCHAR}
+				, #{cd_fc, jdbcType=VARCHAR}
+				, #{cd_goods, jdbcType=VARCHAR}
+				, #{amt_apply, jdbcType=VARCHAR}
+				, #{memo_to_apply, jdbcType=VARCHAR}
+				, #{etc_apply_path, jdbcType=VARCHAR}
+				, #{cd_collect_path, jdbcType=VARCHAR}
+				, #{cd_contact_path, jdbcType=VARCHAR}
+				, #{cd_collect_method, jdbcType=VARCHAR}
+				, #{etc_memo, jdbcType=VARCHAR}
+				, #{nm_agency, jdbcType=VARCHAR}
+				, #{nm_ceo_agency, jdbcType=VARCHAR}
+				, #{url_homepage_agency, jdbcType=VARCHAR}
+				, #{nm_writer, jdbcType=VARCHAR}
+				, #{year_term, jdbcType=VARCHAR}
+				, #{rto_loan, jdbcType=VARCHAR}
+				, #{no_bunch, jdbcType=VARCHAR}
+				, #{id_frt, jdbcType=VARCHAR}
+				, SYSDATE
+				, #{id_frt, jdbcType=VARCHAR}
+				, SYSDATE
+			)
+	</insert>
+	
+	<!-- 대출신청진행상황 조회 : apply_doc_box : 50 -->
+	<select id="listLoanProgSts"  parameterType="com.koscom.apply.model.ApplyForm" resultType="com.koscom.apply.model.ApplyVO">
+		/* com.koscom.apply.dao.ApplyMapper.listLoanProgSts*/
+		SELECT A.*
+		  FROM (
+			    SELECT AI.NO_APPLY
+			    	 , AI.NO_PREPARE
+				     , AI.NO_PERSON
+				     , AI.CD_APPLY_DOC_BOX
+				     , AI.CD_APPLY_COMP
+    			     , AI.CD_GOODS
+				     , AI.CD_ADVERTISEMENT
+				     , AI.YMD_APPLY
+				     , AI.AMT_APPLY
+				     , AI.ID_APPLY
+				     , AI.ETC_APPLY_PATH
+				     , AI.AMT_APPROVAL
+				     , AI.YMD_APPROVAL
+				     , AI.YMD_LST_COMP
+				     , AI.HIS_LST_COMP
+				     , AI.NM_WRITER
+				     , AI.CD_COLLECT_PATH
+				     , AI.CD_CONTACT_PATH
+				     , AI.CD_COLLECT_METHOD
+				     , AI.ETC_MEMO
+				     , AI.NM_AGENCY
+				     , AI.NM_CEO_AGENCY
+				     , AI.URL_HOMEPAGE_AGENCY
+				     , AI.MEMO_TO_APPLY
+				     , AI.MEMO_FROM_APPLY
+				     , AI.NO_AGENCY_PERSON
+				     , AI.DT_AGENCY_FRT
+				     , AI.YMD_EARLY_REPAYMENT
+				     , AI.YEAR_TERM
+				     , AI.RTO_LOAN
+				     , AI.CD_FC
+				     , AI.NO_BUNCH
+					 , AI.ID_FRT
+					 , TO_CHAR(AI.DT_FRT, 'YYYYMMDD') AS DT_FRT
+ 					 , AI.ID_LST
+					 , TO_CHAR(AI.DT_LST, 'YYYYMMDD') AS DT_LST
+				     , ROW_NUMBER() OVER (PARTITION BY AI.NO_PERSON ORDER BY NVL(AI.DT_FRT, AI.DT_LST) DESC) RN
+			      FROM APPLY_INFO AI
+			     WHERE AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			     <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_apply_doc_box)'>
+					AND AI.cd_apply_doc_box = #{cd_apply_doc_box, jdbcType=VARCHAR}
+				</if>
+		    ) A
+	</select>
+</mapper>

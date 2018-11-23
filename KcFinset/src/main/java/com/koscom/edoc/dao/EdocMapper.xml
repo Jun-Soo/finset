@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.edoc.dao.EdocMapper">
+<select id="getEdocInfo" parameterType="com.koscom.edoc.model.EdocInfo" resultType="com.koscom.edoc.model.EdocInfo">
+     SELECT * FROM EDOC_INFO WHERE seq_edoc = #{seq_edoc}
+</select>
+<select id="listEdocInfo" parameterType="com.koscom.edoc.model.EdocInfo" resultType="com.koscom.edoc.model.EdocInfo">
+	SELECT * FROM EDOC_INFO
+	WHERE cd_fc = #{cd_fc}
+    and no_edoc = #{no_edoc}
+	ORDER BY seq_order
+</select>
+
+<select id="getEdocDetail" parameterType="com.koscom.edoc.model.EdocForm" resultType="com.koscom.edoc.model.EdocVO">
+	/* com.koscom.edoc.dao.EdocMapper.getEdocDetail : */
+     SELECT * FROM EDOC_INFO
+     <where>
+ 		1=1
+ 		<if test='@com.koscom.util.MybatisUtil@isNotEmpty(seq_edoc)'>
+ 			AND seq_edoc = #{seq_edoc}
+ 		</if>
+ 		<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+ 			AND cd_fc = #{cd_fc}
+ 		</if>
+ 		<if test='@com.koscom.util.MybatisUtil@isNotEmpty(no_edoc)'>
+ 			AND no_edoc = #{no_edoc}
+ 		</if>
+ 		<if test='@com.koscom.util.MybatisUtil@isNotEmpty(nm_edoc)'>
+ 			AND nm_edoc = #{nm_edoc}
+ 		</if>
+ 		<if test='@com.koscom.util.MybatisUtil@isNotEmpty(type_txrx)'>
+ 			AND type_txrx = #{type_txrx}
+ 		</if>
+ 		<if test='@com.koscom.util.MybatisUtil@isNotEmpty(txt_detail)'>
+ 			AND no_edoc like '%' || #{txt_detail} || '%'
+ 		</if>
+ 		
+ 	</where>
+        AND YN_USE = 'Y'
+ 	ORDER BY cd_fc, no_edoc, type_txrx, seq_order
+</select>
+
+<select id="listEdoc" parameterType="com.koscom.edoc.model.EdocForm" resultType="com.koscom.edoc.model.EdocVO">
+	SELECT * FROM EDOC_INFO
+	<where>
+		1=1
+		<if test='@com.koscom.util.MybatisUtil@isNotEmpty(seq_edoc)'>
+			AND seq_edoc = #{seq_edoc}
+		</if>
+		<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+			AND cd_fc = #{cd_fc}
+		</if>
+		<if test='@com.koscom.util.MybatisUtil@isNotEmpty(no_edoc)'>
+			AND no_edoc = #{no_edoc}
+		</if>
+		<if test='@com.koscom.util.MybatisUtil@isNotEmpty(nm_edoc)'>
+			AND nm_edoc = #{nm_edoc}
+		</if>
+		<if test='@com.koscom.util.MybatisUtil@isNotEmpty(type_txrx)'>
+			AND type_txrx = #{type_txrx}
+		</if>
+	</where>
+	ORDER BY cd_fc, no_edoc, type_txrx, seq_order
+</select>
+<select id="listNmEdoc" parameterType="com.koscom.edoc.model.EdocForm" resultType="String">
+	SELECT DISTINCT no_edoc FROM EDOC_INFO
+	<where>
+		1=1
+		<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+			AND cd_fc = #{cd_fc}
+		</if>
+	</where>
+<!-- 	ORDER BY cd_fc, no_edoc, type_txrx, seq_order -->
+</select>
+<update id="procEdocInfo" parameterType="com.koscom.edoc.model.EdocInfo">
+	MERGE INTO EDOC_INFO
+	   USING DUAL
+	   ON (seq_edoc = #{seq_edoc})
+	   WHEN MATCHED THEN
+	      UPDATE
+	         SET
+		         cd_fc = #{cd_fc, jdbcType=VARCHAR}
+		        , no_edoc = #{no_edoc, jdbcType=VARCHAR}
+		        , nm_edoc = #{nm_edoc, jdbcType=VARCHAR}
+				, etc = #{etc, jdbcType=VARCHAR}
+				, seq_order = #{seq_order, jdbcType=INTEGER}
+				, yn_use = #{yn_use, jdbcType=VARCHAR}
+				, type_txrx = #{type_txrx, jdbcType=VARCHAR}
+				, type_flex = #{type_flex, jdbcType=VARCHAR}
+				, id_lst = #{id_lst, jdbcType=VARCHAR}
+				, dt_lst = SYSDATE
+				, url_edoc = #{url_edoc, jdbcType=VARCHAR}
+		WHEN NOT MATCHED THEN
+		  INSERT (seq_edoc, cd_fc, no_edoc, nm_edoc, etc, seq_order, yn_use,
+		  			type_txrx,type_flex, url_edoc, id_frt, dt_frt, id_lst, dt_lst)
+			VALUES(
+					 SEQ_EDOC_INFO.NEXTVAL
+					, #{cd_fc, jdbcType=VARCHAR}
+				    , #{no_edoc, jdbcType=VARCHAR}
+				    , #{nm_edoc, jdbcType=VARCHAR}
+				    , #{etc, jdbcType=VARCHAR}
+				    , #{seq_order, jdbcType=INTEGER}
+				    , #{yn_use, jdbcType=VARCHAR}
+					, #{type_txrx, jdbcType=VARCHAR}
+					, #{type_flex, jdbcType=VARCHAR}
+				    , #{url_edoc, jdbcType=VARCHAR}
+				    , #{id_frt, jdbcType=VARCHAR}
+				    , SYSDATE
+				    , #{id_frt, jdbcType=VARCHAR}
+				    , SYSDATE
+				)
+</update>
+<delete id="delEdocInfo" parameterType="com.koscom.edoc.model.EdocInfo">
+	DELETE from EDOC_INFO
+	WHERE seq_edoc  = #{seq_edoc}
+</delete>
+<select id="getMaxEdocInfo" parameterType="com.koscom.edoc.model.EdocInfo" resultType="com.koscom.edoc.model.EdocVO">
+	SELECT seq_edoc, cd_fc, no_edoc
+			, code_group
+			, MAX(seq_order) AS seq_order
+			, MAX(code_value) AS code_value
+	FROM EDOC_INFO
+	WHERE code_group=#{code_group}
+	GROUP BY code_group
+</select>
+<update id="modifyListSeq" parameterType="com.koscom.edoc.model.EdocInfo">
+	UPDATE  EDOC_INFO 
+	SET     seq_order = #{seq_order}
+	      , id_lst = #{id_frt, jdbcType=VARCHAR}
+	      , dt_lst = SYSDATE
+	WHERE   code_group = #{code_group}
+	AND     code_value = #{code_value}
+</update>
+<!-- JSTL -->
+<select id="getNmEdoc" parameterType="com.koscom.edoc.model.EdocForm" resultType="String">
+	SELECT DISTINCT nm_Edoc FROM EDOC_info
+	where cd_fc = #{cd_fc}
+	AND no_edoc = #{no_edoc}
+</select>
+
+<select id="getEdocCnt" parameterType="com.koscom.edoc.model.EdocVO" resultType="int">
+     SELECT count(*) FROM EDOC_info
+     WHERE CD_FC = #{cd_fc}
+     AND NO_EDOC = #{no_edoc}
+     AND TYPE_TXRX = #{type_txrx}
+</select>
+</mapper>

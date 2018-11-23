@@ -27,6 +27,13 @@ public interface LoanManager {
 	ReturnClass modifyLoanInfo(TxFcTransmitVO txFcTransmitVO);
 	
 	/**
+	 * 금융사신청번호 update
+	 * @param txFcTransmitVO
+	 * @return
+	 */
+	ReturnClass modifyLoanForNoFcReq(TxFcTransmitVO txFcTransmitVO);
+	
+	/**
 	 * 즐겨찾기 insert
 	 * @param CooconGoodsFavoriteInfo
 	 * @return ReturnClass

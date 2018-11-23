@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.prepare.dao.PrepareMapper">
+	<select id="getPrepare" parameterType="java.lang.String" resultType="com.koscom.prepare.model.PrepareVO">
+		SELECT
+            	*
+          FROM prepare_info
+         WHERE no_prepare = #{no_prepare, jdbcType=VARCHAR}
+	</select>
+
+	<!-- 신규 사전접수 생성 -->
+	<insert id="createPrepare" parameterType="com.koscom.domain.PrepareInfo">
+<!-- 		<selectKey keyProperty="no_prepare" resultType="string" order="BEFORE">
+			(SELECT LPAD(NVL(MAX(no_prepare),0)+1,12,'0') FROM prepare_info)
+		</selectKey> -->
+		<selectKey keyProperty="no_prepare" resultType="string" order="BEFORE">
+			(SELECT LPAD(NVL(PREPARE_SEQUENCE.NEXTVAL,0),12,'0') FROM DUAL)
+		</selectKey>
+
+		INSERT INTO prepare_info
+			(	  no_prepare
+				, no_person
+				, yn_overlap_chk
+				, id_agency
+				, cd_advertisement
+				, cd_prepare_doc_box
+				, cd_goods_type
+				, id_prepare
+				, amt_apply
+				, etc_prepare_path
+				, cd_collect_path
+				, cd_contact_path
+				, cd_collect_method
+				, etc_memo
+				, no_agency
+				, nm_agency
+				, nm_ceo_agency
+				, url_homepage_agency
+				, nm_writer
+				, memo_from_agency
+				, cd_used_apply
+				, c6_keyword
+				, yn_exist_person
+				, ip_prepare
+				, cd_goods_gubun
+				, id_frt
+				, dt_frt
+				, id_lst
+				, dt_lst
+			) VALUES (
+				  #{no_prepare}
+				, #{no_person, jdbcType=VARCHAR}
+				, #{yn_overlap_chk, jdbcType=VARCHAR}
+				, #{id_agency, jdbcType=VARCHAR}
+				, #{cd_advertisement, jdbcType=VARCHAR}
+				, #{cd_prepare_doc_box, jdbcType=VARCHAR}
+				, #{cd_goods_type, jdbcType=VARCHAR}
+				, #{id_prepare, jdbcType=VARCHAR}
+				, #{amt_apply, jdbcType=VARCHAR}
+				, #{etc_prepare_path, jdbcType=VARCHAR}
+				, #{cd_collect_path, jdbcType=VARCHAR}
+				, #{cd_contact_path, jdbcType=VARCHAR}
+				, #{cd_collect_method, jdbcType=VARCHAR}
+				, #{etc_memo, jdbcType=VARCHAR}
+				, #{no_agency, jdbcType=VARCHAR}
+				, #{nm_agency, jdbcType=VARCHAR}
+				, #{nm_ceo_agency, jdbcType=VARCHAR}
+				, #{url_homepage_agency, jdbcType=VARCHAR}
+				, #{nm_writer, jdbcType=VARCHAR}
+				, #{memo_from_agency, jdbcType=VARCHAR}
+				, #{cd_used_apply, jdbcType=VARCHAR}
+				, #{c6_keyword, jdbcType=VARCHAR}
+				, #{yn_exist_person, jdbcType=VARCHAR}
+				, #{ip_prepare, jdbcType=VARCHAR}
+				, #{cd_goods_gubun, jdbcType=VARCHAR}
+				, #{id_frt, jdbcType=VARCHAR}
+				, SYSDATE
+				, #{id_frt, jdbcType=VARCHAR}
+				, SYSDATE
+			)
+	</insert>
+	<!-- 임시 사전접수 삭제 -->
+	<delete id="deletePrepare" parameterType="com.koscom.domain.PrepareInfo">
+        /* com.koscom.prepare.dao.PrepareMapper.deletePrepare */
+		DELETE prepare_info
+		 WHERE no_prepare IN (SELECT no_prepare
+		                       FROM TX_FC_RECEIVE
+		                      WHERE NO_BUNCH = #{no_bunch, jdbcType=VARCHAR} /*NO_BUNCH               */
+		                     )
+	</delete>
+	
+	<update id="modifyPrepareDoc" parameterType="com.koscom.domain.PrepareInfo">
+		UPDATE prepare_info
+		   SET	cd_prepare_doc_box = #{cd_prepare_doc_box}
+	        <choose>
+				<when test='"60".equals(cd_prepare_doc_box)'>
+			      , cd_reject_cause = #{cd_reject_cause, jdbcType=VARCHAR}
+			      , cd_prepare_class = ''
+				</when>
+				<when test='"50".equals(cd_prepare_doc_box)'>
+			      , cd_reject_cause = ''
+			      , cd_prepare_class = #{cd_prepare_class, jdbcType=VARCHAR}
+				</when>
+				<when test='"20".equals(cd_prepare_doc_box)'>
+			      , cd_reject_cause = ''
+			      , cd_prepare_class = #{cd_prepare_class, jdbcType=VARCHAR}
+				</when>
+				<otherwise>
+			      , cd_reject_cause = ''
+			      , cd_prepare_class = ''
+				</otherwise>
+			</choose>
+		      , id_lst = #{id_lst, jdbcType=VARCHAR}
+		      , dt_lst = SYSDATE
+		 WHERE no_prepare = #{no_prepare}
+	</update>
+	
+	<update id="updatePrepareCnt" parameterType="java.lang.String">
+		UPDATE prepare_info PI
+		  SET   cnt_apply = (SELECT count(*) FROM apply_info AI WHERE AI.no_prepare = PI.no_prepare AND AI.cd_apply_doc_box != '99')
+			  , cnt_approval = (SELECT count(*) FROM apply_info AI WHERE AI.no_prepare = PI.no_prepare AND AI.cd_apply_doc_box='50')
+			  , cnt_reject = (SELECT count(*) FROM apply_info AI WHERE AI.no_prepare = PI.no_prepare AND AI.cd_apply_doc_box='60')
+			  , amt_approval = (SELECT NVL(SUM(amt_approval),0) FROM apply_info AI WHERE AI.no_prepare = PI.no_prepare AND AI.cd_apply_doc_box='50')
+		 WHERE no_prepare = #{no_prepare}
+	</update>
+	
+	<update id="updateCounselMemo" parameterType="com.koscom.domain.PrepareInfo">
+		UPDATE prepare_info PI
+		   SET memo_from_counsel = #{memo_from_counsel, jdbcType=VARCHAR}
+		   	  , id_lst = #{id_lst, jdbcType=VARCHAR}
+		      , dt_lst = SYSDATE
+		 WHERE no_prepare = #{no_prepare}
+	</update>
+</mapper>

@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.koscom.counsel.dao.CounselMapper">
+	<select id="listCounselInfoPg" parameterType="com.koscom.counsel.model.CounselForm" resultType="com.koscom.counsel.model.CounselVO">
+	    SELECT	 /*com.koscom.counsel.dao.CounselMapper.listCounselInfoPg*/
+				 T.RNUM
+	    		,T.DT_APPLY
+	    		,T.DT_COUNSEL
+	    		,T.NO_PERSON
+	    		,T.NM_PERSON
+	    		,T.AGE
+	    		,T.CD_COUNSEL_STATUS
+	    		,T.NM_EMP
+	    		,T.YN_WEDDING
+	    		,T.CD_FAMILY_CNT
+	    		,T.CD_JOB
+	    		,T.CD_LIVING
+	    		,T.AMT_MM_INCOME
+	    		,T.AMT_MM_EXPENSE
+	    		,T.LIST_CARD_USE
+	    		,T.LIST_OVERDUE_INFO
+	    		,T.LIST_OVERDUE_ETC
+	    		,T.COUNSEL_CONTENTS
+	    		,T.ETC_CONTENTS
+	    		,T.DT_PRE_COUNSEL
+	    		,T.ID_EMP_COUNSEL
+	    		,T.COUNSEL_SEQ
+	    FROM	(
+				SELECT   ROW_NUMBER() OVER(ORDER BY A.DT_APPLY DESC, A.CD_COUNSEL_STATUS) AS RNUM
+				        ,A.DT_APPLY                                                             /*상담신청일시*/
+				        ,A.DT_COUNSEL                                                           /*상담완료일시*/
+				        ,A.NO_PERSON                                                            /*회원관리번호*/
+				        ,B.NM_PERSON                                                            /*회원명*/
+				        ,FLOOR(MONTHS_BETWEEN(SYSDATE,TO_DATE(SUBSTR(B.BGN,1,8),'YYYYMMDD'))/12) AS AGE /*나이*/
+				        ,A.CD_COUNSEL_STATUS                                                    /*상담상태코드(1:상담신청 접수,2:상담 준비중,3:상담완료)*/
+				        ,C.NM_EMP                                                               /*상담직원명*/
+				        ,A.YN_WEDDING                                                           /*결혼여부(N:미혼,Y:기혼)*/
+				        ,A.CD_FAMILY_CNT                                                        /*부양가족수코드(0:없음,1:1명,2:2명,3:3명이상)*/
+				        ,A.CD_JOB                                                               /*직업코드(10:일반기업,20:전문직,30:공공기관,40:교육기관,50:의료기관,60:자영업)*/
+				        ,A.CD_LIVING                                                            /*주거형태코드(10:자가,20:임차,30:기숙사,40:무상주거,90:기타)*/
+				        ,A.AMT_MM_INCOME                                                        /*월소득금액*/
+				        ,A.AMT_MM_EXPENSE                                                       /*월지출금액*/
+				        ,A.LIST_CARD_USE                                                        /*카드이용내역*/
+				        ,A.LIST_OVERDUE_INFO                                                    /*연체정보내역*/
+				        ,A.LIST_OVERDUE_ETC                                                     /*기타연체내역*/
+				        ,A.COUNSEL_CONTENTS                                                     /*상담내용*/
+				        ,A.ETC_CONTENTS                                                         /*기타내용*/
+				        ,A.DT_PRE_COUNSEL                                                       /*상담준비일시*/
+				        ,A.ID_EMP_COUNSEL                                                       /*상담직원아이디*/
+				        ,A.COUNSEL_SEQ                                                          /*상담순번*/
+				FROM    PERSON_COUNSEL_LIST A
+				        INNER JOIN PERSON_INFO B
+				        ON  (
+				            B.NO_PERSON =   A.NO_PERSON
+				        )
+				        LEFT OUTER JOIN WORKER_INFO C
+				        ON  (
+				            C.ID_EMP    =   A.ID_EMP_COUNSEL
+				        )
+				WHERE   1=1
+         <include refid="listCounselInfoPg_WHERE"/>
+        ) T
+        WHERE T.RNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+        AND   T.RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+	</select>
+
+    <select id="listCounselCount"  parameterType="com.koscom.person.model.PersonForm" resultType="int">
+		SELECT   /*com.koscom.counsel.dao.CounselMapper.listCounselCount*/
+				 COUNT(*) AS recordCount
+		FROM    PERSON_COUNSEL_LIST A
+		        INNER JOIN PERSON_INFO B
+		        ON  (
+		            B.NO_PERSON =   A.NO_PERSON
+		        )
+		        LEFT OUTER JOIN WORKER_INFO C
+		        ON  (
+		            C.ID_EMP    =   A.ID_EMP_COUNSEL
+		        )
+		WHERE   1=1
+         <include refid="listCounselInfoPg_WHERE"/>
+    </select>
+	
+
+    <sql id="listCounselInfoPg_WHERE">
+        <!-- 상세검색 -->
+        <if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_detail)">
+            <if test='"hp".equals(sel_detail)'>
+			AND B.HP LIKE '%'||#{txt_detail}||'%'
+			</if>
+			<if test='"nm_person".equals(sel_detail)'>
+			AND B.NM_PERSON LIKE '%'||#{txt_detail}||'%'
+			</if>
+			<if test='"bgn".equals(sel_detail)'>
+			AND B.BGN LIKE '%'||#{txt_detail}||'%'
+			</if>
+        </if>
+
+        <choose>
+            <when test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_dt_kind)">
+             <choose>
+                 <when test="@com.koscom.util.MybatisUtil@contains('DT_',sel_dt_kind)">
+                     <if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
+                     	<if test='"DT_APPLY".equals(sel_dt_kind)'>
+                         	AND TO_CHAR(A.DT_APPLY,'yyyyMMdd') <![CDATA[>=]]> #{txt_dt_from}
+                         </if>
+                     	<if test='"DT_PRE_COUNSEL".equals(sel_dt_kind)'>
+                         	AND TO_CHAR(A.DT_PRE_COUNSEL,'yyyyMMdd') <![CDATA[>=]]> #{txt_dt_from}
+                         </if>
+                     	<if test='"DT_COUNSEL".equals(sel_dt_kind)'>
+                         	AND TO_CHAR(A.DT_COUNSEL,'yyyyMMdd') <![CDATA[>=]]> #{txt_dt_from}
+                         </if>
+                     </if>
+                     <if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_to)">
+                     	<if test='"DT_APPLY".equals(sel_dt_kind)'>
+                         	AND TO_CHAR(A.DT_APPLY,'yyyyMMdd') <![CDATA[<=]]> #{txt_dt_to}
+                         </if>
+                     	<if test='"DT_PRE_COUNSEL".equals(sel_dt_kind)'>
+                         	AND TO_CHAR(A.DT_PRE_COUNSEL,'yyyyMMdd') <![CDATA[<=]]> #{txt_dt_to}
+                         </if>
+                     	<if test='"DT_COUNSEL".equals(sel_dt_kind)'>
+                         	AND TO_CHAR(A.DT_COUNSEL,'yyyyMMdd') <![CDATA[<=]]> #{txt_dt_to}
+                         </if>
+                     </if>
+                 </when>
+                 <otherwise>
+                     <if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
+                 		AND TO_CHAR(A.DT_APPLY,'yyyyMMdd') <![CDATA[>=]]> #{txt_dt_from}
+                     </if>
+                     <if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_to)">
+                 		AND TO_CHAR(A.DT_APPLY,'yyyyMMdd') <![CDATA[<=]]> #{txt_dt_to}
+                     </if>
+                 </otherwise>
+             </choose>
+         </when>
+         <otherwise>
+             <if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
+                 	AND TO_CHAR(A.DT_APPLY,'yyyyMMdd') <![CDATA[>=]]> #{txt_dt_from}
+             </if>
+             <if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_to)">
+                 	AND TO_CHAR(A.DT_APPLY,'yyyyMMdd') <![CDATA[<=]]> #{txt_dt_to}
+             </if>
+         </otherwise>
+        </choose>
+    </sql>
+	
+	<!-- 상담정보조회 -->
+	 <select id="getCounselInfo" parameterType="com.koscom.counsel.model.CounselVO" resultType="com.koscom.counsel.model.CounselVO">
+         SELECT  /*com.koscom.counsel.dao.CounselMapper.getCounselInfo*/
+                 A.DT_APPLY                                                             /*상담신청일시*/
+                ,A.DT_COUNSEL                                                           /*상담완료일시*/
+                ,A.NO_PERSON                                                            /*회원관리번호*/
+                ,B.NM_PERSON                                                            /*회원명*/
+                ,FLOOR(MONTHS_BETWEEN(SYSDATE,TO_DATE(SUBSTR(B.BGN,1,8),'YYYYMMDD'))/12) AS AGE /*나이*/
+                ,CASE
+                    WHEN SUBSTR(B.BGN,9,1) = '1' THEN '남'
+                    WHEN SUBSTR(B.BGN,9,1) = '2' THEN '여'
+                    ELSE ''
+                 END                        AS CD_GENDER                                /*성별*/
+                ,A.CD_COUNSEL_STATUS                                                    /*상담상태코드(1:상담신청 접수,2:상담 준비중,3:상담완료)*/
+                ,C.NM_EMP                                                               /*상담직원명*/
+                ,A.YN_WEDDING                                                           /*결혼여부(N:미혼,Y:기혼)*/
+                ,A.CD_FAMILY_CNT                                                        /*부양가족수코드(0:없음,1:1명,2:2명,3:3명이상)*/
+                ,A.CD_JOB                                                               /*직업코드(10:일반기업,20:전문직,30:공공기관,40:교육기관,50:의료기관,60:자영업)*/
+                ,A.CD_LIVING                                                            /*주거형태코드(10:자가,20:임차,30:기숙사,40:무상주거,90:기타)*/
+                ,A.AMT_MM_INCOME                                                        /*월소득금액*/
+                ,A.AMT_MM_EXPENSE                                                       /*월지출금액*/
+                ,A.LIST_CARD_USE                                                        /*카드이용내역*/
+                ,A.LIST_OVERDUE_INFO                                                    /*연체정보내역*/
+                ,A.LIST_OVERDUE_ETC                                                     /*기타연체내역*/
+                ,A.COUNSEL_CONTENTS                                                     /*상담내용*/
+                ,A.ETC_CONTENTS                                                         /*기타내용*/
+                ,A.DT_PRE_COUNSEL                                                       /*상담준비일시*/
+                ,A.ID_EMP_COUNSEL                                                       /*상담직원아이디*/
+                ,A.COUNSEL_SEQ                                                          /*상담순번*/
+        FROM    PERSON_COUNSEL_LIST A
+                INNER JOIN PERSON_INFO B
+                ON  (
+                    B.NO_PERSON =   A.NO_PERSON
+                )
+                LEFT OUTER JOIN WORKER_INFO C
+                ON  (
+                    C.ID_EMP    =   A.ID_EMP_COUNSEL
+                )
+        WHERE   A.NO_PERSON     =   #{no_person, jdbcType=VARCHAR}
+        AND     A.COUNSEL_SEQ   =   #{counsel_seq}
+     </select>
+     
+	
+	<!-- 신용정보조회 -->
+	 <select id="getCreditList" parameterType="com.koscom.counsel.model.CounselVO" resultType="com.koscom.counsel.model.CounselVO">
+	 	SELECT   /*com.koscom.counsel.dao.CounselMapper.getCreditList*/
+                 A.NO_PERSON
+				,A.REQ_YYYYMM
+		        ,A.GRADE_CREDIT
+		        ,A.RATING_CREDIT
+		        ,A.PERCENTAGE
+		        ,A.RANK
+		        ,A.CD_SCORE
+		FROM    KCB_CREDIT_LIST A
+		WHERE   A.NO_PERSON =   #{no_person, jdbcType=VARCHAR}
+		ORDER BY A.REQ_YYYYMM
+     </select>
+     
+	
+	<!-- 부채정보조회 -->
+	 <select id="getDebtList" parameterType="com.koscom.counsel.model.CounselVO" resultType="com.koscom.counsel.model.CounselVO">
+	 	SELECT   /*com.koscom.counsel.dao.CounselMapper.getDebtList*/
+                 A.NO_PERSON
+		        ,A.YMD_LOAN
+		        ,CASE
+		             WHEN A.YN_CREDIT = 'Y' AND A.CD_TYPE_DEAL IN ('1','2','3') THEN '신용'
+		             WHEN A.YN_LOAN   = 'Y' AND A.CD_TYPE_DEAL IN ('1','2','3') THEN '담보'
+		             WHEN A.CD_TYPE_DEAL IN ('4','5','6') THEN '카드론'
+		             ELSE ''
+		         END ||
+		         CASE
+		             WHEN A.CD_TYPE_DEAL IN ('1','4') THEN '(분할)'
+		             WHEN A.CD_TYPE_DEAL IN ('2','5') THEN '(일시)'
+		             WHEN A.CD_TYPE_DEAL IN ('3','6') THEN '(한도)'
+		             WHEN A.CD_TYPE_DEAL IN ('A') THEN '리스'
+		             ELSE ''
+		         END                                                        AS DEBT_TYPE
+		        ,A.NM_BIZ
+		        ,FN_AMT_VIEW(A.AMT_CONTRACT)                                AS AMT_CONTRACT
+		        ,FN_AMT_VIEW(A.AMT_REMAIN)                                  AS AMT_REMAIN
+		        ,FN_AMT_VIEW(B.AMT_REPAY)                                   AS AMT_REPAY
+		        ,TRIM(TO_CHAR(FN_ETM_INTEREST(A.NO_PERSON,A.NO_MANAGE_INFO),'990.99')) AS INTEREST
+		        ,B.NM_ACCOUNT
+		FROM    DEBT_PERSONAL_INFO A
+		        INNER JOIN DEBT_PERSONAL_REPAY_LIST B
+		        ON (
+		            A.NO_PERSON = B.NO_PERSON
+		        AND A.NO_MANAGE_INFO = B.NO_MANAGE_INFO
+		        AND B.REQ_YYYYMM = SUBSTR(REPLACE(#{dt_apply, jdbcType=VARCHAR},'-',''),1,6)
+		        )
+		WHERE   A.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		AND (   A.YMD_CANCEL IS NULL
+		    OR  A.YMD_CANCEL >= REPLACE(#{dt_apply, jdbcType=VARCHAR},'-','')
+		    )
+		ORDER BY A.YMD_LOAN
+     </select>
+     
+	
+	<!-- 신용정보조회 -->
+	 <select id="getCounselHist" parameterType="com.koscom.counsel.model.CounselVO" resultType="com.koscom.counsel.model.CounselVO">
+	 	SELECT   /*com.koscom.counsel.dao.CounselMapper.getCounselHist*/
+                 A.DT_APPLY                                                             /*상담신청일시*/
+                ,A.DT_COUNSEL                                                           /*상담완료일시*/
+                ,A.NO_PERSON                                                            /*회원관리번호*/
+                ,A.CD_COUNSEL_STATUS                                                    /*상담상태코드(1:상담신청 접수,2:상담 준비중,3:상담완료)*/
+                ,C.NM_EMP                                                               /*상담직원명*/
+                ,A.ETC_CONTENTS                                                         /*기타내용*/
+                ,A.DT_PRE_COUNSEL                                                       /*상담준비일시*/
+                ,A.ID_EMP_COUNSEL                                                       /*상담직원아이디*/
+                ,A.COUNSEL_SEQ                                                          /*상담순번*/
+        FROM    PERSON_COUNSEL_LIST A
+                INNER JOIN PERSON_INFO B
+                ON  (
+                    B.NO_PERSON =   A.NO_PERSON
+                )
+                LEFT OUTER JOIN WORKER_INFO C
+                ON  (
+                    C.ID_EMP    =   A.ID_EMP_COUNSEL
+                )
+        WHERE   A.NO_PERSON     =   #{no_person, jdbcType=VARCHAR}
+        ORDER BY A.COUNSEL_SEQ
+     </select>
+     
+    
+	<!-- 상담처리중으로 상태변경 -->
+	<update id="saveCounselStatus"  parameterType="com.koscom.counsel.model.CounselVO">
+		UPDATE PERSON_COUNSEL_LIST
+		SET    CD_COUNSEL_STATUS = '2'
+			 , DT_PRE_COUNSEL = CASE WHEN DT_PRE_COUNSEL IS NULL THEN SYSDATE ELSE DT_PRE_COUNSEL END
+			 , ID_EMP_COUNSEL = #{id_emp_counsel, jdbcType=VARCHAR}
+			 , ID_LST = #{id_lst, jdbcType=VARCHAR}
+			 , DT_LST = SYSDATE
+		WHERE  NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		AND    COUNSEL_SEQ = #{counsel_seq}
+	</update>
+     
+    
+	<!-- 상담 내용 입력-->
+	<update id="saveCounselContents"  parameterType="com.koscom.counsel.model.CounselVO">
+		UPDATE PERSON_COUNSEL_LIST
+		SET    CD_COUNSEL_STATUS = #{cd_counsel_status, jdbcType=VARCHAR}
+			 , COUNSEL_CONTENTS = #{counsel_contents, jdbcType=VARCHAR}
+			 , DT_PRE_COUNSEL = CASE WHEN #{cd_counsel_status, jdbcType=VARCHAR} = '2' AND DT_PRE_COUNSEL IS NULL THEN SYSDATE ELSE DT_PRE_COUNSEL END
+			 , DT_COUNSEL = CASE WHEN #{cd_counsel_status, jdbcType=VARCHAR} = '3' AND DT_COUNSEL IS NULL THEN SYSDATE ELSE DT_COUNSEL END
+			 , ETC_CONTENTS = #{etc_contents, jdbcType=VARCHAR}
+			 , ID_EMP_COUNSEL = #{id_emp_counsel, jdbcType=VARCHAR}
+			 , ID_LST = #{id_lst, jdbcType=VARCHAR}
+			 , DT_LST = SYSDATE
+		WHERE  NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		AND    COUNSEL_SEQ = #{counsel_seq}
+	</update>
+	 
+	 
+	<update id="procCounselInfo"  parameterType="com.koscom.domain.CounselInfo">
+		MERGE INTO counsel_info
+		   USING DUAL
+		   ON (no_person = #{no_person} AND seq_counsel = #{seq_counsel, jdbcType=VARCHAR})
+		   WHEN MATCHED THEN
+		      UPDATE 
+		         SET  cd_counsel_class = #{cd_counsel_class, jdbcType=VARCHAR}
+					, yn_meet = #{yn_meet, jdbcType=VARCHAR}
+					, cd_contact = #{cd_contact, jdbcType=VARCHAR}
+					, cd_counsel_method = #{cd_counsel_method, jdbcType=VARCHAR}
+					, etc_counsel = #{etc_counsel, jdbcType=VARCHAR}
+					, id_lst = #{id_lst, jdbcType=VARCHAR}
+					, dt_lst = SYSDATE
+			WHEN NOT MATCHED THEN
+			  INSERT (
+						no_person
+					,	no_apply
+					,	seq_counsel
+					,	cd_counsel_class
+					,	yn_meet
+					,	cd_contact
+					, 	cd_counsel_method
+					,   etc_counsel
+					,	no_prepare
+					,	id_frt
+					,   dt_frt
+					, id_lst
+					, dt_lst
+					)
+			 VALUES
+					(
+						#{no_person}
+					,	#{no_apply, jdbcType=VARCHAR}
+					,	(SELECT NVL(MAX(seq_counsel),0)+1 FROM counsel_info WHERE no_person = #{no_person})
+					,	#{cd_counsel_class, jdbcType=VARCHAR}
+					,	#{yn_meet, jdbcType=VARCHAR}
+					,	#{cd_contact, jdbcType=VARCHAR}
+					, 	#{cd_counsel_method, jdbcType=VARCHAR}
+					, 	#{etc_counsel, jdbcType=VARCHAR}
+					,	#{no_prepare, jdbcType=VARCHAR}
+					,	#{id_frt, jdbcType=VARCHAR}
+					,   SYSDATE
+					,	#{id_frt, jdbcType=VARCHAR}
+					,   SYSDATE
+					)
+	</update>
+	<select id="counselInfoList" parameterType="com.koscom.counsel.model.CounselForm" resultType="com.koscom.counsel.model.CounselVO">
+		SELECT 
+					no_person
+				,	seq_counsel
+				,	no_prepare
+				,	no_apply
+				,	cd_counsel_class
+				,	yn_meet
+				,	cd_contact
+				, 	cd_counsel_method
+				,   etc_counsel
+				,	id_frt
+				,	dt_frt
+				,	id_lst
+				,	dt_lst 
+		FROM counsel_info 
+		WHERE no_person = #{no_person} 
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_apply)">
+				AND no_apply = #{no_apply}
+			</if>
+		ORDER BY seq_counsel DESC
+	</select>
+</mapper>

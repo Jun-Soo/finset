@@ -30,6 +30,13 @@ public interface LoanMapper {
 	int modifyLoanInfo(TxFcTransmitVO txFcTransmitVO);
 	
 	/**
+	 * 금융기관신청번호  update
+	 * @param txFcTransmitVO
+	 * @return
+	 */
+	int modifyLoanForNoFcReq(TxFcTransmitVO txFcTransmitVO);
+	
+	/**
 	 * 신청정보 상품 insert
 	 * @param goodsVO
 	 * @return

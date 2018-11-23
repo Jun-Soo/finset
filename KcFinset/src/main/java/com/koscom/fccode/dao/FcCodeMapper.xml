@@ -11,4 +11,103 @@
 		   AND B.YN_USE = 'Y' 
 		   AND ROWNUM = 1
 	</select>
+	
+	<!-- 해당 전문의 리스트를 가져온다. -->
+	<!-- 직업직위관련된 내용 협의 후 INNER JOIN으로 변경예정 -->
+	<select id="listFcEdocInfo" parameterType="com.koscom.fccode.model.FcCodeForm" resultType="com.koscom.finance.model.FcEdocForm">
+		SELECT FC.CODE_GROUP   AS FIELD_CD
+	         , FC.NM_CODE      AS FIELD_NM
+	         , FC.FIELD_LENGTH AS FIELD_LEN
+	         , FC.ITEM_TAG     AS FIELD_TAG
+	         , SD.TYPE_DATA    AS FIELD_TYPE
+	         , SD.NM_COL       AS FIELD_DB_NM
+	         , FC.TYPE_ATTR    AS FIELD_TYPE_ATTR
+			 , (CASE WHEN (SELECT COUNT(*) FROM FC_EDOC_REPEAT FCRT WHERE FCRT.CD_FC = FC.CD_FC AND FCRT.NO_EDOC = FC.NO_EDOC AND FCRT.TYPE_TXRX = FC.TYPE_TXRX AND FCRT.PARENT_CODE_GROUP = FC.CODE_GROUP GROUP BY FCRT.PARENT_CODE_GROUP ) > 0 THEN 'Y' ELSE 'N' END ) AS REPEAT_YN
+	      FROM FC_EDOC_CD FC INNER JOIN STD_CD SD ON FC.ITEM_TAG = SD.CODE_GROUP AND SD.CODE_VALUE = ' '
+		<where>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+				AND FC.cd_fc = #{cd_fc}
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(no_edoc)'>
+				AND FC.no_edoc = #{no_edoc}
+			</if>
+	<!-- 		<if test='@com.koscom.util.MybatisUtil@isNotEmpty(code_value)'> -->
+	<!-- 			AND FC.code_value = #{code_value} -->
+	<!-- 		</if> -->
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(type_txrx)'>
+				AND FC.type_txrx = #{type_txrx}
+			</if>
+			AND FC.code_value = ' '
+			AND FC.YN_USE = 'Y'
+			AND NOT EXISTS (SELECT FCR.REAL_CODE_GROUP FROM FC_EDOC_REPEAT FCR WHERE FC.CD_FC = FCR.CD_FC AND FC.NO_EDOC = FCR.NO_EDOC AND FC.TYPE_TXRX = FCR.TYPE_TXRX AND FC.CODE_GROUP = FCR.REAL_CODE_GROUP)
+		</where>
+		ORDER BY FC.SEQ_ORDER ASC
+	</select>
+	
+	<!-- 금웅사전문코드 <- 전문공통코드 값 매핑 결과 조회 -->
+	<select id="getFcCommCdToFcCd" parameterType="com.koscom.fccode.model.FcCodeForm" resultType="String">
+		SELECT CODE_VALUE
+		  FROM FC_EDOC_CD
+		 <where>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+				AND cd_fc = #{cd_fc}
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(no_edoc)'>
+				AND no_edoc = #{no_edoc}
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(item_tag)'>
+				AND item_tag = #{item_tag}
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(item_tag_value)'>
+				AND item_tag_value = #{item_tag_value}
+			</if>
+	    	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(type_txrx)'>
+				AND type_txrx = #{type_txrx}
+			</if>
+			AND yn_use = 'Y'
+		</where>
+	</select>
+
+	<!-- 금웅사전문코드 -> 전문공통코드 값 매핑 결과 조회 -->
+	<select id="getFcCdToFcCommCd" parameterType="com.koscom.fccode.model.FcCodeForm" resultType="String">
+		SELECT ITEM_TAG_VALUE
+		  FROM FC_EDOC_CD
+		 <where>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+				AND cd_fc = #{cd_fc}
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(no_edoc)'>
+				AND no_edoc = #{no_edoc}
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(item_tag)'>
+				AND item_tag = #{item_tag}
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(code_value)'>
+				AND code_value = #{code_value}
+			</if>
+	        <if test='@com.koscom.util.MybatisUtil@isNotEmpty(type_txrx)'>
+				AND type_txrx = #{type_txrx}
+			</if>
+			AND yn_use = 'Y'
+		</where>
+	</select>
+
+	<!-- 전문 반복 코드 list 조회 -->
+	<select id="listFcEdocRepeatInfo" parameterType="com.koscom.fccode.model.FcCodeForm" resultType="com.koscom.finance.model.FcEdocForm">
+		SELECT FC.CODE_GROUP       AS FIELD_CD
+	         , FC.NM_CODE          AS FIELD_NM
+	         , FC.FIELD_LENGTH     AS FIELD_LEN
+	         , FC.ITEM_TAG         AS FIELD_TAG
+	         , SD.TYPE_DATA        AS FIELD_TYPE
+	         , SD.NM_COL           AS FIELD_DB_NM
+	         , FC.TYPE_ATTR        AS FIELD_TYPE_ATTR
+	  FROM FC_EDOC_REPEAT FCR INNER JOIN STD_CD SD     ON SD.CODE_VALUE = ' '
+	                          INNER JOIN FC_EDOC_CD FC ON FCR.CD_FC = FC.CD_FC AND FCR.NO_EDOC = FC.NO_EDOC AND FCR.TYPE_TXRX = FC.TYPE_TXRX AND FCR.REAL_CODE_GROUP = FC.CODE_GROUP AND FC.CODE_VALUE = ' '
+		WHERE 1=1
+		  AND FC.item_tag = SD.code_group
+		  AND FCR.cd_fc = #{cd_fc}
+	      AND FCR.no_edoc = #{no_edoc}
+	      AND FCR.type_txrx = #{type_txrx}
+		ORDER BY FCR.SEQ_ORDER ASC
+	</select>
 </mapper>

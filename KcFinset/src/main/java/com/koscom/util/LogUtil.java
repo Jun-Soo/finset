@@ -17,6 +17,16 @@ public class LogUtil {
         logger.debug("====================================");
     }
     /**
+     * 로그 내용앞뒤줄에  ====== 에 추가
+     * @param logger
+     * @param log
+     */
+    public static void infoLn(Logger logger,Object log){
+        logger.info("====================================");
+        logger.info(log.toString());
+        logger.info("====================================");
+    }
+    /**
      * 에러 로그 내용앞뒤줄에  ====== 에 추가
      * @param logger
      * @param th

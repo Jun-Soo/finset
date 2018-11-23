@@ -1,8 +1,10 @@
 package com.koscom.finset.service;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import com.koscom.finance.model.TxFcReceiveVO;
+import com.koscom.finset.model.FinsetDenyVO;
 import com.koscom.finset.model.FinsetForm;
 import com.koscom.finset.model.FinsetVO;
 
@@ -28,4 +30,10 @@ public interface FinsetManager {
 	 * @return int
 	 */
 	int countLoading(FinsetVO vo);
+	
+	LinkedList<FinsetVO> listFinsetGoodsInfo(FinsetForm finsetForm);
+	void insertFinsetDeny(FinsetDenyVO finsetDenyVO);
+	void insertTxFcReceive(FinsetVO finsetVO);
+	void deleteTxFcReceive(FinsetVO finsetVO);
+
 }

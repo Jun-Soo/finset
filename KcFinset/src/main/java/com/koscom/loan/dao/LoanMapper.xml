@@ -71,7 +71,7 @@
 	
 	<update id="modifyLoanInfo" >
 		/* com.koscom.loan.dao.LoanMapper.modifyLoanInfo*/
-		UPDATE tx_fc_transmit
+		UPDATE TX_FC_TRANSMIT
 		SET
 		    nm_comp 				= #{nm_comp, jdbcType=VARCHAR}
 		  , no_biz_comp 			= #{no_biz_comp, jdbcType=VARCHAR}
@@ -90,7 +90,17 @@
 		  , amt_year_income 		= #{amt_year_income, jdbcType=NUMERIC}
 		  , ID_LST                  = #{id_lst, jdbcType=VARCHAR}
 		  , DT_LST                  = SYSDATE
-		WHERE no_bunch = #{no_bunch, jdbcType=VARCHAR}
+		WHERE NO_BUNCH = #{no_bunch, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="modifyLoanForNoFcReq">
+		/* com.koscom.loan.dao.LoanMapper.modifyLoanForNoFcReq*/
+		UPDATE TX_FC_TRANSMIT
+		SET
+		   no_fc_req 	= #{no_fc_req, jdbcType=VARCHAR}
+		    , ID_LST = #{id_lst, jdbcType=VARCHAR}
+		    , DT_LST = SYSDATE
+		WHERE NO_BUNCH = #{no_bunch, jdbcType=VARCHAR}
 	</update>
 
 	<insert id="insertLoanGoodsChoice" >

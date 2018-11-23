@@ -1,8 +1,11 @@
 package com.koscom.env.service;
 
+import java.util.HashMap;
 import java.util.List;
 
+import com.koscom.env.model.CodeForm;
 import com.koscom.env.model.CodeInfo;
+import com.koscom.env.model.CodeVO;
 
 public interface CodeManager {
 
@@ -22,6 +25,13 @@ public interface CodeManager {
 	 */
 	public List<CodeInfo> listCodeInfo(CodeInfo codeInfo);
 	public List<CodeInfo> listCodeInfo(String group);
+	
+	/**
+	 * 코드 목록을 조회합니다.
+	 * @param codeForm
+	 * @return
+	 */
+	public List<CodeVO> listCode(CodeForm codeForm);
 	
 	/**
 	 * 코드그룹ID, 코드명에 해당하는 밸류값 가져옴
@@ -46,5 +56,22 @@ public interface CodeManager {
 	 * @param codeInfo
 	 * @return
 	 */
-	public CodeInfo getAgreeTerm(CodeInfo codeInfo);	
+	public CodeInfo getAgreeTerm(CodeInfo codeInfo);
+	
+	/**
+	 * 코드그룹ID, 코드ID에 해당하는 밸류값 가져옴, 코드가 없으면 디폴트값 리턴
+	 * {@link #getCodeInfo(CodeInfo codeInfo)} method (캐시)
+	 * @param group
+	 * @param id
+	 * @param defaultStr
+	 * @return
+	 */
+	public String getNvlCodeName(String group, String id, String defaultStr);
+	
+	/**
+	 * 해당 코드그룹의 코드상세값을 해쉬맵으로 반환
+	 * @param code_group
+	 * @return
+	 */
+	public HashMap<String, CodeVO> getCodeMapInfo(String code_group);
 }

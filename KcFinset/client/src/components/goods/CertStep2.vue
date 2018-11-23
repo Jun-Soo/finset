@@ -268,7 +268,6 @@ export default {
             _this.kcb_di = result.kcb_di;
             _this.kcb_cp = result.kcb_cp;
 
-            //기존 회원 여부 체크
             _this.insertTxFc();
           } else {
             this.$toast.center(result.message);
@@ -297,7 +296,7 @@ export default {
           if (result.result == "00") {
             _this.no_bunch = result.no_bunch;
             _this.ssn_person = result.ssn_person;
-            this.$router.push({
+            _this.$router.push({
               name: "GoodsCreditReqInfo",
               params: {
                 cd_fc: _this.cd_fc,

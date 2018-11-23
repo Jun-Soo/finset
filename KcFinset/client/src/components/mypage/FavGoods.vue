@@ -144,7 +144,7 @@ export default {
             _this.goodsList = list;
           } else {
             for (var key in list) {
-              _this.totalCount += list.length;
+              _this.goodsList.push(list[key]);
             }
           }
           if (_this.goodsList.length) {

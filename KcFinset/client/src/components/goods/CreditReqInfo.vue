@@ -1,40 +1,36 @@
 <template>
-  <section id="content">
+  <section>
     <div class="container">
-      <div class="lead">
-        <p>부가 정보를 선택해주세요.</p>
+      <p>용도 및 부가 정보를 입력해주세요</p>
+      <ul class="debt-modify">
+        <li>
+          <p class="key">대출용도</p>
+          <p>
+            <multiselect v-model="cd_loan_use" ref="cd_loan_use" placeholder="대출용도선택" track-by="text" label="text" :options="options_loan" :searchable="false" :allow-empty="false" @select="selectLoan()" v-validate="'required'" data-vv-name='대출용도'>
+            </multiselect>
+            <a class=" warn" v-if="errors.has('대출용도')">{{errors.first('대출용도')}}</a>
+          </p>
+        </li>
+        <li>
+          <p class="key">주거형태</p>
+          <p>
+            <multiselect v-model="cd_house_type" ref="cd_house_type" placeholder="주거형태선택" track-by="text" label="text" :options="options_house" :searchable="false" :allow-empty="false" @select="selectHouse()" v-validate="'required'" data-vv-name='주거형태'>
+            </multiselect>
+            <a class=" warn" v-if="errors.has('주거형태')">{{errors.first('주거형태')}}</a>
+          </p>
+        </li>
+        <li>
+          <p class="key">소유형태</p>
+          <p>
+            <multiselect v-model="cd_live_type_home" ref="cd_live_type_home" placeholder="소유형태선택" track-by="text" label="text" :options="options_live" :searchable="false" :allow-empty="false" @select="selectLive()" v-validate="'required'" data-vv-name='소유형태'>
+            </multiselect>
+            <a class=" warn" v-if="errors.has('소유형태')">{{errors.first('소유형태')}}</a>
+          </p>
+        </li>
+      </ul>
+      <div class="btn-wrap float">
+        <a class="solid blue box" @click="clickConfirm()">추가정보입력</a>
       </div>
-      <form name="frmloanApplyStep" id="frmloanApplyStep" method="post" validate="remove_tag;">
-        <input type="hidden" name="cd_goods" id="cd_goods" value="${txFcTransmitVO.cd_goods }" />
-        <input type="hidden" name="cd_fc" id="cd_fc" value="${txFcTransmitVO.cd_fc }" />
-        <input type="hidden" name="no_bunch" id="no_bunch" value="${txFcTransmitVO.no_bunch}" />
-        <input type="hidden" name="kcb_di" id="kcb_di" value="${txFcTransmitVO.kcb_di }" />
-        <input type="hidden" name="ssn_person" id="ssn_person" value="${txFcTransmitVO.ssn_person}" />
-        <div class="form-inline">
-          <div class="form-group">
-            <label for="cd_loan_use">대출용도</label>
-            <multiselect v-model="cd_loan_use" ref="cd_loan_use" placeholder="대출용도선택" track-by="text" label="text" :options="options_loan" :searchable="false" :allow-empty="false" @close="selectLoan()" v-validate="'required'" data-vv-name='대출용도'>
-            </multiselect>
-            <p class=" warn" v-if="errors.has('대출용도')">{{errors.first('대출용도')}}</p>
-
-          </div>
-          <div class="form-group">
-            <label for="cd_house_type">주거형태</label>
-            <multiselect v-model="cd_house_type" ref="cd_house_type" placeholder="주거형태선택" track-by="text" label="text" :options="options_house" :searchable="false" :allow-empty="false" @close="selectHouse()" v-validate="'required'" data-vv-name='주거형태'>
-            </multiselect>
-            <p class=" warn" v-if="errors.has('주거형태')">{{errors.first('주거형태')}}</p>
-          </div>
-          <div class="form-group">
-            <label for="cd_live_type_home">소유형태</label>
-            <multiselect v-model="cd_live_type_home" ref="cd_live_type_home" placeholder="소유형태선택" track-by="text" label="text" :options="options_live" :searchable="false" :allow-empty="false" @close="selectLive()" v-validate="'required'" data-vv-name='소유형태'>
-            </multiselect>
-            <p class=" warn" v-if="errors.has('소유형태')">{{errors.first('소유형태')}}</p>
-          </div>
-        </div>
-      </form>
-    </div>
-    <div class="btn-fixed-bottom" id="next_div" v-if="isShowButton">
-      <a role="button" class="btn btn-lg btn-primary btn-block" @click="clickConfirm();">확인</a>
     </div>
   </section>
 </template>
@@ -52,9 +48,9 @@ export default {
       no_bunch: this.$route.params.no_bunch,
       kcb_di: this.$route.params.kcb_di,
       ssn_person: this.$route.params.ssn_person,
-      cd_loan_use: "",
-      cd_house_type: "",
-      cd_live_type_home: "",
+      cd_loan_use: {},
+      cd_house_type: {},
+      cd_live_type_home: {},
       isShowButton: false,
       options_loan: "",
       options_house: "",

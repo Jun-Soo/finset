@@ -68,6 +68,30 @@
 		  , DT_LST              = SYSDATE
 		WHERE NO_BUNCH = #{no_bunch, jdbcType=VARCHAR}
 	</update>
+	
+	<update id="modifyLoanInfo" >
+		/* com.koscom.loan.dao.LoanMapper.modifyLoanInfo*/
+		UPDATE tx_fc_transmit
+		SET
+		    nm_comp 				= #{nm_comp, jdbcType=VARCHAR}
+		  , no_biz_comp 			= #{no_biz_comp, jdbcType=VARCHAR}
+		  , cd_loan_term 			= #{cd_loan_term, jdbcType=VARCHAR}
+		  , cd_job_class_l 			= #{cd_job_class_l, jdbcType=VARCHAR}
+		  , jb_dt_join 				= #{jb_dt_join, jdbcType=VARCHAR}
+		  , cd_employee_type 		= #{cd_employee_type, jdbcType=VARCHAR}
+		  , jb_tp_mediinsure 		= #{jb_tp_mediinsure, jdbcType=VARCHAR}
+		  , jb_tp_comppriv 			= #{jb_tp_comppriv, jdbcType=VARCHAR}
+		  , jb_tp_listing 			= #{jb_tp_listing, jdbcType=VARCHAR}
+		  , jb_tp_eprmdy 			= #{jb_tp_eprmdy, jdbcType=VARCHAR}
+		  , jb_tp_compsize 			= #{jb_tp_compsize, jdbcType=VARCHAR}
+		  , jb_tp_etlipc 			= #{jb_tp_etlipc, jdbcType=VARCHAR}
+		  , jb_tp_compchulja 		= #{jb_tp_compchulja, jdbcType=VARCHAR}
+		  , cd_duty_comp 			= #{cd_duty_comp, jdbcType=VARCHAR}
+		  , amt_year_income 		= #{amt_year_income, jdbcType=NUMERIC}
+		  , ID_LST                  = #{id_lst, jdbcType=VARCHAR}
+		  , DT_LST                  = SYSDATE
+		WHERE no_bunch = #{no_bunch, jdbcType=VARCHAR}
+	</update>
 
 	<insert id="insertLoanGoodsChoice" >
 		/* com.koscom.loan.dao.LoanMapper.insertLoanGoodsChoice*/

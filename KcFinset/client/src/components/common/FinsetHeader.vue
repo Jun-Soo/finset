@@ -22,7 +22,7 @@
   <div v-else>
     <div id='header' class="sub-top">
       <p class="title">{{this.$store.state.title}}</p>
-      <a v-if="isSetting" @click="$router.go('')" class="setting"></a>
+      <a v-if="isSetting" @click="$router.go('/mypage/regAlarm')" class="setting"></a>
     </div>
   </div>
 </template>

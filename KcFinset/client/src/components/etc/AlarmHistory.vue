@@ -1,48 +1,45 @@
 <template>
-  <section>
-    <div class="alarm-history mt30">
-      <p class="date">2018.9.15</p>
-      <div class="alarm-list">
-        <div class="item">
-          <a @click="$router.go('')">
-            <p class="ico alarm">단기연체정보변동</p>
-            <p class="text">단기연체정보 변동</p>
-          </a>
-        </div>
-        <div class="item">
-          <a @click="$router.go('')">
-            <p class="ico alarm">단기연체정보변동</p>
-            <p class="text">단기연체정보 변동</p>
-          </a>
-        </div>
-      </div>
-    </div>
-    <div class="alarm-history">
-      <p class="date">2018.9.15</p>
-      <div class="alarm-list">
-        <div class="item">
-          <a @click="$router.go('')">
-            <p class="ico alarm">단기연체정보변동</p>
-            <p class="text">단기연체정보 변동</p>
-          </a>
-        </div>
-        <div class="item">
-          <a @click="$router.go('')">
-            <p class="ico alarm">단기연체정보변동</p>
-            <p class="text">단기연체정보 변동</p>
-          </a>
+  <section v-if="seen">
+    <div class="container">
+      <div class="nodata" v-if="alarmList.length == 0">알림 내역이 없습니다.</div>
+      <div class="alarm-history" v-else v-for="(item, idx) in alarmList" :key="item.rnum">
+        <div v-if="idx==0 || (idx!=0&&item.dt_frt!=alarmList[idx-1].dt_frt)">
+          <p class="date">{{formatDateDot(item.dt_frt)}}</p>
+          <div v-for="_item in alarmList" :key="_item.rnum" v-if="_item.dt_frt==item.dt_frt">
+            <div class="alarm-list">
+              <div class="item">
+                <a v-if="_item.link_addr!=null||_item.link_addr!=undefined" @click="moveDetailPage(_item.link_addr)">
+                  <p class="ico alarm">{{_item.title}}</p>
+                  <p class="text">{{_item.body}}</p>
+                </a>
+                <a v-else>
+                  <p class="ico alarm">{{_item.title}}</p>
+                  <p class="text">{{_item.body}}</p>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-
   </section>
 </template>
 
 <script>
+import Common from "./../../assets/js/common.js";
+
 export default {
   name: "EtcAlarmHistory",
   data() {
-    return {};
+    return {
+      push_divcd: "",
+      page: 1,
+      totalPage: 1,
+      rnum: "",
+      alarmList: new Array(),
+      pushEachForm: {},
+      seen: false
+    };
   },
   components: {},
   computed: {},
@@ -52,12 +49,48 @@ export default {
   },
   created() {},
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    let _this = this;
+    if (_this.totalPage >= _this.page) {
+      Common.pagination(this.getListNotification);
+    }
+  },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    getListNotification: function() {
+      let _this = this;
+      let url = "/m/customercenter/listNotification.json";
+      let frm = new FormData();
+      frm.append("page", _this.page);
+
+      // frm.append("push_divcd", "01");
+      _this.$http.post(url, frm).then(response => {
+        _this.page = response.data.pushEachForm.page;
+        _this.pushEachForm = response.data.pushEachForm;
+        _this.totalPage = response.data.pushEachForm.pageCount;
+        if (_this.page == 1) {
+          _this.alarmList = response.data.pagedList.source;
+        } else {
+          var pList = response.data.pagedList.source;
+          for (var key in pList) {
+            _this.alarmList.push(pList[key]);
+          }
+        }
+        _this.page++;
+        this.seen = true;
+      });
+    },
+    moveDetailPage: function(url) {
+      let _this = this;
+      _this.$router.push(url);
+    },
+    formatDateDot: function(date) {
+      return Common.formatDateDot(date);
+    }
+  }
 };
 </script>
 

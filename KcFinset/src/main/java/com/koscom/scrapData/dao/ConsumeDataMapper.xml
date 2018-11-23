@@ -131,6 +131,7 @@
 				,MON_REMAINING
 				,YN_PAY_INSTALLMENT
 				,YN_CANCEL
+				,YN_DELETE
 				,YN_AUTO
 				,YN_BUDGET_EXCEPT
 				,ID_FRT
@@ -162,6 +163,7 @@
 	             ,#{mon_remaining			, jdbcType=VARCHAR} AS MON_REMAINING
 	             ,#{yn_pay_installment		, jdbcType=VARCHAR} AS YN_PAY_INSTALLMENT
 	             ,#{yn_cancel				, jdbcType=VARCHAR} AS YN_CANCEL
+	             ,#{yn_delete				, jdbcType=VARCHAR} AS YN_DELETE
 	             ,#{yn_auto					, jdbcType=VARCHAR} AS YN_AUTO
 	             ,#{yn_budget_except		, jdbcType=VARCHAR} AS YN_BUDGET_EXCEPT
 	             ,#{id_frt					, jdbcType=VARCHAR} AS ID_FRT

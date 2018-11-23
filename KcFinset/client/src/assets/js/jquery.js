@@ -68,6 +68,18 @@ $(function () {
     }
     e.preventDefault()
   })
+
+  $(document).on('click', '.debt-calc-top .expand', function (e) {
+    if ($(this).hasClass('on')) {
+      $(this).closest('.debt-calc-top').find('.graph').slideUp(500, 'easeInOutExpo')
+      $(this).removeClass('on')
+    } else {
+      $(this).closest('.debt-calc-top').find('.graph').slideDown(500, 'easeInOutExpo')
+      $(this).addClass('on')
+    }
+    e.preventDefault()
+  })
+
   // $(document).on('click', '.btn-onoff', function (e) {
   // $(this).toggleClass('on')
   // })

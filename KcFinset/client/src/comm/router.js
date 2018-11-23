@@ -80,6 +80,8 @@ import DebtDetail2 from '@/components/debt/Detail_2'
 import DebtRepayment from '@/components/debt/Repayment'
 import DebtModify from '@/components/debt/Modify'
 import DebtCalc from '@/components/debt/Calc'
+import DebtCalc2 from '@/components/debt/Calc2'
+import DebtCalc3 from '@/components/debt/Calc3'
 import DebtCalcSearch from '@/components/debt/CalcSearch'
 import DebtRegister from '@/components/debt/Register'
 import DebtRegDetail from '@/components/debt/RegDetail'
@@ -137,10 +139,10 @@ import AssetsBankActDetail from '@/components/assets/BankActDetail'
 import AssetsBankDepWdrlList from '@/components/assets/BankDepWdrlList'
 import AssetsBankDepWdrlDetail from '@/components/assets/BankDepWdrlDetail'
 import AssetsStockMain from '@/components/assets/StockMain'
-// import AssetsStockBalcDetail from '@/components/assets/StockBalcDetail'
-// import AssetsStockActDetail from '@/components/assets/StockActDetail'
-// import AssetsStockShrDetail from '@/components/assets/StockShrDetail'
-// import AssetsStockFndDetail from '@/components/assets/StockFndDetail'
+import AssetsStockBalcDetail from '@/components/assets/StockBalcDetail'
+import AssetsStockActDetail from '@/components/assets/StockActDetail'
+import AssetsStockShrDetail from '@/components/assets/StockShrDetail'
+import AssetsStockFndDetail from '@/components/assets/StockFndDetail'
 import AssetsDirInput from '@/components/assets/DirInput'
 
 import MypageHome from '@/components/mypage/Home'
@@ -735,6 +737,24 @@ export const routes = [{
     }
   },
   {
+    path: 'calc2',
+    alias: '/calc2',
+    name: 'debtCalc2',
+    component: DebtCalc2,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'calc3',
+    alias: '/calc3',
+    name: 'debtCalc3',
+    component: DebtCalc3,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
     path: 'calcSearch',
     alias: '/calcSearch',
     name: 'debtCalcSearch',
@@ -959,6 +979,38 @@ export const routes = [{
     path: 'stockMain',
     alias: '/stockMain',
     component: AssetsStockMain,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'stockBalcDetail',
+    alias: '/stockBalcDetail',
+    component: AssetsStockBalcDetail,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'stockActDetail',
+    alias: '/stockActDetail',
+    component: AssetsStockActDetail,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'stockShrDetail',
+    alias: '/stockShrDetail',
+    component: AssetsStockShrDetail,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'stockFndDetail',
+    alias: '/stockFndDetail',
+    component: AssetsStockFndDetail,
     meta: {
       allowPath: true
     }

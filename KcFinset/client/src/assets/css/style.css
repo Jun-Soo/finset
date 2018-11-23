@@ -405,7 +405,7 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .list02 .header { font-size: 13px; color: #666; margin-bottom: 15px; font-weight: 700; }
 .list02 .header.col { color: #9b9489; margin-bottom: 10px; }
 .list02 .item { background: #fff; border-radius: 10px; padding: 20px 15px; margin-bottom: 20px; }
-.list02 .item .flex { width: 100%; display: flex; }
+.list02 .item .flex { width: 100%; display: flex; justify-content: space-between; }
 .list02 .item .flex p { width: 50%; line-height: 24px; font-size: 12px; }
 .list02 .item .flex p.symbol { height: 24px; vertical-align: middle; font-size: 12px; font-weight: 700; }
 .list02 .item .flex p.symbol img { height: 100%; vertical-align: middle; margin-right: 5px; }
@@ -417,6 +417,11 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .list02 .item .flex p.corp.big { font-size: 14px; }
 .list02 .item .flex p.corp em { color: #9b9489; padding-left: 5px; }
 .list02 .item .flex p:last-child { text-align: right; }
+.list02 .item .flex p.red { color: #e52638; font-size: 14px; }
+.list02 .item .flex p.blue { color: #62c1d0; font-size: 14px; }
+.list02 .item .flex p.key { color: #9b9489; font-weight: 700; }
+.list02 .item .flex p.number { font-size: 24px; font-weight: 700; color: #222; }
+.list02 .item .flex p.number em { color: #222; font-weight: 400; }
 .list02 .item .warn { color: #e52638; padding-left: 20px; background: url("../images/common/ico_arlam.png") no-repeat left 15px/13px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e5e5; }
 .list02 .item .warn a { color: inherit; display: block; background: url("../images/common/btn_red_arrow.png") no-repeat right center/6px; }
 .list02 .item .share { display: block; background: url("../images/common/btn_contop_arrow.png") no-repeat right center/7px; }
@@ -426,6 +431,9 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .list02 .item .share span.state em { display: inline-block; padding-left: 10px; margin-left: 10px; border-left: 1px solid #e5e5e5; color: #62c1d0; }
 .list02 .item .checks .title { font-size: 14px; font-weight: 700; color: #222; }
 .list02 .item .checks .small { margin-top: 10px; }
+.list02 .item .bar { position: relative; height: 3px; background: #ecebe8; border-radius: 5px; margin-top: 10px; }
+.list02 .item .bar p { position: absolute; height: 3px; background: #62c1d0; border-radius: 5px; }
+.list02 .select { display: grid; justify-content: space-between; grid-template-columns: 1fr 1fr 1fr; grid-gap: 5px; }
 
 .nobox-list .date { color: #9b9489; margin-top: 20px; padding-bottom: 10px; border-bottom: 1px solid #e5e5e5; }
 .nobox-list .item { padding: 5px 15px 15px 15px; border-bottom: 1px solid #e5e5e5; }
@@ -969,17 +977,19 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 
 .calc-top { display: grid; grid-template-columns: 1fr 1fr; align-items: center; background: #fff; border: 1px solid #e5e5e5; line-height: 60px; }
 .calc-top .key { color: #9b9489; font-weight: 700; padding-left: 15px; }
-.calc-top .value { text-align: right; padding-right: 70px; font-size: 16px; color: #222; font-weight: 700; }
+.calc-top .value { text-align: right; padding-right: 15px; font-size: 16px; color: #222; font-weight: 700; }
 .calc-top .value em { color: #222; padding-left: 2px; }
 
 .calc-acco { background: #fff; border: 1px solid #e5e5e5; margin-top: 15px; }
-.calc-acco .top { display: grid; grid-template-columns: 1fr 1fr 44px; align-items: center; }
+.calc-acco .top { display: grid; grid-template-columns: 1fr 26px 44px; align-items: center; }
 .calc-acco .top .key { padding-left: 15px; }
 .calc-acco .top .key em { font-size: 10px; color: #62c1d0; font-weight: 700; padding-right: 5px; }
+.calc-acco .top .key span { font-size: 16px; color: #222; font-weight: 700; margin-right: 10px; }
+.calc-acco .top .key span em { color: #222; padding-left: 2px; }
 .calc-acco .top .value { text-align: right; padding-right: 5px; font-size: 16px; color: #222; font-weight: 700; }
 .calc-acco .top .value em { color: #222; padding-left: 2px; }
-.calc-acco .top .value a { display: inline-block; width: 10px; height: 10px; background: url("../images/debt/calc_del.png") no-repeat center/10px; margin-left: 10px; vertical-align: middle; }
-.calc-acco .top button { width: 44px; height: 60px; background: url("../images/debt/calc_arrow.png") no-repeat center top/44px; }
+.calc-acco .top .value a { display: inline-block; width: 16px; height: 16px; background: url("../images/debt/calc_del.png") no-repeat center/16px; margin-right: 15px; vertical-align: middle; }
+.calc-acco .top button { width: 44px; height: 60px; background: url("../images/debt/calc_arrow.png") no-repeat center top/44px; border-left: 1px solid #e5e5e5; }
 .calc-acco .top button.on { background-position: center bottom; }
 .calc-acco .acco-body-wrap { display: none; }
 .calc-acco .acco-body-wrap .body { display: grid; grid-template-columns: 1fr 1fr; padding: 20px; align-items: center; border-top: 1px solid #e5e5e5; }
@@ -987,6 +997,28 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .calc-acco .acco-body-wrap .body p.key { font-size: 14px; color: #222; font-weight: 700; }
 .calc-acco .acco-body-wrap .body p input[type="text"] { line-height: 33px; height: 35px; }
 .calc-acco .acco-body-wrap .body p select { width: 100%; }
+
+.calc-search { display: grid; grid-template-columns: 80px 1fr 24px; align-items: center; background: #fff; border: 1px solid #e5e5e5; line-height: 60px; margin-top: 15px; }
+.calc-search p.key { color: #9b9489; font-weight: 700; padding-left: 15px; }
+.calc-search p.text { padding: 0 20px; font-size: 13px; line-height: 19px; }
+.calc-search p button { display: inline-block; width: 14px; height: 14px; background: url("../images/debt/calc_search.png") no-repeat center/14px; margin-right: 15px; vertical-align: middle; }
+
+.debt-calc-top { text-align: center; margin-top: 30px; }
+.debt-calc-top .key { font-size: 14px; font-weight: 700; color: #9b9489; }
+.debt-calc-top .value { font-size: 20px; margin-top: 10px; color: #222; }
+.debt-calc-top .value em { color: #222; font-size: 20px; font-weight: 700; }
+.debt-calc-top .bar { display: grid; padding: 0 21px; margin-top: 30px; }
+.debt-calc-top .bar p { line-height: 32px; padding: 0 10px; color: #fff; }
+.debt-calc-top .bar p:first-child { background: #e52638; text-align: left; }
+.debt-calc-top .bar p:last-child { background: #62c1d0; border-left: 1px solid #fff; text-align: right; }
+.debt-calc-top .graph { padding: 0 21px; display: none; }
+.debt-calc-top .graph img { width: 100%; }
+.debt-calc-top .flex { padding: 0 21px; margin-top: 10px; display: grid; grid-template-columns: 1fr 1fr; }
+.debt-calc-top .flex p { font-size: 14px; }
+.debt-calc-top .flex p:first-child { text-align: left; color: #e52638; }
+.debt-calc-top .flex p:last-child { color: #62c1d0; text-align: right; }
+.debt-calc-top .expand { height: 30px; display: block; background: url("../images/debt/btn-expand.png") no-repeat top center/18px; margin-top: 10px; margin-bottom: 20px; }
+.debt-calc-top .expand.on { background-position: center bottom; }
 
 /*   상품   */
 .goods-wrap { margin-top: 30px; padding: 0 21px; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
@@ -1143,6 +1175,28 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .stock-number .key { font-size: 14px; font-weight: 700; color: #9b9489; padding-top: 30px; }
 .stock-number .value { margin-top: 10px; font-size: 24px; font-weight: 700; color: #222; }
 .stock-number .value em { font-size: 14px; font-weight: 400; margin-left: 5px; }
+
+.balance-top { margin-top: 30px; padding: 0 21px; }
+.balance-top .item { padding: 20px; border: 1px solid #e5e5e5; border-radius: 10px; }
+.balance-top .item .flex-top { display: flex; justify-content: space-between; border-bottom: 1px solid #e5e5e5; padding-bottom: 20px; margin-bottom: 20px; align-items: center; }
+.balance-top .item .flex-top p.symbol { height: 24px; margin-right: 8px; vertical-align: middle; font-size: 12px; font-weight: 700; text-align: left !important; }
+.balance-top .item .flex-top p.symbol img { height: 100%; vertical-align: middle; margin-right: 5px; }
+.balance-top .item .flex-top p.symbol label { height: 30px; }
+.balance-top .item .flex-top p.symbol .x { width: 30px; height: 30px; }
+.balance-top .item .flex-top p.text { text-align: right; }
+.balance-top .item .flex-top p.text em { display: inline-block; margin-left: 5px; padding-left: 5px; border-left: 1px solid #e5e5e5; }
+.balance-top .item .flex-top p.text em:first-child { border: none; padding-left: 0; margin-left: 0; }
+.balance-top .item .top { padding-bottom: 20px; border-bottom: 1px solid #e5e5e5; color: #222; font-size: 24px; font-weight: 700; text-align: center; }
+.balance-top .item .top em { font-size: 12px; color: #222; }
+.balance-top .item .top.name { font-size: 14px; text-align: left; }
+.balance-top .item .body { padding-top: 10px; }
+.balance-top .item .body .flex { display: flex; justify-content: space-between; margin-top: 10px; align-items: center; }
+.balance-top .item .body .flex p { color: #9b9489; }
+.balance-top .item .body .flex p:last-child { text-align: right; font-size: 14px; }
+.balance-top .item .body .flex p.number { color: #222; }
+.balance-top .item .body .flex p.number em { font-size: 24px; font-weight: 700; color: #222; }
+.balance-top .item .body .flex p.blue { color: #62c1d0; }
+.balance-top .item .body .flex p.red { color: #e52638; }
 
 /*   멤버   */
 .cert-wrap { margin-top: 30px; padding: 0 21px; }

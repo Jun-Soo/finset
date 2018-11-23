@@ -43,7 +43,7 @@
 			 CD_SET
 			,TO_CHAR( NVL( SUM( TO_NUMBER( AMT_BUDGET ) ), 0 )) AS AMT_BUDGET
 		FROM
-			CONSUME_GOAL_DETAIL_INFO
+			CONSUME_GOAL_INFO
 		WHERE
 				NO_PERSON	= #{no_person	, jdbcType = VARCHAR}
 			AND REQ_YYYYMM	= #{req_yyyymm	, jdbcType = VARCHAR}
@@ -171,8 +171,7 @@
 			,SORT_TYPE
 				FROM PERSON_CONSUME_CLASS_INFO
 		WHERE 		NO_PERSON 	= #{no_person	, jdbcType=VARCHAR}
-				AND TO_NUMBER(CD_CLASS) <![CDATA[>]]> 10
-				AND CD_TYPE IS NOT NULL
+				AND TYPE_IN_OUT	= '02'
 				AND YN_USE 		= 'Y'
 		ORDER BY
 			TO_NUMBER(SORT_CLASS) ASC, TO_NUMBER(SORT_TYPE) ASC
@@ -442,15 +441,15 @@
 			 PCCI.CD_CLASS
 			,PCCI.NM_CLASS
 			,PCCI.SORT_CLASS
-			,NVL( CGDI.AMT_BUDGET, 0 ) AS AMT_BUDGET
+			,NVL( CGI.AMT_BUDGET, 0 ) AS AMT_BUDGET
 		FROM
 			PERSON_CONSUME_CLASS_INFO PCCI
-		LEFT JOIN CONSUME_GOAL_DETAIL_INFO CGDI ON
-				PCCI.CD_CLASS = CGDI.CD_CLASS
-			AND CGDI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		LEFT JOIN CONSUME_GOAL_INFO CGI ON
+				PCCI.CD_CLASS = CGI.CD_CLASS
+			AND CGI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
 		WHERE
 				PCCI.NO_PERSON						=		#{no_person, jdbcType=VARCHAR}
-			AND TO_NUMBER( PCCI.CD_CLASS ) <![CDATA[>]]>	10
+			AND PCCI.TYPE_IN_OUT					=		'02'
 			AND PCCI.YN_USE							=		'Y'
 		ORDER BY
 			TO_NUMBER(PCCI.SORT_CLASS) ASC
@@ -501,10 +500,10 @@
 					,NO_CARD
 					,AMT_BUDGET
 				FROM
-					CONSUME_GOAL_DETAIL_INFO
+					CONSUME_GOAL_INFO
 				WHERE
-					NO_PERSON = #{no_person, jdbcType = VARCHAR}
-					AND REQ_YYYYMM = TO_CHAR( SYSDATE, 'YYYYMM' )
+						NO_PERSON	= #{no_person, jdbcType = VARCHAR}
+					AND REQ_YYYYMM	= TO_CHAR( SYSDATE, 'YYYYMM' )
 			) C ON
 			(
 				A.CODE_VALUE = C.CD_TYPE
@@ -802,7 +801,7 @@
     </select>
     <insert id="createDetailGoalClass" parameterType="com.koscom.consume.model.ConsumeDetailGoalInfoVO">
 		MERGE INTO
-			CONSUME_GOAL_DETAIL_INFO
+			CONSUME_GOAL_INFO
 				USING DUAL ON
 			(
 					NO_PERSON	= #{no_person	, jdbcType = VARCHAR}
@@ -843,7 +842,7 @@
     </insert>
     <insert id="createDetailGoalMeans" parameterType="com.koscom.consume.model.ConsumeDetailGoalInfoVO">
 		MERGE INTO
-			CONSUME_GOAL_DETAIL_INFO
+			CONSUME_GOAL_INFO
 				USING DUAL ON
 			(
 					NO_PERSON				=		#{no_person	, jdbcType = VARCHAR}
@@ -927,6 +926,7 @@
 		WHERE
 				NO_PERSON	= #{no_person	, jdbcType = VARCHAR}
 			AND CD_CLASS	= #{cd_class	, jdbcType = VARCHAR}
+			AND TYPE_IN_OUT = #{type_in_out , jdbcType = VARCHAR}
 	</update>
 	<update id="modifyPersonSortType" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
 		UPDATE
@@ -942,10 +942,24 @@
 		UPDATE
 			PERSON_CONSUME_CLASS_INFO
 		SET
-			YN_USE = 'N'
+			 YN_USE		= 'N'
+			,SORT_CLASS = NULL
+			,SORT_TYPE	= NULL
 		WHERE
 				NO_PERSON	= #{no_person	, jdbcType = VARCHAR}
+			AND TYPE_IN_OUT = #{type_in_out	, jdbcType = VARCHAR}
 			AND CD_CLASS	= #{cd_class	, jdbcType = VARCHAR}
+	</update>
+	<update id="modifyPersonConsumeClassOtherClass" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
+		UPDATE
+			PERSON_CONSUME_CLASS_INFO
+		SET
+			SORT_CLASS = TO_CHAR( TO_NUMBER( SORT_CLASS )-1 )
+		WHERE
+				NO_PERSON						 =		#{no_person		, jdbcType = VARCHAR}
+			AND TYPE_IN_OUT						 =		#{type_in_out	, jdbcType = VARCHAR}
+			AND TO_NUMBER( SORT_CLASS )	<![CDATA[>]]>	#{sort_class	, jdbcType = VARCHAR}
+			AND CD_CLASS						!=		'99'
 	</update>
 	<update id="modifyConsumeInfoClass" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
 		UPDATE
@@ -954,18 +968,63 @@
 			 CD_CLASS	= '99'
 			,CD_TYPE	= '999'
 		WHERE
+				NO_PERSON	= #{no_person	, jdbcType = VARCHAR}
+			AND CD_CLASS	= #{cd_class	, jdbcType = VARCHAR}
+			AND TYPE_IN_OUT	= #{type_in_out	, jdbcType = VARCHAR}
+	</update>
+	<update id="modifyConsumeGoalInfoClass" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
+		UPDATE
+			CONSUME_GOAL_INFO
+		SET
+			AMT_BUDGET =
+				TO_CHAR(
+					(
+						SELECT
+							TO_NUMBER( AMT_BUDGET )
+						FROM
+							CONSUME_GOAL_INFO
+						WHERE
+								NO_PERSON	= #{no_person, jdbcType = VARCHAR}
+							AND CD_SET		= '01'
+							AND CD_CLASS	= #{cd_class, jdbcType = VARCHAR}
+					)+
+					(
+						SELECT
+							TO_NUMBER( AMT_BUDGET )
+						FROM
+							CONSUME_GOAL_INFO
+						WHERE
+								NO_PERSON	= #{no_person, jdbcType = VARCHAR}
+							AND CD_SET		= '01'
+							AND CD_CLASS	= '99'
+					)
+				)
+		WHERE
 				NO_PERSON	= #{no_person, jdbcType = VARCHAR}
-			AND CD_CLASS	= #{cd_class, jdbcType = VARCHAR}
+			AND CD_CLASS	= '99'
 	</update>
 	<update id="deletePersonConsumeClassType" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
 		UPDATE
 			PERSON_CONSUME_CLASS_INFO
 		SET
-			YN_USE = 'N'
+			 YN_USE		= 'N'
+			,SORT_TYPE	= NULL
 		WHERE
 				NO_PERSON	= #{no_person	, jdbcType = VARCHAR}
 			AND CD_CLASS	= #{cd_class	, jdbcType = VARCHAR}
 			AND CD_TYPE		= #{cd_type		, jdbcType = VARCHAR}
+	</update>
+	<update id="modifyPersonConsumeClassOtherType" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
+		UPDATE
+			PERSON_CONSUME_CLASS_INFO
+		SET
+			SORT_TYPE = TO_CHAR( TO_NUMBER( SORT_TYPE )-1 )
+		WHERE
+				NO_PERSON						 =		#{no_person		, jdbcType = VARCHAR}
+			AND TYPE_IN_OUT						 =		#{type_in_out	, jdbcType = VARCHAR}
+			AND CD_CLASS						 =		#{cd_class		, jdbcType = VARCHAR}
+			AND TO_NUMBER( SORT_TYPE )	<![CDATA[>]]>	#{sort_type		, jdbcType = VARCHAR}
+			AND CD_TYPE							!=		'999'
 	</update>
 	<update id="modifyConsumeInfoType" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
 		UPDATE
@@ -984,8 +1043,9 @@
 		SET
 			NM_CLASS = #{nm_class, jdbcType = VARCHAR}
 		WHERE
-				NO_PERSON			= #{no_person			, jdbcType = VARCHAR}
-			AND CD_CONSUME_CLASS	= #{cd_consume_class	, jdbcType = VARCHAR}
+				NO_PERSON	= #{no_person	, jdbcType = VARCHAR}
+			AND CD_CLASS	= #{cd_class	, jdbcType = VARCHAR}
+			AND TYPE_IN_OUT	= #{type_in_out	, jdbcType = VARCHAR}
 	</update>
 	<update id="modifyPersonConsumeClassNmType" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
 		UPDATE
@@ -1000,57 +1060,109 @@
 	<insert id="createPersonConsumeClassClass" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
 		INSERT INTO
 			PERSON_CONSUME_CLASS_INFO(
+				 NO_PERSON
+				,CD_CONSUME_CLASS
+				,TYPE_IN_OUT
+				,CD_CLASS
+				,NM_CLASS
+				,CD_TYPE
+				,NM_TYPE
+				,YN_DEFAULT
+				,YN_USE
+				,SORT_CLASS
+				,SORT_TYPE
+				,ID_FRT
+				,DT_FRT
+				,ID_LST
+				,DT_LST
+			)(
 				SELECT
-					 #{no_person, jdbcType = VARCHAR}				AS NO_PERSON
-					,(MAX( TO_NUMBER( CD_CLASS ))+ 1)|| '000'		AS CD_CONSUME_CLASS
-					,MAX( TO_NUMBER( CD_CLASS ))+ 1					AS CD_CLASS
-					,#{nm_class, jdbcType = VARCHAR}				AS NM_CLASS
-					,'000'											AS CD_TYPE
-					,NULL											AS_NM_TYPE
-					,'N'											AS YN_DEFAULT
-					,'Y'											AS YN_USE
-					,TO_CHAR( MAX( TO_NUMBER( SORT_CLASS ))+ 1 )	AS SORT_CLASS
-					,'1'											AS SORT_TYPE
-					,#{no_person, jdbcType = VARCHAR}				AS IS_FRT
-					,SYSDATE										AS DT_FRT
-					,#{no_person, jdbcType = VARCHAR}				AS ID_LST
-					,SYSDATE										AS DT_LST
+					 #{no_person, jdbcType = VARCHAR}							AS NO_PERSON
+					,(MAX( TO_NUMBER( CD_CLASS ))+ 1)|| '999'					AS CD_CONSUME_CLASS
+					,'02'														AS TYPE_IN_OUT
+					,MAX( TO_NUMBER( CD_CLASS ))+ 1								AS CD_CLASS
+					,#{nm_class, jdbcType = VARCHAR}							AS NM_CLASS
+					,'999'														AS CD_TYPE
+					,'기타'														AS_NM_TYPE
+					,'N'														AS YN_DEFAULT
+					,'Y'														AS YN_USE
+					,TO_CHAR( MAX( TO_NUMBER( NVL( SORT_CLASS, 0 ) ) ) + 1 )	AS SORT_CLASS
+					,'99'														AS SORT_TYPE
+					,#{no_person, jdbcType = VARCHAR}							AS IS_FRT
+					,SYSDATE													AS DT_FRT
+					,#{no_person, jdbcType = VARCHAR}							AS ID_LST
+					,SYSDATE													AS DT_LST
 				FROM
 					PERSON_CONSUME_CLASS_INFO
 				WHERE
-						NO_PERSON = #{no_person, jdbcType = VARCHAR}
-					AND CD_CLASS != 99
-					AND CD_CLASS > 10
+						NO_PERSON	= #{no_person, jdbcType = VARCHAR}
+					AND TYPE_IN_OUT = '02'
+					AND CD_CLASS	!= '99'
 			)
 	</insert>
 	<insert id="createPersonConsumeClassType" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
 		INSERT INTO
 			PERSON_CONSUME_CLASS_INFO(
+				 NO_PERSON
+				,CD_CONSUME_CLASS
+				,TYPE_IN_OUT
+				,CD_CLASS
+				,NM_CLASS
+				,CD_TYPE
+				,NM_TYPE
+				,YN_DEFAULT
+				,YN_USE
+				,SORT_CLASS
+				,SORT_TYPE
+				,ID_FRT
+				,DT_FRT
+				,ID_LST
+				,DT_LST
+			)(
 				SELECT
 					 #{no_person, jdbcType = VARCHAR}									AS NO_PERSON
-					,#{cd_class, jdbcType = VARCHAR} || (MAX( TO_NUMBER( CD_TYPE ))+ 1)	AS CD_CONSUME_CLASS
+					,#{cd_class, jdbcType = VARCHAR} || TO_CHAR( MAX( CD_TYPE )+ 1 )	AS CD_CONSUME_CLASS
+					,'02'																AS TYPE_IN_OUT
 					,#{cd_class, jdbcType = VARCHAR}									AS CD_CLASS
 					,NM_CLASS															AS NM_CLASS
-					,MAX( TO_NUMBER( CD_TYPE ))+ 1										AS CD_TYPE
-					,#{nm_type, jdbcType = VARCHAR}										AS_NM_TYPE
+					,TO_CHAR( MAX( CD_TYPE )+ 1 )										AS CD_TYPE
+					,#{nm_type, jdbcType = VARCHAR}										AS NM_TYPE
 					,'N'																AS YN_DEFAULT
 					,'Y'																AS YN_USE
 					,SORT_CLASS															AS SORT_CLASS
-					,MAX(TO_NUMBER(SORT_TYPE))+1										AS SORT_TYPE
-					,#{no_person, jdbcType = VARCHAR}									AS IS_FRT
+					,TO_CHAR( MAX( SORT_TYPE )+ 1 )										AS SORT_TYPE
+					,#{no_person, jdbcType = VARCHAR}									AS ID_FRT
 					,SYSDATE															AS DT_FRT
 					,#{no_person, jdbcType = VARCHAR}									AS ID_LST
 					,SYSDATE															AS DT_LST
 				FROM
-					PERSON_CONSUME_CLASS_INFO
-				WHERE
-						NO_PERSON = #{no_person, jdbcType = VARCHAR}
-					AND CD_CLASS > 10
-					AND CD_CLASS = #{cd_class, jdbcType = VARCHAR}
-					AND CD_TYPE != '999'
-				GROUP BY
-					 NM_CLASS
-					,SORT_CLASS
+					(
+						SELECT
+							 NM_CLASS
+							,TO_NUMBER( MAX( CD_TYPE )) AS CD_TYPE
+							,SORT_CLASS
+							,TO_NUMBER( MAX( SORT_TYPE )) AS SORT_TYPE
+						FROM
+							PERSON_CONSUME_CLASS_INFO
+						WHERE
+								NO_PERSON = #{no_person, jdbcType = VARCHAR}
+							AND CD_CLASS = #{cd_class, jdbcType = VARCHAR}
+							AND CD_TYPE != '999'
+						GROUP BY
+							NM_CLASS,
+							SORT_CLASS
+					UNION ALL SELECT
+							NM_CLASS,
+							100 AS CD_TYPE,
+							SORT_CLASS,
+							0 AS SORT_TYPE
+						FROM
+							PERSON_CONSUME_CLASS_INFO
+						WHERE
+								NO_PERSON = #{no_person, jdbcType = VARCHAR}
+							AND CD_CLASS = #{cd_class, jdbcType = VARCHAR}
+					)
+				GROUP BY NM_CLASS, SORT_CLASS
 			)
 	</insert>
 	<insert id="createPersonConsumeClassIncome" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
@@ -1072,28 +1184,28 @@
 				,DT_LST
 			)(
 				SELECT
-					 #{no_person, jdbcType = VARCHAR}		AS NO_PERSON
+					 #{no_person, jdbcType = VARCHAR}				AS NO_PERSON
 					,DECODE(
 						LENGTH( MAX( TO_NUMBER( CD_CLASS ))),
 						1, '0' ||( MAX( TO_NUMBER( CD_CLASS ))+ 1 ),
 						2,( MAX( TO_NUMBER( CD_CLASS ))+ 1 )
-					)|| '000'								AS CD_CONSUME_CLASS
-					,'01'									AS TYPE_IN_OUT
+					)|| '000'										AS CD_CONSUME_CLASS
+					,'01'											AS TYPE_IN_OUT
 					,DECODE(
 						LENGTH( MAX( TO_NUMBER( CD_CLASS ))),
 						1,'0' ||( MAX( TO_NUMBER( CD_CLASS ))+ 1 ),
 						2,( MAX( TO_NUMBER( CD_CLASS ))+ 1 )
-					)										AS CD_CLASS
-					,#{nm_class, jdbcType = VARCHAR}		AS NM_CLASS
-					,'000'									AS CD_TYPE
-					,'N'									AS YN_DEFAULT
-					,'Y'									AS YN_USE
-					,MAX( TO_NUMBER( SORT_CLASS ))+ 1		AS SORT_CLASS
-					,'1'									AS SORT_TYPE
-					,#{no_person, jdbcType = VARCHAR}		AS ID_FRT
-					,SYSDATE								AS DT_FRT
-					,#{no_person, jdbcType = VARCHAR}		AS ID_LST
-					,SYSDATE								AS DT_LST
+					)												AS CD_CLASS
+					,#{nm_class, jdbcType = VARCHAR}				AS NM_CLASS
+					,'000'											AS CD_TYPE
+					,'N'											AS YN_DEFAULT
+					,'Y'											AS YN_USE
+					,MAX( TO_NUMBER( NVL( SORT_CLASS, 0 ) ) )+ 1	AS SORT_CLASS
+					,'1'											AS SORT_TYPE
+					,#{no_person, jdbcType = VARCHAR}				AS ID_FRT
+					,SYSDATE										AS DT_FRT
+					,#{no_person, jdbcType = VARCHAR}				AS ID_LST
+					,SYSDATE										AS DT_LST
 				FROM
 					PERSON_CONSUME_CLASS_INFO
 				WHERE

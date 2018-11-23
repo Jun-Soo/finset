@@ -7,31 +7,41 @@
             <li v-for="(eachClass, index) in consumeCategory" :key="index" class="liClass" @click="toggleSlide">
               <div class="wrap each-class">
                 <!-- <p class="title" @click="slideUpAll">{{eachClass[1]}}</p> -->
-                <p class="title" @mousedown="slideUpAll">{{eachClass[1]}}</p>
+                <p class="title handle" @mousedown="slideUpAll">{{eachClass[1]}}</p>
                 <!-- <p class="title" @touchstart="slideUpAll">{{eachClass[1]}}</p> -->
                 <p class="links">
-                  <button class="delete" @click="deleteClass(index)"></button>
+                  <button class="delete" @click="deleteClass(eachClass[0], eachClass[2])"></button>
                   <button class="modify" @click="clickModify('class', eachClass[1], eachClass[0])"></button>
                 </p>
               </div>
               <ul>
-                <draggable v-model="eachClass[2]" :options="draggableOptions" @update="changeType(index)">
+                <draggable v-model="eachClass[3]" :options="draggableOptions" @update="changeType(index)">
                   <!-- <li v-for="eachType in eachClass[2]" :key="eachType.nm_type"> -->
-                  <li v-for="eachType in eachClass[2]" :key="eachType.nm_type">
+                  <li v-for="eachType in eachClass[3]" :key="eachType.nm_type">
                     <!-- <div class="wrap" :slot="eachType.cd_type == '99'?'footer':false"> -->
                     <div class="wrap">
-                      <p class="title">{{eachType.nm_type}}</p>
+                      <p class="title handle">{{eachType.nm_type}}</p>
                       <p class="links">
-                        <button class="delete" @click="deleteType(index, eachType.cd_type)"></button>
+                        <button class="delete" @click="deleteType(eachClass[0], eachType.cd_type, eachType.sort_type)"></button>
                         <button class="modify" @click="clickModify('type', eachType.nm_type, eachClass[0], eachType.cd_type)"></button>
                       </p>
                     </div>
                   </li>
                 </draggable>
+                <li class="nosub footer">
+                  <div class="wrap each-class">
+                    <p class="title etc">기타</p>
+                  </div>
+                </li>
                 <button class="add-cate" @click="clickAdd('type', eachClass[0])">항목추가</button>
               </ul>
             </li>
           </draggable>
+          <li class="nosub footer">
+            <div class="wrap each-class">
+              <p class="title etc">기타</p>
+            </div>
+          </li>
           <button class="add-cate" @click="clickAdd('class')">항목추가</button>
         </ul>
       </div>
@@ -53,6 +63,7 @@
 
 <script>
 import draggable from "vuedraggable";
+import Constant from "@/assets/js/constant.js";
 import "@/assets/js/jquery.easing.1.3.js";
 
 export default {
@@ -64,8 +75,7 @@ export default {
       isClass: true,
       isModify: false,
       draggableOptions: {
-        handle: ".title",
-        ghostClass: "liGhost",
+        handle: ".handle",
         touchStartThreshold: 200
       },
       nmCate: "",
@@ -109,25 +119,31 @@ export default {
         .get("/m/consume/listPersonConsumeClassInfo.json")
         .then(function(response) {
           var list = response.data.listPersonConsumeClassInfo;
+          list.pop();
           var listCdClass = new Array();
           var i = 0;
           for (var listIdx in list) {
             var nm_class = "";
             var cd_class = "";
+            var sort_class = "";
             var listCdType = new Array();
             for (var idx in list[listIdx]) {
               if (idx == 0) {
                 nm_class = list[listIdx][idx].nm_class;
                 cd_class = list[listIdx][idx].cd_class;
+                sort_class = list[listIdx][idx].sort_class;
               }
-              listCdType.push({
-                cd_type: list[listIdx][idx].cd_type,
-                nm_type: list[listIdx][idx].nm_type,
-                name: list[listIdx][idx].nm_type,
-                order: idx
-              });
+              if (list[listIdx][idx].cd_type != "999") {
+                listCdType.push({
+                  cd_type: list[listIdx][idx].cd_type,
+                  nm_type: list[listIdx][idx].nm_type,
+                  sort_type: list[listIdx][idx].sort_type,
+                  name: list[listIdx][idx].nm_type,
+                  order: idx
+                });
+              }
             }
-            listCdClass[i++] = [cd_class, nm_class, listCdType];
+            listCdClass[i++] = [cd_class, nm_class, sort_class, listCdType];
           }
           _this.consumeCategory = listCdClass;
           console.log(listCdClass);
@@ -178,6 +194,7 @@ export default {
       for (var idx in consumeClass) {
         formData.append("list[" + idx + "].cd_class", consumeClass[idx][0]);
         formData.append("list[" + idx + "].sort_class", parseInt(idx) + 1);
+        formData.append("list[" + idx + "].type_in_out", "02");
       }
       this.$http
         .post("/m/consume/modifyPersonSortClass.json", formData)
@@ -186,7 +203,7 @@ export default {
     changeType: function(index) {
       var _this = this;
       var cd_class = this.consumeCategory[index][0];
-      var consumeType = this.consumeCategory[index][2];
+      var consumeType = this.consumeCategory[index][3];
       var formData = new FormData();
       for (var idx in consumeType) {
         formData.append("list[" + idx + "].cd_class", cd_class);
@@ -222,31 +239,54 @@ export default {
         }
       }
     },
-    deleteClass: function(index) {
-      var _this = this;
-      var formData = new FormData();
-      formData.append("cd_class", this.consumeCategory[index][0]);
-      this.$http
-        .post("/m/consume/deletePersonConsumeClass.json", formData)
-        .then(function(response) {
-          _this.listPersonConsumeClassInfo();
+    deleteClass: function(cd_class, sort_class) {
+      this.$dialogs
+        .confirm("정말로 삭제하시겠습니까?", Constant.options)
+        .then(res => {
+          // console.log(res); // {ok: true|false|undefined}
+          if (res.ok) {
+            var _this = this;
+            var formData = new FormData();
+            formData.append("type_in_out", "02");
+            formData.append("cd_class", cd_class);
+            formData.append("sort_class", sort_class);
+            this.$http
+              .post("/m/consume/deletePersonConsumeClass.json", formData)
+              .then(function(response) {
+                _this.slideUpAll();
+                _this.listPersonConsumeClassInfo();
+              });
+          } else {
+            // this.$dialogs.alert("취소를 선택했습니다.", Constant.options);
+          }
         });
     },
-    deleteType: function(index, cd_type) {
-      var _this = this;
-      var formData = new FormData();
-      var cd_class = this.consumeCategory[index][0];
-      formData.append("cd_class", cd_class);
-      formData.append("cd_type", cd_type);
-      this.$http
-        .post("/m/consume/deletePersonConsumeClassType.json", formData)
-        .then(function(response) {
-          _this.listPersonConsumeClassInfo();
+    deleteType: function(cd_class, cd_type, sort_type) {
+      this.$dialogs
+        .confirm("정말로 삭제하시겠습니까?", Constant.options)
+        .then(res => {
+          // console.log(res); // {ok: true|false|undefined}
+          if (res.ok) {
+            var _this = this;
+            var formData = new FormData();
+            formData.append("type_in_out", "02");
+            formData.append("cd_class", cd_class);
+            formData.append("cd_type", cd_type);
+            formData.append("sort_type", sort_type);
+            this.$http
+              .post("/m/consume/deletePersonConsumeClassType.json", formData)
+              .then(function(response) {
+                _this.listPersonConsumeClassInfo();
+              });
+          } else {
+            // this.$dialogs.alert("취소를 선택했습니다.", Constant.options);
+          }
         });
     },
     confirmCate: function() {
       var _this = this;
       var formData = new FormData();
+      formData.append("type_in_out", "02");
       if (!this.isModify) {
         if (this.isClass) {
           formData.append("nm_class", _this.nmCate);
@@ -295,8 +335,7 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
-.liGhost {
-  height: 43px;
-  opacity: 1;
+.consume-cate-list li .wrap .title.etc {
+  background: none;
 }
 </style>

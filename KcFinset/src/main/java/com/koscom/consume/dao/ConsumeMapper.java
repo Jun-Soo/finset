@@ -234,10 +234,22 @@ public interface ConsumeMapper {
 	void deletePersonConsumeClass(PersonConsumeClassVO personConsumeClassVO);
 
 	/**
+	 * 분류 삭제 이후 소비 분류 소트번호 재정의
+	 * @param personConsumeClassVO
+	 */
+	void modifyPersonConsumeClassOtherClass(PersonConsumeClassVO personConsumeClassVO);
+	
+	/**
 	 * 분류 미사용처리에 따른 소비 업데이트
 	 * @param personConsumeClassVO
 	 */
 	void modifyConsumeInfoClass(PersonConsumeClassVO personConsumeClassVO);
+	
+	/**
+	 * 
+	 * @param personConsumeClassVO
+	 */
+	void modifyConsumeGoalInfoClass(PersonConsumeClassVO personConsumeClassVO);
 	
 	/**
 	 * 항목 미사용 처리
@@ -245,6 +257,12 @@ public interface ConsumeMapper {
 	 */
 	void deletePersonConsumeClassType(PersonConsumeClassVO personConsumeClassVO);
 
+	/**
+	 * 항목 삭제 이후 소비 항목 소트번호 재정의
+	 * @param personConsumeClassVO
+	 */
+	void modifyPersonConsumeClassOtherType(PersonConsumeClassVO personConsumeClassVO);
+	
 	/**
 	 * 항목 미사용처리에 따른 소비 업데이트
 	 * @param personConsumeClassVO

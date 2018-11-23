@@ -350,7 +350,11 @@ public class ConsumeManagerImpl implements ConsumeManager {
 		logger.debug("deletePersonConsumeClass");
 		try{
 			consumeMapper.deletePersonConsumeClass(personConsumeClassVO);
+			consumeMapper.modifyPersonConsumeClassOtherClass(personConsumeClassVO);
 			consumeMapper.modifyConsumeInfoClass(personConsumeClassVO);
+			if(personConsumeClassVO.getType_in_out().equals("02")) {
+				consumeMapper.modifyConsumeGoalInfoClass(personConsumeClassVO);
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 			return;
@@ -362,12 +366,12 @@ public class ConsumeManagerImpl implements ConsumeManager {
 		logger.debug("deletePersonConsumeClassType");
 		try {
 			consumeMapper.deletePersonConsumeClassType(personConsumeClassVO);
+			consumeMapper.modifyPersonConsumeClassOtherType(personConsumeClassVO);
 			consumeMapper.modifyConsumeInfoType(personConsumeClassVO);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return;
 		}
-		
 	}
 	
 	@Override

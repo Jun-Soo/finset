@@ -8,15 +8,15 @@
               <div class="wrap each-class">
                 <p class="title handle">{{eachClass.nm_class}}</p>
                 <p class="links">
-                  <button class="delete" @click="deleteCate(eachClass.cd_class)"></button>
+                  <button class="delete" @click="deleteCate(eachClass.cd_class, eachClass.sort_class)"></button>
                   <button class="modify" @click="modifyCate(eachClass.cd_class, eachClass.nm_class)"></button>
                 </p>
               </div>
             </li>
           </draggable>
-          <li v-bind="etc" class="nosub footer">
+          <li class="nosub footer">
             <div class="wrap each-class">
-              <p class="title etc">{{etc.nm_class}}</p>
+              <p class="title etc">기타</p>
             </div>
           </li>
           <button v-if="!isMax" class="add-cate" @click="clickAdd">항목추가</button>
@@ -55,8 +55,7 @@ export default {
         touchStartThreshold: 200
       },
       nmCate: "",
-      isMax: false,
-      etc: {}
+      isMax: false
     };
   },
   components: {
@@ -83,7 +82,7 @@ export default {
         .get("/m/consume/listPersonIncomeClassInfo.json")
         .then(function(response) {
           var list = response.data.listPersonIncomeClassInfo;
-          _this.etc = list.pop();
+          list.pop();
           for (var idx in list) {
             list[idx].order = idx;
             list[idx].name = list[idx].nm_class;
@@ -103,7 +102,8 @@ export default {
       var _this = this;
       var formData = new FormData();
       if (this.isModify) {
-        formData.append("cd_consume_class", this.curClass + "000");
+        formData.append("type_in_out", "01");
+        formData.append("cd_class", this.curClass);
         formData.append("nm_class", this.nmCate);
         var _this = this;
         this.$http
@@ -128,7 +128,7 @@ export default {
       this.nmCate = nm_class;
       this.isShowAdd = true;
     },
-    deleteCate: function(cd_class) {
+    deleteCate: function(cd_class, sort_class) {
       this.$dialogs
         .confirm("정말로 삭제하시겠습니까?", Constant.options)
         .then(res => {
@@ -136,7 +136,9 @@ export default {
           if (res.ok) {
             var _this = this;
             var formData = new FormData();
+            formData.append("type_in_out", "01");
             formData.append("cd_class", cd_class);
+            formData.append("sort_class", sort_class);
             this.$http
               .post("/m/consume/deletePersonConsumeClass.json", formData)
               .then(function(response) {
@@ -157,13 +159,14 @@ export default {
           incomeClasses[idx].cd_class
         );
         formData.append("list[" + idx + "].sort_class", parseInt(idx) + 1);
+        formData.append("list[" + idx + "].type_in_out", "01");
       }
       idx++;
-      formData.append("list[" + idx + "].cd_class", _this.etc.cd_class);
-      formData.append("list[" + idx + "].sort_class", parseInt(idx) + 1);
       this.$http
         .post("/m/consume/modifyPersonSortClass.json", formData)
-        .then(function(response) {});
+        .then(function(response) {
+          _this.listPersonIncomeClassInfo();
+        });
     }
   }
 };

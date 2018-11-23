@@ -46,7 +46,7 @@ public interface ConsumeDataMapper {
 	 * @param cd_consume_class
 	 * @return
 	 */
-	ContentsVO getCodeByCdConsumeClass(String cd_consume_class);
+	ContentsVO getCodeByCdConsumeClass(Map<String, String> paramMap);
 	
 	/**
 	 * 소비지출 테이블에 추가

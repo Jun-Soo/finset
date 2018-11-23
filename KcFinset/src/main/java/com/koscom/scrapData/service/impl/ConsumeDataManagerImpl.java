@@ -131,7 +131,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 						String tm_trd = tm_approval;
 						String no_biz = no_biz_member;
 						String nm_biz = type_biz_member;
-						ContentsVO contentsVO = getCodeByNmBusiness(cd_fc, type_biz_member);
+						ContentsVO contentsVO = getCodeByNmBusiness(cd_fc, type_biz_member, no_person);
 						String cd_class="";
 						String cd_type="";
 						if(contentsVO==null){
@@ -356,7 +356,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 	 * @param nm_business
 	 * @return
 	 */
-	private ContentsVO getCodeByNmBusiness(String cd_fc, String nm_business){
+	private ContentsVO getCodeByNmBusiness(String cd_fc, String nm_business, String no_person){
 		Map<String, String> paramMap = new HashMap<String, String>();
 		paramMap.put("cd_fc", cd_fc);
 		paramMap.put("nm_business", nm_business);
@@ -367,7 +367,11 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 		} else if(cd_consume_class.equals("")) {
 			return null;
 		}
-		ContentsVO contentsVO = consumeDataMapper.getCodeByCdConsumeClass(cd_consume_class);
+		
+		paramMap = new HashMap<>();
+		paramMap.put("cd_consume_class", cd_consume_class);
+		paramMap.put("no_person", no_person);
+		ContentsVO contentsVO = consumeDataMapper.getCodeByCdConsumeClass(paramMap);
 		return contentsVO;
 	}
 	

@@ -12,19 +12,21 @@
           <li>
             <p class="key" v-text="curTab=='01'?'입금':'결제수단'"></p>
             <p v-if="isNew||!isAuto">
-              <select v-if="!isAuto&&!isModifyAuto" class="sel-means_consume" @change="selectMeans" v-model="consumeVO.means_consume">
+              <select v-if="!isAuto&&!isModifyAuto" class="selMeansConsume" @change="selectMeans" v-model="consumeVO.means_consume">
                 <option value="default" disabled="disabled">선택</option>
                 <option value="04">입출금계좌</option>
                 <option value="00">계좌조회</option>
                 <option v-if="curTab == '02'" value="01">카드</option>
                 <option value="02">현금</option>
               </select>
-              <select v-if="isAuto||isModifyAuto" disabled="disabled" class="sel-means_consume" v-model="consumeVO.means_consume">
+              <!-- <multiselect v-model="consumeVO.means_consume" ref="selMeansConsume" label="text" :show-labels="false" :options="meansConsumeOption" placeholder="결제수단" :searchable="false" :allow-empty="false" @select="selectMeans">
+              </multiselect> -->
+              <select v-if="isAuto||isModifyAuto" disabled="disabled" class="selMeansConsume" v-model="consumeVO.means_consume">
               </select>
             </p>
             <p v-if="!isNew&&isAuto">
               <input v-if="!isModifyAuto" type="text" v-model="consumeVO.nm_card" :readonly="!isNew">
-              <select v-if="isModifyAuto" disabled="disabled" class="sel-means_consume" v-model="consumeVO.means_consume">
+              <select v-if="isModifyAuto" disabled="disabled" class="selMeansConsume" v-model="consumeVO.means_consume">
               </select>
             </p>
           </li>
@@ -162,7 +164,13 @@ export default {
       isShowTrans: false,
       listTrans: {},
       ko: ko,
-      dt_trans: ""
+      dt_trans: "",
+      meansConsumeOption: [
+        { text: "입출금계좌", value: "04" },
+        { text: "계좌조회", value: "00" },
+        { text: "카드", value: "01" },
+        { text: "현금", value: "02" }
+      ]
     };
   },
   components: {
@@ -193,13 +201,16 @@ export default {
       }
     }
   },
-
   watch: {
     isShowTrans: function(key) {
       if (key == true) {
         this.$modals.show("transModal");
       } else {
         this.$modals.hide("transModal");
+      }
+    },
+    meansConsumeOption: function(optionObj) {
+      if (optionObj.value == "01") {
       }
     }
   },
@@ -223,6 +234,7 @@ export default {
         this.$route.query.isAuto == "true" || this.$route.query.isAuto == true;
     }
     this.setDefault();
+    Common.datepickerInit("div-date");
   },
   beforeMount() {},
   mounted() {},
@@ -369,9 +381,7 @@ export default {
         this.isModifyAuto = true;
       }
 
-      var means_consume = document.getElementsByClassName(
-        "sel-means_consume"
-      )[0];
+      var means_consume = document.getElementsByClassName("selMeansConsume")[0];
       means_consume.innerHTML =
         "<option value='04'>(" + transVO.nm_fc + ")" + transVO.an + "</option>";
       this.isShowTrans = false;
@@ -383,7 +393,7 @@ export default {
       this.$modals.hide("confirmModal");
     },
     selectMeans: function(e) {
-      if (e.target.value == "00") {
+      if (e.value == "00") {
         this.listPersonTransDetail();
       } else {
         this.isShowTrans = false;
@@ -494,7 +504,7 @@ export default {
 
       formData.append("type_in_out", this.consumeVO.type_in_out);
       formData.append("means_consume", this.consumeVO.means_consume);
-      var target = document.getElementsByClassName("sel-means_consume")[0];
+      var target = document.getElementsByClassName("selMeansConsume")[0];
       formData.append(
         "nm_card",
         this.consumeVO.nm_card == undefined
@@ -672,15 +682,4 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
-.vdp-datepicker__calendar {
-  position: fixed;
-  font-size: 13px;
-  line-height: 40px;
-}
-.vdp-datepicker__calendar header {
-  position: static;
-}
-.div-date {
-  text-align: right;
-}
 </style>

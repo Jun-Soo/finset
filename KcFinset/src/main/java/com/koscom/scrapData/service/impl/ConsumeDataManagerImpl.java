@@ -396,6 +396,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 	
 	private List<ConsumeDataVO> getInstallmentList(ConsumeDataVO consumeDataVO) {
 		List<ConsumeDataVO> returnList = new ArrayList<ConsumeDataVO>();
+		
 		int amt_in_out = Integer.parseInt(consumeDataVO.getAmt_in_out());
 		int mon_installment = Integer.parseInt(consumeDataVO.getMon_installment());
 		

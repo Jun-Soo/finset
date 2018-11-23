@@ -28,7 +28,7 @@
       <div class="banner-wrap owl-carousel">
         <carousel :perPage=1>
           <slide class="item">
-            <a href="#">
+            <a @click="clickBanner('calendar')">
               <div class="banner">
                 <div class="left">
                   <p class="key">캘린더</p>
@@ -41,7 +41,7 @@
             </a>
           </slide>
           <slide class="item">
-            <a href="#" @click="clickBanner('payment')">
+            <a @click="clickBanner('payment')">
               <div class="banner">
                 <div class="left">
                   <p class="key">카드 대금</p>
@@ -71,9 +71,9 @@
 
       <div class="tab">
         <div class="wrap col3">
-          <a href="#" id="00" :class="{'on':curTab === '00'}" @click="clickTab">전체</a>
-          <a href="#" id="02" :class="{'on':curTab === '02'}" @click="clickTab">지출</a>
-          <a href="#" id="01" :class="{'on':curTab === '01'}" @click="clickTab">수입</a>
+          <a :class="{'on':curTab === '00'}" @click="clickTab('00')">전체</a>
+          <a :class="{'on':curTab === '02'}" @click="clickTab('02')">지출</a>
+          <a :class="{'on':curTab === '01'}" @click="clickTab('01')">수입</a>
         </div>
       </div>
 
@@ -161,12 +161,15 @@ export default {
     this.$store.state.header.active = "consume";
     this.$parent.isBottom = true;
   },
-  created() {},
-  beforeMount() {},
-  mounted() {
+  created() {
+    if (this.$store.state.user.dt_basic > this.standardDt.getDate()) {
+      this.standardDt.setMonth(this.standardDt.getMonth() - 1);
+    }
     this.ym = this.formatHead(this.getYm(this.standardDt));
     this.listConsumeShareInfo();
   },
+  beforeMount() {},
+  mounted() {},
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
@@ -178,10 +181,7 @@ export default {
         .get("/m/consume/listConsumeSharePersonInfo.json", { params: {} })
         .then(function(response) {
           var list = response.data.listConsumeSharePersonInfo;
-          var test = new Object();
-          test.no_person = "P000000109";
-          test.nm_person = "테스트";
-          list.push(test);
+
           for (var idx in list) {
             list[idx].isShow = true;
           }
@@ -283,8 +283,8 @@ export default {
           break;
       }
     },
-    clickTab: function(tab) {
-      this.curTab = tab.srcElement.id;
+    clickTab: function(code) {
+      this.curTab = code;
       this.listConsumeInfo();
     },
     chkType: function(type) {
@@ -317,6 +317,9 @@ export default {
       switch (key) {
         case "payment":
           _this.$router.push("/consume/payment");
+          break;
+        case "calendar":
+          _this.$router.push("/common/monthCal");
           break;
         default:
           break;

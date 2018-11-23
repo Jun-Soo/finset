@@ -36,7 +36,7 @@ textarea { width: 100%; height: 70vh; padding: 20px; border: 1px solid #e5e5e5; 
 .checks.search-check input[type="checkbox"] + label { padding: 0 12px; color: #62c1d0; font-size: 14px; line-height: 28px; text-align: center; border: 1px solid #62c1d0; border-radius: 20px; }
 .checks.search-check input[type="checkbox"] + label:before { display: none; }
 .checks.search-check input[type="checkbox"]:checked + label { background: #62c1d0; color: #fff; }
-.checks.round input[type="radio"] + label { display: inline-block; position: relative; padding-left: 0; color: #62c1d0; border: 1px solid #62c1d0; font-weight: 700; font-size: 14px; line-height: 28px; text-align: center; margin-right: 0; margin-right: 5px; padding: 0 13px; border-radius: 20px; }
+.checks.round input[type="radio"] + label { display: inline-block; position: relative; padding-left: 0; color: #62c1d0; border: 1px solid #62c1d0; font-weight: 700; font-size: 14px; line-height: 28px; text-align: center; margin-right: 0; margin-right: 5px; padding: 0 13px; border-radius: 20px; background: #fff; }
 .checks.round input[type="radio"] + label:before { display: none; }
 .checks.round input[type="radio"] + label:last-of-type { margin: 0; }
 .checks.round input[type="radio"]:checked + label { background: #62c1d0; color: #fff; }
@@ -405,7 +405,7 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .list02 .header { font-size: 13px; color: #666; margin-bottom: 15px; font-weight: 700; }
 .list02 .header.col { color: #9b9489; margin-bottom: 10px; }
 .list02 .item { background: #fff; border-radius: 10px; padding: 20px 15px; margin-bottom: 20px; }
-.list02 .item .flex { width: 100%; display: flex; justify-content: space-between; }
+.list02 .item .flex { width: 100%; display: flex; justify-content: space-between; align-items: center; }
 .list02 .item .flex p { width: 50%; line-height: 24px; font-size: 12px; }
 .list02 .item .flex p.symbol { height: 24px; vertical-align: middle; font-size: 12px; font-weight: 700; }
 .list02 .item .flex p.symbol img { height: 100%; vertical-align: middle; margin-right: 5px; }
@@ -420,10 +420,10 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .list02 .item .flex p.red { color: #e52638; font-size: 14px; }
 .list02 .item .flex p.blue { color: #62c1d0; font-size: 14px; }
 .list02 .item .flex p.key { color: #9b9489; font-weight: 700; }
+.list02 .item .flex p.key img { vertical-align: middle; }
+.list02 .item .flex p.key em { font-weight: 400; }
 .list02 .item .flex p.number { font-size: 24px; font-weight: 700; color: #222; }
 .list02 .item .flex p.number em { color: #222; font-weight: 400; }
-.list02 .item .warn { color: #e52638; padding-left: 20px; background: url("../images/common/ico_arlam.png") no-repeat left 15px/13px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e5e5; }
-.list02 .item .warn a { color: inherit; display: block; background: url("../images/common/btn_red_arrow.png") no-repeat right center/6px; }
 .list02 .item .share { display: block; background: url("../images/common/btn_contop_arrow.png") no-repeat right center/7px; }
 .list02 .item .share span { font-size: 13px; display: inline-block; padding-right: 15px; }
 .list02 .item .share span.name { font-size: 14px; color: #222; font-weight: 700; }
@@ -433,12 +433,14 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .list02 .item .checks .small { margin-top: 10px; }
 .list02 .item .bar { position: relative; height: 3px; background: #ecebe8; border-radius: 5px; margin-top: 10px; }
 .list02 .item .bar p { position: absolute; height: 3px; background: #62c1d0; border-radius: 5px; }
+.list02 .item .warn { color: #e52638; padding-left: 20px; background: url("../images/common/ico_arlam.png") no-repeat left 15px/13px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e5e5; }
+.list02 .item .warn a { color: inherit; display: block; background: url("../images/common/btn_red_arrow.png") no-repeat right center/6px; }
 .list02 .select { display: grid; justify-content: space-between; grid-template-columns: 1fr 1fr 1fr; grid-gap: 5px; }
 
 .nobox-list .date { color: #9b9489; margin-top: 20px; padding-bottom: 10px; border-bottom: 1px solid #e5e5e5; }
 .nobox-list .item { padding: 5px 15px 15px 15px; border-bottom: 1px solid #e5e5e5; }
 .nobox-list .item .flex { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-.nobox-list .item .flex p { flex-grow: 1; }
+.nobox-list .item .flex p { font-size: 14px; color: #333; flex-grow: 1; }
 .nobox-list .item .flex p em { display: inline-block; margin-right: 5px; }
 .nobox-list .item .flex p em.circle { line-height: 20px; padding: 0 10px; color: #fff; font-weight: 700; border-radius: 10px; }
 .nobox-list .item .flex p em.circle.red { background: #e95071; }
@@ -446,7 +448,7 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .nobox-list .item .flex p em.circle.green { background: #89c11c; }
 .nobox-list .item .flex p em.circle.blue { background: #6993f3; }
 .nobox-list .item .flex p em.circle.purple { background: #bf65f3; }
-.nobox-list .item .flex p em.number { font-size: 19px; font-weight: 700; }
+.nobox-list .item .flex p em.number { font-size: 19px; font-weight: 700; color: #222; }
 .nobox-list .item .flex p em.number.red { color: #e52638; }
 .nobox-list .item .flex p em.number.blue { color: #62c1d0; }
 .nobox-list .item .flex p:last-child { text-align: right; }
@@ -966,6 +968,8 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .cut-result-top .item .goods-benefit div:first-child { border: none; }
 .cut-result-top .item .goods-benefit div em { font-size: 12px; }
 .cut-result-top .item .btn { font-size: 12px; color: #62c1d0; font-weight: 700; border: 2px solid #62c1d0; line-height: 28px; text-align: center; display: block; margin-top: 20px; border-radius: 50px; }
+.cut-result-top .item .cate-tag { text-align: center; margin-top: 15px; }
+.cut-result-top .item .cate-tag em { display: inline-block; line-height: 18px; border: 1px solid #888; padding: 0 9px; margin: 0 3px; color: #888; font-weight: 700; border-radius: 20px; margin-bottom: 5px; }
 
 .debt-modify { margin-top: 20px; border-top: 1px solid #e5e5e5; }
 .debt-modify li { display: flex; border-bottom: 1px solid #e5e5e5; }
@@ -1126,6 +1130,18 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 
 .graph-wrapper { padding: 0 21px; }
 
+.report-top { padding: 25px 21px; background: #efeeec; }
+.report-top .date { margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; grid-gap: 6px; }
+.report-top .date p { background: #fff; border: 1px solid #e5e5e5; }
+.report-top .date p input[type="text"] { width: calc(100% - 40px); border: none; }
+
+.report-con .flex { display: flex; }
+.report-con .flex div { text-align: center; flex-grow: 1; padding: 30px 0; }
+.report-con .flex div .key { font-size: 14px; color: #9b9489; }
+.report-con .flex div .key strong { font-size: 14px; color: #9b9489; }
+.report-con .flex div .value { font-size: 24px; color: #222; margin-top: 10px; font-weight: 700; }
+.report-con .graph img { width: 100%; }
+
 .consume-detail { margin-top: 20px; border-top: 1px solid #e5e5e5; }
 .consume-detail li { display: flex; border-bottom: 1px solid #e5e5e5; }
 .consume-detail li p { width: 50%; font-size: 13px; color: #9b9489; font-weight: 700; line-height: 49px; }
@@ -1210,10 +1226,11 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .cert-wrap .grid select { line-height: 38px; height: 38px; }
 .cert-wrap .grid.phone { grid-template-columns: 3fr 7fr; grid-gap: 10px; }
 .cert-wrap button { line-height: 46px; border: 2px solid #62c1d0; text-align: center; font-size: 15px; font-weight: 700; width: 100%; background: #fff; color: #62c1d0; margin-top: 10px; }
-.cert-wrap .warn { color: #e52638; padding-left: 20px; background: url("../images/common/ico_arlam.png") no-repeat left top/13px; margin-top: 10px; }
 .cert-wrap .cert-num { display: grid; grid-template-columns: 7fr 3fr; align-items: center; margin-top: 15px; border: 1px solid #e5e5e5; }
 .cert-wrap .cert-num .time { text-align: center; color: #e52638; text-align: right; padding-right: 15px; }
 .cert-wrap .cert-num input { border: none; margin-top: 0; }
+
+.warn { color: #e52638; padding-left: 20px; background: url("../images/common/ico_arlam.png") no-repeat left top/13px; margin-top: 10px; }
 
 .certcode-wrap { padding-top: 50px; }
 .certcode-wrap .text { font-size: 12px; color: #333; text-align: center; }

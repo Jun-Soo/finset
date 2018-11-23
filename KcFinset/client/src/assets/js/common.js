@@ -2,8 +2,6 @@
  * common
  */
 import Constant from './constant.js'
-import { debug } from 'util'
-
 export default {
   back: function () {
     console.log('back')
@@ -377,8 +375,10 @@ export default {
     if (document.getElementsByClassName(classNm)) {
       for (var i = 0; i < document.getElementsByClassName(classNm).length; i++) {
         for (var j = 1; j < document.getElementsByClassName(classNm)[i].children.length; j++) {
-          let leftMargin = document.getElementsByClassName(classNm)[i].offsetWidth - 300
-          document.getElementsByClassName(classNm)[i].children[j].style.marginLeft = leftMargin + 'px'
+          // let leftMargin = document.getElementsByClassName(classNm)[i].offsetWidth - 300
+          // document.getElementsByClassName(classNm)[i].children[j].style.marginLeft = leftMargin + 'px'
+          document.getElementsByClassName(classNm)[i].children[j].style.top = (document.body.clientHeight - 200) / 2 + 'px'
+          document.getElementsByClassName(classNm)[i].children[j].style.left = (document.body.clientWidth - 300) / 2 + 'px'
         }
       }
     }

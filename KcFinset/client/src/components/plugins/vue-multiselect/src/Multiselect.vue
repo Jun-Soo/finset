@@ -329,12 +329,10 @@ fieldset[disabled] .multiselect {
 }
 
 .multiselect__spinner:before {
-  animation: spinning 2.4s cubic-bezier(0.41, 0.26, 0.2, 0.62);
   animation-iteration-count: infinite;
 }
 
 .multiselect__spinner:after {
-  animation: spinning 2.4s cubic-bezier(0.51, 0.09, 0.21, 0.8);
   animation-iteration-count: infinite;
 }
 
@@ -536,7 +534,7 @@ fieldset[disabled] .multiselect {
   text-decoration: none;
   text-align: center;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  /* transition: transform 0.2s ease; */
 }
 
 .multiselect__select:before {
@@ -588,7 +586,7 @@ fieldset[disabled] .multiselect {
   vertical-align: top;
 }
 
-.multiselect--above .multiselect__content-wrapper {
+/* .multiselect--above .multiselect__content-wrapper {
   bottom: 100%;
   border-bottom-left-radius: 0;
   border-bottom-right-radius: 0;
@@ -596,7 +594,7 @@ fieldset[disabled] .multiselect {
   border-top-right-radius: 5px;
   border-bottom: none;
   border-top: 1px solid #e8e8e8;
-}
+} */
 
 .multiselect__content::webkit-scrollbar {
   display: none;

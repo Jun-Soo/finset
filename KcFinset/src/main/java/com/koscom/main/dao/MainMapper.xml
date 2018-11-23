@@ -94,7 +94,7 @@
 	<select id="getMainDebtSumAmt" parameterType="java.lang.String" resultType="java.lang.String">
 		/* com.koscom.main.dao.MainMapper.getMainDebtSumAmt */
 		SELECT
-			DECODE( NVL( SUM( AMT_REMAIN ), 0 ), 0, '-', SUM( AMT_REMAIN )) AS SUM_AMT
+			SUM( AMT_REMAIN ) AS SUM_AMT
 		FROM
 			DEBT_PERSONAL_INFO
 		WHERE

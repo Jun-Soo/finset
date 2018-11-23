@@ -40,6 +40,7 @@
 		WHEN MATCHED THEN
 		UPDATE SET
 			CD_ASSETS_CLASS = #{cd_assets_class, jdbcType=VARCHAR},
+			CD_DETAIL_CLASS = #{cd_detail_class, jdbcType=VARCHAR},
 			CD_FC = #{cd_fc, jdbcType=VARCHAR},
 			NM_ACCOUNT = #{nm_account, jdbcType=VARCHAR},
 			DT_OPEN = #{dt_open, jdbcType=VARCHAR},
@@ -57,6 +58,7 @@
 			(
 				NO_PERSON,
 				CD_ASSETS_CLASS,
+				CD_DETAIL_CLASS,
 				CD_FC,
 				NO_ACCOUNT,
 				NM_ACCOUNT,
@@ -75,6 +77,7 @@
 			) VALUES (
 				#{no_person, jdbcType=VARCHAR},
 				#{cd_assets_class, jdbcType=VARCHAR},
+				#{cd_detail_class, jdbcType=VARCHAR},
 				#{cd_fc, jdbcType=VARCHAR},
 				#{no_account, jdbcType=VARCHAR},
 				#{nm_account, jdbcType=VARCHAR},

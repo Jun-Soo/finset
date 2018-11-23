@@ -239,6 +239,7 @@ public interface PersonMapper {
 	 * @param PersonShareInfo
 	 * @return int
 	 */
+	int duplPersonShareInfo(PersonShareInfo personShareInfo);
 	String getPersonShareInfoSeq();
 	int createPersonShareInfo(PersonShareInfo personShareInfo);
 

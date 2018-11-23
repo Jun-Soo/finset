@@ -144,7 +144,7 @@ export default {
     this.$store.state.header.type = "main";
     this.$store.state.header.active = "credit";
 
-    this.getCreditInfoMain();
+    this.getCreditMainInfo();
   },
   beforeMount() {},
   mounted() {},
@@ -154,7 +154,7 @@ export default {
   destroyed() {},
   methods: {
     // 신용정보 조회
-    getCreditInfoMain: function() {
+    getCreditMainInfo: function() {
       var _this = this;
       this.$http
         .get("/m/credit/getCreditMainInfo.json", {
@@ -188,7 +188,7 @@ export default {
           _this.guaranteeSumAmt = response.data.guaranteeSumAmt;
 
           // _this.$store.state.isLoading = false;
-          this.seen = true;
+          _this.seen = true;
         })
         .catch(e => {
           //this.$toast.center(ko.messages.error);
@@ -198,8 +198,8 @@ export default {
       return Common.formatNumber(data);
     },
     //메뉴이동
-    goMenu: function(menu){
-      if("news" == menu){
+    goMenu: function(menu) {
+      if ("news" == menu) {
         this.$router.push({
           name: "newsMain",
           query: { scKeyword: ["04"] }

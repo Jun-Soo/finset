@@ -14,6 +14,9 @@
           <p class="symbol"><img :src="debtInfo.fcImg" alt="" />{{debtInfo.nm_fc}}</p>
           <p class="date">{{formatDateDot(debtInfo.ymd_loan)}}</p>
         </div>
+        <div v-for="cutItem in debtInfo.cutItems" :key="cutItem.index">
+          <p>{{getCodeName(cutItem)}}</p>
+        </div>
         <div class="goods-benefit">
           <div>{{debtInfo.ever_interest}}<em> %</em></div>
           <div>{{formatNumber(debtInfo.amt_contract)}}<em> 만원</em></div>
@@ -338,6 +341,9 @@ export default {
     },
     formatDateDot: function(data) {
       return Common.formatDateDot(data);
+    },
+    getCodeName: function(data) {
+      return Common.getCodeName("debt_cut_items", data);
     },
     openInfo: function() {
       var _this = this;

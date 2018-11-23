@@ -34,16 +34,21 @@ public class AssetsDataManagerImpl implements AssetsDataManager {
 					assetsInfoDataVO.setNo_person(assetsDataForm.getNo_person()); //회원번호
 
 					//자산분류코드
+					assetsInfoDataVO.setCd_assets_class("00");
 					if("02".equals(list.getType_an())){ //예적금계좌
 
 						if(list.getNm_an().indexOf("예금") >= 0){
-							assetsInfoDataVO.setCd_assets_class("02");
+							assetsInfoDataVO.setCd_detail_class("02");
 						} else if(list.getNm_an().indexOf("적금") >= 0){
-							assetsInfoDataVO.setCd_assets_class("03");
+							assetsInfoDataVO.setCd_detail_class("03");
+						} else if(list.getNm_an().indexOf("청약") >= 0){
+							assetsInfoDataVO.setCd_detail_class("06");
+						} else if(list.getNm_an().indexOf("퇴직") >= 0 || list.getNm_an().indexOf("IRP") >= 0){
+							assetsInfoDataVO.setCd_detail_class("07");
 						}
 
 					}else{
-						assetsInfoDataVO.setCd_assets_class(list.getType_an());
+						assetsInfoDataVO.setCd_detail_class(list.getType_an());
 					}
 					assetsInfoDataVO.setCd_fc(list.getCd_fc()); //금융사코드
 					assetsInfoDataVO.setNo_account(list.getAn()); //계좌번호

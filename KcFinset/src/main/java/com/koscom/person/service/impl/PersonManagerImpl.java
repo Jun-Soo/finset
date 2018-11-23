@@ -284,6 +284,11 @@ public class PersonManagerImpl implements PersonManager {
 
 	@Override
 	public ReturnClass createPersonShareInfo(PersonShareInfo personShareInfo) {
+		//이미 요청했는지, 공유중인지 체크
+		if(0 != personMapper.duplPersonShareInfo(personShareInfo)){
+			return new ReturnClass(Constant.FAILED,"이미 요청 하셨습니다");
+		}
+
 		String seq_share = personMapper.getPersonShareInfoSeq();
 
 		personShareInfo.setSeq_share(seq_share);

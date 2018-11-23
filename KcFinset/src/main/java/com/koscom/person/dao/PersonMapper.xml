@@ -762,6 +762,21 @@
 	</select>
 
 	<!-- personMapper.createPersonShareInfo 공유관리 요청 -->
+	<select id="duplPersonShareInfo" parameterType="com.koscom.domain.PersonShareInfo" resultType="int">
+		/* com.koscom.person.dao.PersonMapper.duplPersonShareInfo : 공유관리 요청체크  */
+	    SELECT
+			COUNT( SEQ_SHARE ) AS SHARE_CNT
+		FROM
+			SHARE_INFO
+		WHERE
+			(
+				SHARE_STATUS = '01'
+				OR SHARE_STATUS = '02'
+			)
+			AND CD_SHARE = #{cd_share, jdbcType=VARCHAR}
+			AND REQ_NO_PERSON = #{req_no_person, jdbcType=VARCHAR}
+			AND OFFER_HP = #{offer_hp, jdbcType=VARCHAR}
+	</select>
 	<select id="getPersonShareInfoSeq" resultType="String">
 		SELECT
 			SEQ_SHARE_INFO.NEXTVAL

@@ -32,7 +32,8 @@ public class AssetsInfoDataVO implements Serializable{
 	private String dt_frt; //최초입력시간
 
 	//자산관리T
-    private String cd_assets_class; //자산분류코드(01 입출금 / 02 예금 / 03 적금 / 04 펀드 / 05 외환 / 06 증권 / 07 연금 / 08 보험 / 09 부동산)
+    private String cd_assets_class; //자산분류코드
+    private String cd_detail_class; //상세분류코드
     private String no_account; //계좌번호
     private String nm_account; //계좌명
     private String dt_open; //개설일자
@@ -212,6 +213,14 @@ public class AssetsInfoDataVO implements Serializable{
 
 	public void setCd_assets_class(String cd_assets_class) {
 		this.cd_assets_class = cd_assets_class;
+	}
+
+	public String getCd_detail_class() {
+		return cd_detail_class;
+	}
+
+	public void setCd_detail_class(String cd_detail_class) {
+		this.cd_detail_class = cd_detail_class;
 	}
 
 	public String getNo_account() {

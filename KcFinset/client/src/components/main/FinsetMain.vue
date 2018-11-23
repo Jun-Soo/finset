@@ -47,7 +47,7 @@
         <div class="item">
           <div class="left">
             <a @click="$router.push('/debt/main')">부채</a>
-            <p>{{ formatNumber(debtSumAmt) }}<em>원</em></p>
+            <p>{{ (debtSumAmt==null)? '-' : formatNumber(debtSumAmt) }}<em>원</em></p>
           </div>
           <div class="right">
             <a @click="$router.push('/debt/register')"></a>

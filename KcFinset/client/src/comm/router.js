@@ -118,18 +118,18 @@ import ConsumeHome from '@/components/consume/Home'
 import ConsumeMain from '@/components/consume/Main'
 import ConsumeRegGoal from '@/components/consume/RegGoal'
 import ConsumeConsumeDetail from '@/components/consume/ConsumeDetail'
-// import ConsumeIncomeStat from '@/components/consume/IncomeStat'
-// import ConsumeConsumeStat from '@/components/consume/ConsumeStat'
+import ConsumeIncomeAnalyze from '@/components/consume/IncomeAnalyze'
+// import ConsumeConsumeAnalyze from '@/components/consume/ConsumeAnalyze'
 import ConsumeSetting from '@/components/consume/Setting'
 import ConsumeConsumeClass from '@/components/consume/ConsumeClass'
 import ConsumeIncomeClass from '@/components/consume/IncomeClass'
 import ConsumePayment from '@/components/consume/Payment'
 import ConsumePaymentDetail from '@/components/consume/PaymentDetail'
-// import ConsumeSettlement from '@/components/consume/Settlement'
-// import ConsumeStats from '@/components/consume/Stats'
+import ConsumeSettlement from '@/components/consume/Settlement'
+import ConsumeIncomeStats from '@/components/consume/IncomeStats'
+// import ConsumeConsumeStats from '@/components/consume/ConsumeStats'
 // import ConsumePeriodStats from '@/components/consume/PeriodStats'
-import ConsumeIncomeAnalyze from '@/components/consume/IncomeAnalyze'
-// import ConsumeConsumeAnalyze from '@/components/consume/ConsumeAnalyze'
+
 import ConsumeDraggable from '@/components/consume/Draggable'
 
 import AssetsHome from '@/components/assets/Home'
@@ -917,6 +917,22 @@ export const routes = [{
     path: 'paymentDetail',
     alias: '/paymentDetail',
     component: ConsumePaymentDetail,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'settlement',
+    alias: '/settlement',
+    component: ConsumeSettlement,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'consumeIncomeStats',
+    alias: '/consumeIncomeStats',
+    component: ConsumeIncomeStats,
     meta: {
       allowPath: true
     }

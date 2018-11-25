@@ -854,6 +854,7 @@ aside.search-wrap{
             width: 100%;
             display: flex;
             justify-content: space-between;
+            align-items: center;
             p{
                 width: 50%;
                 line-height: 24px;
@@ -911,6 +912,12 @@ aside.search-wrap{
                 &.key{
                     color: $col2;
                     font-weight: 700;
+                    img{
+                        vertical-align: middle;
+                    }
+                    em{
+                        font-weight: 400;
+                    }
                 }
                 &.number{
                     font-size: 24px;
@@ -921,19 +928,6 @@ aside.search-wrap{
                         font-weight: 400;
                     }
                 }
-            }
-        }
-        .warn{
-            color: $col1;
-            padding-left: 20px;
-            background: url("../images/common/ico_arlam.png") no-repeat left 15px / 13px;
-            margin-top: 15px;
-            padding-top: 15px;
-            border-top: 1px solid $lineColor;
-            a{
-                color: inherit;
-                display: block;
-                background: url("../images/common/btn_red_arrow.png") no-repeat right center / 6px;
             }
         }
         .share{
@@ -984,6 +978,19 @@ aside.search-wrap{
                 border-radius: 5px;
             }
         }
+        .warn{
+            color: $col1;
+            padding-left: 20px;
+            background: url("../images/common/ico_arlam.png") no-repeat left 15px / 13px;
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid $lineColor;
+            a{
+                color: inherit;
+                display: block;
+                background: url("../images/common/btn_red_arrow.png") no-repeat right center / 6px;
+            }
+        }
     }
     .select{
         display: grid;
@@ -992,6 +999,8 @@ aside.search-wrap{
         grid-gap: 5px;
     }
 }
+
+
 
 .nobox-list{
     .date{
@@ -1009,6 +1018,8 @@ aside.search-wrap{
             align-items: center;
             margin-top: 10px;
             p{
+                font-size: 14px;
+                color: #333;
                 flex-grow: 1;
                 em{
                     display: inline-block;
@@ -1039,6 +1050,7 @@ aside.search-wrap{
                     &.number{
                         font-size: 19px;
                         font-weight: 700;
+                        color: #222;
                         &.red{
                             color: $col1;
                         }
@@ -3487,6 +3499,21 @@ button.cal{
             margin-top: 20px;
             border-radius: 50px;
         }
+        .cate-tag{
+            text-align: center;
+            margin-top: 15px;
+            em{
+                display: inline-block;
+                line-height: 18px;
+                border: 1px solid #888;
+                padding: 0 9px;
+                margin: 0 3px;
+                color: #888;
+                font-weight: 700;
+                border-radius: 20px;
+                margin-bottom: 5px;
+            }
+        }
     }
 }
 
@@ -4223,6 +4250,55 @@ button.cal{
     padding: 0 21px;
 }
 
+.report-top{
+    padding: 25px 21px;
+    background: #efeeec;
+    .date{
+        margin-top: 15px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-gap: 6px;
+        p{
+            background: #fff;
+            border: 1px solid $lineColor;
+            input[type="text"]{
+                width: calc(100% - 40px);
+                border: none;
+            }
+        }
+    }
+}
+
+.report-con{
+    .flex{
+        display: flex;
+        div{
+            text-align: center;
+            flex-grow: 1;
+            padding: 30px 0;
+            .key{
+                font-size: 14px;
+                color: $col2;
+                strong{
+                    font-size: 14px;
+                    color: $col2;
+                }
+            }
+            .value{
+                font-size: 24px;
+                color: #222;
+                margin-top: 10px;
+                font-weight: 700;
+            }
+        }
+    }
+    .graph{
+        img{
+            width: 100%;
+        }
+    }
+}
+
 
 //   상세보기 및 설정    //
 
@@ -4617,12 +4693,6 @@ button.cal{
         color: $col4;
         margin-top: 10px;
     }
-    .warn{
-        color: $col1;
-        padding-left: 20px;
-        background: url("../images/common/ico_arlam.png") no-repeat left top / 13px;
-        margin-top: 10px;
-    }
     .cert-num{
         display: grid;
         grid-template-columns: 7fr 3fr;
@@ -4640,6 +4710,13 @@ button.cal{
             margin-top: 0;
         }
     }
+}
+
+.warn{
+    color: $col1;
+    padding-left: 20px;
+    background: url("../images/common/ico_arlam.png") no-repeat left top / 13px;
+    margin-top: 10px;
 }
 
 

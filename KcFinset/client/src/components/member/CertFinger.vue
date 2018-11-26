@@ -46,7 +46,6 @@ export default {
   beforeCreate() {},
   created() {
     this.$store.state.title = "지문인증 설정";
-    this.$store.state.header.type = "sub";
 
     window.resultFingerPrint = this.resultFingerPrint;
     window.resultCheckCert = this.resultCheckCert;

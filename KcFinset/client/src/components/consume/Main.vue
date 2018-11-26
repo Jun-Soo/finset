@@ -28,7 +28,7 @@
       <div class="banner-wrap owl-carousel">
         <carousel :perPage=1>
           <slide class="item">
-            <a href="#">
+            <a @click="clickBanner('calendar')">
               <div class="banner">
                 <div class="left">
                   <p class="key">캘린더</p>
@@ -41,7 +41,7 @@
             </a>
           </slide>
           <slide class="item">
-            <a href="#" @click="clickBanner('payment')">
+            <a @click="clickBanner('payment')">
               <div class="banner">
                 <div class="left">
                   <p class="key">카드 대금</p>
@@ -71,9 +71,9 @@
 
       <div class="tab">
         <div class="wrap col3">
-          <a href="#" id="00" :class="{'on':curTab === '00'}" @click="clickTab">전체</a>
-          <a href="#" id="02" :class="{'on':curTab === '02'}" @click="clickTab">지출</a>
-          <a href="#" id="01" :class="{'on':curTab === '01'}" @click="clickTab">수입</a>
+          <a :class="{'on':curTab === '00'}" @click="clickTab('00')">전체</a>
+          <a :class="{'on':curTab === '02'}" @click="clickTab('02')">지출</a>
+          <a :class="{'on':curTab === '01'}" @click="clickTab('01')">수입</a>
         </div>
       </div>
 
@@ -85,13 +85,19 @@
             </div>
           </div>
         </div>
-        <div v-for="(subList, index) in consumeList" :key="index" class="list-wrap">
+        <div v-if="(consumeList||'')==''">
+          <div class="nodata">수입, 소비 내역이 없습니다</div>
+        </div>
+        <div v-else v-for="(subList, index) in consumeList" :key="index" class="list-wrap">
           <p class="date">{{formatDate(subList[0].dt_trd,"mmdd")}}</p>
-          <div v-for="vo in subList" :key="vo.index" class="item" @click="clickConsumeList(vo.seq_consume, vo.no_person, vo.type_in_out, vo.yn_auto)">
+          <div v-for="vo in subList" :key="vo.index" class="item" @click="clickConsumeList(vo.seq_consume, vo.no_person, vo.type_in_out, vo.yn_person_regist)">
             <div class="left">
               <p class="name">{{vo.contents}}</p>
               <p class="cate">
-                <img src="../../assets/images/common/bu_list_shopping.png" alt="" />
+                <!-- <img :src="'../../assets/images/consume/icon/'+getConsumeIconSrc(vo.type_in_out, vo.cd_class) + '.png'" alt="" /> -->
+                <!-- <img src="../../assets/images/common/bu_list_shopping.png" alt="" /> -->
+                <!-- <img :src="require(getConsumeIconSrc(vo.type_in_out, vo.cd_class))" alt="" /> -->
+                <img :src="getConsumeIconSrc(vo.type_in_out, vo.cd_class)" alt="" />
                 <span v-text="vo.type_in_out == '02'?vo.nm_class+' - '+vo.nm_type:vo.nm_class"></span>
               </p>
             </div>
@@ -145,9 +151,24 @@ export default {
   // computed () {
   // },
   watch: {
-    isScrap: function() {},
+    isScrap: function(param) {
+      if (param) {
+      } else {
+        this.progressOption = {
+          text: "공인 인증서를 등록하여 소비내역을 관리하세요",
+          max: 0
+        };
+      }
+    },
     isGoal: function(param) {
       if (this.isScrap == true) {
+        if (param) {
+        } else {
+          this.progressOption = {
+            text: "설정된 예산이 없습니다",
+            max: 0
+          };
+        }
       } else {
         this.progressOption = {
           text: "공인 인증서를 등록하여 소비내역을 관리하세요",
@@ -161,12 +182,15 @@ export default {
     this.$store.state.header.active = "consume";
     this.$parent.isBottom = true;
   },
-  created() {},
-  beforeMount() {},
-  mounted() {
+  created() {
+    if (this.$store.state.user.dt_basic > this.standardDt.getDate()) {
+      this.standardDt.setMonth(this.standardDt.getMonth() - 1);
+    }
     this.ym = this.formatHead(this.getYm(this.standardDt));
     this.listConsumeShareInfo();
   },
+  beforeMount() {},
+  mounted() {},
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
@@ -178,10 +202,7 @@ export default {
         .get("/m/consume/listConsumeSharePersonInfo.json", { params: {} })
         .then(function(response) {
           var list = response.data.listConsumeSharePersonInfo;
-          var test = new Object();
-          test.no_person = "P000000109";
-          test.nm_person = "테스트";
-          list.push(test);
+
           for (var idx in list) {
             list[idx].isShow = true;
           }
@@ -205,10 +226,6 @@ export default {
           var consumeGoal = response.data.consumeGoal;
           if ((consumeGoal || "") == "") {
             _this.isGoal = false;
-            _this.progressOption = {
-              text: "설정된 예산이 없습니다",
-              max: 0
-            };
           } else {
             _this.isGoal = true;
             _this.progressOption.text =
@@ -283,8 +300,8 @@ export default {
           break;
       }
     },
-    clickTab: function(tab) {
-      this.curTab = tab.srcElement.id;
+    clickTab: function(code) {
+      this.curTab = code;
       this.listConsumeInfo();
     },
     chkType: function(type) {
@@ -318,6 +335,9 @@ export default {
         case "payment":
           _this.$router.push("/consume/payment");
           break;
+        case "calendar":
+          _this.$router.push("/common/monthCal");
+          break;
         default:
           break;
       }
@@ -325,7 +345,12 @@ export default {
     clickSetting: function() {
       this.$router.push("/consume/setting");
     },
-    clickConsumeList: function(seq_consume, no_person, type_in_out, yn_auto) {
+    clickConsumeList: function(
+      seq_consume,
+      no_person,
+      type_in_out,
+      yn_person_regist
+    ) {
       var _this = this;
 
       this.$router.push({
@@ -338,12 +363,30 @@ export default {
             _this.shareList.findIndex(
               person => person.no_person === no_person
             ) == 0,
-          isAuto: yn_auto == "Y"
+          isAuto: yn_person_regist == "N"
         }
       });
     },
     regConsume: function() {
       this.$router.push("/consume/consumeDetail");
+    },
+    getConsumeIconSrc: function(type_in_out, cd_class) {
+      let cd;
+      if ((cd_class || "") == "" || (type_in_out || "") == "") {
+        cd = "99";
+      } else if (type_in_out == "01") {
+      } else {
+        //default로 설정된 cd_class가 24까지밖에 없음
+        if (parseInt(cd_class) > 24) {
+          cd = "99";
+        } else {
+          cd = cd_class;
+        }
+      }
+      if (cd == undefined) {
+        return require("@/assets/images/consume/icon/99.png");
+      }
+      return require("@/assets/images/consume/icon/" + cd + ".png");
     },
     clickProgress: function() {}
   }

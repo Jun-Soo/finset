@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import Constant from "./../../assets/js/constant.js";
 import gnb from "./Gnb";
 export default {
   name: "FinsetHeader",
@@ -43,6 +44,8 @@ export default {
   // },
   beforeCreate() {},
   created() {
+    window.androidBackFn = this.androidBackFn;
+
     if (
       location.href.indexOf("alarmHistory") > -1 ||
       location.href.indexOf("mypage/state") > -1
@@ -54,10 +57,20 @@ export default {
   beforeMount() {},
   mounted() {},
   beforeUpdate() {},
-  updated() {},
+  updated() {
+    if (Constant.userAgent == "Android") {
+      let ynEnd = "N";
+      if (this.$store.state.header.type !== "sub") ynEnd = "Y";
+      window.Android.setEndApp(ynEnd);
+    }
+  },
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    androidBackFn: function() {
+      this.$router.go(-1);
+    }
+  }
 };
 </script>
 

@@ -113,7 +113,6 @@ export default {
   created() {
     window.resultKeypad = this.resultKeypad;
     if (Constant.userAgent == "Android") {
-      window.Android.setEndApp("Y");
       window.Android.reqSMSPermission();
     }
     this.$store.state.title = "본인확인";

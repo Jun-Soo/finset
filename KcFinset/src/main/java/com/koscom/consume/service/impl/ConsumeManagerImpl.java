@@ -440,4 +440,10 @@ public class ConsumeManagerImpl implements ConsumeManager {
 			return Integer.parseInt(secondVO.getAmt_in_out()) - Integer.parseInt(firstVO.getAmt_in_out());
 		}
 	}
+	
+	@Override
+	public List<ConsumeVO> listMeansConsume(String no_person) {
+		logger.debug("listMeansConsume");
+		return consumeMapper.listMeansConsume(no_person);
+	}
 }

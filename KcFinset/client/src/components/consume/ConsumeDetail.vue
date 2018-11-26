@@ -11,45 +11,38 @@
         <ul class="consume-detail">
           <li>
             <p class="key" v-text="curTab=='01'?'입금':'결제수단'"></p>
-            <p v-if="isNew||!isAuto">
-              <select v-if="!isAuto&&!isModifyAuto" class="sel-means_consume" @change="selectMeans" v-model="consumeVO.means_consume">
-                <option value="default" disabled="disabled">선택</option>
-                <option value="04">입출금계좌</option>
-                <option value="00">계좌조회</option>
-                <option v-if="curTab == '02'" value="01">카드</option>
-                <option value="02">현금</option>
-              </select>
-              <select v-if="isAuto||isModifyAuto" disabled="disabled" class="sel-means_consume" v-model="consumeVO.means_consume">
-              </select>
-            </p>
-            <p v-if="!isNew&&isAuto">
-              <input v-if="!isModifyAuto" type="text" v-model="consumeVO.nm_card" :readonly="!isNew">
-              <select v-if="isModifyAuto" disabled="disabled" class="sel-means_consume" v-model="consumeVO.means_consume">
-              </select>
+            <p>
+              <multiselect v-validate="'required'" data-vv-name='수단' :disabled="!isNew" v-model="consumeVO.means_consume" ref="selMeansConsume" label="text" :show-labels="false" :options="meansConsumeOption" placeholder="결제수단" :searchable="false" :allow-empty="false" @select="selectMeans">
+              </multiselect>
             </p>
           </li>
           <li>
             <p class="key">금액</p>
-            <p><input type="text" v-model="consumeVO.amt_in_out" :readonly="chkReadonly"><em>원</em></p>
+            <p>
+              <input type="text" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액"><em>원</em>
+              <!-- <p class="warn" v-if="errors.has('이메일')">{{errors.first('금액')}}</p> -->
+            </p>
           </li>
           <li>
             <p class="key">카테고리</p>
             <p>
+              <!-- <button class="btn-cate btn-search" @click="showCategory" :disabled="!isMine" v-text="categoryText" v-validate="'required'" data-vv-name="카테고리"></button> -->
               <button class="btn-cate btn-search" @click="showCategory" :disabled="!isMine" v-text="categoryText"></button>
             </p>
           </li>
           <li>
             <p class="key" v-text="curTab=='01'?'출처':'결제처'"></p>
-            <p><input type="text" v-model="consumeVO.contents" :readonly="chkReadonly"></p>
+            <p><input type="text" v-model="consumeVO.contents" :readonly="chkReadonly" v-validate="'required'" data-vv-name="출처"></p>
           </li>
           <li>
             <p class="key">날짜</p>
-            <p v-if="isNew||!isAuto">
-              <datepicker v-model="consumeVO.dt_trd" :language="ko" :format="formatDateDot" class="div-date" :readonly="chkReadonly"></datepicker>
+            <!-- <p v-if="isNew&&!isAuto"> -->
+            <p>
+              <datepicker v-model="consumeVO.dt_trd" :language="ko" :format="formatDateDot" class="div-date" :disabled="chkReadonly"></datepicker>
             </p>
-            <p v-if="!isNew&&isAuto" readonly>
+            <!-- <p v-if="!isNew||isAuto" readonly>
               <input type="text" :value="formatDateDot(consumeVO.dt_trd)" readonly="readonly">
-            </p>
+            </p> -->
           </li>
           <li class="memo">
             <p class="key">메모</p>
@@ -108,7 +101,10 @@
           <p class="title" v-text="curTab=='01'?'입금내역':'출금내역'"></p>
           <a class="btn-close" @click="closeTransModal"></a>
         </div>
-        <div class="nobox-list">
+        <div v-if="(listTrans||'')==''">
+          <div class="nodata" v-text="(curTab=='01'?'입금':'출금')+'내역이 없습니다'"></div>
+        </div>
+        <div v-else class="nobox-list">
           <div v-for="(subList, index) in listTrans" :key="index">
             <p class="date">{{formatDateDot(listTrans[index][0].dt_trd,"mmdd")}}</p>
             <div v-for="(vo, subIndex) in subList" :key="subIndex" @click="selectTrans(index, subIndex)" class="item">
@@ -125,18 +121,15 @@
         </div>
       </div>
     </vue-modal>
-    <vue-modal transitionName="fade" name="confirmModal">
-      <Confirm slot="body" :modalText="'정말 삭제하시겠습니까?'" :confirm="deleteConsume" :cancel="closeModal" :isSingle="false" />
-    </vue-modal>
-
   </div>
 </template>
 
 <script>
 import Common from "@/assets/js/common.js";
+import Constant from "@/assets/js/constant.js";
 import datepicker from "vuejs-datepicker";
 import { ko } from "vuejs-datepicker/dist/locale";
-import Confirm from "../common/Confirm.vue";
+import korean from "vee-validate/dist/locale/ko.js";
 
 export default {
   name: "ConsumeConsumeDetail",
@@ -149,25 +142,23 @@ export default {
       curClass: "",
       curType: "",
       consumeVO: {
-        dt_trd: new Date(),
-        means_consume: "default"
+        dt_trd: new Date()
       },
       bannerData: "",
       isNew: true,
       isMine: true,
       isAuto: false,
-      isModifyAuto: false,
       isShowBanner: false,
       isShowCategory: false,
       isShowTrans: false,
       listTrans: {},
       ko: ko,
-      dt_trans: ""
+      dt_trans: "",
+      meansConsumeOption: []
     };
   },
   components: {
-    datepicker,
-    Confirm
+    datepicker
   },
   computed: {
     categoryText: function() {
@@ -193,7 +184,6 @@ export default {
       }
     }
   },
-
   watch: {
     isShowTrans: function(key) {
       if (key == true) {
@@ -223,6 +213,7 @@ export default {
         this.$route.query.isAuto == "true" || this.$route.query.isAuto == true;
     }
     this.setDefault();
+    Common.datepickerInit("div-date");
   },
   beforeMount() {},
   mounted() {},
@@ -341,19 +332,25 @@ export default {
       }
     },
     clickSave: function() {
-      if (this.isNew) {
-        this.createConsume();
-      } else {
-        this.modifyConsume();
-      }
+      this.$validator.validateAll().then(res => {
+        if (res) {
+          if (this.isNew) {
+            this.createConsume();
+          } else {
+            this.modifyConsume();
+          }
+        } else {
+          this.$toast.center("정보가 아직 다 입력되지 않았습니다");
+        }
+      });
     },
     selectTrans: function(index, subIndex) {
       var transVO = this.listTrans[index][subIndex];
 
-      this.consumeVO.means_consume = "04";
+      // this.consumeVO.means_consume = "04";
       this.consumeVO.cd_fc = transVO.cd_fc;
       this.consumeVO.nm_fc = transVO.nm_trd;
-      this.consumeVO.cd_card = transVO.an;
+      this.consumeVO.no_card = transVO.an;
       this.consumeVO.nm_card = transVO.nm_an;
       this.consumeVO.type_in_out = this.curTab;
       this.consumeVO.amt_in_out = Common.formatNumber(
@@ -365,28 +362,31 @@ export default {
       this.consumeVO.tm_trd = transVO.tm_trd;
 
       this.isAuto = true;
-      if (!this.isNew) {
-        this.isModifyAuto = true;
-      }
-
-      var means_consume = document.getElementsByClassName(
-        "sel-means_consume"
-      )[0];
-      means_consume.innerHTML =
-        "<option value='04'>(" + transVO.nm_fc + ")" + transVO.an + "</option>";
       this.isShowTrans = false;
     },
     clickDelete: function() {
-      this.$modals.show("confirmModal");
+      var _this = this;
+      this.$dialogs
+        .confirm("정말로 삭제하시겠습니까?", Constant.options)
+        .then(res => {
+          // console.log(res); // {ok: true|false|undefined}
+          if (res.ok) {
+            _this.deleteConsume();
+          } else {
+            // this.$dialogs.alert("취소를 선택했습니다.", Constant.options);
+          }
+        });
     },
-    closeModal: function() {
-      this.$modals.hide("confirmModal");
-    },
-    selectMeans: function(e) {
-      if (e.target.value == "00") {
-        this.listPersonTransDetail();
+    // closeModal: function() {
+    //   this.$modals.hide("confirmModal");
+    // },
+    selectMeans: function(meansOption) {
+      this.setDefault();
+      if (meansOption.means_consume != "02") {
+        this.listPersonTransDetail(meansOption.value);
       } else {
         this.isShowTrans = false;
+        this.isAuto = false;
       }
     },
     showCategory: function() {
@@ -413,7 +413,12 @@ export default {
           vo.amt_in_out = _this.chkReadonly
             ? _this.formatNumber(vo.amt_in_out)
             : vo.amt_in_out;
-
+          _this.meansConsumeOption = [];
+          _this.meansConsumeOption.push({
+            text: vo.nm_card,
+            value: vo.no_card
+          });
+          vo.means_consume = { text: vo.nm_card, value: vo.no_card };
           _this.consumeVO = vo;
 
           if (_this.curTab == "02") {
@@ -493,13 +498,20 @@ export default {
       var formData = new FormData();
 
       formData.append("type_in_out", this.consumeVO.type_in_out);
-      formData.append("means_consume", this.consumeVO.means_consume);
-      var target = document.getElementsByClassName("sel-means_consume")[0];
+      var means_consume = this.consumeVO.means_consume.means_consume;
+
+      formData.append("means_consume", means_consume);
+      formData.append(
+        "cd_fc",
+        means_consume == "02" ? null : this.consumeVO.cd_fc
+      );
       formData.append(
         "nm_card",
-        this.consumeVO.nm_card == undefined
-          ? target.options[target.selectedIndex].text
-          : this.consumeVO.nm_card
+        means_consume == "02" ? "현금" : this.consumeVO.nm_card
+      );
+      formData.append(
+        "no_card",
+        means_consume == "02" ? null : this.consumeVO.no_card
       );
       formData.append(
         "dt_trd",
@@ -570,16 +582,18 @@ export default {
           _this.$router.go(-1);
         });
     },
-    listPersonTransDetail: function() {
+    listPersonTransDetail: function(no_card) {
       var _this = this;
       this.$http
         .get("/m/consume/listPersonTransDetail.json", {
           params: {
+            no_card: no_card,
             type_in_out: _this.curTab
           }
         })
         .then(function(response) {
           var list = response.data.listPersonTransDetail;
+
           for (var idx in list) {
             for (var subIdx in list[idx]) {
               if (list[idx][subIdx].amt_dep == "0") {
@@ -602,8 +616,11 @@ export default {
               );
             }
           }
-
-          _this.listTrans = list;
+          if ((list || "") == "" || list[0].length == 0) {
+            _this.listTrans = [];
+          } else {
+            _this.listTrans = list;
+          }
           _this.isShowTrans = true;
         });
     },
@@ -615,7 +632,7 @@ export default {
       this.$http
         .post("/m/consume/deleteConsumeInfo.json", formData)
         .then(function(response) {
-          _this.closeModal();
+          // _this.closeModal();
           _this.$router.go(-1);
         });
     },
@@ -639,6 +656,25 @@ export default {
           _this.bannerData = data;
         });
     },
+    listMeansConsume: function() {
+      var _this = this;
+
+      this.$http
+        .get("/m/consume/listMeansConsume.json")
+        .then(function(response) {
+          var list = response.data.listMeansConsume;
+          _this.meansConsumeOption = [];
+          for (var idx in list) {
+            _this.meansConsumeOption.push({
+              means_consume: list[idx].means_consume,
+              text:
+                list[idx].means_consume == "02" ? "현금" : list[idx].nm_card,
+              value: list[idx].no_card,
+              cd_fc: list[idx].cd_fc
+            });
+          }
+        });
+    },
     //기타 편의를 위해 함수로 구현한 부분
     setDefault: function() {
       this.consumeVO = {
@@ -652,6 +688,9 @@ export default {
         this.listPersonIncomeClassInfo();
       } else {
         this.listPersonConsumeClassInfo();
+      }
+      if (this.isNew) {
+        this.listMeansConsume();
       }
     },
     getTransText: function(vo) {
@@ -672,15 +711,4 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
-.vdp-datepicker__calendar {
-  position: fixed;
-  font-size: 13px;
-  line-height: 40px;
-}
-.vdp-datepicker__calendar header {
-  position: static;
-}
-.div-date {
-  text-align: right;
-}
 </style>

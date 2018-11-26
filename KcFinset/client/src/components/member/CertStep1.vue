@@ -131,11 +131,7 @@ export default {
     let _this = this;
     let frm = new FormData();
 
-    if (Constant.userAgent == "Android") {
-      window.Android.setEndApp("Y");
-    }
     _this.$store.state.title = "약관동의";
-    _this.$store.state.header.type = "sub";
     frm.append("code_value", "1.0");
     frm.append("code_group", "OPENAPI_TERMS");
     _this.$http.post("/m/login/getAgreeTerm.json", frm).then(response => {

@@ -25,16 +25,44 @@
       </div>
     </div>
     <div class="check-flex">
-      <div>
+      <!-- <div>
         <button class="today" @click="goToToday">TODAY</button>
       </div>
       <div class="wrap">
         <button class="income" :class="{ 'on':isActiveIncome }" @click="clickIncome">수입</button>
         <button class="debt" :class="{ 'on':isActiveConsume }" @click="clickConsume">지출</button>
         <button class="loan" :class="{ 'on':isActiveDebt }" @click="clickDebt">대출</button>
+      </div> -->
+      <div class="income">
+        <button :class="{ 'on':isActiveIncome }" @click="clickIncome">수입</button>
+        <em>1,234,565,000</em>
+      </div>
+      <div class="debt">
+        <button :class="{ 'on':isActiveConsume }" @click="clickConsume">지출</button>
+        <em>1,234,565,000</em>
+      </div>
+      <div class="loan">
+        <button :class="{ 'on':isActiveDebt }" @click="clickDebt">대출</button>
+        <em>1,234,565,000</em>
       </div>
     </div>
-
+    <div class="filter-wrap test">
+      <div class="filter red">
+        <input type="checkbox" id="chk1"><label for="chk1">박준수</label>
+      </div>
+      <div class="filter orange">
+        <input type="checkbox" id="chk2"><label for="chk2">박준수</label>
+      </div>
+      <div class="filter green">
+        <input type="checkbox" id="chk3"><label for="chk3">박준수</label>
+      </div>
+      <div class="filter blue">
+        <input type="checkbox" id="chk4"><label for="chk4">박준수</label>
+      </div>
+      <div class="filter purple">
+        <input type="checkbox" id="chk5"><label for="chk5">박준수</label>
+      </div>
+    </div>
     <component :is="activeView" :class="'v-cal-content--' + activeView" v-bind="activeViewProps"></component>
     <footer class="v-cal-footer"></footer>
   </div>
@@ -240,4 +268,9 @@ export default {
 </script>
 
 <style scoped>
+.test {
+  text-align: center;
+  padding: 10px;
+  margin-bottom: 5px;
+}
 </style>

@@ -2,73 +2,66 @@
   <section>
     <div class="tab">
       <div class="wrap">
-        <a href="#" class="on">검색</a>
-        <a href="#">직접입력</a>
+        <a :class="{'on':tabKey == 'search'}" @click="clickTab('search')">검색</a>
+        <a :class="{'on':tabKey == 'direct'}" @click="clickTab('direct')">직접입력</a>
       </div>
     </div>
 
     <div class="container">
-      <ul class="debt-modify">
+      <ul v-if="tabKey == 'search'" class="debt-modify">
         <li>
           <p class="key">종류</p>
           <p>
-            <select id="sel_building_type" @change="listAddrRegionFirst">
-              <option selected="selected" disabled="disabled">종류선택</option>
-              <option value="1">아파트</option>
-              <option value="2">오피스텔</option>
-            </select>
+            <multiselect v-model="selectObj.building_type" ref="sel_building_type" label="text" :show-labels="false" :options="options_building_type" placeholder="종류 선택" :searchable="false" :allow-empty="false" @select="listAddrRegionFirst">
+            </multiselect>
           </p>
         </li>
         <li>
           <p class="key">시/도</p>
           <p>
-            <select id="sel_region1" @change="listAddrRegionSecond">
-              <option selected="selected" disabled="disabled">시/도 선택</option>
-              <option v-for="(firstVO, index) in listAddrRegion1" :key="index" :value="firstVO.code_value">{{firstVO.nm_code}}</option>
-            </select>
+            <multiselect v-model="selectObj.region1" ref="sel_region1" label="text" :show-labels="false" :options="options_sel_region1" placeholder="시/도 선택" :searchable="false" :allow-empty="false" @select="listAddrRegionSecond">
+            </multiselect>
           </p>
         </li>
         <li>
           <p class="key">시/군/구</p>
           <p>
-            <select id="sel_region2" @change="listAddrRegionThird">
-              <option selected="selected" disabled="disabled">시/군/구 선택</option>
-              <option v-for="(secondVO, index) in listAddrRegion2" :key="index" :value="secondVO.code_value">{{secondVO.nm_code}}</option>
-            </select>
+            <multiselect v-model="selectObj.region2" ref="sel_region2" label="text" :show-labels="false" :options="options_sel_region2" placeholder="시/군/구 선택" :searchable="false" :allow-empty="false" @select="listAddrRegionThird">
+            </multiselect>
           </p>
         </li>
         <li>
           <p class="key">읍/면/동</p>
           <p>
-            <select id="sel_region3" @change="listSrchApartment">
-              <option selected="selected" disabled="disabled">읍/면/동 선택</option>
-              <option v-for="(thirdVO, index) in listAddrRegion3" :key="index" :value="thirdVO.code_value">{{thirdVO.nm_code}}</option>
-            </select>
+            <multiselect v-model="selectObj.region3" ref="sel_region3" label="text" :show-labels="false" :options="options_sel_region3" placeholder="읍/면/동 선택" :searchable="false" :allow-empty="false" @select="listSrchApartment">
+            </multiselect>
           </p>
         </li>
         <li>
           <p class="key">아파트명</p>
           <p>
-            <select @change="scrapKbMarketPrice">
-              <option selected="selected" disabled="disabled">아파트명 선택</option>
-              <option v-for="(fourthVO, index) in listSrchApartmentInfo" :key="index" :value="fourthVO.apartment">{{fourthVO.apartment_name}}</option>
-            </select>
+            <multiselect v-model="selectObj.apartment" ref="sel_apartment" label="text" :show-labels="false" :options="options_sel_apartment" placeholder="아파트명 선택" :searchable="false" :allow-empty="false" @select="scrapKbMarketPrice">
+            </multiselect>
           </p>
         </li>
         <li>
           <p class="key">공급면적/전용면적</p>
           <p>
-            <select>
-              <option>면적 선택</option>
-              <option v-for="(fifthVO, index) in kbMarketPricePyeongList" :key="index" :value="fifthVO.floor_plan_area_supply + '/' + fifthVO.floor_plan_area_dedicated">
-                {{fifthVO.floor_plan_area_supply +"("+fifthVO.floor_plan_area_dedicated+")"}}
-              </option>
-            </select>
+            <multiselect v-model="selectObj.pricePyeong" ref="sel_pricePyeong" label="text" :show-labels="false" :options="options_sel_pricePyeong" placeholder="면적 선택" :searchable="false" :allow-empty="false" @select="selectPricePyeong">
+            </multiselect>
           </p>
         </li>
       </ul>
-      <div class="btn-wrap float">
-        <a href="#" class="solid blue box">확인</a>
+      <ul v-if="tabKey == 'direct'" class="debt-modify">
+        <li>
+          <p class="key">종류</p>
+          <p>
+            <input type="text" v-model="selectObj.direct" />
+          </p>
+        </li>
+      </ul>
+      <div v-if="isFinished" class="btn-wrap float">
+        <a class="solid blue box">확인</a>
       </div>
     </div>
 
@@ -76,17 +69,31 @@
 </template>
 
 <script>
+import Common from "@/assets/js/common.js";
+
 export default {
   name: "DebtCalcSearch",
   data() {
     return {
+      tabKey: "search",
+      options_building_type: [
+        { text: "아파트", value: "1" },
+        { text: "오피스텔", value: "2" }
+      ],
+      options_sel_region1: [],
+      options_sel_region2: [],
+      options_sel_region3: [],
+      options_sel_apartment: [],
+      options_sel_pricePyeong: [],
       listAddrRegion1: new Object(),
       listAddrRegion2: new Object(),
       listAddrRegion3: new Object(),
       listSrchApartmentInfo: new Object(),
       scrapKbMarketPriceList: new Object(),
       kbMarketPricePyeongList: new Object(),
-      kbMarketPricePriceList: new Object()
+      kbMarketPricePriceList: new Object(),
+      selectObj: new Object(),
+      isFinished: false
     };
   },
   components: {},
@@ -103,44 +110,78 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    clickTab: function(key) {
+      if (key == this.tabKey) {
+        return;
+      } else {
+        this.tabKey = key;
+      }
+    },
     listAddrRegionFirst: function(param) {
-      var building_type = param.target.value;
+      var building_type = param.value;
       var _this = this;
       this.$http
         .get("/m/kbrealestate/listAddrRegion1.json", {
           params: { building_type: building_type }
         })
         .then(function(response) {
-          _this.listAddrRegion1 = response.data.listAddrRegion1;
+          var list = response.data.listAddrRegion1;
+          _this.options_sel_region1 = [];
+          for (var idx in list) {
+            _this.options_sel_region1.push({
+              text: list[idx].nm_code,
+              value: list[idx].code_value
+            });
+          }
+          _this.listAddrRegion1 = list;
+          _this.$refs.sel_region1.$el.focus();
         });
     },
     listAddrRegionSecond: function(param) {
-      var region1_code = param.target.value;
+      var region1_code = param.value;
       var _this = this;
       this.$http
         .get("/m/kbrealestate/listAddrRegion2.json", {
           params: { region1_code: region1_code }
         })
         .then(function(response) {
-          _this.listAddrRegion2 = response.data.listAddrRegion2;
+          var list = response.data.listAddrRegion2;
+          _this.options_sel_region2 = [];
+          for (var idx in list) {
+            _this.options_sel_region2.push({
+              text: list[idx].nm_code,
+              value: list[idx].code_value
+            });
+          }
+          _this.listAddrRegion2 = list;
+          _this.$refs.sel_region2.$el.focus();
         });
     },
     listAddrRegionThird: function(param) {
-      var region2_code = param.target.value;
+      var region2_code = param.value;
       var _this = this;
       this.$http
         .get("/m/kbrealestate/listAddrRegion3.json", {
           params: { region2_code: region2_code }
         })
         .then(function(response) {
-          _this.listAddrRegion3 = response.data.listAddrRegion3;
+          var list = response.data.listAddrRegion3;
+          _this.options_sel_region3 = [];
+          for (var idx in list) {
+            _this.options_sel_region3.push({
+              text: list[idx].nm_code,
+              value: list[idx].code_value
+            });
+          }
+          _this.listAddrRegion3 = list;
+          _this.$refs.sel_region3.$el.focus();
         });
     },
     listSrchApartment: function(param) {
-      var building_type = document.getElementById("sel_building_type").value;
-      var region1_code = document.getElementById("sel_region1").value;
-      var region2_code = document.getElementById("sel_region2").value;
-      var region3_code = param.target.value;
+      var building_type = this.selectObj.building_type.value;
+      var region1_code = this.selectObj.region1.value;
+      var region2_code = this.selectObj.region2.value;
+      var region3_code = param.value;
       var _this = this;
       this.$http
         .get("/m/kbrealestate/listSrchApartmentInfo.json", {
@@ -152,16 +193,27 @@ export default {
           }
         })
         .then(function(response) {
-          _this.listSrchApartmentInfo = response.data.listSrchApartmentInfo;
+          var list = response.data.listSrchApartmentInfo;
+          _this.options_sel_apartment = [];
+          for (var idx in list) {
+            _this.options_sel_apartment.push({
+              text: list[idx].apartment_name,
+              value: list[idx].apartment
+            });
+          }
+          _this.listSrchApartmentInfo = list;
+          _this.$refs.sel_apartment.$el.focus();
         });
     },
     scrapKbMarketPrice: function(param) {
-      var building_type = document.getElementById("sel_building_type").value;
-      var region1_code = document.getElementById("sel_region1").value;
-      var region2_code = document.getElementById("sel_region2").value;
-      var region3_code = document.getElementById("sel_region3").value;
-      var apartment = param.target.value;
+      var building_type = this.selectObj.building_type.value;
+      var region1_code = this.selectObj.region1.value;
+      var region2_code = this.selectObj.region2.value;
+      var region3_code = this.selectObj.region3.value;
+      var apartment = param.value;
       var _this = this;
+
+      this.spinnerIsVisible = true;
 
       this.$http
         .get("/m/kbrealestate/scrapKbMarketPriceList.json", {
@@ -174,10 +226,30 @@ export default {
           }
         })
         .then(function(response) {
-          _this.kbMarketPricePyeongList = response.data.kbMarketPricePyeongList;
-          console.log(response.data.kbMarketPricePyeongList);
-          console.log(response.data.kbMarketPricePriceList);
+          var list = response.data.kbMarketPricePyeongList;
+          for (var idx in list) {
+            _this.options_sel_pricePyeong.push({
+              text:
+                list[idx].floor_plan_area_supply +
+                "(" +
+                list[idx].floor_plan_area_dedicated +
+                ")",
+              value: idx
+            });
+            _this.kbMarketPricePriceList[idx] =
+              response.data.kbMarketPricePriceList[idx];
+          }
+          _this.kbMarketPricePyeongList = list;
+          _this.$refs.sel_pricePyeong.$el.focus();
+          _this.spinnerIsVisible = false;
         });
+    },
+    selectPricePyeong: function(param) {
+      console.log(
+        //실제 사용할 가격
+        this.kbMarketPricePriceList[param.value].sale_general_average
+      );
+      this.isFinished = true;
     }
   }
 };

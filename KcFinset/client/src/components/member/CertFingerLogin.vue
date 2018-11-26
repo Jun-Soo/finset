@@ -1,6 +1,6 @@
 <template>
   <section id="content">
-    <div class="cert-finger">
+    <div class="cert-finger" aria-readonly="true">
       <p class="text">지문을 입력해 주세요.</p>
       <div class="red" id="err_message" v-if="cntFailFinger> 0">{{ errMsg }}</div>
     </div>
@@ -35,7 +35,6 @@ export default {
   beforeCreate() {},
   created() {
     this.$store.state.title = "지문인증";
-    this.$store.state.header.type = "sub";
 
     window.resultFingerPrint = this.resultFingerPrint;
     if (Constant.userAgent == "Android") {

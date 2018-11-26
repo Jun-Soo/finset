@@ -68,7 +68,6 @@ export default {
     window.resultCheckAvaliableScrapList = this.resultCheckAvaliableScrapList;
 
     if (Constant.userAgent == "Android") {
-      window.Android.setEndApp("Y");
       window.Android.checkFingerPrint();
     } else if (Constant.userAgent == "iOS") {
       //지문인식 가능여부 체크 결과 콜백 이벤트

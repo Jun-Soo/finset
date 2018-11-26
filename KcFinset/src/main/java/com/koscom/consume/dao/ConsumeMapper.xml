@@ -57,20 +57,29 @@
 			CONSUME_INFO CI,
 			(
 				SELECT
-					TO_CHAR( ADD_MONTHS( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' ),- 1 ), 'YYYYMM' )
-						|| DECODE( LENGTH( PSI.DT_BASIC ), 1, '0' || PSI.DT_BASIC, PSI.DT_BASIC) AS DT_FROM
-					,#{ym_trd, jdbcType = VARCHAR} || DECODE( LENGTH( PSI.DT_BASIC ), 1, '0' || PSI.DT_BASIC, PSI.DT_BASIC ) AS DT_TO
+					 CASE
+						WHEN DT_BASIC IS NULL
+							THEN TO_CHAR( TRUNC( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' ), 'MONTH' ), 'YYYYMMDD' )
+							ELSE TO_CHAR( ADD_MONTHS( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' ),- 1 ), 'YYYYMM' ) ||
+								 DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC )
+					END AS DT_FROM
+					,CASE
+						WHEN DT_BASIC IS NULL
+							THEN TO_CHAR( LAST_DAY( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' )), 'YYYYMMDD' )
+							ELSE #{ym_trd, jdbcType = VARCHAR} || DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC )
+					END AS DT_TO
 				FROM
-					PERSON_SET_INFO PSI
+					PERSON_SET_INFO
 				WHERE
 					NO_PERSON = #{no_person, jdbcType = VARCHAR}
 			) PSI
 		WHERE
-				NO_PERSON			= #{no_person, jdbcType = VARCHAR}
-			AND TO_NUMBER( CI.DT_TRD ) BETWEEN TO_NUMBER( PSI.DT_FROM ) AND TO_NUMBER( PSI.DT_TO )
-			AND CI.TYPE_IN_OUT		= '02'
-			AND CI.YN_CANCEL		= 'N'
-			AND CI.YN_BUDGET_EXCEPT = 'N'
+				NO_PERSON					 = #{no_person, jdbcType = VARCHAR}
+			AND TO_NUMBER(CI.DT_TRD)<![CDATA[>]]>	TO_NUMBER(PSI.DT_FROM)
+			AND TO_NUMBER(CI.DT_TRD)<![CDATA[<=]]>	TO_NUMBER(PSI.DT_TO)
+			AND CI.TYPE_IN_OUT				 = '02'
+			AND CI.YN_CANCEL				 = 'N'
+			AND CI.YN_BUDGET_EXCEPT 		 = 'N'
 	</select>
 	<select id="listConsumeInfoAmt" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.ConsumeVO">
 		SELECT
@@ -79,11 +88,19 @@
 			CONSUME_INFO CI,
 			(
 				SELECT
-					TO_CHAR( ADD_MONTHS( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' ),- 1 ), 'YYYYMM' )
-						|| DECODE( LENGTH( PSI.DT_BASIC ), 1, '0' || PSI.DT_BASIC, PSI.DT_BASIC) AS DT_FROM
-					,#{ym_trd, jdbcType = VARCHAR} || DECODE( LENGTH( PSI.DT_BASIC ), 1, '0' || PSI.DT_BASIC, PSI.DT_BASIC ) AS DT_TO
+					 CASE
+						WHEN DT_BASIC IS NULL
+							THEN TO_CHAR( TRUNC( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' ), 'MONTH' ), 'YYYYMMDD' )
+							ELSE TO_CHAR( ADD_MONTHS( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' ),- 1 ), 'YYYYMM' ) ||
+								 DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC )
+					END AS DT_FROM
+					,CASE
+						WHEN DT_BASIC IS NULL
+							THEN TO_CHAR( LAST_DAY( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' )), 'YYYYMMDD' )
+							ELSE #{ym_trd, jdbcType = VARCHAR} || DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC )
+					END AS DT_TO
 				FROM
-					PERSON_SET_INFO PSI
+					PERSON_SET_INFO
 				WHERE
 					NO_PERSON = #{no_person, jdbcType = VARCHAR}
 			) PSI
@@ -92,9 +109,51 @@
 				<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
 					#{each_person}
 				</foreach>
-			AND TO_NUMBER( CI.DT_TRD ) BETWEEN TO_NUMBER( PSI.DT_FROM ) AND TO_NUMBER( PSI.DT_TO )
-			AND CI.YN_CANCEL = 'N'
-			AND CI.YN_BUDGET_EXCEPT = 'N'
+			AND TO_NUMBER(CI.DT_TRD)<![CDATA[>]]>	TO_NUMBER(PSI.DT_FROM)
+			AND TO_NUMBER(CI.DT_TRD)<![CDATA[<=]]>	TO_NUMBER(PSI.DT_TO)
+			AND CI.YN_CANCEL				 =		'N'
+			AND CI.YN_BUDGET_EXCEPT			 =		'N'
+			AND EXISTS (
+				SELECT
+				      1
+				   FROM
+				      ( SELECT
+				         DISTINCT NO_PERSON AS OFFER_NO_PERSON, MEANS_CONSUME AS CD_TYPE, NO_CARD AS NO_CARD_ACC
+				         FROM
+				            CONSUME_INFO
+				         WHERE
+				            NO_PERSON = #{no_person, jdbcType = VARCHAR}
+				      UNION ALL SELECT
+				            OFFER_NO_PERSON, CD_TYPE, NO_CARD_ACC
+				         FROM
+				            SHARE_INFO_DETAIL A
+				         INNER JOIN SHARE_INFO B ON
+				            A.SEQ_SHARE = B.SEQ_SHARE
+				            AND B.REQ_NO_PERSON = #{no_person, jdbcType = VARCHAR}
+				            AND B.SHARE_STATUS = '02'
+				            AND B.YN_CONSUME_INFO = 'Y'
+				            AND B.DT_END_OFFER IS NULL
+				         WHERE
+				            1 = 1
+				            AND A.CD_INFO = '03'
+				            AND A.YN_SHARE = 'Y' )
+				   WHERE
+				      1 = 1
+				      AND OFFER_NO_PERSON = CI.NO_PERSON
+				      AND
+				      ( CASE
+				         WHEN CD_TYPE = '01' THEN SUBSTR( NO_CARD_ACC, - 3 ) /* 카드 */
+				         WHEN CD_TYPE = '02' THEN CD_TYPE /* 현금 */
+				         WHEN CD_TYPE = '03' THEN CD_TYPE /* 현금영수증 */
+				         WHEN CD_TYPE = '04' THEN NO_CARD_ACC /* 입출금계좌 */
+				      END ) IN
+				      ( CASE
+				         WHEN CI.MEANS_CONSUME = '01' THEN SUBSTR( CI.NO_CARD, - 3 ) /* 카드 */
+				         WHEN CI.MEANS_CONSUME = '02' THEN CI.MEANS_CONSUME /* 현금 */
+				         WHEN CI.MEANS_CONSUME = '03' THEN CI.MEANS_CONSUME /* 현금영수증 */
+				         WHEN CI.MEANS_CONSUME = '04' THEN CI.NO_CARD /* 입출금계좌 */
+				      END ) 
+			)
 		GROUP BY
 			TYPE_IN_OUT
 		ORDER BY
@@ -102,57 +161,113 @@
 	</select>
 	<select id="listConsumeInfo" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.ConsumeVO">
 		SELECT
-			 CI.NO_PERSON
-			,CI.SEQ_CONSUME
-			,CI.TYPE_IN_OUT
-			,CI.MEANS_CONSUME
-			,CI.CD_FC
-			,CI.NM_CARD
-			,CI.DT_TRD
-			,PCCI.NM_CLASS
-			,PCCI.NM_TYPE
-			,CI.CONTENTS
-			,CI.AMT_IN_OUT
-			,CI.YN_AUTO
-				FROM CONSUME_INFO CI, PERSON_CONSUME_CLASS_INFO PCCI,
-				(
-					SELECT
-						 CASE
-							WHEN DT_BASIC IS NULL
-								THEN TO_CHAR( TRUNC( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' ), 'MONTH' ), 'YYYYMMDD' )
-								ELSE TO_CHAR( ADD_MONTHS( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' ),- 1 ), 'YYYYMM' ) ||
-									 DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC )
-						END AS DT_FROM
-						,CASE
-							WHEN DT_BASIC IS NULL THEN
-								TO_CHAR( LAST_DAY( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' )), 'YYYYMMDD' )
-								ELSE #{ym_trd, jdbcType = VARCHAR} || DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC )
-						END AS DT_TO
-					FROM
-						PERSON_SET_INFO
-					WHERE
-						NO_PERSON = #{no_person, jdbcType = VARCHAR}
-				) PSI
+		   CI.NO_PERSON,
+		   CI.SEQ_CONSUME,
+		   CI.TYPE_IN_OUT,
+		   CI.MEANS_CONSUME,
+		   CI.CD_FC,
+		   CI.NM_CARD,
+		   CI.DT_TRD,
+		   CI.CD_CLASS,
+		   PCCI.NM_CLASS,
+		   PCCI.NM_TYPE,
+		   CI.CONTENTS,
+		   CI.AMT_IN_OUT,
+		   CI.YN_AUTO
+		FROM
+		   CONSUME_INFO CI,
+		   PERSON_CONSUME_CLASS_INFO PCCI,
+		   ( SELECT
+		      CASE
+		         WHEN DT_BASIC IS NULL THEN TO_CHAR( TRUNC( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' ), 'MONTH' ), 'YYYYMMDD' )
+		         ELSE TO_CHAR( ADD_MONTHS( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' ),- 1 ), 'YYYYMM' )|| DECODE( LENGTH(DT_BASIC), 1, '0' || DT_BASIC, DT_BASIC )
+		      END AS DT_FROM,
+		      CASE
+		         WHEN DT_BASIC IS NULL THEN TO_CHAR( LAST_DAY( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' )), 'YYYYMMDD' )
+		         ELSE #{ym_trd, jdbcType = VARCHAR} || DECODE( LENGTH(DT_BASIC), 1, '0' || DT_BASIC, DT_BASIC )
+		      END AS DT_TO
+		   FROM
+		      PERSON_SET_INFO
+		   WHERE
+		      NO_PERSON = #{no_person, jdbcType = VARCHAR} ) PSI
 		WHERE
 			    CI.NO_PERSON IN
 					<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
 						#{each_person}
 					</foreach>
-			AND CI.NO_PERSON				 =		PCCI.NO_PERSON
-			AND CI.CD_CLASS					 =		PCCI.CD_CLASS
-			AND CI.CD_TYPE					 =		PCCI.CD_TYPE
-			AND TO_NUMBER(CI.DT_TRD)<![CDATA[>]]>	TO_NUMBER(PSI.DT_FROM)
-			AND TO_NUMBER(CI.DT_TRD)<![CDATA[<=]]>	TO_NUMBER(PSI.DT_TO)
+		   AND CI.NO_PERSON = PCCI.NO_PERSON
+		   AND CI.CD_CLASS = PCCI.CD_CLASS
+		   AND CI.CD_TYPE = PCCI.CD_TYPE
+		   AND TO_NUMBER(CI.DT_TRD)<![CDATA[>]]> TO_NUMBER(PSI.DT_FROM)
+		   AND TO_NUMBER(CI.DT_TRD)<![CDATA[<=]]> TO_NUMBER(PSI.DT_TO)
 			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(type_in_out)">
 				AND CI.TYPE_IN_OUT			 =		#{type_in_out, jdbcType=VARCHAR}
 			</if>
-			AND YN_CANCEL 					 =		'N'
-			AND YN_DELETE					 =		'N'
-			AND YN_BUDGET_EXCEPT			 =		'N'
+		   AND YN_CANCEL = 'N'
+		   AND YN_DELETE = 'N'
+		   AND YN_BUDGET_EXCEPT = 'N'
+		   AND EXISTS ( SELECT
+		      1
+		   FROM
+		      ( SELECT
+		         DISTINCT NO_PERSON AS OFFER_NO_PERSON, MEANS_CONSUME AS CD_TYPE, NO_CARD AS NO_CARD_ACC
+		         FROM
+		            CONSUME_INFO
+		         WHERE
+		            NO_PERSON = #{no_person, jdbcType = VARCHAR}
+		      UNION ALL SELECT
+		            OFFER_NO_PERSON, CD_TYPE, NO_CARD_ACC
+		         FROM
+		            SHARE_INFO_DETAIL A
+		         INNER JOIN SHARE_INFO B ON
+		            A.SEQ_SHARE = B.SEQ_SHARE
+		            AND B.REQ_NO_PERSON = #{no_person, jdbcType = VARCHAR}
+		            AND B.SHARE_STATUS = '02'
+		            AND B.YN_CONSUME_INFO = 'Y'
+		            AND B.DT_END_OFFER IS NULL
+		         WHERE
+		            1 = 1
+		            AND A.CD_INFO = '03'
+		            AND A.YN_SHARE = 'Y' )
+		   WHERE
+		      1 = 1
+		      AND OFFER_NO_PERSON = CI.NO_PERSON
+		      AND
+		      ( CASE
+		         WHEN CD_TYPE = '01' THEN SUBSTR( NO_CARD_ACC, - 3 ) /* 카드 */
+		         WHEN CD_TYPE = '02' THEN CD_TYPE /* 현금 */
+		         WHEN CD_TYPE = '03' THEN CD_TYPE /* 현금영수증 */
+		         WHEN CD_TYPE = '04' THEN NO_CARD_ACC /* 입출금계좌 */
+		      END ) IN
+		      ( CASE
+		         WHEN CI.MEANS_CONSUME = '01' THEN SUBSTR( CI.NO_CARD, - 3 ) /* 카드 */
+		         WHEN CI.MEANS_CONSUME = '02' THEN CI.MEANS_CONSUME /* 현금 */
+		         WHEN CI.MEANS_CONSUME = '03' THEN CI.MEANS_CONSUME /* 현금영수증 */
+		         WHEN CI.MEANS_CONSUME = '04' THEN CI.NO_CARD /* 입출금계좌 */
+		      END ) )
 		ORDER BY
-			CI.DT_TRD DESC, CI.TM_TRD DESC
+		   CI.DT_TRD DESC,
+		   CI.TM_TRD DESC
 	</select>
-
+	<select id="listShareInfoDetail" parameterType="java.lang.String" resultType="com.koscom.consume.model.ConsumeVO">
+		SELECT
+			CD_INFO AS MEANS_CONSUME, NO_CARD_ACC AS NO_CARD 
+		FROM
+			SHARE_INFO_DETAIL
+		WHERE
+			SEQ_SHARE IN(
+				SELECT
+					SEQ_SHARE
+				FROM
+					SHARE_INFO
+				WHERE
+						REQ_NO_PERSON	= #{no_person, jdbcType = VARCHAR}
+					AND SHARE_STATUS	= '02'
+					AND YN_CONSUME_INFO = 'Y'
+					AND DT_END_OFFER IS NULL
+			)
+			AND YN_SHARE	= 'Y'
+	</select>
 	<select id="listPersonIncomeClassInfo" parameterType="java.lang.String" resultType="com.koscom.consume.model.PersonConsumeClassVO">
 		SELECT
 			 NO_PERSON
@@ -250,13 +365,29 @@
     			FROM 	 SCR_TRANSACTION_DETAIL STD
     					,SCR_BANK_API_AN_INFO SBAAI
     					,FC_INFO FI
-    					,PERSON_SET_INFO PSI
-		WHERE 		STD.NO_PERSON = 					 #{no_person, jdbcType=VARCHAR}
-        		AND STD.NO_PERSON = 					 SBAAI.NO_PERSON
-        		AND STD.NO_PERSON = 					 PSI.NO_PERSON
-        		AND SBAAI.CD_FC = 						 FI.CD_FC
-        		AND TO_NUMBER(STD.DT_TRD) BETWEEN		 TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DECODE( LENGTH( PSI.DT_BASIC ), 1, '0' || PSI.DT_BASIC, PSI.DT_BASIC )
-        											 AND TO_CHAR( SYSDATE, 'YYYYMM' )|| DECODE( LENGTH( PSI.DT_BASIC ), 1, '0' || PSI.DT_BASIC, PSI.DT_BASIC )
+    					,(
+							SELECT
+								CASE
+									WHEN DT_BASIC IS NULL THEN TO_CHAR( TRUNC( SYSDATE, 'MONTH' ), 'YYYYMMDD' )
+									WHEN TO_CHAR( SYSDATE, 'DD' )<![CDATA[>=]]> DT_BASIC THEN TO_CHAR( SYSDATE, 'YYYYMM' )|| DT_BASIC
+									WHEN TO_CHAR( SYSDATE, 'DD' )<![CDATA[<]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DT_BASIC
+								END AS DT_FROM,
+								CASE
+									WHEN DT_BASIC IS NULL THEN TO_CHAR( LAST_DAY( SYSDATE ), 'YYYYMMDD' )
+									ELSE TO_CHAR( SYSDATE, 'YYYYMMDD' )
+								END AS DT_TO
+							FROM
+								PERSON_SET_INFO
+							WHERE
+								NO_PERSON = #{no_person, jdbcType = VARCHAR}
+    					) PSI
+		WHERE 		STD.NO_PERSON				  =		#{no_person, jdbcType=VARCHAR}
+        		AND STD.NO_PERSON				  = 	SBAAI.NO_PERSON
+        		AND SBAAI.CD_FC					  = 	FI.CD_FC
+        		AND STD.AN						  =		#{no_card, jdbcType = VARCHAR}
+        		AND STD.AN						  = 	SBAAI.AN
+				AND TO_NUMBER(STD.DT_TRD)<![CDATA[>]]>	TO_NUMBER(PSI.DT_FROM)
+				AND TO_NUMBER(STD.DT_TRD)<![CDATA[<=]]>	TO_NUMBER(PSI.DT_TO)
         		<choose>
         			<when test="@com.koscom.util.MybatisUtil@contains('01',type_in_out)">
         				AND STD.AMT_DEP					 != '0'
@@ -265,7 +396,6 @@
         				AND STD.AMT_WDRL				 != '0'
         			</otherwise>
         		</choose>
-        		AND STD.AN = 							 SBAAI.AN
        ORDER BY
 			STD.DT_TRD DESC, STD.TM_TRD DESC
 	</select>
@@ -457,9 +587,9 @@
 				PCCI.CD_CLASS = CGI.CD_CLASS
 			AND CGI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
 		WHERE
-				PCCI.NO_PERSON						=		#{no_person, jdbcType=VARCHAR}
-			AND PCCI.TYPE_IN_OUT					=		'02'
-			AND PCCI.YN_USE							=		'Y'
+				PCCI.NO_PERSON		=		#{no_person, jdbcType=VARCHAR}
+			AND PCCI.TYPE_IN_OUT	=		'02'
+			AND PCCI.YN_USE			=		'Y'
 		ORDER BY
 			TO_NUMBER(PCCI.SORT_CLASS) ASC
     </select>
@@ -534,7 +664,7 @@
     <select id="listPrevMonthClass" parameterType="java.lang.String" resultType="com.koscom.consume.model.ConsumeDetailGoalInfoVO">
 		SELECT DISTINCT 
 			 PCCI.CD_CLASS
-			,NVL( CGDI.AMT_EXPENSE, 0 ) AS AMT_EXPENSE
+			,NVL( CGI.AMT_EXPENSE, 0 ) AS AMT_EXPENSE
 			,PCCI.SORT_CLASS
 		FROM
 			PERSON_CONSUME_CLASS_INFO PCCI
@@ -564,11 +694,12 @@
 						/*AND TO_CHAR( ADD_MONTHS( SYSDATE,- 3 ), 'YYYYMM' )|| PSI.DT_BASIC*/
 				GROUP BY
 					CI.CD_CLASS
-			) CGDI ON
-			PCCI.CD_CLASS = CGDI.CD_CLASS
+			) CGI ON
+			PCCI.CD_CLASS = CGI.CD_CLASS
 		WHERE
-			PCCI.NO_PERSON = #{no_person, jdbcType = VARCHAR}
-			AND PCCI.CD_CLASS <![CDATA[>]]> 10
+				PCCI.NO_PERSON		= #{no_person, jdbcType = VARCHAR}
+			AND PCCI.TYPE_IN_OUT	= '02'
+			AND YN_USE				= 'Y'
 		ORDER BY
 			TO_NUMBER(SORT_CLASS) ASC
     </select>
@@ -662,7 +793,7 @@
     <select id="listAverageClass" parameterType="java.lang.String" resultType="com.koscom.consume.model.ConsumeDetailGoalInfoVO">
 		SELECT
 			 DISTINCT PCCI.CD_CLASS
-			,NVL( CGDI.AMT_EXPENSE, 0 ) AS AMT_EXPENSE
+			,NVL( CGI.AMT_EXPENSE, 0 ) AS AMT_EXPENSE
 			,PCCI.SORT_CLASS
 		FROM
 			PERSON_CONSUME_CLASS_INFO PCCI
@@ -677,14 +808,10 @@
 							CASE
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 2 ), 'YYYYMM' )|| DT_BASIC
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 3 ), 'YYYYMM' )|| DT_BASIC
-								/*WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 5 ), 'YYYYMM' )|| DT_BASIC*/
-								/*WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 6 ), 'YYYYMM' )|| DT_BASIC*/
 							END AS DT_FROM,
 							CASE
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 0 ), 'YYYYMM' )|| DT_BASIC
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DT_BASIC
-								/*WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 3 ), 'YYYYMM' )|| DT_BASIC*/
-								/*WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 4 ), 'YYYYMM' )|| DT_BASIC*/
 							END AS DT_TO
 						FROM
 							(
@@ -697,15 +824,18 @@
 							)
 					) PSI
 				WHERE
-					CI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
-					AND CI.DT_TRD BETWEEN PSI.DT_FROM AND PSI.DT_TO
+						CI.NO_PERSON				 =		#{no_person, jdbcType=VARCHAR}
+					AND TO_NUMBER(CI.DT_TRD)<![CDATA[>]]>	TO_NUMBER(PSI.DT_FROM)
+					AND TO_NUMBER(CI.DT_TRD)<![CDATA[<=]]>	TO_NUMBER(PSI.DT_TO)
 				GROUP BY
 					 CI.NO_PERSON
 					,CI.CD_CLASS
-			) CGDI ON
-			PCCI.CD_CLASS = CGDI.CD_CLASS
+			) CGI ON
+			PCCI.CD_CLASS = CGI.CD_CLASS
 		WHERE
-			PCCI.CD_CLASS <![CDATA[>]]> 10
+				PCCI.NO_PERSON		= #{no_person, jdbcType = VARCHAR}
+			AND PCCI.TYPE_IN_OUT	= '02'
+			AND PCCI.YN_USE			= 'Y'
 		ORDER BY
 			TO_NUMBER(SORT_CLASS) ASC
     </select>
@@ -1386,5 +1516,48 @@
 		GROUP BY
 			SUBSTR( DT_TRD, 0, 6 )
 		ORDER BY SUBSTR( DT_TRD, 0, 6 ) ASC
+	</select>
+	<select id="listMeansConsume" parameterType="java.lang.String" resultType="com.koscom.consume.model.ConsumeVO">
+		SELECT
+			 MEANS_CONSUME
+			,CD_FC
+			,NO_CARD
+			,NM_CARD
+		FROM
+			(
+				SELECT
+					 '02' AS MEANS_CONSUME
+					,NULL AS CD_FC
+					,NULL AS NO_CARD
+					,NULL AS NM_CARD
+					,1 AS SORT_ORDER
+				FROM
+					DUAL
+			UNION SELECT
+					 '04' AS MEANS_CONSUME
+					,CD_FC
+					,AN AS NO_CARD
+					,NM_AN AS NM_CARD
+					,2 AS SORT_ORDER
+				FROM
+					SCR_BANK_API_AN_INFO
+				WHERE
+						NO_PERSON	= #{no_person, jdbcType = VARCHAR}
+					AND TYPE_AN		= '01'
+			UNION SELECT
+					 '01' AS MEANS_CONSUME
+					,CD_FC
+					,NO_CARD
+					,NM_CARD
+					,3 AS SORT_ORDER
+				FROM
+					SCR_CARD_INFO
+				WHERE
+					NO_PERSON = #{no_person, jdbcType = VARCHAR}
+			)
+		ORDER BY
+			 SORT_ORDER ASC
+			,CD_FC DESC
+			,NO_CARD DESC
 	</select>
 </mapper>

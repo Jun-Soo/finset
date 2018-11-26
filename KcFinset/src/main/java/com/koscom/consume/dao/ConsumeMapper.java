@@ -59,6 +59,13 @@ public interface ConsumeMapper {
 	List<ConsumeVO> listConsumeInfo(ConsumeForm consumeForm);
 	
 	/**
+	 * 공유된 사용자의 정보 조회
+	 * @param no_person
+	 * @return
+	 */
+	List<ConsumeVO> listShareInfoDetail(String no_person);
+	
+	/**
 	 * 개인 계좌 입출금내역 조회
 	 * @param person
 	 * @return
@@ -330,4 +337,11 @@ public interface ConsumeMapper {
 	 * @return
 	 */
 	List<ConsumeVO> getBannerDataIncome(ConsumeVO consumeVO);
+	
+	/**
+	 * 현금, 스크래핑된 계좌, 카드 조회 
+	 * @param no_person
+	 * @return
+	 */
+	List<ConsumeVO> listMeansConsume(String no_person);
 }

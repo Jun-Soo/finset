@@ -18,20 +18,24 @@
           </div>
         </div>
       </div>
-      <a href="#" class="btn" v-if="!isScrap">카드를 등록하고 간편하게 조회하세요</a>
+      <a class="btn" v-if="!isScrap">카드를 등록하고 간편하게 조회하세요</a>
     </div>
 
     <div class="box-list list01">
       <div class="filter-wrap">
         <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
-          <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)" :for="settingList[index].id">{{person.nm_person}}</label>
+          <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
         </div>
       </div>
 
-      <div v-for="(payment, index) in paymentList" :key="index" class="item">
+      <div v-if="(paymentList||'')==''">
+        <div class="nodata">등록 내역이 없습니다</div>
+      </div>
+      <div v-else v-for="(payment, index) in paymentList" :key="index" class="item">
         <div class="top">
           <p class="symbol"><img :src="payment.imgSrc" alt="" />{{payment.nm_fc}}</p>
-          <p class="text"><span class="circle" :class="settingList[shareList.findIndex(person => person.no_person === payment.no_person)].color">{{payment.nm_person.substring(payment.nm_person.length-2)}}</span></p>
+          <!-- <p class="text"><span class="circle" :class="settingList[shareList.findIndex(person => person.no_person === payment.no_person)].color">{{payment.nm_person.substring(payment.nm_person.length-2)}}</span></p> -->
+          <p class="text"><span class="circle" :class="settingList[shareList.findIndex(person => person.no_person === payment.no_person)].color">{{payment.nm_person}}</span></p>
         </div>
         <div class="number-wrap">
           <div class="left">
@@ -40,6 +44,7 @@
           </div>
         </div>
       </div>
+
     </div>
   </section>
 </template>
@@ -74,7 +79,36 @@ export default {
     this.$store.state.title = "카드 대금 조회";
   },
   created() {
+    if (this.$store.state.user.dt_basic > this.standardDt.getDate()) {
+      this.standardDt.setMonth(this.standardDt.getMonth() - 1);
+    }
     this.ym = this.formatHead(this.getYm(this.standardDt));
+
+    //화면 이동 로직
+    var _this = this;
+    let origMousePoint;
+    $(document).on("mousedown", "#app", function(event) {
+      origMousePoint = event.clientX;
+    });
+    $(document).on("mouseup", "#app", function(event) {
+      if (origMousePoint - event.clientX > 150) {
+        _this.setNextMM();
+      } else if (origMousePoint - event.clientX < -150) {
+        _this.setPrevMM();
+      }
+    });
+    $(document).on("touchstart", "#app", function(event) {
+      origMousePoint = event.touches[0].clientX;
+    });
+    $(document).on("touchend", "#app", function(event) {
+      if (origMousePoint - event.changedTouches[0].clientX > 150) {
+        _this.setNextMM();
+      } else if (origMousePoint - event.changedTouches[0].clientX < -150) {
+        _this.setPrevMM();
+      }
+    });
+    ////화면 이동 로직
+
     this.listConsumeShareInfo();
   },
   beforeMount() {},
@@ -151,6 +185,10 @@ export default {
       return Common.formatNumber(number);
     },
     clickShare: function(params) {
+      var no_person_list = this.filterShareList();
+      if (no_person_list.length <= 1 && this.shareList[params].isShow == true) {
+        return;
+      }
       this.shareList[params].isShow = !this.shareList[params].isShow;
       this.listPayment();
     },

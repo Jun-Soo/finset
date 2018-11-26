@@ -91,7 +91,9 @@ export default {
       formData.append("dt_basic", this.dt_basic);
       this.$http
         .post("/m/consume/modifyDt_basic.json", formData)
-        .then(function(response) {});
+        .then(function(response) {
+          this.$store.state.user.dt_basic = this.dt_basic;
+        });
     }
   }
 };

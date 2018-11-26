@@ -304,6 +304,20 @@ public class ConsumeController {
     	model.addAttribute("consumeVO", consumeManager.getConsumeInfo(consumeForm));
     	return "jsonView";
     }
+
+    /**
+     * VUE 
+     * @param session
+     * @param model
+     * @return
+     */
+    @RequestMapping("/listMeansConsume.json")
+    public String listMeansConsume(HttpSession session, Model model) {
+    	logger.debug("listMeansConsume");
+    	String no_person = (String) session.getAttribute("no_person");
+    	model.addAttribute("listMeansConsume", consumeManager.listMeansConsume(no_person));
+    	return "jsonView";
+    }
     
     /**
      * VUE

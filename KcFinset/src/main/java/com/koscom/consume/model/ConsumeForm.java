@@ -13,6 +13,7 @@ public class ConsumeForm implements Serializable{
 	//CONSUME_INFO list, SCR_TRANSACTION_DETAIL 조회용
 	private String	no_person;				//회원 관리 번호
 	private List<String> no_person_list;	//회원 관리 번호 리스트
+	private String	no_card;				//카드(계좌) 번호
 	
 	//CONSUME_INFO get 조회용
 	private int		seq_consume;			//일련번호
@@ -29,9 +30,11 @@ public class ConsumeForm implements Serializable{
 	public ConsumeForm() {
 	}
 	public ConsumeForm(String no_person, List<String> no_person_list,
-			int seq_consume, String ym_trd, String type_in_out, String ymd_trd) {
+			String no_card, int seq_consume, String ym_trd, String type_in_out,
+			String ymd_trd) {
 		this.no_person = no_person;
 		this.no_person_list = no_person_list;
+		this.no_card = no_card;
 		this.seq_consume = seq_consume;
 		this.ym_trd = ym_trd;
 		this.type_in_out = type_in_out;
@@ -49,6 +52,12 @@ public class ConsumeForm implements Serializable{
 	}
 	public void setNo_person_list(List<String> no_person_list) {
 		this.no_person_list = no_person_list;
+	}
+	public String getNo_card() {
+		return no_card;
+	}
+	public void setNo_card(String no_card) {
+		this.no_card = no_card;
 	}
 	public int getSeq_consume() {
 		return seq_consume;

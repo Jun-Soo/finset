@@ -85,13 +85,19 @@
             </div>
           </div>
         </div>
-        <div v-for="(subList, index) in consumeList" :key="index" class="list-wrap">
+        <div v-if="(consumeList||'')==''">
+          <div class="nodata">수입, 소비 내역이 없습니다</div>
+        </div>
+        <div v-else v-for="(subList, index) in consumeList" :key="index" class="list-wrap">
           <p class="date">{{formatDate(subList[0].dt_trd,"mmdd")}}</p>
-          <div v-for="vo in subList" :key="vo.index" class="item" @click="clickConsumeList(vo.seq_consume, vo.no_person, vo.type_in_out, vo.yn_auto)">
+          <div v-for="vo in subList" :key="vo.index" class="item" @click="clickConsumeList(vo.seq_consume, vo.no_person, vo.type_in_out, vo.yn_person_regist)">
             <div class="left">
               <p class="name">{{vo.contents}}</p>
               <p class="cate">
-                <img src="../../assets/images/common/bu_list_shopping.png" alt="" />
+                <!-- <img :src="'../../assets/images/consume/icon/'+getConsumeIconSrc(vo.type_in_out, vo.cd_class) + '.png'" alt="" /> -->
+                <!-- <img src="../../assets/images/common/bu_list_shopping.png" alt="" /> -->
+                <!-- <img :src="require(getConsumeIconSrc(vo.type_in_out, vo.cd_class))" alt="" /> -->
+                <img :src="getConsumeIconSrc(vo.type_in_out, vo.cd_class)" alt="" />
                 <span v-text="vo.type_in_out == '02'?vo.nm_class+' - '+vo.nm_type:vo.nm_class"></span>
               </p>
             </div>
@@ -145,9 +151,24 @@ export default {
   // computed () {
   // },
   watch: {
-    isScrap: function() {},
+    isScrap: function(param) {
+      if (param) {
+      } else {
+        this.progressOption = {
+          text: "공인 인증서를 등록하여 소비내역을 관리하세요",
+          max: 0
+        };
+      }
+    },
     isGoal: function(param) {
       if (this.isScrap == true) {
+        if (param) {
+        } else {
+          this.progressOption = {
+            text: "설정된 예산이 없습니다",
+            max: 0
+          };
+        }
       } else {
         this.progressOption = {
           text: "공인 인증서를 등록하여 소비내역을 관리하세요",
@@ -205,10 +226,6 @@ export default {
           var consumeGoal = response.data.consumeGoal;
           if ((consumeGoal || "") == "") {
             _this.isGoal = false;
-            _this.progressOption = {
-              text: "설정된 예산이 없습니다",
-              max: 0
-            };
           } else {
             _this.isGoal = true;
             _this.progressOption.text =
@@ -328,7 +345,12 @@ export default {
     clickSetting: function() {
       this.$router.push("/consume/setting");
     },
-    clickConsumeList: function(seq_consume, no_person, type_in_out, yn_auto) {
+    clickConsumeList: function(
+      seq_consume,
+      no_person,
+      type_in_out,
+      yn_person_regist
+    ) {
       var _this = this;
 
       this.$router.push({
@@ -341,12 +363,30 @@ export default {
             _this.shareList.findIndex(
               person => person.no_person === no_person
             ) == 0,
-          isAuto: yn_auto == "Y"
+          isAuto: yn_person_regist == "N"
         }
       });
     },
     regConsume: function() {
       this.$router.push("/consume/consumeDetail");
+    },
+    getConsumeIconSrc: function(type_in_out, cd_class) {
+      let cd;
+      if ((cd_class || "") == "" || (type_in_out || "") == "") {
+        cd = "99";
+      } else if (type_in_out == "01") {
+      } else {
+        //default로 설정된 cd_class가 24까지밖에 없음
+        if (parseInt(cd_class) > 24) {
+          cd = "99";
+        } else {
+          cd = cd_class;
+        }
+      }
+      if (cd == undefined) {
+        return require("@/assets/images/consume/icon/99.png");
+      }
+      return require("@/assets/images/consume/icon/" + cd + ".png");
     },
     clickProgress: function() {}
   }

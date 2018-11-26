@@ -337,4 +337,11 @@ public interface ConsumeMapper {
 	 * @return
 	 */
 	List<ConsumeVO> getBannerDataIncome(ConsumeVO consumeVO);
+	
+	/**
+	 * 현금, 스크래핑된 계좌, 카드 조회 
+	 * @param no_person
+	 * @return
+	 */
+	List<ConsumeVO> listMeansConsume(String no_person);
 }

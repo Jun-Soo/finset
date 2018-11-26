@@ -17,7 +17,7 @@
 h3{
     color: #333;
     font-size: 12px;
-    font-weight: 700;
+    font-weight: 700; 
 }
 
 .loading{
@@ -3532,6 +3532,7 @@ button.cal{
             &:last-child{
                 text-align: right;
                 width: 70%;
+                line-height: 1;
                 input[type="text"]{
                     line-height: 49px;
                     text-align: right;
@@ -3539,6 +3540,9 @@ button.cal{
                     font-size: 14px;
                     width: 80%;
                     border: none;
+                }
+                .multiselect__single{
+                    font-size: 12px;
                 }
             }
             .btn-search{
@@ -3572,6 +3576,15 @@ button.cal{
         font-size: 16px;
         color: #222;
         font-weight: 700;
+        input[type="number"]{
+            width: 80%;
+            text-align: right;
+            padding-right: 2px;
+            border: none;
+            font-size: 16px;
+            color: #222;
+            font-weight: 700;
+        }
         em{
             color: #222;
             padding-left: 2px;
@@ -3654,6 +3667,8 @@ button.cal{
                 input[type="text"]{
                     line-height: 33px;
                     height: 35px;
+                    text-align: right;
+                    padding-right: 10px;
                 }
                 select{
                     width: 100%;
@@ -4678,8 +4693,20 @@ button.cal{
             height: 38px;
         }
         &.phone{
-            grid-template-columns: 3fr 7fr;
+            grid-template-columns: 4fr 6fr;
             grid-gap: 10px;
+            .multiselect__tags{
+                border: 1px solid $lineColor;
+                text-align: left;
+                line-height: 1;
+            }
+            .multiselect__single{
+                margin-bottom: 0;
+                margin-top: 3px;
+            }
+            .multiselect__select{
+                top: 1px;
+            }
         }
     }
     button{
@@ -5310,6 +5337,12 @@ button.cal{
                 &.alarm-change{
                     background: url("../images/etc/alarm6.png") no-repeat left center / 24px;
                 }
+                &.alarm-share{
+                    background: url("../images/etc/alarm7.png") no-repeat left center / 24px;
+                }
+                &.alarm-event{
+                    background: url("../images/etc/alarm8.png") no-repeat left center / 24px;
+                }
             }
             .text{
                 font-size: 14px;
@@ -5583,6 +5616,10 @@ button.cal{
                     padding-right: 50px;
                     padding-bottom: 20px;
                     position: relative;
+                    em{
+                        font-size: inherit;
+                        color: $col4;
+                    }
                     &:after{
                         display: inline-block;
                         content: "";

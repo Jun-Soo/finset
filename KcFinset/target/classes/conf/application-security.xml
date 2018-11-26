@@ -2,7 +2,7 @@
 <beans:beans xmlns="http://www.springframework.org/schema/security"
 			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 			 xsi:schemaLocation="http://www.springframework.org/schema/beans 
-								 http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
+								 http://www.springframework.org/schema/beans/spring-beans-4.0.xsd 
 								 http://www.springframework.org/schema/security 
 								 http://www.springframework.org/schema/security/spring-security-3.2.xsd"
 			 xmlns:beans="http://www.springframework.org/schema/beans"
@@ -14,11 +14,11 @@
 	<!-- AUTHORITY 가 ADMIN 일 경우 접속가능한 IP 정의  -->
 	<beans:bean id="loginManager" class="com.koscom.login.service.LoginManager">
 	</beans:bean>
-	
+	<!-- 
 	<beans:bean id="securityReqFilter" class="com.koscom.util.SecurityReqFilter">
 	</beans:bean>
-	
-	<!-- 패턴정의 -->
+	 -->
+	<!-- 패턴정의
 	<http pattern="/ckeditor/**" security="none"/>
 	<http pattern="/fonts/**" security="none"/>
 	<http pattern="/img/**" security="none"/>
@@ -27,36 +27,47 @@
 	<http pattern="/style/**" security="none"/>
 	<http pattern="/servlet/**" security="none"/>
 
-	<http pattern="/m/base/**" security="none"/>
 	<http pattern="/m/login/**" security="none"/>
 	<http pattern="/m/person/**" security="none"/>
 	<http pattern="/m/credit/kcm*" security="none"/>
 	<http pattern="/m/credit/frameAcceptTerms*" security="none"/>
+	<http pattern="/m/scrap/**" security="none"/>
+	<http pattern="/m/customercenter/**" security="none"/>
+	<http pattern="/code/**" security="none"/>
+	<http pattern="/m/comm/**" security="none"/>
+	
+	 
 	
 	<http pattern="/kcb/**" security="none"/>
 	<http pattern="/logout" security="none"/>
 	<http pattern="/favicon.ico" security="none"/>
 	
-	<http pattern="/m/scrap/**" security="none"/>
+	-->
+	<http pattern="/html/**" security="none"/>
+	<http pattern="/m/base/**" security="none"/>
+	<http pattern="/m/person/**" security="none"/>
+	<http pattern="/m/login/**" security="none"/>
 	
 	<http auto-config="true">
-		<access-denied-handler error-page="/login/403.crz"/>
-		<custom-filter ref="securityReqFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
+		<access-denied-handler error-page="/error/403"/>
+		<!-- <custom-filter ref="securityReqFilter" before="FILTER_SECURITY_INTERCEPTOR"/> -->
 		<intercept-url pattern="/**" access="ROLE_USER, ROLE_ADMIN" />
-		<form-login login-page="/home"
-					always-use-default-target="true"
-					default-target-url="/home"
-					authentication-success-handler-ref="loginManager"
+		<form-login authentication-success-handler-ref="loginManager"
 					authentication-failure-handler-ref="loginManager"
 					/>
 		<!-- 중복로그인 -->
-		<session-management invalid-session-url="/m/person/framePersonLogout.crz">
-			<concurrency-control max-sessions="1" expired-url="/m/login/frameSecurityCodeConfirm.crz?denied=92" />
+		<session-management>
+			<concurrency-control max-sessions="1" />
 		</session-management>
-		
 		<logout invalidate-session="true" />
-				
+		
+		<custom-filter after="EXCEPTION_TRANSLATION_FILTER" ref="ajaxSessionTimeoutFilter"/>
 	</http>
+	
+	<!-- ajax 세션처리를 위한 필터 선언 -->
+    <beans:bean id="ajaxSessionTimeoutFilter" class="com.koscom.util.AjaxSessionCheckFilter">
+        <beans:property name="ajaxHeader" value="AJAX" />
+	</beans:bean>
 	
 	<beans:bean id="loggerListener" class="org.springframework.security.authentication.event.LoggerListener"/>
 	

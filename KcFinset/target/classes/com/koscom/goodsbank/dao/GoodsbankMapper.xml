@@ -57,7 +57,6 @@
 			,FC_LINK				  /* 금융사링크 */
 			,TIME_INTEREST			  /* 이자부과시기 */
 			,YN_FAVORITE
-			,PATH_FILE1
 			,CD_FC
 			,YN_ALLIANCE
 			,RNUM
@@ -114,7 +113,6 @@
                 ,LST.FC_LINK				  /* 금융사링크 */
                 ,LST.TIME_INTEREST			  /* 이자부과시기 */
 				,LST.YN_FAVORITE
-			    ,LST.PATH_FILE1
 			    ,LST.CD_FC
 			    ,LST.YN_ALLIANCE
 	            ,ROWNUM RNUM
@@ -180,7 +178,6 @@
 					  	ELSE 'N'
 					  	END
 					  	) AS YN_FAVORITE
-			     	  ,FI.PATH_FILE1
 			     	  ,FI.CD_FC
 			     	  ,FI.YN_ALLIANCE
 				 	FROM GOODSBANK_INFO GI
@@ -191,11 +188,6 @@
 				    <foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
 			        	#{item, jdbcType=VARCHAR}
 				    </foreach>
-                      AND (    (     #{cd_fin, jdbcType=VARCHAR} = 'C'
-                                 AND FI.CD_FIN IN ('C','D')
-                               )
-                            OR FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
-                          )
                 	  AND GI.YN_USE = 'Y'
 					  AND (    /*GI.MAX_LOAN_TERM IS NULL*/
 							/* 대출기간(상환기간) 검색사용안함 */
@@ -379,11 +371,6 @@
 					  <foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
 			       		#{item, jdbcType=VARCHAR}
 				      </foreach>
-                      AND (    (     #{cd_fin, jdbcType=VARCHAR} = 'C'
-                                 AND FI.CD_FIN IN ('C','D')
-                               )
-                            OR FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
-                          )
 					  AND GI.YN_USE = 'Y'
 					  AND (    /*GI.MAX_LOAN_TERM IS NULL*/
 							/* 대출기간(상환기간) 검색사용안함 */
@@ -601,7 +588,6 @@
 			ID_LST,
 			DT_LST,
 			YN_FAVORITE,
-			PATH_FILE1,
 			YN_ALLIANCE,
 	        ROWNUM RNUM
 	    FROM
@@ -664,7 +650,6 @@
 				LST.ID_LST,
 				LST.DT_LST,
 			    LST.YN_FAVORITE,
-			    LST.PATH_FILE1,
 			    LST.YN_ALLIANCE,
 	            ROWNUM RNUM
 	         FROM
@@ -737,7 +722,6 @@
 			     		ELSE 'N'
 			     		END
 			     		) AS YN_FAVORITE
-			     		, FI.PATH_FILE1
 			     		,FI.YN_ALLIANCE
 				 	FROM GOODSBANK_INFO GI
 				 	LEFT OUTER JOIN FC_INFO FI
@@ -747,12 +731,6 @@
 					<foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
 			        	#{item, jdbcType=VARCHAR}
 				    </foreach>
-
-                    AND (    (     #{cd_fin, jdbcType=VARCHAR} = 'C'
-                              AND FI.CD_FIN IN ('C','D')
-                             )
-                          OR FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
-                        )
 					AND GI.YN_USE = 'Y'
 					  AND (    /*GI.MAX_LOAN_TERM IS NULL*/
 							/* 대출기간(상환기간) 검색사용안함 */
@@ -996,7 +974,6 @@
 			     		ELSE 'N'
 			     		END
 			     		) AS YN_FAVORITE
-			     		, FI.PATH_FILE1
 				 	FROM GOODSBANK_INFO GI
 				 	LEFT OUTER JOIN FC_INFO FI
 				 	ON GI.CD_FC = FI.CD_FC
@@ -1005,12 +982,7 @@
 					<foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
 			        	#{item, jdbcType=VARCHAR}
 				    </foreach>
-                    AND (    (     #{cd_fin, jdbcType=VARCHAR} = 'C'
-                               AND FI.CD_FIN IN ('C','D')
-                             )
-                          OR FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
-                        )
-					AND GI.YN_USE = 'Y'
+					  AND GI.YN_USE = 'Y'
 					  AND (    /*GI.MAX_LOAN_TERM IS NULL*/
 							/* 대출기간(상환기간) 검색사용안함 */
 							/*OR*/ 1 = (SELECT (CASE WHEN CD_TERM_LOAN_01 = 'N'
@@ -1220,7 +1192,6 @@
             , FC_LINK                  /* 금융사링크            */
             , TIME_INTEREST  		   /* 이자부과시기            */
             , YN_FAVORITE
-			, PATH_FILE1
 			, YN_ALLIANCE
 	        , RNUM
 	    FROM
@@ -1277,7 +1248,6 @@
                 , LST.FC_LINK                  /* 금융사링크            */
                 , LST.TIME_INTEREST  		   /* 이자부과시기            */
 			    , LST.YN_FAVORITE
-			    , LST.PATH_FILE1
 			    , LST.YN_ALLIANCE
 	            , ROWNUM RNUM
 	         FROM
@@ -1343,7 +1313,6 @@
 			     		ELSE 'N'
 			     		END
 			     		) AS YN_FAVORITE
-			     		, FI.PATH_FILE1
 			     		, FI.YN_ALLIANCE
 				 	FROM GOODSBANK_INFO GI
 				 	LEFT OUTER JOIN FC_INFO FI
@@ -1354,11 +1323,6 @@
 					<foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
 			        	#{item, jdbcType=VARCHAR}
 				    </foreach>
-                      AND (    (     #{cd_fin, jdbcType=VARCHAR} = 'C'
-                                 AND FI.CD_FIN IN ('C','D')
-                               )
-                            OR FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
-                          )
                    ORDER BY NVL(FI.YN_ALLIANCE, 'N') DESC, <choose>
                             <when test="'01'.equals(orderby)">
                                 GI.RTO_INTEREST_FROM ASC/*금리낮은순*/,
@@ -1390,11 +1354,6 @@
 	 	  <foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
 		  	#{item, jdbcType=VARCHAR}
 		  </foreach>
-          AND (    (     #{cd_fin, jdbcType=VARCHAR} = 'C'
-                     AND FI.CD_FIN IN ('C','D')
-                   )
-                OR FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
-              )
 	</select>
 	
 	<select id="getGoodsBankFavorite" parameterType="com.koscom.goodsbank.model.GoodsbankVO" resultType="com.koscom.goodsbank.model.GoodsbankVO">
@@ -1463,7 +1422,6 @@
 			ELSE 'N'
 			END
 			) AS YN_FAVORITE
-			, FI.PATH_FILE1
 			, FI.NM_FC
 		 FROM GOODSBANK_INFO GI
 		 LEFT OUTER JOIN FC_INFO FI

@@ -3,11 +3,57 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.koscom.person.dao.PersonMapper">
+	<insert id="createPersonAgreeHist" parameterType="com.koscom.person.model.PersonAgreeHistVO">
+        INSERT INTO PERSON_AGREE_HIST
+            (     NO_PERSON
+                , DT_AGREE
+                , CD_AGREE
+                , TERMS_CONTENT
+                , TERMS_VERSION
+                , TERMS_DATE
+                , TERMS_START_DATE
+                , TERMS_END_DATE
+                , YN_DISUSE
+                , ID_FRT
+                , DT_FRT
+            ) VALUES (
+                  #{no_person, 			jdbcType=VARCHAR}
+                , #{dt_agree, 			jdbcType=VARCHAR}
+                , #{cd_agree, 			jdbcType=VARCHAR}
+                , #{terms_content, 		jdbcType=VARCHAR}
+                , #{terms_version, 		jdbcType=VARCHAR}
+                , #{terms_date, 		jdbcType=VARCHAR}
+                , #{terms_start_date, 	jdbcType=VARCHAR}
+                , #{terms_end_date, 	jdbcType=VARCHAR}
+                , #{yn_disuse, 			jdbcType=VARCHAR}
+                , #{id_frt, 			jdbcType=VARCHAR}
+                , SYSDATE
+            )
+    </insert>
+
+    <insert id="createPersonAgreedtHist" parameterType="com.koscom.person.model.PersonAgreedtHistVO">
+        INSERT INTO PERSON_AGREEDT_HIST
+            (     NO_PERSON
+                , DT_AGREE
+                , CD_AGREE
+                , CD_FC
+                , ID_FRT
+                , DT_FRT
+            ) VALUES (
+                  #{no_person, 			jdbcType=VARCHAR}
+                , #{dt_agree, 			jdbcType=VARCHAR}
+                , #{cd_agree, 			jdbcType=VARCHAR}
+                , #{cd_fc, 				jdbcType=VARCHAR}
+                , #{id_frt, 			jdbcType=VARCHAR}
+                , SYSDATE
+            )
+    </insert>
 
 	<select id="getPersonInfoHp" parameterType="String" resultType="com.koscom.person.model.PersonVO">
 		/* com.koscom.person.dao.PersonMapper.getPersonInfoHp */
-		SELECT *
-		  FROM PERSON_INFO
+		SELECT A.*, B.DT_BASIC, B.YN_INSTALLMENT
+		  FROM PERSON_INFO A LEFT OUTER JOIN PERSON_SET_INFO B ON
+		       A.NO_PERSON = B.NO_PERSON
 		 WHERE HP = #{hp, jdbcType=VARCHAR}
 	</select>
 
@@ -143,6 +189,24 @@
                 , SYSDATE
             )
     </insert>
+
+    <select id="getPersonConnectTime" parameterType="java.lang.String" resultType="java.lang.String" >
+        /* com.koscom.person.dao.PersonMapper.getPersonConnectTime */
+		SELECT
+			TB.DT_FRT
+		FROM
+			(
+				SELECT
+					TO_CHAR( DT_FRT, 'YYYY.MM.DD HH24:MI' ) AS DT_FRT
+				FROM
+					PERSON_LOGIN_HIST
+				WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+				ORDER BY
+					DT_FRT DESC
+			) TB
+		WHERE
+			ROWNUM = 1
+    </select>
 
     <insert id="insertActiveHist">
     	/* com.koscom.person.dao.PersonMapper.insertActiveHist */
@@ -319,117 +383,27 @@
 	</insert>
 
 	<!-- 공유관리 -->
-	<!-- personMapper.listPersonShareInfoSummary 공유관리 요약list -->
-	<select id="listPersonShareInfoSummary" parameterType="com.koscom.person.model.PersonShareInfoForm" resultType="com.koscom.person.model.PersonShareInfoVO">
-		/* com.koscom.person.dao.PersonMapper.listPersonShareInfoSummary : 공유관리 요약list */
-	    SELECT
-			SI.SEQ_SHARE,
-			SI.REQ_NO_PERSON,
-			SI.REQ_NM_PERSON,
-			SI.REQ_HP,
-			SI.OFFER_NO_PERSON,
-			SI.OFFER_NM_PERSON,
-			SI.OFFER_HP,
-			SI.SHARE_STATUS,
-			SI.YN_CREDIT_OFFER,
-			SI.YN_DEBT_OFFER,
-			SI.YN_INCOME_OFFER,
-			SI.YN_ACCOUNT_OFFER,
-			SI.YN_CARD_OFFER,
-			SI.YN_DEBT_ITGT_MNGM,
-			SI.YN_ASSET_ITGT_MNGM,
-			SI.YN_CONSUME_ITGT_MNGM,
-			SI.DT_STT_OFFER,
-			SI.DT_END_OFFER,
-			SI.YN_OFFER,
-			SI.YN_ITGT_MNGM,
-			SI.ID_FRT,
-			SI.DT_FRT,
-			SI.ID_LST,
-			SI.DT_LST
-		FROM
-			(
-				SELECT
-					SEQ_SHARE,
-					REQ_NO_PERSON,
-					REQ_NM_PERSON,
-					REQ_HP,
-					OFFER_NO_PERSON,
-					OFFER_NM_PERSON,
-					OFFER_HP,
-					SHARE_STATUS,
-					YN_CREDIT_OFFER,
-					YN_DEBT_OFFER,
-					YN_INCOME_OFFER,
-					YN_ACCOUNT_OFFER,
-					YN_CARD_OFFER,
-					YN_DEBT_ITGT_MNGM,
-					YN_ASSET_ITGT_MNGM,
-					YN_CONSUME_ITGT_MNGM,
-					DT_STT_OFFER,
-					DT_END_OFFER,
-					(
-						CASE
-						WHEN YN_CREDIT_OFFER = 'Y'
-							OR YN_DEBT_OFFER = 'Y'
-							OR YN_INCOME_OFFER = 'Y'
-							OR YN_ACCOUNT_OFFER = 'Y'
-							OR YN_CARD_OFFER = 'Y'
-						THEN 'Y'
-						ELSE 'N'
-						END
-					) AS YN_OFFER,
-					(
-						CASE
-						WHEN YN_DEBT_ITGT_MNGM = 'Y'
-							OR YN_ASSET_ITGT_MNGM = 'Y'
-							OR YN_CONSUME_ITGT_MNGM = 'Y'
-						THEN 'Y'
-						ELSE 'N'
-						END
-					) AS YN_ITGT_MNGM,
-					ID_FRT,
-					TO_CHAR(DT_FRT, 'YYYYMMDD') AS DT_FRT,
-					ID_LST,
-					TO_CHAR(DT_LST, 'YYYYMMDD') AS DT_LST
-				FROM
-					SHARE_INFO
-				WHERE
-					(SHARE_STATUS != '03' AND SHARE_STATUS != '04')
-					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(type_list)">
-						<if test='"offer".equals(type_list)'>
-							AND REQ_NO_PERSON = #{no_person, jdbcType=NUMERIC}
-						</if>
-						<if test='"req".equals(type_list)'>
-					   		AND OFFER_NO_PERSON = #{no_person, jdbcType=NUMERIC}
-						</if>
-					</if>
-				ORDER BY
-					DT_FRT DESC
-			) SI
-		WHERE
-			ROWNUM <![CDATA[<=]]> 3
-	</select>
-
-	<sql id="listPersonShareInfoMain_WHERE">
+	<sql id="listPersonShareInfo_WHERE">
 		<where>
-		    SHARE_STATUS != '04'
+		    CD_SHARE = #{cd_share, jdbcType=VARCHAR}
+		    AND SHARE_STATUS = #{share_status, jdbcType=VARCHAR}
 		    <if test="@com.koscom.util.MybatisUtil@isNotEmpty(type_list)">
-				<if test='"offer".equals(type_list)'>
-					AND REQ_NO_PERSON = #{no_person, jdbcType=NUMERIC}
-				</if>
 				<if test='"req".equals(type_list)'>
-			   		AND OFFER_NO_PERSON = #{no_person, jdbcType=NUMERIC}
+					AND REQ_NO_PERSON = #{no_person, jdbcType=VARCHAR}
+				</if>
+				<if test='"offer".equals(type_list)'>
+			   		AND OFFER_NO_PERSON = #{no_person, jdbcType=VARCHAR}
 			  	</if>
 			</if>
 		</where>
 	</sql>
 
-	<!-- personMapper.listPersonShareInfoMain 공유관리 메인list -->
-	<select id="listPersonShareInfoMain" parameterType="com.koscom.person.model.PersonShareInfoForm" resultType="com.koscom.person.model.PersonShareInfoVO">
-		/* com.koscom.person.dao.PersonMapper.listPersonShareInfoMain : 공유관리 메인list */
-	    SELECT
-	        SEQ_SHARE,
+	<!-- personMapper.listPersonShareInfo 공유관리list -->
+	<select id="listPersonShareInfo" parameterType="com.koscom.person.model.PersonShareInfoForm" resultType="com.koscom.domain.PersonShareInfo">
+		/* com.koscom.person.dao.PersonMapper.listPersonShareInfo : 공유관리list */
+	   	SELECT
+			SEQ_SHARE,
+			CD_SHARE,
 			REQ_NO_PERSON,
 			REQ_NM_PERSON,
 			REQ_HP,
@@ -437,110 +411,71 @@
 			OFFER_NM_PERSON,
 			OFFER_HP,
 			SHARE_STATUS,
-			YN_CREDIT_OFFER,
-			YN_DEBT_OFFER,
-			YN_INCOME_OFFER,
-			YN_ACCOUNT_OFFER,
-			YN_CARD_OFFER,
-			YN_DEBT_ITGT_MNGM,
-			YN_ASSET_ITGT_MNGM,
-			YN_CONSUME_ITGT_MNGM,
+			RELATIONS,
+			YN_CREDIT_INFO,
+			YN_DEBT_INFO,
+			YN_INCOME_INFO,
+			YN_ASSET_INFO,
+			YN_CONSUME_INFO,
 			DT_STT_OFFER,
 			DT_END_OFFER,
-			YN_OFFER,
-			YN_ITGT_MNGM,
 			ID_FRT,
-			DT_FRT,
+			TO_CHAR(DT_FRT, 'YYYYMMDD') AS DT_FRT,
 			ID_LST,
-			DT_LST,
-		    RNUM
-	    FROM
-	        (SELECT
-	            LST.SEQ_SHARE,
-				LST.REQ_NO_PERSON,
-				LST.REQ_NM_PERSON,
-				LST.REQ_HP,
-				LST.OFFER_NO_PERSON,
-				LST.OFFER_NM_PERSON,
-				LST.OFFER_HP,
-				LST.SHARE_STATUS,
-				LST.YN_CREDIT_OFFER,
-				LST.YN_DEBT_OFFER,
-				LST.YN_INCOME_OFFER,
-				LST.YN_ACCOUNT_OFFER,
-				LST.YN_CARD_OFFER,
-				LST.YN_DEBT_ITGT_MNGM,
-				LST.YN_ASSET_ITGT_MNGM,
-				LST.YN_CONSUME_ITGT_MNGM,
-				LST.DT_STT_OFFER,
-				LST.DT_END_OFFER,
-				LST.YN_OFFER,
-				LST.YN_ITGT_MNGM,
-				LST.ID_FRT,
-				LST.DT_FRT,
-				LST.ID_LST,
-				LST.DT_LST,
-	            ROWNUM RNUM
-	         FROM
-	            (
-	    		SELECT
-					SEQ_SHARE,
-					REQ_NO_PERSON,
-					REQ_NM_PERSON,
-					REQ_HP,
-					OFFER_NO_PERSON,
-					OFFER_NM_PERSON,
-					OFFER_HP,
-					SHARE_STATUS,
-					YN_CREDIT_OFFER,
-					YN_DEBT_OFFER,
-					YN_INCOME_OFFER,
-					YN_ACCOUNT_OFFER,
-					YN_CARD_OFFER,
-					YN_DEBT_ITGT_MNGM,
-					YN_ASSET_ITGT_MNGM,
-					YN_CONSUME_ITGT_MNGM,
-					DT_STT_OFFER,
-					DT_END_OFFER,
-					(CASE WHEN YN_CREDIT_OFFER = 'Y'
-							OR YN_DEBT_OFFER = 'Y'
-							OR YN_INCOME_OFFER = 'Y'
-							OR YN_ACCOUNT_OFFER = 'Y'
-							OR YN_CARD_OFFER = 'Y'
-					THEN 'Y'
-					ELSE 'N'
-					END
-					) AS YN_OFFER,
-					(CASE WHEN YN_DEBT_ITGT_MNGM = 'Y'
-							OR YN_ASSET_ITGT_MNGM = 'Y'
-							OR YN_CONSUME_ITGT_MNGM = 'Y'
-					THEN 'Y'
-					ELSE 'N'
-					END
-					) AS YN_ITGT_MNGM,
-					ID_FRT,
-					TO_CHAR(DT_FRT, 'YYYYMMDD') AS DT_FRT,
-					ID_LST,
-					TO_CHAR(DT_LST, 'YYYYMMDD') AS DT_LST
-				FROM
-					SHARE_INFO
-				<include refid="listPersonShareInfoMain_WHERE"/>
-				ORDER BY DT_FRT DESC
-			) LST
-	        WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
-	    )
-	    WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+			TO_CHAR(DT_LST, 'YYYYMMDD') AS DT_LST
+		FROM
+			SHARE_INFO SI
+		<include refid="listPersonShareInfo_WHERE"/>
+		ORDER BY SI.DT_FRT DESC
 	</select>
-	<select id="listPersonShareInfoMainCount"  parameterType="com.koscom.person.model.PersonShareInfoForm" resultType="int">
-	    SELECT
-            COUNT(*) AS recordCount
-         FROM
-         	SHARE_INFO
-         <include refid="listPersonShareInfoMain_WHERE"/>
+
+	<sql id="listPersonShareInfoHist_WHERE">
+		<where>
+		    CD_SHARE = #{cd_share, jdbcType=VARCHAR}
+		    <if test="@com.koscom.util.MybatisUtil@isNotEmpty(type_list)">
+				<if test='"req".equals(type_list)'>
+					AND REQ_NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					AND (SHARE_STATUS = '04' OR SHARE_STATUS = '05')
+				</if>
+				<if test='"offer".equals(type_list)'>
+			   		AND OFFER_NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			   		AND (SHARE_STATUS = '03' OR SHARE_STATUS = '04')
+			  	</if>
+			</if>
+		</where>
+	</sql>
+
+	<!-- personMapper.listPersonShareInfoHist 공유관리HistoryList -->
+	<select id="listPersonShareInfoHist" parameterType="com.koscom.person.model.PersonShareInfoForm" resultType="com.koscom.domain.PersonShareInfo">
+		/* com.koscom.person.dao.PersonMapper.listPersonShareInfoHist : 공유관리HistoryList */
+	   	SELECT
+			SEQ_SHARE,
+			CD_SHARE,
+			REQ_NO_PERSON,
+			REQ_NM_PERSON,
+			REQ_HP,
+			OFFER_NO_PERSON,
+			OFFER_NM_PERSON,
+			OFFER_HP,
+			SHARE_STATUS,
+			RELATIONS,
+			YN_CREDIT_INFO,
+			YN_DEBT_INFO,
+			YN_INCOME_INFO,
+			YN_ASSET_INFO,
+			YN_CONSUME_INFO,
+			DT_STT_OFFER,
+			DT_END_OFFER,
+			ID_FRT,
+			TO_CHAR(DT_FRT, 'YYYYMMDD') AS DT_FRT
+		FROM
+			SHARE_INFO_HIST SIH
+		<include refid="listPersonShareInfoHist_WHERE"/>
+		ORDER BY SIH.DT_FRT DESC
 	</select>
 
 	<!-- personMapper.listShareInfoAllCancel 공유관리 모두해지하기list -->
-	<select id="listShareInfoAllCancel" parameterType="com.koscom.person.model.PersonShareInfoVO" resultType="com.koscom.person.model.PersonShareInfoVO">
+	<select id="listShareInfoAllCancel" parameterType="com.koscom.domain.PersonShareInfo" resultType="com.koscom.domain.PersonShareInfo">
 		/* com.koscom.person.dao.PersonMapper.listShareInfoAllCancel : 공유관리 모두해지하기list */
 	    SELECT
 			SEQ_SHARE,
@@ -572,11 +507,12 @@
 			AND OFFER_NO_PERSON = #{offer_no_person, jdbcType=NUMERIC}
 	</select>
 
-	<!-- personMapper.getPersonShareInfo 공유관리 상세정보 -->
-	<select id="getPersonShareInfo" parameterType="com.koscom.person.model.PersonShareInfoVO" resultType="com.koscom.person.model.PersonShareInfoVO">
-		/* com.koscom.person.dao.PersonMapper.getPersonShareInfo : 공유관리 상세정보 */
+	<!-- personMapper.getPersonShareInfoHist 공유관리 hist정보 -->
+	<select id="getPersonShareInfoHist" parameterType="com.koscom.domain.PersonShareInfo" resultType="com.koscom.domain.PersonShareInfo">
+		/* com.koscom.person.dao.PersonMapper.getPersonShareInfoHist : 공유관리 hist정보 */
 	    SELECT
 			SEQ_SHARE,
+			CD_SHARE,
 			REQ_NO_PERSON,
 			REQ_NM_PERSON,
 			REQ_HP,
@@ -584,32 +520,44 @@
 			OFFER_NM_PERSON,
 			OFFER_HP,
 			SHARE_STATUS,
-			YN_CREDIT_OFFER,
-			YN_DEBT_OFFER,
-			YN_INCOME_OFFER,
-			YN_ACCOUNT_OFFER,
-			YN_CARD_OFFER,
-			YN_DEBT_ITGT_MNGM,
-			YN_ASSET_ITGT_MNGM,
-			YN_CONSUME_ITGT_MNGM,
+			RELATIONS,
+			YN_CREDIT_INFO,
+			YN_DEBT_INFO,
+			YN_INCOME_INFO,
+			YN_ASSET_INFO,
+			YN_CONSUME_INFO,
 			DT_STT_OFFER,
 			DT_END_OFFER,
-			(CASE WHEN YN_CREDIT_OFFER = 'Y'
-					OR YN_DEBT_OFFER = 'Y'
-					OR YN_INCOME_OFFER = 'Y'
-					OR YN_ACCOUNT_OFFER = 'Y'
-					OR YN_CARD_OFFER = 'Y'
-			THEN 'Y'
-			ELSE 'N'
-			END
-			) AS YN_OFFER,
-			(CASE WHEN YN_DEBT_ITGT_MNGM = 'Y'
-					OR YN_ASSET_ITGT_MNGM = 'Y'
-					OR YN_CONSUME_ITGT_MNGM = 'Y'
-			THEN 'Y'
-			ELSE 'N'
-			END
-			) AS YN_ITGT_MNGM,
+			ID_FRT,
+			TO_CHAR(DT_FRT, 'YYYYMMDD') AS DT_FRT
+		FROM
+			SHARE_INFO_HIST
+		WHERE
+			SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+			AND SHARE_STATUS = #{share_status, jdbcType=VARCHAR}
+	</select>
+
+	<!-- personMapper.getPersonShareInfo 공유관리 상세정보 -->
+	<select id="getPersonShareInfo" parameterType="com.koscom.domain.PersonShareInfo" resultType="com.koscom.domain.PersonShareInfo">
+		/* com.koscom.person.dao.PersonMapper.getPersonShareInfo : 공유관리 상세정보 */
+	    SELECT
+			SEQ_SHARE,
+			CD_SHARE,
+			REQ_NO_PERSON,
+			REQ_NM_PERSON,
+			REQ_HP,
+			OFFER_NO_PERSON,
+			OFFER_NM_PERSON,
+			OFFER_HP,
+			SHARE_STATUS,
+			RELATIONS,
+			YN_CREDIT_INFO,
+			YN_DEBT_INFO,
+			YN_INCOME_INFO,
+			YN_ASSET_INFO,
+			YN_CONSUME_INFO,
+			DT_STT_OFFER,
+			DT_END_OFFER,
 			ID_FRT,
 			TO_CHAR(DT_FRT, 'YYYYMMDD') AS DT_FRT,
 			ID_LST,
@@ -621,7 +569,7 @@
 	</select>
 
 	<!-- personMapper.getPersonShareEtmInfo 공유관리 소득정보 -->
-	<select id="getPersonShareEtmInfo" parameterType="com.koscom.person.model.PersonShareInfoVO" resultType="com.koscom.person.model.PersonShareInfoVO">
+	<select id="getPersonShareEtmInfo" parameterType="com.koscom.domain.PersonShareInfo" resultType="com.koscom.domain.PersonShareInfo">
 		/* com.koscom.person.dao.PersonMapper.getPersonShareEtmInfo : 공유관리 소득정보 */
 	    SELECT
 			PEII.CD_ETM_BASIC,
@@ -647,18 +595,199 @@
 			ROWNUM = 1
 	</select>
 
+	<!-- personMapper.listPersonShareInfoAsset 공유관리 - 공유설정(자산정보 계좌list) -->
+	<select id="listPersonShareInfoAsset" parameterType="com.koscom.domain.PersonShareInfo" resultType="com.koscom.domain.PersonShareInfo">
+		/* com.koscom.person.dao.PersonMapper.listPersonShareInfoAsset : 공유관리 - 공유설정(자산정보 계좌list) */
+	    SELECT
+	    	ROWNUM AS RNUM,
+			TB.YN_SHARE,
+			TB.CD_ASSETS_CLASS,
+	    	TB.NO_ACCOUNT,
+	    	TB.NM_ACCOUNT
+	    FROM (
+	    		SELECT
+					SID.YN_SHARE,
+					AI.CD_ASSETS_CLASS,
+					AI.NO_ACCOUNT,
+					AI.NM_ACCOUNT
+				FROM
+					ASSETS_INFO AI
+				LEFT OUTER JOIN SHARE_INFO_DETAIL SID
+						ON (
+								SID.SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+								AND SID.CD_INFO = '02'
+								AND AI.CD_ASSETS_CLASS = SID.CD_TYPE
+								AND AI.NO_ACCOUNT = SID.NO_CARD_ACC
+								AND AI.NO_PERSON = SID.ID_FRT
+							)
+				WHERE AI.YN_USE = 'Y'
+					AND AI.NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
+				ORDER BY AI.NM_ACCOUNT
+			) TB
+	</select>
+
+	<!-- personMapper.listPersonShareInfoConsume 공유관리 - 공유설정(소비정보 계좌list) -->
+	<select id="listPersonShareInfoConsume" parameterType="com.koscom.domain.PersonShareInfo" resultType="com.koscom.domain.PersonShareInfo">
+		/* com.koscom.person.dao.PersonMapper.listPersonShareInfoConsume : 공유관리 - 공유설정(소비정보 계좌list) */
+	    SELECT
+			ROWNUM AS RNUM,
+			TB.YN_SHARE,
+			TB.NM_CODE,
+			TB.CODE_VALUE,
+			TB.NO_CARD,
+			TB.NM_CARD
+		FROM (
+				SELECT
+					ASD.YN_SHARE,
+					A.NM_CODE,
+					A.CODE_VALUE,
+					'' AS NO_CARD,
+					'' AS NM_CARD
+				FROM
+					COMM_CD A
+				LEFT OUTER JOIN SHARE_INFO_DETAIL ASD
+				ON (
+						ASD.SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+						AND ASD.CD_INFO = '03'
+						AND A.CODE_VALUE = ASD.CD_TYPE
+						AND ASD.ID_FRT = #{offer_no_person, jdbcType=VARCHAR}
+					)
+				WHERE
+					A.CODE_GROUP = 'cd_consume'
+					AND (A.CODE_VALUE = '02' OR A.CODE_VALUE = '03')
+				UNION ALL
+					SELECT
+						BSD.YN_SHARE,
+						B.NM_CODE,
+						B.CODE_VALUE,
+						B.NO_CARD,
+						B.NM_CARD
+					FROM(
+						SELECT
+							(SELECT NM_CODE FROM COMM_CD WHERE CODE_GROUP = 'cd_consume' AND CODE_VALUE='01') AS NM_CODE,
+							'01' AS CODE_VALUE,
+							NO_CARD,
+							NM_CARD
+						FROM
+							SCR_CARD_INFO
+						WHERE
+							YN_DELETE = 'N'
+							AND NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
+					UNION ALL
+						SELECT
+							(SELECT NM_CODE FROM COMM_CD WHERE CODE_GROUP = 'cd_consume' AND CODE_VALUE='04') AS NM_CODE,
+							'04' AS CODE_VALUE,
+							AN AS NO_CARD,
+							NM_AN AS NM_CARD
+						FROM
+							SCR_BANK_API_AN_INFO
+						WHERE
+							YN_DELETE = 'N'
+							AND NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
+							AND TYPE_AN = '01'
+					) B
+				LEFT OUTER JOIN SHARE_INFO_DETAIL BSD
+				ON (
+						BSD.SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+						AND BSD.CD_INFO = '03'
+						AND B.CODE_VALUE = BSD.CD_TYPE
+						AND B.NO_CARD = BSD.NO_CARD_ACC
+						AND BSD.ID_FRT = #{offer_no_person, jdbcType=VARCHAR}
+					)
+			) TB
+			ORDER BY TB.NM_CODE
+	</select>
+
+	<!-- personMapper.listPersonShareInfoDebt 공유관리 - 공유설정(부채정보 계좌list) -->
+	<select id="listPersonShareInfoDebt" parameterType="com.koscom.domain.PersonShareInfo" resultType="com.koscom.domain.PersonShareInfo">
+	    /* com.koscom.person.dao.PersonMapper.listPersonShareInfoDebt : 공유관리 - 공유설정(대출정보 계좌list) */
+		SELECT
+			ROWNUM AS RNUM,
+			TB.YN_SHARE,
+			TB.NO_MANAGE_INFO,
+			TB.CD_FC,
+			TB.NM_FC,
+			TB.DEBT_TYPE,
+			TB.AMT_REMAIN
+		FROM (
+				SELECT
+					SID.YN_SHARE,
+					A.NO_MANAGE_INFO,
+					A.CD_FC,
+					B.NM_FC,
+					CASE
+						WHEN A.YN_CREDIT = 'Y'
+							AND A.CD_TYPE_DEAL IN('1','2','3') THEN '신용'
+						WHEN A.YN_LOAN = 'Y'
+							AND A.CD_TYPE_DEAL IN('1','2','3') THEN '담보'
+						WHEN A.CD_TYPE_DEAL IN('4','5','6') THEN '카드론'
+						ELSE ''
+					END
+					|| CASE
+						WHEN A.CD_TYPE_DEAL IN('1','4') THEN '(분할)'
+						WHEN A.CD_TYPE_DEAL IN('2','5') THEN '(일시)'
+						WHEN A.CD_TYPE_DEAL IN('3','6') THEN '(한도)'
+						WHEN A.CD_TYPE_DEAL IN('A') THEN '리스'
+						ELSE ''
+					END AS DEBT_TYPE,
+					A.AMT_REMAIN
+				FROM
+					DEBT_PERSONAL_INFO A
+				LEFT OUTER JOIN FC_INFO B
+				ON ( B.CD_FC = A.CD_FC )
+				LEFT OUTER JOIN SHARE_INFO_DETAIL SID
+				ON (
+						SID.SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+						AND SID.CD_INFO = '01'
+						AND A.NO_MANAGE_INFO = SID.NO_MANAGE_INFO
+						AND A.NO_PERSON = SID.ID_FRT
+					)
+				WHERE
+					A.YMD_CANCEL IS NULL
+					AND A.DISPLAY_YN = 'Y'
+					AND A.NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
+				ORDER BY
+					(
+						CASE WHEN A.CD_TYPE_DEAL NOT IN('3','6') THEN 1
+						ELSE 2
+						END
+					),
+					(
+						CASE
+							WHEN A.AMT_REMAIN = '-' THEN 0
+							ELSE TO_NUMBER( A.AMT_REMAIN )
+						END
+					) DESC
+			) TB
+	</select>
+
+	<!-- personMapper.createPersonShareInfo 공유관리 요청 -->
+	<select id="duplPersonShareInfo" parameterType="com.koscom.domain.PersonShareInfo" resultType="int">
+		/* com.koscom.person.dao.PersonMapper.duplPersonShareInfo : 공유관리 요청체크  */
+	    SELECT
+			COUNT( SEQ_SHARE ) AS SHARE_CNT
+		FROM
+			SHARE_INFO
+		WHERE
+			(
+				SHARE_STATUS = '01'
+				OR SHARE_STATUS = '02'
+			)
+			AND CD_SHARE = #{cd_share, jdbcType=VARCHAR}
+			AND REQ_NO_PERSON = #{req_no_person, jdbcType=VARCHAR}
+			AND OFFER_HP = #{offer_hp, jdbcType=VARCHAR}
+	</select>
 	<select id="getPersonShareInfoSeq" resultType="String">
 		SELECT
 			SEQ_SHARE_INFO.NEXTVAL
 		FROM
 			DUAL
 	</select>
-
-	<!-- personMapper.createPersonShareInfo 공유관리 요청 -->
 	<insert id="createPersonShareInfo" parameterType="com.koscom.domain.PersonShareInfo">
 		/* com.koscom.person.dao.PersonMapper.createPersonShareInfo : 공유관리 요청  */
 		INSERT INTO SHARE_INFO(
 			SEQ_SHARE,
+			CD_SHARE,
 			REQ_NO_PERSON,
 			REQ_NM_PERSON,
 			REQ_HP,
@@ -666,20 +795,19 @@
 			OFFER_NM_PERSON,
 			OFFER_HP,
 			SHARE_STATUS,
-			YN_CREDIT_OFFER,
-			YN_DEBT_OFFER,
-			YN_INCOME_OFFER,
-			YN_ACCOUNT_OFFER,
-			YN_CARD_OFFER,
-			YN_DEBT_ITGT_MNGM,
-			YN_ASSET_ITGT_MNGM,
-			YN_CONSUME_ITGT_MNGM,
+			RELATIONS,
+			YN_CREDIT_INFO,
+			YN_DEBT_INFO,
+			YN_INCOME_INFO,
+			YN_ASSET_INFO,
+			YN_CONSUME_INFO,
 			ID_FRT,
 			DT_FRT,
 			ID_LST,
 			DT_LST
 		) VALUES (
 			#{seq_share, jdbcType=NUMERIC},
+			#{cd_share, jdbcType=VARCHAR},
 			#{req_no_person, jdbcType=VARCHAR},
 			#{req_nm_person, jdbcType=VARCHAR},
 			#{req_hp, jdbcType=VARCHAR},
@@ -687,14 +815,12 @@
 			#{offer_nm_person, jdbcType=VARCHAR},
 			#{offer_hp, jdbcType=VARCHAR},
 			#{share_status, jdbcType=VARCHAR},
-			#{yn_credit_offer, jdbcType=VARCHAR},
-			#{yn_debt_offer, jdbcType=VARCHAR},
-			#{yn_income_offer, jdbcType=VARCHAR},
-			#{yn_account_offer, jdbcType=VARCHAR},
-			#{yn_card_offer, jdbcType=VARCHAR},
-			#{yn_debt_itgt_mngm, jdbcType=VARCHAR},
-			#{yn_asset_itgt_mngm, jdbcType=VARCHAR},
-			#{yn_consume_itgt_mngm, jdbcType=VARCHAR},
+			#{relations, jdbcType=VARCHAR},
+			#{yn_credit_info, jdbcType=VARCHAR},
+			#{yn_debt_info, jdbcType=VARCHAR},
+			#{yn_income_info, jdbcType=VARCHAR},
+			#{yn_asset_info, jdbcType=VARCHAR},
+			#{yn_consume_info, jdbcType=VARCHAR},
 			#{id_frt, jdbcType=VARCHAR},
 			SYSDATE,
 			#{id_lst, jdbcType=VARCHAR},
@@ -702,25 +828,90 @@
 		)
 	</insert>
 
-	<!-- personMapper.duplChkPersonShareInfo 공유관리 동일정보여부 체크 -->
-	<select id="duplChkPersonShareInfo" parameterType="com.koscom.domain.PersonShareInfo" resultType="int">
-		/* com.koscom.person.dao.PersonMapper.duplChkPersonShareInfo : 공유관리 동일정보여부 체크  */
-		SELECT
-			CASE
-				WHEN YN_CREDIT_OFFER = #{yn_credit_offer, jdbcType=VARCHAR}
-				AND YN_DEBT_OFFER = #{yn_debt_offer, jdbcType=VARCHAR}
-				AND YN_INCOME_OFFER = #{yn_income_offer, jdbcType=VARCHAR}
-				AND YN_DEBT_ITGT_MNGM = #{yn_debt_itgt_mngm, jdbcType=VARCHAR}
-				AND YN_ASSET_ITGT_MNGM = #{yn_asset_itgt_mngm, jdbcType=VARCHAR}
-				AND YN_CONSUME_ITGT_MNGM = #{yn_consume_itgt_mngm, jdbcType=VARCHAR}
-				THEN 1
-				ELSE 0
-			END DUPL_CHK
+	<select id="chkPersonShareInfoReqCancel" parameterType="com.koscom.domain.PersonShareInfo" resultType="int">
+	    SELECT
+			COUNT(*) AS CHK_CNT
 		FROM
 			SHARE_INFO
 		WHERE
 			SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+			AND SHARE_STATUS = '05'
 	</select>
+
+	<!-- personMapper.updatePersonShareInfoSetStatus 공유관리 - 공유설정(상태변경) -->
+	<update id="updatePersonShareInfoSetStatus" parameterType="com.koscom.domain.PersonShareInfo">
+		/* com.koscom.person.dao.PersonMapper.updatePersonShareInfoSetStatus : 공유관리 - 공유설정(상태변경) */
+		UPDATE
+			SHARE_INFO
+		SET
+			SHARE_STATUS = #{share_status, jdbcType=VARCHAR},
+			<if test='"05".equals(share_status)'>
+				<if test="@com.koscom.util.MybatisUtil@isNotEmpty(offer_no_person)">
+					OFFER_NO_PERSON = #{offer_no_person, jdbcType=VARCHAR},
+				</if>
+			</if>
+			<if test='"04".equals(share_status)'>
+				DT_END_OFFER = TO_CHAR(SYSDATE, 'YYYYMMDD'),
+			</if>
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHERE
+			SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+	</update>
+
+	<!-- personMapper.updatePersonShareInfoSetStatus 공유관리 - 공유설정(계좌추가) -->
+	<delete id="deletePsersonShareInfoDetail" parameterType="com.koscom.domain.PersonShareInfo">
+	    /* com.koscom.person.dao.PersonMapper.deletePsersonShareInfoDetail : 공유관리 - 공유설정(계좌삭제) */
+		DELETE FROM SHARE_INFO_DETAIL
+		WHERE SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+	</delete>
+	<insert id="createPersonShareInfoDetail" parameterType="com.koscom.domain.PersonShareInfo">
+	    /* com.koscom.person.dao.PersonMapper.createPersonShareInfoDetail : 공유관리 - 공유설정(계좌추가) */
+		INSERT INTO SHARE_INFO_DETAIL(
+			SEQ_SHARE,
+			CD_INFO,
+			CD_TYPE,
+			NO_MANAGE_INFO,
+			NO_CARD_ACC,
+			YN_SHARE,
+			ID_FRT,
+			DT_FRT,
+			ID_LST,
+			DT_LST
+		) VALUES (
+			#{seq_share, jdbcType=NUMERIC},
+			#{cd_info, jdbcType=VARCHAR},
+			#{cd_type, jdbcType=VARCHAR},
+			#{no_manage_info, jdbcType=VARCHAR},
+			#{no_card_acc, jdbcType=VARCHAR},
+			#{yn_share, jdbcType=VARCHAR},
+			#{id_frt, jdbcType=VARCHAR},
+			SYSDATE,
+			#{id_lst, jdbcType=VARCHAR},
+			SYSDATE
+		)
+	</insert>
+
+	<!-- personMapper.updatePersonShareInfoSetItems 공유관리 - 공유설정(항목변경) -->
+	<update id="updatePersonShareInfoSetItems" parameterType="com.koscom.domain.PersonShareInfo">
+		/* com.koscom.person.dao.PersonMapper.updatePersonShareInfoSetItems : 공유관리 - 공유설정(항목변경) */
+		UPDATE
+			SHARE_INFO
+		SET
+			<if test='"02".equals(share_status)'>
+				SHARE_STATUS = #{share_status, jdbcType=VARCHAR},
+				DT_STT_OFFER = TO_CHAR(SYSDATE, 'YYYYMMDD'),
+			</if>
+			YN_CREDIT_INFO = #{yn_credit_info, jdbcType=VARCHAR},
+			YN_DEBT_INFO = #{yn_debt_info, jdbcType=VARCHAR},
+			YN_INCOME_INFO = #{yn_income_info, jdbcType=VARCHAR},
+			YN_ASSET_INFO = #{yn_asset_info, jdbcType=VARCHAR},
+			YN_CONSUME_INFO = #{yn_consume_info, jdbcType=VARCHAR},
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHERE
+			SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+	</update>
 
 	<!-- personMapper.updatePersonShareInfoSet01 공유관리 공유설정(공유재요청) -->
 	<update id="updatePersonShareInfoSet01" parameterType="com.koscom.domain.PersonShareInfo">
@@ -794,38 +985,40 @@
 	    /* com.koscom.person.dao.PersonMapper.createPersonShareInfoHist : 공유관리 이력생성  */
 		INSERT INTO SHARE_INFO_HIST(
 			SEQ_SHARE,
+			CD_SHARE,
 			REQ_NO_PERSON,
+			REQ_NM_PERSON,
 			REQ_HP,
 			OFFER_NO_PERSON,
+			OFFER_NM_PERSON,
 			OFFER_HP,
 			SHARE_STATUS,
-			YN_CREDIT_OFFER,
-			YN_DEBT_OFFER,
-			YN_INCOME_OFFER,
-			YN_ACCOUNT_OFFER,
-			YN_CARD_OFFER,
-			YN_DEBT_ITGT_MNGM,
-			YN_ASSET_ITGT_MNGM,
-			YN_CONSUME_ITGT_MNGM,
+			RELATIONS,
+			YN_CREDIT_INFO,
+			YN_DEBT_INFO,
+			YN_INCOME_INFO,
+			YN_ASSET_INFO,
+			YN_CONSUME_INFO,
 			DT_STT_OFFER,
 			DT_END_OFFER,
 			ID_FRT,
 			DT_FRT
 		) VALUES (
 			#{seq_share, jdbcType=NUMERIC},
+			#{cd_share, jdbcType=VARCHAR},
 			#{req_no_person, jdbcType=VARCHAR},
+			#{req_nm_person, jdbcType=VARCHAR},
 			#{req_hp, jdbcType=VARCHAR},
 			#{offer_no_person, jdbcType=VARCHAR},
+			#{offer_nm_person, jdbcType=VARCHAR},
 			#{offer_hp, jdbcType=VARCHAR},
 			#{share_status, jdbcType=VARCHAR},
-			#{yn_credit_offer, jdbcType=VARCHAR},
-			#{yn_debt_offer, jdbcType=VARCHAR},
-			#{yn_income_offer, jdbcType=VARCHAR},
-			#{yn_account_offer, jdbcType=VARCHAR},
-			#{yn_card_offer, jdbcType=VARCHAR},
-			#{yn_debt_itgt_mngm, jdbcType=VARCHAR},
-			#{yn_asset_itgt_mngm, jdbcType=VARCHAR},
-			#{yn_consume_itgt_mngm, jdbcType=VARCHAR},
+			#{relations, jdbcType=VARCHAR},
+			#{yn_credit_info, jdbcType=VARCHAR},
+			#{yn_debt_info, jdbcType=VARCHAR},
+			#{yn_income_info, jdbcType=VARCHAR},
+			#{yn_asset_info, jdbcType=VARCHAR},
+			#{yn_consume_info, jdbcType=VARCHAR},
 			#{dt_stt_offer, jdbcType=VARCHAR},
 			#{dt_end_offer, jdbcType=VARCHAR},
 			#{id_frt, jdbcType=VARCHAR},
@@ -856,7 +1049,7 @@
 			UPDATE SET
 				REQ_STATUS = #{req_status, jdbcType=VARCHAR},
 				<choose>
-				<when test='"03".equals(req_status)'>
+				<when test='"02".equals(req_status)'>
 					RES_MESSAGE = #{res_message, jdbcType=VARCHAR},
 				</when>
 				<otherwise>
@@ -898,7 +1091,7 @@
 	</update>
 
 	<!-- personMapper.listPersonShareInfoReqUpdate 업데이트요청List -->
-	<select id="listPersonShareInfoReqUpdate" parameterType="com.koscom.person.model.PersonShareInfoVO" resultType="com.koscom.person.model.PersonShareInfoVO">
+	<select id="listPersonShareInfoReqUpdate" parameterType="com.koscom.domain.PersonShareInfo" resultType="com.koscom.domain.PersonShareInfo">
 		/* com.koscom.person.dao.PersonMapper.listPersonShareInfoReqUpdate : 업데이트요청List */
 	    SELECT
 			SI.SEQ_SHARE,
@@ -915,7 +1108,7 @@
 			AND SMI.REQ_STATUS = '01'
 			AND SI.OFFER_NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
 	</select>
-	
+
 	<select id="getPersonInfoDupCi" parameterType="com.koscom.person.model.PersonVO" resultType="java.lang.String">
 		SELECT NO_PERSON
 			FROM PERSON_INFO
@@ -923,13 +1116,13 @@
 				KCB_CI = #{kcb_ci, jdbcType=VARCHAR}
 		  AND	YN_USE = 'Y'
 	</select>
-	
+
 	<update id="modifyPersonHp" parameterType="com.koscom.person.model.PersonVO">
 		UPDATE PERSON_INFO SET
 			HP = #{hp, jdbcType=VARCHAR}
 		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</update>
-	
+
 	<select id="getPersonInfoDup" parameterType="com.koscom.person.model.PersonVO" resultType="com.koscom.person.model.PersonVO">
         SELECT
         	NO_PERSON
@@ -937,7 +1130,7 @@
         FROM PERSON_INFO
          WHERE NO_PERSON = #{nm_person, jdbcType=VARCHAR} AND HP = #{hp, jdbcType=VARCHAR}
     </select>
-    
+
     <insert id="insertPerson">
         <selectKey keyProperty="no_person" resultType="string" order="BEFORE">
             (SELECT 'P'||LPAD(SEQ_PERSON_NO.NEXTVAL,9,'0') FROM DUAL)
@@ -982,7 +1175,7 @@
                 , SYSDATE
             )
     </insert>
-    
+
     <insert id="createPersonCertificateInfo" parameterType="com.koscom.person.model.PersonCertificateInfoVO">
 		MERGE INTO PERSON_CERTIFICATE_INFO
         USING DUAL
@@ -1020,7 +1213,7 @@
         , SYSDATE
         )
 	</insert>
-	
+
 	<select id="getPushSettingInfo" parameterType="java.lang.String" resultType="com.koscom.person.model.PersonVO">
         SELECT
             CD_PUSH AS ITEM_PUSH
@@ -1029,11 +1222,11 @@
         WHERE
             NO_PERSON = #{no_person, jdbcType=VARCHAR}
     </select>
-    
+
     <select id="procPersonInfoDelQuit" parameterType="String" resultType="int">
         SELECT FN_PERSON_QUIT( #{no_person, jdbcType=VARCHAR} ) FROM DUAL
     </select>
-    
+
     <insert id="createPersonQuit">
         INSERT INTO person_quit_hist
             (
@@ -1054,5 +1247,28 @@
                     , #{id_frt, jdbcType=VARCHAR}
                     , SYSDATE
             )
+    </insert>
+
+    <insert id="insertDefaultPersonSet" parameterType="java.lang.String">
+		INSERT
+			INTO
+				PERSON_SET_INFO(
+					 NO_PERSON
+					,DT_BASIC
+					,YN_INSTALLMENT
+					,ID_FRT
+					,DT_FRT
+					,ID_LST
+					,DT_LST
+				)
+			VALUES(
+				 #{no_person, jdbcType = VARCHAR}
+				,'1'
+				,'N'
+				,#{no_person, jdbcType = VARCHAR}
+				,SYSDATE
+				,#{no_person, jdbcType = VARCHAR}
+				,SYSDATE
+			)
     </insert>
 </mapper>

@@ -3,6 +3,511 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.koscom.scrap.dao.ScrapMapper">
+	<insert id="insertStockSummaryHist" parameterType="com.koscom.scrap.model.StockSummaryVO">
+		<selectKey keyProperty="seq" resultType="java.lang.Integer" order="BEFORE">
+			(SELECT NVL(MAX(SEQ),0)+1 FROM STOCK_SUMMARY_HIST)
+		</selectKey>
+		INSERT INTO STOCK_SUMMARY_HIST
+        (
+			 NO_PERSON
+			, CD_FC
+			, ACCNO
+			, SEQ
+			, CASHBALANCE
+			, D1
+			, D2
+			, SUBSTITUTE
+			, RECEIVABLE
+			, SUBSMARGIN
+			, LOANCREDIT
+			, VALATTRADE
+			, VALUEATCUR
+			, PROLOSS
+			, TOTALACCVAL
+			, CASHAVWITHDRAW
+			, ID_FRT
+			, DT_FRT
+		)
+		SELECT
+			NO_PERSON
+			, CD_FC
+			, ACCNO
+			, #{seq	,jdbcType=NUMERIC}
+			, CASHBALANCE
+			, D1
+			, D2
+			, SUBSTITUTE
+			, RECEIVABLE
+			, SUBSMARGIN
+			, LOANCREDIT
+			, VALATTRADE
+			, VALUEATCUR
+			, PROLOSS
+			, TOTALACCVAL
+			, CASHAVWITHDRAW
+			, ID_FRT
+			, DT_FRT
+		FROM STOCK_SUMMARY
+		WHERE NO_PERSON		= #{no_person	,jdbcType=VARCHAR}
+			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR}
+	</insert>
+	
+	<insert id="insertStockSummary" parameterType="com.koscom.scrap.model.StockSummaryVO">
+		INSERT INTO STOCK_SUMMARY
+		(
+			  NO_PERSON
+			, CD_FC
+			, ACCNO
+			, CASHBALANCE
+			, D1
+			, D2
+			, SUBSTITUTE
+			, RECEIVABLE
+			, SUBSMARGIN
+			, LOANCREDIT
+			, VALATTRADE
+			, VALUEATCUR
+			, PROLOSS
+			, TOTALACCVAL
+			, CASHAVWITHDRAW
+			, ID_FRT
+			, DT_FRT
+		) VALUES (
+			#{no_person				, jdbcType=VARCHAR}
+			, #{cd_fc				, jdbcType=VARCHAR}
+			, #{accno				, jdbcType=VARCHAR}
+			, #{cashbalance			, jdbcType=VARCHAR}
+			, #{d1					, jdbcType=VARCHAR}
+			, #{d2					, jdbcType=VARCHAR}
+			, #{substitute			, jdbcType=VARCHAR}
+			, #{receivable			, jdbcType=VARCHAR}
+			, #{subsmargin			, jdbcType=VARCHAR}
+			, #{loancredit			, jdbcType=VARCHAR}
+			, #{valattrade			, jdbcType=VARCHAR}
+			, #{valueatcur			, jdbcType=VARCHAR}
+			, #{proloss				, jdbcType=VARCHAR}
+			, #{totalaccval			, jdbcType=VARCHAR}
+			, #{cashavwithdraw		, jdbcType=VARCHAR}
+			, #{id_frt				, jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<delete id="deleteStockSummary"  parameterType="com.koscom.scrap.model.StockSummaryVO">
+		 DELETE
+	     FROM STOCK_SUMMARY
+	     WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	     	AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+    </delete>
+    
+    <insert id="insertStockEquitylistHist" parameterType="com.koscom.scrap.model.StockEquitylistVO">
+		<selectKey keyProperty="seq" resultType="java.lang.Integer" order="BEFORE">
+			(SELECT NVL(MAX(SEQ),0)+1 FROM STOCK_EQUITYLIST_HIST)
+		</selectKey>
+		INSERT INTO STOCK_EQUITYLIST_HIST
+        (
+			 NO_PERSON
+			, CD_FC
+			, ACCNO
+			, SEQ
+			, ISINCODE
+			, ASSETTYPE
+			, QTY
+			, TRADETYPE
+			, VALATTRADE
+			, VALATCUR
+			, PROLOSS
+			, EARNINGRATE
+			, ID_FRT
+			, DT_FRT
+		)
+		SELECT
+			NO_PERSON
+			, CD_FC
+			, ACCNO
+			, #{seq	,jdbcType=NUMERIC}
+			, ISINCODE
+			, ASSETTYPE
+			, QTY
+			, TRADETYPE
+			, VALATTRADE
+			, VALATCUR
+			, PROLOSS
+			, EARNINGRATE
+			, ID_FRT
+			, DT_FRT
+		FROM STOCK_EQUITYLIST
+		WHERE NO_PERSON		= #{no_person	,jdbcType=VARCHAR}
+			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR}
+	</insert>
+    
+    <insert id="insertStockEquitylist" parameterType="com.koscom.scrap.model.StockEquitylistVO">
+		INSERT INTO STOCK_EQUITYLIST
+		(
+			  NO_PERSON
+			, CD_FC
+			, ACCNO
+			, ISINCODE
+			, ASSETTYPE
+			, QTY
+			, TRADETYPE
+			, VALATTRADE
+			, VALATCUR
+			, PROLOSS
+			, EARNINGRATE
+			, ID_FRT
+			, DT_FRT
+		) VALUES (
+			#{no_person				, jdbcType=VARCHAR}
+			, #{cd_fc				, jdbcType=VARCHAR}
+			, #{accno				, jdbcType=VARCHAR}
+			, #{isincode			, jdbcType=VARCHAR}
+			, #{assettype			, jdbcType=VARCHAR}
+			, #{qty					, jdbcType=VARCHAR}
+			, #{tradetype			, jdbcType=VARCHAR}
+			, #{valattrade			, jdbcType=VARCHAR}
+			, #{valatcur			, jdbcType=VARCHAR}
+			, #{proloss				, jdbcType=VARCHAR}
+			, #{earningrate			, jdbcType=VARCHAR}
+			, #{id_frt				, jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<delete id="deleteStockEquitylist"  parameterType="com.koscom.scrap.model.StockEquitylistVO">
+		 DELETE
+	     FROM STOCK_EQUITYLIST
+	     WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	     	AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+    </delete>
+    
+    <insert id="insertStockFundlistHist" parameterType="com.koscom.scrap.model.StockFundlistVO">
+		<selectKey keyProperty="seq" resultType="java.lang.Integer" order="BEFORE">
+			(SELECT NVL(MAX(SEQ),0)+1 FROM STOCK_FUNDLIST_HIST)
+		</selectKey>
+		INSERT INTO STOCK_FUNDLIST_HIST
+        (
+			 NO_PERSON
+			, CD_FC
+			, ACCNO
+			, SEQ
+			, FUNDCODE
+			, FUNDNAME
+			, VALATTRADE
+			, VALATCUR
+			, PROLOSS
+			, FIRSTDATEBUY
+			, LASTDATEBUY
+			, MATURITY
+			, EARNINGRATE
+			, ID_FRT
+			, DT_FRT
+		)
+		SELECT
+			NO_PERSON
+			, CD_FC
+			, ACCNO
+			, #{seq	,jdbcType=NUMERIC}
+			, FUNDCODE
+			, FUNDNAME
+			, VALATTRADE
+			, VALATCUR
+			, PROLOSS
+			, FIRSTDATEBUY
+			, LASTDATEBUY
+			, MATURITY
+			, EARNINGRATE
+			, ID_FRT
+			, DT_FRT
+		FROM STOCK_FUNDLIST
+		WHERE NO_PERSON		= #{no_person	,jdbcType=VARCHAR}
+			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR}
+	</insert>
+    
+    <insert id="insertStockFundlist" parameterType="com.koscom.scrap.model.StockFundlistVO">
+		INSERT INTO STOCK_FUNDLIST
+		(
+			  NO_PERSON
+			, CD_FC
+			, ACCNO
+			, FUNDCODE
+			, FUNDNAME
+			, VALATTRADE
+			, VALATCUR
+			, PROLOSS
+			, FIRSTDATEBUY
+			, LASTDATEBUY
+			, MATURITY
+			, EARNINGRATE
+			, ID_FRT
+			, DT_FRT
+		) VALUES (
+			#{no_person				, jdbcType=VARCHAR}
+			, #{cd_fc				, jdbcType=VARCHAR}
+			, #{accno				, jdbcType=VARCHAR}
+			, #{fundcode			, jdbcType=VARCHAR}
+			, #{fundname			, jdbcType=VARCHAR}
+			, #{valattrade			, jdbcType=VARCHAR}
+			, #{valatcur			, jdbcType=VARCHAR}
+			, #{proloss				, jdbcType=VARCHAR}
+			, #{firstdatebuy		, jdbcType=VARCHAR}
+			, #{lastdatebuy			, jdbcType=VARCHAR}
+			, #{maturity			, jdbcType=VARCHAR}
+			, #{earningrate			, jdbcType=VARCHAR}
+			, #{id_frt				, jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<delete id="deleteStockFundlist"  parameterType="com.koscom.scrap.model.StockFundlistVO">
+		 DELETE
+	     FROM STOCK_FUNDLIST
+	     WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	     	AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+    </delete>
+    
+    <insert id="insertStockEtclistHist" parameterType="com.koscom.scrap.model.StockEtclistVO">
+		<selectKey keyProperty="seq" resultType="java.lang.Integer" order="BEFORE">
+			(SELECT NVL(MAX(SEQ),0)+1 FROM STOCK_ETCLIST_HIST)
+		</selectKey>
+		INSERT INTO STOCK_ETCLIST_HIST
+        (
+			NO_PERSON
+			, CD_FC
+			, ACCNO
+			, SEQ
+			, ASSETTYPE
+			, ASSETNAME
+			, ISINCODE
+			, QTY
+			, TRADETYPE
+			, VALATTRADE
+			, VALUEATCUR
+			, EARNINGRATE
+			, ID_FRT
+			, DT_FRT
+		)
+		SELECT
+			NO_PERSON
+			, CD_FC
+			, ACCNO
+			, #{seq	,jdbcType=NUMERIC}
+			, ASSETTYPE
+			, ASSETNAME
+			, ISINCODE
+			, QTY
+			, TRADETYPE
+			, VALATTRADE
+			, VALUEATCUR
+			, EARNINGRATE
+			, ID_FRT
+			, DT_FRT
+		FROM STOCK_ETCLIST
+		WHERE NO_PERSON		= #{no_person	,jdbcType=VARCHAR}
+			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR}
+	</insert>
+	
+	<insert id="insertStockEtclist" parameterType="com.koscom.scrap.model.StockEtclistVO">
+		INSERT INTO STOCK_ETCLIST
+		(
+			  NO_PERSON
+			, CD_FC
+			, ACCNO
+			, ASSETTYPE
+			, ASSETNAME
+			, ISINCODE
+			, QTY
+			, TRADETYPE
+			, VALATTRADE
+			, VALUEATCUR
+			, EARNINGRATE
+			, ID_FRT
+			, DT_FRT
+		) VALUES (
+			#{no_person				, jdbcType=VARCHAR}
+			, #{cd_fc				, jdbcType=VARCHAR}
+			, #{accno				, jdbcType=VARCHAR}
+			, #{assettype			, jdbcType=VARCHAR}
+			, #{assetname			, jdbcType=VARCHAR}
+			, #{isincode			, jdbcType=VARCHAR}
+			, #{qty					, jdbcType=VARCHAR}
+			, #{tradetype			, jdbcType=VARCHAR}
+			, #{valattrade			, jdbcType=VARCHAR}
+			, #{valatcur			, jdbcType=VARCHAR}
+			, #{earningrate			, jdbcType=VARCHAR}
+			, #{id_frt				, jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<delete id="deleteStockEtclist"  parameterType="com.koscom.scrap.model.StockEtclistVO">
+		 DELETE
+	     FROM STOCK_ETCLIST
+	     WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	     	AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+    </delete>
+    
+    <insert id="insertStockInterestIsinHist" parameterType="com.koscom.scrap.model.StockInterestIsinVO">
+		<selectKey keyProperty="seq" resultType="java.lang.Integer" order="BEFORE">
+			(SELECT NVL(MAX(SEQ),0)+1 FROM STOCK_INTEREST_ISIN_HIST)
+		</selectKey>
+		INSERT INTO STOCK_INTEREST_ISIN_HIST
+        (
+			NO_PERSON
+			, CD_FC
+			, ACCNO
+			, SEQ
+			, GROUP_NAME
+			, LIST_ISINCODE
+			, ID_FRT
+			, DT_FRT
+		)
+		SELECT
+			NO_PERSON
+			, CD_FC
+			, ACCNO
+			, #{seq	,jdbcType=NUMERIC}
+			, GROUP_NAME
+			, LIST_ISINCODE
+			, ID_FRT
+			, DT_FRT
+		FROM STOCK_INTEREST_ISIN
+		WHERE NO_PERSON		= #{no_person	,jdbcType=VARCHAR}
+			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR}
+	</insert>
+    
+    <insert id="insertStockInterestIsin" parameterType="com.koscom.scrap.model.StockInterestIsinVO">
+		INSERT INTO STOCK_INTEREST_ISIN
+		(
+			  NO_PERSON
+			, CD_FC
+			, ACCNO
+			, GROUP_NAME
+			, LIST_ISINCODE
+			, ID_FRT
+			, DT_FRT
+		) VALUES (
+			#{no_person				, jdbcType=VARCHAR}
+			, #{cd_fc				, jdbcType=VARCHAR}
+			, #{accno				, jdbcType=VARCHAR}
+			, #{group_name			, jdbcType=VARCHAR}
+			, #{list_isincode		, jdbcType=VARCHAR}
+			, #{id_frt				, jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<delete id="deleteStockInterestIsin"  parameterType="com.koscom.scrap.model.StockInterestIsinVO">
+		 DELETE
+	     FROM STOCK_INTEREST_ISIN
+	     WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	     	AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+    </delete>
+    
+     <insert id="insertStockTransaction" parameterType="com.koscom.scrap.model.StockTransactionVO">
+		INSERT INTO STOCK_TRANSACTION
+		(
+			  NO_PERSON
+			, CD_FC
+			, ACCNO
+			, ISINCODE
+			, TRANSTYPE
+			, TRANSDATE
+			, CHANGEAMT
+			, CHANGEQTY
+			, QTY
+			, ID_FRT
+			, DT_FRT
+		) VALUES (
+			#{no_person				, jdbcType=VARCHAR}
+			, #{cd_fc				, jdbcType=VARCHAR}
+			, #{accno				, jdbcType=VARCHAR}
+			, #{isincode			, jdbcType=VARCHAR}
+			, #{transdate			, jdbcType=VARCHAR}
+			, #{transtype			, jdbcType=VARCHAR}
+			, #{changeamt			, jdbcType=VARCHAR}
+			, #{changeqty			, jdbcType=VARCHAR}
+			, #{qty		, jdbcType=VARCHAR}
+			, #{id_frt				, jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+    
+    <select id="getMaxDateStockTransaction" parameterType="com.koscom.scrap.model.StockTransactionVO" resultType="java.lang.String">
+		SELECT MAX(TRANSDATE) MAX_DT_TRD FROM STOCK_TRANSACTION
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+		GROUP BY NO_PERSON, CD_FC
+	</select>
+	
+	<insert id="createStockList" parameterType="com.koscom.scrap.model.StockListVO">
+		MERGE INTO STOCK_LIST
+		USING DUAL
+		ON ( NO_PERSON		= #{no_person	,jdbcType=VARCHAR}
+			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR} 
+			AND ACCNO		= #{accno		,jdbcType=VARCHAR} )
+		WHEN MATCHED THEN
+		UPDATE
+		 SET
+		  	STATE			= #{state		,jdbcType=VARCHAR}
+		    ,ACC_TYPE		= #{acc_type	,jdbcType=VARCHAR}
+		 	,REAL_ACCNO		= #{real_accno	,jdbcType=VARCHAR}
+		 	,ALIAS			= #{alias		,jdbcType=VARCHAR}
+		 	,YN_DELETE		= #{yn_delete	,jdbcType=VARCHAR}
+			,ID_LST			= #{id_lst		,jdbcType=VARCHAR}
+			,DT_LST			= SYSDATE
+		WHEN NOT MATCHED THEN
+        INSERT
+        (
+			 NO_PERSON
+			,CD_FC
+			,ACCNO
+			,REAL_ACCNO
+			,STATE
+			,ACC_TYPE
+			,ALIAS
+			,YN_DELETE
+			,ID_FRT
+			,DT_FRT
+		) VALUES (
+			 #{no_person		,jdbcType=VARCHAR}
+			,#{cd_fc			,jdbcType=VARCHAR}
+			,#{accno			,jdbcType=VARCHAR}
+			,#{real_accno		,jdbcType=VARCHAR}
+			,#{state			,jdbcType=VARCHAR}
+			,#{acc_type			,jdbcType=VARCHAR}
+			,#{alias			,jdbcType=VARCHAR}
+			,#{yn_delete		,jdbcType=VARCHAR}
+			,#{id_frt			,jdbcType=VARCHAR}
+			,SYSDATE
+		)
+	</insert>
+	
+	<update id="updateStockList" parameterType="com.koscom.scrap.model.StockListVO">
+		UPDATE STOCK_LIST
+		   SET YN_DELETE = 'Y'
+		 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+	</update>
+	
+	<select id="listStockList" parameterType="com.koscom.scrap.model.StockListVO" resultType="com.koscom.scrap.model.StockListVO">
+		SELECT NO_PERSON
+			, CD_FC
+			, ACCNO
+			, REAL_ACCNO
+			, STATE
+			, ACC_TYPE
+			, ALIAS
+			, ID_FRT
+			, DT_FRT
+			, ID_FRT
+			, DT_FRT
+		FROM STOCK_LIST
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC= #{cd_fc, jdbcType=VARCHAR} 
+			AND STATE = '사용'
+			AND YN_DELETE = 'N'
+	</select>
 
 	<insert id="insertScrRsltScrap" parameterType="com.koscom.scrap.model.ScrRsltScrapVO">
 		<selectKey keyProperty="seq_scraping_result" resultType="integer" order="BEFORE">
@@ -10,21 +515,21 @@
 		</selectKey>
 
 		INSERT INTO SCR_RSLT_SCRAP
-			(
-			  	 NO_PERSON
-			  	, SEQ_SCRAPING_RESULT
-			  	, CD_SCRAP
-				, RSLT_SCRAPING
-				, NO_BIZ_COMP
-				, DT_FRT
-			) VALUES (
-				  #{no_person, jdbcType=VARCHAR}
-				  , #{seq_scraping_result, jdbcType=NUMERIC}
-				  , #{cd_scrap, jdbcType=NUMERIC}
-				  , #{rslt_scraping, jdbcType=NUMERIC}
-				  , #{no_biz_comp, jdbcType=NUMERIC}
-				  , SYSDATE
-			)
+		(
+		  	 NO_PERSON
+		  	, SEQ_SCRAPING_RESULT
+		  	, CD_SCRAP
+			, RSLT_SCRAPING
+			, NO_BIZ_COMP
+			, DT_FRT
+		) VALUES (
+			  #{no_person, jdbcType=VARCHAR}
+			  , #{seq_scraping_result, jdbcType=NUMERIC}
+			  , #{cd_scrap, jdbcType=NUMERIC}
+			  , #{rslt_scraping, jdbcType=NUMERIC}
+			  , #{no_biz_comp, jdbcType=NUMERIC}
+			  , SYSDATE
+		)
 	</insert>
 	
 	<update id="updateScrRsltScrap" parameterType="com.koscom.scrap.model.ScrRsltScrapVO">
@@ -45,8 +550,8 @@
 			, YN_LINK
 			, LINK_DATE
 		FROM FC_LINK_INFO
-		WHERE NO_PERSON = #{NO_PERSON, jdbcType=VARCHAR}
-			AND CD_AGENCY= #{CD_AGENCY, jdbcType=VARCHAR} 
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_AGENCY= #{cd_agency, jdbcType=VARCHAR} 
 			AND YN_LINK = 'Y'
 	</select>
 	
@@ -143,6 +648,7 @@
 		SELECT NO_PERSON
 			, SEQ_SCRAPING_RESULT
 			, CD_FC
+			, CD_TYPE
 			, YMD_STT
 			, YMD_END
 			, ERROR_CD
@@ -151,13 +657,15 @@
 		FROM SCR_REQ_CARD
 		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
 			AND CD_FC= #{cd_fc, jdbcType=VARCHAR}
+			AND CD_TYPE= #{cd_type, jdbcType=VARCHAR}
 	</select>
 	
 	<insert id="createScrReqCard" parameterType="com.koscom.scrap.model.ScrReqCardVO">
 		MERGE INTO SCR_REQ_CARD
 		USING DUAL
 		ON ( NO_PERSON		= #{no_person	,jdbcType=VARCHAR}
-			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR} )
+			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR}
+			AND CD_TYPE		= #{cd_type		,jdbcType=VARCHAR} )
 		WHEN MATCHED THEN
 		UPDATE
 		 SET
@@ -173,6 +681,7 @@
 			 NO_PERSON
 			,SEQ_SCRAPING_RESULT
 			,CD_FC
+			,CD_TYPE
 			,YMD_STT
 			,YMD_END
 			,ERROR_CD
@@ -182,6 +691,7 @@
 			 #{no_person			,jdbcType=VARCHAR}
 			,#{seq_scraping_result	,jdbcType=VARCHAR}
 			,#{cd_fc				,jdbcType=VARCHAR}
+			,#{cd_type				,jdbcType=VARCHAR}
 			,#{ymd_stt				,jdbcType=VARCHAR}
 			,#{ymd_end				,jdbcType=VARCHAR}
 			,#{error_cd				,jdbcType=VARCHAR}
@@ -196,6 +706,7 @@
 			 NO_PERSON
 			, SEQ_SCRAPING_RESULT
 			, CD_FC
+			, CD_TYPE
 			, YMD_STT
 			, YMD_END
 			, ERROR_CD
@@ -205,6 +716,7 @@
 		SELECT NO_PERSON
 			, SEQ_SCRAPING_RESULT
 			, CD_FC
+			, CD_TYPE
 			, YMD_STT
 			, YMD_END
 			, ERROR_CD
@@ -213,6 +725,7 @@
 		FROM SCR_REQ_CARD
 		WHERE NO_PERSON		= #{no_person	,jdbcType=VARCHAR}
 			AND CD_FC		= #{cd_fc		,jdbcType=VARCHAR}
+			AND CD_TYPE		= #{cd_type		,jdbcType=VARCHAR}
 	</insert>
 	
 	<select id="getScrReqHealth" parameterType="com.koscom.scrap.model.ScrReqHealthVO" resultType="com.koscom.scrap.model.ScrReqHealthVO">
@@ -322,18 +835,18 @@
 	<insert id="createFcLinkInfo" parameterType="com.koscom.scrap.model.FcLinkInfoVO">
 		MERGE INTO FC_LINK_INFO
 		USING DUAL
-		ON ( NO_PERSON = #{NO_PERSON, jdbcType=VARCHAR}
-			AND CD_FC = #{CD_FC, jdbcType=VARCHAR} )
+		ON ( NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR} )
 		WHEN MATCHED THEN
 		UPDATE
 		 SET
-		  	CN					= #{CN            ,jdbcType=VARCHAR}
-		    ,CD_LINK_STAT		= #{CD_LINK_STAT  ,jdbcType=VARCHAR}
-		 	,YN_LINK			= #{YN_LINK       ,jdbcType=VARCHAR}
-		 	,TYPE_LOGIN			= #{TYPE_LOGIN    ,jdbcType=VARCHAR}
+		  	CN					= #{cn            ,jdbcType=VARCHAR}
+		    ,CD_LINK_STAT		= #{cd_link_stat  ,jdbcType=VARCHAR}
+		 	,YN_LINK			= #{yn_link       ,jdbcType=VARCHAR}
+		 	,TYPE_LOGIN			= #{type_login    ,jdbcType=VARCHAR}
 			,LINK_DATE			= TO_CHAR(SYSDATE , 'YYYYMMDD')
-			,RSN_LINK_MESSAGE	= #{RSN_LINK_MESSAGE    ,jdbcType=VARCHAR}
-			,ID_LST				= #{ID_LST        ,jdbcType=VARCHAR}
+			,RSN_LINK_MESSAGE	= #{rsn_link_message    ,jdbcType=VARCHAR}
+			,ID_LST				= #{id_lst        ,jdbcType=VARCHAR}
 			,DT_LST				= SYSDATE
 		WHEN NOT MATCHED THEN
         INSERT
@@ -352,18 +865,18 @@
 			,ID_LST
 			,DT_LST
 		) VALUES (
-			 #{NO_PERSON	,jdbcType=VARCHAR}
-			,#{CD_FC		,jdbcType=VARCHAR}
-			,#{CD_AGENCY	,jdbcType=VARCHAR}
-			,#{CN			,jdbcType=VARCHAR}
-			,#{CD_LINK_STAT	,jdbcType=VARCHAR}
-			,#{YN_LINK		,jdbcType=VARCHAR}
-			,#{TYPE_LOGIN	,jdbcType=VARCHAR}
+			 #{no_person	,jdbcType=VARCHAR}
+			,#{cd_fc		,jdbcType=VARCHAR}
+			,#{cd_agency	,jdbcType=VARCHAR}
+			,#{cn			,jdbcType=VARCHAR}
+			,#{cd_link_stat	,jdbcType=VARCHAR}
+			,#{yn_link		,jdbcType=VARCHAR}
+			,#{type_login	,jdbcType=VARCHAR}
 			,TO_CHAR(SYSDATE, 'YYYYMMDD')
-			,#{RSN_LINK_MESSAGE	,jdbcType=VARCHAR}
-			,#{ID_FRT		,jdbcType=VARCHAR}
+			,#{rsn_link_message	,jdbcType=VARCHAR}
+			,#{id_frt		,jdbcType=VARCHAR}
 			,SYSDATE
-			,#{ID_LST		,jdbcType=VARCHAR}
+			,#{id_lst		,jdbcType=VARCHAR}
 			,SYSDATE
 		)
 	</insert>
@@ -371,10 +884,10 @@
 	<update id="updateFcLinkInfo" parameterType="com.koscom.scrap.model.FcLinkInfoVO">
 		UPDATE FC_LINK_INFO
 		SET
-			CD_LINK_STAT = #{CD_LINK_STAT, jdbcType=VARCHAR}
-			, RSN_LINK_MESSAGE = #{RSN_LINK_MESSAGE, jdbcType=VARCHAR}
-		WHERE NO_PERSON = #{NO_PERSON, jdbcType=VARCHAR}
-			AND CD_FC = #{CD_FC, jdbcType=NUMERIC}
+			CD_LINK_STAT = #{cd_link_stat, jdbcType=VARCHAR}
+			, RSN_LINK_MESSAGE = #{rsn_link_message, jdbcType=VARCHAR}
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=NUMERIC}
 	</update>
 	
 	<select id="getLinkedFcCount" parameterType="java.lang.String" resultType="int">
@@ -396,8 +909,8 @@
 			, LK.YN_LINK
 			, LK.TYPE_LOGIN
 		FROM FC_LINK_INFO LK, FC_INFO FC, COMM_CD CD
-		WHERE NO_PERSON = #{NO_PERSON, jdbcType=VARCHAR} 
-			AND CN = #{CN, jdbcType=VARCHAR}
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR} 
+			AND CN IN ( #{cn, jdbcType=VARCHAR}, #{dn, jdbcType=VARCHAR} )
 			AND LK.YN_LINK = 'Y'  AND LK.CD_FC = FC.CD_FC AND CD.CODE_GROUP = 'cd_fin' AND CD.CODE_VALUE = FC.CD_FIN
 		ORDER BY CD_FIN, NM_FC
 	</select>
@@ -409,19 +922,16 @@
 			, FC.CD_FC
 			, FC.NM_FC
 			, (SELECT NM_CODE FROM COMM_CD WHERE CODE_GROUP = 'cd_fin' AND CODE_VALUE = FC.CD_FIN) NM_CODE
-			, CD.NM_CODE CD_COOCON
+			, CD_FC_COOCON CD_COOCON
 			, NVL(LK.YN_LINK, 'N') YN_LINK
 			, LK.CD_LINK_STAT
 			, LK.RSN_LINK_MESSAGE
 			, (SELECT NM_CODE FROM COMM_CD WHERE CODE_GROUP = 'type_login' AND CODE_VALUE = LK.TYPE_LOGIN) TYPE_LOGIN
 		FROM FC_INFO 
 			FC LEFT OUTER JOIN
-			(SELECT * FROM FC_LINK_INFO WHERE NO_PERSON = #{NO_PERSON, jdbcType=VARCHAR}) LK  
+			(SELECT * FROM FC_LINK_INFO WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}) LK  
 			ON LK.CD_FC = FC.CD_FC
-			, COMM_CD CD
 		WHERE FC.YN_SCRAP = 'Y'
-			AND CD.CODE_GROUP = 'cd_coocon_fc'
-			AND CD.CODE_VALUE = FC.CD_FC
 		ORDER BY CD_FIN, YN_LINK DESC, NM_FC
 	</select>
 	
@@ -453,10 +963,10 @@
 			,ID_LST
 			,SYSDATE
 		FROM FC_LINK_INFO
-		WHERE NO_PERSON = #{NO_PERSON, jdbcType=VARCHAR} 
-			AND CN = #{CN, jdbcType=VARCHAR}
-		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(CD_FC)">
-			AND CD_FC = #{CD_FC, jdbcType=VARCHAR}
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR} 
+			AND CN = #{cn, jdbcType=VARCHAR}
+		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)">
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
 		</if>
 	</insert>
 	
@@ -482,7 +992,7 @@
 			,PROFIT_RATE	= #{profit_rate    ,jdbcType=VARCHAR}
 			,FEW_DAYS		= #{few_days       ,jdbcType=VARCHAR}
 			,INTEREST_DATE	= #{interest_date  ,jdbcType=VARCHAR}
-			,YN_USE			= #{yn_use         ,jdbcType=VARCHAR}
+			,YN_DELETE		= #{yn_delete       ,jdbcType=VARCHAR}
 		WHEN NOT MATCHED THEN
         INSERT
         (
@@ -503,7 +1013,7 @@
 			,PROFIT_RATE
 			,FEW_DAYS
 			,INTEREST_DATE
-			,YN_USE
+			,YN_DELETE
 			,DT_FRT
 		) VALUES (
 			 #{no_person , jdbcType=VARCHAR}
@@ -523,16 +1033,24 @@
 			,#{profit_rate    ,jdbcType=VARCHAR}
 			,#{few_days		  ,jdbcType=VARCHAR}
 			,#{interest_date  ,jdbcType=VARCHAR}
-			,#{yn_use		  ,jdbcType=VARCHAR}
+			,#{yn_delete	  ,jdbcType=VARCHAR}
 			,SYSDATE
 		)
 	</insert>
 	
+	<update id="updateScrBankApiAnInfo" parameterType="com.koscom.scrap.model.ScrBankApiAnInfoVO">
+		UPDATE SCR_BANK_API_AN_INFO
+		   SET YN_DELETE = 'Y'
+		 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+	</update>
+	
 	<insert id="createScrCardInfo" parameterType="com.koscom.scrap.model.ScrCardInfoVO">
 		MERGE INTO SCR_CARD_INFO
 		USING DUAL
-		ON (no_person = #{no_person, jdbcType=VARCHAR}
-			AND no_card = #{no_card, jdbcType=VARCHAR} )
+		ON (NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+			AND NO_CARD = #{no_card, jdbcType=VARCHAR} )
 		WHEN MATCHED THEN
 		UPDATE
 		 SET
@@ -540,6 +1058,8 @@
 		    ,DT_PAYMENT 	= #{dt_payment     ,jdbcType=VARCHAR}
 		    ,AMT_PAYMENT	= #{amt_payment    ,jdbcType=VARCHAR}
 		 	,FC_MEMBER		= #{fc_member      ,jdbcType=VARCHAR}
+		 	,YN_DELETE		= #{yn_delete      ,jdbcType=VARCHAR}
+		 	,DT_LST			= SYSDATE
 		WHEN NOT MATCHED THEN
         INSERT
         (
@@ -550,6 +1070,8 @@
 			,DT_PAYMENT
 			,AMT_PAYMENT
 			,FC_MEMBER
+			,YN_DELETE
+			,DT_FRT
 		) VALUES (
 			 #{no_person      ,jdbcType=VARCHAR}
 			,#{cd_fc		  ,jdbcType=VARCHAR}
@@ -558,6 +1080,126 @@
 			,#{dt_payment	  ,jdbcType=VARCHAR}
 			,#{amt_payment	  ,jdbcType=VARCHAR}
 			,#{fc_member      ,jdbcType=VARCHAR}
+			,#{yn_delete      ,jdbcType=VARCHAR}
+			,SYSDATE
+		)
+	</insert>
+	
+	<update id="updateScrCardInfo" parameterType="com.koscom.scrap.model.ScrCardInfoVO">
+		UPDATE SCR_CARD_INFO
+		   SET YN_DELETE = 'Y'
+		 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+	</update>
+	
+	<insert id="createScrCardLimitInfo" parameterType="com.koscom.scrap.model.ScrCardLimitInfoVO">
+		MERGE INTO SCR_CARD_LIMIT_INFO
+		USING DUAL
+		ON (NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+			AND TYPE_CARD = #{type_card, jdbcType=VARCHAR} )
+		WHEN MATCHED THEN
+		UPDATE
+		 SET
+		    AMT_CARD_LIMIT		    = #{amt_card_limit       ,jdbcType=VARCHAR}
+		    ,AMT_CARD_USE 			= #{amt_card_use         ,jdbcType=VARCHAR}
+		    ,AMT_CARD_RESIDUAL		= #{amt_card_residual    ,jdbcType=VARCHAR}
+		 	,AMT_LUMPSUM_LIMIT		= #{amt_lumpsum_limit    ,jdbcType=VARCHAR}
+		 	,AMT_LUMPSUM_USE		= #{amt_lumpsum_use      ,jdbcType=VARCHAR}
+		 	,AMT_LUMPSUM_RESIDUAL	= #{amt_lumpsum_residual ,jdbcType=VARCHAR}
+		 	,AMT_ISTM_LIMIT			= #{amt_istm_limit       ,jdbcType=VARCHAR}
+		 	,AMT_ISTM_USE			= #{amt_istm_use         ,jdbcType=VARCHAR}
+		 	,AMT_ISTM_RESIDUAL		= #{amt_istm_residual    ,jdbcType=VARCHAR}
+		 	,AMT_OVERSEA_LIMIT		= #{amt_oversea_limit    ,jdbcType=VARCHAR}
+		 	,AMT_OVERSEA_USE		= #{amt_oversea_use      ,jdbcType=VARCHAR}
+		 	,AMT_OVERSEA_RESIDUAL	= #{amt_oversea_residual ,jdbcType=VARCHAR}
+		 	,AMT_CASH_LIMIT			= #{amt_cash_limit       ,jdbcType=VARCHAR}
+		 	,AMT_CASH_USE			= #{amt_cash_use         ,jdbcType=VARCHAR}
+		 	,AMT_CASH_RESIDUAL		= #{amt_cash_residual    ,jdbcType=VARCHAR}
+		 	,CD_CURRENCY			= #{cd_currency          ,jdbcType=VARCHAR}
+		 	,YN_DELETE				= #{yn_delete            ,jdbcType=VARCHAR}
+		 	,DT_LST					= SYSDATE
+		WHEN NOT MATCHED THEN
+        INSERT
+        (
+			 NO_PERSON
+			,CD_FC
+			,TYPE_CARD
+			,AMT_CARD_LIMIT
+			,AMT_CARD_USE
+			,AMT_CARD_RESIDUAL
+			,AMT_LUMPSUM_LIMIT
+			,AMT_LUMPSUM_USE
+			,AMT_LUMPSUM_RESIDUAL
+			,AMT_ISTM_LIMIT
+			,AMT_ISTM_USE
+			,AMT_ISTM_RESIDUAL
+			,AMT_OVERSEA_LIMIT
+			,AMT_OVERSEA_USE
+			,AMT_OVERSEA_RESIDUAL
+			,AMT_CASH_LIMIT
+			,AMT_CASH_USE
+			,AMT_CASH_RESIDUAL
+			,CD_CURRENCY
+			,YN_DELETE
+			,DT_FRT
+		) VALUES (
+			 #{no_person      		,jdbcType=VARCHAR}
+			,#{cd_fc		 		,jdbcType=VARCHAR}
+			,#{type_card			,jdbcType=VARCHAR}
+			,#{amt_card_limit		,jdbcType=VARCHAR}
+			,#{amt_card_use	  		,jdbcType=VARCHAR}
+			,#{amt_card_residual	,jdbcType=VARCHAR}
+			,#{amt_lumpsum_limit    ,jdbcType=VARCHAR}
+			,#{amt_lumpsum_use      ,jdbcType=VARCHAR}
+			,#{amt_lumpsum_residual ,jdbcType=VARCHAR}
+			,#{amt_istm_limit      	,jdbcType=VARCHAR}
+			,#{amt_istm_use      	,jdbcType=VARCHAR}
+			,#{amt_istm_residual    ,jdbcType=VARCHAR}
+			,#{amt_oversea_limit    ,jdbcType=VARCHAR}
+			,#{amt_oversea_use      ,jdbcType=VARCHAR}
+			,#{amt_oversea_residual ,jdbcType=VARCHAR}
+			,#{amt_cash_limit      	,jdbcType=VARCHAR}
+			,#{amt_cash_use      	,jdbcType=VARCHAR}
+			,#{amt_cash_residual    ,jdbcType=VARCHAR}
+			,#{cd_currency      	,jdbcType=VARCHAR}
+			,#{yn_delete   			,jdbcType=VARCHAR}
+			,SYSDATE
+		)
+	</insert>
+	
+	<update id="updateScrCardLimitInfo" parameterType="com.koscom.scrap.model.ScrCardLimitInfoVO">
+		UPDATE SCR_CARD_LIMIT_INFO
+		   SET YN_DELETE = 'Y'
+		 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+	</update>
+	
+	<insert id="createScrCardPointInfo" parameterType="com.koscom.scrap.model.ScrCardPointInfoVO">
+		MERGE INTO SCR_CARD_POINT_INFO
+		USING DUAL
+		ON (NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+			AND TYPE_POINT = #{type_point, jdbcType=VARCHAR} )
+		WHEN MATCHED THEN
+		UPDATE
+		 SET
+		    HOLD_POINT		= #{hold_point     ,jdbcType=VARCHAR}
+		    ,DT_LST			= SYSDATE
+		WHEN NOT MATCHED THEN
+        INSERT
+        (
+			 NO_PERSON
+			,CD_FC
+			,TYPE_POINT
+			,HOLD_POINT
+			,DT_FRT
+		) VALUES (
+			 #{no_person      ,jdbcType=VARCHAR}
+			,#{cd_fc		  ,jdbcType=VARCHAR}
+			,#{type_point	  ,jdbcType=VARCHAR}
+			,#{hold_point	  ,jdbcType=VARCHAR}
+			,SYSDATE
 		)
 	</insert>
 	
@@ -611,7 +1253,83 @@
 		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
 			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
 		GROUP BY NO_PERSON, CD_FC
-	</select >
+	</select>
+	
+	<insert id="createScrCardChargeInfo" parameterType="com.koscom.scrap.model.ScrCardChargeInfoVO">
+		MERGE INTO SCR_CARD_CHARGE_INFO
+		USING DUAL
+		ON (NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+			AND CHARGE_YYYYMM = #{charge_yyyymm, jdbcType=VARCHAR} )
+		WHEN MATCHED THEN
+		UPDATE
+		 SET
+		    MONTHLY_CHARGE  = #{monthly_charge ,jdbcType=VARCHAR}
+		    ,DT_FRT 	    = SYSDATE
+		WHEN NOT MATCHED THEN
+        INSERT
+        (
+			 NO_PERSON
+			,CD_FC
+			,CHARGE_YYYYMM
+			,MONTHLY_CHARGE
+			,DT_FRT
+		) VALUES (
+			 #{no_person      ,jdbcType=VARCHAR}
+			,#{cd_fc		  ,jdbcType=VARCHAR}
+			,#{charge_yyyymm  ,jdbcType=VARCHAR}
+			,#{monthly_charge ,jdbcType=VARCHAR}
+			,SYSDATE
+		)
+	</insert>
+	
+	<insert id="createScrCardChargeDetail" parameterType="com.koscom.scrap.model.ScrCardChargeDetailVO">
+		INSERT INTO SCR_CARD_CHARGE_DETAIL(
+			 NO_PERSON
+			,CD_FC
+			,CHARGE_YYYYMM
+			,TYPE_CARD
+			,NO_CARD
+			,DT_PAYMENT
+			,DT_USE
+			,NM_MEMBER
+			,MONTH_INSTALLMENT
+			,DEPOSIT_NUMBER
+			,USAGE_FEE
+			,AMT_CHARGE
+			,FEES
+			,AMT_AFTER_PAYMENT
+			,NO_BIZ_MEMBER
+			,TYPE_BIZ_MEMBER
+			,DT_FRT
+
+		) VALUES (
+			 #{no_person         ,jdbcType=VARCHAR}
+			,#{cd_fc             ,jdbcType=VARCHAR}
+			,#{charge_yyyymm     ,jdbcType=VARCHAR}
+			,#{type_card         ,jdbcType=VARCHAR}
+			,#{no_card           ,jdbcType=VARCHAR}
+			,#{dt_payment        ,jdbcType=VARCHAR}
+			,#{dt_use            ,jdbcType=VARCHAR}
+			,#{nm_member         ,jdbcType=VARCHAR}
+			,#{month_installment ,jdbcType=VARCHAR}
+			,#{deposit_number    ,jdbcType=VARCHAR}
+			,#{usage_fee         ,jdbcType=VARCHAR}
+			,#{amt_charge        ,jdbcType=VARCHAR}
+			,#{fees              ,jdbcType=VARCHAR}
+			,#{amt_after_payment ,jdbcType=VARCHAR}
+			,#{no_biz_member     ,jdbcType=VARCHAR}
+			,#{type_biz_member   ,jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	
+	<select id="getMaxDateScrCardChargeDetail" parameterType="java.util.HashMap" resultType="java.lang.String">
+		SELECT MAX(DT_USE) MAX_DT_TRD FROM SCR_CARD_CHARGE_DETAIL
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+		GROUP BY NO_PERSON, CD_FC
+	</select>
 	
 	<insert id="createScrReqCertification" parameterType="com.koscom.scrap.model.ScrReqCertificationVO">
 		INSERT INTO SCR_REQ_CERTIFICATION(

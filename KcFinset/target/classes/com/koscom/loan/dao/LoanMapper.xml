@@ -3,6 +3,105 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.koscom.loan.dao.LoanMapper">
+	<insert id="insertLoanInfo" >
+		/* com.koscom.loan.dao.LoanMapper.insertLoanInfo*/
+<!-- 		<selectKey keyProperty="no_bunch" resultType="string" order="BEFORE"> -->
+<!-- 			(SELECT NVL(MAX(cast(no_bunch As Int)),0) + 1 FROM tx_fc_transmit) -->
+<!-- 		</selectKey> -->
+		<selectKey keyProperty="no_bunch" resultType="string" order="BEFORE">
+			(SELECT LPAD(NVL(TX_FC_TRANSMIT_SEQUENCE.NEXTVAL,0),20,'0') FROM DUAL)
+		</selectKey>
+		INSERT INTO TX_FC_TRANSMIT
+			(   NO_BUNCH
+              , NM_PERSON
+              , SSN_PERSON
+              , NO_PERSON
+              , HP1
+              , YMD_BIRTH
+              , KCB_DI
+              , ID_FRT
+              , DT_FRT
+              , ID_LST
+              , DT_LST
+			) VALUES (
+				  #{no_bunch              , jdbcType=VARCHAR}
+				, #{nm_person			  , jdbcType=VARCHAR}
+				, XX1.ENC_VARCHAR2_INS(#{ssn_person, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'TX_FC_TRANSMIT', 'SSN_PERSON')
+				, #{no_person			  , jdbcType=VARCHAR}
+				, #{hp1			  		  , jdbcType=VARCHAR}
+				, #{ymd_birth			  , jdbcType=VARCHAR}
+				, #{kcb_di			  	  , jdbcType=VARCHAR}
+				, #{id_frt			  	  , jdbcType=VARCHAR}
+				, SYSDATE
+				, #{id_frt			  	  , jdbcType=VARCHAR}
+				, SYSDATE
+			)
+	</insert>
+	
+	<insert id="insertLoanGoodsInfo" >
+		/* com.koscom.loan.dao.LoanMapper.insertLoanGoodsInfo*/
+        /* com.koscom.finance.dao.FinanceMapper.insertTxFcGoods : */
+        INSERT INTO TX_FC_GOODS /* 신청 상품정보 */
+	        (
+	            NO_BUNCH /* 순번           */
+	           ,CD_GOODS /* 상품코드       */
+	           ,ID_FRT   /* 최초입력아이디 */
+	           ,DT_FRT   /* 최초입력시간   */
+	        )
+	        VALUES
+	        (
+	             #{no_bunch, jdbcType=VARCHAR}/* 순번           */
+	            ,#{cd_goods, jdbcType=VARCHAR}/* 상품코드       */
+	            ,#{id_frt  , jdbcType=VARCHAR}/* 등록자ID      */
+	            ,SYSDATE      /* 등록일시       */
+	        )
+	</insert>
+	
+	<update id="modifyLoanAdditional">
+		/* com.koscom.loan.dao.LoanMapper.modifyLoanAdditional*/
+		UPDATE TX_FC_TRANSMIT
+		SET
+		   CD_LOAN_USE 			= #{cd_loan_use, jdbcType=VARCHAR}
+		  , CD_HOUSE_TYPE 		= #{cd_house_type, jdbcType=VARCHAR}
+		  , CD_LIVE_TYPE_HOME 	= #{cd_live_type_home, jdbcType=VARCHAR}
+		  , ID_LST              = #{id_lst, jdbcType=VARCHAR}
+		  , DT_LST              = SYSDATE
+		WHERE NO_BUNCH = #{no_bunch, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="modifyLoanInfo" >
+		/* com.koscom.loan.dao.LoanMapper.modifyLoanInfo*/
+		UPDATE TX_FC_TRANSMIT
+		SET
+		    nm_comp 				= #{nm_comp, jdbcType=VARCHAR}
+		  , no_biz_comp 			= #{no_biz_comp, jdbcType=VARCHAR}
+		  , cd_loan_term 			= #{cd_loan_term, jdbcType=VARCHAR}
+		  , cd_job_class_l 			= #{cd_job_class_l, jdbcType=VARCHAR}
+		  , jb_dt_join 				= #{jb_dt_join, jdbcType=VARCHAR}
+		  , cd_employee_type 		= #{cd_employee_type, jdbcType=VARCHAR}
+		  , jb_tp_mediinsure 		= #{jb_tp_mediinsure, jdbcType=VARCHAR}
+		  , jb_tp_comppriv 			= #{jb_tp_comppriv, jdbcType=VARCHAR}
+		  , jb_tp_listing 			= #{jb_tp_listing, jdbcType=VARCHAR}
+		  , jb_tp_eprmdy 			= #{jb_tp_eprmdy, jdbcType=VARCHAR}
+		  , jb_tp_compsize 			= #{jb_tp_compsize, jdbcType=VARCHAR}
+		  , jb_tp_etlipc 			= #{jb_tp_etlipc, jdbcType=VARCHAR}
+		  , jb_tp_compchulja 		= #{jb_tp_compchulja, jdbcType=VARCHAR}
+		  , cd_duty_comp 			= #{cd_duty_comp, jdbcType=VARCHAR}
+		  , amt_year_income 		= #{amt_year_income, jdbcType=NUMERIC}
+		  , ID_LST                  = #{id_lst, jdbcType=VARCHAR}
+		  , DT_LST                  = SYSDATE
+		WHERE NO_BUNCH = #{no_bunch, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="modifyLoanForNoFcReq">
+		/* com.koscom.loan.dao.LoanMapper.modifyLoanForNoFcReq*/
+		UPDATE TX_FC_TRANSMIT
+		SET
+		   no_fc_req 	= #{no_fc_req, jdbcType=VARCHAR}
+		    , ID_LST = #{id_lst, jdbcType=VARCHAR}
+		    , DT_LST = SYSDATE
+		WHERE NO_BUNCH = #{no_bunch, jdbcType=VARCHAR}
+	</update>
 
 	<insert id="insertLoanGoodsChoice" >
 		/* com.koscom.loan.dao.LoanMapper.insertLoanGoodsChoice*/

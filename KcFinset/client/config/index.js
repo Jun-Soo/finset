@@ -12,23 +12,23 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/m/': {
-        target: 'http://192.168.0.3:8080',
+        target: 'http://192.168.1.50:8080',
         changeOrigin: true,
         pathRewrite: {
-          '^/m/':'/m/'
+          '^/m/': '/m/'
         }
       },
       '/check': {
-        target: 'http://192.168.0.3:8080',
+        target: 'http://192.168.1.50:8080',
         changeOrigin: true,
         pathRewrite: {
-          '^/check':'/'
+          '^/check': '/'
         }
       }
     },
 
     // Various Dev Server settings
-    host: '192.168.0.3', // can be overwritten by process.env.HOST
+    host: '192.168.1.50', // can be overwritten by process.env.HOST
     port: 8081, // can be overwritten by process.env.PORT, if port is in use, a free one will be determined
     autoOpenBrowser: false,
     errorOverlay: true,
@@ -61,7 +61,7 @@ module.exports = {
   build: {
     // Template for index.html
     index: path.resolve(__dirname, '../../src/main/webapp/index.html'),
-    
+
     // Paths
     assetsRoot: path.resolve(__dirname, '../../src/main/webapp'),
     assetsSubDirectory: 'static',

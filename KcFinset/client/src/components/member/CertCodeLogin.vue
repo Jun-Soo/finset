@@ -67,8 +67,6 @@ export default {
   created() {
     this.$store.state.title = "비밀번호 확인";
     if (Constant.userAgent == "Android") {
-      window.Android.setEndApp("Y");
-
       if (this.$store.state.user.ynFingerprint == "Y") {
         window.Android.initFingerPrint();
       }

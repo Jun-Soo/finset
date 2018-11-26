@@ -14,6 +14,7 @@ import VueCarousel from 'vue-carousel'
 import VueModal from './components/plugins/modal/index'
 import Multiselect from './components/plugins/vue-multiselect/src/index'
 import SlimDialog from 'v-slim-dialog'
+import datepicker from 'vuejs-datepicker'
 
 import 'jquery'
 
@@ -47,6 +48,7 @@ Vue.use(VueModal)
 Vue.use(window.VueCharts)
 Vue.use(SlimDialog)
 Vue.component('multiselect', Multiselect)
+Vue.component('datepicker', datepicker)
 
 Vue.config.debug = true
 Vue.config.devtools = false

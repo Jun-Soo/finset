@@ -105,11 +105,9 @@ export default {
   beforeCreate() {},
   created() {
     if (Constant.userAgent == "Android") {
-      window.Android.setEndApp("Y");
       window.Android.reqSMSPermission();
     }
     this.$store.state.title = "본인확인";
-    this.$store.state.header.type = "sub";
     this.time = this.minutes * 60;
   },
   beforeMount() {},

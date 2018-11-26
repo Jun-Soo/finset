@@ -9,8 +9,9 @@ const store = new Vuex.Store({
   state: {
     title: 'FINSET',
     header: {
-      type: 'sub',
-      active: ''
+      type: '',
+      active: '',
+      backPath: ''
     },
     user: {
       noPerson: '',

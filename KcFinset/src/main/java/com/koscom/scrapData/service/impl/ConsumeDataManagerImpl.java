@@ -159,8 +159,9 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 								yn_cancel = "Y";
 							}
 						}
-						String yn_auto = "Y";
+						String yn_auto = "N";
 						String yn_budget_except = "N";
+						String yn_person_regist = "N";
 						String id_frt = no_person;
 						Date dt_frt = null;
 						String id_lst = no_person;
@@ -195,6 +196,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 										yn_cancel,
 										yn_auto,
 										yn_budget_except,
+										yn_person_regist,
 										id_frt,
 										dt_frt,
 										id_lst,
@@ -278,8 +280,9 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 					String yn_pay_installment = null;
 					String yn_delete = "N";
 					String yn_cancel = "N";
-					String yn_auto = "Y";
+					String yn_auto = "N";
 					String yn_budget_except = "N";
+					String yn_person_regist = "N";
 					String id_frt = no_person;
 					Date dt_frt = null;
 					String id_lst = no_person;
@@ -313,6 +316,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 							yn_cancel,
 							yn_auto,
 							yn_budget_except,
+							yn_person_regist,
 							id_frt,
 							dt_frt,
 							id_lst,
@@ -430,6 +434,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 					consumeDataVO.getYn_cancel(),
 					consumeDataVO.getYn_auto(),
 					consumeDataVO.getYn_budget_except(),
+					consumeDataVO.getYn_person_regist(),
 					consumeDataVO.getId_frt(),
 					consumeDataVO.getDt_frt(),
 					consumeDataVO.getId_lst(),

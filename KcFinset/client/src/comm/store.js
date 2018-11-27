@@ -68,6 +68,7 @@ const store = new Vuex.Store({
       state.accessToken = data.accessToken
       state.nmPerson = data.nmPerson
       state.isLoggedIn = true
+      state.header.type = 'sub'
     },
     LOGOUT (state) {
       localStorage.removeItem('accessToken')

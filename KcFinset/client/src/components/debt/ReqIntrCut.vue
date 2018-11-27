@@ -14,14 +14,14 @@
           <p class="symbol"><img :src="debtInfo.fcImg" alt="" />{{debtInfo.nm_fc}}</p>
           <p class="date">{{formatDateDot(debtInfo.ymd_loan)}}</p>
         </div>
-        <div v-for="cutItem in debtInfo.cutItems" :key="cutItem.index">
-          <p>{{getCodeName(cutItem)}}</p>
-        </div>
         <div class="goods-benefit">
           <div>{{debtInfo.ever_interest}}<em> %</em></div>
           <div>{{formatNumber(debtInfo.amt_contract)}}<em> 만원</em></div>
         </div>
         <a v-if="'' != debtInfo.tel && debtInfo.tel != null" @click="callFc(debtInfo.tel)" class="btn">전화로 문의하기</a>
+        <div class="cate-tag">
+          <em v-for="cutItem in debtInfo.cutItems" :key="cutItem.index">{{getCodeName(cutItem)}}</em>
+        </div>
       </div>
     </div>
 

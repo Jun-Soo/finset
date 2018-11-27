@@ -1,14 +1,14 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="assets-top">
       <div class="wrap">
         <div class="item">
           <p class="key">자산<em>(원)</em></p>
-          <p class="value">165,550,000</p>
+          <p class="value">{{('0'==assetsSumAmt)? '-' : formatNumber(assetsSumAmt)}}</p>
         </div>
         <div class="item">
           <p class="key">부채<em>(원)</em></p>
-          <p class="value">89,000,000</p>
+          <p class="value">{{(debtSumAmt==null)? '-' : formatNumber(debtSumAmt)}}</p>
         </div>
       </div>
     </div>
@@ -16,11 +16,11 @@
     <div class="banner-wrap owl-carousel">
       <carousel :perPage=1>
         <slide class="item">
-          <a @click="goMenu('')">
+          <a @click="goMenu('ctrlFcLink')">
             <div class="banner">
               <div class="left">
-                <p class="key">우리가족 가계부</p>
-                <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                <p class="key">나의 주식계좌 찾기</p>
+                <p class="value">잠자는 주식 계좌를<br>찾아드립니다</p>
               </div>
               <div class="right">
                 <img src="../../assets/images/main/banner_ico.png" alt="" />
@@ -28,12 +28,13 @@
             </div>
           </a>
         </slide>
+        <!-- 준비중 -->
         <slide class="item">
-          <a @click="goMenu('')">
+          <a>
             <div class="banner">
               <div class="left">
-                <p class="key">우리가족 가계부</p>
-                <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                <p class="key">내 토지 찾기</p>
+                <p class="value">공인 인증 한번으로<br>나의 토지를 찾아보세요</p>
               </div>
               <div class="right">
                 <img src="../../assets/images/main/banner_ico.png" alt="" />
@@ -41,12 +42,13 @@
             </div>
           </a>
         </slide>
+        <!-- 준비중 -->
         <slide class="item">
-          <a @click="goMenu('')">
+          <a>
             <div class="banner">
               <div class="left">
-                <p class="key">우리가족 가계부</p>
-                <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                <p class="key">자산분석</p>
+                <p class="value">자산별 진단을 받아보세요</p>
               </div>
               <div class="right">
                 <img src="../../assets/images/main/banner_ico.png" alt="" />
@@ -59,18 +61,19 @@
 
     <div class="list02 box-list pb90">
 
-      <div class="item">
+      <div @click="goMenu('bank')" class="item">
         <div class="flex">
-          <p class="corp big">은행<em>3건</em></p>
-          <p class="number big">46,570,000<em>원</em></p>
+          <p class="corp big">은행<em>{{assetsBankInfo.cnt_account}}건</em></p>
+          <p class="number big">{{(assetsBankInfo.sum_amt_balance == null)? '-' : formatNumber(assetsBankInfo.sum_amt_balance)}}<em>원</em></p>
         </div>
       </div>
-      <div class="item">
+      <div @click="goMenu('stock')" class="item">
         <div class="flex">
-          <p class="corp big">증권(주식/펀드/CMA)<em>3건</em></p>
-          <p class="number big">46,570,000<em>원</em></p>
+          <p class="corp big">증권(주식/펀드/CMA)<em>{{assetsStockInfo.cnt_account}}건</em></p>
+          <p class="number big">{{(assetsStockInfo.sum_amt_evaluation == null)? '-' : formatNumber(assetsStockInfo.sum_amt_evaluation)}}<em>원</em></p>
         </div>
       </div>
+      <!--
       <div class="item">
         <div class="flex">
           <p class="corp big">부동산<em>3건</em></p>
@@ -83,6 +86,7 @@
           <p class="number big">46,570,000<em>원</em></p>
         </div>
       </div>
+      -->
       <button class="btn-spend-add"></button>
     </div>
 
@@ -90,10 +94,21 @@
 </template>
 
 <script>
+import Common from "./../../assets/js/common.js";
+import Constant from "./../../assets/js/constant.js";
+
+import ko from "vee-validate/dist/locale/ko.js";
+
 export default {
   name: "AssetsMain",
   data() {
-    return {};
+    return {
+      seen: false,
+      assetsSumAmt: "", //자산총금액
+      debtSumAmt: "", //부채총금액
+      assetsBankInfo: "", //은행정보
+      assetsStockInfo: "" //증권정보
+    };
   },
   components: {},
   computed: {},
@@ -101,7 +116,9 @@ export default {
     this.$store.state.header.type = "main";
     this.$store.state.header.active = "assets";
   },
-  created() {},
+  created() {
+    this.getAssetsMainInfo();
+  },
   beforeMount() {},
   mounted() {},
   beforeUpdate() {},
@@ -109,12 +126,49 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    // 자산메인 정보조회
+    getAssetsMainInfo: function() {
+      var _this = this;
+      this.$http
+        .get("/m/assets/getAssetsMainInfo.json", {
+          params: {}
+        })
+        .then(response => {
+          _this.assetsSumAmt = response.data.assetsSumAmt;
+          _this.debtSumAmt = response.data.debtSumAmt;
+          _this.assetsBankInfo = response.data.assetsBankInfo;
+          _this.assetsStockInfo = response.data.assetsStockInfo;
+
+          console.log(_this.assetsBankInfo);
+          console.log(_this.assetsStockInfo);
+          _this.seen = true;
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+        });
+    },
+    formatNumber: function(data) {
+      return Common.formatNumber(data);
+    },
     //메뉴이동
     goMenu: function(menu) {
-      if ("news" == menu) {
+      //주식계좌찾기
+      if ("ctrlFcLink" == menu) {
         this.$router.push({
-          name: "newsMain",
-          query: { scKeyword: ["04"] }
+          name: "scrapCtrlFcLink",
+          params: { tab: "stock" }
+        });
+        //은행메인
+      } else if ("bank" == menu) {
+        this.$router.push({
+          name: "assetsBankMain",
+          params: {}
+        });
+        //증권메인
+      } else if ("stock" == menu) {
+        this.$router.push({
+          name: "AssetsStockMain",
+          params: {}
         });
       }
     }

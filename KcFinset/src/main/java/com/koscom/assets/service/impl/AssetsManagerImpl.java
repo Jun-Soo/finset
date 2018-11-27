@@ -11,8 +11,6 @@ import com.koscom.assets.dao.AssetsMapper;
 import com.koscom.assets.model.AssetsForm;
 import com.koscom.assets.model.AssetsInfoVO;
 import com.koscom.assets.service.AssetsManager;
-import com.koscom.util.Constant;
-import com.koscom.util.ReturnClass;
 
 @Service("assetsManager")
 public class AssetsManagerImpl implements AssetsManager {
@@ -24,43 +22,90 @@ public class AssetsManagerImpl implements AssetsManager {
 	private AssetsMapper assetsMapper;
 
 	@Override
-	public AssetsInfoVO getSummaryTotalAmt(AssetsForm assetsForm){
-		return assetsMapper.getSummaryTotalAmt(assetsForm);
+	public AssetsInfoVO getAssetsMainInfo(AssetsForm assetsForm){
+		return assetsMapper.getAssetsMainInfo(assetsForm);
 	}
 
 	@Override
-	public List<AssetsInfoVO> listSummaryClassTotalAmt(AssetsForm assetsForm){
-		return assetsMapper.listSummaryClassTotalAmt(assetsForm);
+	public AssetsInfoVO getAssetsBankDepWdrlInfo(AssetsForm assetsForm){
+		return assetsMapper.getAssetsBankDepWdrlInfo(assetsForm);
 	}
 
 	@Override
-	public List<AssetsInfoVO> listAccountStatTotalAmt(AssetsForm assetsForm){
-		return assetsMapper.listAccountStatTotalAmt(assetsForm);
+	public List<AssetsInfoVO> listAssetsSharePerson(AssetsForm assetsForm){
+		return assetsMapper.listAssetsSharePerson(assetsForm);
 	}
 
 	@Override
-	public List<AssetsInfoVO> listAccountStatContents(AssetsForm assetsForm){
-		return assetsMapper.listAccountStatContents(assetsForm);
+	public List<AssetsInfoVO> listAssetsBankAccount(AssetsForm assetsForm){
+		return assetsMapper.listAssetsBankAccount(assetsForm);
+	}
+	@Override
+	public int listAssetsBankAccountCount(AssetsForm assetsForm){
+		return assetsMapper.listAssetsBankAccountCount(assetsForm);
 	}
 
 	@Override
-	public AssetsInfoVO getDepWdrlTotalAmt(AssetsForm assetsForm){
-		return assetsMapper.getDepWdrlTotalAmt(assetsForm);
+	public void updateAssetsSortInfo(AssetsInfoVO assetsInfoVO){
+
+		List<AssetsInfoVO> sortList = assetsInfoVO.getSortList();
+		String no_person = assetsInfoVO.getNo_person();
+		for(AssetsInfoVO sortVO: sortList) {
+			sortVO.setNo_person(no_person);
+			assetsMapper.updateAssetsSortInfo(sortVO);
+		}
 	}
 
 	@Override
-	public List<AssetsInfoVO> listDepWdrlContents(AssetsForm assetsForm){
-		return assetsMapper.listDepWdrlContents(assetsForm);
+	public AssetsInfoVO getAssetsInfo(AssetsForm assetsForm){
+		return assetsMapper.getAssetsInfo(assetsForm);
 	}
 
-//	@Override
-//	public ReturnClass createAssetsInfo(AssetsInfoVO assetsInfoVO) {
-//
-//		if(1 != assetsMapper.createAssetsInfo(assetsInfoVO)){
-//			new ReturnClass(Constant.FAILED, "처리 실패하였습니다.");
-//		}
-//
-//		return new ReturnClass(Constant.SUCCESS, "처리 성공하였습니다");
-//	}
+	@Override
+	public List<String> listAssetsSearchKeyword(AssetsForm assetsForm){
+		return assetsMapper.listAssetsSearchKeyword(assetsForm);
+	}
+
+	@Override
+	public List<AssetsInfoVO> listAssetsBankActTrns(AssetsForm assetsForm){
+		return assetsMapper.listAssetsBankActTrns(assetsForm);
+	}
+	@Override
+	public int listAssetsBankActTrnsCount(AssetsForm assetsForm){
+		return assetsMapper.listAssetsBankActTrnsCount(assetsForm);
+	}
+
+	@Override
+	public List<AssetsInfoVO> listAssetsAccount(String no_person){
+		return assetsMapper.listAssetsAccount(no_person);
+	}
+
+	@Override
+	public AssetsInfoVO getAssetsBankDepWdrlTotalAmt(AssetsForm assetsForm){
+		return assetsMapper.getAssetsBankDepWdrlTotalAmt(assetsForm);
+	}
+	@Override
+	public List<AssetsInfoVO> listAssetsBankDepWdrl(AssetsForm assetsForm){
+		return assetsMapper.listAssetsBankDepWdrl(assetsForm);
+	}
+	@Override
+	public int listAssetsBankDepWdrlCount(AssetsForm assetsForm){
+		return assetsMapper.listAssetsBankDepWdrlCount(assetsForm);
+	}
+
+	@Override
+	public AssetsInfoVO getAssetsBankDepWdrlDetail(AssetsForm assetsForm){
+		return assetsMapper.getAssetsBankDepWdrlDetail(assetsForm);
+	}
+
+	@Override
+	public AssetsInfoVO getAssetsDetailCsInfo(AssetsForm assetsForm){
+		return assetsMapper.getAssetsDetailCsInfo(assetsForm);
+	}
+
+	@Override
+	public int updateAssetsDetailCsInfo(AssetsInfoVO assetsInfoVO){
+		return assetsMapper.updateAssetsDetailCsInfo(assetsInfoVO);
+	}
 
 }

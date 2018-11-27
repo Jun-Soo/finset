@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div v-if="seen">
     <section>
       <div class="gray-search-box">
         <div class="search">
           <div class="left">
-            <button class="on">1주일</button>
-            <button>3개월</button>
-            <button>6개월</button>
+            <button @click="setTermType('01'); searchDepWdrlList();" :class="{on:scTermType=='01'}">1주일</button>
+            <button @click="setTermType('02'); searchDepWdrlList();" :class="{on:scTermType=='02'}">3개월</button>
+            <button @click="setTermType('03'); searchDepWdrlList();" :class="{on:scTermType=='03'}">6개월</button>
           </div>
           <div class="right">
             <button class="acco">조건검색</button>
@@ -15,22 +15,24 @@
         <div class="form">
           <p>은행계좌선택</p>
           <p>
-            <select v-for="account in accountList" :key="account.index" :value="account.no_account">
-              <!-- TODO accountList 가져올 때 하단에서 option명 '전체' 추가-->
-              <option>{{account.nm_fc}}({{account.no_account}})</option>
+            <select v-model="scAccount" @change="searchDepWdrlList()">
+              <option value="">전체</option>
+              <template v-for="scAccountInfo in scAccountList">
+                <option :key="scAccountInfo.index" :value="scAccountInfo.no_account">{{scAccountInfo.nm_fc}}({{scAccountInfo.no_account}})</option>
+              </template>
             </select>
           </p>
         </div>
         <div class="wrap">
           <div class="date-pick">
             <p>
-              <input type="text"><button></button>
+              <input v-model="txt_dt_from" type="text" readonly="readonly"><button></button>
             </p>
             <p>
-              <input type="text"><button></button>
+              <input v-model="txt_dt_to" type="text" readonly="readonly"><button></button>
             </p>
           </div>
-          <div class="btn-wrap mt20">
+          <div @click="searchDepWdrlList()" class="btn-wrap mt20">
             <a class="solid blue">검색</a>
           </div>
         </div>
@@ -39,9 +41,9 @@
       <div class="bank-detail noMG">
         <div class="select">
           <div class="left">
-            <select v-model="actType" @change="searchList()">
-              <option v-for="option in actTypeOptions" :key="option.index" :value="option.value">
-                {{ option.text }}
+            <select v-model="scTrnsType" @change="searchDepWdrlList()">
+              <option v-for="scTrnsTypeOption in scTrnsTypeOptions" :key="scTrnsTypeOption.index" :value="scTrnsTypeOption.value">
+                {{ scTrnsTypeOption.text }}
               </option>
             </select>
           </div>
@@ -53,58 +55,30 @@
         <div class="inout">
           <div>
             <p class="key red">입금<em>(원)</em></p>
-            <p class="number">4,350,000</p>
+            <p class="number">{{(totalAmt.cnt_account=="0")? '-' : formatNumber(totalAmt.total_amt_dep)}}</p>
           </div>
           <div>
             <p class="key blue">출금<em>(원)</em></p>
-            <p class="number">4,350,000</p>
+            <p class="number">{{(totalAmt.cnt_account=="0")? '-' : formatNumber(totalAmt.total_amt_wdrl)}}</p>
           </div>
         </div>
 
-        <div class="nobox-list">
-          <p class="date">07.12</p>
-          <div class="item">
-            <div class="flex">
-              <p><em class="circle red">준수</em><em>급여</em></p>
-              <p><em class="number red">5,340,000</em>원</p>
+        <div v-if="depWdrlList.length == 0" class="nodata">등록 내역이 없습니다</div>
+        <div v-else class="nobox-list">
+          <template v-for="depWdrlInfo in depWdrlList">
+            <p :key="depWdrlInfo.index" v-if="depWdrlInfo.dateCol" class="date">{{formatDateDot(depWdrlInfo.dt_trd)}}</p>
+            <div :key="depWdrlInfo.index" @click="viewDetail(depWdrlInfo.no_person, depWdrlInfo.no_account, depWdrlInfo.dt_trd, depWdrlInfo.tm_trd, depWdrlInfo.rk);" class="item">
+              <div class="flex">
+                <p><em class="circle" :class="colorList[depWdrlInfo.rk]">{{depWdrlInfo.nm_person}}</em><em>{{depWdrlInfo.doc1}}</em></p>
+                <p v-if="'0'!=depWdrlInfo.amt_dep"><em class="number blue">{{formatNumber(depWdrlInfo.amt_dep)}}</em>원</p>
+                <p v-else><em class="number red">{{('-'+formatNumber(depWdrlInfo.amt_wdrl))}}</em>원</p>
+              </div>
+              <div class="flex">
+                <p class="key">{{depWdrlInfo.nm_fc}}</p>
+                <p class="key">{{depWdrlInfo.an}}</p>
+              </div>
             </div>
-            <div class="flex">
-              <p class="key">신한은행</p>
-              <p class="key">116-01-01919</p>
-            </div>
-          </div>
-          <div class="item">
-            <div class="flex">
-              <p><em class="circle blue">준수</em><em>급여</em></p>
-              <p><em class="number blue">5,340,000</em>원</p>
-            </div>
-            <div class="flex">
-              <p class="key">신한은행</p>
-              <p class="key">116-01-01919</p>
-            </div>
-          </div>
-
-          <p class="date">07.12</p>
-          <div class="item">
-            <div class="flex">
-              <p><em class="circle red">준수</em><em>급여</em></p>
-              <p><em class="number red">5,340,000</em>원</p>
-            </div>
-            <div class="flex">
-              <p class="key">신한은행</p>
-              <p class="key">116-01-01919</p>
-            </div>
-          </div>
-          <div class="item">
-            <div class="flex">
-              <p><em class="circle blue">준수</em><em>급여</em></p>
-              <p><em class="number blue">5,340,000</em>원</p>
-            </div>
-            <div class="flex">
-              <p class="key">신한은행</p>
-              <p class="key">116-01-01919</p>
-            </div>
-          </div>
+          </template>
         </div>
       </div>
     </section>
@@ -115,23 +89,7 @@
       </div>
       <div class="wrap">
         <div class="hash">
-          <a># 이체</a>
-          <a># 국민대출</a>
-          <a># 급여</a>
-          <a># 황</a>
-          <a># 통신비</a>
-          <a># N빵</a>
-          <a># 보험료</a>
-          <a># 쇼파</a>
-          <a># 신용카드</a>
-          <a># 어머니 생신</a>
-          <a># 입출금이자</a>
-          <a># 자전거 계약금</a>
-          <a># 대출</a>
-          <a># 김수진</a>
-          <a># 국민입금</a>
-          <a># 공기청청기</a>
-          <a># 집대출</a>
+          <a v-for="scKeywordInfo in scKeywordList" :key="scKeywordInfo.index"># {{scKeywordInfo.doc1}}</a>
         </div>
       </div>
     </aside>
@@ -139,17 +97,34 @@
 </template>
 
 <script>
+import Common from "./../../assets/js/common.js";
+import Constant from "./../../assets/js/constant.js";
+
+import ko from "vee-validate/dist/locale/ko.js";
+
 export default {
   name: "AssetsAccountWdrlDetail",
   data() {
     return {
-      accountList: [{ nm_fc: "전체", no_account: "" }],
-      actTypeOptions: [
-        { text: "전체", value: "01" },
-        { text: "입금", value: "02" },
-        { text: "출금", value: "03" }
+      seen: "",
+      scTermType: "", //기간type
+      scAccountList: [], //검색 계좌list
+      scAccount: "", //검색 계좌
+      currentDate: "", //오늘 날짜
+      txt_dt_from: "", //검색 시작일
+      txt_dt_to: "", //검색 종료일
+      scKeywordList: [],
+      scKeyword: "",
+      scTrnsTypeOptions: [
+        { text: "전체", value: "" },
+        { text: "입금", value: "01" },
+        { text: "출금", value: "02" }
       ],
-      actType: "01"
+      scTrnsType: "",
+      totalAmt: "", //입금 / 출금 총액
+      page: 1,
+      depWdrlList: [], //입출금list
+      colorList: ["red", "orange", "green", "blue", "purple"]
     };
   },
   components: {},
@@ -158,7 +133,9 @@ export default {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "입출금내역";
   },
-  created() {},
+  created() {
+    this.getSearchCondition();
+  },
   beforeMount() {},
   mounted() {},
   beforeUpdate() {},
@@ -166,55 +143,175 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    //목록 조회
-    searchList: function() {
+    //기간 선택
+    setTermType: function(termType) {
+      var _this = this;
+      var d = new Date();
+
+      //1주일
+      if ("01" == termType) {
+        var dayOfMonth = d.getDate();
+        d.setDate(dayOfMonth - 7);
+
+        //3개월
+      } else if ("02" == termType) {
+        var monthOfYear = d.getMonth();
+        d.setMonth(monthOfYear - 3);
+
+        //6개월
+      } else if ("03" == termType) {
+        var monthOfYear = d.getMonth();
+        d.setMonth(monthOfYear - 6);
+      }
+      _this.scTermType = termType;
+      _this.txt_dt_from = _this.getDateStr(d);
+    },
+    getDateStr(myDate) {
+      var month = myDate.getMonth() + 1;
+      if (month < 10) {
+        month = "0" + month;
+      }
+      return myDate.getFullYear() + "-" + month + "-" + myDate.getDate();
+    },
+    //검색조건 조회
+    getSearchCondition: function() {
+      var _this = this;
+      this.$http
+        .get("/m/assets/getAssetsBankDepWdrlSc.json", {
+          params: {}
+        })
+        .then(response => {
+          _this.scAccountList = response.data.scAccountList;
+          _this.currentDate = response.data.currentDate;
+          _this.scKeywordList = response.data.scKeywordList;
+
+          //store값 셋팅
+          if ("" != this.$store.state.scListParam.scTermType) {
+            _this.scTermType = this.$store.state.scListParam.scTermType;
+            _this.setTermType(this.scTermType);
+          }
+          if ("" != this.$store.state.scListParam.scAccount) {
+            _this.scAccount = this.$store.state.scListParam.scAccount;
+          }
+          if ("" != this.$store.state.scListParam.txt_dt_from) {
+            _this.txt_dt_from = this.$store.state.scListParam.txt_dt_from;
+          } else {
+            _this.txt_dt_from = _this.currentDate;
+          }
+          if ("" != this.$store.state.scListParam.txt_dt_to) {
+            _this.txt_dt_to = this.$store.state.scListParam.txt_dt_to;
+          } else {
+            _this.txt_dt_to = _this.currentDate;
+          }
+          if ("" != this.$store.state.scListParam.scKeyword) {
+            _this.scKeyword = this.$store.state.scListParam.scKeyword;
+          }
+          if ("" != this.$store.state.scListParam.scTrnsType) {
+            _this.scTrnsType = this.$store.state.scListParam.scTrnsType;
+          }
+
+          //store 검색조건 초기화
+          this.$store.state.scListParam.scTermType = "";
+          this.$store.state.scListParam.scAccount = "";
+          this.$store.state.scListParam.txt_dt_from = "";
+          this.$store.state.scListParam.txt_dt_to = "";
+          this.$store.state.scListParam.scKeyword = "";
+          this.$store.state.scListParam.scTrnsType = "";
+
+          _this.searchDepWdrlList();
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+        });
+    },
+    //검색
+    searchDepWdrlList: function() {
       var _this = this;
       _this.page = 1;
-      Common.pagination(_this.listBankAct);
+      _this.depWdrlList = [];
+      _this.getDepWdrlTotalAmt();
+      Common.pagination(_this.listDepWdrl);
     },
-    listBankAct: function(callback) {
+    //입금 / 출금 총액
+    getDepWdrlTotalAmt: function() {
       var _this = this;
 
-      console.log("actType" + _this.actType);
+      console.log("txt_dt_from" + _this.txt_dt_from);
+      console.log("txt_dt_to" + _this.txt_dt_to);
+      console.log("scTrnsType" + _this.scTrnsType);
+      console.log("scKeyword" + _this.scKeyword);
+
+      var formData = new FormData();
+      formData.append("scAccount", _this.scAccount);
+      formData.append("txt_dt_from", _this.txt_dt_from);
+      formData.append("txt_dt_to", _this.txt_dt_to);
+      formData.append("scTrnsType", _this.scTrnsType);
+      formData.append("scKeyword", _this.scKeyword);
+
+      this.$http
+        .post("/m/assets/getAssetsBankDepWdrlTotalAmt.json", formData)
+        .then(function(response) {
+          _this.totalAmt = response.data.totalAmt;
+        })
+        .catch(e => {
+          _this.$toast.center(ko.messages.error);
+        });
+    },
+    formatNumber: function(data) {
+      return Common.formatNumber(data);
+    },
+    formatDateDot: function(data) {
+      return Common.formatDateDot(data);
+    },
+    getCodeName: function(code_group, code_value) {
+      return Common.getCodeName(code_group, code_value);
+    },
+    //입출금list
+    listDepWdrl: function(callback) {
+      var _this = this;
+
+      console.log("txt_dt_from" + _this.txt_dt_from);
+      console.log("txt_dt_to" + _this.txt_dt_to);
+      console.log("scTrnsType" + _this.scTrnsType);
       console.log("scKeyword" + _this.scKeyword);
 
       var formData = new FormData();
       formData.append("page", _this.page);
-      formData.append("actType", _this.actType);
+      formData.append("scAccount", _this.scAccount);
+      formData.append("txt_dt_from", _this.txt_dt_from);
+      formData.append("txt_dt_to", _this.txt_dt_to);
+      formData.append("scTrnsType", _this.scTrnsType);
       formData.append("scKeyword", _this.scKeyword);
 
       this.$http
-        .post("/m/news/listNews.json", formData)
+        .post("/m/assets/listAssetsBankDepWdrl.json", formData)
         .then(function(response) {
-          var actList = response.data.accountList;
-          for (var i = 0; i < act.length; i++) {
-            _this.accountList.append(act[i]);
-          }
-
-          //썸네일 이미지 셋팅
           var list = response.data.pagedList.source;
+          //날짜 칼럼 셋팅
+          var dtTrd = "";
           for (var i = 0; i < list.length; i++) {
-            if (list[i].seq_thum_file != null) {
-              list[i].thumImg =
-                "/m/news/getApiNewsImg.json?seq_news=" +
-                list[i].seq_news +
-                "&file_type=01";
+            list[i];
+            if (dtTrd != list[i].dt_trd) {
+              list[i].dateCol = true;
+            } else {
+              list[i].dateCol = false;
             }
+            dtTrd = list[i].dt_trd;
           }
 
           //pagination
           if (list.length === 0) {
             callback();
-            _this.newsList = [];
+            _this.depWdrlList = [];
             _this.seen = true;
             return;
           }
           //스크롤시 계속 페이지 추가되도록
           if (_this.page == 1) {
-            _this.newsList = list;
+            _this.depWdrlList = list;
           } else {
             for (var key in list) {
-              _this.newsList.push(list[key]);
+              _this.depWdrlList.push(list[key]);
             }
           }
           _this.totalPage = response.data.pagedList.pageCount;
@@ -226,6 +323,29 @@ export default {
         .catch(e => {
           _this.$toast.center(ko.messages.error);
         });
+    },
+    //상세페이지로 이동
+    viewDetail: function(no_person, no_account, dt_trd, tm_trd, rk) {
+      var _this = this;
+
+      //store 검색조건 유지
+      this.$store.state.scListParam.scTermType = _this.scTermType;
+      this.$store.state.scListParam.scAccount = _this.scAccount;
+      this.$store.state.scListParam.txt_dt_from = _this.txt_dt_from;
+      this.$store.state.scListParam.txt_dt_to = _this.txt_dt_to;
+      this.$store.state.scListParam.scKeyword = _this.scKeyword;
+      this.$store.state.scListParam.scTrnsType = _this.scTrnsType;
+
+      this.$router.push({
+        name: "assetsBankDepWdrlDetail",
+        query: {
+          no_person: no_person,
+          no_account: no_account,
+          dt_trd: dt_trd,
+          tm_trd: tm_trd,
+          rk: rk
+        }
+      });
     }
   }
 };

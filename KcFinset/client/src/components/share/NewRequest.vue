@@ -93,7 +93,8 @@ export default {
     //사용자검색
     srcPerson: function() {
       if (Constant.userAgent == "iOS") {
-        Jockey.on("getAddressList", function(param) {
+        Jockey.send("getAddressList");
+        Jockey.on("resultAddress", function(param) {
           resultAddress(param.src_nm_person, param.src_hp);
         });
       } else if (Constant.userAgent == "Android") {

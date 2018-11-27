@@ -66,6 +66,7 @@ public class ConsumeController {
     
     /**
      * VUE
+     * 공유된 사용자 조회
      * @param model
      * @param session
      * @return
@@ -80,6 +81,7 @@ public class ConsumeController {
     
     /**
      * VUE
+     * 소비지출 내역 리스트, 스크래핑 여부, 예산 데이터 조회 
      * @param model
      * @param ym
      * @param session
@@ -116,6 +118,7 @@ public class ConsumeController {
     
     /**
      * VUE
+     * 계좌 입출금내역 조회
      * @param model
      * @param ym
      * @param session
@@ -156,6 +159,14 @@ public class ConsumeController {
     	return "/consume/frameConsumeCategory";
     }
     
+    /**
+     * VUE
+     * 사용자 세팅 변경
+     * @param session
+     * @param personSetInfoVO
+     * @return
+     * @throws FinsetException
+     */
     @RequestMapping("/modifyPersonSetInfo.json")
     public String modifyPersonSetInfo(HttpSession session ,PersonSetInfoVO personSetInfoVO) throws FinsetException {
     	logger.debug("modifyPersonSetInfo");
@@ -169,6 +180,7 @@ public class ConsumeController {
 
     /**
      * VUE
+     * 청구내역 리스트 조회
      * @param session
      * @param model
      * @param no_person_list
@@ -190,6 +202,7 @@ public class ConsumeController {
     
     /**
      * VUE
+     * 사용자 세팅 조회
      * @param session
      * @param model
      * @return
@@ -204,6 +217,7 @@ public class ConsumeController {
     
     /**
      * VUE
+     * 할부 적용 여부 변경
      * @param session
      * @param model
      * @param personSetInfoForm
@@ -220,6 +234,7 @@ public class ConsumeController {
     
     /**
      * VUE
+     * 기준일 변경
      * @param session
      * @param model
      * @param personSetInfoForm
@@ -236,6 +251,7 @@ public class ConsumeController {
     
     /**
      * VUE
+     * 예산 리스트 조회
      * @param session
      * @param model
      * @return
@@ -249,6 +265,7 @@ public class ConsumeController {
     }
     /**
      * VUE
+     * 이전 달 소비 내역 리스트 조회
      * @param session
      * @param model
      * @return
@@ -263,6 +280,7 @@ public class ConsumeController {
     
     /**
      * VUE
+     * 3개월 평균 소비 내역 리스트 조회
      * @param session
      * @param model
      * @return
@@ -277,6 +295,7 @@ public class ConsumeController {
     
     /**
      * VUE
+     * 예산 등록
      * @param session
      * @param model
      * @param consumeDetailGoalInfoVO
@@ -292,7 +311,8 @@ public class ConsumeController {
     }
     
     /**
-     * VUE 
+     * VUE
+     * 소비지출 상세내역 조회
      * @param session
      * @param model
      * @param consumeForm
@@ -306,7 +326,8 @@ public class ConsumeController {
     }
 
     /**
-     * VUE 
+     * VUE
+     * 현금 + 스크래핑 된 사용자의 카드, 계좌 내역 조회
      * @param session
      * @param model
      * @return
@@ -321,6 +342,7 @@ public class ConsumeController {
     
     /**
      * VUE
+     * 분류, 항목 조회
      * @param model
      * @param no_person
      * @return
@@ -339,7 +361,8 @@ public class ConsumeController {
     }
     
     /**
-     * VUE 
+     * VUE
+     * 분류 정렬순서 변경
      * @param session
      * @param model
      * @param personConsumeClassVO
@@ -355,7 +378,8 @@ public class ConsumeController {
     }
     
     /**
-     * VUE 
+     * VUE
+     * 항목 정렬순서 변경
      * @param session
      * @param model
      * @param personConsumeClassVO
@@ -372,6 +396,7 @@ public class ConsumeController {
     
     /**
      * VUE 
+     * 분류 삭제
      * @param session
      * @param model
      * @param personConsumeClassVO
@@ -387,7 +412,8 @@ public class ConsumeController {
     }
     
     /**
-     * VUE 
+     * VUE
+     * 항목 삭제
      * @param session
      * @param model
      * @param personConsumeClassVO
@@ -403,7 +429,8 @@ public class ConsumeController {
     }
     
     /**
-     * VUE 
+     * VUE
+     * 소비분류 추가
      * @param session
      * @param model
      * @param personConsumeClassVO
@@ -420,6 +447,7 @@ public class ConsumeController {
     
     /**
      * VUE 
+     * 소비항목 추가
      * @param session
      * @param model
      * @param personConsumeClassVO
@@ -436,6 +464,7 @@ public class ConsumeController {
     
 	/**
 	 * VUE
+	 * 수입분류 조회
 	 * @param session
 	 * @param model
 	 * @param no_person
@@ -456,6 +485,7 @@ public class ConsumeController {
     
     /**
      * VUE
+     * 분류 명 변경
      * @param session
      * @param model
      * @param personConsumeClassVO
@@ -472,6 +502,7 @@ public class ConsumeController {
     
     /**
      * VUE
+     * 항목 명 변경
      * @param session
      * @param model
      * @param personConsumeClassVO
@@ -488,6 +519,7 @@ public class ConsumeController {
     
     /**
      * VUE
+     * 수입 분류 추가
      * @param session
      * @param model
      * @param personConsumeClassVO
@@ -504,6 +536,7 @@ public class ConsumeController {
     
     /**
      * VUE
+     * 소비지출 데이터 변경
      * @param session
      * @param model
      * @param consumeVO
@@ -520,6 +553,7 @@ public class ConsumeController {
     
     /**
      * VUE
+     * 소비지출 데이터 삭제
      * @param session
      * @param model
      * @param consumeForm
@@ -536,6 +570,7 @@ public class ConsumeController {
     
     /**
      * VUE
+     * 소비지출 데이터 추가
      * @param session
      * @param model
      * @param consumeVO
@@ -552,6 +587,7 @@ public class ConsumeController {
     
     /**
      * VUE
+     * 배너에 들어갈 데이터 조회
      * @param session
      * @param model
      * @param consumeVO

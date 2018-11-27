@@ -46,4 +46,42 @@
 			 	)
     </select>
 
+	<!-- 푸시 등록-->
+	<insert id="createPushEachInfo" parameterType="com.koscom.pusheach.model.PushEachVO">
+		
+		<selectKey keyProperty="seq_push" resultType="int" order="BEFORE">
+			(SELECT NVL(MAX(seq_push),0)+1 FROM push_each_info)
+		</selectKey>
+		/* com.koscom.pusheach.dao.PushEachMapper.createPushEachInfo : 푸시 등록 */
+		INSERT INTO PUSH_EACH_INFO (
+			seq_push
+			, no_person
+			, title
+			, body
+			, push_divcd
+			, link_addr
+			, yn_send
+            , yn_display
+			, dt_reserv
+			, id_frt
+			, dt_frt
+			, id_lst
+			, dt_lst			
+			)
+		VALUES (
+			  #{seq_push}
+			, #{no_person, jdbcType=VARCHAR}
+			, #{title, jdbcType=VARCHAR}
+			, #{body, jdbcType=VARCHAR}
+			, #{push_divcd, jdbcType=VARCHAR}
+			, #{link_addr, jdbcType=VARCHAR}
+			, NVL(#{yn_send   , jdbcType=VARCHAR},'Y')
+		    , NVL(#{yn_display, jdbcType=VARCHAR},'Y')
+			, SYSDATE
+			, #{id_frt, jdbcType=VARCHAR}
+			, SYSDATE
+			, #{id_frt, jdbcType=VARCHAR}
+			, SYSDATE
+			)
+	</insert>
 </mapper>

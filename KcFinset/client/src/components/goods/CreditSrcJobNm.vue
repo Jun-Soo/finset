@@ -79,7 +79,7 @@ export default {
         this.$toast.center("직장명을 입력해주세요.");
         return false;
       }
-      this.spinnerIsVisible = true;
+      this.$store.state.isLoading = true;
       var formData = new FormData();
       formData.append("page", this.page);
       formData.append("txt_detail", this.nm_comp);
@@ -93,7 +93,7 @@ export default {
         .then(response => {
           var list = response.data.pagedList.source;
           if (list.length === 0) {
-            this.spinnerIsVisible = false;
+            this.$store.state.isLoading = false;
             callback();
             return;
           }
@@ -109,7 +109,7 @@ export default {
             }
           }
           _this.page++;
-          this.spinnerIsVisible = false;
+          this.$store.state.isLoading = false;
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);

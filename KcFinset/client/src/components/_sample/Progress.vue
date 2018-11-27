@@ -16,7 +16,7 @@ export default {
   name: "test",
   props: {
     max: {
-      default: 0.8,
+      default: 1.0,
       type: Number
     },
     text: {

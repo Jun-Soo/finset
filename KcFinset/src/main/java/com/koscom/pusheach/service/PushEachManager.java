@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.koscom.pusheach.model.PushEachForm;
 import com.koscom.pusheach.model.PushEachVO;
+import com.koscom.util.ReturnClass;
 
 public interface PushEachManager {
 
@@ -14,4 +15,11 @@ public interface PushEachManager {
 	 */
 	public List<PushEachVO> listPushNotification(PushEachForm pushEachForm);
 	int listPushNotificationCount(PushEachForm pushEachForm);
+	
+	/**
+	 * 푸시 기록
+	 * @param pushEachVO
+	 * @return
+	 */
+	public ReturnClass createPushEachInfo(PushEachVO pushEachVO);
 }

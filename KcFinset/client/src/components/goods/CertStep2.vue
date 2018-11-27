@@ -28,10 +28,12 @@
               {{ option.text }}
             </option>
           </select> -->
-          <multiselect v-model="telComCd" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @select="onSelect">
+          <multiselect v-model="telComCd" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @select="onSelect" data-vv-name='통신사'>
             <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
           </multiselect>
           <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
+          <p class="warn" v-if="errors.has('생년월일')">{{errors.first('통신사')}}</p>
+          <!-- <p class="warn" v-if="errors.has('성별')">{{errors.first('성별')}}</p> -->
         </div>
         <button id="req_certification" v-on:click="kcmRequestCertNo()">인증번호 전송</button>
         <div class="cert-num" id="cert_no_conteiner">
@@ -246,8 +248,8 @@ export default {
       });
     },
     /*
-    * 인증 번호 확인
-    */
+     * 인증 번호 확인
+     */
     confirmedCertify: function() {
       var _this = this;
 

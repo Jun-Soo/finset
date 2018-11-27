@@ -10,8 +10,8 @@
       <div class="container pb90">
         <ul class="consume-detail">
           <li>
-            <p class="key" v-text="curTab=='01'?'입금':'결제수단'"></p>
-            <p>
+            <p class="key" v-text="curTab=='01'?'입금':'결제수단'" style="width:12%"></p>
+            <p style="width:88%">
               <multiselect v-validate="'required'" data-vv-name='수단' :disabled="!isNew" v-model="consumeVO.means_consume" ref="selMeansConsume" label="text" :show-labels="false" :options="meansConsumeOption" placeholder="결제수단" :searchable="false" :allow-empty="false" @select="selectMeans">
               </multiselect>
             </p>

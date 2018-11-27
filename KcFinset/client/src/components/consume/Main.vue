@@ -18,10 +18,6 @@
             <p class="value">{{formatNumber(income)}}</p>
           </div>
         </div>
-        <!-- <div class="progress">
-          <a href="#">예산을 설정하여 목표를 이루세요</a>
-          <a href="#" class="on">예산을 설정하여 목표를 이루세요</a>
-        </div> -->
         <Progress :max="progressOption.max" :text="progressOption.text" :click="clickProgress" />
       </div>
 
@@ -388,7 +384,13 @@ export default {
       }
       return require("@/assets/images/consume/icon/" + cd + ".png");
     },
-    clickProgress: function() {}
+    clickProgress: function() {
+      if (!this.isScrap) {
+        this.$router.push("/scrap/CtrlFcLink");
+      } else if (!this.isGoal) {
+        this.$router.push("/consume/regGoal");
+      }
+    }
   }
 };
 </script>

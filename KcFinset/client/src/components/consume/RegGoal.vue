@@ -48,14 +48,15 @@
               <p><input readonly type="text" :value="sumGoal"></p>
             </dt>
             <dd v-for="(vo, index) in listDetailGoal" :key="index">
-              <p v-if="vo.cd_type == '01'">{{vo.nm_card}}</p>
+              <p v-if="vo.cd_type == '01' || vo.cd_type == '04'">{{vo.nm_card}}</p>
               <p v-else-if="vo.cd_type == '02'">현금</p>
               <p v-else-if="vo.cd_type == '03'">현금영수증</p>
-              <p v-else-if="vo.cd_type == '04'">출금</p>
-              <input v-if="vo.cd_type == '01' || vo.cd_type == '03'" type="hidden" :name="'list['+index+'].cd_fc'" :value="vo.cd_fc" />
+              <!-- <p v-else-if="vo.cd_type == '04'">출금</p> -->
+              <!-- <input v-if="vo.cd_type == '01' || vo.cd_type == '03'" type="hidden" :name="'list['+index+'].cd_fc'" :value="vo.cd_fc" /> -->
+              <input v-if="vo.cd_type != '02'" type="hidden" :name="'list['+index+'].cd_fc'" :value="vo.cd_fc" />
               <input type="hidden" :name="'list['+index+'].cd_type'" :value="vo.cd_type" />
-              <input v-if="vo.cd_type == '01'" type="hidden" :name="'list['+index+'].no_card'" :value="vo.no_card" />
-              <input v-if="vo.cd_type == '01'" type="hidden" :name="'list['+index+'].nm_card'" :value="vo.nm_card" />
+              <input v-if="vo.cd_type == '01' || vo.cd_type == '04'" type="hidden" :name="'list['+index+'].no_card'" :value="vo.no_card" />
+              <input v-if="vo.cd_type == '01' || vo.cd_type == '04'" type="hidden" :name="'list['+index+'].nm_card'" :value="vo.nm_card" />
               <p><input :name="'list['+index+'].amt_budget'" class="each_amt" type="text" v-model="vo.amt_budget" :readonly="curLabel != 'custom'"></p>
             </dd>
           </dl>

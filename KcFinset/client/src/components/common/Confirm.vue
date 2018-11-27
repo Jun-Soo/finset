@@ -1,5 +1,5 @@
 <template>
-  <div id="modal-confirm" class="modal-confirm" :style="'display: block;'+marginLeft">
+  <div id="modal-confirm" class="modal-confirm" style="display: block;">
     <div class="debt-modal-body">
       <p class="text" v-text="modalText"></p>
     </div>

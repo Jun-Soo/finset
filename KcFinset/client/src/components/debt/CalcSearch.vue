@@ -54,22 +54,29 @@
       </ul>
       <ul v-if="tabKey == 'direct'" class="debt-modify">
         <li>
-          <p class="key">종류</p>
-          <p>
-            <input type="text" v-model="selectObj.direct" />
-          </p>
+          <p class="key">주소</p>
+          <p><input v-model="returnObj.address" type="text" readonly="readonly"><em @click="clickSearch">검색</em></p>
+        </li>
+        <li>
+          <p class="key">가격</p>
+          <p><input v-model="returnObj.price" type="text"><em>만원</em></p>
         </li>
       </ul>
-      <div v-if="isFinished" class="btn-wrap float">
-        <a class="solid blue box">확인</a>
+      <div class="btn-wrap float">
+        <a @click="clickConfirm" class="solid blue box">확인</a>
       </div>
     </div>
-
+    <vue-modal transitionName="zoom-in" name="postcode-modal">
+      <div slot="body">
+        <DaumPostcode :on-complete="selectPostcode" />
+      </div>
+    </vue-modal>
   </section>
 </template>
 
 <script>
 import Common from "@/assets/js/common.js";
+import DaumPostcode from "vuejs-daum-postcode";
 
 export default {
   name: "DebtCalcSearch",
@@ -93,14 +100,29 @@ export default {
       kbMarketPricePyeongList: new Object(),
       kbMarketPricePriceList: new Object(),
       selectObj: new Object(),
-      isFinished: false
+      isShowModal: false,
+      returnObj: {
+        address: "",
+        price: ""
+      }
     };
   },
-  components: {},
+  components: {
+    DaumPostcode
+  },
   computed: {},
   beforeCreate() {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "주택 입력";
+  },
+  watch: {
+    isShowModal: function(param) {
+      if (param) {
+        this.$modals.show("postcode-modal");
+      } else {
+        this.$modals.hide("postcode-modal");
+      }
+    }
   },
   created() {},
   beforeMount() {},
@@ -114,9 +136,14 @@ export default {
       if (key == this.tabKey) {
         return;
       } else {
+        this.returnObj = {
+          address: "",
+          price: ""
+        };
         this.tabKey = key;
       }
     },
+    //종류에 따른 시/도 데이터 조회
     listAddrRegionFirst: function(param) {
       var building_type = param.value;
       var _this = this;
@@ -137,6 +164,7 @@ export default {
           _this.$refs.sel_region1.$el.focus();
         });
     },
+    //시/도 에 따른 시/군/구 데이터 조회
     listAddrRegionSecond: function(param) {
       var region1_code = param.value;
       var _this = this;
@@ -157,6 +185,7 @@ export default {
           _this.$refs.sel_region2.$el.focus();
         });
     },
+    //시/군/구 에 따른 읍/면/동 데이터 조회
     listAddrRegionThird: function(param) {
       var region2_code = param.value;
       var _this = this;
@@ -177,6 +206,7 @@ export default {
           _this.$refs.sel_region3.$el.focus();
         });
     },
+    //상위 데이터들에 따른 아파트명 조회
     listSrchApartment: function(param) {
       var building_type = this.selectObj.building_type.value;
       var region1_code = this.selectObj.region1.value;
@@ -205,6 +235,7 @@ export default {
           _this.$refs.sel_apartment.$el.focus();
         });
     },
+    //상위 데이터들과 아파트명에 따른 공급면적/ 전용면적 조회
     scrapKbMarketPrice: function(param) {
       var building_type = this.selectObj.building_type.value;
       var region1_code = this.selectObj.region1.value;
@@ -213,7 +244,7 @@ export default {
       var apartment = param.value;
       var _this = this;
 
-      this.spinnerIsVisible = true;
+      this.$store.state.isLoading = true;
 
       this.$http
         .get("/m/kbrealestate/scrapKbMarketPriceList.json", {
@@ -240,16 +271,33 @@ export default {
               response.data.kbMarketPricePriceList[idx];
           }
           _this.kbMarketPricePyeongList = list;
+          _this.$store.state.isLoading = false;
+
           _this.$refs.sel_pricePyeong.$el.focus();
-          _this.spinnerIsVisible = false;
+          _this.returnObj.address = param.text;
         });
     },
+    //면적 선택시 사용될 함수
     selectPricePyeong: function(param) {
-      console.log(
-        //실제 사용할 가격
-        this.kbMarketPricePriceList[param.value].sale_general_average
-      );
-      this.isFinished = true;
+      //실제 가격
+      this.returnObj.price = this.kbMarketPricePriceList[
+        param.value
+      ].sale_general_average;
+    },
+    //검색버튼 클릭했을 때
+    clickSearch: function() {
+      this.isShowModal = true;
+    },
+    //다음 주소를 선택했을 때
+    selectPostcode: function(param) {
+      var _this = this;
+      console.log(param.address);
+      // this.returnObj.address = param.address;
+      this.$set(_this.returnObj, "address", param.address);
+      this.isShowModal = false;
+    },
+    clickConfirm: function() {
+      console.log(this.returnObj);
     }
   }
 };

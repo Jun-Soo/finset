@@ -14,4 +14,11 @@ public interface PushEachMapper {
 	 */
 	List<PushEachVO> listPushNotification(PushEachForm pushEachForm);
 	int listPushNotificationCount(PushEachForm pushEachForm);
+	
+	/**
+	 * 푸시 기록
+	 * @param pushEachVO
+	 * @return
+	 */
+	void createPushEachInfo(PushEachVO pushEachVO);
 }

@@ -587,12 +587,10 @@ public class FinanceManagerImpl implements FinanceManager {
         listFcGoods = (fcEdocSendVO != null)? fcEdocSendVO.getListGoods():null;
         goods_size  = (listFcGoods  != null)? listFcGoods.size()         :0;
 
-        logger.info("EDOC#1 : no_person - "+no_person+" - "+"no_bunch - "+no_bunch);
-
         if(fcEdocSendVO != null && goods_size > 0 ){// 대출 상품 리스트 유무 확인
-
             no_person = fcEdocSendVO.getNo_person();
             no_bunch  = fcEdocSendVO.getNo_bunch();
+            logger.info("EDOC#1 : no_person - "+no_person+" - "+"no_bunch - "+no_bunch);
 
             if (listFcGoods != null ) {
 

@@ -27,7 +27,12 @@ const store = new Vuex.Store({
     },
     scListParam: {
       scKeyword: [],
-      orderby: '01'
+      orderby: '01',
+      scTermType: '',
+      scAccount: '',
+      txt_dt_from: '',
+      txt_dt_to: '',
+      scTrnsType: ''
     },
     returnUrl: '',
     proxyUrl: '',

@@ -4,122 +4,891 @@
 
 <mapper namespace="com.koscom.assets.dao.AssetsMapper">
 
-    <!-- 자산요약 -->
-	<select id="getSummaryTotalAmt" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+    <select id="getAssetsMainInfo" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+        /* com.koscom.assets.dao.AssetsMapper.getAssetsMainInfo - 자산관리(자산메인) */
 		SELECT
-			FN_AMT_VIEW( SUM( AMT_BALANCE ) ) AS TOTAL_BALANCE
+			COUNT( NO_ACCOUNT ) AS CNT_ACCOUNT,
+			SUM( AMT_BALANCE ) AS SUM_AMT_BALANCE,
+			SUM( AMT_EVALUATION ) AS SUM_AMT_EVALUATION
 		FROM
 			ASSETS_INFO
 		WHERE
-			NO_PERSON = #{no_person, jdbcType=VARCHAR}
-	</select>
-
-	<select id="listSummaryClassTotalAmt" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
-		SELECT
-			COMM.CODE_VALUE AS CD_ASSETS_CLASS,
-			COMM.NM_CODE AS NM_ASSETS_CLASS,
-			NVL( AI.CNT_ACCOUNT, '0' ) AS CNT_ACCOUNT,
-			NVL( AI.TOTAL_BALANCE, '0' ) AS TOTAL_BALANCE
-		FROM
-			(
-				SELECT
-					CODE_VALUE,
-					NM_CODE
-				FROM
-					COMM_CD
-				WHERE
-					CODE_GROUP = 'cd_assets_class'
-					AND CODE_VALUE != ' '
-			) COMM
-		LEFT JOIN(
-				SELECT
-					CD_ASSETS_CLASS,
-					COUNT( NO_ACCOUNT ) AS CNT_ACCOUNT,
-					SUM( AMT_BALANCE ) AS TOTAL_BALANCE
-				FROM
-					ASSETS_INFO
-				WHERE
-					NO_PERSON = #{no_person, jdbcType=VARCHAR}
-				GROUP BY
-					CD_ASSETS_CLASS
-			) AI
-		ON
-			COMM.CODE_VALUE = AI.CD_ASSETS_CLASS
-		ORDER BY
-			COMM.CODE_VALUE,
-			COMM.NM_CODE
-	</select>
-
-	<!-- 계좌현황 -->
-	<select id="listAccountStatTotalAmt" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
-		SELECT
-			CD_ASSETS_CLASS,
-			SUM( AMT_BALANCE ) AS TOTAL_BALANCE
-		FROM
-			ASSETS_INFO
-		WHERE
-			CD_ASSETS_CLASS IN('01','02','03')	<!-- 은행일경우 -->
-			AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
-		GROUP BY
-			CD_ASSETS_CLASS
-	</select>
-
-	<select id="listAccountStatContents" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
-		SELECT
-			CD_ASSETS_CLASS,
-			CD_FC,
-			NM_ACCOUNT,
-			NO_ACCOUNT,
-			AMT_BALANCE
-		FROM
-			ASSETS_INFO
-		WHERE
-			NO_PERSON = #{no_person, jdbcType=VARCHAR}
-	</select>
-
-	<!-- 입출금 -->
-	<select id="getDepWdrlTotalAmt" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
-		SELECT
-			SUBSTR( DT_TRD, 0, 6 ) AS DT_TRD,
-			SUM( AMT_DEP ) AS TOTAL_DEP,
-			SUM( AMT_WDRL ) AS TOTAL_WDRL
-		FROM
-			SCR_TRANSACTION_DETAIL
-		WHERE
-			NO_PERSON = #{no_person, jdbcType=VARCHAR}
-			AND SUBSTR( DT_TRD, 0, 6 )= #{yyyymm_trd, jdbcType=VARCHAR}
-		GROUP BY
-			SUBSTR( DT_TRD, 0, 6 )
-	</select>
-
-	<select id="listDepWdrlContents" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
-		SELECT
-			A.DT_TRD,
-			A.AN,
-			B.NM_AN,
-			B.CD_FC,
-			A.AMT_DEP,
-			A.AMT_WDRL,
-			A.BALANCE
-		FROM
-			SCR_TRANSACTION_DETAIL A
-		INNER JOIN
-			SCR_BANK_API_AN_INFO B
-		ON
-			A.NO_PERSON = B.NO_PERSON
-			AND A.AN = B.AN
-		WHERE
-			A.NO_PERSON = 'P000000109'
+			DT_EXPIRE IS NULL
+			AND YN_USE = 'Y'
 			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(type_list)">
 			<choose>
-			    <when test="'dep'.equals(type_list)">	<!-- 입금내역 -->
-					AND A.A.AMT_WDRL = '0'
+			    <when test="'bank'.equals(type_list)">	<!-- 은행 -->
+					AND CD_ASSETS_CLASS = '00'
 				</when>
-				<when test="'wdrl'.equals(type_list)">	<!-- 출금내역 -->
-					AND A.AMT_DEP = '0'
+				<when test="'stock'.equals(type_list)">	<!-- 증권 -->
+					AND CD_ASSETS_CLASS = '10'
 				</when>
 			</choose>
 			</if>
+			AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</select>
+
+    <select id="getAssetsBankDepWdrlInfo" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+        /* com.koscom.assets.dao.AssetsMapper.getAssetsBankDepWdrlInfo - 자산관리(은행메인 - 최근 입출금 내역) */
+		SELECT
+			TB.NO_PERSON,
+			TB.AN,
+			DECODE( SUBSTR( TO_CHAR( TB.DT_TRD, 'MM' ), 1, 1 ), '0', SUBSTR( TO_CHAR( TB.DT_TRD, 'MM' ), 2, 1 ), TO_CHAR( TB.DT_TRD, 'MM' ))|| '/' ||
+			DECODE( SUBSTR( TO_CHAR( TB.DT_TRD, 'DD' ), 1, 1 ), '0', SUBSTR( TO_CHAR( TB.DT_TRD, 'DD' ), 2, 1 ), TO_CHAR( TB.DT_TRD, 'DD' ))|| ' ' ||
+			SUBSTR( TM_TRD, 0, 2 )|| ':' || SUBSTR( TM_TRD, 3, 2 )
+			AS DT_TRD,
+			TB.AMT_DEP,
+			TB.AMT_WDRL,
+			TB.DOC1,
+			TB.DOC2
+		FROM
+			(
+				SELECT
+					NO_PERSON,
+					AN,
+					TO_DATE( DT_TRD ) AS DT_TRD,
+					TM_TRD,
+					AMT_WDRL,
+					AMT_DEP,
+					BALANCE,
+					DOC1,
+					DOC2
+				FROM
+					SCR_TRANSACTION_DETAIL
+				WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+				ORDER BY
+					( DT_TRD || TM_TRD ) DESC
+			) TB
+		WHERE ROWNUM = 1
+	</select>
+
+    <select id="listAssetsSharePerson" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+        /* com.koscom.assets.dao.AssetsMapper.getAssetsBankDepWdrlInfo - 자산관리(은행메인 - 공유자list) */
+       	SELECT NO_PERSON,
+       			NM_PERSON,
+       			ROWNUM RK
+       	FROM (
+       		SELECT
+				OFFER_NO_PERSON AS NO_PERSON,
+				OFFER_NM_PERSON AS NM_PERSON
+			FROM
+				SHARE_INFO
+			WHERE
+				SHARE_STATUS = '02'
+				AND YN_ASSET_INFO = 'Y'
+				AND REQ_NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			ORDER BY
+				DT_FRT DESC
+		)
+		WHERE ROWNUM <![CDATA[<=]]> 4
+	</select>
+
+    <select id="listAssetsBankAccount" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+        /* com.koscom.assets.dao.AssetsMapper.listAssetsBankAccount - 자산관리(은행메인 - 계좌내역) */
+       	SELECT
+    		NO_PERSON,
+			NM_PERSON,
+			RK,
+			NO_ACCOUNT,
+			NM_ACCOUNT,
+			CD_FC,
+			NM_FC,
+			AMT_BALANCE,
+			AMT_EVALUATION,
+			CD_ASSETS_CLASS,
+			CD_DETAIL_CLASS,
+			SORT,
+			RNUM
+    	FROM (
+    		SELECT
+				LST.NO_PERSON,
+				LST.NM_PERSON,
+				LST.RK,
+				LST.NO_ACCOUNT,
+				LST.NM_ACCOUNT,
+				LST.CD_FC,
+				LST.NM_FC,
+				LST.AMT_BALANCE,
+				LST.AMT_EVALUATION,
+				LST.CD_ASSETS_CLASS,
+				LST.CD_DETAIL_CLASS,
+				LST.SORT,
+				ROWNUM RNUM
+    		FROM (
+				SELECT
+					TB.NO_PERSON,
+					TB.NM_PERSON,
+					TB.RK,
+					TB.NO_ACCOUNT,
+					TB.NM_ACCOUNT,
+					TB.CD_FC,
+					( SELECT NM_FC FROM FC_INFO WHERE CD_FC = TB.CD_FC ) AS NM_FC,
+					TB.AMT_BALANCE,
+					TB.AMT_EVALUATION,
+					TB.CD_ASSETS_CLASS,
+					TB.CD_DETAIL_CLASS,
+					TB.SORT
+				FROM
+					(
+						SELECT
+							AI.NO_PERSON,
+							( SELECT NM_PERSON FROM PERSON_INFO WHERE NO_PERSON = AI.NO_PERSON ) AS NM_PERSON,
+							0 AS RK,
+							AI.NO_ACCOUNT,
+							AI.NM_ACCOUNT,
+							AI.CD_FC,
+							AI.AMT_BALANCE,
+							AI.AMT_EVALUATION,
+							AI.CD_ASSETS_CLASS,
+							AI.CD_DETAIL_CLASS,
+							AI.SORT
+						FROM
+							ASSETS_INFO AI
+						WHERE
+							AI.CD_ASSETS_CLASS = '00'
+							AND AI.YN_USE = 'Y'
+							AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+						<if test="@com.koscom.util.MybatisUtil@isNotEmpty(person_share_list)">
+						UNION ALL
+						SELECT
+							SI.NO_PERSON,
+							SI.NM_PERSON,
+							SI.RK,
+							AI.NO_ACCOUNT,
+							AI.NM_ACCOUNT,
+							AI.CD_FC,
+							AI.AMT_BALANCE,
+							AI.AMT_EVALUATION,
+							AI.CD_ASSETS_CLASS,
+							AI.CD_DETAIL_CLASS,
+							AI.SORT
+						FROM
+							(
+							SELECT
+								SEQ_SHARE,
+								NO_PERSON,
+								NM_PERSON,
+								ROWNUM RK
+							FROM (
+								SELECT
+									SEQ_SHARE,
+									OFFER_NO_PERSON AS NO_PERSON,
+									OFFER_NM_PERSON AS NM_PERSON
+								FROM
+									SHARE_INFO
+								WHERE SHARE_STATUS = '02'
+									AND YN_ASSET_INFO = 'Y'
+									AND REQ_NO_PERSON = #{no_person, jdbcType=VARCHAR}
+									AND OFFER_NO_PERSON IN
+										<foreach item="share_person" collection="person_share_list" open="(" separator="," close=")">
+											#{share_person}
+										</foreach>
+								ORDER BY
+									DT_FRT DESC
+								)
+							) SI
+						INNER JOIN SHARE_INFO_DETAIL SID
+						ON (
+								SI.SEQ_SHARE = SID.SEQ_SHARE
+								AND SID.CD_TYPE = '00'
+								AND SID.YN_SHARE= 'Y'
+							)
+						INNER JOIN ASSETS_INFO AI
+						ON (
+							SID.NO_CARD_ACC = AI.NO_ACCOUNT
+							AND AI.YN_USE = 'Y'
+							)
+					</if>
+					) TB
+				ORDER BY TB.RK, TB.SORT, TB.AMT_BALANCE
+			) LST
+	    	WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	    )
+	    WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+	</select>
+    <select id="listAssetsBankAccountCount" parameterType="com.koscom.assets.model.AssetsForm" resultType="int">
+        /* com.koscom.assets.dao.AssetsMapper.listAssetsBankAccountCount - 자산관리(은행메인 - 계좌내역Count) */
+       	SELECT
+			COUNT(*) AS recordCount
+		FROM
+			(
+				SELECT
+					AI.NO_PERSON,
+					( SELECT NM_PERSON FROM PERSON_INFO WHERE NO_PERSON = AI.NO_PERSON ) AS NM_PERSON,
+					0 AS RK,
+					AI.NO_ACCOUNT,
+					AI.NM_ACCOUNT,
+					AI.CD_FC,
+					AI.AMT_BALANCE,
+					AI.AMT_EVALUATION,
+					AI.CD_ASSETS_CLASS,
+					AI.CD_DETAIL_CLASS,
+					AI.SORT
+				FROM
+					ASSETS_INFO AI
+				WHERE
+					AI.CD_ASSETS_CLASS = '00'
+					AND AI.YN_USE = 'Y'
+					AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+				<if test="@com.koscom.util.MybatisUtil@isNotEmpty(person_share_list)">
+				UNION ALL
+				SELECT
+					SI.NO_PERSON,
+					SI.NM_PERSON,
+					SI.RK,
+					AI.NO_ACCOUNT,
+					AI.NM_ACCOUNT,
+					AI.CD_FC,
+					AI.AMT_BALANCE,
+					AI.AMT_EVALUATION,
+					AI.CD_ASSETS_CLASS,
+					AI.CD_DETAIL_CLASS,
+					AI.SORT
+				FROM
+					(
+						SELECT
+							SEQ_SHARE,
+							NO_PERSON,
+							NM_PERSON,
+							ROWNUM RK
+						FROM (
+								SELECT
+									SEQ_SHARE,
+									OFFER_NO_PERSON AS NO_PERSON,
+									OFFER_NM_PERSON AS NM_PERSON
+								FROM
+									SHARE_INFO
+								WHERE SHARE_STATUS = '02'
+									AND YN_ASSET_INFO = 'Y'
+									AND REQ_NO_PERSON = #{no_person, jdbcType=VARCHAR}
+									AND OFFER_NO_PERSON IN
+										<foreach item="share_person" collection="person_share_list" open="(" separator="," close=")">
+											#{share_person}
+										</foreach>
+								ORDER BY
+									DT_FRT DESC
+								)
+							) SI
+				INNER JOIN SHARE_INFO_DETAIL SID
+				ON (
+						SI.SEQ_SHARE = SID.SEQ_SHARE
+						AND SID.CD_TYPE = '00'
+						AND SID.YN_SHARE= 'Y'
+					)
+				INNER JOIN ASSETS_INFO AI
+				ON (
+					SID.NO_CARD_ACC = AI.NO_ACCOUNT
+					AND AI.YN_USE = 'Y'
+					)
+				</if>
+			) TB
+	</select>
+
+    <update id="updateAssetsSortInfo" parameterType="com.koscom.assets.model.AssetsInfoVO">
+         /* com.koscom.assets.dao.AssetsMapper.updateAssetsSortInfo - 자산관리(은행메인 - 정렬순서 변경) */
+		UPDATE
+			ASSETS_INFO
+		SET
+			SORT = #{sort, jdbcType=VARCHAR}
+		WHERE
+			NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND NO_ACCOUNT = #{no_account, jdbcType=VARCHAR}
+
+    </update>
+
+    <select id="getAssetsInfo" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+        /* com.koscom.assets.dao.AssetsMapper.getAssetsInfo - 자산관리(자산개별정보) */
+        SELECT
+			AI.NO_ACCOUNT,
+			AI.NM_ACCOUNT,
+			AI.CD_FC,
+			( SELECT NM_FC FROM FC_INFO WHERE CD_FC = AI.CD_FC ) AS NM_FC,
+			AI.AMT_BALANCE,
+			AI.AMT_EVALUATION,
+			AI.CD_ASSETS_CLASS,
+			AI.CD_DETAIL_CLASS
+		FROM ASSETS_INFO AI
+		WHERE AI.NO_PERSON =  #{no_person, jdbcType=VARCHAR}
+			AND AI.NO_ACCOUNT =  #{no_account, jdbcType=VARCHAR}
+    </select>
+
+    <select id="listAssetsSearchKeyword" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+		/* com.koscom.assets.dao.AssetsMapper.listAssetsSearchKeyword - 자산관리(검색키워드list) */
+        SELECT
+			TB.DOC1
+		FROM
+			(
+				SELECT
+					DOC1,
+					RANK() OVER(
+					ORDER BY
+						COUNT( DOC1 ) DESC
+					) AS RK
+				FROM
+					SCR_TRANSACTION_DETAIL
+				WHERE
+					NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_account)">
+			    		AND AN = #{no_account, jdbcType=VARCHAR}
+					</if>
+				GROUP BY
+					DOC1
+			) TB
+		WHERE
+			RK <![CDATA[<=]]> 10
+    </select>
+
+    <sql id="listAssetsBankActTrns_WHERE">
+		<where>
+			STD.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND STD.AN = #{no_account, jdbcType=VARCHAR}
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(scKeyword)">
+			    AND STD.DOC1 = #{scKeyword, jdbcType=VARCHAR}
+			</if>
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(scTrnsType)">
+			<choose>
+			   	<when test="'01'.equals(scTrnsType)">	<!-- 입금 -->
+					AND STD.AMT_DEP != '0'
+				</when>
+				<when test="'02'.equals(scTrnsType)">	<!-- 출금 -->
+					AND STD.AMT_WDRL != '0'
+				</when>
+			</choose>
+			</if>
+		</where>
+	</sql>
+    <select id="listAssetsBankActTrns" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+        /* com.koscom.assets.dao.AssetsMapper.listAssetsBankActTrns - 자산관리(은행 계좌상세 - 입출금내역) */
+       	SELECT
+    		DT_TRD,
+			AMT_WDRL,
+			AMT_DEP,
+			BALANCE,
+			DOC1,
+			DOC2,
+			DEALWAY1,
+			DEALWAY2,
+			RNUM
+    	FROM (
+    		SELECT
+				LST.DT_TRD,
+				LST.AMT_WDRL,
+				LST.AMT_DEP,
+				LST.BALANCE,
+				LST.DOC1,
+				LST.DOC2,
+				LST.DEALWAY1,
+				LST.DEALWAY2,
+				ROWNUM RNUM
+    		FROM (
+    			SELECT
+					STD.DT_TRD,
+					STD.AMT_WDRL,
+					STD.AMT_DEP,
+					STD.BALANCE,
+					STD.DOC1,
+					STD.DOC2,
+					STD.DEALWAY1,
+					STD.DEALWAY2
+				FROM
+					SCR_TRANSACTION_DETAIL STD
+				<include refid="listAssetsBankActTrns_WHERE"/>
+				ORDER BY
+					( DT_TRD || TM_TRD ) DESC
+			) LST
+	    	WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	    )
+	    WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+	</select>
+    <select id="listAssetsBankActTrnsCount" parameterType="com.koscom.assets.model.AssetsForm" resultType="int">
+        /* com.koscom.assets.dao.AssetsMapper.listAssetsBankActTrnsCount - 자산관리(은행 계좌상세 - 입출금내역Count) */
+       	SELECT
+			COUNT(*) AS recordCount
+		FROM
+			(
+			SELECT
+				STD.DT_TRD,
+				STD.AMT_WDRL,
+				STD.AMT_DEP,
+				STD.BALANCE,
+				STD.DOC1,
+				STD.DOC2,
+				STD.DEALWAY1,
+				STD.DEALWAY2
+			FROM
+				SCR_TRANSACTION_DETAIL STD
+			<include refid="listAssetsBankActTrns_WHERE"/>
+			) TB
+	</select>
+
+    <select id="listAssetsAccount" parameterType="java.lang.String" resultType="com.koscom.assets.model.AssetsInfoVO">
+        /* com.koscom.assets.dao.AssetsMapper.listAssetsAccount - 자산관리(계좌list) */
+       SELECT
+			TB.NO_PERSON,
+			TB.NM_PERSON,
+			TB.RK,
+			TB.NO_ACCOUNT,
+			TB.NM_ACCOUNT,
+			TB.CD_FC,
+			( SELECT NM_FC FROM FC_INFO WHERE CD_FC = TB.CD_FC ) AS NM_FC,
+			TB.AMT_BALANCE,
+			TB.AMT_EVALUATION,
+			TB.CD_ASSETS_CLASS,
+			TB.CD_DETAIL_CLASS
+		FROM
+			(
+				SELECT
+					AI.NO_PERSON,
+					( SELECT NM_PERSON FROM PERSON_INFO WHERE NO_PERSON = AI.NO_PERSON ) AS NM_PERSON,
+					0 AS RK,
+					AI.NO_ACCOUNT,
+					AI.NM_ACCOUNT,
+					AI.CD_FC,
+					AI.AMT_BALANCE,
+					AI.AMT_EVALUATION,
+					AI.CD_ASSETS_CLASS,
+					AI.CD_DETAIL_CLASS
+				FROM
+					ASSETS_INFO AI
+				WHERE
+					AI.CD_ASSETS_CLASS = '00'
+					AND AI.YN_USE = 'Y'
+					AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+				UNION ALL
+				SELECT
+					SI.NO_PERSON,
+					SI.NM_PERSON,
+					SI.RK,
+					AI.NO_ACCOUNT,
+					AI.NM_ACCOUNT,
+					AI.CD_FC,
+					AI.AMT_BALANCE,
+					AI.AMT_EVALUATION,
+					AI.CD_ASSETS_CLASS,
+					AI.CD_DETAIL_CLASS
+				FROM
+					(
+					SELECT
+						SEQ_SHARE,
+						NO_PERSON,
+						NM_PERSON,
+						ROWNUM RK
+					FROM (
+						SELECT
+							SEQ_SHARE,
+							OFFER_NO_PERSON AS NO_PERSON,
+							OFFER_NM_PERSON AS NM_PERSON
+						FROM
+							SHARE_INFO
+						WHERE SHARE_STATUS = '02'
+							AND YN_ASSET_INFO = 'Y'
+							AND REQ_NO_PERSON = #{no_person, jdbcType=VARCHAR}
+						ORDER BY
+							DT_FRT DESC
+						)
+					) SI
+				INNER JOIN SHARE_INFO_DETAIL SID
+				ON (
+						SI.SEQ_SHARE = SID.SEQ_SHARE
+						AND SID.CD_TYPE = '00'
+						AND SID.YN_SHARE= 'Y'
+					)
+				INNER JOIN ASSETS_INFO AI
+				ON (
+					SID.NO_CARD_ACC = AI.NO_ACCOUNT
+					AND AI.YN_USE = 'Y'
+					)
+			) TB
+		ORDER BY TB.RK, TB.AMT_BALANCE
+    </select>
+
+    <sql id="listDepWdrl_WHERE">
+		<where>
+		    <if test="@com.koscom.util.MybatisUtil@isNotEmpty(scAccount)">
+				AND STD.AN = #{scAccount, jdbcType=VARCHAR}
+			</if>
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
+				AND TO_DATE(STD.DT_TRD,'YYYYMMDD')       <![CDATA[>=]]> #{txt_dt_from}
+			</if>
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_to)">
+				AND TO_DATE(STD.DT_TRD,'YYYYMMDD')       <![CDATA[<=]]> #{txt_dt_to}
+			</if>
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(scKeyword)">
+			    AND STD.DOC1 = #{scKeyword, jdbcType=VARCHAR}
+			</if>
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(scTrnsType)">
+			<choose>
+			   	<when test="'01'.equals(scTrnsType)">	<!-- 입금 -->
+					AND STD.AMT_DEP != '0'
+				</when>
+				<when test="'02'.equals(scTrnsType)">	<!-- 출금 -->
+					AND STD.AMT_WDRL != '0'
+				</when>
+			</choose>
+			</if>
+		</where>
+	</sql>
+    <select id="getAssetsBankDepWdrlTotalAmt" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+		/* com.koscom.assets.dao.AssetsMapper.getDepWdrlTotalAmt - 자산관리(입출금내역 - 입금 / 출금 총액) */
+        SELECT
+			SUM(STD.AMT_DEP) AS TOTAL_AMT_DEP,
+			SUM(STD.AMT_WDRL) AS TOTAL_AMT_WDRL,
+			COUNT(STD.AN) AS CNT_ACCOUNT
+		FROM
+			(
+				SELECT
+					AI.NO_PERSON,
+					( SELECT NM_PERSON FROM PERSON_INFO WHERE NO_PERSON = AI.NO_PERSON ) AS NM_PERSON,
+					0 AS RK,
+					AI.NO_ACCOUNT,
+					AI.NM_ACCOUNT,
+					AI.CD_FC,
+					AI.AMT_BALANCE,
+					AI.AMT_EVALUATION,
+					AI.CD_ASSETS_CLASS,
+					AI.CD_DETAIL_CLASS
+				FROM
+					ASSETS_INFO AI
+				WHERE
+					AI.CD_ASSETS_CLASS = '00'
+					AND AI.YN_USE = 'Y'
+					AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+				UNION ALL
+				SELECT
+					SI.NO_PERSON,
+					SI.NM_PERSON,
+					SI.RK,
+					AI.NO_ACCOUNT,
+					AI.NM_ACCOUNT,
+					AI.CD_FC,
+					AI.AMT_BALANCE,
+					AI.AMT_EVALUATION,
+					AI.CD_ASSETS_CLASS,
+					AI.CD_DETAIL_CLASS
+				FROM
+					(
+					SELECT
+						SEQ_SHARE,
+						NO_PERSON,
+						NM_PERSON,
+						ROWNUM RK
+					FROM (
+						SELECT
+							SEQ_SHARE,
+							OFFER_NO_PERSON AS NO_PERSON,
+							OFFER_NM_PERSON AS NM_PERSON
+						FROM
+							SHARE_INFO
+						WHERE SHARE_STATUS = '02'
+							AND YN_ASSET_INFO = 'Y'
+							AND REQ_NO_PERSON = #{no_person, jdbcType=VARCHAR}
+						ORDER BY
+							DT_FRT DESC
+						)
+					) SI
+				INNER JOIN SHARE_INFO_DETAIL SID
+				ON (
+						SI.SEQ_SHARE = SID.SEQ_SHARE
+						AND SID.CD_TYPE = '00'
+						AND SID.YN_SHARE= 'Y'
+					)
+				INNER JOIN ASSETS_INFO AI
+				ON (
+					SID.NO_CARD_ACC = AI.NO_ACCOUNT
+					AND AI.YN_USE = 'Y'
+					)
+			) TB
+		INNER JOIN SCR_TRANSACTION_DETAIL STD
+		ON ( STD.NO_PERSON = TB.NO_PERSON
+			AND STD.AN = TB.NO_ACCOUNT )
+		<include refid="listDepWdrl_WHERE"/>
+	</select>
+
+    <select id="listAssetsBankDepWdrl" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+        /* com.koscom.assets.dao.AssetsMapper.listAssetsDepWdrl - 자산관리(입출금내역 - list) */
+       	SELECT
+    		NO_PERSON,
+			NM_PERSON,
+			RK,
+			NO_ACCOUNT,
+			NM_ACCOUNT,
+			CD_FC,
+			NM_FC,
+			CD_ASSETS_CLASS,
+			CD_DETAIL_CLASS,
+			AN,
+			DT_TRD,
+			TM_TRD,
+			AMT_DEP,
+			AMT_WDRL,
+			DOC1,
+			DOC2,
+			RNUM
+    	FROM (
+    		SELECT
+				LST.NO_PERSON,
+				LST.NM_PERSON,
+				LST.RK,
+				LST.NO_ACCOUNT,
+				LST.NM_ACCOUNT,
+				LST.CD_FC,
+				LST.NM_FC,
+				LST.CD_ASSETS_CLASS,
+				LST.CD_DETAIL_CLASS,
+				LST.AN,
+				LST.DT_TRD,
+				LST.TM_TRD,
+				LST.AMT_DEP,
+				LST.AMT_WDRL,
+				LST.DOC1,
+				LST.DOC2,
+				ROWNUM RNUM
+    		FROM (
+				SELECT
+					SHAI.NO_PERSON,
+					SHAI.NM_PERSON,
+					SHAI.RK,
+					SHAI.NO_ACCOUNT,
+					SHAI.NM_ACCOUNT,
+					SHAI.CD_FC,
+					( SELECT NM_FC FROM FC_INFO WHERE CD_FC = SHAI.CD_FC ) AS NM_FC,
+					SHAI.CD_ASSETS_CLASS,
+					SHAI.CD_DETAIL_CLASS,
+					STD.AN,
+					STD.DT_TRD,
+					STD.TM_TRD,
+					STD.AMT_DEP,
+					STD.AMT_WDRL,
+					STD.DOC1,
+					STD.DOC2
+				FROM
+					(
+						SELECT
+							AI.NO_PERSON,
+							( SELECT NM_PERSON FROM PERSON_INFO WHERE NO_PERSON = AI.NO_PERSON ) AS NM_PERSON,
+							0 AS RK,
+							AI.NO_ACCOUNT,
+							AI.NM_ACCOUNT,
+							AI.CD_FC,
+							AI.AMT_BALANCE,
+							AI.AMT_EVALUATION,
+							AI.CD_ASSETS_CLASS,
+							AI.CD_DETAIL_CLASS
+						FROM
+							ASSETS_INFO AI
+						WHERE
+							AI.CD_ASSETS_CLASS = '00'
+							AND AI.YN_USE = 'Y'
+							AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+						UNION ALL
+						SELECT
+							SI.NO_PERSON,
+							SI.NM_PERSON,
+							SI.RK,
+							AI.NO_ACCOUNT,
+							AI.NM_ACCOUNT,
+							AI.CD_FC,
+							AI.AMT_BALANCE,
+							AI.AMT_EVALUATION,
+							AI.CD_ASSETS_CLASS,
+							AI.CD_DETAIL_CLASS
+						FROM
+							(
+							SELECT
+								SEQ_SHARE,
+								NO_PERSON,
+								NM_PERSON,
+								ROWNUM RK
+							FROM (
+								SELECT
+									SEQ_SHARE,
+									OFFER_NO_PERSON AS NO_PERSON,
+									OFFER_NM_PERSON AS NM_PERSON
+								FROM
+									SHARE_INFO
+								WHERE SHARE_STATUS = '02'
+									AND YN_ASSET_INFO = 'Y'
+									AND REQ_NO_PERSON = #{no_person, jdbcType=VARCHAR}
+								ORDER BY
+									DT_FRT DESC
+								)
+							) SI
+						INNER JOIN SHARE_INFO_DETAIL SID
+						ON (
+								SI.SEQ_SHARE = SID.SEQ_SHARE
+								AND SID.CD_TYPE = '00'
+								AND SID.YN_SHARE= 'Y'
+							)
+						INNER JOIN ASSETS_INFO AI
+						ON (
+							SID.NO_CARD_ACC = AI.NO_ACCOUNT
+							AND AI.YN_USE = 'Y'
+							)
+					) SHAI
+				INNER JOIN SCR_TRANSACTION_DETAIL STD
+				ON ( STD.NO_PERSON = SHAI.NO_PERSON
+					AND STD.AN = SHAI.NO_ACCOUNT )
+				<include refid="listDepWdrl_WHERE"/>
+				ORDER BY
+					( STD.DT_TRD || STD.TM_TRD ) DESC
+			) LST
+	    	WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	    )
+	    WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+	</select>
+    <select id="listAssetsBankDepWdrlCount" parameterType="com.koscom.assets.model.AssetsForm" resultType="int">
+        /* com.koscom.assets.dao.AssetsMapper.listAssetsDepWdrlCount - 자산관리(입출금내역 - count) */
+       	SELECT
+			COUNT(*) AS recordCount
+		FROM
+			(
+			SELECT
+				SHAI.NO_PERSON,
+				SHAI.NM_PERSON,
+				SHAI.RK,
+				SHAI.NO_ACCOUNT,
+				SHAI.NM_ACCOUNT,
+				SHAI.CD_FC,
+				( SELECT NM_FC FROM FC_INFO WHERE CD_FC = SHAI.CD_FC ) AS NM_FC,
+				SHAI.CD_ASSETS_CLASS,
+				SHAI.CD_DETAIL_CLASS,
+				STD.AN,
+				STD.DT_TRD,
+				STD.TM_TRD,
+				STD.AMT_DEP,
+				STD.AMT_WDRL,
+				STD.DOC1,
+				STD.DOC2
+			FROM
+				(
+					SELECT
+						AI.NO_PERSON,
+						( SELECT NM_PERSON FROM PERSON_INFO WHERE NO_PERSON = AI.NO_PERSON ) AS NM_PERSON,
+						0 AS RK,
+						AI.NO_ACCOUNT,
+						AI.NM_ACCOUNT,
+						AI.CD_FC,
+						AI.CD_ASSETS_CLASS,
+						AI.CD_DETAIL_CLASS
+					FROM
+						ASSETS_INFO AI
+					WHERE
+						AI.CD_ASSETS_CLASS = '00'
+						AND AI.YN_USE = 'Y'
+						AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					UNION ALL
+					SELECT
+						SI.NO_PERSON,
+						SI.NM_PERSON,
+						SI.RK,
+						AI.NO_ACCOUNT,
+						AI.NM_ACCOUNT,
+						AI.CD_FC,
+						AI.CD_ASSETS_CLASS,
+						AI.CD_DETAIL_CLASS
+					FROM
+						(
+						SELECT
+							SEQ_SHARE,
+							NO_PERSON,
+							NM_PERSON,
+							ROWNUM RK
+						FROM (
+							SELECT
+								SEQ_SHARE,
+								OFFER_NO_PERSON AS NO_PERSON,
+								OFFER_NM_PERSON AS NM_PERSON
+							FROM
+								SHARE_INFO
+							WHERE SHARE_STATUS = '02'
+								AND YN_ASSET_INFO = 'Y'
+								AND REQ_NO_PERSON = #{no_person, jdbcType=VARCHAR}
+							ORDER BY
+								DT_FRT DESC
+							)
+						) SI
+					INNER JOIN SHARE_INFO_DETAIL SID
+					ON (
+							SI.SEQ_SHARE = SID.SEQ_SHARE
+							AND SID.CD_TYPE = '00'
+							AND SID.YN_SHARE= 'Y'
+						)
+					INNER JOIN ASSETS_INFO AI
+					ON (
+						SID.NO_CARD_ACC = AI.NO_ACCOUNT
+						AND AI.YN_USE = 'Y'
+						)
+				) SHAI
+			INNER JOIN SCR_TRANSACTION_DETAIL STD
+			ON ( STD.NO_PERSON = SHAI.NO_PERSON
+				AND STD.AN = SHAI.NO_ACCOUNT )
+			<include refid="listDepWdrl_WHERE"/>
+			) TB
+	</select>
+
+    <select id="getAssetsBankDepWdrlDetail" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+		/* com.koscom.assets.dao.AssetsMapper.getAssetsBankDepWdrlDetail - 자산관리(입출금상세) */
+		SELECT
+			( SELECT NM_FC FROM FC_INFO WHERE CD_FC = AI.CD_FC ) AS NM_FC,
+			STD.AN,
+			STD.DT_TRD,
+			( SUBSTR( STD.TM_TRD, 0, 2 )|| ':' || SUBSTR( STD.TM_TRD, 3, 2 ) ) AS TM_TRD,
+			DECODE( STD.AMT_WDRL, '0', '01', '02' ) AS CD_TRNS,
+			DECODE( STD.AMT_WDRL, '0', '입금', '출금' ) AS NM_TRNS,
+			STD.DEALWAY1,
+			STD.DEALWAY2,
+			STD.DOC1,
+			STD.DOC2,
+			STD.AMT_DEP,
+			STD.AMT_WDRL,
+			STD.BALANCE
+		FROM
+			ASSETS_INFO AI
+		INNER JOIN SCR_TRANSACTION_DETAIL STD
+		ON (
+				STD.NO_PERSON = AI.NO_PERSON
+				AND STD.AN = AI.NO_ACCOUNT
+			)
+		WHERE STD.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND STD.AN = #{no_account, jdbcType=VARCHAR}
+			AND STD.DT_TRD = #{dt_trd, jdbcType=VARCHAR}
+			AND STD.TM_TRD = #{tm_trd, jdbcType=VARCHAR}
+    </select>
+
+    <select id="getAssetsDetailCsInfo" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+		/* com.koscom.assets.dao.AssetsMapper.getAssetsDetailCsInfo - 자산관리(입출금상세 소비정보) */
+		SELECT
+			CI.CD_CLASS,
+			PCCI.NM_CLASS,
+			CI.CD_TYPE,
+			PCCI.NM_TYPE
+		FROM
+			CONSUME_INFO CI
+		INNER JOIN PERSON_CONSUME_CLASS_INFO PCCI
+		ON (
+				PCCI.NO_PERSON = CI.NO_PERSON
+				AND PCCI.CD_CLASS		= CI.CD_CLASS
+				AND PCCI.CD_TYPE		= CI.CD_TYPE
+			)
+		WHERE CI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CI.NO_CARD = #{no_account, jdbcType=VARCHAR}
+			AND CI.DT_TRD = #{dt_trd, jdbcType=VARCHAR}
+			AND CI.TM_TRD = #{tm_trd, jdbcType=VARCHAR}
+    </select>
+
+    <update id="updateAssetsDetailCsInfo" parameterType="com.koscom.assets.model.AssetsInfoVO">
+		/* com.koscom.assets.dao.AssetsMapper.updateAssetsDetailCsInfo - 자산관리(입출금상세 소비정보 업데이트) */
+		UPDATE
+			CONSUME_INFO
+		SET
+			CD_CLASS = #{cd_class, jdbcType=VARCHAR},
+			CD_TYPE = #{cd_type, jdbcType=VARCHAR},
+			YN_AUTO = #{yn_auto, jdbcType=VARCHAR}
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND NO_CARD = #{no_account, jdbcType=VARCHAR}
+			AND DT_TRD = #{dt_trd, jdbcType=VARCHAR}
+			AND TM_TRD = #{tm_trd, jdbcType=VARCHAR}
+    </update>
+
 
 </mapper>

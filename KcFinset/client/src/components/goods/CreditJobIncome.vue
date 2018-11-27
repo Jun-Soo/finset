@@ -15,7 +15,7 @@
           <li v-if="show_jobSearch">
             <p class="key">직장명</p>
             <p>
-              <input type="text" style="width: 60%" placeholder="직장명을 검색하세요" @focus="searchJob" v-model="nm_comp" v-validate="'required'" data-vv-name='직장명'>
+              <input type="text" style="width: 60%" placeholder="직장명을 검색하세요" @focus="searchJob" v-model="korentrnm" v-validate="'required'" data-vv-name='직장명'>
               <button class="btn-search" @click="searchJob"></button>
               <a class=" warn" v-if="errors.has('직장명')">{{errors.first('직장명')}}</a>
             </p>
@@ -139,9 +139,9 @@ export default {
     selectOccupational: function(option) {
       this.hide2ndDepth();
       if (option.value == "1") {
-        this.nm_comp = "";
+        this.korentrnm = "";
       } else {
-        this.nm_comp = option.text;
+        this.korentrnm = option.text;
       }
       this.occupational_detail = {};
       this.worker_position = {};
@@ -168,7 +168,6 @@ export default {
       }, 100);
     },
     changeDtJoinView: function(option) {
-      alert("test");
       var _this = this;
       this.disable_amt_year_income = false;
       setTimeout(function() {
@@ -685,14 +684,14 @@ export default {
       // var index = this.$refs.form.index;
       // console.log(this.$refs.form.jobList[index]);
       this.$modals.hide(name);
-      if (this.nm_comp != "") {
+      if (this.korentrnm != "") {
         this.cateChgLow(this.occupational_detail);
         this.show2ndDepth();
       }
     },
     openPop: function(name) {
       this.$modals.show(name);
-      if (this.nm_comp != "") {
+      if (this.korentrnm != "") {
         this.cateChgLow(this.occupational_detail);
         this.show2ndDepth();
       }

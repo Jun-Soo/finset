@@ -5,7 +5,7 @@
 <mapper namespace="com.koscom.main.dao.MainMapper">
 
 	<select id="getMainConsumeSumAmt" parameterType="java.lang.String" resultType="java.lang.String">
-		/* com.koscom.main.dao.MainMapper.getMainConsumeSumAmt */
+		/* com.koscom.main.dao.MainMapper.getMainConsumeSumAmt 소비총금액*/
 		<![CDATA[
 		SELECT
 			CASE WHEN PSI.DT_BASIC IS NULL
@@ -74,7 +74,7 @@
 	</select>
 
 	<select id="getMainAssetsSumAmt" parameterType="java.lang.String" resultType="java.lang.String">
-		/* com.koscom.main.dao.MainMapper.getMainAssetsSumAmt */
+		/* com.koscom.main.dao.MainMapper.getMainAssetsSumAmt 자산총금액*/
 		SELECT
 			( TB.SUM_AMT_BALANCE + TB.SUM_AMT_EVALUATION ) AS SUM_AMT
 		FROM
@@ -92,7 +92,7 @@
 	</select>
 
 	<select id="getMainDebtSumAmt" parameterType="java.lang.String" resultType="java.lang.String">
-		/* com.koscom.main.dao.MainMapper.getMainDebtSumAmt */
+		/* com.koscom.main.dao.MainMapper.getMainDebtSumAmt 부채총금액*/
 		SELECT
 			SUM( AMT_REMAIN ) AS SUM_AMT
 		FROM

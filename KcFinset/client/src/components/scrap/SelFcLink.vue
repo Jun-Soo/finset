@@ -167,7 +167,7 @@ export default {
       if (this.isSingle) {
         formData.append("cd_fc", this.cd_coocon);
       }
-      this.spinnerIsVisible = true; // 시작시 Spinner 보여주기
+      _this.$store.state.isLoading = true; // 시작시 Spinner 보여주기
       this.$http
         .post("/m/scrap/getTermsContent.json", formData)
         .then(function(response) {
@@ -176,7 +176,7 @@ export default {
             _this.financeTerms = response.data.financeTerms;
             var financeTerms = JSON.parse(_this.financeTerms);
             _this.financeTermsText = financeTerms.text;
-            _this.spinnerIsVisible = false;
+            _this.$store.state.isLoading = false;
             if (isShow) {
               _this.openPop();
             }

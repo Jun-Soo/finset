@@ -28,7 +28,10 @@ import com.google.gson.JsonSyntaxException;
 import com.koscom.domain.CooconGoodsFavoriteInfo;
 import com.koscom.domain.KisCompanyOutlineInfo;
 import com.koscom.domain.KisSrchByNameInfo;
+import com.koscom.finance.model.TxFcReceiveVO;
 import com.koscom.finance.model.TxFcTransmitVO;
+import com.koscom.finance.service.FinanceManager;
+import com.koscom.finset.model.FinsetForm;
 import com.koscom.goods.model.GoodsForm;
 import com.koscom.goods.model.GoodsVO;
 import com.koscom.kisline.model.KisCompanyOutlineItemsVO;
@@ -41,12 +44,9 @@ import com.koscom.loan.service.LoanManager;
 import com.koscom.login.service.SecureManager;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
-import com.koscom.util.AuthUtil;
-import com.koscom.util.Constant;
-import com.koscom.util.LogUtil;
-import com.koscom.util.Pagination;
-import com.koscom.util.ReturnClass;
-import com.koscom.util.StringUtil;
+import com.koscom.pusheach.model.PushEachVO;
+import com.koscom.pusheach.service.PushEachManager;
+import com.koscom.util.*;
 
 @Controller
 @RequestMapping("/m/loan")
@@ -66,6 +66,12 @@ public class LoanController implements Constant {
 	
 	@Autowired
 	KislineManager kislineManager;
+	
+	@Autowired
+	FinanceManager financeManager;
+	
+	@Autowired
+	PushEachManager pushEachManager;
 	
 	@Resource
 	Environment environment;
@@ -369,6 +375,186 @@ public class LoanController implements Constant {
 		logger.debug("pagedList");
 		logger.debug("pagedList="+pagedList);
 		model.addAttribute("pagedList", pagedList);
+		return JSON_VIEW;
+	}
+	
+	/** VUE
+	 * 개인신용대출 대출가능 상품 리스트, 전문 송/수신
+	 * @param model
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/reqFinanceInfo.json")
+	public String reqFinanceInfo(Model model, HttpServletRequest request, GoodsForm goodsForm, HttpSession session, FinsetForm finsetForm) throws FinsetException, IOException{
+		String no_person      = (String) session.getAttribute("no_person");
+        String title          = null;// 제목
+        String body           = null;// 내용
+        String push_divcd     = "01";//푸쉬구분코드 : 일반
+        String fcm_token      =null;
+        String url            = null;
+        String loan_code      = null;
+
+        PersonVO   personVO   = null;
+        PushEachVO pushEachVO = null;
+        GoodsVO    goodsVO    = null;
+		goodsForm.setNo_person(no_person);
+		goodsForm.setYn_use   ("Y"      );
+		
+		//대출 금리/한도조회 상품 목록
+		String[] cd_fc    = null;
+		String[] cd_goods = null;
+        String _cd_fc     = null;
+        String _cd_goods  = null;
+
+        _cd_goods = goodsForm.getCd_goods ();
+        _cd_fc    = goodsForm.getCd_fc    ();
+        loan_code = goodsForm.getLoan_code();
+
+        /**
+         * 로그추가
+         */
+		logger.debug("reqFinanceInfo.crz:선택한 대출상품리스트 : " + _cd_goods);
+		logger.debug("reqFinanceInfo.crz:선택한 대출업체리스트 : " + _cd_fc   );
+		logger.debug("reqFinanceInfo.crz:선택한 loan_code      : " + loan_code);
+		logger.debug("no_person : " + no_person   );
+		String site = (environment != null)?environment.getProperty("service.profile"):"";
+		LogUtil.debugLn(logger,"site="+site);
+		boolean isSuccess = true;
+		String message = "한도조회가 완료되었습니다.";
+		String error_message = "한도조회중 오류가 발생하였습니다.";
+		String exception_desc = null;
+        TxFcReceiveVO txFcReceiveVO = null;
+        TxFcTransmitVO txFcTransmitVO = null;
+		if(    _cd_goods != null && StringUtil.isNotEmpty(_cd_goods)
+			&& _cd_fc    != null && StringUtil.isNotEmpty(_cd_fc   )){
+			cd_fc    = goodsForm.getCd_fc().split(",");
+			cd_goods = goodsForm.getCd_goods().split(",");
+		}
+		logger.debug("reqFinanceInfo.crz: cd_goods : " + cd_goods);
+		List<GoodsVO> listFcGoods = new ArrayList<GoodsVO>();
+		if(cd_fc != null && cd_fc.length > 0 && cd_goods != null && cd_goods.length > 0) {
+			for(int i = 0; i < cd_fc.length; i++) {
+                goodsVO = new GoodsVO();
+                goodsVO.setCd_fc   (cd_fc[i]   );
+				goodsVO.setCd_goods(cd_goods[i]);
+				goodsVO.setId_frt  (no_person  );
+				listFcGoods.add(goodsVO);
+			}
+			logger.debug("대출상품리스트 건수 : " + listFcGoods.size());
+            txFcTransmitVO = loanManager.getTxFcTransmitInfoForMsg(goodsForm.getNo_bunch());
+            txFcTransmitVO.setListGoods(listFcGoods);
+			txFcTransmitVO.setLoan_code(loan_code);
+			txFcTransmitVO.setNo_person(no_person);
+			txFcTransmitVO.setId_frt   (no_person);
+
+			logger.debug("============> 1차한도조회 시작: "  + txFcTransmitVO + " > KCB DI : " +txFcTransmitVO.getKcb_di() );
+			ReturnClass rc = null;
+			ArrayList<Throwable> listErr = null;
+			try {
+                /**
+                 * 조회전 조회중 데이터 등록
+                 */
+				financeManager.setFinsetForReady(txFcTransmitVO);
+                /**
+                 * 조회 실행
+                 */
+				rc = financeManager.reqFinanceInfo(txFcTransmitVO);
+				if (rc != null) {
+					if( Constant.FAILED.equals(rc.getCd_result())) {
+						logger.debug("EDOC ERROR " + rc.getDes_message());
+						model.addAttribute("result", Constant.FAILED);
+						model.addAttribute("errorMsg", rc.getDes_message());
+					} else if(Constant.SUCCESS.equals(rc.getCd_result())) {
+						txFcReceiveVO = (TxFcReceiveVO)rc.getReturnObj();
+						listErr = txFcReceiveVO.getListErr();
+						logger.debug("============> 1차한도조회 결과 응답: "  + txFcReceiveVO);
+						model.addAttribute("result", Constant.SUCCESS);
+					}
+				}
+				if(listErr != null && listErr.size() > 0) {
+				    isSuccess = false;
+                }
+//				throw new FinsetException("TEST 에러");
+			} catch (IOException e) {
+				isSuccess = false;
+//				message = e.getMessage();
+				exception_desc = e.getMessage();
+				LogUtil.error(logger,e);
+			} catch (FinsetException e) {
+				isSuccess = false;
+//				message = e.getMessage();
+				exception_desc = e.getMessage();
+				LogUtil.error(logger,e);
+			} catch (FinsetMessageException e) {
+				isSuccess = true;
+//				message = e.getMessage();
+				exception_desc = e.getMessage();
+				LogUtil.error(logger,e);
+			} catch (RuntimeException e) {
+				isSuccess = false;
+//				message = e.getMessage();
+				exception_desc = e.getMessage();
+				LogUtil.error(logger,e);
+			} catch (Exception e) {
+				isSuccess = false;
+//				message = e.getMessage();
+				exception_desc = e.getMessage();
+				LogUtil.error(logger,e);
+			} finally {
+				if (isSuccess == true) {
+					body = message;
+				} else {
+					body = error_message;
+//					txFcReceiveVO = new TxFcReceiveVO();
+//					txFcReceiveVO.setHd_cd_result(-1);
+//					txFcReceiveVO.setHd_err_msg(exception_desc);
+//					/**
+//					 * 조회후 에러 데이터 등록
+//					 */
+//					financeManager.setFinsetForFail(txFcReceiveVO,txFcTransmitVO);
+				}
+			}
+		} else {
+			model.addAttribute("errorMsg", "대출상품이 없습니다.");
+			logger.debug("대출상품리스트 건수 : 0");
+			model.addAttribute("count", 0);
+		}
+
+		model.addAttribute("no_bunch" , goodsForm.getNo_bunch());
+		model.addAttribute("isSuccess", isSuccess              );
+		model.addAttribute("message"  , message                );
+		/**
+		 * push 전송로직
+		 */
+        personVO = personManager.getPersonInfo(no_person);
+        title    = "[상품조회결과]";
+        url = "/m/customercenter/frameCustomerViewResults.crz";
+        if (personVO != null) {
+            pushEachVO = new PushEachVO();
+            fcm_token = personVO.getFcm_token();
+            if (fcm_token != null && !fcm_token.equals("")) {
+                pushEachVO.setSendTo    (fcm_token    );
+                pushEachVO.setNo_person (no_person    );
+                pushEachVO.setTitle     (title        );
+                pushEachVO.setBody      (body         );
+                pushEachVO.setPush_divcd(push_divcd   );//일반
+                pushEachVO.setLink_addr (url          );
+                logger.debug("@@@@SendTo())"+fcm_token);
+
+                if(FcmUtil.sendFcm(  fcm_token
+                        , title
+                        , body
+                        , url
+                        , StringUtil.nullToString(personVO.getYn_os(), "1")
+                        , StringUtil.nullToString(personVO.getCd_push(), "")
+                        , environment.getProperty("push.fcm"))){
+                }
+                pushEachManager.createPushEachInfo(pushEachVO);
+            }
+        } else {
+            throw new FinsetException("사용자가 존재하지 않습니다.no_person="+no_person);
+        }
 		return JSON_VIEW;
 	}
 	

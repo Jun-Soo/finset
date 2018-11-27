@@ -23,37 +23,37 @@
     <div class="banner-wrap owl-carousel">
       <carousel :perPage=1>
         <slide class="item">
+          <a @click="$router.push('/credit/raiseMain')">
+            <div class="banner">
+              <div class="left">
+                <p class="key">신용등급 올리기</p>
+                <p class="value">클릭 한번으로<br />신용점수를 올리세요</p>
+              </div>
+              <div class="right">
+                <img src="../../assets/images/main/banner_ico.png" alt="" />
+              </div>
+            </div>
+          </a>
+        </slide>
+        <slide class="item">
+          <a @click="$router.push('/credit/smartReport')">
+            <div class="banner">
+              <div class="left">
+                <p class="key">나의 신용 통계분석</p>
+                <p class="value">나의 신용상태가 궁금하다면 ?</p>
+              </div>
+              <div class="right">
+                <img src="../../assets/images/main/banner_ico.png" alt="" />
+              </div>
+            </div>
+          </a>
+        </slide>
+        <slide class="item">
           <a @click="goMenu('news')">
             <div class="banner">
               <div class="left">
                 <p class="key">신용 뉴스</p>
-                <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
-              </div>
-              <div class="right">
-                <img src="../../assets/images/main/banner_ico.png" alt="" />
-              </div>
-            </div>
-          </a>
-        </slide>
-        <slide class="item">
-          <a @click="goShareInfoMain('01')">
-            <div class="banner">
-              <div class="left">
-                <p class="key">공유관리 - 신용</p>
-                <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
-              </div>
-              <div class="right">
-                <img src="../../assets/images/main/banner_ico.png" alt="" />
-              </div>
-            </div>
-          </a>
-        </slide>
-        <slide class="item">
-          <a @click="goShareInfoMain('02')">
-            <div class="banner">
-              <div class="left">
-                <p class="key">공유관리 - 금융</p>
-                <p class="value">가족이 사용한 지출을<br>한꺼번에 관리하세요</p>
+                <p class="value">신용을 관리하기 위한 꿀팁과<br />뉴스를 확인하세요</p>
               </div>
               <div class="right">
                 <img src="../../assets/images/main/banner_ico.png" alt="" />
@@ -205,14 +205,6 @@ export default {
           query: { scKeyword: ["04"] }
         });
       }
-    },
-    //공유관리 메인으로 이동
-    goShareInfoMain: function(cd_share) {
-      this.$router.push({
-        name: "shareMain",
-        // query: { cd_share: "01" }
-        query: { cd_share: cd_share }
-      });
     }
   }
 };

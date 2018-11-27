@@ -21,28 +21,51 @@
     </div>
 
     <div class="my-main-list">
-      <div class="list">
+      <!--지출-->
+      <div v-if="consumeSumAmt != null" class="list">
         <div class="item">
           <div class="left">
             <a @click="$router.push('/consume/main')">지출</a>
             <p>{{ formatNumber(consumeSumAmt) }}<em>원</em></p>
           </div>
           <div class="right">
-            <a @click="$router.push(' ')"></a>
+            <a @click="goMenu('csDetail')"></a>
           </div>
         </div>
       </div>
-      <div class="list">
+      <div v-else class="list no">
+        <div class="item">
+          <div class="left">
+            <a @click="$router.push('/consume/main')">지출</a>
+          </div>
+          <div class="right">
+            <a @click="$router.push('/scrap/ctrlFcLink')">등록하신 후 사용하세요</a>
+          </div>
+        </div>
+      </div>
+      <!--자산-->
+      <div v-if="assetsSumAmt != '0'" class="list">
         <div class="item">
           <div class="left">
             <a @click="$router.push('/assets/main')">자산</a>
             <p>{{ formatNumber(assetsSumAmt) }}<em>원</em></p>
           </div>
           <div class="right">
-            <a @click="$router.push(' ')"></a>
+            <a @click="$router.push('/assets/dirInput')"></a>
           </div>
         </div>
       </div>
+      <div v-else class="list no">
+        <div class="item">
+          <div class="left">
+            <a @click="$router.push('/assets/main')">자산</a>
+          </div>
+          <div class="right">
+            <a @click="$router.push('/scrap/ctrlFcLink')">등록하신 후 사용하세요</a>
+          </div>
+        </div>
+      </div>
+      <!--부채-->
       <div class="list">
         <div class="item">
           <div class="left">
@@ -59,7 +82,7 @@
       <div class="wrap">
         <a @click="$router.push('/credit/raiseMain')">신용등급<br>올리기</a>
         <a @click="$router.push('/credit/smartReport')">신용<br>리포트</a>
-        <a @click="goShareInfoMain();">정보<br>공유하기</a>
+        <a @click="goMenu('share');">정보<br>공유하기</a>
       </div>
     </div>
     <FinsetBottom></FinsetBottom>
@@ -134,6 +157,7 @@ export default {
           _this.consumeSumAmt = response.data.consumeSumAmt;
           _this.assetsSumAmt = response.data.assetsSumAmt;
           _this.debtSumAmt = response.data.debtSumAmt;
+
           if (_this.creditInfo) {
             _this.gaugeValue = _this.creditInfo.rating_credit / 1000;
             _this.gaugeText = _this.creditInfo.grade_credit + "등급";
@@ -190,11 +214,18 @@ export default {
         });
     },
     //공유관리 메인으로 이동
-    goShareInfoMain: function() {
-      this.$router.push({
-        name: "shareMain",
-        params: { cd_share: "02" }
-      });
+    goMenu: function(menu) {
+      if ("csDetail" == menu) {
+        this.$router.push({
+          path: "/consume/consumeDetail",
+          query: { no_person: this.$store.state.user.noPerson }
+        });
+      } else if ("share" == menu) {
+        this.$router.push({
+          name: "shareMain",
+          query: { cd_share: "02" }
+        });
+      }
     }
   }
 };

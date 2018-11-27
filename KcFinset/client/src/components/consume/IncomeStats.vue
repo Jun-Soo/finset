@@ -8,7 +8,8 @@
         <p class="date">07.12</p>
         <div class="item">
           <div class="flex">
-            <p><em class="circle red">준수</em>후이비인후과</p>
+            <!-- <p><em class="circle red">준수</em>후이비인후과</p> -->
+            <p>후이비인후과</p>
             <p><em class="number">-5,340,000</em>원</p>
           </div>
           <div class="flex">

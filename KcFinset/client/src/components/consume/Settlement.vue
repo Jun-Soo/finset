@@ -30,7 +30,8 @@
         </div>
       </div>
       <div class="graph">
-        <img src="../../assets/images/consume/graph2.png" alt="" />
+        <!-- <img src="../../assets/images/consume/graph2.png" alt="" /> -->
+        <Graph></Graph>
       </div>
     </div>
 
@@ -53,7 +54,7 @@
       </div>
 
       <div class="item">
-        <a href="#" class="block">
+        <a @click="clickItem" class="block">
           <div class="flex">
             <p class="key"><img src="../../assets/images/common/bu_list_drug.png" width="15px" class="mr5" alt="" />식비 <em>(120건)</em></p>
             <p class="number">118,107<em>원</em></p>
@@ -69,7 +70,7 @@
       </div>
 
       <div class="item">
-        <a href="#" class="block">
+        <a @click="clickItem" class="block">
           <div class="flex">
             <p class="key"><img src="../../assets/images/common/bu_list_drug.png" width="15px" class="mr5" alt="" />식비 <em>(120건)</em></p>
             <p class="number">118,107<em>원</em></p>
@@ -90,12 +91,15 @@
 </template>
 
 <script>
+import Graph from "./SettlementChart";
 export default {
   name: "ConsumeSettlement",
   data() {
     return {};
   },
-  components: {},
+  components: {
+    Graph: Graph
+  },
   computed: {},
   beforeCreate() {
     this.$store.state.header.type = "sub";
@@ -108,7 +112,11 @@ export default {
   updated() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    clickItem: function() {
+      this.$router.push("/consume/consumeIncomeStats");
+    }
+  }
 };
 </script>
 

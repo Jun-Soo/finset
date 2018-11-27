@@ -175,7 +175,7 @@
 	                , BO.seq_level
 	                , BO.seq_order
 	                , BO.id_board
- 	                , Replace(BO.title, #{txt_detail, jdbcType=VARCHAR}, '&lt;em style="color:#15689f;font-weight:bold;"&gt;'|| #{txt_detail, jdbcType=VARCHAR} || '&lt;/em&gt;') AS title
+ 	                , Replace(BO.title, #{txt_detail, jdbcType=VARCHAR}, '&lt;em&gt;'|| #{txt_detail, jdbcType=VARCHAR} || '&lt;/em&gt;') AS title
 <!--  	                BO.title -->
 	                , BO.hit
 	                , BO.pass_board

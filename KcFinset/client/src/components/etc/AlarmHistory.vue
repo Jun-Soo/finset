@@ -9,11 +9,21 @@
             <div class="alarm-list">
               <div class="item">
                 <a v-if="_item.link_addr!=null||_item.link_addr!=undefined" @click="moveDetailPage(_item.link_addr)">
-                  <p class="ico alarm">{{_item.title}}</p>
+                  <p v-if="_item.push_divcd=='02'" class="ico alarm-credit">{{_item.title}}</p>
+                  <p v-else-if="_item.push_divcd=='03'" class="ico alarm-debt">{{_item.title}}</p>
+                  <p v-else-if="_item.push_divcd=='04'" class="ico alarm-goods">{{_item.title}}</p>
+                  <p v-else-if="_item.push_divcd=='05'" class="ico alarm-event">{{_item.title}}</p>
+                  <p v-else-if="_item.push_divcd=='06'" class="ico alarm-share">{{_item.title}}</p>
+                  <p v-else class="ico alarm">{{_item.title}}</p>
                   <p class="text">{{_item.body}}</p>
                 </a>
                 <a v-else>
-                  <p class="ico alarm">{{_item.title}}</p>
+                  <p v-if="_item.push_divcd=='02'" class="ico alarm-credit">{{_item.title}}</p>
+                  <p v-else-if="_item.push_divcd=='03'" class="ico alarm-debt">{{_item.title}}</p>
+                  <p v-else-if="_item.push_divcd=='04'" class="ico alarm-goods">{{_item.title}}</p>
+                  <p v-else-if="_item.push_divcd=='05'" class="ico alarm-event">{{_item.title}}</p>
+                  <p v-else-if="_item.push_divcd=='06'" class="ico alarm-share">{{_item.title}}</p>
+                  <p v-else class="ico alarm">{{_item.title}}</p>
                   <p class="text">{{_item.body}}</p>
                 </a>
               </div>
@@ -72,6 +82,7 @@ export default {
         _this.pushEachForm = response.data.pushEachForm;
         _this.totalPage = response.data.pushEachForm.pageCount;
         if (_this.page == 1) {
+          console.log();
           _this.alarmList = response.data.pagedList.source;
         } else {
           var pList = response.data.pagedList.source;
@@ -79,6 +90,8 @@ export default {
             _this.alarmList.push(pList[key]);
           }
         }
+        console.log(_this.pushEachForm);
+        console.log(_this.alarmList);
         _this.page++;
         this.seen = true;
       });

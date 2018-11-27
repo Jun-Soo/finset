@@ -115,7 +115,7 @@ public class CustomerCenterController implements Constant {
 		String no_person = (String) session.getAttribute("no_person");
 		pushEachForm.setNo_person(no_person);
 		pushEachForm.setPage(pushEachForm.getPage());
-		pushEachForm.setPush_divcd("02");
+//		pushEachForm.setPush_divcd("02");
 		Pagination pagedList = (Pagination) pushEachForm.setPagedList(pushEachManager.listPushNotification(pushEachForm), pushEachManager.listPushNotificationCount(pushEachForm));
 		model.addAttribute("pagedList", pagedList);
 		logger.info("pagedList========="+pagedList.toString());
@@ -1081,7 +1081,7 @@ public class CustomerCenterController implements Constant {
 		return "/customercenter/frameCustomerFAQ";
 	}
 
-	/**
+	/** VUE
 	 * 마이페이지 자주묻는질문 검색
 	 * @param request
 	 * @param model

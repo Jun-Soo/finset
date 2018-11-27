@@ -52,7 +52,7 @@
             </a>
           </slide>
           <slide class="item">
-            <a>
+            <a @click="clickBanner('calc')">
               <div class="banner">
                 <div class="left">
                   <p class="key">계산기</p>
@@ -332,6 +332,9 @@ export default {
           break;
         case "reqIntrCut":
           _this.$router.push("/debt/reqIntrCut");
+          break;
+        case "calc":
+          _this.$router.push("/debt/calc");
           break;
         default:
           break;

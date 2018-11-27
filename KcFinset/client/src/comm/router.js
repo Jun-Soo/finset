@@ -80,8 +80,8 @@ import DebtDetail2 from '@/components/debt/Detail_2'
 import DebtRepayment from '@/components/debt/Repayment'
 import DebtModify from '@/components/debt/Modify'
 import DebtCalc from '@/components/debt/Calc'
-import DebtCalc2 from '@/components/debt/Calc2'
-import DebtCalc3 from '@/components/debt/Calc3'
+// import DebtCalc2 from '@/components/debt/Calc2'
+// import DebtCalc3 from '@/components/debt/Calc3'
 import DebtCalcSearch from '@/components/debt/CalcSearch'
 import DebtRegister from '@/components/debt/Register'
 import DebtRegDetail from '@/components/debt/RegDetail'
@@ -226,14 +226,6 @@ export const routes = [{
       allowPath: true
     }
   },
-  // {
-  //  path: '/client/logout',
-  //  name: 'logout',
-  //  component: Logout,
-  //  meta: {
-  //    allowPath: true
-  //  }
-  // },
   {
     path: '/error',
     name: 'error',
@@ -732,24 +724,6 @@ export const routes = [{
         alias: '/calc',
         name: 'debtCalc',
         component: DebtCalc,
-        meta: {
-          allowPath: true
-        }
-      },
-      {
-        path: 'calc2',
-        alias: '/calc2',
-        name: 'debtCalc2',
-        component: DebtCalc2,
-        meta: {
-          allowPath: true
-        }
-      },
-      {
-        path: 'calc3',
-        alias: '/calc3',
-        name: 'debtCalc3',
-        component: DebtCalc3,
         meta: {
           allowPath: true
         }
@@ -1305,15 +1279,6 @@ export const routes = [{
           allowPath: true
         }
       }
-      // {
-      //   path: 'termDetail',
-      //   alias: '/termDetail',
-      //   name: 'etcTermDetail',
-      //   component: EtcTermDetail,
-      //   meta: {
-      //     allowPath: true
-      //   }
-      // }
     ]
   },
   {
@@ -1523,12 +1488,6 @@ export const routes = [{
           requiresAuth: true
         }
       }
-      // {
-      //   path: 'certPerson',
-      //   alias: '/certPerson',
-      //   component: CertPerson,
-      //   meta: { allowPath: true, requiresAuth: true }
-      // }
     ]
   },
   {

@@ -50,7 +50,7 @@
             </a>
           </slide>
           <slide class="item">
-            <a href="#">
+            <a @click="clickBanner('settlement')">
               <div class="banner">
                 <div class="left">
                   <p class="key">소비통계분석</p>
@@ -333,6 +333,9 @@ export default {
           break;
         case "calendar":
           _this.$router.push("/common/monthCal");
+          break;
+        case "settlement":
+          _this.$router.push("/consume/settlement");
           break;
         default:
           break;

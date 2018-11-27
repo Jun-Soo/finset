@@ -17,6 +17,7 @@
 	            (
 				SELECT TITLE
 					, BODY
+					, PUSH_DIVCD
 					, LINK_ADDR
 					, TO_CHAR(DT_FRT,'YYYYMMDD') AS DT_FRT
 				FROM PUSH_EACH_INFO
@@ -37,12 +38,12 @@
 	            (
 				SELECT TITLE
 					, BODY
+					, PUSH_DIVCD
 					, LINK_ADDR
 					, TO_CHAR(DT_FRT,'YYYYMMDD') AS DT_FRT
 				FROM PUSH_EACH_INFO
 				WHERE YN_DISPLAY = 'Y'
 					AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
-					AND PUSH_DIVCD = #{push_divcd, jdbcType=VARCHAR}
 			 	)
     </select>
 

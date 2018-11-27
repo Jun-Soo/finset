@@ -80,7 +80,6 @@ export default {
       // second_label: "second",
       // second_data: [50, 40, 90, 60]
     };
-  },
-  components: {}
+  }
 };
 </script>

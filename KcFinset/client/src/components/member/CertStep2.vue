@@ -17,10 +17,9 @@
       <div class="cert-wrap">
         <p class="title">휴대폰인증</p>
         <div class="grid phone">
-          <multiselect v-model="telComNm" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @select="onSelect">
+          <multiselect v-model="telComCd" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @select="onSelect" v-validate="'required'" data-vv-name='통신사'>
             <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
           </multiselect>
-          <input type="hidden" name="telComCd" id="telComCd" v-model="telComCd" v-validate="'required'" data-vv-name='통신사' />
           <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
         </div>
         <p class="warn" v-if="errors.has('통신사')">{{errors.first('통신사')}}</p>

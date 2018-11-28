@@ -4699,6 +4699,8 @@ button.cal{
                 border: 1px solid $lineColor;
                 text-align: left;
                 line-height: 1;
+                padding: 5px 20px 0 8px;
+                margin-top: 0px;
             }
             .multiselect__single{
                 margin-bottom: 0;
@@ -4706,6 +4708,7 @@ button.cal{
             }
             .multiselect__select{
                 top: 1px;
+                margin-right: 5px;
             }
         }
     }

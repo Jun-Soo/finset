@@ -180,4 +180,9 @@ public class DebtManagerImpl implements DebtManager {
 		debtMapper.createDebtPersonalInfo(debtVO);
 	}
 
+	@Override
+	public List<PersonInfo> listCalendarShareInfo(String no_person) {
+		return debtMapper.listCalendarShareInfo(no_person);
+	}
+
 }

@@ -1,36 +1,89 @@
 <template>
   <div id="wrapper">
-    <VueScheduler :events="events" event-display="name" @event-clicked="openDetail" @curYM="curYM" />
-    <vue-modal name="my-modal" transitionName="zoom-in" theme="width:100% !important; max-height: 80%; top: 134px; position:absolute">
-      <h2 slot="header" @click="hide">FINSET</h2>
+    <VueScheduler
+      :events="events"
+      event-display="name"
+      @event-clicked="openDetail"
+      :shareList="shareList"
+      :clickShare="clickShare"
+      @curYM="curYM"
+    />
+    <vue-modal
+      name="my-modal"
+      transitionName="zoom-in"
+      theme="width:100% !important; max-height: 80%; top: 134px; position:absolute"
+    >
+      <h2
+        slot="header"
+        @click="hide"
+      >FINSET</h2>
       <div class="modal-subHeader">
         <p class="left">{{modalDate}}</p>
         <p class="right">{{sumTotal}} 원</p><br />
         <div class="modal-eachTotal">
-          <p v-if="incomeTotal!=0" class="left modal-label label-income">수입</p>
-          <p v-if="incomeTotal!=0" class="left modal-amt amt-income"> {{incomeTotal}} 원</p>
-          <p v-if="consumeTotal!=0" class="left modal-label label-consume">지출</p>
-          <p v-if="consumeTotal!=0" class="left modal-amt amt-consume"> {{consumeTotal}} 원</p>
-          <p v-if="debtTotal!=0" class="left modal-label label-debt">부채</p>
-          <p v-if="debtTotal!=0" class="left modal-amt amt-debt"> {{debtTotal}} 원</p>
+          <p
+            v-if="incomeTotal!=0"
+            class="left modal-label label-income"
+          >수입</p>
+          <p
+            v-if="incomeTotal!=0"
+            class="left modal-amt amt-income"
+          > {{incomeTotal}} 원</p>
+          <p
+            v-if="consumeTotal!=0"
+            class="left modal-label label-consume"
+          >지출</p>
+          <p
+            v-if="consumeTotal!=0"
+            class="left modal-amt amt-consume"
+          > {{consumeTotal}} 원</p>
+          <p
+            v-if="debtTotal!=0"
+            class="left modal-label label-debt"
+          >부채</p>
+          <p
+            v-if="debtTotal!=0"
+            class="left modal-amt amt-debt"
+          > {{debtTotal}} 원</p>
         </div>
       </div>
-      <div class="modal-income" v-if="incomeList!=null">
-        <div class="modal-list" v-for="incomeVO in incomeList" :key="incomeVO.index">
+      <div
+        class="modal-income"
+        v-if="incomeList!=null"
+      >
+        <div
+          class="modal-list"
+          v-for="incomeVO in incomeList"
+          :key="incomeVO.index"
+        >
           <p class="left modal-label label-income">수입</p>
           <p class="left list-text">{{incomeVO.contents}}</p>
           <p class="right">{{formatNumber(incomeVO.amt_in_out)}} 원</p>
         </div>
       </div>
-      <div class="modal-consume" v-if="consumeList!=null">
-        <div class="modal-list" v-for="consumeVO in consumeList" :key="consumeVO.index">
+      <div
+        class="modal-consume"
+        v-if="consumeList!=null"
+      >
+        <div
+          class="modal-list"
+          v-for="consumeVO in consumeList"
+          :key="consumeVO.index"
+        >
           <p class="left modal-label label-consume">지출</p>
           <p class="left list-text">{{consumeVO.contents}}</p>
           <p class="right">{{formatNumber(consumeVO.amt_in_out)}} 원</p>
         </div>
       </div>
-      <div class="modal-debt" v-if="debtList!=null">
-        <div class="modal-list" v-for="debtVO in debtList" :key="debtVO.index">
+      <div
+        class="modal-debt"
+        v-if="debtList!=null"
+      >
+        <div
+          class="modal-list"
+          v-for="debtVO in debtList"
+          :key="debtVO.index"
+        >
           <p class="left modal-label label-debt">부채</p>
           <p class="left list-text">{{debtVO.nm_biz}}</p>
           <p class="right">{{formatNumber(debtVO.amt_repay)}} 원</p>
@@ -57,7 +110,8 @@ export default {
       debtTotal: 0,
       incomeList: null,
       consumeList: null,
-      debtList: null
+      debtList: null,
+      shareList: []
     };
   },
   components: {
@@ -65,21 +119,38 @@ export default {
   },
   // computed: {
   // },
-  beforeCreate() {},
+  beforeCreate() {
+    this.$store.state.header.type = "sub";
+    this.$store.state.title = "캘린더";
+  },
   created() {},
   beforeMount() {},
   mounted() {
-    this.getCalendarData(
-      Common.formatDate(new Date())
-        .replace(/[-]/g, "")
-        .substr(0, 6)
-    );
+    this.listCalendarShareInfo();
   },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    listCalendarShareInfo: function() {
+      var _this = this;
+      this.$http
+        .get("/m/debt/listCalendarShareInfo.json", { params: {} })
+        .then(function(response) {
+          var list = response.data.listCalendarShareInfo;
+
+          for (var idx in list) {
+            list[idx].isShow = true;
+          }
+          _this.shareList = list;
+          _this.getCalendarData(
+            Common.formatDate(new Date())
+              .replace(/[-]/g, "")
+              .substr(0, 6)
+          );
+        });
+    },
     openDetail(params) {
       this.modalDate = this.formatModalDate(params.date);
       var ymd = Common.formatDate(params.date, "yyyymmdd").replace(/-/g, "");
@@ -231,6 +302,24 @@ export default {
       this.$modals.hide("my-modal");
 
       console.log("cd");
+    },
+    clickShare: function(params) {
+      var no_person_list = this.filterShareList();
+      if (no_person_list.length <= 1 && this.shareList[params].isShow == true) {
+        return;
+      }
+      this.shareList[params].isShow = !this.shareList[params].isShow;
+      // this.listConsumeInfo();
+    },
+    filterShareList: function() {
+      var shareList = new Array();
+      var _this = this;
+      for (var idx in _this.shareList) {
+        if (_this.shareList[idx].isShow) {
+          shareList.push(_this.shareList[idx].no_person);
+        }
+      }
+      return shareList;
     }
   }
 };

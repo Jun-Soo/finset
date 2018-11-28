@@ -209,4 +209,10 @@ public interface DebtMapper {
 	 */
 	void createDebtPersonalInfo(DebtVO debtVO);
 
+	/**
+	 * 캘린더 공유 리스트 조회
+	 * @param no_person
+	 * @return
+	 */
+	List<PersonInfo> listCalendarShareInfo(String no_person);
 }

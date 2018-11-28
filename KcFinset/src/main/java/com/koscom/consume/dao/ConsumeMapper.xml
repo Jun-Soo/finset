@@ -583,21 +583,29 @@
 			,NVL( CGI.AMT_BUDGET, 0 ) AS AMT_BUDGET
 		FROM
 			PERSON_CONSUME_CLASS_INFO PCCI
-		LEFT JOIN CONSUME_GOAL_INFO CGI ON
+		LEFT JOIN
+			(
+				SELECT
+					 CD_CLASS
+					,AMT_BUDGET
+				FROM
+					CONSUME_GOAL_INFO
+				WHERE
+						NO_PERSON	= #{no_person, jdbcType = VARCHAR}
+					AND REQ_YYYYMM	=
+						CASE
+							WHEN TO_NUMBER( TO_CHAR( SYSDATE, 'DD' ))<![CDATA[>]]>(
+								SELECT
+									TO_NUMBER( NVL( DT_BASIC, 0 ))
+								FROM
+									PERSON_SET_INFO
+								WHERE
+									NO_PERSON = #{no_person, jdbcType = VARCHAR}
+							) THEN TO_CHAR( SYSDATE, 'YYYYMM' )
+							ELSE TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )
+						END
+			) CGI ON
 				PCCI.CD_CLASS	= CGI.CD_CLASS
-			AND CGI.NO_PERSON	= #{no_person, jdbcType=VARCHAR}
-			AND REQ_YYYYMM		=
-				CASE
-					WHEN TO_NUMBER( TO_CHAR( SYSDATE, 'DD' ))<![CDATA[>]]>(
-						SELECT
-							TO_NUMBER( NVL( DT_BASIC, 0 ))
-						FROM
-							PERSON_SET_INFO
-						WHERE
-							NO_PERSON = #{no_person, jdbcType = VARCHAR}
-					) THEN TO_CHAR( SYSDATE, 'YYYYMM' )
-					ELSE TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )
-				END
 		WHERE
 				PCCI.NO_PERSON		=		#{no_person, jdbcType=VARCHAR}
 			AND PCCI.TYPE_IN_OUT	=		'02'
@@ -610,7 +618,7 @@
 			 A.CODE_VALUE AS CD_TYPE
 			,B.CD_FC
 			,B.NO_CARD
-			,B.NM_CARD
+			,NVL(B.NM_CARD, '현금') AS NM_CARD
 			,NVL(C.AMT_BUDGET, 0) AS AMT_BUDGET
 		FROM
 			COMM_CD A
@@ -630,7 +638,7 @@
 						 #{no_person, jdbcType = VARCHAR}
 						,CD_FC
 						,NULL
-						,NULL
+						,'현금영수증'
 						,'03' AS CODE_VALUE
 					FROM
 						FC_INFO
@@ -717,22 +725,31 @@
 					 CONSUME_INFO CI
 					,(
 						SELECT
-							 NO_PERSON
-							,DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC ) AS DT_BASIC
+							CASE
+								WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| '00'
+								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DT_BASIC
+								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 2 ), 'YYYYMM' )|| DT_BASIC
+							END AS DT_FROM,
+							CASE
+								WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( LAST_DAY( ADD_MONTHS( SYSDATE,- 1 ) ), 'YYYYMMDD' )
+								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 0 ), 'YYYYMM' )|| DT_BASIC
+								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DT_BASIC
+							END AS DT_TO
 						FROM
-							PERSON_SET_INFO
-						WHERE
-							NO_PERSON = #{no_person, jdbcType=VARCHAR}
+							(
+								SELECT
+									DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC ) AS DT_BASIC
+								FROM
+									PERSON_SET_INFO
+								WHERE
+									NO_PERSON = #{no_person, jdbcType=VARCHAR}
+							)
 					) PSI
 				WHERE
-						CI.NO_PERSON	= PSI.NO_PERSON
-					AND CI.NO_PERSON	= #{no_person, jdbcType = VARCHAR}
-					AND CI.TYPE_IN_OUT	= '02'
-					AND CI.DT_TRD BETWEEN
-							TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| PSI.DT_BASIC
-						AND TO_CHAR( SYSDATE, 'YYYYMM' )|| PSI.DT_BASIC
-							/*TO_CHAR( ADD_MONTHS( SYSDATE,- 4 ), 'YYYYMM' )|| PSI.DT_BASIC*/
-						/*AND TO_CHAR( ADD_MONTHS( SYSDATE,- 3 ), 'YYYYMM' )|| PSI.DT_BASIC*/
+						CI.NO_PERSON				 = #{no_person, jdbcType = VARCHAR}
+					AND CI.TYPE_IN_OUT				 = '02'
+					AND TO_NUMBER(CI.DT_TRD)<![CDATA[>]]>	TO_NUMBER(PSI.DT_FROM)
+					AND TO_NUMBER(CI.DT_TRD)<![CDATA[<=]]>	TO_NUMBER(PSI.DT_TO)
 				GROUP BY
 					CI.CD_CLASS
 			) CGI ON
@@ -877,8 +894,8 @@
 						SELECT
 							CASE
 								WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| '00'
-								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DT_BASIC
-								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 2 ), 'YYYYMM' )|| DT_BASIC
+								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 3 ), 'YYYYMM' )|| DT_BASIC
+								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 4 ), 'YYYYMM' )|| DT_BASIC
 							END AS DT_FROM,
 							CASE
 								WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( LAST_DAY( ADD_MONTHS( SYSDATE,- 1 ) ), 'YYYYMMDD' )

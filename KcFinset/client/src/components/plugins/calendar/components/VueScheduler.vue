@@ -18,9 +18,15 @@
     </header> -->
     <div class="spend-top">
       <div class="date-wrap">
-        <button class="prev" @click="prev"></button>
+        <button
+          class="prev"
+          @click="prev"
+        ></button>
         <p>{{calendarYear}}.{{calendarMonth}}</p>
-        <button class="next" @click="next"></button>
+        <button
+          class="next"
+          @click="next"
+        ></button>
         <button class="setting"></button>
       </div>
     </div>
@@ -34,19 +40,28 @@
         <button class="loan" :class="{ 'on':isActiveDebt }" @click="clickDebt">대출</button>
       </div> -->
       <div class="income">
-        <button :class="{ 'on':isActiveIncome }" @click="clickIncome">수입</button>
+        <button
+          :class="{ 'on':isActiveIncome }"
+          @click="clickIncome"
+        >수입</button>
         <em>1,234,565,000</em>
       </div>
       <div class="debt">
-        <button :class="{ 'on':isActiveConsume }" @click="clickConsume">지출</button>
+        <button
+          :class="{ 'on':isActiveConsume }"
+          @click="clickConsume"
+        >지출</button>
         <em>1,234,565,000</em>
       </div>
       <div class="loan">
-        <button :class="{ 'on':isActiveDebt }" @click="clickDebt">대출</button>
+        <button
+          :class="{ 'on':isActiveDebt }"
+          @click="clickDebt"
+        >대출</button>
         <em>1,234,565,000</em>
       </div>
     </div>
-    <div class="filter-wrap test">
+    <!-- <div class="filter-wrap test">
       <div class="filter red">
         <input type="checkbox" id="chk1"><label for="chk1">박준수</label>
       </div>
@@ -62,8 +77,28 @@
       <div class="filter purple">
         <input type="checkbox" id="chk5"><label for="chk5">박준수</label>
       </div>
+    </div> -->
+    <div class="list-wrap">
+      <div class="filter-wrap">
+        <div
+          v-for="(person, index) in shareList"
+          :key="person.no_person"
+          class="filter"
+          :class="settingList[index].color"
+        >
+          <input
+            type="checkbox"
+            :checked="person.isShow"
+            :id="settingList[index].id"
+          ><label @click="clickShare(index)">{{person.nm_person}}</label>
+        </div>
+      </div>
     </div>
-    <component :is="activeView" :class="'v-cal-content--' + activeView" v-bind="activeViewProps"></component>
+    <component
+      :is="activeView"
+      :class="'v-cal-content--' + activeView"
+      v-bind="activeViewProps"
+    ></component>
     <footer class="v-cal-footer"></footer>
   </div>
 </template>
@@ -111,6 +146,14 @@ export default {
     eventDisplay: {
       type: [String, Function],
       default: () => config.eventDisplay
+    },
+    shareList: {
+      type: [Array, Object],
+      dafault: {}
+    },
+    clickShare: {
+      type: Function,
+      default: function() {}
     }
   },
   data() {
@@ -120,7 +163,14 @@ export default {
       activeDate: null,
       isActiveIncome: true,
       isActiveConsume: true,
-      isActiveDebt: true
+      isActiveDebt: true,
+      settingList: [
+        { color: "red", id: "chk1" },
+        { color: "orange", id: "chk2" },
+        { color: "green", id: "chk3" },
+        { color: "blue", id: "chk4" },
+        { color: "purple", id: "chk5" }
+      ]
     };
   },
   mounted() {
@@ -268,9 +318,4 @@ export default {
 </script>
 
 <style scoped>
-.test {
-  text-align: center;
-  padding: 10px;
-  margin-bottom: 5px;
-}
 </style>

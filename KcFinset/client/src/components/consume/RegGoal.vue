@@ -6,58 +6,141 @@
 
     <div class="tab">
       <div class="wrap">
-        <a @click="clickTab('01')" :class="{'on':curTab=='01'}">분류별</a>
-        <a @click="clickTab('02')" :class="{'on':curTab=='02'}">수단별</a>
+        <a
+          @click="clickTab('01')"
+          :class="{'on':curTab=='01'}"
+        >분류별</a>
+        <a
+          @click="clickTab('02')"
+          :class="{'on':curTab=='02'}"
+        >수단별</a>
       </div>
     </div>
 
     <div class="box-list noMG">
       <div class="filter-wrap">
         <div class="filter blue">
-          <input type="checkbox" id="chk1" :checked="curLabel==='average'"><label @click="clickLabel('average')">3개월평균</label>
+          <input
+            type="checkbox"
+            id="chk1"
+            :checked="curLabel==='average'"
+          ><label @click="clickLabel('average')">3개월평균</label>
         </div>
         <div class="filter blue">
-          <input type="checkbox" id="chk2" :checked="curLabel==='prevMon'"><label @click="clickLabel('prevMon')">전월사용</label>
+          <input
+            type="checkbox"
+            id="chk2"
+            :checked="curLabel==='prevMon'"
+          ><label @click="clickLabel('prevMon')">전월사용</label>
         </div>
         <div class="filter blue">
-          <input type="checkbox" id="chk3" :checked="curLabel==='custom'"><label @click="clickLabel('custom')">사용자 지정</label>
+          <input
+            type="checkbox"
+            id="chk3"
+            :checked="curLabel==='custom'"
+          ><label @click="clickLabel('custom')">사용자 지정</label>
         </div>
       </div>
 
-      <div class="goal-list-wrap" v-if="curTab=='01'">
+      <div
+        class="goal-list-wrap"
+        v-if="curTab=='01'"
+      >
         <form id="frmRegGoal">
           <dl>
             <dt class="sum">
               <p class="title">합계</p>
-              <p><input readonly type="text" :value="sumGoal"></p>
+              <p><input
+                  readonly
+                  type="text"
+                  :value="sumGoal"
+                ></p>
             </dt>
-            <dd v-for="(vo, index) in listDetailGoal" :key="vo.cd_class">
+            <dd
+              v-for="(vo, index) in listDetailGoal"
+              :key="vo.cd_class"
+            >
               <p>{{vo.nm_class}}</p>
-              <input type="hidden" :name="'list['+index+'].cd_class'" :value="vo.cd_class" />
-              <p><input :name="'list['+index+'].amt_budget'" class="each_amt" type="text" v-model="vo.amt_budget" :readonly="curLabel != 'custom'"></p>
+              <input
+                type="hidden"
+                :name="'list['+index+'].cd_class'"
+                :value="vo.cd_class"
+              />
+              <p><input
+                  :name="'list['+index+'].amt_budget'"
+                  class="each_amt"
+                  type="text"
+                  v-model="vo.amt_budget"
+                  :readonly="curLabel != 'custom'"
+                  v-validate="'required|numeric'"
+                  :data-vv-name="vo.nm_class"
+                ></p>
+              <p
+                class="warn"
+                v-if="errors.has(vo.nm_class)"
+              >{{errors.first(vo.nm_class)}}</p>
             </dd>
           </dl>
         </form>
       </div>
 
-      <div class="goal-list-wrap" v-if="curTab=='02'">
+      <div
+        class="goal-list-wrap"
+        v-if="curTab=='02'"
+      >
         <form id="frmRegGoal">
           <dl>
             <dt class="sum">
               <p class="title">합계</p>
-              <p><input readonly type="text" :value="sumGoal"></p>
+              <p><input
+                  readonly
+                  type="text"
+                  :value="sumGoal"
+                ></p>
             </dt>
-            <dd v-for="(vo, index) in listDetailGoal" :key="index">
+            <dd
+              v-for="(vo, index) in listDetailGoal"
+              :key="index"
+            >
               <p v-if="vo.cd_type == '01' || vo.cd_type == '04'">{{vo.nm_card}}</p>
               <p v-else-if="vo.cd_type == '02'">현금</p>
               <p v-else-if="vo.cd_type == '03'">현금영수증</p>
-              <!-- <p v-else-if="vo.cd_type == '04'">출금</p> -->
-              <!-- <input v-if="vo.cd_type == '01' || vo.cd_type == '03'" type="hidden" :name="'list['+index+'].cd_fc'" :value="vo.cd_fc" /> -->
-              <input v-if="vo.cd_type != '02'" type="hidden" :name="'list['+index+'].cd_fc'" :value="vo.cd_fc" />
-              <input type="hidden" :name="'list['+index+'].cd_type'" :value="vo.cd_type" />
-              <input v-if="vo.cd_type == '01' || vo.cd_type == '04'" type="hidden" :name="'list['+index+'].no_card'" :value="vo.no_card" />
-              <input v-if="vo.cd_type == '01' || vo.cd_type == '04'" type="hidden" :name="'list['+index+'].nm_card'" :value="vo.nm_card" />
-              <p><input :name="'list['+index+'].amt_budget'" class="each_amt" type="text" v-model="vo.amt_budget" :readonly="curLabel != 'custom'"></p>
+              <input
+                v-if="vo.cd_type != '02'"
+                type="hidden"
+                :name="'list['+index+'].cd_fc'"
+                :value="vo.cd_fc"
+              />
+              <input
+                type="hidden"
+                :name="'list['+index+'].cd_type'"
+                :value="vo.cd_type"
+              />
+              <input
+                v-if="vo.cd_type == '01' || vo.cd_type == '04'"
+                type="hidden"
+                :name="'list['+index+'].no_card'"
+                :value="vo.no_card"
+              />
+              <input
+                v-if="vo.cd_type == '01' || vo.cd_type == '04'"
+                type="hidden"
+                :name="'list['+index+'].nm_card'"
+                :value="vo.nm_card"
+              />
+              <p><input
+                  :name="'list['+index+'].amt_budget'"
+                  class="each_amt"
+                  type="text"
+                  v-model="vo.amt_budget"
+                  :readonly="curLabel != 'custom'"
+                  v-validate="'required|numeric'"
+                  :data-vv-name="vo.nm_card"
+                ></p>
+              <p
+                class="warn"
+                v-if="errors.has(vo.nm_card)"
+              >{{errors.first(vo.nm_card)}}</p>
             </dd>
           </dl>
         </form>
@@ -65,12 +148,17 @@
     </div>
 
     <div class="btn-wrap float">
-      <a @click="createGoal" class="solid blue box">저장</a>
+      <a
+        @click="createGoal"
+        class="solid blue box"
+      >저장</a>
     </div>
   </section>
 </template>
 
 <script>
+import ko from "vee-validate/dist/locale/ko.js";
+
 export default {
   name: "ConsumeRegGoal",
   data() {
@@ -202,13 +290,21 @@ export default {
       }
     },
     createGoal: function() {
-      var frmRegGoal = document.getElementById("frmRegGoal");
-      var formData = new FormData(frmRegGoal);
-      formData.append("cd_set", this.curTab);
       var _this = this;
-      this.$http
-        .post("/m/consume/createGoal.json", formData)
-        .then(function(response) {});
+      this.$validator.validateAll().then(res => {
+        if (res) {
+          var frmRegGoal = document.getElementById("frmRegGoal");
+          var formData = new FormData(frmRegGoal);
+          formData.append("cd_set", this.curTab);
+          this.$http
+            .post("/m/consume/createGoal.json", formData)
+            .then(function(response) {
+              _this.$toast.center("저장되었습니다");
+            });
+        } else {
+          _this.$toast.center(ko.messages.require);
+        }
+      });
     }
   }
 };

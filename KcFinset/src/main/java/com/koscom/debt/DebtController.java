@@ -138,6 +138,7 @@ public class DebtController {
 
 	/**
 	 * VUE
+	 * 부채 공유 사용자 리스트조회
 	 * @param model
 	 * @param session
 	 * @return
@@ -179,6 +180,7 @@ public class DebtController {
 
 	/**
 	 * VUE
+	 * 부채 상세데이터 조회
 	 * @param session
 	 * @param model
 	 * @param no_person
@@ -265,7 +267,8 @@ public class DebtController {
 	}
 
 	/**
-	 *
+	 * VUE
+	 * 부채 업데이트를 위한 데이터 조회
 	 * @param session
 	 * @param model
 	 * @param debtForm
@@ -309,6 +312,7 @@ public class DebtController {
 
 	/**
 	 * VUE
+	 * 부채정보 수정
 	 * @param request
 	 * @param debtVO
 	 * @param model
@@ -328,6 +332,7 @@ public class DebtController {
 	}
 
 	/**
+	 * VUE
 	 * 부채 삭제, 삭제 취소 처리
 	 * @param session
 	 * @param request
@@ -429,6 +434,15 @@ public class DebtController {
 		return "jsonView";
 	}
 
+	/**
+	 * VUE
+	 * 부채 데이터 리스트 조회
+	 * @param session
+	 * @param model
+	 * @param ym
+	 * @return
+	 * @throws FinsetException
+	 */
 	@RequestMapping("/getCalendarData.json")
 	public String getCalendarData(HttpSession session, Model model, String ym) throws FinsetException {
 		String no_person = (String) session.getAttribute("no_person");
@@ -467,6 +481,18 @@ public class DebtController {
 		return "jsonView";
 	}
 
+	/**
+	 * VUE
+	 * 캘린더 요약 데이터 조회
+	 * @param session
+	 * @param model
+	 * @param ymd
+	 * @param isActiveIncome
+	 * @param isActiveConsume
+	 * @param isActiveDebt
+	 * @return
+	 * @throws FinsetException
+	 */
 	@RequestMapping("/listCalendarData.json")
 	public String listCalendarData(
 			HttpSession session,
@@ -536,6 +562,14 @@ public class DebtController {
 		return "jsonView";
 	}
 
+	/**
+	 * VUE
+	 * 부채 상환내역 추가
+	 * @param session
+	 * @param model
+	 * @param debtVO
+	 * @return
+	 */
 	@RequestMapping("/createRepayment.json")
 	public String createRepayment(HttpSession session, Model model, DebtVO debtVO) {
 		String no_person = (String) session.getAttribute("no_person");
@@ -608,6 +642,7 @@ public class DebtController {
 	
 	/**
 	 * VUE
+	 * 부채 등록
 	 * @param session
 	 * @param debtVO
 	 * @return
@@ -627,4 +662,18 @@ public class DebtController {
 		return "jsonView";
 	}
 
+	/**
+	 * VUE
+	 * 캘린더 용 공유된 사용자 리스트 조회
+	 * @param session
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/listCalendarShareInfo.json")
+	public String listCalendarShareInfo(HttpSession session, Model model) {
+		logger.debug("listCalendarShareInfo");
+		String no_person = (String)session.getAttribute("no_person");
+		model.addAttribute("listCalendarShareInfo", debtManager.listCalendarShareInfo(no_person));
+		return "jsonView";
+	}
 }

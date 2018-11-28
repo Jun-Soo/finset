@@ -17,16 +17,14 @@
       <div class="cert-wrap">
         <p class="title">휴대폰인증</p>
         <div class="grid phone">
-          <!-- <select id="telComCd" name="telComCd" v-model="telComCd" v-validate="'required'" v-on:change="nextFocus('telComCd')" v-bind:disabled="isDisabled" placeholder="통신사" data-vv-name='통신사'>
-            <option v-for="option in options" v-bind:key="option.value" v-bind:value="option.value">
-              {{ option.text }}
-            </option>
-          </select> -->
           <multiselect v-model="telComNm" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @select="onSelect">
             <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
           </multiselect>
+          <input type="hidden" name="telComCd" id="telComCd" v-model="telComCd" v-validate="'required'" data-vv-name='통신사' />
           <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
         </div>
+        <p class="warn" v-if="errors.has('통신사')">{{errors.first('통신사')}}</p>
+        <p class="warn" v-if="errors.has('휴대폰 번호')">{{errors.first('휴대폰 번호')}}</p>
         <button id="req_certification" v-on:click="kcmRequestCertNo()">인증번호 전송</button>
         <div class="cert-num" id="cert_no_conteiner">
           <input type="number" name="smsCertNo" id="smsCertNo" v-model="smsCertNo" placeholder="인증번호를 입력하세요" autocomplete="off" readonly>
@@ -141,7 +139,6 @@ export default {
       var _this = this;
       if (val == "birth" && _this.ssn_birth.length == 6) $("#sex").focus();
       if (val == "sex" && _this.sex.length == 1) {
-        $("#telComCd").focus();
         this.$children[0].isOpen = true;
       }
       if (val == "telComCd" && _this.telComCd) $("#hp").focus();
@@ -213,8 +210,8 @@ export default {
       });
     },
     /*
-    * 인증 번호 확인
-    */
+     * 인증 번호 확인
+     */
     confirmedCertify: function() {
       var _this = this;
 

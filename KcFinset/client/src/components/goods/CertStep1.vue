@@ -199,6 +199,7 @@ export default {
         this.$router.push({
           name: "GoodsCertStep2",
           params: {
+            type: this.$route.params.type,
             cd_fc: this.$route.params.cd_fc,
             cd_goods: this.$route.params.cd_goods
           }

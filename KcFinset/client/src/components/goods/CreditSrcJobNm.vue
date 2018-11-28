@@ -151,17 +151,18 @@ export default {
                 _this.$parent.$parent.korentrnm = this.jobList[
                   this.index
                 ].korentrnm;
-                _this.$parent.$parent.bizno = this.jobList[this.index].business;
-                _this.$parent.$parent.crpno = this.jobList[this.index].crpno;
-                _this.$parent.$parent.ltgmktdivcd = this.jobList[
-                  this.index
-                ].ltgmktdivcd;
-                _this.$parent.$parent.eprmdydivcd = this.jobList[
-                  this.index
-                ].eprmdydivcd;
-                _this.$parent.$parent.etl_ipc_yn = this.jobList[
-                  this.index
-                ].etl_ipc_yn;
+                // _this.$parent.$parent.bizno = this.jobList[this.index].business;
+                // _this.$parent.$parent.crpno = this.jobList[this.index].crpno;
+                // _this.$parent.$parent.kiscode = this.jobList[this.index].kiscode
+                // _this.$parent.$parent.ltgmktdivcd = this.jobList[
+                //   this.index
+                // ].ltgmktdivcd;
+                // _this.$parent.$parent.eprmdydivcd = this.jobList[
+                //   this.index
+                // ].eprmdydivcd;
+                // _this.$parent.$parent.etl_ipc_yn = this.jobList[
+                //   this.index
+                // ].etl_ipc_yn;
                 _this.$emit("popclose");
               } else {
                 _this.$toast.center("다시 시도해주세요.");

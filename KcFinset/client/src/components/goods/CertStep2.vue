@@ -60,6 +60,7 @@ export default {
   props: {},
   data() {
     return {
+      type: this.$route.params.type,
       cd_fc: this.$route.params.cd_fc,
       cd_goods: this.$route.params.cd_goods,
       no_bunch: "",
@@ -114,6 +115,7 @@ export default {
   beforeCreate() {},
   created() {
     window.resultKeypad = this.resultKeypad;
+
     if (Constant.userAgent == "Android") {
       window.Android.reqSMSPermission();
     }
@@ -131,17 +133,6 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    //native call back
-    setCertNumber: function(number) {
-      number = number + "";
-      if (this.smsCertNo.length == 0) {
-        this.smsCertNo = number;
-      }
-    },
-    //native call back
-    setRequestPhoneNumber: function(phoneNumber) {
-      this.hp = phoneNumber;
-    },
     getLoanPersonCertInfo: function(number) {
       var _this = this;
       this.$http
@@ -297,16 +288,29 @@ export default {
           if (result.result == "00") {
             _this.no_bunch = result.no_bunch;
             _this.ssn_person = result.ssn_person;
-            _this.$router.push({
-              name: "GoodsCreditReqInfo",
-              params: {
-                cd_fc: _this.cd_fc,
-                cd_goods: _this.cd_goods,
-                no_bunch: _this.no_bunch,
-                kcb_di: _this.kcb_di,
-                ssn_person: _this.ssn_person
-              }
-            });
+            if (_this.type == "loanWorker") {
+              _this.$router.push({
+                name: "GoodsCreditReqInfo",
+                params: {
+                  cd_fc: _this.cd_fc,
+                  cd_goods: _this.cd_goods,
+                  no_bunch: _this.no_bunch,
+                  kcb_di: _this.kcb_di,
+                  ssn_person: _this.ssn_person
+                }
+              });
+            } else if (_this.type == "loanHome") {
+              _this.$router.push({
+                name: "GoodsCreditReqInfo",
+                params: {
+                  cd_fc: _this.cd_fc,
+                  cd_goods: _this.cd_goods,
+                  no_bunch: _this.no_bunch,
+                  kcb_di: _this.kcb_di,
+                  ssn_person: _this.ssn_person
+                }
+              });
+            }
           }
         })
         .catch(e => {

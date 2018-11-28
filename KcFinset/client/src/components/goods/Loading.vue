@@ -56,7 +56,7 @@ export default {
             _this.$toast.center("한도조회 신청하였습니다.");
           }
           setTimeout(function() {
-            _this.$router.push("/goods/main");
+            _this.$router.push("/goods/list");
           }, 100);
         })
         .catch(e => {

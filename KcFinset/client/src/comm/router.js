@@ -107,10 +107,10 @@ import GoodsResult from '@/components/goods/Result'
 import GoodsReqDone from '@/components/goods/ReqDone'
 // import GoodsHsnTerm from '@/components/goods/HsnTerm'
 // import GoodsHsnCertPerson from '@/components/goods/HsnCertPerson'
-// import GoodsHsnInsReqInfo from '@/components/goods/HsnInsReqInfo'
-// import GoodsHsnInsHsnInfo from '@/components/goods/HsnInsHsnInfo'
-// import GoodsHsnInsIncome from '@/components/goods/HsnInsIncome'
-// import GoodsHsnInsRepay from '@/components/goods/HsnInsRepay'
+import GoodsHsnInsReqInfo from '@/components/goods/HsnInsReqInfo'
+import GoodsHsnInsHsnInfo from '@/components/goods/HsnInsHsnInfo'
+import GoodsHsnInsIncome from '@/components/goods/HsnInsIncome'
+import GoodsHsnInsRepay from '@/components/goods/HsnInsRepay'
 // import GoodsHsnResult from '@/components/goods/HsnResult'
 import GoodsWorkerGoods from '@/components/goods/WorkerGoods'
 
@@ -1097,6 +1097,42 @@ export const routes = [{
     alias: '/creditInsJobNm',
     name: 'GoodsCreditInsJobNm',
     component: GoodsCreditInsJobNm,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'hsnInsReqInfo',
+    alias: '/hsnInsReqInfo',
+    name: 'GoodsHsnInsReqInfo',
+    component: GoodsHsnInsReqInfo,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'hsnInsHsnInfo',
+    alias: '/hsnInsHsnInfo',
+    name: 'GoodsHsnInsHsnInfo',
+    component: GoodsHsnInsHsnInfo,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'hsnInsIncome',
+    alias: '/hsnInsIncome',
+    name: 'GoodsHsnInsIncome',
+    component: GoodsHsnInsIncome,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'hsnInsRepay',
+    alias: '/hsnInsRepay',
+    name: 'GoodsHsnInsRepay',
+    component: GoodsHsnInsRepay,
     meta: {
       allowPath: true
     }

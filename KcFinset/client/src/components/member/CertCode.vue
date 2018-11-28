@@ -63,9 +63,9 @@ export default {
   created() {
     var _this = this;
     window.resultCheckFingerPrint = this.resultCheckFingerPrint;
-    window.resultCheckCert = this.resultCheckCert;
-    window.resultCheckPasswordCert = this.resultCheckPasswordCert;
-    window.resultCheckAvaliableScrapList = this.resultCheckAvaliableScrapList;
+    // window.resultCheckCert = this.resultCheckCert;
+    // window.resultCheckPasswordCert = this.resultCheckPasswordCert;
+    // window.resultCheckAvaliableScrapList = this.resultCheckAvaliableScrapList;
 
     if (Constant.userAgent == "Android") {
       window.Android.checkFingerPrint();
@@ -161,12 +161,13 @@ export default {
                 }, 2000);
               } else {
                 if (
-                  Constant.userAgent == "Android" &&
-                  localStorage.getItem("site") != "REAL"
+                  Constant.userAgent == "Android" ||
+                  Constant.userAgent == "IOS"
                 ) {
-                  this.checkExistCert();
+                  //_this.checkExistCert();
+                  _this.$router.push("/scrap/fcLink");
                 } else {
-                  this.login();
+                  _this.login();
                 }
               }
               this.$toast.center("비밀번호설정이 완료 되었습니다.");
@@ -209,21 +210,6 @@ export default {
           this.$toast.center(ko.messages.error);
         });
     },
-    // 공인인증서 유무 체크
-    checkExistCert: function() {
-      var _this = this;
-      if (Constant.userAgent == "iOS") {
-        //공인인증서 유무 체크 결과 콜백 이벤트
-        Jockey.on("resultCheckCert", function(param) {
-          var iscert = "false";
-          if (param.isCert == 1) iscert = "true";
-          _this.resultCheckCert(iscert);
-        });
-        Jockey.send("checkExistCert");
-      } else if (Constant.userAgent == "Android") {
-        window.Android.checkExistCert();
-      }
-    },
     /***
      * Native Call function
      ***/
@@ -234,42 +220,57 @@ export default {
       } else {
         this.chkFingerPrint = "N";
       }
-    },
-    //공인인증서 유무 결과 (모바일에서 호출)
-    resultCheckCert: function(isCert) {
-      console.log("isCert : " + isCert);
-      var _this = this;
-      if (isCert == "true") {
-        // 공인인증서가 있을 경우
-        if (Constant.userAgent == "iOS") {
-          Jockey.on("resultCheckPasswordCert", function(param) {
-            _this.resultCheckPasswordCert(param.dn, param.cn);
-          });
-          Jockey.send("checkPasswordCert", {
-            noPerson: this.$store.state.user.noPerson,
-            nmPerson: this.$store.state.user.nmPerson
-          });
-          //do nothing
-        } else if (Constant.userAgent == "Android") {
-          window.Android.checkPasswordCert(
-            this.$store.state.user.noPerson,
-            this.$store.state.user.nmPerson
-          );
-        }
-      } else {
-        // 공인인증서가 없을 경우
-        this.$toast.center("공인인증서가 없습니다.");
-        this.login();
-      }
-    },
-    resultCheckPasswordCert: function(dn, cn) {
-      // 금융정보제공동의서 확인여부 체크 필요
-      this.$router.push({ name: "scrapSelFcLink", params: { dn: dn, cn: cn } });
-    },
-    // Native에서 건너뛰기 눌렀을 경우 호출
-    resultCheckAvaliableScrapList: function() {
-      this.login();
     }
+    // // 공인인증서 유무 체크
+    // checkExistCert: function() {
+    //   var _this = this;
+    //   if (Constant.userAgent == "iOS") {
+    //     //공인인증서 유무 체크 결과 콜백 이벤트
+    //     Jockey.on("resultCheckCert", function(param) {
+    //       var iscert = "false";
+    //       if (param.isCert == 1) iscert = "true";
+    //       _this.resultCheckCert(iscert);
+    //     });
+    //     Jockey.send("checkExistCert");
+    //   } else if (Constant.userAgent == "Android") {
+    //     window.Android.checkExistCert();
+    //   }
+    // },
+    // //공인인증서 유무 결과 (모바일에서 호출)
+    // resultCheckCert: function(isCert) {
+    //   console.log("isCert : " + isCert);
+    //   var _this = this;
+    //   if (isCert == "true") {
+    //     // 공인인증서가 있을 경우
+    //     if (Constant.userAgent == "iOS") {
+    //       Jockey.on("resultCheckPasswordCert", function(param) {
+    //         _this.resultCheckPasswordCert(param.dn, param.cn);
+    //       });
+    //       Jockey.send("checkPasswordCert", {
+    //         noPerson: this.$store.state.user.noPerson,
+    //         nmPerson: this.$store.state.user.nmPerson
+    //       });
+    //       //do nothing
+    //     } else if (Constant.userAgent == "Android") {
+    //       window.Android.checkPasswordCert(
+    //         this.$store.state.user.noPerson,
+    //         this.$store.state.user.nmPerson
+    //       );
+    //     }
+    //   } else {
+    //     // 공인인증서가 없을 경우
+    //     this.$toast.center("공인인증서가 없습니다.");
+    //     this.login();
+    //   }
+    // },
+    // resultCheckPasswordCert: function(dn, cn) {
+    //   // 금융정보제공동의서 확인여부 체크 필요
+    //   this.$router.push({ name: "scrapSelFcLink", params: { dn: dn, cn: cn } });
+    // },
+    // // Native에서 건너뛰기 눌렀을 경우 호출
+    // resultCheckAvaliableScrapList: function() {
+    //   this.login();
+    // }
   }
 };
 </script>

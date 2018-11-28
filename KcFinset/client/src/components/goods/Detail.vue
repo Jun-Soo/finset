@@ -117,6 +117,7 @@ export default {
     return {
       seen: false,
       isAffiliates: this.$route.params.isAffiliates,
+      type: this.$route.params.type,
       cd_fc: this.$route.params.cd_fc,
       cd_goods: this.$route.params.cd_goods,
       curTab: "interest",
@@ -170,6 +171,7 @@ export default {
       this.$router.push({
         name: "GoodsCertStep1",
         params: {
+          type: this.type,
           cd_fc: this.cd_fc,
           cd_goods: this.cd_goods
         }

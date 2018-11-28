@@ -106,14 +106,15 @@ export default {
       dt_join_view: "",
       amt_year_income: "",
       //기업정보
+      kiscode: "", //대상기업 KISCODE
       korentrnm: "", //회사명
       bizno: "", //사업자번호
       crpno: "", //법인번호
       ltgmktdivcd: "", //상장여부
       eprmdydivcd: "", //기업주체구분
-      // scl: "",            //기업규모 -- 데이터 없음
+      // scl: "",       //기업규모 -- 데이터 없음
       etl_ipc_yn: "" //외부감사여부
-      // chulja: "",         //상호출자제한집단(그룹사)여부  -- 데이터 없음
+      // chulja: "",    //상호출자제한집단(그룹사)여부  -- 데이터 없음
     };
   },
   components: {
@@ -199,14 +200,18 @@ export default {
         if (res) {
           var formData = new FormData();
           formData.append("no_bunch", _this.no_bunch);
-          formData.append("korentrnm", _this.korentrnm);
-          formData.append("bizno", _this.bizno);
-          formData.append("crpno", _this.crpno);
-          formData.append("ltgmktdivcd", _this.ltgmktdivcd);
-          formData.append("eprmdydivcd", _this.eprmdydivcd);
-          //formData.append("scl", _this.scl);
-          formData.append("etl_ipc_yn", _this.etl_ipc_yn);
-          //formData.append("chulja", _this.chulja);
+          formData.append("nm_comp", _this.korentrnm);
+          formData.append("kiscode", _this.kiscode);
+          formData.append("cd_occupational", _this.occupational.value);
+          formData.append(
+            "cd_occupational_detail",
+            _this.occupational_detail.value
+          );
+          formData.append("cd_worker_position", _this.worker_position.value);
+          formData.append("cd_employee_type", _this.employee_type.value);
+          formData.append("dt_join_view", _this.dt_join_view);
+          formData.append("amt_year_income", _this.amt_year_income);
+
           this.$http
             .post("/m/loan/updateTxFc.json", formData, {
               headers: {

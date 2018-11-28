@@ -250,25 +250,11 @@ export default {
       }
       this.loadGoodsTab(type);
     },
-    goBack: function() {
-      this.$router.push("/goods/main");
-    },
-    // showSpinner: async function() {
-    //   this.spinnerIsVisible = true; // 시작시 Spinner 보여주기
-
-    //   this.secondsLeft = 3;
-    //   var interval = setInterval(() => {
-    //     this.secondsLeft--;
-    //     if (this.secondsLeft <= 0) {
-    //       clearInterval(interval);
-    //       this.spinnerIsVisible = false; // 0초되면 숨기기
-    //     }
-    //   }, 1000);
-    // },
     loanGoodsDetail: function(cd_fc, cd_non_goods) {
       this.$router.push({
         name: "GoodsDetail",
         params: {
+          type: this.curTab,
           cd_fc: cd_fc,
           cd_goods: cd_non_goods,
           urlPath: this.urlPath,

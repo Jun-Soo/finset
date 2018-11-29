@@ -71,7 +71,7 @@ export default {
       ssn_birth: "",
       birthday: "",
       sex: "",
-      telComCd: {},
+      telComCd: null,
       telComNm: "",
       hp: "",
       kcb_ci: "",
@@ -91,14 +91,6 @@ export default {
         { text: "SK알뜰폰", value: "04" },
         { text: "KT알뜰폰", value: "05" },
         { text: "LG알뜰폰", value: "06" }
-      ],
-      location: [
-        { label: "SKT", key: "01" },
-        { label: "KT", key: "02" },
-        { label: "LG", key: "03" },
-        { label: "SK알뜰폰", key: "04" },
-        { label: "KT알뜰폰", key: "05" },
-        { label: "LG알뜰폰", key: "06" }
       ],
       timeId: "",
       timerObj: null,
@@ -288,7 +280,8 @@ export default {
           if (result.result == "00") {
             _this.no_bunch = result.no_bunch;
             _this.ssn_person = result.ssn_person;
-            if (_this.type == "loanWorker") {
+            //신용대출
+            if (_this.type == "01") {
               _this.$router.push({
                 name: "GoodsCreditReqInfo",
                 params: {
@@ -299,7 +292,8 @@ export default {
                   ssn_person: _this.ssn_person
                 }
               });
-            } else if (_this.type == "loanHome") {
+              //담보대출
+            } else if (_this.type == "03") {
               _this.$router.push({
                 name: "GoodsHsnInsReqInfo",
                 params: {

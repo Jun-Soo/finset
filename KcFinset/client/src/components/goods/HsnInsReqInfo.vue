@@ -3,18 +3,18 @@
     <div class="container">
       <p>가족(본인 및 세대원) 중에 주택담보대출이 있나요 ?</p>
       <div class="yesno">
-        <a class="solid" :class="{'on':ynLoan === 'Y'}" @click="clickIsLoan('Y')">예</a>
-        <a class="stroke" :class="{'on':ynLoan === 'N'}" @click="clickIsLoan('N')">아니오</a>
+        <a :class="ynLoan=='Y'?'solid':'stroke'" @click="clickIsLoan('Y')">예</a>
+        <a :class="ynLoan=='N'?'solid':'stroke'" @click="clickIsLoan('N')">아니오</a>
       </div>
       <p class="mt30">서민/실수요자 인가요 ?</p>
       <p class="info-massage">무주택 세대주</p>
       <p class="info-massage">부부합산 연소득 6천만원(생애최초 구입자는 7천만원)이하</p>
       <div class="yesno">
-        <a class="solid" :class="{'on':ynIncome === 'Y'}" @click="clickChkIncome('Y')">예</a>
-        <a class="stroke" :class="{'on':ynIncome === 'N'}" @click="clickChkIncome('N')">아니오</a>
+        <a :class="ynIncome=='Y'?'solid':'stroke'" @click="clickChkIncome('Y')">예</a>
+        <a :class="ynIncome=='N'?'solid':'stroke'" @click="clickChkIncome('N')">아니오</a>
       </div>
       <div class="btn-wrap float">
-        <a href="#" class="solid blue box" @click="clickNext()">다음</a>
+        <a class="solid blue box" @click="clickNext()">다음</a>
       </div>
     </div>
 
@@ -56,11 +56,11 @@ export default {
       this.ynIncome = flag;
     },
     clickNext: function() {
-      if (ynLoan == "") {
+      if (this.ynLoan == "") {
         this.$toast.center("주택담보대출여부를 선택해주세요.");
         return;
       }
-      if (ynLoan == "") {
+      if (this.ynIncome == "") {
         this.$toast.center("서민/실수요자여부를 선택해주세요.");
         return;
       }
@@ -71,7 +71,7 @@ export default {
       var formData = new FormData();
       formData.append("cd_fc", this.cd_fc);
       formData.append("cd_goods", this.cd_goods);
-      formData.append("ssn_person", this.ssn_person);
+      formData.append("no_bunch", this.no_bunch);
       formData.append("yn_loan_already", this.ynLoan);
       formData.append("yn_user_end", this.ynIncome);
       this.$http

@@ -90,7 +90,23 @@ public class LoanManagerImpl implements LoanManager{
 		}
 		return new ReturnClass(Constant.SUCCESS, "처리 성공하였습니다");
 	}
+	
+	@Override
+	public ReturnClass modifyLoanREIncomeInfo(TxFcTransmitVO txFcTransmitVO) {
+		if(1 != loanMapper.modifyLoanREIncomeInfo(txFcTransmitVO)){
+			new ReturnClass(Constant.FAILED, "처리 실패하였습니다.");
+		}
+		return new ReturnClass(Constant.SUCCESS, "처리 성공하였습니다");
+	}
 
+	@Override
+	public ReturnClass modifyLoanRERepaymentInfo(TxFcTransmitVO txFcTransmitVO) {
+		if(1 != loanMapper.modifyLoanRERepaymentInfo(txFcTransmitVO)){
+			new ReturnClass(Constant.FAILED, "처리 실패하였습니다.");
+		}
+		return new ReturnClass(Constant.SUCCESS, "처리 성공하였습니다");
+	}
+	
 	@Override
 	public ReturnClass insertLoanGoodsChoice(CooconGoodsFavoriteInfo cooconGoodsFavoriteInfo) {
 		if(1 != loanMapper.insertLoanGoodsChoice(cooconGoodsFavoriteInfo)){

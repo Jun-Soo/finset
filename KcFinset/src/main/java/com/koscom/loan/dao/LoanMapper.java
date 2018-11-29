@@ -52,6 +52,21 @@ public interface LoanMapper {
 	int modifyLoanREHomeInfo(TxFcTransmitVO txFcTransmitVO);
 	
 	/**
+	 * 부동산 소득정보 update 
+	 * @param txFcTransmitVO
+	 * @return
+	 */
+	int modifyLoanREIncomeInfo(TxFcTransmitVO txFcTransmitVO);
+	
+	/**
+	 * 
+	 * 부동산 상환정보 update 
+	 * @param txFcTransmitVO
+	 * @return
+	 */
+	int modifyLoanRERepaymentInfo(TxFcTransmitVO txFcTransmitVO);
+	
+	/**
 	 * 신청정보 상품 insert
 	 * @param goodsVO
 	 * @return

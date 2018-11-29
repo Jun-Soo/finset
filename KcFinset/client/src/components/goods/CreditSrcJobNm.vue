@@ -32,7 +32,7 @@
     </div>
 
     <div class="btn-wrap float">
-      <a class="box blue solid" @click="clickConfim()">확인</a>
+      <a class="box blue solid" @click="clickConfirm()">확인</a>
     </div>
 
   </section>
@@ -128,7 +128,7 @@ export default {
       this.$parent.$parent.openPop("CreditInsJobNm");
       this.$emit("popclose");
     },
-    clickConfim: function(job) {
+    clickConfirm: function(job) {
       var _this = this;
       for (var i = 0; i < this.jobList.length; i++) {
         if (this.jobList[i].isSelect) {

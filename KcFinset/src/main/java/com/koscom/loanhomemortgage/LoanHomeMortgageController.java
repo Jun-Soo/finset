@@ -177,14 +177,6 @@ public class LoanHomeMortgageController implements Constant {
 	 */
 	@RequestMapping("/modifyLoanREConditionInfo.json")
 	public String modifyLoanREConditionInfo(HttpServletRequest request, Model model, TxFcTransmitVO txFcTransmitVO) {
-        /**
-         * 접근제어 : start
-         */
-        boolean isAuth = AuthUtil.isHaveAuth(request,"/frameLoanHomeMortgageStep8.crz", environment);
-        if(isAuth == false) {return JSON_VIEW;}
-        /**
-         * 접근제어 : end
-         */
 		logger.info("=======================================================11111111111111111111111111111111111111111111");
 		logger.info(txFcTransmitVO.toString());
 		logger.info("=======================================================");
@@ -202,18 +194,44 @@ public class LoanHomeMortgageController implements Constant {
 	 */
 	@RequestMapping("/modifyLoanREHomeInfo.json")
 	public String modifyLoanREHomeInfo(HttpServletRequest request, Model model, TxFcTransmitVO txFcTransmitVO) {
-        /**
-         * 접근제어 : start
-         */
-        boolean isAuth = AuthUtil.isHaveAuth(request,"/frameLoanHomeMortgageStep9.crz", environment);
-        if(isAuth == false) {return JSON_VIEW;}
-        /**
-         * 접근제어 : end
-         */
 		logger.info("=======================================================11111111111111111111111111111111111111111111");
 		logger.info(txFcTransmitVO.toString());
 		logger.info("=======================================================");
 		ReturnClass returnClass = loanManager.modifyLoanREHomeInfo(txFcTransmitVO);
+		model.addAttribute("result", returnClass.getCd_result());
+		return "jsonView";
+	}
+	
+	/** VUE
+	 * 직장/소득 정보 update
+	 * @param request
+	 * @param model
+	 * @param txFcTransmitVO
+	 * @return
+	 */
+	@RequestMapping("/modifyLoanREIncomeInfo.json")
+	public String modifyLoanREIncomeInfo(HttpServletRequest request, Model model, TxFcTransmitVO txFcTransmitVO) {
+		logger.info("=======================================================11111111111111111111111111111111111111111111");
+		logger.info(txFcTransmitVO.toString());
+		logger.info("=======================================================");
+		ReturnClass returnClass = loanManager.modifyLoanREIncomeInfo(txFcTransmitVO);
+		model.addAttribute("result", returnClass.getCd_result());
+		return "jsonView";
+	}
+	
+	/** VUE
+	 * 상환 정보 update
+	 * @param request
+	 * @param model
+	 * @param txFcTransmitVO
+	 * @return
+	 */
+	@RequestMapping("/modifyLoanRERepaymentInfo.json")
+	public String modifyLoanRERepaymentInfo(HttpServletRequest request, Model model, TxFcTransmitVO txFcTransmitVO) {
+		logger.info("=======================================================11111111111111111111111111111111111111111111");
+		logger.info(txFcTransmitVO.toString());
+		logger.info("=======================================================");
+		ReturnClass returnClass = loanManager.modifyLoanRERepaymentInfo(txFcTransmitVO);
 		model.addAttribute("result", returnClass.getCd_result());
 		return "jsonView";
 	}

@@ -15,6 +15,8 @@
 			(   NO_BUNCH
               , NM_PERSON
               , SSN_PERSON
+              , CD_GOODS
+              , CD_SEX
               , NO_PERSON
               , HP1
               , YMD_BIRTH
@@ -27,6 +29,8 @@
 				  #{no_bunch              , jdbcType=VARCHAR}
 				, #{nm_person			  , jdbcType=VARCHAR}
 				, XX1.ENC_VARCHAR2_INS(#{ssn_person, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'TX_FC_TRANSMIT', 'SSN_PERSON')
+				, #{cd_goods			  , jdbcType=VARCHAR}
+				, #{cd_sex				  , jdbcType=VARCHAR}
 				, #{no_person			  , jdbcType=VARCHAR}
 				, #{hp1			  		  , jdbcType=VARCHAR}
 				, #{ymd_birth			  , jdbcType=VARCHAR}
@@ -130,6 +134,31 @@
 		  , DT_LST                  = SYSDATE
 		WHERE no_bunch = #{no_bunch, jdbcType=VARCHAR}
 		]]>
+	</update>
+	
+	<update id="modifyLoanREIncomeInfo" >
+		/* com.koscom.loan.dao.LoanMapper.modifyLoanREIncomeInfo*/
+		UPDATE tx_fc_transmit
+		SET
+		   cd_job_class_l 			= #{cd_job_class_l, jdbcType=VARCHAR}
+		  , amt_year_income 		= #{amt_year_income, jdbcType=NUMERIC}
+		  , amt_year_sale 			= #{amt_year_sale, jdbcType=NUMERIC}
+		  , ID_LST                  = #{id_lst, jdbcType=VARCHAR}
+		  , DT_LST                  = SYSDATE
+		WHERE no_bunch = #{no_bunch, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="modifyLoanRERepaymentInfo" >
+		/* com.koscom.loan.dao.LoanMapper.modifyLoanRERepaymentInfo*/
+		UPDATE tx_fc_transmit
+		SET
+		   yn_loan_mount 		= #{yn_loan_mount, jdbcType=VARCHAR}
+		  , cd_loan_mount 		= #{cd_loan_mount, jdbcType=VARCHAR}
+		  , cd_type_pay 		= #{cd_type_pay, jdbcType=VARCHAR}
+		  , cd_loan_term 		= #{cd_loan_term, jdbcType=VARCHAR}
+		  , ID_LST                  = #{id_lst, jdbcType=VARCHAR}
+		  , DT_LST                  = SYSDATE
+		WHERE no_bunch = #{no_bunch, jdbcType=VARCHAR}
 	</update>
 
 	<insert id="insertLoanGoodsChoice" >

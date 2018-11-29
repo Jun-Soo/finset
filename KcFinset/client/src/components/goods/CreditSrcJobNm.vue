@@ -92,7 +92,7 @@ export default {
         })
         .then(response => {
           var list = response.data.pagedList.source;
-          if (list === null || list.length === 0) {
+          if ((list || "") == "" || list.length === 0) {
             this.$store.state.isLoading = false;
             callback();
             return;

@@ -125,7 +125,7 @@ export default {
         .post("/m/customercenter/listCustomerGoodsFavorite.json", formData)
         .then(function(response) {
           var list = response.data.pagedList.source;
-          if (list.length === 0) {
+          if ((list || "") == "" || list.length === 0) {
             _this.seen = true;
             callback();
             return;

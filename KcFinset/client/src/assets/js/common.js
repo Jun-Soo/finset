@@ -233,23 +233,22 @@ export default {
     var yyyy = ''
     var mm = ''
     var dd = ''
-    if (date != null && date !== '') {
-      if (typeof date === 'string') {
-        yyyy = date.substring(0, 4)
-        mm = date.substring(4, 6)
-        dd = date.substring(6, 8)
-      } else if (typeof date === 'object') {
-        yyyy = date.getFullYear()
-        mm = date.getMonth() + 1
-        if (mm < 10) {
-          mm = '0' + mm
-        }
-        dd = date.getDate()
-        if (dd < 10) {
-          dd = '0' + dd
-        }
+    if (typeof date === 'string') {
+      yyyy = date.substring(0, 4)
+      mm = date.substring(4, 6)
+      dd = date.substring(6, 8)
+    } else if (typeof date === 'object') {
+      yyyy = date.getFullYear()
+      mm = date.getMonth() + 1
+      if (mm < 10) {
+        mm = '0' + mm
       }
-
+      dd = date.getDate()
+      if (dd < 10) {
+        dd = '0' + dd
+      }
+    }
+    if (date != null && date !== '') {
       if (((pattern || '') === '') || pattern === 'yyyymmdd') {
         return yyyy + '.' + mm + '.' + dd
       } else if (pattern === 'yyyymm') {
@@ -386,26 +385,49 @@ export default {
   },
   // pagination 사용법
   // 필요한 함수를 작성하되, 함수 파라미터로 callback을 선언
-  pagination: function (callback) {
+  pagination: function (callback, el) {
     Constant._this = this
     Constant._callback = callback
+    if (el === 'modal') {
+      Constant._el = document.getElementsByClassName('v-modal__mask')[0]
+    } else {
+      Constant._el = document.getElementById(el)
+    }
     Constant._this.addScroll()
     Constant._callback(function () {})
   },
   handleScroll: function () {
     var html = document.documentElement
-    var docHeight = html.scrollHeight
-    var viewHeight = html.offsetHeight > html.clientHeight ? html.clientHeight : html.offsetHeight
-    var scrollY = window.scrollY
+    var docHeight
+    var viewHeight
+    var scrollY
+    if ((Constant._el || '') === '') {
+      docHeight = html.scrollHeight
+      viewHeight = html.offsetHeight > html.clientHeight ? html.clientHeight : html.offsetHeight
+      scrollY = window.scrollY
+    } else {
+      docHeight = Constant._el.scrollHeight
+      viewHeight = html.clientHeight
+      scrollY = Constant._el.scrollTop
+    }
     var scrollBottom = docHeight - viewHeight - scrollY
+
     if (scrollBottom === 0) {
       Constant._callback(Constant._this.removeScroll)
     }
   },
   addScroll: function () {
-    window.addEventListener('scroll', Constant._this.handleScroll)
+    if ((Constant._el || '') === '') {
+      window.addEventListener('scroll', Constant._this.handleScroll)
+    } else {
+      Constant._el.addEventListener('scroll', Constant._this.handleScroll)
+    }
   },
   removeScroll: function () {
-    window.removeEventListener('scroll', Constant._this.handleScroll)
+    if ((Constant._el || '') === '') {
+      window.removeEventListener('scroll', Constant._this.handleScroll)
+    } else {
+      Constant._el.removeEventListener('scroll', Constant._this.handleScroll)
+    }
   }
 }

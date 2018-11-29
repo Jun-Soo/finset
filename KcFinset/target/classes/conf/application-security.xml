@@ -47,6 +47,8 @@
 	<http pattern="/m/base/**" security="none"/>
 	<http pattern="/m/person/**" security="none"/>
 	<http pattern="/m/login/**" security="none"/>
+	<http pattern="/m/scrap/**" security="none"/>
+	<http pattern="/m/fincorp/getFinCorpIcon.crz" security="none"/>
 	
 	<http auto-config="true">
 		<access-denied-handler error-page="/error/403"/>

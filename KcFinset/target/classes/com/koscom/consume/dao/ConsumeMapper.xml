@@ -583,9 +583,29 @@
 			,NVL( CGI.AMT_BUDGET, 0 ) AS AMT_BUDGET
 		FROM
 			PERSON_CONSUME_CLASS_INFO PCCI
-		LEFT JOIN CONSUME_GOAL_INFO CGI ON
-				PCCI.CD_CLASS = CGI.CD_CLASS
-			AND CGI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		LEFT JOIN
+			(
+				SELECT
+					 CD_CLASS
+					,AMT_BUDGET
+				FROM
+					CONSUME_GOAL_INFO
+				WHERE
+						NO_PERSON	= #{no_person, jdbcType = VARCHAR}
+					AND REQ_YYYYMM	=
+						CASE
+							WHEN TO_NUMBER( TO_CHAR( SYSDATE, 'DD' ))<![CDATA[>]]>(
+								SELECT
+									TO_NUMBER( NVL( DT_BASIC, 0 ))
+								FROM
+									PERSON_SET_INFO
+								WHERE
+									NO_PERSON = #{no_person, jdbcType = VARCHAR}
+							) THEN TO_CHAR( SYSDATE, 'YYYYMM' )
+							ELSE TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )
+						END
+			) CGI ON
+				PCCI.CD_CLASS	= CGI.CD_CLASS
 		WHERE
 				PCCI.NO_PERSON		=		#{no_person, jdbcType=VARCHAR}
 			AND PCCI.TYPE_IN_OUT	=		'02'
@@ -598,63 +618,92 @@
 			 A.CODE_VALUE AS CD_TYPE
 			,B.CD_FC
 			,B.NO_CARD
-			,B.NM_CARD
+			,NVL(B.NM_CARD, '현금') AS NM_CARD
 			,NVL(C.AMT_BUDGET, 0) AS AMT_BUDGET
 		FROM
 			COMM_CD A
 		LEFT JOIN(
-				SELECT
-					 NO_PERSON
-					,CD_FC
-					,NO_CARD
-					,NM_CARD
-					,'01' AS CODE_VALUE
-				FROM
-					SCR_CARD_INFO
-				WHERE
-					NO_PERSON = #{no_person, jdbcType = VARCHAR}
+			SELECT
+				 NO_PERSON
+				,CD_FC
+				,NO_CARD
+				,NM_CARD
+				,'01' AS CODE_VALUE
+			FROM
+				SCR_CARD_INFO
+			WHERE
+				NO_PERSON = #{no_person, jdbcType = VARCHAR}
 			UNION(
 					SELECT
 						 #{no_person, jdbcType = VARCHAR}
 						,CD_FC
 						,NULL
-						,NULL
+						,'현금영수증'
 						,'03' AS CODE_VALUE
 					FROM
 						FC_INFO
 					WHERE
 						NM_FC LIKE '%국세청%'
 				)
-			) B ON
-			(
-				A.CODE_VALUE = B.CODE_VALUE
-			)
+			UNION(
+					SELECT
+						 NO_PERSON
+						,CD_FC
+						,AN AS NO_CARD
+						,NM_AN AS NM_CARD
+						,'04' AS CODE_VALUE
+					FROM
+						SCR_BANK_API_AN_INFO
+					WHERE
+							NO_PERSON = #{no_person, jdbcType = VARCHAR}
+						AND TYPE_AN = '01'
+				)
+		) B ON
+		(
+			A.CODE_VALUE = B.CODE_VALUE
+		)
 		LEFT JOIN(
-				SELECT
-					 NO_PERSON
-					,REQ_YYYYMM
-					,CD_SET
-					,CD_TYPE
-					,NM_CARD
-					,NO_CARD
-					,AMT_BUDGET
-				FROM
-					CONSUME_GOAL_INFO
-				WHERE
-						NO_PERSON	= #{no_person, jdbcType = VARCHAR}
-					AND REQ_YYYYMM	= TO_CHAR( SYSDATE, 'YYYYMM' )
-			) C ON
+			SELECT
+				 NO_PERSON
+				,REQ_YYYYMM
+				,CD_SET
+				,CD_TYPE
+				,NM_CARD
+				,NO_CARD
+				,AMT_BUDGET
+			FROM
+				CONSUME_GOAL_INFO
+			WHERE
+					NO_PERSON	= #{no_person, jdbcType = VARCHAR}
+				AND REQ_YYYYMM =
+					CASE
+						WHEN TO_NUMBER( TO_CHAR( SYSDATE, 'DD' ))>(
+							SELECT
+								TO_NUMBER( NVL( DT_BASIC, 0 ))
+							FROM
+								PERSON_SET_INFO
+							WHERE
+								NO_PERSON = #{no_person, jdbcType = VARCHAR}
+						) THEN TO_CHAR( SYSDATE, 'YYYYMM' )
+						ELSE TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )
+					END
+		) C ON
+		(
+			A.CODE_VALUE = C.CD_TYPE
+			AND 1 =
 			(
-				A.CODE_VALUE = C.CD_TYPE
-				AND NVL( SUBSTRB( B.NO_CARD,- 3 ), 'chk' )= CASE
-					WHEN NVL( SUBSTRB( B.NO_CARD,- 3 ), 'chk' )= 'chk' THEN 'chk'
-					WHEN NVL( SUBSTRB( B.NO_CARD,- 3 ), 'chk' )!= 'chk' THEN NVL( SUBSTRB( C.NO_CARD,- 3 ), 'chk' )
-				END
-				AND NVL( B.NM_CARD, 'chk' )= CASE
-					WHEN NVL( B.NM_CARD, 'chk' )= 'chk' THEN 'chk'
-					WHEN NVL( B.NM_CARD, 'chk' )!= 'chk' THEN NVL( C.NM_CARD, 'chk' )
+				CASE
+					WHEN A.CODE_VALUE				= '01'
+						AND SUBSTRB( B.NO_CARD,- 3 )= SUBSTRB( C.NO_CARD,- 3 )
+						AND B.NM_CARD				= C.NM_CARD					THEN 1
+					WHEN A.CODE_VALUE				= '02'						THEN 1
+					WHEN A.CODE_VALUE				= '03'						THEN 1
+					WHEN A.CODE_VALUE				= '04'
+						AND B.NO_CARD				= C.NO_CARD					THEN 1
+					ELSE 0
 				END
 			)
+		)
 		WHERE
 			A.CODE_GROUP = 'cd_consume'
 			AND YN_SYSTEM_CODE IS NULL
@@ -676,22 +725,31 @@
 					 CONSUME_INFO CI
 					,(
 						SELECT
-							 NO_PERSON
-							,DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC ) AS DT_BASIC
+							CASE
+								WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| '00'
+								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DT_BASIC
+								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 2 ), 'YYYYMM' )|| DT_BASIC
+							END AS DT_FROM,
+							CASE
+								WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( LAST_DAY( ADD_MONTHS( SYSDATE,- 1 ) ), 'YYYYMMDD' )
+								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 0 ), 'YYYYMM' )|| DT_BASIC
+								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DT_BASIC
+							END AS DT_TO
 						FROM
-							PERSON_SET_INFO
-						WHERE
-							NO_PERSON = #{no_person, jdbcType=VARCHAR}
+							(
+								SELECT
+									DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC ) AS DT_BASIC
+								FROM
+									PERSON_SET_INFO
+								WHERE
+									NO_PERSON = #{no_person, jdbcType=VARCHAR}
+							)
 					) PSI
 				WHERE
-						CI.NO_PERSON	= PSI.NO_PERSON
-					AND CI.NO_PERSON	= #{no_person, jdbcType = VARCHAR}
-					AND CI.TYPE_IN_OUT	= '02'
-					AND CI.DT_TRD BETWEEN
-							TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| PSI.DT_BASIC
-						AND TO_CHAR( SYSDATE, 'YYYYMM' )|| PSI.DT_BASIC
-							/*TO_CHAR( ADD_MONTHS( SYSDATE,- 4 ), 'YYYYMM' )|| PSI.DT_BASIC*/
-						/*AND TO_CHAR( ADD_MONTHS( SYSDATE,- 3 ), 'YYYYMM' )|| PSI.DT_BASIC*/
+						CI.NO_PERSON				 = #{no_person, jdbcType = VARCHAR}
+					AND CI.TYPE_IN_OUT				 = '02'
+					AND TO_NUMBER(CI.DT_TRD)<![CDATA[>]]>	TO_NUMBER(PSI.DT_FROM)
+					AND TO_NUMBER(CI.DT_TRD)<![CDATA[<=]]>	TO_NUMBER(PSI.DT_TO)
 				GROUP BY
 					CI.CD_CLASS
 			) CGI ON
@@ -735,6 +793,19 @@
 					WHERE
 						NM_FC LIKE '%국세청%'
 				)
+			UNION(
+					SELECT
+						 NO_PERSON
+						,CD_FC
+						,AN AS NO_CARD
+						,NM_AN AS NM_CARD
+						,'04' AS CODE_VALUE
+					FROM
+						SCR_BANK_API_AN_INFO
+					WHERE
+							NO_PERSON = #{no_person, jdbcType = VARCHAR}
+						AND TYPE_AN = '01'
+				)
 			) B ON
 			(
 				A.CODE_VALUE = B.CODE_VALUE
@@ -747,26 +818,37 @@
 					,CI.NO_CARD
 					,SUM( CI.AMT_IN_OUT ) AS AMT_EXPENSE
 				FROM
-					CONSUME_INFO CI,
-					(
+					 CONSUME_INFO CI
+					,(
 						SELECT
-							DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC ) AS DT_BASIC
+							CASE
+								WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| '00'
+								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DT_BASIC
+								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 2 ), 'YYYYMM' )|| DT_BASIC
+							END AS DT_FROM,
+							CASE
+								WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( LAST_DAY( ADD_MONTHS( SYSDATE,- 1 ) ), 'YYYYMMDD' )
+								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 0 ), 'YYYYMM' )|| DT_BASIC
+								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DT_BASIC
+							END AS DT_TO
 						FROM
-							PERSON_SET_INFO
-						WHERE
-							NO_PERSON = #{no_person, jdbcType=VARCHAR}
+							(
+								SELECT
+									DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC ) AS DT_BASIC
+								FROM
+									PERSON_SET_INFO
+								WHERE
+									NO_PERSON = #{no_person, jdbcType=VARCHAR}
+							)
 					) PSI
 				WHERE
-					CI.NO_PERSON = #{no_person, jdbcType = VARCHAR}
-					AND CI.TYPE_IN_OUT = '02'
-					AND CI.DT_TRD BETWEEN
-							TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| PSI.DT_BASIC
-						AND TO_CHAR( SYSDATE, 'YYYYMM' )|| PSI.DT_BASIC
-							/*TO_CHAR( ADD_MONTHS( SYSDATE,- 4 ), 'YYYYMM' )|| PSI.DT_BASIC*/
-						/*AND TO_CHAR( ADD_MONTHS( SYSDATE,- 3 ), 'YYYYMM' )|| PSI.DT_BASIC*/
-					AND CI.YN_CANCEL = 'N'
-					AND CI.YN_DELETE = 'N'
-					AND CI.YN_BUDGET_EXCEPT = 'N'
+						CI.NO_PERSON				 =		#{no_person, jdbcType = VARCHAR}
+					AND CI.TYPE_IN_OUT				 =		'02'
+					AND TO_NUMBER(CI.DT_TRD)<![CDATA[>]]>	TO_NUMBER(PSI.DT_FROM)
+					AND TO_NUMBER(CI.DT_TRD)<![CDATA[<=]]>	TO_NUMBER(PSI.DT_TO)
+					AND CI.YN_CANCEL				 =		'N'
+					AND CI.YN_DELETE				 =		'N'
+					AND CI.YN_BUDGET_EXCEPT			 =		'N'
 				GROUP BY
 					 MEANS_CONSUME
 					,CD_FC
@@ -775,14 +857,19 @@
 			) C ON
 			(
 				A.CODE_VALUE = C.CD_TYPE
-				AND NVL( SUBSTRB( B.NO_CARD,- 3 ), 'chk' )= CASE
-					WHEN NVL( SUBSTRB( B.NO_CARD,- 3 ), 'chk' )= 'chk' THEN 'chk'
-					WHEN NVL( SUBSTRB( B.NO_CARD,- 3 ), 'chk' )!= 'chk' THEN NVL( SUBSTRB( C.NO_CARD,- 3 ), 'chk' )
-				END
-				AND NVL( B.NM_CARD, 'chk' )= CASE
-					WHEN NVL( B.NM_CARD, 'chk' )= 'chk' THEN 'chk'
-					WHEN NVL( B.NM_CARD, 'chk' )!= 'chk' THEN NVL( C.NM_CARD, 'chk' )
-				END
+				AND 1 =
+				(
+					CASE
+						WHEN A.CODE_VALUE				= '01'
+							AND SUBSTRB( B.NO_CARD,- 3 )= SUBSTRB( C.NO_CARD,- 3 )
+							AND B.NM_CARD				= C.NM_CARD					THEN 1
+						WHEN A.CODE_VALUE				= '02'						THEN 1
+						WHEN A.CODE_VALUE				= '03'						THEN 1
+						WHEN A.CODE_VALUE				= '04'
+							AND B.NO_CARD				= C.NO_CARD					THEN 1
+						ELSE 0
+					END
+				)
 			)
 		WHERE
 			A.CODE_GROUP = 'cd_consume'
@@ -802,14 +889,16 @@
 					 CI.CD_CLASS
 					,ROUND( SUM( CI.AMT_IN_OUT )/ 3, 0 ) AS AMT_EXPENSE
 				FROM
-					CONSUME_INFO CI,
-					(
+					CONSUME_INFO CI
+					,(
 						SELECT
 							CASE
-								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 2 ), 'YYYYMM' )|| DT_BASIC
-								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 3 ), 'YYYYMM' )|| DT_BASIC
+								WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| '00'
+								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 3 ), 'YYYYMM' )|| DT_BASIC
+								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 4 ), 'YYYYMM' )|| DT_BASIC
 							END AS DT_FROM,
 							CASE
+								WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( LAST_DAY( ADD_MONTHS( SYSDATE,- 1 ) ), 'YYYYMMDD' )
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 0 ), 'YYYYMM' )|| DT_BASIC
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DT_BASIC
 							END AS DT_TO
@@ -871,6 +960,19 @@
 					WHERE
 						NM_FC LIKE '%국세청%'
 				)
+			UNION(
+					SELECT
+						 NO_PERSON
+						,CD_FC
+						,AN AS NO_CARD
+						,NM_AN AS NM_CARD
+						,'04' AS CODE_VALUE
+					FROM
+						SCR_BANK_API_AN_INFO
+					WHERE
+							NO_PERSON = #{no_person, jdbcType = VARCHAR}
+						AND TYPE_AN = '01'
+				)
 			) B ON
 			(
 				A.CODE_VALUE = B.CODE_VALUE
@@ -883,20 +985,18 @@
 					,CI.NO_CARD
 					,SUM( CI.AMT_IN_OUT ) AS AMT_EXPENSE
 				FROM
-					CONSUME_INFO CI,
-					(
+					 CONSUME_INFO CI
+					,(
 						SELECT
 							CASE
-								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 2 ), 'YYYYMM' )|| DT_BASIC
-								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 3 ), 'YYYYMM' )|| DT_BASIC
-								/*WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 5 ), 'YYYYMM' )|| DT_BASIC*/
-								/*WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 6 ), 'YYYYMM' )|| DT_BASIC*/
+								WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| '00'
+								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DT_BASIC
+								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 2 ), 'YYYYMM' )|| DT_BASIC
 							END AS DT_FROM,
 							CASE
+								WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( LAST_DAY( ADD_MONTHS( SYSDATE,- 1 ) ), 'YYYYMMDD' )
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 0 ), 'YYYYMM' )|| DT_BASIC
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DT_BASIC
-								/*WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 3 ), 'YYYYMM' )|| DT_BASIC*/
-								/*WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 4 ), 'YYYYMM' )|| DT_BASIC*/
 							END AS DT_TO
 						FROM
 							(
@@ -905,7 +1005,7 @@
 								FROM
 									PERSON_SET_INFO
 								WHERE
-									NO_PERSON = #{no_person, jdbcType = VARCHAR}
+									NO_PERSON = #{no_person, jdbcType=VARCHAR}
 							)
 					) PSI
 				WHERE
@@ -923,14 +1023,19 @@
 			) C ON
 			(
 				A.CODE_VALUE = C.CD_TYPE
-				AND NVL( SUBSTRB( B.NO_CARD,- 3 ), 'chk' )= CASE
-					WHEN NVL( SUBSTRB( B.NO_CARD,- 3 ), 'chk' )= 'chk' THEN 'chk'
-					WHEN NVL( SUBSTRB( B.NO_CARD,- 3 ), 'chk' )!= 'chk' THEN NVL( SUBSTRB( C.NO_CARD,- 3 ), 'chk' )
-				END
-				AND NVL( B.NM_CARD, 'chk' )= CASE
-					WHEN NVL( B.NM_CARD, 'chk' )= 'chk' THEN 'chk'
-					WHEN NVL( B.NM_CARD, 'chk' )!= 'chk' THEN NVL( C.NM_CARD, 'chk' )
-				END
+				AND 1 =
+					(
+						CASE
+							WHEN A.CODE_VALUE = '01'
+							AND SUBSTRB( B.NO_CARD,- 3 )= SUBSTRB( C.NO_CARD,- 3 )
+							AND B.NM_CARD = C.NM_CARD THEN 1
+							WHEN A.CODE_VALUE = '02' THEN 1
+							WHEN A.CODE_VALUE = '03' THEN 1
+							WHEN A.CODE_VALUE = '04'
+							AND B.NO_CARD = C.NO_CARD THEN 1
+							ELSE 0
+						END
+					)
 			)
 		WHERE
 			A.CODE_GROUP = 'cd_consume'
@@ -939,53 +1044,75 @@
 			CD_TYPE ASC, CD_FC ASC, NO_CARD ASC
     </select>
     <insert id="createDetailGoalClass" parameterType="com.koscom.consume.model.ConsumeDetailGoalInfoVO">
-		MERGE INTO
-			CONSUME_GOAL_INFO
-				USING DUAL ON
-			(
-					NO_PERSON	= #{no_person	, jdbcType = VARCHAR}
-				AND REQ_YYYYMM	= TO_CHAR(SYSDATE, 'YYYYMM')
-				AND CD_CLASS	= #{cd_class	, jdbcType = VARCHAR}
-			)
-			WHEN MATCHED THEN UPDATE
-			SET
-				 AMT_BUDGET		= #{amt_budget	, jdbcType = VARCHAR}
-				,AMT_EXPENSE	= #{amt_expense	, jdbcType = VARCHAR}
-				,ID_LST			= #{no_person	, jdbcType = VARCHAR}
-				,DT_LST			= SYSDATE
-				WHEN NOT MATCHED THEN INSERT
-					(
-						 NO_PERSON
-						,REQ_YYYYMM
-						,CD_SET
-						,CD_CLASS
-						,AMT_BUDGET
-						,AMT_EXPENSE
-						,ID_FRT
-						,DT_FRT
-						,ID_LST
-						,DT_LST
-					)
-				VALUES(
-					 #{no_person	, jdbcType = VARCHAR}
-					,TO_CHAR(SYSDATE, 'YYYYMM')
-					,'01'
-					,#{cd_class		, jdbcType = VARCHAR}
-					,#{amt_budget	, jdbcType = VARCHAR}
-					,#{amt_expense	, jdbcType = VARCHAR}
-					,#{no_person	, jdbcType = VARCHAR}
-					,SYSDATE
-					,#{no_person	, jdbcType = VARCHAR}
-					,SYSDATE
+		<selectKey keyProperty="req_yyyymm" resultType="java.lang.String" order="BEFORE">
+			SELECT
+				CASE
+					WHEN TO_NUMBER( TO_CHAR( SYSDATE, 'DD' ))> TO_NUMBER( NVL( DT_BASIC, 0 )) THEN TO_CHAR( SYSDATE, 'YYYYMM' )
+					ELSE TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )
+				END AS REQ_YYYYMM
+			FROM
+				PERSON_SET_INFO
+			WHERE
+				NO_PERSON = #{no_person, jdbcType = VARCHAR}
+		</selectKey>
+			MERGE INTO
+				CONSUME_GOAL_INFO
+					USING DUAL ON
+				(
+						NO_PERSON	= #{no_person	, jdbcType = VARCHAR}
+					AND REQ_YYYYMM	= #{req_yyyymm	, jdbcType = VARCHAR}
+					AND CD_CLASS	= #{cd_class	, jdbcType = VARCHAR}
 				)
+				WHEN MATCHED THEN UPDATE
+				SET
+					 AMT_BUDGET		= #{amt_budget	, jdbcType = VARCHAR}
+					,AMT_EXPENSE	= #{amt_expense	, jdbcType = VARCHAR}
+					,ID_LST			= #{no_person	, jdbcType = VARCHAR}
+					,DT_LST			= SYSDATE
+					WHEN NOT MATCHED THEN INSERT
+						(
+							 NO_PERSON
+							,REQ_YYYYMM
+							,CD_SET
+							,CD_CLASS
+							,AMT_BUDGET
+							,AMT_EXPENSE
+							,ID_FRT
+							,DT_FRT
+							,ID_LST
+							,DT_LST
+						)
+					VALUES(
+						 #{no_person	, jdbcType = VARCHAR}
+						,#{req_yyyymm	, jdbcType = VARCHAR}
+						,'01'
+						,#{cd_class		, jdbcType = VARCHAR}
+						,#{amt_budget	, jdbcType = VARCHAR}
+						,#{amt_expense	, jdbcType = VARCHAR}
+						,#{no_person	, jdbcType = VARCHAR}
+						,SYSDATE
+						,#{no_person	, jdbcType = VARCHAR}
+						,SYSDATE
+					)
     </insert>
     <insert id="createDetailGoalMeans" parameterType="com.koscom.consume.model.ConsumeDetailGoalInfoVO">
+		<selectKey keyProperty="req_yyyymm" resultType="java.lang.String" order="BEFORE">
+			SELECT
+				CASE
+					WHEN TO_NUMBER( TO_CHAR( SYSDATE, 'DD' ))> TO_NUMBER( NVL( DT_BASIC, 0 )) THEN TO_CHAR( SYSDATE, 'YYYYMM' )
+					ELSE TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )
+				END AS REQ_YYYYMM
+			FROM
+				PERSON_SET_INFO
+			WHERE
+				NO_PERSON = #{no_person, jdbcType = VARCHAR}
+		</selectKey>
 		MERGE INTO
 			CONSUME_GOAL_INFO
 				USING DUAL ON
 			(
 					NO_PERSON				=		#{no_person	, jdbcType = VARCHAR}
-				AND REQ_YYYYMM				= 		TO_CHAR(SYSDATE, 'YYYYMM')
+				AND REQ_YYYYMM				= 		#{req_yyyymm, jdbcType = VARCHAR}
 				AND CD_TYPE					= 		#{cd_type	, jdbcType = VARCHAR}
 				AND NVL(CD_FC, 'chk')		= NVL(	#{cd_fc		, jdbcType = VARCHAR}, 'chk')
 				AND NVL(NO_CARD, 'chk')		= NVL(	#{no_card	, jdbcType = VARCHAR}, 'chk')
@@ -1014,7 +1141,7 @@
 					)
 				VALUES(
 					 #{no_person	, jdbcType = VARCHAR}
-					,TO_CHAR(SYSDATE, 'YYYYMM')
+					,#{req_yyyymm	, jdbcType = VARCHAR}
 					,'02'
 					,#{cd_type		, jdbcType = VARCHAR}
 					,#{cd_fc		, jdbcType = VARCHAR}

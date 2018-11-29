@@ -6,32 +6,76 @@
 
       <div class="filter-wrap">
         <div class="filter red">
-          <input type="checkbox" checked="checked" readonly="readonly"><label for="">{{nm_person}}</label>
+          <input
+            type="checkbox"
+            checked="checked"
+            readonly="readonly"
+          ><label for="">{{nm_person}}</label>
         </div>
-        <div v-if="personShareList.length!=0" v-for="personShareInfo in personShareList" :key="personShareInfo.index" class="filter" :class="colorList[personShareInfo.rk]">
-          <input type="checkbox" v-model="person_share_list" :value="personShareInfo.no_person" :id="'chk'+personShareInfo.rk" @change="searchAccountList();">
+        <div
+          v-if="personShareList.length!=0"
+          v-for="personShareInfo in personShareList"
+          :key="personShareInfo.index"
+          class="filter"
+          :class="colorList[personShareInfo.rk]"
+        >
+          <input
+            type="checkbox"
+            v-model="person_share_list"
+            :value="personShareInfo.no_person"
+            :id="'chk'+personShareInfo.rk"
+            @change="searchAccountList();"
+          >
           <label :for="'chk'+personShareInfo.rk">{{personShareInfo.nm_person}}</label>
         </div>
       </div>
     </div>
 
-    <div v-if="depWdrlInfo != null" @click="viewDetail('dwl')" class="assets-bank-recent">
+    <div
+      v-if="depWdrlInfo != null"
+      @click="viewDetail('dwl')"
+      class="assets-bank-recent"
+    >
       <p>{{depWdrlInfo.dt_trd}}<em>{{depWdrlInfo.doc1}}</em></p>
       <p v-if="'0'!=depWdrlInfo.amt_dep"><em class="number blue">{{formatNumber(depWdrlInfo.amt_dep)}}</em>원</p>
       <p v-else><em class="number red">{{('-'+formatNumber(depWdrlInfo.amt_wdrl))}}</em>원</p>
     </div>
 
-    <div v-if="accountMyList.length == 0 && accountShareList.length == 0" class="nodata">계좌 내역이 없습니다</div>
-    <div v-else class="box-list list01 noMG">
+    <div
+      v-if="accountMyList.length == 0 && accountShareList.length == 0"
+      class="nodata"
+    >계좌 내역이 없습니다</div>
+    <div
+      v-else
+      class="box-list list01 noMG"
+    >
 
-      <draggable v-model="accountMyList" @start="drag=true" :options="draggableOptions" @update="changeSort()">
-        <div v-for="accountMyInfo in accountMyList" :key="accountMyInfo.index" class="item sortClass">
-          <a @click="viewDetail('act', accountMyInfo.no_person, accountMyInfo.nm_person, accountMyInfo.no_account, accountMyInfo.rk)" class="block handle">
+      <draggable
+        v-model="accountMyList"
+        @start="drag=true"
+        :options="draggableOptions"
+        @update="changeSort()"
+      >
+        <div
+          v-for="accountMyInfo in accountMyList"
+          :key="accountMyInfo.index"
+          class="item sortClass"
+        >
+          <a
+            @click="viewDetail('act', accountMyInfo.no_person, accountMyInfo.nm_person, accountMyInfo.no_account, accountMyInfo.rk)"
+            class="block handle"
+          >
             <div class="top">
-              <p class="symbol"><img :src="accountMyInfo.fcImg" alt="" />{{accountMyInfo.nm_fc}}</p>
+              <p class="symbol"><img
+                  :src="accountMyInfo.fcImg"
+                  alt=""
+                />{{accountMyInfo.nm_fc}}</p>
               <p class="text">
                 <em class="blue bold">{{getCodeName('cd_assets_bank',accountMyInfo.cd_detail_class)}}</em>
-                <span class="circle" :class="colorList[accountMyInfo.rk]">{{accountMyInfo.nm_person}}</span>
+                <span
+                  class="circle"
+                  :class="colorList[accountMyInfo.rk]"
+                >{{accountMyInfo.nm_person}}</span>
               </p>
             </div>
             <div class="text-wrap">
@@ -46,13 +90,26 @@
         </div>
       </draggable>
 
-      <div v-for="accountShareInfo in accountShareList" :key="accountShareInfo.index" class="item">
-        <a @click="viewDetail('act', accountShareInfo.no_person, accountShareInfo.nm_person, accountShareInfo.no_account, accountShareInfo.rk)" class="block">
+      <div
+        v-for="accountShareInfo in accountShareList"
+        :key="accountShareInfo.index"
+        class="item"
+      >
+        <a
+          @click="viewDetail('act', accountShareInfo.no_person, accountShareInfo.nm_person, accountShareInfo.no_account, accountShareInfo.rk)"
+          class="block"
+        >
           <div class="top">
-            <p class="symbol"><img :src="accountShareInfo.fcImg" alt="" />{{accountShareInfo.nm_fc}}</p>
+            <p class="symbol"><img
+                :src="accountShareInfo.fcImg"
+                alt=""
+              />{{accountShareInfo.nm_fc}}</p>
             <p class="text">
               <em class="blue bold">{{getCodeName('cd_assets_bank',accountShareInfo.cd_detail_class)}}</em>
-              <span class="circle" :class="colorList[accountShareInfo.rk]">{{accountShareInfo.nm_person}}</span>
+              <span
+                class="circle"
+                :class="colorList[accountShareInfo.rk]"
+              >{{accountShareInfo.nm_person}}</span>
             </p>
           </div>
           <div class="text-wrap">
@@ -78,7 +135,7 @@ import ko from "vee-validate/dist/locale/ko.js";
 import draggable from "vuedraggable";
 
 export default {
-  name: "AssetsAccountInfo",
+  name: "assetsBankMain",
   data() {
     return {
       seen: false,

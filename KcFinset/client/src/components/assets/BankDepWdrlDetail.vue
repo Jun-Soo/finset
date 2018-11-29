@@ -2,7 +2,10 @@
   <section v-if="seen">
     <div class="inout-list">
       <ul class="flex">
-        <li class="symbol"><img :src="depWdrlInfo.fcImg" alt="" />{{depWdrlInfo.nm_fc}}</li>
+        <li class="symbol"><img
+            :src="depWdrlInfo.fcImg"
+            alt=""
+          />{{depWdrlInfo.nm_fc}}</li>
         <li class="num">{{depWdrlInfo.an}}</li>
       </ul>
       <ul class="flex">
@@ -35,7 +38,11 @@
       <ul class="flex">
         <li>지출 설정</li>
         <li>
-          <button class="btn-cate btn-search" @click="showCategory()" :disabled="rk!='0'">{{csCategoryText}}</button>
+          <button
+            class="btn-cate btn-search"
+            @click="showCategory()"
+            :disabled="rk!='0'"
+          >{{csCategoryText}}</button>
         </li>
       </ul>
       <!--
@@ -49,44 +56,83 @@
 
     <div class="cs-top">
       <div class="links">
-        <a @click="$router.push('')" class="kakao">카카오톡 문의</a>
-        <a @click="$router.push('')" class="copy">복사</a>
+        <a
+          @click="$router.push('')"
+          class="kakao"
+        >카카오톡 문의</a>
+        <a
+          @click="$router.push('')"
+          class="copy"
+        >복사</a>
 
       </div>
     </div>
 
-    <aside class="search-wrap" :class="{'on':isShowCategory}">
-      <div class="top" @click="closeCategory()">
+    <aside
+      class="search-wrap"
+      :class="{'on':isShowCategory}"
+    >
+      <div
+        class="top"
+        @click="closeCategory()"
+      >
         <button>카테고리</button>
         <a class="btn-setting"></a>
       </div>
-      <div v-if="depWdrlInfo.cd_trns == '02'" class="select-cate">
+      <div
+        v-if="depWdrlInfo.cd_trns == '02'"
+        class="select-cate"
+      >
         <div class="cate-wrap">
           <ul>
-            <li v-for="eachClass in consumeCategory" :key="eachClass.cd_class" :class="{'on':eachClass.cd_class==csCurClass}" @click="clickCategory('class', eachClass.cd_class, eachClass.nm_class)">
+            <li
+              v-for="eachClass in consumeCategory"
+              :key="eachClass.cd_class"
+              :class="{'on':eachClass.cd_class==csCurClass}"
+              @click="clickCategory('class', eachClass.cd_class, eachClass.nm_class)"
+            >
               {{eachClass.nm_class}}
             </li>
           </ul>
         </div>
-        <div class="cate-wrap" v-if="consumeCategory!={}">
+        <div
+          class="cate-wrap"
+          v-if="consumeCategory!={}"
+        >
           <ul v-if="consumeCategory[csCurClass] != undefined">
-            <li v-for="(eachType, index) in consumeCategory[csCurClass]['listCdType']" :key="index" :class="{'on':eachType.cd_type==csCurType}" @click="clickCategory('type', eachType.cd_type, eachType.nm_type)">
+            <li
+              v-for="(eachType, index) in consumeCategory[csCurClass]['listCdType']"
+              :key="index"
+              :class="{'on':eachType.cd_type==csCurType}"
+              @click="clickCategory('type', eachType.cd_type, eachType.nm_type)"
+            >
               {{eachType.nm_type}}
             </li>
           </ul>
         </div>
       </div>
-      <div v-else-if="depWdrlInfo.cd_trns == '01'" class="select-cate one">
+      <div
+        v-else-if="depWdrlInfo.cd_trns == '01'"
+        class="select-cate one"
+      >
         <div class="cate-wrap">
           <ul>
-            <li v-for="eachClass in consumeCategory" :key="eachClass.cd_class" :class="{'on':eachClass.cd_class==csCurClass}" @click="clickCategory('class', eachClass.cd_class, eachClass.nm_class)">
+            <li
+              v-for="eachClass in consumeCategory"
+              :key="eachClass.cd_class"
+              :class="{'on':eachClass.cd_class==csCurClass}"
+              @click="clickCategory('class', eachClass.cd_class, eachClass.nm_class)"
+            >
               {{eachClass.nm_class}}
             </li>
           </ul>
         </div>
       </div>
       <div class="action btn1">
-        <a @click="clickConfirm()" class="solid">확인</a>
+        <a
+          @click="clickConfirm()"
+          class="solid"
+        >확인</a>
       </div>
     </aside>
   </section>
@@ -99,7 +145,7 @@ import Constant from "./../../assets/js/constant.js";
 import ko from "vee-validate/dist/locale/ko.js";
 
 export default {
-  name: "AssetsAccountDepDetail",
+  name: "assetsBankDepWdrlDetail",
   data() {
     return {
       seen: false,

@@ -74,7 +74,7 @@ import Constant from "./../../assets/js/constant.js";
 import ko from "vee-validate/dist/locale/ko.js";
 
 export default {
-  name: "AssetsDepWdrlDetail",
+  name: "assetsBankActDetail",
   data() {
     return {
       seen: false,

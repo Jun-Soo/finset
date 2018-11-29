@@ -10,17 +10,18 @@ import com.koscom.comm.model.SearchForm;
 public class CounselForm extends SearchForm implements Serializable{
 
 	private static final long serialVersionUID = 4702028913926086586L;
-	
+
 	private String no_person;	// 개인번호
 	private String counsel_seq;    		/*상담순번*/
+	private String cd_counsel_status; /* 상담상태코드(1:상담신청 접수,2:상담 준비중,3:상담완료) */
 	private String dt_apply;    		/*상담신청일시*/
 	private String id_frt;		// 작성자
-	
-	private String no_agency_person; //대리점 개인번호 
+
+	private String no_agency_person; //대리점 개인번호
 	private String no_prepare;	// 사전접수번호
 	private String no_apply;	// 접수번호
 	private String id_agency;	// 매체사
-	
+
 	@Override
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
@@ -40,6 +41,14 @@ public class CounselForm extends SearchForm implements Serializable{
 		this.counsel_seq = counsel_seq;
 	}
 
+	public String getCd_counsel_status() {
+		return cd_counsel_status;
+	}
+
+	public void setCd_counsel_status(String cd_counsel_status) {
+		this.cd_counsel_status = cd_counsel_status;
+	}
+
 	public String getDt_apply() {
 		return dt_apply;
 	}
@@ -47,7 +56,7 @@ public class CounselForm extends SearchForm implements Serializable{
 	public void setDt_apply(String dt_apply) {
 		this.dt_apply = dt_apply;
 	}
-	
+
 	public String getId_frt() {
 		return id_frt;
 	}
@@ -87,5 +96,5 @@ public class CounselForm extends SearchForm implements Serializable{
 	public void setId_agency(String id_agency) {
 		this.id_agency = id_agency;
 	}
-	
+
 }

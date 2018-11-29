@@ -4,9 +4,18 @@
       <div class="gray-search-box">
         <div class="search">
           <div class="left">
-            <button @click="setTermType('01'); searchDepWdrlList();" :class="{on:scTermType=='01'}">1주일</button>
-            <button @click="setTermType('02'); searchDepWdrlList();" :class="{on:scTermType=='02'}">3개월</button>
-            <button @click="setTermType('03'); searchDepWdrlList();" :class="{on:scTermType=='03'}">6개월</button>
+            <button
+              @click="setTermType('01'); searchDepWdrlList();"
+              :class="{on:scTermType=='01'}"
+            >1주일</button>
+            <button
+              @click="setTermType('02'); searchDepWdrlList();"
+              :class="{on:scTermType=='02'}"
+            >3개월</button>
+            <button
+              @click="setTermType('03'); searchDepWdrlList();"
+              :class="{on:scTermType=='03'}"
+            >6개월</button>
           </div>
           <div class="right">
             <button class="acco">조건검색</button>
@@ -15,10 +24,16 @@
         <div class="form">
           <p>은행계좌선택</p>
           <p>
-            <select v-model="scAccount" @change="searchDepWdrlList()">
+            <select
+              v-model="scAccount"
+              @change="searchDepWdrlList()"
+            >
               <option value="">전체</option>
               <template v-for="scAccountInfo in scAccountList">
-                <option :key="scAccountInfo.index" :value="scAccountInfo.no_account">{{scAccountInfo.nm_fc}}({{scAccountInfo.no_account}})</option>
+                <option
+                  :key="scAccountInfo.index"
+                  :value="scAccountInfo.no_account"
+                >{{scAccountInfo.nm_fc}}({{scAccountInfo.no_account}})</option>
               </template>
             </select>
           </p>
@@ -26,13 +41,24 @@
         <div class="wrap">
           <div class="date-pick">
             <p>
-              <input v-model="txt_dt_from" type="text" readonly="readonly"><button></button>
+              <input
+                v-model="txt_dt_from"
+                type="text"
+                readonly="readonly"
+              ><button></button>
             </p>
             <p>
-              <input v-model="txt_dt_to" type="text" readonly="readonly"><button></button>
+              <input
+                v-model="txt_dt_to"
+                type="text"
+                readonly="readonly"
+              ><button></button>
             </p>
           </div>
-          <div @click="searchDepWdrlList()" class="btn-wrap mt20">
+          <div
+            @click="searchDepWdrlList()"
+            class="btn-wrap mt20"
+          >
             <a class="solid blue">검색</a>
           </div>
         </div>
@@ -41,8 +67,15 @@
       <div class="bank-detail noMG">
         <div class="select">
           <div class="left">
-            <select v-model="scTrnsType" @change="searchDepWdrlList()">
-              <option v-for="scTrnsTypeOption in scTrnsTypeOptions" :key="scTrnsTypeOption.index" :value="scTrnsTypeOption.value">
+            <select
+              v-model="scTrnsType"
+              @change="searchDepWdrlList()"
+            >
+              <option
+                v-for="scTrnsTypeOption in scTrnsTypeOptions"
+                :key="scTrnsTypeOption.index"
+                :value="scTrnsTypeOption.value"
+              >
                 {{ scTrnsTypeOption.text }}
               </option>
             </select>
@@ -63,13 +96,30 @@
           </div>
         </div>
 
-        <div v-if="depWdrlList.length == 0" class="nodata">등록 내역이 없습니다</div>
-        <div v-else class="nobox-list">
+        <div
+          v-if="depWdrlList.length == 0"
+          class="nodata"
+        >등록 내역이 없습니다</div>
+        <div
+          v-else
+          class="nobox-list"
+        >
           <template v-for="depWdrlInfo in depWdrlList">
-            <p :key="depWdrlInfo.index" v-if="depWdrlInfo.dateCol" class="date">{{formatDateDot(depWdrlInfo.dt_trd)}}</p>
-            <div :key="depWdrlInfo.index" @click="viewDetail(depWdrlInfo.no_person, depWdrlInfo.no_account, depWdrlInfo.dt_trd, depWdrlInfo.tm_trd, depWdrlInfo.rk);" class="item">
+            <p
+              :key="depWdrlInfo.index"
+              v-if="depWdrlInfo.dateCol"
+              class="date"
+            >{{formatDateDot(depWdrlInfo.dt_trd)}}</p>
+            <div
+              :key="depWdrlInfo.index"
+              @click="viewDetail(depWdrlInfo.no_person, depWdrlInfo.no_account, depWdrlInfo.dt_trd, depWdrlInfo.tm_trd, depWdrlInfo.rk);"
+              class="item"
+            >
               <div class="flex">
-                <p><em class="circle" :class="colorList[depWdrlInfo.rk]">{{depWdrlInfo.nm_person}}</em><em>{{depWdrlInfo.doc1}}</em></p>
+                <p><em
+                    class="circle"
+                    :class="colorList[depWdrlInfo.rk]"
+                  >{{depWdrlInfo.nm_person}}</em><em>{{depWdrlInfo.doc1}}</em></p>
                 <p v-if="'0'!=depWdrlInfo.amt_dep"><em class="number blue">{{formatNumber(depWdrlInfo.amt_dep)}}</em>원</p>
                 <p v-else><em class="number red">{{('-'+formatNumber(depWdrlInfo.amt_wdrl))}}</em>원</p>
               </div>
@@ -89,7 +139,10 @@
       </div>
       <div class="wrap">
         <div class="hash">
-          <a v-for="scKeywordInfo in scKeywordList" :key="scKeywordInfo.index"># {{scKeywordInfo.doc1}}</a>
+          <a
+            v-for="scKeywordInfo in scKeywordList"
+            :key="scKeywordInfo.index"
+          ># {{scKeywordInfo.doc1}}</a>
         </div>
       </div>
     </aside>
@@ -103,7 +156,7 @@ import Constant from "./../../assets/js/constant.js";
 import ko from "vee-validate/dist/locale/ko.js";
 
 export default {
-  name: "AssetsAccountWdrlDetail",
+  name: "assetsBankDepWdrlList",
   data() {
     return {
       seen: "",

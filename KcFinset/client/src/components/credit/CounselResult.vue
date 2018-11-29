@@ -1,35 +1,112 @@
 <template>
-    <section>
-        <div class="counsel-result">
-            <p class="title">상담결과</p>
-            <p>안녕하세요.</p>
-            <p>홍길동님의 경우엔 주로 할부결제와 단기카드대출(현금서비스) 이용금액이 많아 카드 채무가 신용도에 악영향을 주고 있으므로 앞으로는 일시불로 카드를 사용하는 것이 바람직합니다.</p>
-            <p>우선 현실적인 목표로 단기카드대출(현금서비스)이용을 점차 줄여 6개월 내에 300만원 이하로 낮추고 다시 6개월 내에 잔액을 모두 상환한다는 계획을 세워 실행에 옮기도록 하는 것이 좋습니다.</p>
-            <p>잔액을 모두 상환하면 1등급 정도는 상승할 것으로 예상됩니다.</p>
-        </div>
-    </section>
+  <section v-if="seen">
+    <div class="counsel-result">
+      <p class="title">질문</p>
+      {{counselInfo.dt_apply}}<br />
+      <p>{{counselInfo.inquiry_contents}}</p>
+      <template v-if="cd_counsel_status=='3'">
+        <p class="title">답변</p>
+        {{counselInfo.dt_counsel}}<br />
+        <p>{{counselContents}}</p>
+      </template>
+    </div>
+    <button
+      v-if="cd_counsel_status!='3'"
+      @click="goUpdateForm()"
+    >수정</button>
+    <button
+      v-if="cd_counsel_status!='3'"
+      @click="deleteCounsel()"
+    >취소</button>
+  </section>
 </template>
 
 <script>
+import Common from "./../../assets/js/common.js";
+import Constant from "./../../assets/js/constant.js";
+import ko from "vee-validate/dist/locale/ko.js";
+
 export default {
-  name: "CreditCounselResult",
+  name: "creditCounselResult",
   data() {
-    return {};
+    return {
+      seen: false,
+      counsel_seq: "",
+      cd_counsel_status: "",
+      counselInfo: "",
+      counselContents: ""
+    };
   },
   components: {},
   computed: {},
   beforeCreate() {
     this.$store.state.header.type = "sub";
-    this.$store.state.title = "신용상담";
+    this.$store.state.title = "상담결과보기";
   },
-  created() {},
+  created() {
+    this.counsel_seq = this.$route.query.counsel_seq;
+    this.cd_counsel_status = this.$route.query.cd_counsel_status;
+    this.getCreditCounselResultInfo();
+  },
   beforeMount() {},
   mounted() {},
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    //정보조회
+    getCreditCounselResultInfo: function() {
+      var _this = this;
+      this.$http
+        .get("/m/credit/getCreditCounselResultInfo.json", {
+          params: {
+            counsel_seq: _this.counsel_seq,
+            cd_counsel_status: _this.cd_counsel_status
+          }
+        })
+        .then(response => {
+          _this.counselInfo = response.data.counselInfo;
+          //상담완료시 답변내용 셋팅
+          if ("3" == _this.cd_counsel_status) {
+            _this.counselContents = response.data.counselContents;
+          }
+
+          _this.seen = true;
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+        });
+    },
+    //수정화면 이동
+    goUpdateForm: function() {
+      this.$router.push({
+        name: "creditCounselReqStep4",
+        query: {
+          counsel_seq: counsel_seq
+        }
+      });
+    },
+    //삭제
+    deleteCounsel: function() {
+      var _this = this;
+
+      var formData = new FormData();
+      formData.append("counsel_seq", _this.counsel_seq);
+
+      this.$http
+        .post("/m/credit/deleteCreditCounselInfo.json", formData)
+        .then(response => {
+          this.$toast.center(response.data.message);
+          if ("00" == response.data.result) {
+            _this.$router.push("/credit/counselMain");
+          }
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+        });
+    }
+  }
 };
 </script>
 

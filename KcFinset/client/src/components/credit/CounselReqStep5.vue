@@ -1,26 +1,30 @@
 <template>
   <section>
-    <div class="container">
-      <textarea></textarea>
-      <div class="btn-wrap float">
-        <a @click="$router.push('')" class="solid blue box">신청하기</a>
-      </div>
+
+    <div class="loading success">
+      {{this.$store.state.user.nmPerson}}님의 신용상담을<br>신청하였습니다.
     </div>
 
+    <div class="btn-wrap float">
+      <a
+        @click="$router.push('/credit/counselMain')"
+        class="solid box blue"
+      >홈으로</a>
+    </div>
   </section>
 </template>
 
 <script>
 export default {
-  name: "CreditCounselInfo4",
+  name: "creditCounselReqStep5",
   data() {
     return {};
   },
   components: {},
   computed: {},
   beforeCreate() {
-    this.$store.state.header.type = "sub";
-    this.$store.state.title = "신청내용";
+    this.$store.state.header.type = "noHeader";
+    this.$store.state.title = "";
   },
   created() {},
   beforeMount() {},

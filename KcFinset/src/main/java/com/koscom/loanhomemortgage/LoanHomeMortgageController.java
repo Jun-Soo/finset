@@ -16,12 +16,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.koscom.conditionhouse.model.ConditionhouseForm;
 import com.koscom.conditionhouse.service.ConditionhouseManager;
 import com.koscom.domain.ConditionhouseInfo;
+import com.koscom.finance.model.TxFcTransmitVO;
 import com.koscom.goods.model.GoodsForm;
 import com.koscom.goods.model.GoodsVO;
 import com.koscom.goods.service.GoodsManager;
 import com.koscom.goodsbank.model.GoodsbankForm;
 import com.koscom.goodsbank.model.GoodsbankVO;
 import com.koscom.goodsbank.service.GoodsbankManager;
+import com.koscom.loan.service.LoanManager;
 import com.koscom.util.AuthUtil;
 import com.koscom.util.Constant;
 import com.koscom.util.Pagination;
@@ -43,6 +45,9 @@ public class LoanHomeMortgageController implements Constant {
 
 	@Autowired
 	ConditionhouseManager conditionhouseManager;
+	
+	@Autowired
+	LoanManager loanManager;
 	
 	@Resource
 	Environment environment;
@@ -160,6 +165,74 @@ public class LoanHomeMortgageController implements Constant {
 			logger.info("goodsInfo.toString() : "+goodsInfo.toString());
 			model.addAttribute("goodsInfo", goodsInfo);
 		}
+		return "jsonView";
+	}
+	
+	/** VUE
+	 * 부동산 신청조건 update 
+	 * @param request
+	 * @param model
+	 * @param txFcTransmitVO
+	 * @return
+	 */
+	@RequestMapping("/modifyLoanREConditionInfo.json")
+	public String modifyLoanREConditionInfo(HttpServletRequest request, Model model, TxFcTransmitVO txFcTransmitVO) {
+		logger.info("=======================================================11111111111111111111111111111111111111111111");
+		logger.info(txFcTransmitVO.toString());
+		logger.info("=======================================================");
+		ReturnClass returnClass = loanManager.modifyLoanREConditionInfo(txFcTransmitVO);
+		model.addAttribute("result", returnClass.getCd_result());
+		return "jsonView";
+	}
+	
+	/** VUE
+	 * 주택 정보 update
+	 * @param request
+	 * @param model
+	 * @param txFcTransmitVO
+	 * @return
+	 */
+	@RequestMapping("/modifyLoanREHomeInfo.json")
+	public String modifyLoanREHomeInfo(HttpServletRequest request, Model model, TxFcTransmitVO txFcTransmitVO) {
+		logger.info("=======================================================11111111111111111111111111111111111111111111");
+		logger.info(txFcTransmitVO.toString());
+		logger.info("=======================================================");
+		ReturnClass returnClass = loanManager.modifyLoanREHomeInfo(txFcTransmitVO);
+		model.addAttribute("result", returnClass.getCd_result());
+		return "jsonView";
+	}
+	
+	/** VUE
+	 * 직장/소득 정보 update
+	 * @param request
+	 * @param model
+	 * @param txFcTransmitVO
+	 * @return
+	 */
+	@RequestMapping("/modifyLoanREIncomeInfo.json")
+	public String modifyLoanREIncomeInfo(HttpServletRequest request, Model model, TxFcTransmitVO txFcTransmitVO) {
+		logger.info("=======================================================11111111111111111111111111111111111111111111");
+		logger.info(txFcTransmitVO.toString());
+		logger.info("=======================================================");
+		ReturnClass returnClass = loanManager.modifyLoanREIncomeInfo(txFcTransmitVO);
+		model.addAttribute("result", returnClass.getCd_result());
+		return "jsonView";
+	}
+	
+	/** VUE
+	 * 상환 정보 update
+	 * @param request
+	 * @param model
+	 * @param txFcTransmitVO
+	 * @return
+	 */
+	@RequestMapping("/modifyLoanRERepaymentInfo.json")
+	public String modifyLoanRERepaymentInfo(HttpServletRequest request, Model model, TxFcTransmitVO txFcTransmitVO) {
+		logger.info("=======================================================11111111111111111111111111111111111111111111");
+		logger.info(txFcTransmitVO.toString());
+		logger.info("=======================================================");
+		ReturnClass returnClass = loanManager.modifyLoanRERepaymentInfo(txFcTransmitVO);
+		model.addAttribute("result", returnClass.getCd_result());
 		return "jsonView";
 	}
 	

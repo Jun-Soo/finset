@@ -153,7 +153,7 @@ export default {
           if (Constant.userAgent == "Android") {
             window.Android.closeWebView();
           } else if (Constant.userAgent == "iOS") {
-            Jockey.send("closeWebView", {});
+            Jockey.send("closeWebView");
           }
           return false;
         } else {

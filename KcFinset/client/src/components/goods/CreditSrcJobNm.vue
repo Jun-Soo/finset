@@ -32,7 +32,7 @@
     </div>
 
     <div class="btn-wrap float">
-      <a class="box blue solid" @click="clickConfim()">확인</a>
+      <a class="box blue solid" @click="clickConfirm()">확인</a>
     </div>
 
   </section>
@@ -71,9 +71,9 @@ export default {
   methods: {
     changeInput: function(option) {
       this.page = 1;
-      Common.pagination(this.searchJob);
+      Common.pagination(this.searchJob, "modal");
     },
-    searchJob: function() {
+    searchJob: function(callback) {
       var _this = this;
       if (this.nm_comp == "") {
         this.$toast.center("직장명을 입력해주세요.");
@@ -92,7 +92,7 @@ export default {
         })
         .then(response => {
           var list = response.data.pagedList.source;
-          if (list.length === 0) {
+          if ((list || "") == "" || list.length === 0) {
             this.$store.state.isLoading = false;
             callback();
             return;
@@ -128,7 +128,7 @@ export default {
       this.$parent.$parent.openPop("CreditInsJobNm");
       this.$emit("popclose");
     },
-    clickConfim: function(job) {
+    clickConfirm: function(job) {
       var _this = this;
       for (var i = 0; i < this.jobList.length; i++) {
         if (this.jobList[i].isSelect) {

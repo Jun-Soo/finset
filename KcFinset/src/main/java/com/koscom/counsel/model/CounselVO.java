@@ -5,9 +5,9 @@ import java.io.Serializable;
 import com.koscom.domain.CounselInfo;
 
 public class CounselVO extends CounselInfo implements Serializable{
-	
+
 	private static final long serialVersionUID = -2613450342627866149L;
-	
+
 	/**
 	 * 상담 구분
 	 * 0 01 중요사항
@@ -19,7 +19,7 @@ public class CounselVO extends CounselInfo implements Serializable{
 	public static String CD_COUNSEL_CLASS_10 = "10";
 	public static String CD_COUNSEL_CLASS_20 = "20";
 	public static String CD_COUNSEL_CLASS_30 = "30";
-	
+
 	private String no_person;    		/*회원관리번호*/
 	private String counsel_seq;    		/*상담순번*/
 	private String cd_counsel_status;   /*상담상태코드(1:상담신청 접수,2:상담 준비중,3:상담완료)*/
@@ -33,21 +33,23 @@ public class CounselVO extends CounselInfo implements Serializable{
 	private String list_card_use;    	/*카드이용내역*/
 	private String list_overdue_info;   /*연체정보내역*/
 	private String list_overdue_etc;    /*기타연체내역*/
+	private String inquiry_contents;	/*질문내용*/
 	private String counsel_contents;    /*상담내용*/
 	private String etc_contents;    	/*기타내용*/
 	private String dt_pre_counsel;    	/*상담준비일시*/
 	private String dt_counsel;    		/*상담완료일시*/
 	private String id_emp_counsel;    	/*상담직원아이디*/
+	private String yn_delete;			/* 삭제여부 */
 	private String id_frt;    			/*최초입력아이디*/
 	private String dt_frt;    			/*최초입력시간*/
 	private String id_lst;    			/*최종수정아이디*/
 	private String dt_lst;    			/*최종수정시간*/
-	
+
 	private String age;					/*나이*/
 	private String nm_emp;				/*상담직원명*/
 	private String nm_person;			/*회원명*/
 	private String cd_gender;           /*성별*/
-	
+
 	//신용정보
 	private String req_yyyymm;			/*기준일*/
 	private String grade_credit;		/*신용등급*/
@@ -55,7 +57,7 @@ public class CounselVO extends CounselInfo implements Serializable{
 	private String percentage;			/*백분율*/
 	private String rank;				/*순위*/
 	private String cd_score;			/*스코어구분코드*/
-	
+
 	//부채정보
 	private String ymd_loan;			/*약정일*/
 	private String debt_type;			/*분류*/
@@ -64,8 +66,18 @@ public class CounselVO extends CounselInfo implements Serializable{
 	private String amt_remain;			/*잔액*/
 	private String amt_repay;			/*월상환액*/
 	private String interest;			/*이자율*/
-	private String nm_account;          /*계좌상태명*/           
-	
+	private String nm_account;          /*계좌상태명*/
+
+	//신용_신용상담
+	private String sex;  //성별
+	private String bal_overdue;  //연체금액
+	private String cur_mm_amt_repay;  //월상환액
+	private String cnt_card_use;  //이용카드수
+	private String amt_card_total; //월이용액
+	private String amt_income_total; //월소득
+	private String amt_consume_total; //소비정보 전월 총금액
+	private String amt_expense_total; //월지출
+
 	public String getNo_person() {
 		return no_person;
 	}
@@ -144,6 +156,12 @@ public class CounselVO extends CounselInfo implements Serializable{
 	public void setList_overdue_etc(String list_overdue_etc) {
 		this.list_overdue_etc = list_overdue_etc;
 	}
+	public String getInquiry_contents() {
+		return inquiry_contents;
+	}
+	public void setInquiry_contents(String inquiry_contents) {
+		this.inquiry_contents = inquiry_contents;
+	}
 	public String getCounsel_contents() {
 		return counsel_contents;
 	}
@@ -173,6 +191,12 @@ public class CounselVO extends CounselInfo implements Serializable{
 	}
 	public void setId_emp_counsel(String id_emp_counsel) {
 		this.id_emp_counsel = id_emp_counsel;
+	}
+	public String getYn_delete() {
+		return yn_delete;
+	}
+	public void setYn_delete(String yn_delete) {
+		this.yn_delete = yn_delete;
 	}
 	public String getId_frt() {
 		return id_frt;
@@ -221,7 +245,7 @@ public class CounselVO extends CounselInfo implements Serializable{
 	}
 	public void setCd_gender(String cd_gender) {
 		this.cd_gender = cd_gender;
-	}	
+	}
 	public String getReq_yyyymm() {
 		return req_yyyymm;
 	}
@@ -306,5 +330,53 @@ public class CounselVO extends CounselInfo implements Serializable{
 	public void setNm_account(String nm_account) {
 		this.nm_account = nm_account;
 	}
-	
+	public String getSex() {
+		return sex;
+	}
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+	public String getBal_overdue() {
+		return bal_overdue;
+	}
+	public void setBal_overdue(String bal_overdue) {
+		this.bal_overdue = bal_overdue;
+	}
+	public String getCur_mm_amt_repay() {
+		return cur_mm_amt_repay;
+	}
+	public void setCur_mm_amt_repay(String cur_mm_amt_repay) {
+		this.cur_mm_amt_repay = cur_mm_amt_repay;
+	}
+	public String getCnt_card_use() {
+		return cnt_card_use;
+	}
+	public void setCnt_card_use(String cnt_card_use) {
+		this.cnt_card_use = cnt_card_use;
+	}
+	public String getAmt_card_total() {
+		return amt_card_total;
+	}
+	public void setAmt_card_total(String amt_card_total) {
+		this.amt_card_total = amt_card_total;
+	}
+	public String getAmt_income_total() {
+		return amt_income_total;
+	}
+	public void setAmt_income_total(String amt_income_total) {
+		this.amt_income_total = amt_income_total;
+	}
+	public String getAmt_consume_total() {
+		return amt_consume_total;
+	}
+	public void setAmt_consume_total(String amt_consume_total) {
+		this.amt_consume_total = amt_consume_total;
+	}
+	public String getAmt_expense_total() {
+		return amt_expense_total;
+	}
+	public void setAmt_expense_total(String amt_expense_total) {
+		this.amt_expense_total = amt_expense_total;
+	}
+
 }

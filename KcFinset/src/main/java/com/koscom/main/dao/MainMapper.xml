@@ -86,7 +86,7 @@
 					ASSETS_INFO
 				WHERE
 					DT_EXPIRE IS NULL
-					AND YN_USE = 'Y'
+					AND YN_DELETE = 'N'
 					AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
 			) TB
 	</select>

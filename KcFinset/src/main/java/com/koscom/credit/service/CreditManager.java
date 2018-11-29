@@ -3,7 +3,10 @@ package com.koscom.credit.service;
 import java.util.HashMap;
 import java.util.List;
 
+import com.koscom.counsel.model.CounselForm;
+import com.koscom.counsel.model.CounselVO;
 import com.koscom.domain.CreditInfo;
+import com.koscom.util.ReturnClass;
 
 public interface CreditManager {
 
@@ -82,4 +85,61 @@ public interface CreditManager {
 	 * @return
 	 */
 	List<CreditInfo> getCreditInfoByNmIf(CreditInfo info);
+
+	/**
+	 * 신용상담 - 메인List
+	 * @param CounselForm
+	 * @return
+	 */
+	List<CounselVO> listCreditCounselMain(CounselForm counselForm);
+
+	/**
+	 * 신용상담 - 상담결과보기(상담정보)
+	 * @param String no_person
+	 * @return CounselVO
+	 */
+	CounselVO getCreditCounselInfo(CounselForm counselForm);
+
+	/**
+	 * 신용상담 - 상담결과보기
+	 * @param CounselForm
+	 * @return HashMap
+	 */
+	HashMap<String, String> getPersonCounselMapInfo(CounselForm counselForm);
+
+	/**
+	 * 신용상담 - 상담신청(기본정보)
+	 * @param String no_person
+	 * @return CounselVO
+	 */
+	CounselVO getCreditCounselBaseInfo(String no_person);
+
+	/**
+	 * 신용상담 - 상담신청(부가정보)
+	 * @param String no_person
+	 * @return CounselVO
+	 */
+	CounselVO getCreditCounselAddInfo(String no_person);
+
+	/**
+	 * 신용상담 - 상담신청(등록)
+	 * @param CounselVO
+	 * @return ReturnClass
+	 */
+	ReturnClass createCreditCounselInfo(CounselVO counselVO);
+
+	/**
+	 * 신용상담 - 상담신청(수정)
+	 * @param CounselVO
+	 * @return ReturnClass
+	 */
+	ReturnClass updateCreditCounselInfo(CounselVO counselVO);
+
+	/**
+	 * 신용상담 - 상담신청(삭제)
+	 * @param CounselVO
+	 * @return ReturnClass
+	 */
+	ReturnClass deleteCreditCounselInfo(CounselVO counselVO);
+
 }

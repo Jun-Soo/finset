@@ -15,11 +15,13 @@
           <p class="total" v-if="cd_goods_alliance=='02'">선택 (<em>{{selectedCount}}</em>개)</p>
         </div>
         <div class="right">
-          <select v-model="cd_goods_class" @change="optingOnChange()">
+          <multiselect v-model="cd_goods_class" label="text" :show-labels="false" :options="options" :searchable="false" :allow-empty="false" @select="optingOnChange">
+          </multiselect>
+          <!-- <select v-model="cd_goods_class" @change="optingOnChange()">
             <option v-for="option in options" :key="option.index" v-bind:value="option.value">
               {{ option.text }}
             </option>
-          </select>
+          </select> -->
         </div>
       </div>
       <div class="item" v-for="goods in goodsList" :key="goods.index">
@@ -53,7 +55,7 @@
       </div>
     </div>
     <div class="btn-wrap float" v-if="cd_goods_alliance=='02' && selectedCount > 0">
-      <a class="solid box blue">금리/한도 조회하기</a>
+      <a class="solid box blue" @click="clickSearch()">금리/한도 조회하기</a>
     </div>
   </section>
 </template>
@@ -66,7 +68,7 @@ export default {
     return {
       seen: false,
       curTab: "noAffiliates",
-      cd_goods_class: "01",
+      cd_goods_class: { text: "신용대출(직장인)", value: "01" },
       cd_goods_alliance: "01",
       totalCount: 0,
       selectedCount: 0,
@@ -74,8 +76,9 @@ export default {
       goodsList: [],
       Common: Common,
       options: [
-        { text: "신용대출(직장인)", value: "01" },
-        { text: "신용대출(개인사업자)", value: "02" },
+        { text: "신용대출", value: "01" },
+        //{ text: "신용대출(직장인)", value: "01" },
+        //{ text: "신용대출(개인사업자)", value: "02" },
         { text: "담보대출", value: "03" }
       ]
     };
@@ -115,14 +118,14 @@ export default {
       var _this = this;
       var formData = new FormData();
       formData.append("page", this.page);
-      formData.append("cd_goods_class", this.cd_goods_class);
+      formData.append("cd_goods_class", this.cd_goods_class.value);
       formData.append("cd_goods_alliance", this.cd_goods_alliance);
 
       this.$http
         .post("/m/customercenter/listCustomerGoodsFavorite.json", formData)
         .then(function(response) {
           var list = response.data.pagedList.source;
-          if (list.length === 0) {
+          if ((list || "") == "" || list.length === 0) {
             _this.seen = true;
             callback();
             return;
@@ -162,7 +165,8 @@ export default {
         this.selectedCount--;
       }
     },
-    optingOnChange: function() {
+    optingOnChange: function(option) {
+      this.cd_goods_class = option;
       this.tabOnClick(this.curTab);
     },
     favGoodsChoice: function(goods, event) {
@@ -192,6 +196,33 @@ export default {
           yn_alliance: goods.yn_alliance
         }
       });
+    },
+    clickSearch: function() {
+      var _this = this;
+      var count = 0;
+      var cd_fc = "";
+      var cd_goods = "";
+      for (var i = 0; i < this.goodsList.length; i++) {
+        if (this.goodsList[i].isSelectChecked) {
+          count++;
+          cd_fc += this.goodsList[i].cd_fc + ",";
+          cd_goods += this.goodsList[i].cd_goods + ",";
+        }
+      }
+      if (count) {
+        cd_goods = cd_goods.slice(0, -1);
+        cd_fc = cd_fc.slice(0, -1);
+        this.$router.push({
+          name: "GoodsCertStep1",
+          params: {
+            type: _this.cd_goods_class.value,
+            cd_fc: cd_fc,
+            cd_goods: cd_goods
+          }
+        });
+      } else {
+        this.$toast.center("선택된 대출 상품이 없습니다.");
+      }
     }
   }
 };

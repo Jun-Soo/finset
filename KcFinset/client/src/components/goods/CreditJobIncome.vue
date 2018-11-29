@@ -9,51 +9,51 @@
             <p>
               <multiselect placeholder="직군선택" v-model="occupational" label="text" :options="option_occupational" :searchable="false" :allow-empty="false" @select="selectOccupational" v-validate="'required'" data-vv-name='직군'>
               </multiselect>
-              <a class=" warn" v-if="errors.has('직군')">{{errors.first('직군')}}</a>
             </p>
           </li>
+          <p class=" warn" v-if="errors.has('직군')">{{errors.first('직군')}}</p>
           <li v-if="show_jobSearch">
             <p class="key">직장명</p>
             <p>
               <input type="text" style="width: 60%" placeholder="직장명을 검색하세요" @focus="searchJob" v-model="korentrnm" v-validate="'required'" data-vv-name='직장명'>
               <button class="btn-search" @click="searchJob"></button>
-              <a class=" warn" v-if="errors.has('직장명')">{{errors.first('직장명')}}</a>
             </p>
           </li>
+          <p class=" warn" v-if="errors.has('직장명')">{{errors.first('직장명')}}</p>
           <li v-if="show_occupational_detail">
             <p class="key">상세직군</p>
             <p>
               <multiselect ref="occupational_detail" placeholder="상세직군선택" v-model="occupational_detail" label="text" :options="option_occupational_detail" :searchable="false" :allow-empty="false" @select="selectOccupationalDetail" v-validate="'required'" data-vv-name='상세직군'>
               </multiselect>
-              <a class=" warn" v-if="errors.has('상세직군')">{{errors.first('상세직군')}}</a>
             </p>
           </li>
+          <p class=" warn" v-if="errors.has('상세직군')">{{errors.first('상세직군')}}</p>
           <li v-if="show_worker_position">
             <p class="key">직위</p>
             <p>
               <multiselect ref="worker_position" placeholder="직위선택" v-model="worker_position" label="text" :options="option_worker_position" :searchable="false" :allow-empty="false" @select="selectWorkerPosition" v-validate="'required'" data-vv-name='직위'>
               </multiselect>
-              <a class=" warn" v-if="errors.has('직위')">{{errors.first('직위')}}</a>
             </p>
           </li>
+          <p class=" warn" v-if="errors.has('직위')">{{errors.first('직위')}}</p>
           <li v-if="show_employee_type">
             <p class="key">고용형태</p>
             <p>
               <multiselect ref="employee_type" placeholder="고용형태선택" v-model="employee_type" label="text" :options="option_employee_type" :searchable="false" :allow-empty="false" @select="selectEmployeeType" v-validate="'required'" data-vv-name='고용형태'>
               </multiselect>
-              <a class=" warn" v-if="errors.has('고용형태')">{{errors.first('고용형태')}}</a>
             </p>
           </li>
+          <p class=" warn" v-if="errors.has('고용형태')">{{errors.first('고용형태')}}</p>
           <li v-if="show_dt_join_view">
             <p class="key">입사년월</p>
             <p><input id="dt_join_view" type="month" laceholder="입사년월" v-model="dt_join_view" @change="changeDtJoinView" v-validate="'required'" data-vv-name='입사년월'></p>
-            <a class=" warn" v-if="errors.has('입사년월')">{{errors.first('입사년월')}}</a>
           </li>
+          <p class=" warn" v-if="errors.has('입사년월')">{{errors.first('입사년월')}}</p>
           <li>
             <p class="key">연소득</p>
             <p><input id="amt_year_income" type="text" v-model="amt_year_income" @change="changeAmtYearIncome" :disabled="disable_amt_year_income" v-validate="'required'" data-vv-name='연소득'> 만원</p>
-            <a class=" warn" v-if="errors.has('연소득')">{{errors.first('연소득')}}</a>
           </li>
+          <p class=" warn" v-if="errors.has('연소득')">{{errors.first('연소득')}}</p>
         </ul>
         <div class="btn-wrap float" v-if="show_next">
           <a class="solid blue box" @click="clickNext">다음</a>
@@ -73,6 +73,7 @@
 import Common from "./../../assets/js/common.js";
 import CreditSrcJobNm from "./CreditSrcJobNm.vue";
 import CreditInsJobNm from "./CreditInsJobNm.vue";
+import ko from "vee-validate/dist/locale/ko.js";
 export default {
   name: "",
   data() {
@@ -99,10 +100,10 @@ export default {
       option_worker_position: [],
       option_employee_type: [],
       //연동 값
-      occupational: {},
-      occupational_detail: {},
-      worker_position: {},
-      employee_type: {},
+      occupational: null,
+      occupational_detail: null,
+      worker_position: null,
+      employee_type: null,
       dt_join_view: "",
       amt_year_income: "",
       //기업정보
@@ -213,7 +214,7 @@ export default {
           formData.append("amt_year_income", _this.amt_year_income);
 
           this.$http
-            .post("/m/loan/updateTxFc.json", formData, {
+            .post("/m/loanworker/updateTxFc.json", formData, {
               headers: {
                 async: false,
                 "Content-Type":

@@ -32,7 +32,7 @@
 
 <script>
 export default {
-  name: "AssetsStockShrDetail",
+  name: "assetsStockShrDetail",
   data() {
     return {};
   },

@@ -49,7 +49,7 @@
 
 <script>
 export default {
-  name: "AssetsEtc",
+  name: "assetsDirInput",
   data() {
     return {};
   },

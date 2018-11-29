@@ -109,9 +109,9 @@ textarea{
 		line-height:30px;
 		text-align:left;
 		vertical-align: middle;
-		-webkit-user-select: none;
-		-moz-user-select: none;
-		-ms-user-select: none;
+		-webkit-user-select: text;
+		-moz-user-select: text;
+		-ms-user-select: text;
 		margin-right: 40px;
 		position: relative;
 		&:before{
@@ -144,9 +144,9 @@ textarea{
 		line-height:30px;
 		text-align:left;
 		vertical-align: middle;
-		-webkit-user-select: none;
-		-moz-user-select: none;
-		-ms-user-select: none;
+		-webkit-user-select: text;
+		-moz-user-select: text;
+		-ms-user-select: text;
 		&:before{
 			position: absolute;
 			left: 0;
@@ -298,9 +298,9 @@ textarea{
             line-height:18px;
             text-align:left;
             vertical-align: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
+            -webkit-user-select: text;
+            -moz-user-select: text;
+            -ms-user-select: text;
             &:before{
                 position: absolute;
                 left: 0;

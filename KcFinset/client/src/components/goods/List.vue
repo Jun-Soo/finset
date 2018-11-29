@@ -251,10 +251,17 @@ export default {
       this.loadGoodsTab(type);
     },
     loanGoodsDetail: function(cd_fc, cd_non_goods) {
+      var type = "";
+      if ((this.curTab = "loanWorker")) {
+        type = "01";
+      } else if ((this.curTab = "loanHome")) {
+        type = "03";
+      }
+
       this.$router.push({
         name: "GoodsDetail",
         params: {
-          type: this.curTab,
+          type: type,
           cd_fc: cd_fc,
           cd_goods: cd_non_goods,
           urlPath: this.urlPath,

@@ -87,7 +87,7 @@
         </div>
       </div>
       -->
-      <button class="btn-spend-add"></button>
+      <button class="btn-spend-add" @click="$router.push('/assets/dirInput')"></button>
     </div>
 
   </section>
@@ -100,7 +100,7 @@ import Constant from "./../../assets/js/constant.js";
 import ko from "vee-validate/dist/locale/ko.js";
 
 export default {
-  name: "AssetsMain",
+  name: "assetsMain",
   data() {
     return {
       seen: false,
@@ -139,8 +139,6 @@ export default {
           _this.assetsBankInfo = response.data.assetsBankInfo;
           _this.assetsStockInfo = response.data.assetsStockInfo;
 
-          console.log(_this.assetsBankInfo);
-          console.log(_this.assetsStockInfo);
           _this.seen = true;
         })
         .catch(e => {

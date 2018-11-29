@@ -51,6 +51,7 @@ export default {
           _this.$store.commit("INIT", response.data);
 
           if (Constant.userAgent == "Android") {
+            window.Android.setBackKeyUse("Y");
             window.Android.settingPush(response.data.yn_push);
             window.Android.settingPushType(response.data.cd_push);
             if (response.data.yn_fingerprint == "Y") {

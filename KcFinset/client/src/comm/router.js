@@ -65,12 +65,13 @@ import CreditRaiseRetry from '@/components/credit/RaiseRetry'
 // import CreditRaiseMobile from '@/components/credit/RaiseMobile'
 import CreditRaiseResult from '@/components/credit/RaiseResult'
 // import CreditGradeAnalysis from '@/components/credit/GradeAnalysis'
+import CreditCounselMain from '@/components/credit/CounselMain'
 import CreditCounselInfo from '@/components/credit/CounselInfo'
-import CreditCounselInfo2 from '@/components/credit/CounselInfo2'
-import CreditCounselInfo3 from '@/components/credit/CounselInfo3'
-import CreditCounselInfo4 from '@/components/credit/CounselInfo4'
-import CreditCounselInfo5 from '@/components/credit/CounselInfo5'
-import CreditRegCounsel from '@/components/credit/RegCounsel'
+import CreditCounselReqStep1 from '@/components/credit/CounselReqStep1'
+import CreditCounselReqStep2 from '@/components/credit/CounselReqStep2'
+import CreditCounselReqStep3 from '@/components/credit/CounselReqStep3'
+import CreditCounselReqStep4 from '@/components/credit/CounselReqStep4'
+import CreditCounselReqStep5 from '@/components/credit/CounselReqStep5'
 import CreditCounselResult from '@/components/credit/CounselResult'
 
 import DebtHome from '@/components/debt/Home'
@@ -211,1416 +212,1428 @@ import TemplateChartMultipleBar from '@/components/template/ChartMultipleBar'
 Vue.use(Router)
 
 export const routes = [{
-  path: '/home',
-  name: 'home',
-  component: Home,
-  meta: {
-    allowPath: true
+    path: '/home',
+    name: 'home',
+    component: Home,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: '/intro',
+    name: 'intro',
+    component: FinsetIntro,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: '/error',
+    name: 'error',
+    component: ErrorPage,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: '/main',
+    name: 'main',
+    component: FinsetMain,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: '/proxy',
+    name: 'proxy',
+    component: ProxyPage,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'spinner',
+    alias: '/spinner',
+    component: Spinner,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: '/common',
+    name: 'common',
+    component: MemberHome,
+    children: [{
+        path: 'loading',
+        alias: '/loading',
+        component: Loading,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'monthCal',
+        alias: '/monthCal',
+        component: CommonMonthCal,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'yearCal',
+        alias: '/yearCal',
+        component: CommonYearCal,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'calSetting',
+        alias: '/calSetting',
+        component: CommonCalSetting,
+        meta: {
+          allowPath: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/member',
+    name: 'member',
+    component: MemberHome,
+    children: [{
+        path: 'terms1',
+        alias: '/terms1',
+        component: MemberTerms1,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'terms2',
+        alias: '/terms2',
+        component: MemberTerms2,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'terms3',
+        alias: '/terms3',
+        component: MemberTerms3,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'terms4',
+        alias: '/terms4',
+        component: MemberTerms4,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'terms5',
+        alias: '/terms5',
+        component: MemberTerms5,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'terms6',
+        alias: '/terms6',
+        component: MemberTerms6,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'terms7',
+        alias: '/terms7',
+        component: MemberTerms7,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'terms8',
+        alias: '/terms8',
+        component: MemberTerms8,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'terms9',
+        alias: '/terms9',
+        component: MemberTerms9,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'terms10',
+        alias: '/terms10',
+        component: MemberTerms10,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'certStep1',
+        alias: '/certStep1',
+        component: MemberCertStep1,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'certStep2',
+        alias: '/certStep2',
+        component: MemberCertStep2,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'certCode',
+        alias: '/certCode',
+        component: MemberCertCode,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'certFinger',
+        alias: '/certFinger',
+        component: MemberCertFinger,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'certCodeLogin',
+        alias: '/certCodeLogin',
+        component: MemberCertCodeLogin,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'certFingerLogin',
+        alias: '/certFingerLogin',
+        component: MemberCertFingerLogin,
+        meta: {
+          allowPath: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/credit',
+    component: CreditHome,
+    children: [{
+        path: 'main',
+        alias: '/main',
+        component: CreditMain,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'detail',
+        alias: '/detail',
+        component: CreditDetail,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'cardInfo',
+        alias: '/cardInfo',
+        name: 'creditCardInfo',
+        component: CreditCardInfo,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'loanInfo',
+        alias: '/loanInfo',
+        name: 'creditLoanInfo',
+        component: CreditLoanInfo,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'overdueInfo',
+        alias: '/overdueInfo',
+        name: 'creditOverdueInfo',
+        component: CreditOverdueInfo,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'guaranteeInfo',
+        alias: '/guaranteeInfo',
+        name: 'creditGuaranteeInfo',
+        component: CreditGuaranteeInfo,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'smartReport',
+        alias: '/smartReport',
+        name: 'creditSmartReport',
+        component: CreditSmartReport,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'raiseInsPersonInfo',
+        alias: '/raiseInsPersonInfo',
+        name: 'CreditRaiseInsPersonInfo',
+        component: CreditRaiseInsPersonInfo,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'raiseInsPersonInfoNts',
+        alias: '/raiseInsPersonInfoNts',
+        component: CreditRaiseInsPersonInfoNts,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'loading',
+        alias: '/loading',
+        component: CreditLoading,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'raiseMain',
+        alias: '/raiseMain',
+        component: CreditRaiseMain,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'raiseInfo',
+        alias: '/raiseInfo',
+        component: CreditRaiseInfo,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'raiseNhis',
+        alias: '/raiseNhis',
+        component: CreditRaiseNhis,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'raiseNps',
+        alias: '/raiseNps',
+        component: CreditRaiseNps,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'raiseNts',
+        alias: '/raiseNts',
+        component: CreditRaiseNts,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'raiseRetry',
+        alias: '/raiseRetry',
+        component: CreditRaiseRetry,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'raiseResult',
+        alias: '/raiseResult',
+        component: CreditRaiseResult,
+        name: 'creditRaiseResult',
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'counselMain',
+        alias: '/counselMain',
+        component: CreditCounselMain,
+        name: 'creditCounselMain',
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'counselInfo',
+        alias: '/counselInfo',
+        component: CreditCounselInfo,
+        name: 'creditCounselInfo',
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'counselReqStep1',
+        alias: '/counselReqStep1',
+        component: CreditCounselReqStep1,
+        name: 'creditCounselReqStep1',
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'counselReqStep2',
+        alias: '/counselReqStep2',
+        component: CreditCounselReqStep2,
+        name: 'creditCounselReqStep2',
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'counselReqStep3',
+        alias: '/counselReqStep3',
+        component: CreditCounselReqStep3,
+        name: 'creditCounselReqStep3',
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'counselReqStep4',
+        alias: '/counselReqStep4',
+        component: CreditCounselReqStep4,
+        name: 'creditCounselReqStep4',
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'counselReqStep5',
+        alias: '/counselReqStep5',
+        component: CreditCounselReqStep5,
+        name: 'creditCounselReqStep5',
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'counselResult',
+        alias: '/counselResult',
+        component: CreditCounselResult,
+        name: 'creditCounselResult',
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/debt',
+    component: DebtHome,
+    children: [{
+        path: 'main',
+        alias: '/main',
+        component: DebtMain,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'calendar',
+        alias: '/calendar',
+        component: DebtCalendar,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'detail',
+        alias: '/detail',
+        name: 'debtDetail',
+        component: DebtDetail,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'detail_2',
+        alias: '/detail_2',
+        name: 'debtDetail_2',
+        component: DebtDetail2,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'repayment',
+        alias: '/repayment',
+        name: 'debtRepayment',
+        component: DebtRepayment,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'modify',
+        alias: '/modify',
+        name: 'debtModify',
+        component: DebtModify,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'calc',
+        alias: '/calc',
+        name: 'debtCalc',
+        component: DebtCalc,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'calcSearch',
+        alias: '/calcSearch',
+        name: 'debtCalcSearch',
+        component: DebtCalcSearch,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'register',
+        alias: '/register',
+        name: 'debtRegister',
+        component: DebtRegister,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'regDetail',
+        alias: '/regDetail',
+        name: 'debtRegDetail',
+        component: DebtRegDetail,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'update',
+        alias: '/update',
+        name: 'debtUpdate',
+        component: DebtUpdate,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'reqIntrCut',
+        alias: '/reqIntrCut',
+        name: 'debtReqIntrCut',
+        component: DebtReqIntrCut,
+        meta: {
+          allowPath: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/memo',
+    component: MemoHome,
+    children: [{
+        path: 'register',
+        alias: '/register',
+        component: MemoRegister,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'list',
+        alias: '/list',
+        component: MemoList,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'detail',
+        alias: '/detail',
+        component: MemoDetail,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'main',
+        alias: '/main',
+        component: MemoMain,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'create',
+        alias: '/create',
+        component: MemoCreate,
+        meta: {
+          allowPath: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/consume',
+    component: ConsumeHome,
+    children: [{
+        path: 'main',
+        alias: '/main',
+        component: ConsumeMain,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'regGoal',
+        alias: '/regGoal',
+        component: ConsumeRegGoal,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'consumeDetail',
+        alias: '/consumeDetail',
+        component: ConsumeConsumeDetail,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'incomeAnalyze',
+        alias: '/incomeAnalyze',
+        component: ConsumeIncomeAnalyze,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'setting',
+        alias: '/setting',
+        component: ConsumeSetting,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'consumeClass',
+        alias: '/consumeClass',
+        component: ConsumeConsumeClass,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'incomeClass',
+        alias: '/incomeClass',
+        component: ConsumeIncomeClass,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'payment',
+        alias: '/payment',
+        component: ConsumePayment,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'paymentDetail',
+        alias: '/paymentDetail',
+        component: ConsumePaymentDetail,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'settlement',
+        alias: '/settlement',
+        component: ConsumeSettlement,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'consumeIncomeStats',
+        alias: '/consumeIncomeStats',
+        component: ConsumeIncomeStats,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'draggable',
+        alias: '/draggable',
+        component: ConsumeDraggable,
+        meta: {
+          allowPath: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/assets',
+    component: AssetsHome,
+    children: [{
+        path: 'main',
+        alias: '/main',
+        component: AssetsMain,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'bankMain',
+        alias: '/bankMain',
+        name: 'assetsBankMain',
+        component: AssetsBankMain,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'bankActDetail',
+        alias: '/bankActDetail',
+        name: 'assetsBankActDetail',
+        component: AssetsBankActDetail,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'bankDepWdrlList',
+        alias: '/bankDepWdrlList',
+        name: 'assetsBankDepWdrlList',
+        component: AssetsBankDepWdrlList,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'bankDepWdrlDetail',
+        alias: '/bankDepWdrlDetail',
+        name: 'assetsBankDepWdrlDetail',
+        component: AssetsBankDepWdrlDetail,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'stockMain',
+        alias: '/stockMain',
+        component: AssetsStockMain,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'stockBalcDetail',
+        alias: '/stockBalcDetail',
+        component: AssetsStockBalcDetail,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'stockActDetail',
+        alias: '/stockActDetail',
+        component: AssetsStockActDetail,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'stockShrDetail',
+        alias: '/stockShrDetail',
+        component: AssetsStockShrDetail,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'stockFndDetail',
+        alias: '/stockFndDetail',
+        component: AssetsStockFndDetail,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'dirInput',
+        alias: '/dirInput',
+        component: AssetsDirInput,
+        meta: {
+          allowPath: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/goods',
+    component: GoodsHome,
+    children: [{
+        path: 'list',
+        alias: '/list',
+        component: GoodsList,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'detail',
+        alias: '/detail',
+        name: 'GoodsDetail',
+        component: GoodsDetail,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'stockDetail',
+        alias: '/stockDetail',
+        name: 'GoodsStockDetail',
+        component: GoodsStockDetail,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'certStep1',
+        alias: '/certStep1',
+        name: 'GoodsCertStep1',
+        component: GoodsCertStep1,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'certStep2',
+        alias: '/certStep2',
+        name: 'GoodsCertStep2',
+        component: GoodsCertStep2,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'creditReqInfo',
+        alias: '/creditReqInfo',
+        name: 'GoodsCreditReqInfo',
+        component: GoodsCreditReqInfo,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'creditJobIncome',
+        alias: '/creditJobIncome',
+        name: 'GoodsCreditJobIncome',
+        component: GoodsCreditJobIncome,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'creditSrcJobNm',
+        alias: '/creditSrcJobNm',
+        name: 'GoodsCreditSrcJobNm',
+        component: GoodsCreditSrcJobNm,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'creditInsJobNm',
+        alias: '/creditInsJobNm',
+        name: 'GoodsCreditInsJobNm',
+        component: GoodsCreditInsJobNm,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'hsnInsReqInfo',
+        alias: '/hsnInsReqInfo',
+        name: 'GoodsHsnInsReqInfo',
+        component: GoodsHsnInsReqInfo,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'hsnInsHsnInfo',
+        alias: '/hsnInsHsnInfo',
+        name: 'GoodsHsnInsHsnInfo',
+        component: GoodsHsnInsHsnInfo,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'hsnInsIncome',
+        alias: '/hsnInsIncome',
+        name: 'GoodsHsnInsIncome',
+        component: GoodsHsnInsIncome,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'hsnInsRepay',
+        alias: '/hsnInsRepay',
+        name: 'GoodsHsnInsRepay',
+        component: GoodsHsnInsRepay,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'loading',
+        alias: '/loading',
+        name: 'GoodsLoading',
+        component: GoodsLoading,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'result',
+        alias: '/result',
+        name: 'GoodsResult',
+        component: GoodsResult,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'reqDone',
+        alias: '/reqDone',
+        name: 'GoodsReqDone',
+        component: GoodsReqDone,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'workergoods',
+        alias: '/workergoods',
+        component: GoodsWorkerGoods,
+        meta: {
+          allowPath: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/share',
+    name: 'share',
+    component: ShareHome,
+    children: [{
+        path: 'main',
+        alias: '/main',
+        name: 'shareMain',
+        component: ShareMain,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'history',
+        alias: '/history',
+        name: 'shareHistory',
+        component: ShareHistory,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'newRequest',
+        alias: '/newRequest',
+        name: 'shareNewRequest',
+        component: ShareNewRequest,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'reqSetting',
+        alias: '/reqSetting',
+        name: 'shareReqSetting',
+        component: ShareReqSetting,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'offerSetting',
+        alias: '/offerSetting',
+        name: 'shareOfferSetting',
+        component: ShareOfferSetting,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'detail',
+        alias: '/detail',
+        name: 'shareDetail',
+        component: ShareDetail,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/etc',
+    component: EtcHome,
+    children: [{
+        path: 'alarmHistory',
+        alias: '/alarmHistory',
+        name: 'etcAlarmHistory',
+        component: EtcAlarmHistory,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'noticeMain',
+        alias: '/noticeMain',
+        name: 'etcNoticeMain',
+        component: EtcNoticeMain,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'noticeDetail',
+        alias: '/noticeDetail',
+        name: 'etcNoticeDetail',
+        component: EtcNoticeDetail,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'eventDetail',
+        alias: '/eventDetail',
+        name: 'etcEventDetail',
+        component: EtcEventDetail,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'faqMain',
+        alias: '/faqMain',
+        name: 'etcFaqMain',
+        component: EtcFaqMain,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'faqList',
+        alias: '/faqList',
+        name: 'etcFaqList',
+        component: EtcFaqList,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'faqDetail',
+        alias: '/faqDetail',
+        name: 'etcFaqDetail',
+        component: EtcFaqDetail,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'term',
+        alias: '/term',
+        name: 'etcTerm',
+        component: EtcTerm,
+        meta: {
+          allowPath: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/scrap',
+    component: ScrapHome,
+    children: [{
+        path: 'certStep',
+        alias: '/certStep',
+        name: 'scrapCertStep',
+        component: ScrapCertStep,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'fcLink',
+        alias: '/fcLink',
+        name: 'scrapFcLink',
+        component: ScrapFcLink,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'resultFcLink',
+        alias: '/resultFcLink',
+        name: 'scrapResultFcLink',
+        component: ScrapResultFcLink,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'ctrlFcLink',
+        alias: '/ctrlFcLink',
+        name: 'scrapCtrlFcLink',
+        component: ScrapCtrlFcLink,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'loading',
+        alias: '/loadaing',
+        name: 'scrapLoading',
+        component: ScrapLoading,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'regFcLink',
+        alias: '/regFcLink',
+        name: 'scrapRegFcLink',
+        component: ScrapRegFcLink,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'selFcLink',
+        alias: '/selFcLink',
+        name: 'scrapSelFcLink',
+        component: ScrapSelFcLink,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'terms',
+        alias: '/terms',
+        name: 'scrapTerms',
+        component: ScrapTerms,
+        meta: {
+          allowPath: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/mypage',
+    name: 'mypage',
+    component: MypageHome,
+    children: [{
+        path: 'info',
+        alias: '/info',
+        component: MypageInfo,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'email',
+        alias: '/email',
+        component: MypageEmail,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'logout',
+        alias: '/logout',
+        component: MypageLogout,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'regAlarm',
+        alias: '/regAlarm',
+        component: MypageRegAlarm,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'drop',
+        alias: '/drop',
+        component: MypageDrop,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'dropDone',
+        alias: '/dropDone',
+        component: MypageDropDone,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'cert',
+        alias: '/cert',
+        component: MypageCert,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'regCertLogin',
+        alias: '/regCertLogin',
+        component: MypageRegCertLogin,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'certPerson',
+        alias: '/certPerson',
+        component: MypageCertPerson,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'chgPwd',
+        alias: '/chgPwd',
+        component: MypageChgPwd,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'favGoods',
+        alias: '/favGoods',
+        component: MypageFavGoods,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'favDetail',
+        alias: '/favDetail',
+        name: 'MypageFavDetail',
+        component: MypageFavDetail,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'rstlInqGoods',
+        alias: '/rstlInqGoods',
+        component: MypageRstlInqGoods,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'state',
+        alias: '/state',
+        component: MypageState,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/sample/swiper',
+    name: 'swiper',
+    component: Swiper,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: '/sample/gauge',
+    name: 'gauge',
+    component: Gauge,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: '/sample/progress',
+    name: 'progress',
+    component: Progress,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: '/sample/calendar',
+    name: 'calendar',
+    component: Calendar,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: '/template',
+    name: 'template',
+    component: TemplateHome,
+    children: [{
+        path: 'main',
+        alias: '/main',
+        component: TemplateMain,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'chartSingleLine',
+        alias: '/chartSingleLine',
+        component: TemplateChartSingleLine,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'chartSingleLine2',
+        alias: '/chartSingleLine2',
+        component: TemplateChartSingleLine2,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'chartMultipleBar',
+        alias: '/chartMultipleBar',
+        component: TemplateChartMultipleBar,
+        meta: {
+          allowPath: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/news',
+    component: NewsHome,
+    children: [{
+        path: 'main',
+        alias: '/main',
+        name: 'newsMain',
+        component: NewsMain,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      },
+      {
+        path: 'detail',
+        alias: '/detail',
+        name: 'newsDetail',
+        component: NewsDetail,
+        meta: {
+          allowPath: true,
+          requiresAuth: true
+        }
+      }
+    ]
   }
-},
-{
-  path: '/intro',
-  name: 'intro',
-  component: FinsetIntro,
-  meta: {
-    allowPath: true
-  }
-},
-{
-  path: '/error',
-  name: 'error',
-  component: ErrorPage,
-  meta: {
-    allowPath: true
-  }
-},
-{
-  path: '/main',
-  name: 'main',
-  component: FinsetMain,
-  meta: {
-    allowPath: true,
-    requiresAuth: true
-  }
-},
-{
-  path: '/proxy',
-  name: 'proxy',
-  component: ProxyPage,
-  meta: {
-    allowPath: true
-  }
-},
-{
-  path: 'spinner',
-  alias: '/spinner',
-  component: Spinner,
-  meta: {
-    allowPath: true
-  }
-},
-{
-  path: '/common',
-  name: 'common',
-  component: MemberHome,
-  children: [{
-    path: 'loading',
-    alias: '/loading',
-    component: Loading,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'monthCal',
-    alias: '/monthCal',
-    component: CommonMonthCal,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'yearCal',
-    alias: '/yearCal',
-    component: CommonYearCal,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'calSetting',
-    alias: '/calSetting',
-    component: CommonCalSetting,
-    meta: {
-      allowPath: true
-    }
-  }
-  ]
-},
-{
-  path: '/member',
-  name: 'member',
-  component: MemberHome,
-  children: [{
-    path: 'terms1',
-    alias: '/terms1',
-    component: MemberTerms1,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'terms2',
-    alias: '/terms2',
-    component: MemberTerms2,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'terms3',
-    alias: '/terms3',
-    component: MemberTerms3,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'terms4',
-    alias: '/terms4',
-    component: MemberTerms4,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'terms5',
-    alias: '/terms5',
-    component: MemberTerms5,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'terms6',
-    alias: '/terms6',
-    component: MemberTerms6,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'terms7',
-    alias: '/terms7',
-    component: MemberTerms7,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'terms8',
-    alias: '/terms8',
-    component: MemberTerms8,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'terms9',
-    alias: '/terms9',
-    component: MemberTerms9,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'terms10',
-    alias: '/terms10',
-    component: MemberTerms10,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'certStep1',
-    alias: '/certStep1',
-    component: MemberCertStep1,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'certStep2',
-    alias: '/certStep2',
-    component: MemberCertStep2,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'certCode',
-    alias: '/certCode',
-    component: MemberCertCode,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'certFinger',
-    alias: '/certFinger',
-    component: MemberCertFinger,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'certCodeLogin',
-    alias: '/certCodeLogin',
-    component: MemberCertCodeLogin,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'certFingerLogin',
-    alias: '/certFingerLogin',
-    component: MemberCertFingerLogin,
-    meta: {
-      allowPath: true
-    }
-  }
-  ]
-},
-{
-  path: '/credit',
-  component: CreditHome,
-  children: [{
-    path: 'main',
-    alias: '/main',
-    component: CreditMain,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'detail',
-    alias: '/detail',
-    component: CreditDetail,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'cardInfo',
-    alias: '/cardInfo',
-    name: 'creditCardInfo',
-    component: CreditCardInfo,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'loanInfo',
-    alias: '/loanInfo',
-    name: 'creditLoanInfo',
-    component: CreditLoanInfo,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'overdueInfo',
-    alias: '/overdueInfo',
-    name: 'creditOverdueInfo',
-    component: CreditOverdueInfo,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'guaranteeInfo',
-    alias: '/guaranteeInfo',
-    name: 'creditGuaranteeInfo',
-    component: CreditGuaranteeInfo,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'smartReport',
-    alias: '/smartReport',
-    name: 'creditSmartReport',
-    component: CreditSmartReport,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'raiseInsPersonInfo',
-    alias: '/raiseInsPersonInfo',
-    name: 'CreditRaiseInsPersonInfo',
-    component: CreditRaiseInsPersonInfo,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'raiseInsPersonInfoNts',
-    alias: '/raiseInsPersonInfoNts',
-    component: CreditRaiseInsPersonInfoNts,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'loading',
-    alias: '/loading',
-    component: CreditLoading,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'raiseMain',
-    alias: '/raiseMain',
-    component: CreditRaiseMain,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'raiseInfo',
-    alias: '/raiseInfo',
-    component: CreditRaiseInfo,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'raiseNhis',
-    alias: '/raiseNhis',
-    component: CreditRaiseNhis,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'raiseNps',
-    alias: '/raiseNps',
-    component: CreditRaiseNps,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'raiseNts',
-    alias: '/raiseNts',
-    component: CreditRaiseNts,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'raiseRetry',
-    alias: '/raiseRetry',
-    component: CreditRaiseRetry,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'raiseResult',
-    alias: '/raiseResult',
-    component: CreditRaiseResult,
-    name: 'creditRaiseResult',
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'counselInfo',
-    alias: '/counselInfo',
-    component: CreditCounselInfo,
-    name: 'creditCounselInfo',
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'counselInfo2',
-    alias: '/counselInfo2',
-    component: CreditCounselInfo2,
-    name: 'creditCounselInfo2',
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'counselInfo3',
-    alias: '/counselInfo3',
-    component: CreditCounselInfo3,
-    name: 'creditCounselInfo3',
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'counselInfo4',
-    alias: '/counselInfo4',
-    component: CreditCounselInfo4,
-    name: 'creditCounselInfo4',
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'counselInfo5',
-    alias: '/counselInfo5',
-    component: CreditCounselInfo5,
-    name: 'creditCounselInfo5',
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'regCounsel',
-    alias: '/regCounsel',
-    component: CreditRegCounsel,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'counselResult',
-    alias: '/counselResult',
-    component: CreditCounselResult,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  }
-  ]
-},
-{
-  path: '/debt',
-  component: DebtHome,
-  children: [{
-    path: 'main',
-    alias: '/main',
-    component: DebtMain,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'calendar',
-    alias: '/calendar',
-    component: DebtCalendar,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'detail',
-    alias: '/detail',
-    name: 'debtDetail',
-    component: DebtDetail,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'detail_2',
-    alias: '/detail_2',
-    name: 'debtDetail_2',
-    component: DebtDetail2,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'repayment',
-    alias: '/repayment',
-    name: 'debtRepayment',
-    component: DebtRepayment,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'modify',
-    alias: '/modify',
-    name: 'debtModify',
-    component: DebtModify,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'calc',
-    alias: '/calc',
-    name: 'debtCalc',
-    component: DebtCalc,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'calcSearch',
-    alias: '/calcSearch',
-    name: 'debtCalcSearch',
-    component: DebtCalcSearch,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'register',
-    alias: '/register',
-    name: 'debtRegister',
-    component: DebtRegister,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'regDetail',
-    alias: '/regDetail',
-    name: 'debtRegDetail',
-    component: DebtRegDetail,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'update',
-    alias: '/update',
-    name: 'debtUpdate',
-    component: DebtUpdate,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'reqIntrCut',
-    alias: '/reqIntrCut',
-    name: 'debtReqIntrCut',
-    component: DebtReqIntrCut,
-    meta: {
-      allowPath: true
-    }
-  }
-  ]
-},
-{
-  path: '/memo',
-  component: MemoHome,
-  children: [{
-    path: 'register',
-    alias: '/register',
-    component: MemoRegister,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'list',
-    alias: '/list',
-    component: MemoList,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'detail',
-    alias: '/detail',
-    component: MemoDetail,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'main',
-    alias: '/main',
-    component: MemoMain,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'create',
-    alias: '/create',
-    component: MemoCreate,
-    meta: {
-      allowPath: true
-    }
-  }
-  ]
-},
-{
-  path: '/consume',
-  component: ConsumeHome,
-  children: [{
-    path: 'main',
-    alias: '/main',
-    component: ConsumeMain,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'regGoal',
-    alias: '/regGoal',
-    component: ConsumeRegGoal,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'consumeDetail',
-    alias: '/consumeDetail',
-    component: ConsumeConsumeDetail,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'incomeAnalyze',
-    alias: '/incomeAnalyze',
-    component: ConsumeIncomeAnalyze,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'setting',
-    alias: '/setting',
-    component: ConsumeSetting,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'consumeClass',
-    alias: '/consumeClass',
-    component: ConsumeConsumeClass,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'incomeClass',
-    alias: '/incomeClass',
-    component: ConsumeIncomeClass,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'payment',
-    alias: '/payment',
-    component: ConsumePayment,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'paymentDetail',
-    alias: '/paymentDetail',
-    component: ConsumePaymentDetail,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'settlement',
-    alias: '/settlement',
-    component: ConsumeSettlement,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'consumeIncomeStats',
-    alias: '/consumeIncomeStats',
-    component: ConsumeIncomeStats,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'draggable',
-    alias: '/draggable',
-    component: ConsumeDraggable,
-    meta: {
-      allowPath: true
-    }
-  }
-  ]
-},
-{
-  path: '/assets',
-  component: AssetsHome,
-  children: [{
-    path: 'main',
-    alias: '/main',
-    component: AssetsMain,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'bankMain',
-    alias: '/bankMain',
-    name: 'assetsBankMain',
-    component: AssetsBankMain,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'bankActDetail',
-    alias: '/bankActDetail',
-    name: 'assetsBankActDetail',
-    component: AssetsBankActDetail,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'bankDepWdrlList',
-    alias: '/bankDepWdrlList',
-    name: 'assetsBankDepWdrlList',
-    component: AssetsBankDepWdrlList,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'bankDepWdrlDetail',
-    alias: '/bankDepWdrlDetail',
-    name: 'assetsBankDepWdrlDetail',
-    component: AssetsBankDepWdrlDetail,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'stockMain',
-    alias: '/stockMain',
-    component: AssetsStockMain,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'stockBalcDetail',
-    alias: '/stockBalcDetail',
-    component: AssetsStockBalcDetail,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'stockActDetail',
-    alias: '/stockActDetail',
-    component: AssetsStockActDetail,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'stockShrDetail',
-    alias: '/stockShrDetail',
-    component: AssetsStockShrDetail,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'stockFndDetail',
-    alias: '/stockFndDetail',
-    component: AssetsStockFndDetail,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'dirInput',
-    alias: '/dirInput',
-    component: AssetsDirInput,
-    meta: {
-      allowPath: true
-    }
-  }
-  ]
-},
-{
-  path: '/goods',
-  component: GoodsHome,
-  children: [{
-    path: 'list',
-    alias: '/list',
-    component: GoodsList,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'detail',
-    alias: '/detail',
-    name: 'GoodsDetail',
-    component: GoodsDetail,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'stockDetail',
-    alias: '/stockDetail',
-    name: 'GoodsStockDetail',
-    component: GoodsStockDetail,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'certStep1',
-    alias: '/certStep1',
-    name: 'GoodsCertStep1',
-    component: GoodsCertStep1,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'certStep2',
-    alias: '/certStep2',
-    name: 'GoodsCertStep2',
-    component: GoodsCertStep2,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'creditReqInfo',
-    alias: '/creditReqInfo',
-    name: 'GoodsCreditReqInfo',
-    component: GoodsCreditReqInfo,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'creditJobIncome',
-    alias: '/creditJobIncome',
-    name: 'GoodsCreditJobIncome',
-    component: GoodsCreditJobIncome,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'creditSrcJobNm',
-    alias: '/creditSrcJobNm',
-    name: 'GoodsCreditSrcJobNm',
-    component: GoodsCreditSrcJobNm,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'creditInsJobNm',
-    alias: '/creditInsJobNm',
-    name: 'GoodsCreditInsJobNm',
-    component: GoodsCreditInsJobNm,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'hsnInsReqInfo',
-    alias: '/hsnInsReqInfo',
-    name: 'GoodsHsnInsReqInfo',
-    component: GoodsHsnInsReqInfo,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'hsnInsHsnInfo',
-    alias: '/hsnInsHsnInfo',
-    name: 'GoodsHsnInsHsnInfo',
-    component: GoodsHsnInsHsnInfo,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'hsnInsIncome',
-    alias: '/hsnInsIncome',
-    name: 'GoodsHsnInsIncome',
-    component: GoodsHsnInsIncome,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'hsnInsRepay',
-    alias: '/hsnInsRepay',
-    name: 'GoodsHsnInsRepay',
-    component: GoodsHsnInsRepay,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'loading',
-    alias: '/loading',
-    name: 'GoodsLoading',
-    component: GoodsLoading,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'result',
-    alias: '/result',
-    name: 'GoodsResult',
-    component: GoodsResult,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'reqDone',
-    alias: '/reqDone',
-    name: 'GoodsReqDone',
-    component: GoodsReqDone,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'workergoods',
-    alias: '/workergoods',
-    component: GoodsWorkerGoods,
-    meta: {
-      allowPath: true
-    }
-  }
-  ]
-},
-{
-  path: '/share',
-  name: 'share',
-  component: ShareHome,
-  children: [{
-    path: 'main',
-    alias: '/main',
-    name: 'shareMain',
-    component: ShareMain,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'history',
-    alias: '/history',
-    name: 'shareHistory',
-    component: ShareHistory,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'newRequest',
-    alias: '/newRequest',
-    name: 'shareNewRequest',
-    component: ShareNewRequest,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'reqSetting',
-    alias: '/reqSetting',
-    name: 'shareReqSetting',
-    component: ShareReqSetting,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'offerSetting',
-    alias: '/offerSetting',
-    name: 'shareOfferSetting',
-    component: ShareOfferSetting,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'detail',
-    alias: '/detail',
-    name: 'shareDetail',
-    component: ShareDetail,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  }
-  ]
-},
-{
-  path: '/etc',
-  component: EtcHome,
-  children: [{
-    path: 'alarmHistory',
-    alias: '/alarmHistory',
-    name: 'etcAlarmHistory',
-    component: EtcAlarmHistory,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'noticeMain',
-    alias: '/noticeMain',
-    name: 'etcNoticeMain',
-    component: EtcNoticeMain,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'noticeDetail',
-    alias: '/noticeDetail',
-    name: 'etcNoticeDetail',
-    component: EtcNoticeDetail,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'eventDetail',
-    alias: '/eventDetail',
-    name: 'etcEventDetail',
-    component: EtcEventDetail,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'faqMain',
-    alias: '/faqMain',
-    name: 'etcFaqMain',
-    component: EtcFaqMain,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'faqList',
-    alias: '/faqList',
-    name: 'etcFaqList',
-    component: EtcFaqList,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'faqDetail',
-    alias: '/faqDetail',
-    name: 'etcFaqDetail',
-    component: EtcFaqDetail,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'term',
-    alias: '/term',
-    name: 'etcTerm',
-    component: EtcTerm,
-    meta: {
-      allowPath: true
-    }
-  }
-  ]
-},
-{
-  path: '/scrap',
-  component: ScrapHome,
-  children: [{
-    path: 'certStep',
-    alias: '/certStep',
-    name: 'scrapCertStep',
-    component: ScrapCertStep,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'fcLink',
-    alias: '/fcLink',
-    name: 'scrapFcLink',
-    component: ScrapFcLink,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'resultFcLink',
-    alias: '/resultFcLink',
-    name: 'scrapResultFcLink',
-    component: ScrapResultFcLink,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'ctrlFcLink',
-    alias: '/ctrlFcLink',
-    name: 'scrapCtrlFcLink',
-    component: ScrapCtrlFcLink,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'loading',
-    alias: '/loadaing',
-    name: 'scrapLoading',
-    component: ScrapLoading,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'regFcLink',
-    alias: '/regFcLink',
-    name: 'scrapRegFcLink',
-    component: ScrapRegFcLink,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'selFcLink',
-    alias: '/selFcLink',
-    name: 'scrapSelFcLink',
-    component: ScrapSelFcLink,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'terms',
-    alias: '/terms',
-    name: 'scrapTerms',
-    component: ScrapTerms,
-    meta: {
-      allowPath: true
-    }
-  }
-  ]
-},
-{
-  path: '/mypage',
-  name: 'mypage',
-  component: MypageHome,
-  children: [{
-    path: 'info',
-    alias: '/info',
-    component: MypageInfo,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'email',
-    alias: '/email',
-    component: MypageEmail,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'logout',
-    alias: '/logout',
-    component: MypageLogout,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'regAlarm',
-    alias: '/regAlarm',
-    component: MypageRegAlarm,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'drop',
-    alias: '/drop',
-    component: MypageDrop,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'dropDone',
-    alias: '/dropDone',
-    component: MypageDropDone,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'cert',
-    alias: '/cert',
-    component: MypageCert,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'regCertLogin',
-    alias: '/regCertLogin',
-    component: MypageRegCertLogin,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'certPerson',
-    alias: '/certPerson',
-    component: MypageCertPerson,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'chgPwd',
-    alias: '/chgPwd',
-    component: MypageChgPwd,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'favGoods',
-    alias: '/favGoods',
-    component: MypageFavGoods,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'favDetail',
-    alias: '/favDetail',
-    name: 'MypageFavDetail',
-    component: MypageFavDetail,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'rstlInqGoods',
-    alias: '/rstlInqGoods',
-    component: MypageRstlInqGoods,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'state',
-    alias: '/state',
-    component: MypageState,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  }
-  ]
-},
-{
-  path: '/sample/swiper',
-  name: 'swiper',
-  component: Swiper,
-  meta: {
-    allowPath: true
-  }
-},
-{
-  path: '/sample/gauge',
-  name: 'gauge',
-  component: Gauge,
-  meta: {
-    allowPath: true
-  }
-},
-{
-  path: '/sample/progress',
-  name: 'progress',
-  component: Progress,
-  meta: {
-    allowPath: true
-  }
-},
-{
-  path: '/sample/calendar',
-  name: 'calendar',
-  component: Calendar,
-  meta: {
-    allowPath: true
-  }
-},
-{
-  path: '/template',
-  name: 'template',
-  component: TemplateHome,
-  children: [{
-    path: 'main',
-    alias: '/main',
-    component: TemplateMain,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'chartSingleLine',
-    alias: '/chartSingleLine',
-    component: TemplateChartSingleLine,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'chartSingleLine2',
-    alias: '/chartSingleLine2',
-    component: TemplateChartSingleLine2,
-    meta: {
-      allowPath: true
-    }
-  },
-  {
-    path: 'chartMultipleBar',
-    alias: '/chartMultipleBar',
-    component: TemplateChartMultipleBar,
-    meta: {
-      allowPath: true
-    }
-  }
-  ]
-},
-{
-  path: '/news',
-  component: NewsHome,
-  children: [{
-    path: 'main',
-    alias: '/main',
-    name: 'newsMain',
-    component: NewsMain,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'detail',
-    alias: '/detail',
-    name: 'newsDetail',
-    component: NewsDetail,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  }
-  ]
-}
 ]
 
 const router = new Router({

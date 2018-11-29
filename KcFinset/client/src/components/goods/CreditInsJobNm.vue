@@ -24,6 +24,7 @@
 </template>
 
 <script>
+import ko from "vee-validate/dist/locale/ko.js";
 export default {
   name: "",
   data() {

@@ -3,7 +3,10 @@
     <div class="balance-top">
       <div class="item">
         <div class="flex-top">
-          <p class="symbol"><img src="../../assets/images/common/bu_samsung.png" alt="" />삼성생명보험</p>
+          <p class="symbol"><img
+              src="../../assets/images/common/bu_samsung.png"
+              alt=""
+            />삼성생명보험</p>
           <p class="text"><em>위탁종합</em><em>110-125-700003</em></p>
         </div>
         <div class="top">5,318,107<em>원</em></div>
@@ -47,7 +50,10 @@
       </div>
 
       <div class="item">
-        <a @click="$router.push('')" class="block">
+        <a
+          @click="$router.push('')"
+          class="block"
+        >
           <div class="flex">
             <p class="key">예수금</p>
             <p class="number">118,107<em>원</em></p>
@@ -63,7 +69,10 @@
       </div>
 
       <div class="item">
-        <a @click="$router.push('')" class="block">
+        <a
+          @click="$router.push('')"
+          class="block"
+        >
           <div class="flex">
             <p class="key">현대자동차</p>
             <p class="number">1,000,000<em>원</em></p>
@@ -79,7 +88,10 @@
       </div>
 
       <div class="item">
-        <a @click="$router.push('')" class="block">
+        <a
+          @click="$router.push('')"
+          class="block"
+        >
           <div class="flex">
             <p class="key">현대자동차</p>
             <p class="number">1,000,000<em>원</em></p>
@@ -101,7 +113,7 @@
 
 <script>
 export default {
-  name: "AssetsStockActDetail",
+  name: "assetsStockActDetail",
   data() {
     return {};
   },

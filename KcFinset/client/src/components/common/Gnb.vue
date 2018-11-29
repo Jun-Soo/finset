@@ -4,8 +4,14 @@
     <div class="gnb-wrap">
       <div class="top">
         <div class="left">
-          <button class="alarm" @click="clickButton('/etc/alarmHistory')"></button>
-          <button class="logout" @click="chkLogout"></button>
+          <button
+            class="alarm"
+            @click="clickButton('/etc/alarmHistory')"
+          ></button>
+          <button
+            class="logout"
+            @click="chkLogout"
+          ></button>
         </div>
         <div class="right">
           <button class="gnb-close"></button>
@@ -32,7 +38,7 @@
           <dd><a href="#">신용정보</a></dd>
           <dd><a href="#">신용등급올리기</a></dd>
           <dd><a href="#">스마트리포트</a></dd>
-          <dd><a href="#">신용상담</a></dd>
+          <dd><a @click="clickButton('/credit/counselMain')">신용상담</a></dd>
           <dd><a href="#">신용정보제공</a></dd>
 
           <dt>부채</dt>

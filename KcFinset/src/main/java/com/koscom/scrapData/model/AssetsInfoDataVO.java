@@ -28,7 +28,6 @@ public class AssetsInfoDataVO implements Serializable{
 	private String few_days; //최종이수일자
 	private String interest_date; //이자납입일
 	private String yn_delete; //삭제여부
-	private String yn_use; //사용여부
 	private String dt_frt; //최초입력시간
 
 	//자산관리T
@@ -189,14 +188,6 @@ public class AssetsInfoDataVO implements Serializable{
 
 	public void setYn_delete(String yn_delete) {
 		this.yn_delete = yn_delete;
-	}
-
-	public String getYn_use() {
-		return yn_use;
-	}
-
-	public void setYn_use(String yn_use) {
-		this.yn_use = yn_use;
 	}
 
 	public String getDt_frt() {

@@ -14,7 +14,7 @@
 			ASSETS_INFO
 		WHERE
 			DT_EXPIRE IS NULL
-			AND YN_USE = 'Y'
+			AND YN_DELETE = 'N'
 			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(type_list)">
 			<choose>
 			    <when test="'bank'.equals(type_list)">	<!-- 은행 -->
@@ -145,8 +145,9 @@
 						FROM
 							ASSETS_INFO AI
 						WHERE
-							AI.CD_ASSETS_CLASS = '00'
-							AND AI.YN_USE = 'Y'
+							AI.DT_EXPIRE IS NULL
+							AND AI.YN_DELETE = 'N'
+							AND AI.CD_ASSETS_CLASS = '00'
 							AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
 						<if test="@com.koscom.util.MybatisUtil@isNotEmpty(person_share_list)">
 						UNION ALL
@@ -196,7 +197,8 @@
 						INNER JOIN ASSETS_INFO AI
 						ON (
 							SID.NO_CARD_ACC = AI.NO_ACCOUNT
-							AND AI.YN_USE = 'Y'
+							AND AI.DT_EXPIRE IS NULL
+							AND AI.YN_DELETE = 'N'
 							)
 					</if>
 					) TB
@@ -227,8 +229,9 @@
 				FROM
 					ASSETS_INFO AI
 				WHERE
-					AI.CD_ASSETS_CLASS = '00'
-					AND AI.YN_USE = 'Y'
+					AI.DT_EXPIRE IS NULL
+					AND AI.YN_DELETE = 'N'
+					AND AI.CD_ASSETS_CLASS = '00'
 					AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
 				<if test="@com.koscom.util.MybatisUtil@isNotEmpty(person_share_list)">
 				UNION ALL
@@ -278,7 +281,8 @@
 				INNER JOIN ASSETS_INFO AI
 				ON (
 					SID.NO_CARD_ACC = AI.NO_ACCOUNT
-					AND AI.YN_USE = 'Y'
+					AND AI.DT_EXPIRE IS NULL
+					AND AI.YN_DELETE = 'N'
 					)
 				</if>
 			) TB
@@ -289,11 +293,12 @@
 		UPDATE
 			ASSETS_INFO
 		SET
-			SORT = #{sort, jdbcType=VARCHAR}
+			SORT = #{sort, jdbcType=VARCHAR},
+			ID_LST = #{no_person, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
 		WHERE
 			NO_PERSON = #{no_person, jdbcType=VARCHAR}
 			AND NO_ACCOUNT = #{no_account, jdbcType=VARCHAR}
-
     </update>
 
     <select id="getAssetsInfo" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
@@ -451,8 +456,9 @@
 				FROM
 					ASSETS_INFO AI
 				WHERE
-					AI.CD_ASSETS_CLASS = '00'
-					AND AI.YN_USE = 'Y'
+					AI.DT_EXPIRE IS NULL
+					AND AI.YN_DELETE = 'N'
+					AND AI.CD_ASSETS_CLASS = '00'
 					AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
 				UNION ALL
 				SELECT
@@ -496,7 +502,8 @@
 				INNER JOIN ASSETS_INFO AI
 				ON (
 					SID.NO_CARD_ACC = AI.NO_ACCOUNT
-					AND AI.YN_USE = 'Y'
+					AND AI.DT_EXPIRE IS NULL
+					AND AI.YN_DELETE = 'N'
 					)
 			) TB
 		ORDER BY TB.RK, TB.AMT_BALANCE
@@ -550,8 +557,9 @@
 				FROM
 					ASSETS_INFO AI
 				WHERE
-					AI.CD_ASSETS_CLASS = '00'
-					AND AI.YN_USE = 'Y'
+					AI.DT_EXPIRE IS NULL
+					AND AI.YN_DELETE = 'N'
+					AND AI.CD_ASSETS_CLASS = '00'
 					AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
 				UNION ALL
 				SELECT
@@ -595,7 +603,8 @@
 				INNER JOIN ASSETS_INFO AI
 				ON (
 					SID.NO_CARD_ACC = AI.NO_ACCOUNT
-					AND AI.YN_USE = 'Y'
+					AND AI.DT_EXPIRE IS NULL
+					AND AI.YN_DELETE = 'N'
 					)
 			) TB
 		INNER JOIN SCR_TRANSACTION_DETAIL STD
@@ -677,8 +686,9 @@
 						FROM
 							ASSETS_INFO AI
 						WHERE
-							AI.CD_ASSETS_CLASS = '00'
-							AND AI.YN_USE = 'Y'
+							AI.DT_EXPIRE IS NULL
+							AND AI.YN_DELETE = 'N'
+							AND AI.CD_ASSETS_CLASS = '00'
 							AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
 						UNION ALL
 						SELECT
@@ -722,7 +732,8 @@
 						INNER JOIN ASSETS_INFO AI
 						ON (
 							SID.NO_CARD_ACC = AI.NO_ACCOUNT
-							AND AI.YN_USE = 'Y'
+							AND AI.DT_EXPIRE IS NULL
+							AND AI.YN_DELETE = 'N'
 							)
 					) SHAI
 				INNER JOIN SCR_TRANSACTION_DETAIL STD
@@ -773,8 +784,9 @@
 					FROM
 						ASSETS_INFO AI
 					WHERE
-						AI.CD_ASSETS_CLASS = '00'
-						AND AI.YN_USE = 'Y'
+						AI.DT_EXPIRE IS NULL
+						AND AI.YN_DELETE = 'N'
+						AND AI.CD_ASSETS_CLASS = '00'
 						AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
 					UNION ALL
 					SELECT
@@ -816,7 +828,8 @@
 					INNER JOIN ASSETS_INFO AI
 					ON (
 						SID.NO_CARD_ACC = AI.NO_ACCOUNT
-						AND AI.YN_USE = 'Y'
+						AND AI.DT_EXPIRE IS NULL
+						AND AI.YN_DELETE = 'N'
 						)
 				) SHAI
 			INNER JOIN SCR_TRANSACTION_DETAIL STD
@@ -883,7 +896,9 @@
 		SET
 			CD_CLASS = #{cd_class, jdbcType=VARCHAR},
 			CD_TYPE = #{cd_type, jdbcType=VARCHAR},
-			YN_AUTO = #{yn_auto, jdbcType=VARCHAR}
+			YN_AUTO = #{yn_auto, jdbcType=VARCHAR},
+			ID_LST = #{no_person, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
 		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
 			AND NO_CARD = #{no_account, jdbcType=VARCHAR}
 			AND DT_TRD = #{dt_trd, jdbcType=VARCHAR}

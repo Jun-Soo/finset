@@ -8,25 +8,25 @@
           <p>
             <multiselect v-model="cd_loan_use" ref="cd_loan_use" placeholder="대출용도선택" track-by="text" label="text" :options="options_loan" :searchable="false" :allow-empty="false" @select="selectLoan()" v-validate="'required'" data-vv-name='대출용도'>
             </multiselect>
-            <a class=" warn" v-if="errors.has('대출용도')">{{errors.first('대출용도')}}</a>
           </p>
         </li>
+        <p class=" warn" v-if="errors.has('대출용도')">{{errors.first('대출용도')}}</p>
         <li>
           <p class="key">주거형태</p>
           <p>
             <multiselect v-model="cd_house_type" ref="cd_house_type" placeholder="주거형태선택" track-by="text" label="text" :options="options_house" :searchable="false" :allow-empty="false" @select="selectHouse()" v-validate="'required'" data-vv-name='주거형태'>
             </multiselect>
-            <a class=" warn" v-if="errors.has('주거형태')">{{errors.first('주거형태')}}</a>
           </p>
         </li>
+        <p class=" warn" v-if="errors.has('주거형태')">{{errors.first('주거형태')}}</p>
         <li>
           <p class="key">소유형태</p>
           <p>
             <multiselect v-model="cd_live_type_home" ref="cd_live_type_home" placeholder="소유형태선택" track-by="text" label="text" :options="options_live" :searchable="false" :allow-empty="false" @select="selectLive()" v-validate="'required'" data-vv-name='소유형태'>
             </multiselect>
-            <a class=" warn" v-if="errors.has('소유형태')">{{errors.first('소유형태')}}</a>
           </p>
         </li>
+        <p class=" warn" v-if="errors.has('소유형태')">{{errors.first('소유형태')}}</p>
       </ul>
       <div class="btn-wrap float">
         <a class="solid blue box" @click="clickConfirm()">추가정보입력</a>
@@ -48,9 +48,9 @@ export default {
       no_bunch: this.$route.params.no_bunch,
       kcb_di: this.$route.params.kcb_di,
       ssn_person: this.$route.params.ssn_person,
-      cd_loan_use: {},
-      cd_house_type: {},
-      cd_live_type_home: {},
+      cd_loan_use: null,
+      cd_house_type: null,
+      cd_live_type_home: null,
       isShowButton: false,
       options_loan: "",
       options_house: "",
@@ -101,7 +101,7 @@ export default {
           formData.append("cd_house_type", _this.cd_house_type.value);
           formData.append("cd_live_type_home", _this.cd_live_type_home.value);
           this.$http
-            .post("/m/loan/modifyLoanAdditional.json", formData, {
+            .post("/m/loanworker/modifyLoanAdditional.json", formData, {
               headers: {
                 async: false,
                 "Content-Type":

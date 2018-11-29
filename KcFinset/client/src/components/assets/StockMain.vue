@@ -8,26 +8,47 @@
     <div class="box-list list01 noMG">
       <div class="filter-wrap">
         <div class="filter red">
-          <input type="checkbox" id="chk1"><label for="chk1">박준수</label>
+          <input
+            type="checkbox"
+            id="chk1"
+          ><label for="chk1">박준수</label>
         </div>
         <div class="filter orange">
-          <input type="checkbox" id="chk2"><label for="chk2">박준수</label>
+          <input
+            type="checkbox"
+            id="chk2"
+          ><label for="chk2">박준수</label>
         </div>
         <div class="filter green">
-          <input type="checkbox" id="chk3"><label for="chk3">박준수</label>
+          <input
+            type="checkbox"
+            id="chk3"
+          ><label for="chk3">박준수</label>
         </div>
         <div class="filter blue">
-          <input type="checkbox" id="chk4"><label for="chk4">박준수</label>
+          <input
+            type="checkbox"
+            id="chk4"
+          ><label for="chk4">박준수</label>
         </div>
         <div class="filter purple">
-          <input type="checkbox" id="chk5"><label for="chk5">박준수</label>
+          <input
+            type="checkbox"
+            id="chk5"
+          ><label for="chk5">박준수</label>
         </div>
       </div>
 
       <div class="item">
-        <a @click="$router.push('')" class="block">
+        <a
+          @click="$router.push('')"
+          class="block"
+        >
           <div class="top">
-            <p class="symbol"><img src="../../assets/images/common/bu_kb.png" alt="" />국민은행</p>
+            <p class="symbol"><img
+                src="../../assets/images/common/bu_kb.png"
+                alt=""
+              />국민은행</p>
             <p class="text"><span class="circle blue">준수</span></p>
           </div>
           <div class="number-wrap bi">
@@ -45,9 +66,15 @@
         </a>
       </div>
       <div class="item">
-        <a @click="$router.push('')" class="block">
+        <a
+          @click="$router.push('')"
+          class="block"
+        >
           <div class="top">
-            <p class="symbol"><img src="../../assets/images/common/bu_kb.png" alt="" />국민은행</p>
+            <p class="symbol"><img
+                src="../../assets/images/common/bu_kb.png"
+                alt=""
+              />국민은행</p>
             <p class="text"><span class="circle red">준수</span></p>
           </div>
           <div class="number-wrap bi">
@@ -72,7 +99,7 @@
 
 <script>
 export default {
-  name: "AssetsStockMain",
+  name: "assetsStockMain",
   data() {
     return {};
   },

@@ -23,10 +23,7 @@
                 <p class="value">잠자는 주식 계좌를<br>찾아드립니다</p>
               </div>
               <div class="right">
-                <img
-                  src="../../assets/images/main/banner_ico.png"
-                  alt=""
-                />
+                <img src="../../assets/images/main/banner_ico.png" alt="" />
               </div>
             </div>
           </a>
@@ -40,10 +37,7 @@
                 <p class="value">공인 인증 한번으로<br>나의 토지를 찾아보세요</p>
               </div>
               <div class="right">
-                <img
-                  src="../../assets/images/main/banner_ico.png"
-                  alt=""
-                />
+                <img src="../../assets/images/main/banner_ico.png" alt="" />
               </div>
             </div>
           </a>
@@ -57,10 +51,7 @@
                 <p class="value">자산별 진단을 받아보세요</p>
               </div>
               <div class="right">
-                <img
-                  src="../../assets/images/main/banner_ico.png"
-                  alt=""
-                />
+                <img src="../../assets/images/main/banner_ico.png" alt="" />
               </div>
             </div>
           </a>
@@ -70,19 +61,13 @@
 
     <div class="list02 box-list pb90">
 
-      <div
-        @click="goMenu('bank')"
-        class="item"
-      >
+      <div @click="goMenu('bank')" class="item">
         <div class="flex">
           <p class="corp big">은행<em>{{assetsBankInfo.cnt_account}}건</em></p>
           <p class="number big">{{(assetsBankInfo.sum_amt_balance == null)? '-' : formatNumber(assetsBankInfo.sum_amt_balance)}}<em>원</em></p>
         </div>
       </div>
-      <div
-        @click="goMenu('stock')"
-        class="item"
-      >
+      <div @click="goMenu('stock')" class="item">
         <div class="flex">
           <p class="corp big">증권(주식/펀드/CMA)<em>{{assetsStockInfo.cnt_account}}건</em></p>
           <p class="number big">{{(assetsStockInfo.sum_amt_evaluation == null)? '-' : formatNumber(assetsStockInfo.sum_amt_evaluation)}}<em>원</em></p>
@@ -102,7 +87,7 @@
         </div>
       </div>
       -->
-      <button class="btn-spend-add"></button>
+      <button class="btn-spend-add" @click="$router.push('/assets/dirInput')"></button>
     </div>
 
   </section>
@@ -154,8 +139,6 @@ export default {
           _this.assetsBankInfo = response.data.assetsBankInfo;
           _this.assetsStockInfo = response.data.assetsStockInfo;
 
-          console.log(_this.assetsBankInfo);
-          console.log(_this.assetsStockInfo);
           _this.seen = true;
         })
         .catch(e => {

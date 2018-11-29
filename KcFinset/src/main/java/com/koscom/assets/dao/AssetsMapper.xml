@@ -14,7 +14,7 @@
 			ASSETS_INFO
 		WHERE
 			DT_EXPIRE IS NULL
-			AND YN_USE = 'Y'
+			AND YN_DELETE = 'N'
 			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(type_list)">
 			<choose>
 			    <when test="'bank'.equals(type_list)">	<!-- 은행 -->
@@ -146,7 +146,7 @@
 							ASSETS_INFO AI
 						WHERE
 							AI.DT_EXPIRE IS NULL
-							AND AI.YN_USE = 'Y'
+							AND AI.YN_DELETE = 'N'
 							AND AI.CD_ASSETS_CLASS = '00'
 							AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
 						<if test="@com.koscom.util.MybatisUtil@isNotEmpty(person_share_list)">
@@ -198,7 +198,7 @@
 						ON (
 							SID.NO_CARD_ACC = AI.NO_ACCOUNT
 							AND AI.DT_EXPIRE IS NULL
-							AND AI.YN_USE = 'Y'
+							AND AI.YN_DELETE = 'N'
 							)
 					</if>
 					) TB
@@ -230,7 +230,7 @@
 					ASSETS_INFO AI
 				WHERE
 					AI.DT_EXPIRE IS NULL
-					AND AI.YN_USE = 'Y'
+					AND AI.YN_DELETE = 'N'
 					AND AI.CD_ASSETS_CLASS = '00'
 					AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
 				<if test="@com.koscom.util.MybatisUtil@isNotEmpty(person_share_list)">
@@ -282,7 +282,7 @@
 				ON (
 					SID.NO_CARD_ACC = AI.NO_ACCOUNT
 					AND AI.DT_EXPIRE IS NULL
-					AND AI.YN_USE = 'Y'
+					AND AI.YN_DELETE = 'N'
 					)
 				</if>
 			) TB
@@ -457,7 +457,7 @@
 					ASSETS_INFO AI
 				WHERE
 					AI.DT_EXPIRE IS NULL
-					AND AI.YN_USE = 'Y'
+					AND AI.YN_DELETE = 'N'
 					AND AI.CD_ASSETS_CLASS = '00'
 					AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
 				UNION ALL
@@ -503,7 +503,7 @@
 				ON (
 					SID.NO_CARD_ACC = AI.NO_ACCOUNT
 					AND AI.DT_EXPIRE IS NULL
-					AND AI.YN_USE = 'Y'
+					AND AI.YN_DELETE = 'N'
 					)
 			) TB
 		ORDER BY TB.RK, TB.AMT_BALANCE
@@ -558,7 +558,7 @@
 					ASSETS_INFO AI
 				WHERE
 					AI.DT_EXPIRE IS NULL
-					AND AI.YN_USE = 'Y'
+					AND AI.YN_DELETE = 'N'
 					AND AI.CD_ASSETS_CLASS = '00'
 					AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
 				UNION ALL
@@ -604,7 +604,7 @@
 				ON (
 					SID.NO_CARD_ACC = AI.NO_ACCOUNT
 					AND AI.DT_EXPIRE IS NULL
-					AND AI.YN_USE = 'Y'
+					AND AI.YN_DELETE = 'N'
 					)
 			) TB
 		INNER JOIN SCR_TRANSACTION_DETAIL STD
@@ -687,7 +687,7 @@
 							ASSETS_INFO AI
 						WHERE
 							AI.DT_EXPIRE IS NULL
-							AND AI.YN_USE = 'Y'
+							AND AI.YN_DELETE = 'N'
 							AND AI.CD_ASSETS_CLASS = '00'
 							AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
 						UNION ALL
@@ -733,7 +733,7 @@
 						ON (
 							SID.NO_CARD_ACC = AI.NO_ACCOUNT
 							AND AI.DT_EXPIRE IS NULL
-							AND AI.YN_USE = 'Y'
+							AND AI.YN_DELETE = 'N'
 							)
 					) SHAI
 				INNER JOIN SCR_TRANSACTION_DETAIL STD
@@ -785,7 +785,7 @@
 						ASSETS_INFO AI
 					WHERE
 						AI.DT_EXPIRE IS NULL
-						AND AI.YN_USE = 'Y'
+						AND AI.YN_DELETE = 'N'
 						AND AI.CD_ASSETS_CLASS = '00'
 						AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
 					UNION ALL
@@ -829,7 +829,7 @@
 					ON (
 						SID.NO_CARD_ACC = AI.NO_ACCOUNT
 						AND AI.DT_EXPIRE IS NULL
-						AND AI.YN_USE = 'Y'
+						AND AI.YN_DELETE = 'N'
 						)
 				) SHAI
 			INNER JOIN SCR_TRANSACTION_DETAIL STD

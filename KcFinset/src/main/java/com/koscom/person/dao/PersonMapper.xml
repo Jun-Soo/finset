@@ -621,7 +621,7 @@
 								AND AI.NO_PERSON = SID.ID_FRT
 							)
 				WHERE AI.DT_EXPIRE IS NULL
-					AND AI.YN_USE = 'Y'
+					AND AI.YN_DELETE = 'N'
 					AND AI.NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
 				ORDER BY AI.NM_ACCOUNT
 			) TB

@@ -57,7 +57,7 @@ public class AssetsDataManagerImpl implements AssetsDataManager {
 					assetsInfoDataVO.setDt_expire(list.getDt_end()); //만기일자
 					assetsInfoDataVO.setAmt_balance(list.getCurrent_balance()); //잔액(금융사계좌정보 - 현재잔액)
 					assetsInfoDataVO.setInterest(list.getInterest_rate()); //금리
-					assetsInfoDataVO.setYn_use(("N".equals(list.getYn_delete())?"Y":"N")); //사용여부
+					assetsInfoDataVO.setYn_delete(list.getYn_delete()); //삭제여부
 					assetsInfoDataVO.setYn_person_regist("N"); //사용자등록여부
 					assetsInfoDataVO.setId_frt(assetsDataForm.getNo_person()); //최초입력아이디
 					assetsInfoDataVO.setId_lst(assetsDataForm.getNo_person()); //최종수정아이디

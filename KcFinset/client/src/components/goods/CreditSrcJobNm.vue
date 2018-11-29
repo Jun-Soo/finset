@@ -71,9 +71,9 @@ export default {
   methods: {
     changeInput: function(option) {
       this.page = 1;
-      Common.pagination(this.searchJob);
+      Common.pagination(this.searchJob, "modal");
     },
-    searchJob: function() {
+    searchJob: function(callback) {
       var _this = this;
       if (this.nm_comp == "") {
         this.$toast.center("직장명을 입력해주세요.");

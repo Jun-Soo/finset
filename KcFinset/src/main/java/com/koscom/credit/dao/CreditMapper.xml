@@ -1315,4 +1315,221 @@
 		WHERE NO_PERSON = #{noPerson}
 			AND  NM_IF = #{nmIf}
 	</select>
+
+	<!-- 신용상담 -->
+	<select id="listCreditCounselMain" parameterType="java.lang.String" resultType="com.koscom.counsel.model.CounselVO">
+		/* com.koscom.credit.dao.CreditMapper.listCreditCounselMain 신용상담 - 메인List */
+	    SELECT
+			PCL.NO_PERSON,
+			PCL.COUNSEL_SEQ,
+			PCL.CD_COUNSEL_STATUS,
+			TO_CHAR(PCL.DT_APPLY,'YYYY.MM.DD') AS DT_APPLY,
+			TO_CHAR(PCL.DT_PRE_COUNSEL,'YYYY.MM.DD') AS DT_PRE_COUNSEL,
+			TO_CHAR(PCL.DT_COUNSEL,'YYYY.MM.DD') AS DT_COUNSEL,
+			PCL.YN_WEDDING,
+			PCL.CD_FAMILY_CNT,
+			PCL.CD_JOB,
+			PCL.CD_LIVING,
+			PCL.AMT_MM_INCOME,
+			PCL.AMT_MM_EXPENSE,
+			PCL.ID_EMP_COUNSEL,
+			PCL.ID_FRT,
+			PCL.DT_FRT,
+			PCL.ID_LST,
+			PCL.DT_LST,
+			( SELECT NM_PERSON FROM PERSON_INFO WHERE NO_PERSON = PCL.NO_PERSON ) AS NM_PERSON
+		FROM
+			PERSON_COUNSEL_LIST PCL
+		WHERE PCL.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND PCL.YN_DELETE = 'N'
+		ORDER BY
+			PCL.DT_FRT DESC
+	</select>
+
+	<select id="getCreditCounselInfo" parameterType="com.koscom.counsel.model.CounselForm" resultType="com.koscom.counsel.model.CounselVO">
+		/* com.koscom.credit.dao.CreditMapper.getCreditCounselInfo 신용상담 - 개별정보 */
+	    SELECT
+			PCL.NO_PERSON,
+			PCL.COUNSEL_SEQ,
+			PCL.CD_COUNSEL_STATUS,
+			TO_CHAR(PCL.DT_APPLY,'YYYY.MM.DD') AS DT_APPLY,
+			TO_CHAR(PCL.DT_PRE_COUNSEL,'YYYY.MM.DD') AS DT_PRE_COUNSEL,
+			TO_CHAR(PCL.DT_COUNSEL,'YYYY.MM.DD') AS DT_COUNSEL,
+			PCL.YN_WEDDING,
+			PCL.CD_FAMILY_CNT,
+			PCL.CD_JOB,
+			PCL.CD_LIVING,
+			PCL.AMT_MM_INCOME,
+			PCL.AMT_MM_EXPENSE,
+			PCL.INQUIRY_CONTENTS,
+			PCL.ID_EMP_COUNSEL
+		FROM PERSON_COUNSEL_LIST PCL
+		WHERE PCL.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND PCL.COUNSEL_SEQ = #{counsel_seq, jdbcType=VARCHAR}
+	</select>
+
+	<resultMap id="result_personCounselInfo_map" type="java.util.HashMap">
+		<result property="list_card_use" column="LIST_CARD_USE" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="list_overdue_info" column="LIST_OVERDUE_INFO" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="list_overdue_etc" column="LIST_OVERDUE_ETC" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="counsel_contents" column="COUNSEL_CONTENTS" jdbcType="CLOB" javaType="java.lang.String" />
+ 	</resultMap>
+	<select id="getPersonCounselMapInfo" parameterType="com.koscom.counsel.model.CounselForm" resultMap="result_personCounselInfo_map">
+		/* com.koscom.credit.dao.CreditMapper.getPersonCounselMapInfo 신용상담 - 상담결과보기 */
+	    SELECT LIST_CARD_USE,
+				LIST_OVERDUE_INFO,
+				LIST_OVERDUE_ETC,
+				COUNSEL_CONTENTS
+		FROM PERSON_COUNSEL_LIST
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND COUNSEL_SEQ = #{counsel_seq, jdbcType=VARCHAR}
+	</select>
+
+	<select id="getCreditCounselBaseInfo" parameterType="java.lang.String" resultType="com.koscom.counsel.model.CounselVO">
+	    /* com.koscom.credit.dao.CreditMapper.getCreditCounselBaseInfo 신용상담 - 상담신청(기본정보) */
+		SELECT
+			P.NO_PERSON,
+			P.NM_PERSON,
+			FLOOR(MONTHS_BETWEEN(SYSDATE,TO_DATE(SUBSTR(P.BGN,1,8),'YYYYMMDD'))/12) AS AGE,
+			DECODE(SUBSTR(P.BGN,9,10),'1','남','여') AS SEX,
+			KCL.GRADE_CREDIT,
+			KCL.RATING_CREDIT,
+			FN_AMT_VIEW(KCI.BAL_OVERDUE) AS BAL_OVERDUE,
+			FN_AMT_VIEW(DEBT.AMT_CONTRACT) AS AMT_CONTRACT,
+			FN_AMT_VIEW(DEBT.AMT_REMAIN) AS AMT_REMAIN,
+			FN_AMT_VIEW(DEBT.CUR_MM_AMT_REPAY) AS CUR_MM_AMT_REPAY,
+			KCI.CNT_CARD_USE,
+			FN_AMT_VIEW(KCI.AMT_CARD_TOTAL) AS AMT_CARD_TOTAL
+		FROM
+			PERSON_INFO P
+		LEFT OUTER JOIN KCB_CREDIT_LIST KCL
+		ON (
+				P.NO_PERSON = KCL.NO_PERSON
+				AND KCL.REQ_YYYYMM = TO_CHAR( SYSDATE, 'YYYYMM' )
+			)
+		LEFT OUTER JOIN KCB_CREDIT_INFO KCI
+		ON P.NO_PERSON = KCI.NO_PERSON
+		LEFT OUTER JOIN(
+				SELECT
+					DPI.NO_PERSON,
+					SUM( DPI.AMT_CONTRACT ) AS AMT_CONTRACT,
+					SUM( DPI.AMT_REMAIN ) AS AMT_REMAIN,
+					SUM( CASE WHEN DPI.CD_TYPE_DEAL IN( '3', '6' ) THEN 0 ELSE TO_NUMBER( DPRL.AMT_REPAY ) END ) AS CUR_MM_AMT_REPAY
+				FROM
+					DEBT_PERSONAL_INFO DPI
+				INNER JOIN DEBT_PERSONAL_REPAY_LIST DPRL
+				ON (
+						DPI.NO_PERSON = DPRL.NO_PERSON
+						AND DPI.NO_MANAGE_INFO = DPRL.NO_MANAGE_INFO
+						AND DPRL.REQ_YYYYMM = TO_CHAR( SYSDATE, 'YYYYMM' )
+						AND DPRL.PAYMENT_YMD IS NOT NULL
+					)
+				WHERE DPI.DISPLAY_YN = 'Y'
+					AND DPI.YMD_CANCEL IS NULL
+				GROUP BY
+					DPI.NO_PERSON
+			) DEBT
+		ON P.NO_PERSON = DEBT.NO_PERSON
+		WHERE P.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+    </select>
+
+	<select id="getCreditCounselAddInfo" parameterType="java.lang.String" resultType="com.koscom.counsel.model.CounselVO">
+	    /* com.koscom.credit.dao.CreditMapper.getCreditCounselAddInfo 신용상담 - 상담신청(부가정보) */
+		SELECT
+			P.NO_PERSON,
+			P.NM_PERSON,
+			FN_ETM_INCOME_AMT(#{no_person, jdbcType=VARCHAR}) AS AMT_INCOME_TOTAL,
+			NVL( CI.AMT_CONSUME_TOTAL, 0 ) AS AMT_CONSUME_TOTAL,
+			NVL( KCI.AMT_CARD_TOTAL, 0 ) AS AMT_CARD_TOTAL
+		FROM
+			PERSON_INFO P
+		LEFT OUTER JOIN KCB_CREDIT_INFO KCI
+		ON P.NO_PERSON = KCI.NO_PERSON
+		LEFT OUTER JOIN(
+				SELECT
+					NO_PERSON,
+					NVL( SUM( AMT_IN_OUT ), 0 ) AS AMT_CONSUME_TOTAL
+				FROM
+					CONSUME_INFO
+				WHERE
+					YN_CANCEL = 'N'
+					AND YN_DELETE = 'N'
+					AND TYPE_IN_OUT = '02'
+					AND SUBSTR( DT_TRD, 0, 6 )= TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )
+				GROUP BY NO_PERSON
+			) CI
+		ON P.NO_PERSON = CI.NO_PERSON
+		WHERE P.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+    </select>
+
+	<insert id="createCreditCounselInfo" parameterType="com.koscom.counsel.model.CounselVO">
+        <selectKey keyProperty="counsel_seq" resultType="string" order="BEFORE">
+            (SELECT NVL(MAX(counsel_seq),0)+1 FROM PERSON_COUNSEL_LIST WHERE no_person = #{no_person, jdbcType=VARCHAR})
+        </selectKey>
+
+        INSERT INTO PERSON_COUNSEL_LIST
+            (     NO_PERSON
+				, COUNSEL_SEQ
+				, CD_COUNSEL_STATUS
+				, DT_APPLY
+				, YN_WEDDING
+				, CD_FAMILY_CNT
+				, CD_JOB
+				, CD_LIVING
+				, AMT_MM_INCOME
+				, AMT_MM_EXPENSE
+				, LIST_CARD_USE
+				, LIST_OVERDUE_INFO
+				, LIST_OVERDUE_ETC
+				, INQUIRY_CONTENTS
+				, YN_DELETE
+				, ID_FRT
+				, DT_FRT
+				, ID_LST
+				, DT_LST
+            ) VALUES (
+                  #{no_person, jdbcType=VARCHAR}
+				, #{counsel_seq}
+				, '1'
+				, SYSDATE
+				, #{yn_wedding, jdbcType=VARCHAR}
+				, #{cd_family_cnt, jdbcType=VARCHAR}
+				, #{cd_job, jdbcType=VARCHAR}
+				, #{cd_living, jdbcType=VARCHAR}
+				, #{amt_mm_income, jdbcType=NUMERIC}
+				, #{amt_mm_expense, jdbcType=NUMERIC}
+				, #{list_card_use, jdbcType=VARCHAR}
+				, #{list_overdue_info, jdbcType=VARCHAR}
+				, #{list_overdue_etc, jdbcType=VARCHAR}
+				, #{inquiry_contents, jdbcType=VARCHAR}
+				, 'N'
+				, #{id_frt, jdbcType=VARCHAR}
+                , SYSDATE
+                , #{id_lst, jdbcType=VARCHAR}
+                , SYSDATE
+            )
+    </insert>
+
+	<update id="updateCreditCounselInfo" parameterType="com.koscom.counsel.model.CounselVO">
+		UPDATE
+			PERSON_COUNSEL_LIST
+		SET
+			INQUIRY_CONTENTS = #{inquiry_contents, jdbcType=VARCHAR},
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND COUNSEL_SEQ = #{counsel_seq}
+    </update>
+
+	<update id="deleteCreditCounselInfo" parameterType="com.koscom.counsel.model.CounselVO">
+		UPDATE
+			PERSON_COUNSEL_LIST
+		SET
+			YN_DELETE = 'Y',
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND COUNSEL_SEQ = #{counsel_seq}
+    </update>
+
 </mapper>

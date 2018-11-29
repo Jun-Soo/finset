@@ -5,24 +5,14 @@
       <p class="pt10">지금 FINSET<br>신용상담서비스를 만나보세요</p>
       <a @click="openInfo()">신용상담이란?</a>
     </div>
-    <div
-      v-if="counselList.length == 0"
-      class="nodata"
-    >등록 내역이 없습니다</div>
-    <div
-      v-else
-      class="box-list counsel-list noMG"
-    >
+    <div v-if="counselList.length == 0" class="nodata">등록 내역이 없습니다</div>
+    <div v-else class="box-list counsel-list noMG">
       <template v-for="counselInfo in counselList">
         <!-- 상담신청접수 -->
-        <div
-          v-if="counselInfo.cd_counsel_status=='1'"
-          :key="counselInfo.index"
-          class="item"
-        >
+        <div v-if="counselInfo.cd_counsel_status=='1'" :key="counselInfo.index" class="item">
           <div class="top">
-            <p>{{formatDateDot(counselInfo.dt_apply)}}</p>
-            <!-- <p><a @click="$router.push('')">신청내역</a></p> -->
+            <p>{{counselInfo.dt_apply}}</p>
+            <p><a @click="viewResult(counselInfo.counsel_seq, counselInfo.cd_counsel_status)">신청내용</a></p>
           </div>
           <div class="result apply">
             <p class="title">상담 신청 접수</p>
@@ -30,14 +20,10 @@
           </div>
         </div>
         <!-- 상담 준비중 -->
-        <div
-          v-if="counselInfo.cd_counsel_status=='2'"
-          :key="counselInfo.index"
-          class="item"
-        >
+        <div v-else-if="counselInfo.cd_counsel_status=='2'" :key="counselInfo.index" class="item">
           <div class="top">
-            <p>{{formatDateDot(counselInfo.dt_pre_counsel)}}</p>
-            <!-- <p><a @click="$router.push('')">신청내역</a></p> -->
+            <p>{{counselInfo.dt_pre_counsel}}</p>
+            <p><a @click="viewResult(counselInfo.counsel_seq, counselInfo.cd_counsel_status)">신청내용</a></p>
           </div>
           <div class="result ing">
             <p class="title">상담 대기중</p>
@@ -45,13 +31,9 @@
           </div>
         </div>
         <!-- 상담완료 -->
-        <div
-          v-else
-          :key="counselInfo.index"
-          class="item"
-        >
+        <div v-else :key="counselInfo.index" class="item">
           <div class="top">
-            <p>{{formatDateDot(counselInfo.dt_counsel)}}</p>
+            <p>{{counselInfo.dt_counsel}}</p>
             <p><a @click="viewResult(counselInfo.counsel_seq, counselInfo.cd_counsel_status)">상담결과</a></p>
           </div>
           <div class="result done">
@@ -63,21 +45,11 @@
     </div>
 
     <div class="btn-wrap float">
-      <a
-        @click="$router.push('/credit/counselReqStep1')"
-        class="solid blue box"
-      >상담 신청하기</a>
+      <a @click="$router.push('/credit/counselReqStep1')" class="solid blue box">상담 신청하기</a>
     </div>
 
-    <vue-modal
-      transitionName="zoom-in"
-      name="info-modal"
-      v-on:popclose="closeInfo()"
-    >
-      <CounselInfo
-        slot="body"
-        v-on:popclose="closeInfo()"
-      ></CounselInfo>
+    <vue-modal transitionName="zoom-in" name="info-modal" v-on:popclose="closeInfo()">
+      <CounselInfo slot="body" v-on:popclose="closeInfo()"></CounselInfo>
     </vue-modal>
   </section>
 </template>
@@ -138,9 +110,6 @@ export default {
         .catch(e => {
           this.$toast.center(ko.messages.error);
         });
-    },
-    formatDateDot: function(data) {
-      return Common.formatDateDot(data);
     },
     //상담결과보기
     viewResult: function(counsel_seq, cd_counsel_status) {

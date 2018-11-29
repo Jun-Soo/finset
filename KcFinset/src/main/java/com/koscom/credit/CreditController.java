@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import com.koscom.counsel.model.CounselForm;
+import com.koscom.counsel.model.CounselVO;
 import com.koscom.credit.service.CreditManager;
 import com.koscom.domain.CreditInfo;
 import com.koscom.env.service.CodeManager;
@@ -46,6 +48,7 @@ import com.koscom.util.DateUtil;
 import com.koscom.util.FinsetException;
 import com.koscom.util.NumberUtil;
 import com.koscom.util.ReturnClass;
+import com.koscom.util.SessionUtil;
 import com.koscom.util.SkipLoginCheck;
 import com.koscom.util.StringUtil;
 
@@ -1261,7 +1264,7 @@ public class CreditController {
     public String frameAcceptTerms10() {
         return "/base/sub/frameAcceptTerms10";
     }
-    
+
     /** VUE
      * 신용등급 올리기
      * @param model
@@ -1502,7 +1505,7 @@ public class CreditController {
 		}
 		return "jsonView";
     }
-    
+
     /**
      * 국민건강보험 주민번호
      * @param model
@@ -1579,7 +1582,7 @@ public class CreditController {
 		}
 		return "/credit/frameCreditSsnInfo";
     }
-    
+
     /** VUE
      * 건강보험 납부내역 조회
      * @param model
@@ -1683,7 +1686,7 @@ public class CreditController {
         }
       	return "/credit/frameCreditRaiseNhis";
     }
-    
+
     /** VUE
      * 국세청 소득금액 증명 조회
      * @param model
@@ -1777,7 +1780,7 @@ public class CreditController {
 		model.addAttribute("name", personVO.getNm_person());
       	return "/credit/frameCreditRaiseNts";
     }
-    
+
     /** VUE
      * 국민연금 납부내역 조회
      * @param model
@@ -1852,8 +1855,173 @@ public class CreditController {
 
       	return "/credit/frameCreditRaiseNps";
     }
-}
 
+    /**
+     * VUE
+     * 신용상담메인 list
+     * @param model
+     * @param request
+     * @param session
+     * @param CounselForm
+     * @return String
+     */
+	@RequestMapping("/listCreditCounselMain.json")
+	public String listCreditCounselMain(Model model, HttpServletRequest request, HttpSession session, CounselForm counselForm) {
+
+		String no_person = (String) session.getAttribute("no_person");
+		counselForm.setNo_person(no_person);
+
+		model.addAttribute("counselList", creditManager.listCreditCounselMain(counselForm));
+
+		return "jsonView";
+	}
+
+	/**
+	* VUE
+	* 신용상담 - 신용상담결과보기
+	* @param request
+	* @param model
+	* @param session
+    * @param CounselForm
+	* @return String
+	*/
+	@RequestMapping("/getCreditCounselResultInfo.json")
+	public String getCreditCounselResultInfo(Model model, HttpServletRequest request, HttpSession session, CounselForm counselForm) {
+		String no_person = (String) session.getAttribute("no_person");
+
+		counselForm.setNo_person(no_person);
+
+		model.addAttribute("counselInfo", creditManager.getCreditCounselInfo(counselForm));
+
+		if("3".equals(counselForm.getCd_counsel_status())){
+			//답변내용
+			HashMap<String, String> personCounselMapInfo = creditManager.getPersonCounselMapInfo(counselForm);
+			model.addAttribute("counselContents",personCounselMapInfo.get("counsel_contents"));
+		}
+
+		return "jsonView";
+	}
+
+	/**
+	* VUE
+	* 신용상담 - 상담신청(기본정보)
+	* @param request
+	* @param model
+	* @param session
+	* @return String
+	*/
+	@RequestMapping("/getCreditCounselReqStep2Info.json")
+	public String getCreditCounselReqStep2Info(Model model, HttpServletRequest request, HttpSession session) {
+		String no_person = (String) session.getAttribute("no_person");
+
+		model.addAttribute("counselInfo", creditManager.getCreditCounselBaseInfo(no_person));
+
+		return "jsonView";
+	}
+
+	/**
+	* VUE
+	* 신용상담 - 상담신청(부가정보)
+	* @param request
+	* @param model
+	* @param session
+	* @return String
+	*/
+	@RequestMapping("/getCreditCounselReqStep3Info.json")
+	public String getCreditCounselReqStep3Info(Model model, HttpServletRequest request, HttpSession session) {
+		String no_person = (String) session.getAttribute("no_person");
+
+		model.addAttribute("counselInfo", creditManager.getCreditCounselAddInfo(no_person));
+
+		return "jsonView";
+	}
+
+	/**
+	* VUE
+	* 신용상담 - 상담신청(신청내용)
+	* @param request
+	* @param model
+	* @param session
+	* @param counselForm
+	* @return String
+	*/
+	@RequestMapping("/getCreditCounselReqStep4Info.json")
+	public String getCreditCounselReqStep4Info(Model model, HttpServletRequest request, HttpSession session, CounselForm counselForm) {
+		String no_person = (String) session.getAttribute("no_person");
+
+		counselForm.setNo_person(no_person);
+
+		model.addAttribute("counselInfo", creditManager.getCreditCounselInfo(counselForm));
+
+		return "jsonView";
+	}
+
+	/**
+	 * 신용상담 - 상담신청(등록)
+	 * @param request
+	 * @param model
+	 * @param session
+	 * @param counselVO
+	 * @return String
+	 */
+	@RequestMapping("/createCreditCounselInfo.json")
+	public String createCreditCounselInfo(HttpServletRequest request, Model model, HttpSession session, CounselVO counselVO) {
+		String no_person = (String) session.getAttribute("no_person");
+		counselVO.setNo_person(no_person);
+
+		HashMap<String, String> creditDetailJsonInfoMap = creditManager.getCreditDetailJsonInfo(no_person);
+		counselVO.setList_card_use(creditDetailJsonInfoMap.get("list_card_use"));
+		counselVO.setList_overdue_info(creditDetailJsonInfoMap.get("list_overdue_info"));
+		counselVO.setList_overdue_etc(creditDetailJsonInfoMap.get("list_overdue_etc"));
+
+		ReturnClass returnClass = creditManager.createCreditCounselInfo((CounselVO)SessionUtil.setUser(counselVO, session));
+		model.addAttribute("message", returnClass.getMessage());
+		model.addAttribute("result" , returnClass.getCd_result());
+
+		return "jsonView";
+	}
+
+	/**
+	 * 신용상담 - 상담신청(수정)
+	 * @param request
+	 * @param model
+	 * @param session
+	 * @param counselVO
+	 * @return String
+	 */
+	@RequestMapping("/updateCreditCounselInfo.json")
+	public String updateCreditCounselInfo(HttpServletRequest request, Model model, HttpSession session, CounselVO counselVO) {
+		String no_person = (String) session.getAttribute("no_person");
+		counselVO.setNo_person(no_person);
+
+		ReturnClass returnClass = creditManager.updateCreditCounselInfo((CounselVO)SessionUtil.setUser(counselVO, session));
+		model.addAttribute("message", returnClass.getMessage());
+		model.addAttribute("result" , returnClass.getCd_result());
+
+		return "jsonView";
+	}
+
+	/**
+	 * 신용상담 - 상담신청(삭제)
+	 * @param request
+	 * @param model
+	 * @param session
+	 * @param counselVO
+	 * @return String
+	 */
+	@RequestMapping("/deleteCreditCounselInfo.json")
+	public String deleteCreditCounselInfo(HttpServletRequest request, Model model, HttpSession session, CounselVO counselVO) {
+		String no_person = (String) session.getAttribute("no_person");
+		counselVO.setNo_person(no_person);
+
+		ReturnClass returnClass = creditManager.deleteCreditCounselInfo((CounselVO)SessionUtil.setUser(counselVO, session));
+		model.addAttribute("message", returnClass.getMessage());
+		model.addAttribute("result" , returnClass.getCd_result());
+
+		return "jsonView";
+	}
+
+}
 
 class MapIntegerComparator implements Comparator<Map<String, String>> {
 

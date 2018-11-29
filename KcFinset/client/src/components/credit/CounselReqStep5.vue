@@ -6,10 +6,7 @@
     </div>
 
     <div class="btn-wrap float">
-      <a
-        @click="$router.push('/credit/counselMain')"
-        class="solid box blue"
-      >홈으로</a>
+      <a @click="$router.push('/credit/counselMain')" class="solid box blue">홈으로</a>
     </div>
   </section>
 </template>

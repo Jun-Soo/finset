@@ -2,10 +2,7 @@
   <div>
     <div class="pop-top">
       <p class="title">신용상담이란?</p>
-      <a
-        class="btn-close"
-        v-on:click="$emit('popclose')"
-      ></a>
+      <a class="btn-close" v-on:click="$emit('popclose')"></a>
       <!-- v-on:click="this.$parent.@click('inner')" -->
     </div>
     <!-- Content -->

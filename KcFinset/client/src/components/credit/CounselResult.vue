@@ -1,23 +1,32 @@
 <template>
   <section v-if="seen">
-    <div class="counsel-result">
-      <p class="title">질문</p>
-      {{counselInfo.dt_apply}}<br />
-      <p>{{counselInfo.inquiry_contents}}</p>
-      <template v-if="cd_counsel_status=='3'">
-        <p class="title">답변</p>
-        {{counselInfo.dt_counsel}}<br />
-        <p>{{counselContents}}</p>
-      </template>
+    <div class="reg-counsel">
+      <dl>
+        <dt>
+          <p>질문</p>
+          <p>{{counselInfo.dt_apply}}</p>
+        </dt>
+        <dd>{{counselInfo.inquiry_contents}}</dd>
+      </dl>
+      <dl v-if="cd_counsel_status=='3'">
+        <dt>
+          <p>답변</p>
+          <p>{{counselInfo.dt_counsel}}</p>
+        </dt>
+        <dd>{{counselContents}}</dd>
+      </dl>
     </div>
-    <button
+
+    <div
       v-if="cd_counsel_status!='3'"
-      @click="goUpdateForm()"
-    >수정</button>
-    <button
-      v-if="cd_counsel_status!='3'"
-      @click="deleteCounsel()"
-    >취소</button>
+      class="btn-wrap col2"
+    >
+      <a @click="deleteCounsel()">취소</a>
+      <a
+        @click="goUpdateForm()"
+        class="btn-solid"
+      >수정</a>
+    </div>
   </section>
 </template>
 
@@ -39,13 +48,19 @@ export default {
   },
   components: {},
   computed: {},
-  beforeCreate() {
-    this.$store.state.header.type = "sub";
-    this.$store.state.title = "상담결과보기";
-  },
+  beforeCreate() {},
   created() {
+    this.$store.state.header.type = "sub";
+    var cd_counsel_status = this.$route.query.cd_counsel_status;
+    var title = "";
+    if ("3" != cd_counsel_status) {
+      title = "신청내용보기";
+    } else {
+      title = "상담결과보기";
+    }
+    this.$store.state.title = title;
+    this.cd_counsel_status = cd_counsel_status;
     this.counsel_seq = this.$route.query.counsel_seq;
-    this.cd_counsel_status = this.$route.query.cd_counsel_status;
     this.getCreditCounselResultInfo();
   },
   beforeMount() {},
@@ -80,10 +95,11 @@ export default {
     },
     //수정화면 이동
     goUpdateForm: function() {
+      var _this = this;
       this.$router.push({
         name: "creditCounselReqStep4",
         query: {
-          counsel_seq: counsel_seq
+          counsel_seq: _this.counsel_seq
         }
       });
     },

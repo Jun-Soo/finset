@@ -14,7 +14,7 @@ export default {
     Constant.params = this.getParams()
 
     // ios a, button 태그 이벤트
-    $('body *').on('touchstart', function () { })
+    $('body *').on('touchstart', function () {})
 
     // Tab
     $('.tabs a').click(function (e) {
@@ -233,22 +233,23 @@ export default {
     var yyyy = ''
     var mm = ''
     var dd = ''
-    if (typeof date === 'string') {
-      yyyy = date.substring(0, 4)
-      mm = date.substring(4, 6)
-      dd = date.substring(6, 8)
-    } else if (typeof date === 'object') {
-      yyyy = date.getFullYear()
-      mm = date.getMonth() + 1
-      if (mm < 10) {
-        mm = '0' + mm
-      }
-      dd = date.getDate()
-      if (dd < 10) {
-        dd = '0' + dd
-      }
-    }
     if (date != null && date !== '') {
+      if (typeof date === 'string') {
+        yyyy = date.substring(0, 4)
+        mm = date.substring(4, 6)
+        dd = date.substring(6, 8)
+      } else if (typeof date === 'object') {
+        yyyy = date.getFullYear()
+        mm = date.getMonth() + 1
+        if (mm < 10) {
+          mm = '0' + mm
+        }
+        dd = date.getDate()
+        if (dd < 10) {
+          dd = '0' + dd
+        }
+      }
+
       if (((pattern || '') === '') || pattern === 'yyyymmdd') {
         return yyyy + '.' + mm + '.' + dd
       } else if (pattern === 'yyyymm') {
@@ -389,7 +390,7 @@ export default {
     Constant._this = this
     Constant._callback = callback
     Constant._this.addScroll()
-    Constant._callback(function () { })
+    Constant._callback(function () {})
   },
   handleScroll: function () {
     var html = document.documentElement

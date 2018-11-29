@@ -5,135 +5,48 @@
         <li>
           <p class="key">결혼여부</p>
           <p>
-            <multiselect
-              v-model="yn_wedding"
-              ref="yn_wedding"
-              placeholder="결혼여부선택"
-              track-by="text"
-              label="text"
-              :options="ynWeddingOptions"
-              :searchable="false"
-              :allow-empty="false"
-              @select="selectYnWedding()"
-              v-validate="'required'"
-              data-vv-name='결혼여부'
-            >
+            <multiselect v-model="yn_wedding" ref="yn_wedding" placeholder="결혼여부선택" track-by="text" label="text" :options="ynWeddingOptions" :searchable="false" :allow-empty="false" @select="selectYnWedding()" v-validate="'required'" data-vv-name='결혼여부'>
             </multiselect>
           </p>
-          <p
-            class="warn"
-            v-if="errors.has('결혼여부')"
-          >{{errors.first('결혼여부')}}</p>
+          <p class="warn" v-if="errors.has('결혼여부')">{{errors.first('결혼여부')}}</p>
         </li>
         <li>
           <p class="key">부양가족</p>
           <p>
-            <multiselect
-              v-model="cd_family_cnt"
-              ref="cd_family_cnt"
-              placeholder="부양가족선택"
-              track-by="text"
-              label="text"
-              :options="options_family_cnt"
-              :searchable="false"
-              :allow-empty="false"
-              @select="selectFamilyCnt()"
-              v-validate="'required'"
-              data-vv-name='부양가족'
-            >
+            <multiselect v-model="cd_family_cnt" ref="cd_family_cnt" placeholder="부양가족선택" track-by="text" label="text" :options="options_family_cnt" :searchable="false" :allow-empty="false" @select="selectFamilyCnt()" v-validate="'required'" data-vv-name='부양가족'>
             </multiselect>
           </p>
-          <p
-            class="warn"
-            v-if="errors.has('부양가족')"
-          >{{errors.first('부양가족')}}</p>
+          <p class="warn" v-if="errors.has('부양가족')">{{errors.first('부양가족')}}</p>
         </li>
         <li>
           <p class="key">주거형태</p>
           <p>
-            <multiselect
-              v-model="cd_living"
-              ref="cd_living"
-              placeholder="주거형태선택"
-              track-by="text"
-              label="text"
-              :options="options_living"
-              :searchable="false"
-              :allow-empty="false"
-              @select="selectLiving()"
-              v-validate="'required'"
-              data-vv-name='주거형태'
-            >
+            <multiselect v-model="cd_living" ref="cd_living" placeholder="주거형태선택" track-by="text" label="text" :options="options_living" :searchable="false" :allow-empty="false" @select="selectLiving()" v-validate="'required'" data-vv-name='주거형태'>
             </multiselect>
           </p>
-          <p
-            class="warn"
-            v-if="errors.has('주거형태')"
-          >{{errors.first('주거형태')}}</p>
+          <p class="warn" v-if="errors.has('주거형태')">{{errors.first('주거형태')}}</p>
         </li>
         <li>
           <p class="key">직업</p>
           <p>
-            <multiselect
-              v-model="cd_job"
-              ref="cd_job"
-              placeholder="직군선택"
-              track-by="text"
-              label="text"
-              :options="options_job"
-              :searchable="false"
-              :allow-empty="false"
-              @select="selectJob()"
-              v-validate="'required'"
-              data-vv-name='직업'
-            >
+            <multiselect v-model="cd_job" ref="cd_job" placeholder="직군선택" track-by="text" label="text" :options="options_job" :searchable="false" :allow-empty="false" @select="selectJob()" v-validate="'required'" data-vv-name='직업'>
             </multiselect>
           </p>
-          <p
-            class="warn"
-            v-if="errors.has('직업')"
-          >{{errors.first('직업')}}</p>
+          <p class="warn" v-if="errors.has('직업')">{{errors.first('직업')}}</p>
         </li>
         <li>
           <p class="key">월소득</p>
-          <p><input
-              type="number"
-              id="amt_mm_income"
-              v-model="amt_mm_income"
-              v-html="counselInfo.amt_income_total"
-              v-validate="'required|numeric|max:10'"
-              data-vv-name='월소득'
-            ></p>
-          <p
-            class="warn"
-            v-if="errors.has('월소득')"
-          >{{errors.first('월소득')}}</p>
+          <p><input type="number" id="amt_mm_income" v-model="amt_mm_income" v-html="counselInfo.amt_income_total" @change="changeIncome()" v-validate="'required|numeric|max:10'" data-vv-name='월소득'></p>
+          <p class="warn" v-if="errors.has('월소득')">{{errors.first('월소득')}}</p>
         </li>
         <li>
           <p class="key">월지출</p>
-          <p><input
-              type="number"
-              id="amt_mm_expense"
-              v-model="amt_mm_expense"
-              v-html="counselInfo.amt_expense_total"
-              @change="changeExpense()"
-              v-validate="'required|numeric|max:10'"
-              data-vv-name='월지출'
-            ></p>
-          <p
-            class="warn"
-            v-if="errors.has('월지출')"
-          >{{errors.first('월지출')}}</p>
+          <p><input type="number" id="amt_mm_expense" v-model="amt_mm_expense" v-html="counselInfo.amt_expense_total" @change="changeExpense()" v-validate="'required|numeric|max:10'" data-vv-name='월지출'></p>
+          <p class="warn" v-if="errors.has('월지출')">{{errors.first('월지출')}}</p>
         </li>
       </ul>
-      <div
-        v-if="isShowBtn"
-        class="btn-wrap float"
-      >
-        <a
-          @click="goCounselReqStep4()"
-          class="solid blue box"
-        >상담내용입력</a>
+      <div v-if="isShowBtn" class="btn-wrap float">
+        <a @click="goCounselReqStep4()" class="solid blue box">상담내용입력</a>
       </div>
     </div>
 
@@ -228,6 +141,13 @@ export default {
       var _this = this;
       setTimeout(function() {
         $("#amt_mm_income").focus();
+        _this.showBtn();
+      }, 100);
+    },
+    changeIncome: function() {
+      var _this = this;
+      setTimeout(function() {
+        _this.showBtn();
       }, 100);
     },
     changeExpense: function() {
@@ -238,11 +158,11 @@ export default {
     },
     showBtn: function() {
       var _this = this;
-      console.log("amt_mm_income");
-      console.log(this.amt_mm_income);
-      console.log("amt_mm_expense");
-      console.log(this.amt_mm_expense);
-      _this.isShowBtn = true;
+      if ("" != _this.amt_mm_income && "" != _this.amt_mm_expense) {
+        _this.isShowBtn = true;
+      } else {
+        _this.isShowBtn = false;
+      }
     },
     //상담내용입력화면으로 이동
     goCounselReqStep4: function() {

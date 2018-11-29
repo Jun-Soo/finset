@@ -4,6 +4,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.koscom.counsel.model.CounselForm;
+import com.koscom.counsel.model.CounselVO;
 import com.koscom.credit.model.CreditDtlVO;
 import com.koscom.domain.CreditInfo;
 import com.koscom.kcb.model.CrawlingVO;
@@ -18,6 +20,7 @@ import com.koscom.kcb.model.KcbOverdueInfo;
 import com.koscom.kcb.model.KcbOverduePublicInfo;
 import com.koscom.kcb.model.KcbOverdueSteadpayInfo;
 import com.koscom.person.model.PersonEtmIncomeInfo;
+import com.koscom.util.ReturnClass;
 
 public interface CreditMapper {
 
@@ -289,4 +292,62 @@ public interface CreditMapper {
 	 * @return CreditInfo
 	 */
 	List<CreditInfo> getCreditInfoByNmIf(CreditInfo info);
+
+	/**
+	 * 신용관리_신용상담메인 list
+	 * @param counselForm
+	 * @return
+	 */
+	List<CounselVO> listCreditCounselMain(CounselForm counselForm);
+
+	/**
+	 * 신용상담 - 상담결과보기(상담정보)
+	 * @param String no_person
+	 * @return CounselVO
+	 */
+	CounselVO getCreditCounselInfo(CounselForm counselForm);
+
+	/**
+	 * 신용상담 - 상담결과보기
+	 * @param CounselForm
+	 * @return HashMap
+	 */
+	HashMap<String, String> getPersonCounselMapInfo(CounselForm counselForm);
+
+	/**
+	 * 신용상담 - 상담신청(기본정보)
+	 * @param String no_person
+	 * @return CounselVO
+	 */
+	CounselVO getCreditCounselBaseInfo(String no_person);
+
+	/**
+	 * 신용상담 - 상담신청(부가정보)
+	 * @param String no_person
+	 * @return CounselVO
+	 */
+	CounselVO getCreditCounselAddInfo(String no_person);
+
+	/**
+	 * 신용상담 - 상담신청(등록)
+	 * @param CounselVO
+	 * @return int
+	 */
+	int createCreditCounselInfo(CounselVO counselVO);
+
+	/**
+	 * 신용상담 - 상담신청(수정)
+	 * @param CounselVO
+	 * @return int
+	 */
+	int updateCreditCounselInfo(CounselVO counselVO);
+
+	/**
+	 * 신용상담 - 상담신청(삭제)
+	 * @param CounselVO
+	 * @return int
+	 */
+	int deleteCreditCounselInfo(CounselVO counselVO);
+
+
 }

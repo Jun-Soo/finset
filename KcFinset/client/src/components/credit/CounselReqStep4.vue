@@ -1,22 +1,10 @@
 <template>
   <section>
     <div class="container">
-      <textarea
-        v-model="inquiry_contents"
-        v-html="counselInfo.inquiry_contents"
-        placeholder="상담내용을 입력합니다."
-      ></textarea>
+      <textarea v-model="inquiry_contents" placeholder="상담내용을 입력합니다."></textarea>
       <div class="btn-wrap float">
-        <a
-          v-if="counsel_seq==''"
-          @click="createCounsel()"
-          class="solid blue box"
-        >신청하기</a>
-        <a
-          v-else
-          @click="updateCounsel()"
-          class="solid blue box"
-        >수정하기</a>
+        <a v-if="counsel_seq==''" @click="createCounsel()" class="solid blue box">신청하기</a>
+        <a v-else @click="updateCounsel()" class="solid blue box">수정하기</a>
       </div>
     </div>
 
@@ -64,10 +52,12 @@ export default {
       var _this = this;
       this.$http
         .get("/m/credit/getCreditCounselReqStep4Info.json", {
-          params: {}
+          params: { counsel_seq: _this.counsel_seq }
         })
         .then(response => {
-          _this.counselInfo = response.data.counselInfo;
+          var counselInfo = response.data.counselInfo;
+          _this.inquiry_contents = counselInfo.inquiry_contents;
+          _this.counselInfo = counselInfo;
 
           _this.seen = true;
         })
@@ -80,7 +70,7 @@ export default {
       var _this = this;
 
       var formData = new FormData();
-      formData.append("cd_yn_wedding", this.$route.query.cd_yn_wedding);
+      formData.append("yn_wedding", this.$route.query.yn_wedding);
       formData.append("cd_family_cnt", this.$route.query.cd_family_cnt);
       formData.append("cd_living", this.$route.query.cd_living);
       formData.append("cd_job", this.$route.query.cd_job);

@@ -4,37 +4,16 @@
     <div class="container mt30">
       <div class="checks">
         <!--전체약관동의-->
-        <input
-          type="checkbox"
-          id="check-all"
-          v-model="chkAll"
-          v-on:click="allChecked()"
-        ><label for="check-all">전체 약관 동의</label>
-        <div
-          class="box-agree"
-          v-if="!chkAll"
-        >
-          <p><input
-              type="checkbox"
-              name="checkbox1"
-              id="checkbox1"
-              v-model="chkBox1"
-            ><label for="checkbox1">[필수] 서비스 이용동의</label></p>
+        <input type="checkbox" id="check-all" v-model="chkAll" v-on:click="allChecked()"><label for="check-all">전체 약관 동의</label>
+        <div class="box-agree" v-if="!chkAll">
+          <p><input type="checkbox" name="checkbox1" id="checkbox1" v-model="chkBox1"><label for="checkbox1">[필수] 서비스 이용동의</label></p>
           <ul>
             <li><a v-on:click="openPop('1')">서비스 이용약관</a></li>
             <li><a v-on:click="openPop('2')">개인정보 수집·이용 동의</a></li>
           </ul>
         </div>
-        <div
-          class="box-agree"
-          v-if="!chkAll"
-        >
-          <p><input
-              type="checkbox"
-              name="checkbox2"
-              id="checkbox2"
-              v-model="chkBox2"
-            ><label for="checkbox2">[필수] 통신사/본인확인 서비스 이용 동의</label></p>
+        <div class="box-agree" v-if="!chkAll">
+          <p><input type="checkbox" name="checkbox2" id="checkbox2" v-model="chkBox2"><label for="checkbox2">[필수] 통신사/본인확인 서비스 이용 동의</label></p>
           <ul>
             <li><a v-on:click="openPop('3')">고유식별정보처리 동의</a></li>
             <li><a v-on:click="openPop('4')">통신사 본인확인 이용약관 동의</a></li>
@@ -44,171 +23,45 @@
     </div>
     <div class="cert-wrap">
       <p class="title">회원정보</p>
-      <input
-        type="text"
-        class="form-control"
-        name="nm_person"
-        id="nm_person"
-        v-model="nm_person"
-        v-validate="'required|max:8'"
-        v-bind:disabled="isDisabled"
-        autocomplete="off"
-        placeholder="이름을 입력하세요"
-        data-vv-name='이름'
-      />
-      <p
-        class="warn"
-        v-if="errors.has('이름')"
-      >{{errors.first('이름')}}</p>
+      <input type="text" class="form-control" name="nm_person" id="nm_person" v-model="nm_person" v-validate="'required|max:8'" v-bind:disabled="isDisabled" autocomplete="off" placeholder="이름을 입력하세요" data-vv-name='이름' />
+      <p class="warn" v-if="errors.has('이름')">{{errors.first('이름')}}</p>
       <div class="grid">
-        <div class="number"><input
-            type="number"
-            placeholder="생년월일6자리"
-            name="ssn_birth"
-            id="ssn_birth"
-            v-model="ssn_birth"
-            v-validate="'required|length:6|max:6'"
-            v-on:keyup="nextFocus('birth')"
-            v-bind:disabled="isDisabled"
-            autocomplete="off"
-            data-vv-name='생년월일'
-          ></div>
+        <div class="number"><input type="number" placeholder="생년월일6자리" name="ssn_birth" id="ssn_birth" v-model="ssn_birth" v-validate="'required|length:6|max:6'" v-on:keyup="nextFocus('birth')" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='생년월일'></div>
         <div class="dash">-</div>
-        <div class="number last"><input
-            type="password"
-            pattern="[0-9]*"
-            name="sex"
-            id="sex"
-            v-model="sex"
-            inputmode="numeric"
-            maxlength="1"
-            style="-webkit-text-security:disc"
-            v-on:change="nextFocus('sex')"
-            v-bind:disabled="isDisabled"
-            autocomplete="off"
-            v-validate="'required|between:0,9|length:1|max:1'"
-            data-vv-name='성별'
-          >******</div>
+        <div class="number last"><input type="password" pattern="[0-9]*" name="sex" id="sex" v-model="sex" inputmode="numeric" maxlength="1" style="-webkit-text-security:disc" v-on:change="nextFocus('sex')" v-bind:disabled="isDisabled" autocomplete="off" v-validate="'required|between:0,9|length:1|max:1'" data-vv-name='성별'>******</div>
       </div>
-      <p
-        class="warn"
-        v-if="errors.has('생년월일')"
-      >{{errors.first('생년월일')}}</p>
-      <p
-        class="warn"
-        v-if="errors.has('성별')"
-      >{{errors.first('성별')}}</p>
+      <p class="warn" v-if="errors.has('생년월일')">{{errors.first('생년월일')}}</p>
+      <p class="warn" v-if="errors.has('성별')">{{errors.first('성별')}}</p>
     </div>
     <div class="cert-wrap">
       <p class="title">휴대폰인증</p>
       <div class="grid phone">
-        <multiselect
-          v-model="telComNm"
-          track-by="text"
-          label="text"
-          placeholder="통신사"
-          :options="options"
-          :searchable="false"
-          :allow-empty="false"
-          @select="onSelect"
-        >
-          <template
-            slot="singleLabel"
-            slot-scope="{ option }"
-          >{{ option.text }}</template>
+        <multiselect v-model="telComNm" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @select="onSelect">
+          <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
         </multiselect>
-        <input
-          type="tel"
-          name="hp"
-          id="hp"
-          v-model="hp"
-          v-validate="'required|max:11'"
-          v-bind:disabled="isDisabled"
-          placeholder="휴대폰 번호"
-          data-vv-name='휴대폰 번호'
-        >
+        <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
       </div>
-      <button
-        id="req_certification"
-        v-on:click="personCertify()"
-      >인증번호 전송</button>
-      <div
-        class="cert-num"
-        id="cert_no_conteiner"
-      >
-        <input
-          type="number"
-          ref="smsCertNo"
-          name="smsCertNo"
-          id="smsCertNo"
-          v-model="smsCertNo"
-          placeholder="인증번호를 입력하세요"
-          autocomplete="off"
-          v-bind:readonly="isReadOnly"
-        >
-        <p
-          class="time"
-          id="countdown"
-          aria-hidden="true"
-        >{{ timer }}</p>
+      <button id="req_certification" v-on:click="personCertify()">인증번호 전송</button>
+      <div class="cert-num" id="cert_no_conteiner">
+        <input type="number" ref="smsCertNo" name="smsCertNo" id="smsCertNo" v-model="smsCertNo" placeholder="인증번호를 입력하세요" autocomplete="off" v-bind:readonly="isReadOnly">
+        <p class="time" id="countdown" aria-hidden="true">{{ timer }}</p>
       </div>
-      <p
-        class="warn"
-        id="certNoWarning"
-        name="certNoWarning"
-        v-if="timer==='00:00'"
-      >인증번호를 재전송 해주세요.</p>
+      <p class="warn" id="certNoWarning" name="certNoWarning" v-if="timer==='00:00'">인증번호를 재전송 해주세요.</p>
     </div>
-    <div
-      class="btn-wrap"
-      id="confirmed_div"
-      v-if="smsCertNo&&timer!='00:00'"
-    >
-      <a
-        id="confirmed_certify"
-        class="btn-next"
-        v-on:click="confirmedCertify()"
-      >다음</a>
+    <div class="btn-wrap float" id="confirmed_div" v-if="smsCertNo&&timer!='00:00'">
+      <a id="confirmed_certify" class="btn-next" v-on:click="confirmedCertify()">다음</a>
     </div>
-    <vue-modal
-      transitionName="zoom-in"
-      name="my-modal1"
-      v-on:popclose="closePop('1')"
-    >
-      <Terms1
-        slot="body"
-        v-on:popclose="closePop('1')"
-      ></Terms1>
+    <vue-modal transitionName="zoom-in" name="my-modal1" v-on:popclose="closePop('1')">
+      <Terms1 slot="body" v-on:popclose="closePop('1')"></Terms1>
     </vue-modal>
-    <vue-modal
-      transitionName="zoom-in"
-      name="my-modal2"
-      v-on:popclose="closePop('2')"
-    >
-      <Terms4
-        slot="body"
-        v-on:popclose="closePop('2')"
-      ></Terms4>
+    <vue-modal transitionName="zoom-in" name="my-modal2" v-on:popclose="closePop('2')">
+      <Terms4 slot="body" v-on:popclose="closePop('2')"></Terms4>
     </vue-modal>
-    <vue-modal
-      transitionName="zoom-in"
-      name="my-modal3"
-      v-on:popclose="closePop('3')"
-    >
-      <Terms9
-        slot="body"
-        v-on:popclose="closePop('3')"
-      ></Terms9>
+    <vue-modal transitionName="zoom-in" name="my-modal3" v-on:popclose="closePop('3')">
+      <Terms9 slot="body" v-on:popclose="closePop('3')"></Terms9>
     </vue-modal>
-    <vue-modal
-      transitionName="zoom-in"
-      name="my-modal4"
-      v-on:popclose="closePop('4')"
-    >
-      <Terms10
-        slot="body"
-        v-on:popclose="closePop('4')"
-      ></Terms10>
+    <vue-modal transitionName="zoom-in" name="my-modal4" v-on:popclose="closePop('4')">
+      <Terms10 slot="body" v-on:popclose="closePop('4')"></Terms10>
     </vue-modal>
   </section>
 </template>

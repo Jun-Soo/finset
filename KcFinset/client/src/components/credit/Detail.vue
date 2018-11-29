@@ -186,6 +186,9 @@ export default {
   created() {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "변동이력";
+    if(this.$route.query.listType != null && this.$route.query.listType !=""){
+      this.listType = this.$route.query.listType;
+    }
     this.getDetailInfo();
   },
   beforeMount() {},

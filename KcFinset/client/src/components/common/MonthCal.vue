@@ -1,92 +1,86 @@
 <template>
   <div id="wrapper">
-    <VueScheduler
-      :events="events"
-      event-display="name"
-      @event-clicked="openDetail"
-      :shareList="shareList"
-      :clickShare="clickShare"
-      @curYM="curYM"
-    />
-    <vue-modal
-      name="my-modal"
-      transitionName="zoom-in"
-      theme="width:100% !important; max-height: 80%; top: 134px; position:absolute"
-    >
-      <h2
-        slot="header"
-        @click="hide"
-      >FINSET</h2>
-      <div class="modal-subHeader">
-        <p class="left">{{modalDate}}</p>
-        <p class="right">{{sumTotal}} 원</p><br />
-        <div class="modal-eachTotal">
-          <p
-            v-if="incomeTotal!=0"
-            class="left modal-label label-income"
-          >수입</p>
-          <p
-            v-if="incomeTotal!=0"
-            class="left modal-amt amt-income"
-          > {{incomeTotal}} 원</p>
-          <p
-            v-if="consumeTotal!=0"
-            class="left modal-label label-consume"
-          >지출</p>
-          <p
-            v-if="consumeTotal!=0"
-            class="left modal-amt amt-consume"
-          > {{consumeTotal}} 원</p>
-          <p
-            v-if="debtTotal!=0"
-            class="left modal-label label-debt"
-          >부채</p>
-          <p
-            v-if="debtTotal!=0"
-            class="left modal-amt amt-debt"
-          > {{debtTotal}} 원</p>
+    <VueScheduler v-if="isMonth" :events="events" event-display="name" @event-clicked="openDetail" :shareList="shareList" :clickShare="clickShare" :sumData="sumData" @curYM="curYM" ref="scheduler" />
+
+    <vue-modal name="my-modal" transitionName="zoom-in" theme="width: 90%">
+      <div slot="body" class="modal-con" data-modal-con="modal01">
+        <div class="top">
+          {{modalDate}}
+          <button class="modal-close"></button>
         </div>
-      </div>
-      <div
-        class="modal-income"
-        v-if="incomeList!=null"
-      >
-        <div
-          class="modal-list"
-          v-for="incomeVO in incomeList"
-          :key="incomeVO.index"
-        >
-          <p class="left modal-label label-income">수입</p>
-          <p class="left list-text">{{incomeVO.contents}}</p>
-          <p class="right">{{formatNumber(incomeVO.amt_in_out)}} 원</p>
-        </div>
-      </div>
-      <div
-        class="modal-consume"
-        v-if="consumeList!=null"
-      >
-        <div
-          class="modal-list"
-          v-for="consumeVO in consumeList"
-          :key="consumeVO.index"
-        >
-          <p class="left modal-label label-consume">지출</p>
-          <p class="left list-text">{{consumeVO.contents}}</p>
-          <p class="right">{{formatNumber(consumeVO.amt_in_out)}} 원</p>
-        </div>
-      </div>
-      <div
-        class="modal-debt"
-        v-if="debtList!=null"
-      >
-        <div
-          class="modal-list"
-          v-for="debtVO in debtList"
-          :key="debtVO.index"
-        >
-          <p class="left modal-label label-debt">부채</p>
-          <p class="left list-text">{{debtVO.nm_biz}}</p>
-          <p class="right">{{formatNumber(debtVO.amt_repay)}} 원</p>
+        <div class="cal-con">
+          <div class="cal-top">
+            <div>
+              <em class="income">수입</em>
+              <p>{{incomeTotal}} 원</p>
+            </div>
+            <div>
+              <em class="debt">지출</em>
+              <p>{{consumeTotal}} 원</p>
+            </div>
+            <div>
+              <em class="loan">대출</em>
+              <p>{{debtTotal}} 원</p>
+            </div>
+          </div>
+          <div class="body">
+            <!-- <div class="list">
+              <div>
+                <em class="red">준수</em>
+                <em class="debt">지출</em>
+                <em class="text">여의도 떡볶이</em>
+              </div>
+              <div class="won">650,000 원</div>
+            </div>
+            <div class="list">
+              <div>
+                <em class="orange">길동</em>
+                <em class="debt">지출</em>
+                <em class="text">파리크라상</em>
+              </div>
+              <div class="won">650,000 원</div>
+            </div>
+            <div class="list">
+              <div>
+                <em class="red">준수</em>
+                <em class="debt">수입</em>
+                <em class="text">과외비</em>
+              </div>
+              <div class="won">650,000 원</div>
+            </div> -->
+            <div v-for="(incomeVO, index) in incomeList" :key="'income-'+index" class="list">
+              <div>
+                <em :class="$refs.scheduler.settingList[shareList.findIndex(person => person.no_person === incomeVO.no_person)].color">
+                  {{shareList.filter(person => person.no_person === incomeVO.no_person)[0].nm_person}}
+                </em>
+                <em class="income">수입</em>
+                <em class="text">{{incomeVO.contents}}</em>
+              </div>
+              <div class="won">{{Common.formatNumber(incomeVO.amt_in_out)}} 원</div>
+            </div>
+
+            <div v-for="(consumeVO, index) in consumeList" :key="'consume-'+index" class="list">
+              <div>
+                <em :class="$refs.scheduler.settingList[shareList.findIndex(person => person.no_person === consumeVO.no_person)].color">
+                  {{shareList.filter(person => person.no_person === consumeVO.no_person)[0].nm_person}}
+                </em>
+                <em class="debt">지출</em>
+                <em class="text">{{consumeVO.contents}}</em>
+              </div>
+              <div class="won">{{Common.formatNumber(consumeVO.amt_in_out)}} 원</div>
+            </div>
+
+            <div v-for="(debtVO, index) in debtList" :key="'debt-'+index" class="list">
+              <div>
+                <em :class="$refs.scheduler.settingList[shareList.findIndex(person => person.no_person === debtVO.no_person)].color">
+                  {{shareList.filter(person => person.no_person === debtVO.no_person)[0].nm_person}}
+                </em>
+                <em class="loan">부채</em>
+                <em class="text" v-text="(debtVO.nm_fc||'')==''?debtVO.creditor:debtVO.nm_fc"></em>
+              </div>
+              <div class="won">{{Common.formatNumber(debtVO.amt_repay)}} 원</div>
+            </div>
+          </div>
         </div>
       </div>
     </vue-modal>
@@ -105,13 +99,21 @@ export default {
       events: [],
       modalDate: "",
       sumTotal: 0,
+      sumData: {
+        sumIncome: 0,
+        sumConsume: 0,
+        sumDebt: 0
+      },
       incomeTotal: 0,
       consumeTotal: 0,
       debtTotal: 0,
       incomeList: null,
       consumeList: null,
       debtList: null,
-      shareList: []
+      shareList: [],
+      standardDt: new Date(),
+      isMonth: true,
+      Common: Common
     };
   },
   components: {
@@ -123,11 +125,14 @@ export default {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "캘린더";
   },
-  created() {},
-  beforeMount() {},
-  mounted() {
+  created() {
+    this.standardDt = Common.formatDate(this.standardDt)
+      .replace(/[-]/g, "")
+      .substr(0, 6);
     this.listCalendarShareInfo();
   },
+  beforeMount() {},
+  mounted() {},
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
@@ -135,6 +140,7 @@ export default {
   methods: {
     listCalendarShareInfo: function() {
       var _this = this;
+
       this.$http
         .get("/m/debt/listCalendarShareInfo.json", { params: {} })
         .then(function(response) {
@@ -144,17 +150,13 @@ export default {
             list[idx].isShow = true;
           }
           _this.shareList = list;
-          _this.getCalendarData(
-            Common.formatDate(new Date())
-              .replace(/[-]/g, "")
-              .substr(0, 6)
-          );
+          _this.listCalendarData(_this.standardDt);
         });
     },
     openDetail(params) {
       this.modalDate = this.formatModalDate(params.date);
       var ymd = Common.formatDate(params.date, "yyyymmdd").replace(/-/g, "");
-      this.listCalendarData(
+      this.listDetailCalendarData(
         ymd,
         params.isActiveIncome,
         params.isActiveConsume,
@@ -209,11 +211,11 @@ export default {
         type: type
       });
     },
-    getCalendarData(ym) {
+    listCalendarData(ym) {
       var _this = this;
       this.$http
-        .get("/m/debt/getCalendarData.json", {
-          params: { ym: ym }
+        .get("/m/debt/listCalendarData.json", {
+          params: { ym: ym, no_person_list: _this.filterShareList() }
         })
         .then(function(response) {
           _this.events = [];
@@ -223,26 +225,34 @@ export default {
           var consumeList = data.consumeList;
           var debtList = data.debtList;
 
+          _this.sumData.sumIncome = 0;
+          _this.sumData.sumConsume = 0;
+          _this.sumData.sumDebt = 0;
+
           for (var idx in incomeList) {
             _this.makeEvent(incomeList[idx], "income");
+            _this.sumData.sumIncome += parseInt(incomeList[idx].amt_in_out);
           }
           for (var idx in consumeList) {
             _this.makeEvent(consumeList[idx], "consume");
+            _this.sumData.sumConsume += parseInt(consumeList[idx].amt_in_out);
           }
           for (var idx in debtList) {
             _this.makeEvent(debtList[idx], "debt");
+            _this.sumData.sumDebt += parseInt(debtList[idx].amt_in_out);
           }
         });
     },
-    listCalendarData(ymd, isActiveIncome, isActiveConsume, isActiveDebt) {
+    listDetailCalendarData(ymd, isActiveIncome, isActiveConsume, isActiveDebt) {
       var _this = this;
       this.$http
-        .get("/m/debt/listCalendarData.json", {
+        .get("/m/debt/listDetailCalendarData.json", {
           params: {
             ymd: ymd,
             isActiveIncome: isActiveIncome,
             isActiveConsume: isActiveConsume,
-            isActiveDebt: isActiveDebt
+            isActiveDebt: isActiveDebt,
+            no_person_list: _this.filterShareList()
           }
         })
         .then(function(response) {
@@ -275,7 +285,8 @@ export default {
         });
     },
     curYM(ym) {
-      this.getCalendarData(ym);
+      this.standardDt = ym;
+      this.listCalendarData(ym);
     },
     formatModalDate(date) {
       var mm = date.getMonth() + 1;
@@ -309,7 +320,11 @@ export default {
         return;
       }
       this.shareList[params].isShow = !this.shareList[params].isShow;
-      // this.listConsumeInfo();
+      this.listCalendarData(
+        Common.formatDate(this.standardDt)
+          .replace(/[-]/g, "")
+          .substr(0, 6)
+      );
     },
     filterShareList: function() {
       var shareList = new Array();

@@ -126,14 +126,14 @@ public interface ConsumeMapper {
 	 * @param consumeForm
 	 * @return
 	 */
-	List<ConsumeVO> getCalendarConsumeData(ConsumeForm consumeForm);
+	List<ConsumeVO> listCalendarConsumeData(ConsumeForm consumeForm);
 	
 	/**
 	 * 공통 캘린더 리스트 조회
 	 * @param consumeForm
 	 * @return
 	 */
-	List<ConsumeVO> listCalendarConsumeData(ConsumeForm consumeForm);
+	List<ConsumeVO> listDetailCalendarConsumeData(ConsumeForm consumeForm);
 	
 	/**
 	 * 청구내역 요약 조회
@@ -344,4 +344,11 @@ public interface ConsumeMapper {
 	 * @return
 	 */
 	List<ConsumeVO> listMeansConsume(String no_person);
+	
+	/**
+	 * 년 달력 데이터 조회
+	 * @param consumeForm
+	 * @return
+	 */
+	List<ConsumeVO> listCalendarConsumeDataYear(ConsumeForm consumeForm);
 }

@@ -161,14 +161,14 @@ public interface DebtMapper {
 	 * @param debtForm
 	 * @return
 	 */
-	List<DebtCalendarVO> getCalendarDebtData(DebtForm debtForm);
+	List<DebtCalendarVO> listCalendarDebtData(DebtForm debtForm);
 
 	/**
 	 * 공통 캘린더 리스트 조회
 	 * @param debtForm
 	 * @return
 	 */
-	List<DebtCalendarVO> listCalendarDebtData(DebtForm debtForm);
+	List<DebtCalendarVO> listDetailCalendarDebtData(DebtForm debtForm);
 
 	/**
 	 * 부채 메인 상단

@@ -436,24 +436,25 @@ public class DebtController {
 
 	/**
 	 * VUE
-	 * 부채 데이터 리스트 조회
+	 * 캘린더 리스트에 들어갈 데이터 조회
 	 * @param session
 	 * @param model
 	 * @param ym
 	 * @return
 	 * @throws FinsetException
 	 */
-	@RequestMapping("/getCalendarData.json")
-	public String getCalendarData(HttpSession session, Model model, String ym) throws FinsetException {
+	@RequestMapping("/listCalendarData.json")
+	public String listCalendarData(HttpSession session, Model model, @RequestParam(value="no_person_list[]") List<String> no_person_list, String ym) throws FinsetException {
 		String no_person = (String) session.getAttribute("no_person");
 		ConsumeForm consumeForm = new ConsumeForm();
 		consumeForm.setNo_person(no_person);
+		consumeForm.setNo_person_list(no_person_list);
 		consumeForm.setYm_trd(ym);
 
 		List<ConsumeVO> incomeList = new ArrayList<ConsumeVO>();
 		List<ConsumeVO> consumeList = new ArrayList<ConsumeVO>();
 
-		List<ConsumeVO> rawConsumeList = consumeManager.getCalendarConsumeData(consumeForm);
+		List<ConsumeVO> rawConsumeList = consumeManager.listCalendarConsumeData(consumeForm);
 
 		for(ConsumeVO vo : rawConsumeList) {
 			String type = vo.getType_in_out();
@@ -469,13 +470,11 @@ public class DebtController {
 
 		DebtForm debtForm = new DebtForm();
 		debtForm.setNo_person(no_person);
+		debtForm.setNo_person_list(no_person_list);
 		debtForm.setReq_yyyymm(ym);
 
-		List<DebtCalendarVO> debtList = debtManager.getCalendarDebtData(debtForm);
+		List<DebtCalendarVO> debtList = debtManager.listCalendarDebtData(debtForm);
 
-		for(DebtCalendarVO vo : debtList) {
-			vo.setReq_yyyymmdd(vo.getReq_yyyymm() + vo.getInter_pay_day());
-		}
 		model.addAttribute("debtList", debtList);
 
 		return "jsonView";
@@ -483,7 +482,7 @@ public class DebtController {
 
 	/**
 	 * VUE
-	 * 캘린더 요약 데이터 조회
+	 * 캘린더 상세 데이터 조회
 	 * @param session
 	 * @param model
 	 * @param ymd
@@ -493,11 +492,12 @@ public class DebtController {
 	 * @return
 	 * @throws FinsetException
 	 */
-	@RequestMapping("/listCalendarData.json")
-	public String listCalendarData(
+	@RequestMapping("/listDetailCalendarData.json")
+	public String listDetailCalendarData(
 			HttpSession session,
 			Model model,
 			String ymd,
+			@RequestParam(value="no_person_list[]") List<String> no_person_list,
 			boolean isActiveIncome,
 			boolean isActiveConsume,
 			boolean isActiveDebt
@@ -511,12 +511,13 @@ public class DebtController {
 		if(isActiveIncome||isActiveConsume){
 			ConsumeForm consumeForm = new ConsumeForm();
 			consumeForm.setNo_person(no_person);
+			consumeForm.setNo_person_list(no_person_list);
 			consumeForm.setYmd_trd(ymd);
 
 			List<ConsumeVO> incomeList = new ArrayList<ConsumeVO>();
 			List<ConsumeVO> consumeList = new ArrayList<ConsumeVO>();
 
-			List<ConsumeVO> rawConsumeList = consumeManager.listCalendarConsumeData(consumeForm);
+			List<ConsumeVO> rawConsumeList = consumeManager.listDetailCalendarConsumeData(consumeForm);
 
 			for(ConsumeVO vo : rawConsumeList) {
 				String type = vo.getType_in_out();
@@ -544,9 +545,10 @@ public class DebtController {
 		if(isActiveDebt){
 			DebtForm debtForm = new DebtForm();
 			debtForm.setNo_person(no_person);
+			debtForm.setNo_person_list(no_person_list);
 			debtForm.setReq_yyyymmdd(ymd);
 
-			List<DebtCalendarVO> debtList = debtManager.listCalendarDebtData(debtForm);
+			List<DebtCalendarVO> debtList = debtManager.listDetailCalendarDebtData(debtForm);
 
 			for(DebtCalendarVO vo : debtList) {
 				vo.setReq_yyyymmdd(vo.getReq_yyyymm() + vo.getInter_pay_day());
@@ -674,6 +676,27 @@ public class DebtController {
 		logger.debug("listCalendarShareInfo");
 		String no_person = (String)session.getAttribute("no_person");
 		model.addAttribute("listCalendarShareInfo", debtManager.listCalendarShareInfo(no_person));
+		return "jsonView";
+	}
+	
+	/**
+	 * VUE
+	 * 년 캘린더 데이터 리스트 조회
+	 * @param session
+	 * @param model
+	 * @param no_person_list
+	 * @param consumeForm
+	 * @return
+	 */
+	@RequestMapping("/listCalendarDataYear.json")
+	public String listCalendarDataYear(HttpSession session, Model model, @RequestParam(value="no_person_list[]") List<String> no_person_list, String y_trd) {
+		logger.debug("listCalendarDataYear");
+		ConsumeForm consumeForm = new ConsumeForm();
+		String no_person = (String)session.getAttribute("no_person");
+		consumeForm.setNo_person(no_person);
+		consumeForm.setNo_person_list(no_person_list);
+		consumeForm.setY_trd(y_trd);
+		model.addAttribute("listCalendarConsumeDataYear", consumeManager.listCalendarConsumeDataYear(consumeForm));
 		return "jsonView";
 	}
 }

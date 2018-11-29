@@ -232,15 +232,15 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	}
 	
 	@Override
-	public List<ConsumeVO> getCalendarConsumeData(ConsumeForm consumeForm) {
-		logger.debug("getCalendarConsumeData");
-		return consumeMapper.getCalendarConsumeData(consumeForm);
-	}
-
-	@Override
 	public List<ConsumeVO> listCalendarConsumeData(ConsumeForm consumeForm) {
 		logger.debug("listCalendarConsumeData");
 		return consumeMapper.listCalendarConsumeData(consumeForm);
+	}
+
+	@Override
+	public List<ConsumeVO> listDetailCalendarConsumeData(ConsumeForm consumeForm) {
+		logger.debug("listDetailCalendarConsumeData");
+		return consumeMapper.listDetailCalendarConsumeData(consumeForm);
 	}
 	
 	@Override
@@ -445,5 +445,11 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	public List<ConsumeVO> listMeansConsume(String no_person) {
 		logger.debug("listMeansConsume");
 		return consumeMapper.listMeansConsume(no_person);
+	}
+
+	@Override
+	public List<ConsumeVO> listCalendarConsumeDataYear(ConsumeForm consumeForm) {
+		logger.debug("listCalendarConsumeDataYear");
+		return consumeMapper.listCalendarConsumeDataYear(consumeForm);
 	}
 }

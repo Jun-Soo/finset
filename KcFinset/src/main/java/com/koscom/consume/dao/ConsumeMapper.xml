@@ -491,24 +491,69 @@
 				NO_PERSON	= 	{#no_person		, jdbcType = VARCHAR}
 			AND REQ_YYYYMM	=	{#req_yyyymm	, jdbcType = VARCHAR}
 	</select>
-    <select id="getCalendarConsumeData" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.ConsumeVO">
+    <select id="listCalendarConsumeData" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.ConsumeVO">
 		SELECT
+			CI.TYPE_IN_OUT,
+			NVL( SUM( CI.AMT_IN_OUT ), 0 ) AS AMT_IN_OUT,
+			CI.DT_TRD
+		FROM
+			CONSUME_INFO CI
+		WHERE
+			NO_PERSON IN
+				<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
+					#{each_person}
+				</foreach>
+			AND SUBSTR(CI.DT_TRD, 0, 6)	= #{ym_trd, jdbcType = VARCHAR}
+			AND CI.YN_CANCEL			= 'N'
+			AND CI.YN_BUDGET_EXCEPT		= 'N'
+			AND EXISTS (
+				SELECT
+				      1
+				   FROM
+				      ( SELECT
+				         DISTINCT NO_PERSON AS OFFER_NO_PERSON, MEANS_CONSUME AS CD_TYPE, NO_CARD AS NO_CARD_ACC
+				         FROM
+				            CONSUME_INFO
+				         WHERE
+				            NO_PERSON = #{no_person, jdbcType = VARCHAR}
+				      UNION ALL SELECT
+				            OFFER_NO_PERSON, CD_TYPE, NO_CARD_ACC
+				         FROM
+				            SHARE_INFO_DETAIL A
+				         INNER JOIN SHARE_INFO B ON
+				            A.SEQ_SHARE = B.SEQ_SHARE
+				            AND B.REQ_NO_PERSON = #{no_person, jdbcType = VARCHAR}
+				            AND B.SHARE_STATUS = '02'
+				            AND B.YN_CONSUME_INFO = 'Y'
+				            AND B.DT_END_OFFER IS NULL
+				         WHERE
+				            1 = 1
+				            AND A.CD_INFO = '03'
+				            AND A.YN_SHARE = 'Y' )
+				   WHERE
+				      1 = 1
+				      AND OFFER_NO_PERSON = CI.NO_PERSON
+				      AND
+				      ( CASE
+				         WHEN CD_TYPE = '01' THEN SUBSTR( NO_CARD_ACC, - 3 ) /* 카드 */
+				         WHEN CD_TYPE = '02' THEN CD_TYPE /* 현금 */
+				         WHEN CD_TYPE = '03' THEN CD_TYPE /* 현금영수증 */
+				         WHEN CD_TYPE = '04' THEN NO_CARD_ACC /* 입출금계좌 */
+				      END ) IN
+				      ( CASE
+				         WHEN CI.MEANS_CONSUME = '01' THEN SUBSTR( CI.NO_CARD, - 3 ) /* 카드 */
+				         WHEN CI.MEANS_CONSUME = '02' THEN CI.MEANS_CONSUME /* 현금 */
+				         WHEN CI.MEANS_CONSUME = '03' THEN CI.MEANS_CONSUME /* 현금영수증 */
+				         WHEN CI.MEANS_CONSUME = '04' THEN CI.NO_CARD /* 입출금계좌 */
+				      END ) 
+			)
+		GROUP BY
 			 TYPE_IN_OUT
 			,DT_TRD
-			,SUM( TO_NUMBER( AMT_IN_OUT )) AMT_IN_OUT
-		FROM
-			CONSUME_INFO
-		WHERE
-				NO_PERSON = #{no_person , jdbcType = VARCHAR}
-			AND YN_DELETE = 'N'
-			AND SUBSTR( DT_TRD, 0, 6 )= #{ym_trd , jdbcType = VARCHAR}
-		GROUP BY
-			 DT_TRD
-			,TYPE_IN_OUT
 		ORDER BY
-			DT_TRD DESC 
+			TYPE_IN_OUT ASC
     </select>
-    <select id="listCalendarConsumeData" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.ConsumeVO">
+    <select id="listDetailCalendarConsumeData_prev" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.ConsumeVO">
 		SELECT
 			 TYPE_IN_OUT
 			,DT_TRD
@@ -522,6 +567,67 @@
 			AND DT_TRD	  = #{ymd_trd , jdbcType = VARCHAR}
 		ORDER BY
 			DT_TRD DESC 
+    </select>
+    <select id="listDetailCalendarConsumeData" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.ConsumeVO">
+		SELECT
+			 CI.NO_PERSON
+			,CI.TYPE_IN_OUT
+			,CI.DT_TRD
+			,CI.AMT_IN_OUT
+			,CI.CONTENTS
+		FROM
+			CONSUME_INFO CI
+		WHERE
+			NO_PERSON IN
+				<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
+					#{each_person}
+				</foreach>
+			AND CI.DT_TRD				= #{ymd_trd, jdbcType = VARCHAR}
+			AND CI.YN_CANCEL			= 'N'
+			AND CI.YN_BUDGET_EXCEPT		= 'N'
+			AND EXISTS (
+				SELECT
+				      1
+				   FROM
+				      ( SELECT
+				         DISTINCT NO_PERSON AS OFFER_NO_PERSON, MEANS_CONSUME AS CD_TYPE, NO_CARD AS NO_CARD_ACC
+				         FROM
+				            CONSUME_INFO
+				         WHERE
+				            NO_PERSON = #{no_person, jdbcType = VARCHAR}
+				      UNION ALL SELECT
+				            OFFER_NO_PERSON, CD_TYPE, NO_CARD_ACC
+				         FROM
+				            SHARE_INFO_DETAIL A
+				         INNER JOIN SHARE_INFO B ON
+				            A.SEQ_SHARE = B.SEQ_SHARE
+				            AND B.REQ_NO_PERSON = #{no_person, jdbcType = VARCHAR}
+				            AND B.SHARE_STATUS = '02'
+				            AND B.YN_CONSUME_INFO = 'Y'
+				            AND B.DT_END_OFFER IS NULL
+				         WHERE
+				            1 = 1
+				            AND A.CD_INFO = '03'
+				            AND A.YN_SHARE = 'Y' )
+				   WHERE
+				      1 = 1
+				      AND OFFER_NO_PERSON = CI.NO_PERSON
+				      AND
+				      ( CASE
+				         WHEN CD_TYPE = '01' THEN SUBSTR( NO_CARD_ACC, - 3 ) /* 카드 */
+				         WHEN CD_TYPE = '02' THEN CD_TYPE /* 현금 */
+				         WHEN CD_TYPE = '03' THEN CD_TYPE /* 현금영수증 */
+				         WHEN CD_TYPE = '04' THEN NO_CARD_ACC /* 입출금계좌 */
+				      END ) IN
+				      ( CASE
+				         WHEN CI.MEANS_CONSUME = '01' THEN SUBSTR( CI.NO_CARD, - 3 ) /* 카드 */
+				         WHEN CI.MEANS_CONSUME = '02' THEN CI.MEANS_CONSUME /* 현금 */
+				         WHEN CI.MEANS_CONSUME = '03' THEN CI.MEANS_CONSUME /* 현금영수증 */
+				         WHEN CI.MEANS_CONSUME = '04' THEN CI.NO_CARD /* 입출금계좌 */
+				      END ) 
+			)
+		ORDER BY
+			TYPE_IN_OUT ASC
     </select>
     <select id="getPaymentSummary" parameterType="com.koscom.consume.model.PaymentForm" resultType="com.koscom.consume.model.PaymentVO">
 		SELECT
@@ -1687,4 +1793,107 @@
 			,CD_FC DESC
 			,NO_CARD DESC
 	</select>
+    <select id="listCalendarConsumeDataYear" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.ConsumeVO">
+		SELECT
+			 MM.MM_BASIC AS DT_TRD
+			,SUM( MM.AMT_IN_OUT ) AS AMT_IN_OUT
+			,MM.TYPE_IN_OUT AS TYPE_IN_OUT
+		FROM
+			(
+				SELECT
+					CI.NO_PERSON
+					,CI.SEQ_CONSUME
+					,CI.TYPE_IN_OUT
+					,CI.MEANS_CONSUME
+					,CI.CD_FC
+					,CI.NM_CARD
+					,CI.DT_TRD
+					,PCCI.NM_CLASS
+					,PCCI.NM_TYPE
+					,CI.CONTENTS
+					,CI.AMT_IN_OUT
+					,CI.YN_AUTO
+					,NVL( PSI.DT_BASIC, '01' )
+					,TO_CHAR( SYSDATE, 'DD' )
+					,CASE
+						WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>=]]> NVL( PSI.DT_BASIC, '01' )
+						AND TO_CHAR( TO_DATE( CI.DT_TRD, 'YYYYMMDD' ), 'DD' ) <![CDATA[>=]]> NVL( PSI.DT_BASIC, '01' ) THEN TO_CHAR( TO_DATE( CI.DT_TRD, 'YYYYMMDD' ), 'YYYYMM' )
+						ELSE TO_CHAR( ADD_MONTHS( CI.DT_TRD,- 1 ), 'YYYYMM' )
+					END MM_BASIC
+				FROM
+					CONSUME_INFO CI,
+					PERSON_CONSUME_CLASS_INFO PCCI,
+					PERSON_SET_INFO PSI
+				WHERE
+						CI.NO_PERSON IN
+							<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
+								#{each_person}
+							</foreach>
+					AND CI.NO_PERSON = PCCI.NO_PERSON
+					AND CI.CD_CLASS = PCCI.CD_CLASS
+					AND CI.CD_TYPE = PCCI.CD_TYPE
+					AND CI.NO_PERSON = PSI.NO_PERSON
+					AND YN_CANCEL = 'N'
+					AND YN_DELETE = 'N'
+					AND YN_BUDGET_EXCEPT = 'N'
+					AND EXISTS(
+						SELECT
+							1
+						FROM
+							(
+								SELECT
+									 DISTINCT NO_PERSON AS OFFER_NO_PERSON
+									,MEANS_CONSUME AS CD_TYPE
+									,NO_CARD AS NO_CARD_ACC
+								FROM
+									CONSUME_INFO
+								WHERE
+									NO_PERSON = #{no_person, jdbcType = VARCHAR}
+							UNION ALL SELECT
+									 OFFER_NO_PERSON
+									,CD_TYPE
+									,NO_CARD_ACC
+								FROM
+									SHARE_INFO_DETAIL A
+								INNER JOIN SHARE_INFO B ON
+										A.SEQ_SHARE			= B.SEQ_SHARE
+									AND B.REQ_NO_PERSON		= #{no_person, jdbcType = VARCHAR}
+									AND B.SHARE_STATUS		= '02'
+									AND B.YN_CONSUME_INFO	= 'Y'
+									AND B.DT_END_OFFER		IS NULL
+								WHERE
+									1 = 1
+									AND A.CD_INFO = '03'
+									AND A.YN_SHARE = 'Y'
+							)
+						WHERE
+							1 = 1
+							AND OFFER_NO_PERSON = CI.NO_PERSON
+							AND(
+								CASE
+									WHEN CD_TYPE = '01' THEN SUBSTR( NO_CARD_ACC,- 3 ) /* 카드 */
+									WHEN CD_TYPE = '02' THEN CD_TYPE /* 현금 */
+									WHEN CD_TYPE = '03' THEN CD_TYPE /* 현금영수증 */
+									WHEN CD_TYPE = '04' THEN NO_CARD_ACC /* 입출금계좌 */
+								END
+							) IN(
+								CASE
+									WHEN CI.MEANS_CONSUME = '01' THEN SUBSTR( CI.NO_CARD,- 3 ) /* 카드 */
+									WHEN CI.MEANS_CONSUME = '02' THEN CI.MEANS_CONSUME /* 현금 */
+									WHEN CI.MEANS_CONSUME = '03' THEN CI.MEANS_CONSUME /* 현금영수증 */
+									WHEN CI.MEANS_CONSUME = '04' THEN CI.NO_CARD /* 입출금계좌 */
+								END
+							)
+					)
+				ORDER BY
+					CI.DT_TRD DESC,
+					CI.TM_TRD DESC
+			) MM
+		WHERE
+			1 = 1
+			AND SUBSTR( MM.MM_BASIC, 0, 4 )= #{y_trd, jdbcType = VARCHAR}
+		GROUP BY
+			 MM.MM_BASIC
+			,MM.TYPE_IN_OUT
+    </select>
 </mapper>

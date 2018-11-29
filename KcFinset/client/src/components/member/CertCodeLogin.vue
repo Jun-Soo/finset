@@ -226,7 +226,7 @@ export default {
           if (response.data.result == "00") {
             //정상
             if (Constant.userAgent == "iOS") {
-              Jockey.send("closeWebView", {});
+              Jockey.send("closeWebView");
             } else if (Constant.userAgent == "Android") {
               window.Android.closeWebView();
               return false;
@@ -272,7 +272,7 @@ export default {
           if (Constant.userAgent == "Android") {
             window.Android.closeWebView();
           } else if (Constant.userAgent == "iOS") {
-            Jockey.send("closeWebView", {});
+            Jockey.send("closeWebView");
           }
           return false;
         } else {

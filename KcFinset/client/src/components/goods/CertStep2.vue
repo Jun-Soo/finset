@@ -301,7 +301,7 @@ export default {
               });
             } else if (_this.type == "loanHome") {
               _this.$router.push({
-                name: "GoodsCreditReqInfo",
+                name: "GoodsHsnInsReqInfo",
                 params: {
                   cd_fc: _this.cd_fc,
                   cd_goods: _this.cd_goods,

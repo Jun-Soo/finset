@@ -213,7 +213,7 @@ export default {
           formData.append("amt_year_income", _this.amt_year_income);
 
           this.$http
-            .post("/m/loan/updateTxFc.json", formData, {
+            .post("/m/loanworker/updateTxFc.json", formData, {
               headers: {
                 async: false,
                 "Content-Type":

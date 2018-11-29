@@ -102,6 +102,35 @@
 		    , DT_LST = SYSDATE
 		WHERE NO_BUNCH = #{no_bunch, jdbcType=VARCHAR}
 	</update>
+	
+	<update id="modifyLoanREConditionInfo" >
+		/* com.koscom.loan.dao.LoanMapper.modifyLoanREConditionInfo*/
+		UPDATE tx_fc_transmit
+		SET
+		   yn_loan_already 			= #{yn_loan_already, jdbcType=VARCHAR}
+		  , yn_user_end 			= #{yn_user_end, jdbcType=VARCHAR}
+		  , ID_LST                  = #{id_lst, jdbcType=VARCHAR}
+		  , DT_LST                  = SYSDATE
+		WHERE no_bunch = #{no_bunch, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="modifyLoanREHomeInfo" >
+		/* com.koscom.loan.dao.LoanMapper.modifyLoanREHomeInfo*/
+		<![CDATA[
+		UPDATE tx_fc_transmit
+		SET
+		   cd_house_type 				= #{cd_house_type, jdbcType=VARCHAR}
+		  , region_1 					= #{region_1, jdbcType=VARCHAR}
+		  , region_2 					= #{region_2, jdbcType=VARCHAR}
+		  , region_3 					= #{region_3, jdbcType=VARCHAR}
+		  , security_addr 				= #{security_addr, jdbcType=VARCHAR}
+	 	  , security_exclusive_area 	= REPLACE(#{security_exclusive_area, jdbcType=VARCHAR} ,'&sup2;','²')
+		  , security_floor 				= #{security_floor, jdbcType=VARCHAR}
+		  , ID_LST                  = #{id_lst, jdbcType=VARCHAR}
+		  , DT_LST                  = SYSDATE
+		WHERE no_bunch = #{no_bunch, jdbcType=VARCHAR}
+		]]>
+	</update>
 
 	<insert id="insertLoanGoodsChoice" >
 		/* com.koscom.loan.dao.LoanMapper.insertLoanGoodsChoice*/

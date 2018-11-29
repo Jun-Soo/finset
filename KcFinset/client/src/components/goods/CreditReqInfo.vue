@@ -101,7 +101,7 @@ export default {
           formData.append("cd_house_type", _this.cd_house_type.value);
           formData.append("cd_live_type_home", _this.cd_live_type_home.value);
           this.$http
-            .post("/m/loan/modifyLoanAdditional.json", formData, {
+            .post("/m/loanworker/modifyLoanAdditional.json", formData, {
               headers: {
                 async: false,
                 "Content-Type":

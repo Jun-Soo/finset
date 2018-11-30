@@ -1,5 +1,5 @@
 <template>
-  <div id="wrapper">
+  <div id="wrapper" v-if="seen">
     <VueScheduler v-if="isMonth" :events="events" event-display="name" @event-clicked="openDetail" :shareList="shareList" :clickShare="clickShare" :sumData="sumData" @curYM="curYM" ref="scheduler" />
 
     <vue-modal name="my-modal" transitionName="zoom-in" theme="width: 90%">
@@ -72,6 +72,7 @@ export default {
   name: "CommonCalendar",
   data() {
     return {
+      seen: false,
       events: [],
       modalDate: "",
       sumTotal: 0,
@@ -215,8 +216,9 @@ export default {
           }
           for (var idx in debtList) {
             _this.makeEvent(debtList[idx], "debt");
-            _this.sumData.sumDebt += parseInt(debtList[idx].amt_in_out);
+            _this.sumData.sumDebt += parseInt(debtList[idx].amt_repay);
           }
+          _this.seen = true;
         });
     },
     listDetailCalendarData(ymd, isActiveIncome, isActiveConsume, isActiveDebt) {

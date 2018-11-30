@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="seen">
     <section>
       <div class="tab">
         <div class="wrap">
@@ -36,11 +36,11 @@
           </li>
           <li>
             <p class="key">날짜</p>
-            <!-- <p v-if="isNew&&!isAuto"> -->
+            <!-- <p v-if="isNew&&isPersonRegist"> -->
             <p>
               <datepicker v-model="consumeVO.dt_trd" :language="ko" :format="formatDateDot" class="div-date" :disabled="chkReadonly"></datepicker>
             </p>
-            <!-- <p v-if="!isNew||isAuto" readonly>
+            <!-- <p v-if="!isNew||!isPersonRegist" readonly>
               <input type="text" :value="formatDateDot(consumeVO.dt_trd)" readonly="readonly">
             </p> -->
           </li>
@@ -135,6 +135,7 @@ export default {
   name: "ConsumeConsumeDetail",
   data() {
     return {
+      seen: false,
       curTab: "02",
       consumeCategory: {},
       orgClass: "",
@@ -147,14 +148,15 @@ export default {
       bannerData: "",
       isNew: true,
       isMine: true,
-      isAuto: false,
+      isPersonRegist: true,
       isShowBanner: false,
       isShowCategory: false,
       isShowTrans: false,
       listTrans: {},
       ko: ko,
       dt_trans: "",
-      meansConsumeOption: []
+      meansConsumeOption: [],
+      isAuto: true
     };
   },
   components: {
@@ -175,9 +177,9 @@ export default {
     chkReadonly: function() {
       if (!this.isMine) {
         return true;
-      } else if (this.isNew && !this.isAuto) {
+      } else if (this.isNew && this.isPersonRegist) {
         return false;
-      } else if (!this.isNew && !this.isAuto) {
+      } else if (!this.isNew && this.isPersonRegist) {
         return false;
       } else {
         return true;
@@ -202,15 +204,16 @@ export default {
     this.ko.ymd = true;
     this.isNew = (this.$route.query.seq_consume || "") == "";
     if (this.isNew) {
-      this.isAuto = false;
+      this.isPersonRegist = true;
       this.curTab = "02";
       this.isMine = true;
     } else {
       this.curTab = this.$route.query.type_in_out;
       this.isMine =
         this.$route.query.isMine == "true" || this.$route.query.isMine == true;
-      this.isAuto =
-        this.$route.query.isAuto == "true" || this.$route.query.isAuto == true;
+      this.isPersonRegist =
+        this.$route.query.isPersonRegist == "true" ||
+        this.$route.query.isPersonRegist == true;
     }
     this.setDefault();
     Common.datepickerInit("div-date");
@@ -240,7 +243,7 @@ export default {
     },
     //화면 컨트롤 부분
     clickTab: function(key) {
-      if (!this.isNew || this.isAuto || this.curTab == key) {
+      if (!this.isNew || !this.isPersonRegist || this.curTab == key) {
         return;
       }
       this.curTab = key;
@@ -345,9 +348,24 @@ export default {
       });
     },
     selectTrans: function(index, subIndex) {
+      var _this = this;
+      this.$dialogs
+        .confirm(
+          "이후에도 해당 출금에 대해서 지출로 등록할까요?",
+          Constant.options
+        )
+        .then(res => {
+          // console.log(res); // {ok: true|false|undefined}
+          _this.isAuto = true;
+          if (res.ok) {
+            _this.deleteConsume();
+          } else {
+            // this.$dialogs.alert("취소를 선택했습니다.", Constant.options);
+          }
+        });
+
       var transVO = this.listTrans[index][subIndex];
 
-      // this.consumeVO.means_consume = "04";
       this.consumeVO.cd_fc = transVO.cd_fc;
       this.consumeVO.nm_fc = transVO.nm_trd;
       this.consumeVO.no_card = transVO.an;
@@ -361,7 +379,7 @@ export default {
       this.consumeVO.dt_trd = new Date(Common.formatDateDot(transVO.dt_trd));
       this.consumeVO.tm_trd = transVO.tm_trd;
 
-      this.isAuto = true;
+      this.isPersonRegist = false;
       this.isShowTrans = false;
     },
     clickDelete: function() {
@@ -377,16 +395,13 @@ export default {
           }
         });
     },
-    // closeModal: function() {
-    //   this.$modals.hide("confirmModal");
-    // },
     selectMeans: function(meansOption) {
       this.setDefault();
       if (meansOption.means_consume != "02") {
         this.listPersonTransDetail(meansOption.value);
       } else {
         this.isShowTrans = false;
-        this.isAuto = false;
+        this.isPersonRegist = true;
       }
     },
     showCategory: function() {
@@ -468,6 +483,8 @@ export default {
           _this.consumeCategory = listCdClass;
           if (!_this.isNew) {
             _this.getConsumeInfo();
+          } else {
+            _this.seen = true;
           }
         });
     },
@@ -488,6 +505,8 @@ export default {
           _this.consumeCategory = listCdClass;
           if (!_this.isNew) {
             _this.getConsumeInfo();
+          } else {
+            _this.seen = true;
           }
         });
     },
@@ -540,11 +559,10 @@ export default {
       formData.append("yn_pay_installment", "N");
       formData.append("yn_cancel", "N");
       formData.append("yn_delete", "N");
-      if (this.isAuto) {
-        formData.append("yn_auto", "Y");
-      } else {
-        formData.append("yn_auto", "N");
-      }
+      this.isAuto
+        ? formData.append("yn_auto", "Y")
+        : formData.append("yn_auto", "N");
+
       formData.append("yn_budget_except", "N");
 
       this.$http
@@ -574,7 +592,9 @@ export default {
         "memo",
         this.consumeVO.memo == undefined ? "" : this.consumeVO.memo
       );
-      formData.append("yn_auto", this.isAuto == true ? "Y" : "N");
+      this.isPersonRegist
+        ? formData.append("yn_person_regist", "Y")
+        : formData.append("yn_person_regist", "N");
 
       this.$http
         .post("/m/consume/modifyConsumeInfo.json", formData)
@@ -654,6 +674,7 @@ export default {
             _this.isShowBanner = true;
           }
           _this.bannerData = data;
+          _this.seen = true;
         });
     },
     listMeansConsume: function() {

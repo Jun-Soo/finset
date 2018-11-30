@@ -22,13 +22,17 @@
         <em>{{Common.formatNumber(sumData.sumDebt)}}</em>
       </div>
     </div>
-    <div class="list-wrap">
-      <div class="filter-wrap">
-        <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
-          <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
+
+    <div class="container noMG">
+      <div class="list-wrap">
+        <div class="filter-wrap">
+          <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
+            <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
+          </div>
         </div>
       </div>
     </div>
+
     <component :is="activeView" :class="'v-cal-content--' + activeView" v-bind="activeViewProps"></component>
     <footer class="v-cal-footer"></footer>
   </div>

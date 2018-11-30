@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="con-top goal-top">
       <p><em>잠깐 !!</em><br>예산 사용 통계를 확인해<br>보시고 설정하세요</p>
     </div>
@@ -77,6 +77,7 @@ export default {
   name: "ConsumeRegGoal",
   data() {
     return {
+      seen: false,
       curTab: "01",
       curLabel: "custom",
       listDetailGoal: []
@@ -125,6 +126,7 @@ export default {
         })
         .then(function(response) {
           _this.listDetailGoal = response.data.listDetailGoal;
+          _this.seen = true;
         });
     },
     listPrevMonthConsume: function() {

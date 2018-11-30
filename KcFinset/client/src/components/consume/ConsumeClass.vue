@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="seen">
     <section>
       <div class="box-list noMG">
         <ul class="consume-cate-list">
@@ -70,6 +70,7 @@ export default {
   name: "ConsumeConsumeClass",
   data() {
     return {
+      seen: true,
       consumeCategory: [],
       isShowAdd: false,
       isClass: true,
@@ -146,7 +147,7 @@ export default {
             listCdClass[i++] = [cd_class, nm_class, sort_class, listCdType];
           }
           _this.consumeCategory = listCdClass;
-          console.log(listCdClass);
+          _this.seen = true;
         });
     },
     clickAdd: function(key, cd_class) {

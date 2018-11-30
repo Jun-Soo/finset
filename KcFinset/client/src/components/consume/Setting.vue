@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="cert-check-wrap">
       <p class="title">회원정보</p>
       <select @change="modifyDt_basic" v-model="dt_basic">
@@ -35,6 +35,7 @@ export default {
   name: "ConsumeSetting",
   data() {
     return {
+      seen: false,
       yn_installment: "N",
       dt_basic: 1
     };
@@ -75,6 +76,7 @@ export default {
           var personInfo = response.data.personInfo;
           _this.yn_installment = personInfo.yn_installment;
           _this.dt_basic = personInfo.dt_basic;
+          _this.seen = true;
         });
     },
     modifyYn_installment: function() {

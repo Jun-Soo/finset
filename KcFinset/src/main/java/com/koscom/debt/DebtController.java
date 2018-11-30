@@ -324,6 +324,12 @@ public class DebtController {
 		if(debtVO == null){
 			model.addAttribute("code","99");
 		} else {
+			if(debtVO.getRep_method().equals("null")) {
+				debtVO.setRep_method(null);
+			}
+			if(debtVO.getLoan_mount().equals("null")) {
+				debtVO.setLoan_mount(null);
+			}
 			debtVO.setNo_person(no_person);
 			debtManager.updateDebtInfo(debtVO);
 			model.addAttribute("code","00");

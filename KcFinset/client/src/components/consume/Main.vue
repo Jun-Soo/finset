@@ -1,5 +1,5 @@
 <template>
-  <div class="main">
+  <div class="main" v-if="seen">
     <section>
       <div class="spend-top">
         <div class="date-wrap">
@@ -118,6 +118,7 @@ export default {
   name: "ConsumeMain",
   data() {
     return {
+      seen: false,
       ym: "",
       consumeList: [],
       shareList: [],
@@ -245,6 +246,7 @@ export default {
           }
           _this.isScrap = response.data.isScrap;
           _this.consumeList = response.data.listConsumeInfo;
+          _this.seen = true;
         });
     },
     formatHead: function(dateStr) {
@@ -362,7 +364,7 @@ export default {
             _this.shareList.findIndex(
               person => person.no_person === no_person
             ) == 0,
-          isAuto: yn_person_regist == "N"
+          isPersonRegist: yn_person_regist == "Y"
         }
       });
     },

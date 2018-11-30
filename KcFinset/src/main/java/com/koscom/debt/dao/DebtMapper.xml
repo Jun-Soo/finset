@@ -827,9 +827,10 @@
 	<select id="getDebtInfoForUpdate" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtVO">
 		SELECT
 			REPAYMENT AS REP_METHOD,
-			LOAN_MOUNT,
+			CD_TYPE_DEAL,
+			NVL(LOAN_MOUNT, '00') AS LOAN_MOUNT,
 			INTER_PAY_DAY,
-			INTER_PAY_CYCLE
+			NVL(INTER_PAY_CYCLE, '01') AS INTER_PAY_CYCLE
 		FROM
 			DEBT_PERSONAL_INFO
 		WHERE
@@ -841,8 +842,9 @@
 		UPDATE
 			DEBT_PERSONAL_INFO
 		SET
-			INTEREST		 = #{interest			, jdbcType = VARCHAR}
+			 INTEREST		 = #{interest			, jdbcType = VARCHAR}
 			,REPAYMENT		 = #{rep_method			, jdbcType = VARCHAR}
+			,CD_TYPE_DEAL	 = #{cd_type_deal		, jdbcType = VARCHAR}
 			,LOAN_MOUNT		 = #{loan_mount			, jdbcType = VARCHAR}
 			,INTER_PAY_DAY	 = #{inter_pay_day		, jdbcType = VARCHAR}
 			,INTER_PAY_CYCLE = #{inter_pay_cycle	, jdbcType = VARCHAR}

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="seen">
     <section>
       <div class="dept-top">
         <div class="wrap">
@@ -154,6 +154,7 @@ export default {
   name: "DebtMain",
   data() {
     return {
+      seen: false,
       isNone: true,
       debtList: [],
       debtSummary: "",
@@ -288,6 +289,7 @@ export default {
             debtSummary.dsrStyle = "width:0%";
           }
           _this.debtSummary = debtSummary;
+          _this.seen = true;
         });
     },
     formatNumber: function(number) {

@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="spend-top">
       <div class="date-wrap">
         <button class="prev" @click="setYear('prev')"></button>
@@ -13,15 +13,15 @@
     <div class="check-flex">
       <div class="income">
         <!-- <button class="on">수입</button> -->
-        <em>1,234,565,000</em>
+        <em>{{sumIncome}}</em>
       </div>
       <div class="debt">
         <!-- <button class="on">지출</button> -->
-        <em>1,234,565,000</em>
+        <em>{{sumConsume}}</em>
       </div>
       <div class="loan">
         <!-- <button>대출</button> -->
-        <em>1,234,565,000</em>
+        <em>{{sumDebt}}</em>
       </div>
     </div>
     <div class="list-wrap">
@@ -53,6 +53,7 @@ export default {
   name: "CommonYearCal",
   data() {
     return {
+      seen: false,
       standardDt: new Date(),
       calData: [
         { income: 0, consume: 0, debt: 0 },
@@ -83,6 +84,27 @@ export default {
   computed: {
     headDt: function() {
       return this.standardDt.getFullYear();
+    },
+    sumIncome: function() {
+      var sum = 0;
+      for (var idx in this.calData) {
+        sum += parseInt(this.calData[idx].income);
+      }
+      return Common.formatNumber(sum);
+    },
+    sumConsume: function() {
+      var sum = 0;
+      for (var idx in this.calData) {
+        sum += parseInt(this.calData[idx].consume);
+      }
+      return Common.formatNumber(sum);
+    },
+    sumDebt: function() {
+      var sum = 0;
+      for (var idx in this.calData) {
+        sum += parseInt(this.calData[idx].debt);
+      }
+      return Common.formatNumber(sum);
     }
   },
   beforeCreate() {
@@ -92,7 +114,7 @@ export default {
   created() {},
   beforeMount() {},
   mounted() {
-    this.setDefaultCalData();
+    this.calData = this.getDefaultCalData();
     this.listCalendarShareInfo();
   },
   beforeUpdate() {},
@@ -116,9 +138,8 @@ export default {
         });
     },
     listCalendarDataYear: function() {
-      this.setDefaultCalData();
-
       var _this = this;
+      var calData = this.getDefaultCalData();
 
       this.$http
         .get("/m/debt/listCalendarDataYear.json", {
@@ -133,13 +154,13 @@ export default {
           for (var idx in list) {
             if (list[idx].type_in_out == "01") {
               _this.$set(
-                _this.calData[parseInt(list[idx].dt_trd.substring(4, 6)) - 1],
+                calData[parseInt(list[idx].dt_trd.substring(4, 6)) - 1],
                 "income",
                 list[idx].amt_in_out
               );
             } else if (list[idx].type_in_out == "02") {
               _this.$set(
-                _this.calData[parseInt(list[idx].dt_trd.substring(4, 6)) - 1],
+                calData[parseInt(list[idx].dt_trd.substring(4, 6)) - 1],
                 "consume",
                 list[idx].amt_in_out
               );
@@ -148,11 +169,13 @@ export default {
           list = response.data.listCalendarDebtDataYear;
           for (var idx in list) {
             _this.$set(
-              _this.calData[parseInt(list[idx].req_yyyymm.substring(4, 6)) - 1],
+              calData[parseInt(list[idx].req_yyyymm.substring(4, 6)) - 1],
               "debt",
               list[idx].amt_repay
             );
           }
+          _this.calData = calData;
+          _this.seen = true;
         });
     },
     setYear(key) {
@@ -177,8 +200,8 @@ export default {
           break;
       }
     },
-    setDefaultCalData: function() {
-      this.calData = [
+    getDefaultCalData: function() {
+      return [
         { income: 0, consume: 0, debt: 0, sum: 0 },
         { income: 0, consume: 0, debt: 0, sum: 0 },
         { income: 0, consume: 0, debt: 0, sum: 0 },

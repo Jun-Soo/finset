@@ -73,6 +73,7 @@ public class GoodsbankInfo implements Serializable{
 	private String desc_repayment_fee; //중도상환수수료상세
 	private String desc_prefer_yield; //우대금리상세
 	private String keyword_list; //키워드
+	protected String deliberate= "";	//심의필
 
 	//20180720 goodsbank_info금융사링크 추가
 	private String fc_link;
@@ -715,6 +716,16 @@ public class GoodsbankInfo implements Serializable{
 
 	public void setKeyword_list(String keyword_list) {
 		this.keyword_list = keyword_list;
+	}
+
+
+	public String getDeliberate() {
+		return deliberate;
+	}
+
+
+	public void setDeliberate(String deliberate) {
+		this.deliberate = deliberate;
 	}
 
 

@@ -11,7 +11,7 @@
           <div><em>최대 </em>{{Common.formatNumber(goods.desc_max_limit)}}<em> 만원</em></div>
         </div>
         <p class="goods-text1" v-html=goods.desc_feature></p>
-        <p class="goods-text2">저축은행중앙회 심의필 2018-00404호(2018.8.12)</p>
+        <p class="goods-text2" v-html=goods.deliberate></p>
       </a>
     </div>
   </div>
@@ -52,7 +52,7 @@ export default {
       formData.append("page", _parent.page);
       formData.append("cd_goods_class_l", _parent.cd_goods_class_l);
       formData.append("cd_goods_class_m", _parent.cd_goods_class_m);
-      formData.append("orderby", _parent.orderby);
+      formData.append("orderby", _parent.orderby.value);
       this.$http
         .post(_parent.urlPath + "listLoanNoAffiliates.json", formData)
         .then(function(response) {

@@ -4,14 +4,8 @@
     <div class="gnb-wrap">
       <div class="top">
         <div class="left">
-          <button
-            class="alarm"
-            @click="clickButton('/etc/alarmHistory')"
-          ></button>
-          <button
-            class="logout"
-            @click="chkLogout"
-          ></button>
+          <button class="alarm" @click="clickButton('/etc/alarmHistory')"></button>
+          <button class="logout" @click="chkLogout"></button>
         </div>
         <div class="right">
           <button class="gnb-close"></button>
@@ -28,7 +22,7 @@
           <a @click="clickButton('/mypage/cert')">인증보안</a>
           <a @click="clickButton('/etc/noticeMain')">공지/이벤트</a>
           <a href="#">개인설정</a>
-          <a href="#">금융달력</a>
+          <a @click="clickButton('/credit/counselMain')">금융달력</a>
           <a @click="clickButton('/share/main')">정보공유관리</a>
           <a href="#">금융계산기</a>
           <a @click="clickButton('/news/main')">뉴스</a>
@@ -42,15 +36,15 @@
           <dd><a href="#">신용정보제공</a></dd>
 
           <dt>부채</dt>
-          <dd><a href="#">부채현황</a></dd>
+          <dd><a @click="clickButton('/debt/main')">부채현황</a></dd>
           <dd><a href="#">계산기</a></dd>
           <dd><a href="#">금리인하요구</a></dd>
           <dd><a href="#">추천상품</a></dd>
 
           <dt>소비지출</dt>
-          <dd><a href="#">소비/지출 현황</a></dd>
-          <dd><a href="#">지출캘린더</a></dd>
-          <dd><a href="#">카드대금 조회</a></dd>
+          <dd><a @click="clickButton('/consume/main')">소비/지출 현황</a></dd>
+          <dd><a @click="clickButton('/common/monthCal')">지출캘린더</a></dd>
+          <dd><a @click="clickButton('/consume/payment')">카드대금 조회</a></dd>
 
           <dt>자산</dt>
           <dd><a href="#">자산현황</a></dd>

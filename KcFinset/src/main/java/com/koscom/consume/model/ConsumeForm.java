@@ -27,11 +27,14 @@ public class ConsumeForm implements Serializable{
 	//CONSUME_INFO 캘린더 list 조회
 	private String ymd_trd;					//거래 년월일
 	
+	//CONSUME_INFO 년 캘린더 list 조회
+	private String y_trd;					//거래년
+	
 	public ConsumeForm() {
 	}
 	public ConsumeForm(String no_person, List<String> no_person_list,
 			String no_card, int seq_consume, String ym_trd, String type_in_out,
-			String ymd_trd) {
+			String ymd_trd, String y_trd) {
 		this.no_person = no_person;
 		this.no_person_list = no_person_list;
 		this.no_card = no_card;
@@ -39,6 +42,7 @@ public class ConsumeForm implements Serializable{
 		this.ym_trd = ym_trd;
 		this.type_in_out = type_in_out;
 		this.ymd_trd = ymd_trd;
+		this.y_trd = y_trd;
 	}
 	
 	public String getNo_person() {
@@ -82,6 +86,12 @@ public class ConsumeForm implements Serializable{
 	}
 	public void setYmd_trd(String ymd_trd) {
 		this.ymd_trd = ymd_trd;
+	}
+	public String getY_trd() {
+		return y_trd;
+	}
+	public void setY_trd(String y_trd) {
+		this.y_trd = y_trd;
 	}
 	
 	public String toString() {

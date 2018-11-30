@@ -23,6 +23,12 @@ public class AssetsInfoVO implements Serializable{
     private String amt_evaluation; //평가금액
     private String interest; //금리
     private String rate_return; //수익률
+    private String real_estate_addr; //부동산주소
+    private String nm_model; //자동차모델명
+    private String amount_jewelry; //귀금속보유량
+    private String etc_assets; //기타자산
+    private String memo; //메모
+    private String yn_delete; //삭제여부
     private String yn_person_regist; //사용자등록여부
     private String sort; //정렬순서
     private String id_frt; //최초입력아이디
@@ -31,6 +37,7 @@ public class AssetsInfoVO implements Serializable{
     private String dt_lst; //최종수정시간
     private String total_balance; //총잔액
     private String cnt_account; //계좌건수
+
 
     //입출금내역
     private String total_amt_dep; //입금 총액
@@ -62,6 +69,10 @@ public class AssetsInfoVO implements Serializable{
     private String cd_type; //소비 - 카테고리
     private String nm_type; //소비 - 카테고리명
     private String yn_auto; //소비 - 자동적용여부
+
+    //기타메인
+    private String nm_code; //코드명
+    private String cnt_item; //항목개수
 
 	public String getNo_person() {
 		return no_person;
@@ -157,6 +168,54 @@ public class AssetsInfoVO implements Serializable{
 
 	public void setRate_return(String rate_return) {
 		this.rate_return = rate_return;
+	}
+
+	public String getReal_estate_addr() {
+		return real_estate_addr;
+	}
+
+	public void setReal_estate_addr(String real_estate_addr) {
+		this.real_estate_addr = real_estate_addr;
+	}
+
+	public String getNm_model() {
+		return nm_model;
+	}
+
+	public void setNm_model(String nm_model) {
+		this.nm_model = nm_model;
+	}
+
+	public String getAmount_jewelry() {
+		return amount_jewelry;
+	}
+
+	public void setAmount_jewelry(String amount_jewelry) {
+		this.amount_jewelry = amount_jewelry;
+	}
+
+	public String getEtc_assets() {
+		return etc_assets;
+	}
+
+	public void setEtc_assets(String etc_assets) {
+		this.etc_assets = etc_assets;
+	}
+
+	public String getMemo() {
+		return memo;
+	}
+
+	public void setMemo(String memo) {
+		this.memo = memo;
+	}
+
+	public String getYn_delete() {
+		return yn_delete;
+	}
+
+	public void setYn_delete(String yn_delete) {
+		this.yn_delete = yn_delete;
 	}
 
 	public String getYn_person_regist() {
@@ -429,6 +488,22 @@ public class AssetsInfoVO implements Serializable{
 
 	public void setYn_auto(String yn_auto) {
 		this.yn_auto = yn_auto;
+	}
+
+	public String getNm_code() {
+		return nm_code;
+	}
+
+	public void setNm_code(String nm_code) {
+		this.nm_code = nm_code;
+	}
+
+	public String getCnt_item() {
+		return cnt_item;
+	}
+
+	public void setCnt_item(String cnt_item) {
+		this.cnt_item = cnt_item;
 	}
 
 	@Override

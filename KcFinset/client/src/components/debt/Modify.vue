@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="container">
       <p>금리 등 부채 정보를 수정합니다.</p>
       <ul class="debt-modify">
@@ -10,46 +10,26 @@
         <li>
           <p class="key">상환방법</p>
           <p>
-            <!-- <select v-model="debtVO.rep_method">
-              <option value="01">만기일시상환</option>
-              <option value="02">원리금분할상환</option>
-              <option value="03">원금분할상환</option>
-            </select> -->
-            <multiselect v-model="debtVO.rep_method" ref="rep_method" label="text" :show-labels="false" :options="rep_method_option" placeholder="상환방법" :searchable="false" :allow-empty="false" @close="autoOpen(1)">
-              <!-- <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template> -->
+            <multiselect v-model="debtVO.rep_method" ref="rep_method" label="text" :show-labels="false" :options="rep_method_option" placeholder="상환방법" :searchable="false" :allow-empty="false" @select="autoOpen(1)">
             </multiselect>
           </p>
         </li>
         <li>
           <p class="key">거치기간</p>
           <p>
-            <!-- <select v-model="debtVO.loan_mount">
-              <option value="00">없음</option>
-              <option v-for="(n, index) in 10" :key="index" :value="(n+'').length == 1?'0'+n:n">{{n}} 년</option>
-            </select> -->
-            <multiselect v-model="debtVO.loan_mount" ref="loan_mount" label="text" :show-labels="false" :options="loan_mount_option" placeholder="거치기간" :searchable="false" :allow-empty="false" @close="autoOpen(2)"></multiselect>
+            <multiselect v-model="debtVO.loan_mount" ref="loan_mount" label="text" :show-labels="false" :options="loan_mount_option" placeholder="거치기간" :searchable="false" :allow-empty="false" @select="autoOpen(2)"></multiselect>
           </p>
         </li>
         <li>
           <p class="key">이자납입주기</p>
           <p>
-            <!-- <select v-model="debtVO.inter_pay_cycle">
-              <option value="01">매월</option>
-              <option value="02">분기</option>
-              <option value="03">년</option>
-              <option value="04">만기시</option>
-              <option value="05">특정일</option>
-            </select> -->
-            <multiselect v-model="debtVO.inter_pay_cycle" ref="inter_pay_cycle" label="text" :show-labels="false" :options="inter_pay_cycle_option" placeholder="이자납입주기" :searchable="false" :allow-empty="false" @close="autoOpen(3)"></multiselect>
+            <multiselect v-model="debtVO.inter_pay_cycle" ref="inter_pay_cycle" label="text" :show-labels="false" :options="inter_pay_cycle_option" placeholder="이자납입주기" :searchable="false" :allow-empty="false" @select="autoOpen(3)"></multiselect>
           </p>
         </li>
         <li>
           <p class="key">이자납입일</p>
           <p>
-            <!-- <select v-model="debtVO.inter_pay_day">
-              <option v-for="(n, index) in 31" :key="index" :value="(n+'').length == 1? '0'+ n : n">{{n}} 일</option>
-            </select> -->
-            <multiselect v-model="debtVO.inter_pay_day" ref="inter_pay_day" label="text" placeholder="이자납입일" :show-labels="false" :options="inter_pay_day_option" :searchable="false" :allow-empty="false" @close="autoOpen(4)"></multiselect>
+            <multiselect v-model="debtVO.inter_pay_day" ref="inter_pay_day" label="text" placeholder="이자납입일" :show-labels="false" :options="inter_pay_day_option" :searchable="false" :allow-empty="false" @select="autoOpen(4)"></multiselect>
           </p>
         </li>
       </ul>
@@ -65,6 +45,7 @@ export default {
   name: "DebtModify",
   data() {
     return {
+      seen: false,
       debtVO: {},
       rep_method_option: [
         { text: "만기일시상환", value: "03" },
@@ -115,12 +96,11 @@ export default {
             _this.$route.query.interest == "-"
               ? 0
               : _this.$route.query.interest;
-          // debtVO.rep_method = debtVO.rep_method ? debtVO.rep_method : "01";
-          // debtVO.loan_mount = debtVO.loan_mount ? debtVO.loan_mount : "00";
-          // debtVO.inter_pay_day = debtVO.inter_pay_day
-          //   ? debtVO.inter_pay_day
-          //   : "01";
-          debtVO.rep_method = _this.getDefault("rep_method", debtVO.rep_method);
+          debtVO.rep_method = _this.getDefault(
+            "rep_method",
+            debtVO.cd_type_deal,
+            debtVO.rep_method
+          );
           debtVO.loan_mount = _this.getDefault("loan_mount", debtVO.loan_mount);
           debtVO.inter_pay_cycle = _this.getDefault(
             "inter_pay_cycle",
@@ -131,16 +111,30 @@ export default {
             debtVO.inter_pay_day
           );
           _this.debtVO = debtVO;
+          _this.seen = true;
         });
     },
     updateDebtInfo: function() {
       var _this = this;
       var formData = new FormData();
-      formData.append("interest", this.$route.query.interest);
-      formData.append("rep_method", this.debtVO.rep_method);
-      formData.append("loan_mount", this.debtVO.loan_mount);
-      formData.append("inter_pay_day", this.debtVO.inter_pay_day);
-      formData.append("inter_pay_cycle", this.debtVO.inter_pay_cycle);
+      formData.append("interest", this.debtVO.interest);
+      if (this.debtVO.rep_method.value == "03") {
+        formData.append("rep_method", null);
+      } else {
+        formData.append("rep_method", this.debtVO.rep_method.value);
+      }
+      if (this.debtVO.rep_method.value == "03") {
+        formData.append("cd_type_deal", "2");
+      } else {
+        formData.append("cd_type_deal", "1");
+      }
+      if (this.debtVO.loan_mount.value == "00") {
+        formData.append("loan_mount", null);
+      } else {
+        formData.append("loan_mount", this.debtVO.loan_mount.value);
+      }
+      formData.append("inter_pay_day", this.debtVO.inter_pay_day.value);
+      formData.append("inter_pay_cycle", this.debtVO.inter_pay_cycle.value);
       formData.append("no_person", this.$route.query.no_person);
       formData.append("no_manage_info", this.$route.query.no_manage_info);
       this.$http
@@ -150,7 +144,8 @@ export default {
             path: "/debt/detail",
             query: {
               no_person: _this.$route.query.no_person,
-              no_manage_info: _this.$route.query.no_manage_info
+              no_manage_info: _this.$route.query.no_manage_info,
+              isMine: true
             }
           });
         });
@@ -173,6 +168,7 @@ export default {
     },
     getLoan_mount_option: function() {
       var arr = new Array();
+      arr.push({ text: "없음", value: "00" });
       for (var idx = 1; idx <= 10; idx++) {
         arr.push({
           text: idx + "년",
@@ -186,16 +182,22 @@ export default {
       for (var idx = 1; idx <= 31; idx++) {
         arr.push({
           text: idx + "일",
-          value: (idx + "").length == 1 ? "0" + idx : idx
+          value: idx
         });
       }
       return arr;
     },
-    getDefault: function(type, value) {
+    getDefault: function(type, value, repayment) {
       switch (type) {
         case "rep_method":
+          var methodValue = "";
+          if (value == "2" || value == "5") {
+            methodValue = "03";
+          } else {
+            methodValue = repayment.length == 1 ? "0" + repayment : repayment;
+          }
           return this.rep_method_option.filter(
-            eachOption => eachOption.value == value
+            eachOption => eachOption.value == methodValue
           )[0];
         case "loan_mount":
           return this.loan_mount_option.filter(

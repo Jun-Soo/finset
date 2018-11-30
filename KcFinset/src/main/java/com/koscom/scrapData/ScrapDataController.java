@@ -28,6 +28,12 @@ public class ScrapDataController {
     @Autowired
     ScrapDataManager scrapDataManager;
     
+    /**
+     * 스크래핑 데이터 저장(자산, 소비)
+     * @param session
+     * @param model
+     * @return
+     */
     @RequestMapping("/saveScrapData.json")
     public String saveScrapData(
     		HttpSession session, 

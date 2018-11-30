@@ -43,10 +43,7 @@
       </div>
 
       <div class="item">
-        <a
-          @click="$router.push('')"
-          class="block"
-        >
+        <a @click="$router.push('')" class="block">
           <div class="flex">
             <p class="key">예수금</p>
             <p class="number">118,107<em>원</em></p>
@@ -62,10 +59,7 @@
       </div>
 
       <div class="item">
-        <a
-          @click="$router.push('')"
-          class="block"
-        >
+        <a @click="$router.push('')" class="block">
           <div class="flex">
             <p class="key">현대자동차</p>
             <p class="number">1,000,000<em>원</em></p>
@@ -81,10 +75,7 @@
       </div>
 
       <div class="item">
-        <a
-          @click="$router.push('')"
-          class="block"
-        >
+        <a @click="$router.push('')" class="block">
           <div class="flex">
             <p class="key">현대자동차</p>
             <p class="number">1,000,000<em>원</em></p>

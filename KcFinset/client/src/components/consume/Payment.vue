@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="spend-top">
       <div class="date-wrap">
         <button class="prev" @click="setPrevMM"></button>
@@ -56,6 +56,7 @@ export default {
   name: "ConsumePayment",
   data() {
     return {
+      seen: false,
       ym: "",
       standardDt: new Date(),
       shareList: [],
@@ -169,6 +170,7 @@ export default {
           _this.isScrap = response.data.isScrap;
           _this.paymentSummary = response.data.paymentSummary;
           _this.paymentList = list;
+          _this.seen = true;
         });
     },
     filterShareList: function() {

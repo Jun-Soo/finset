@@ -126,14 +126,14 @@ public interface DebtManager {
 	 * @param debtForm
 	 * @return
 	 */
-	List<DebtCalendarVO> getCalendarDebtData(DebtForm debtForm);
+	List<DebtCalendarVO> listCalendarDebtData(DebtForm debtForm);
 
 	/**
 	 * 공통 캘린더 리스트 조회
 	 * @param debtForm
 	 * @return
 	 */
-	List<DebtCalendarVO> listCalendarDebtData(DebtForm debtForm);
+	List<DebtCalendarVO> listDetailCalendarDebtData(DebtForm debtForm);
 
 	/**
 	 * 부채 메인 상단
@@ -174,4 +174,11 @@ public interface DebtManager {
 	 * @return
 	 */
 	List<PersonInfo> listCalendarShareInfo(String no_person);
+	
+	/**
+	 * 년 캘린더 데이터 리스트 조회
+	 * @param debtForm
+	 * @return
+	 */
+	List<DebtCalendarVO> listCalendarDebtDataYear(DebtForm debtForm);
 }

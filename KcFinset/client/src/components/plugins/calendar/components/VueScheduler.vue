@@ -1,109 +1,46 @@
 <template>
   <div>
-    <!-- <header class="v-cal-header">
-      <div class="v-cal-header__actions">
-        <div class="actions-left">
-          <div @click="changeType">
-            <h3 class="v-cal-header__title font-mon">{{ calendarMonth }}</h3>
-            <h3 class="v-cal-header__title font-year">{{ calendarYear }}</h3>
-          </div>
-          <button class="v-cal-button today-button" @click="goToToday" :class="{ 'v-cal-button--is-active': activeDate && activeDate.isSame( today, 'day' )}">{{ labels.today }}</button>
-        </div>
-        <div class="actions-right">
-          <button class="v-cal-button income-button" :class="{ active:isActiveIncome }" @click="clickIncome">수입</button>
-          <button class="v-cal-button consume-button" :class="{ active:isActiveConsume }" @click="clickConsume">지출</button>
-          <button class="v-cal-button debt-button" :class="{ active:isActiveDebt }" @click="clickDebt">대출</button>
-        </div>
-      </div>
-    </header> -->
     <div class="spend-top">
       <div class="date-wrap">
-        <button
-          class="prev"
-          @click="prev"
-        ></button>
+        <button class="prev" @click="prev"></button>
         <p>{{calendarYear}}.{{calendarMonth}}</p>
-        <button
-          class="next"
-          @click="next"
-        ></button>
-        <button class="setting"></button>
+        <button class="next" @click="next"></button>
+        <button class="setting" @click="goYear"></button>
       </div>
     </div>
     <div class="check-flex">
-      <!-- <div>
-        <button class="today" @click="goToToday">TODAY</button>
-      </div>
-      <div class="wrap">
-        <button class="income" :class="{ 'on':isActiveIncome }" @click="clickIncome">수입</button>
-        <button class="debt" :class="{ 'on':isActiveConsume }" @click="clickConsume">지출</button>
-        <button class="loan" :class="{ 'on':isActiveDebt }" @click="clickDebt">대출</button>
-      </div> -->
       <div class="income">
-        <button
-          :class="{ 'on':isActiveIncome }"
-          @click="clickIncome"
-        >수입</button>
-        <em>1,234,565,000</em>
+        <button :class="{ 'on':isActiveIncome }" @click="clickIncome">수입</button>
+        <em>{{Common.formatNumber(sumData.sumIncome)}}</em>
       </div>
       <div class="debt">
-        <button
-          :class="{ 'on':isActiveConsume }"
-          @click="clickConsume"
-        >지출</button>
-        <em>1,234,565,000</em>
+        <button :class="{ 'on':isActiveConsume }" @click="clickConsume">지출</button>
+        <em>{{Common.formatNumber(sumData.sumConsume)}}</em>
       </div>
       <div class="loan">
-        <button
-          :class="{ 'on':isActiveDebt }"
-          @click="clickDebt"
-        >대출</button>
-        <em>1,234,565,000</em>
+        <button :class="{ 'on':isActiveDebt }" @click="clickDebt">대출</button>
+        <em>{{Common.formatNumber(sumData.sumDebt)}}</em>
       </div>
     </div>
-    <!-- <div class="filter-wrap test">
-      <div class="filter red">
-        <input type="checkbox" id="chk1"><label for="chk1">박준수</label>
-      </div>
-      <div class="filter orange">
-        <input type="checkbox" id="chk2"><label for="chk2">박준수</label>
-      </div>
-      <div class="filter green">
-        <input type="checkbox" id="chk3"><label for="chk3">박준수</label>
-      </div>
-      <div class="filter blue">
-        <input type="checkbox" id="chk4"><label for="chk4">박준수</label>
-      </div>
-      <div class="filter purple">
-        <input type="checkbox" id="chk5"><label for="chk5">박준수</label>
-      </div>
-    </div> -->
-    <div class="list-wrap">
-      <div class="filter-wrap">
-        <div
-          v-for="(person, index) in shareList"
-          :key="person.no_person"
-          class="filter"
-          :class="settingList[index].color"
-        >
-          <input
-            type="checkbox"
-            :checked="person.isShow"
-            :id="settingList[index].id"
-          ><label @click="clickShare(index)">{{person.nm_person}}</label>
+
+    <div class="container noMG">
+      <div class="list-wrap">
+        <div class="filter-wrap">
+          <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
+            <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
+          </div>
         </div>
       </div>
     </div>
-    <component
-      :is="activeView"
-      :class="'v-cal-content--' + activeView"
-      v-bind="activeViewProps"
-    ></component>
+
+    <component :is="activeView" :class="'v-cal-content--' + activeView" v-bind="activeViewProps"></component>
     <footer class="v-cal-footer"></footer>
   </div>
 </template>
 
 <script>
+import Common from "@/assets/js/common.js";
+
 import Event from "../model/Event";
 
 import config from "../utils/config";
@@ -154,6 +91,10 @@ export default {
     clickShare: {
       type: Function,
       default: function() {}
+    },
+    sumData: {
+      type: Object,
+      default: {}
     }
   },
   data() {
@@ -170,7 +111,8 @@ export default {
         { color: "green", id: "chk3" },
         { color: "blue", id: "chk4" },
         { color: "purple", id: "chk5" }
-      ]
+      ],
+      Common: Common
     };
   },
   mounted() {
@@ -259,6 +201,9 @@ export default {
     },
     changeType() {
       console.log("cahnge");
+    },
+    goYear: function() {
+      this.$router.push("/common/yearCal");
     }
   },
   filters: {},

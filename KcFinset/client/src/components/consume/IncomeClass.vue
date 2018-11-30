@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="seen">
     <section>
       <div class="box-list noMG">
         <ul class="consume-cate-list">
@@ -47,6 +47,7 @@ export default {
   name: "ConsumeIncomeClass",
   data() {
     return {
+      seen: false,
       incomeCategory: [],
       isShowAdd: false,
       isModify: false,
@@ -88,6 +89,7 @@ export default {
             list[idx].name = list[idx].nm_class;
           }
           _this.incomeCategory = list;
+          _this.seen = true;
         });
     },
     clickAdd: function() {

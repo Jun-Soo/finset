@@ -144,6 +144,7 @@ import AssetsStockBalcDetail from '@/components/assets/StockBalcDetail'
 import AssetsStockActDetail from '@/components/assets/StockActDetail'
 import AssetsStockShrDetail from '@/components/assets/StockShrDetail'
 import AssetsStockFndDetail from '@/components/assets/StockFndDetail'
+import AssetsEtcMain from '@/components/assets/etcMain'
 import AssetsDirInput from '@/components/assets/DirInput'
 
 import MypageHome from '@/components/mypage/Home'
@@ -1017,6 +1018,15 @@ export const routes = [{
         path: 'stockFndDetail',
         alias: '/stockFndDetail',
         component: AssetsStockFndDetail,
+        meta: {
+          allowPath: true
+        }
+      },
+      {
+        path: 'etcMain',
+        alias: '/etcMain',
+        name: 'assetsEtcMain',
+        component: AssetsEtcMain,
         meta: {
           allowPath: true
         }

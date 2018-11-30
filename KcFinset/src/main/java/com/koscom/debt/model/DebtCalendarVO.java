@@ -9,7 +9,7 @@ public class DebtCalendarVO implements Serializable{
 	
 	private static final long serialVersionUID = 2222693108938401173L;
 	
-	/*달력*/
+	private String no_person		 ;	  /*회원관리번호*/
 	private String no_manage_info    ;    /*정보관리번호*/
     private String cd_fc             ;    /*금융사코드*/
     private String nm_fc             ;    /*금융사명*/
@@ -21,44 +21,49 @@ public class DebtCalendarVO implements Serializable{
     private String pay_dd            ;    /*이자납입일 일*/
     private String pay_type          ;    /*납입종류*/
     private String pay_type_nm       ;    /*납입종류명*/
-
-    /*신규*/
     private String inter_pay_day	 ;	  /*이자 납입일*/
     private String req_yyyymm		 ;	  /*이자 납입월*/
     private String req_yyyymmdd		 ;	  /*납입일*/
     
-    public String getNo_manage_info() {
-        return no_manage_info;
-    }
+    public String getNo_person() {
+		return no_person;
+	}
 
-    public void setNo_manage_info(String no_manage_info) {
-        this.no_manage_info = no_manage_info;
-    }
+	public void setNo_person(String no_person) {
+		this.no_person = no_person;
+	}
 
+	public String getNo_manage_info() {
+		return no_manage_info;
+	}
 
-    public String getCd_fc() {
-        return cd_fc;
-    }
+	public void setNo_manage_info(String no_manage_info) {
+		this.no_manage_info = no_manage_info;
+	}
 
-    public void setCd_fc(String cd_fc) {
-        this.cd_fc = cd_fc;
-    }
+	public String getCd_fc() {
+		return cd_fc;
+	}
 
-    public String getNm_fc() {
-        return nm_fc;
-    }
+	public void setCd_fc(String cd_fc) {
+		this.cd_fc = cd_fc;
+	}
 
-    public void setNm_fc(String nm_fc) {
-        this.nm_fc = nm_fc;
-    }
+	public String getNm_fc() {
+		return nm_fc;
+	}
 
-    public String getAmt_repay() {
-        return amt_repay;
-    }
+	public void setNm_fc(String nm_fc) {
+		this.nm_fc = nm_fc;
+	}
 
-    public void setAmt_repay(String amt_repay) {
-        this.amt_repay = amt_repay;
-    }
+	public String getAmt_repay() {
+		return amt_repay;
+	}
+
+	public void setAmt_repay(String amt_repay) {
+		this.amt_repay = amt_repay;
+	}
 
 	public String getInterest_ymd() {
 		return interest_ymd;
@@ -131,7 +136,7 @@ public class DebtCalendarVO implements Serializable{
 	public void setReq_yyyymm(String req_yyyymm) {
 		this.req_yyyymm = req_yyyymm;
 	}
-	
+
 	public String getReq_yyyymmdd() {
 		return req_yyyymmdd;
 	}
@@ -140,7 +145,7 @@ public class DebtCalendarVO implements Serializable{
 		this.req_yyyymmdd = req_yyyymmdd;
 	}
 
-    @Override
+	@Override
     public String toString() {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }

@@ -5,6 +5,7 @@ import java.util.List;
 import com.koscom.assets.model.AssetsForm;
 import com.koscom.assets.model.AssetsInfoVO;
 import com.koscom.consume.model.ConsumeVO;
+import com.koscom.util.ReturnClass;
 
 public interface AssetsManager {
 
@@ -99,10 +100,23 @@ public interface AssetsManager {
 	/**
 	 * 자산 - 입출금상세(소비정보 업데이트)
 	 * @param AssetsInfoVO
-	 * @return void
+	 * @return int
 	 */
 	public int updateAssetsDetailCsInfo(AssetsInfoVO assetsInfoVO);
 
+	/**
+	 * 자산 - 직접입력
+	 * @param AssetsInfoVO
+	 * @return ReturnClass
+	 */
+	public ReturnClass createAssetsInfo(AssetsInfoVO assetsInfoVO);
+
+	/**
+	 * 자산 - 기타메인
+	 * @param String no_person
+	 * @return List<AssetsInfoVO>
+	 */
+	public List<AssetsInfoVO> listAssetsEtcMain(String no_person);
 
 
 }

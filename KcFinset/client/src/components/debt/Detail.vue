@@ -1,5 +1,5 @@
 <template>
-  <div @click="closeMenu">
+  <div @click="closeMenu" v-if="seen">
     <section>
       <div class="container">
         <div class="bar-top noMG">
@@ -11,13 +11,13 @@
                 <a @click="clickMenu('modify')">수정</a>
                 <a @click="clickMenu('delete')">삭제</a>
                 <a @click="clickMenu('memo')">메모</a>
-                <a :href="'tel:'+debtVO.tel">전화걸기</a>
+                <a @click="clickMenu('tel')">전화걸기</a>
               </div>
             </div>
           </div>
           <p class="key">상환금액(당월)</p>
           <div class="wrap">
-            <div class="left">{{debtVO.cur_mm_amt_repay}}<em>원</em></div>
+            <div class="left">{{formatNumber(debtVO.cur_mm_amt_repay * 10000)}}<em>원</em></div>
             <div class="right">
               <p class="key">잔액</p>
               <p class="value">{{formatNumber(debtVO.amt_remain)}}<em>원</em></p>
@@ -84,15 +84,20 @@
       </div>
 
       <div v-if="curTab == 'repay'" class="block-list2 noMG">
-        <div class="index">
-          <p class="normal">정상</p>
-          <p class="overdue">연체</p>
-          <p class="etc">기타</p>
-        </div>
+        <div v-if="(listDebtRepay||'')!=''">
+          <div class="index">
+            <p class="normal">정상</p>
+            <p class="overdue">연체</p>
+            <p class="etc">기타</p>
+          </div>
 
-        <ul class="list">
-          <li :class="getCdStateColor(debtRepay.cd_state)" @click="openRepPop(index)" v-for="(debtRepay, index) in listDebtRepay" :key="index">{{debtRepay.req_yyyymm}}</li>
-        </ul>
+          <ul class="list">
+            <li :class="getCdStateColor(debtRepay.cd_state)" @click="openRepPop(index)" v-for="(debtRepay, index) in listDebtRepay" :key="index">{{debtRepay.req_yyyymm}}</li>
+          </ul>
+        </div>
+        <div v-else class="nodata">
+          상환 내역이 없습니다
+        </div>
       </div>
 
     </section>
@@ -108,12 +113,14 @@
 
 <script>
 import Common from "@/assets/js/common.js";
+import Constant from "@/assets/js/constant.js";
 import RepPop from "./sub/RepPop.vue";
 
 export default {
   name: "DebtDetail",
   data() {
     return {
+      seen: false,
       curTab: "contract",
       isMine: true,
       debtVO: "",
@@ -162,6 +169,7 @@ export default {
                 ? true
                 : false;
           }
+          _this.seen = true;
         });
     },
     formatNumber: function(number) {
@@ -189,13 +197,30 @@ export default {
           }
         });
       } else if (key == "delete") {
-        var formData = new FormData();
-        formData.append("no_person", this.$route.query.no_person);
-        formData.append("no_manage_info", this.$route.query.no_manage_info);
-        this.$http
-          .post("/m/debt/deleteDebt.json", formData)
-          .then(function(response) {
-            _this.$router.push("/debt/main");
+        var _this = this;
+        this.$dialogs
+          .confirm(
+            "선택하신 부채 정보는 모두 삭제되어 이후 조회가 불가능합니다.\r\n\r\n해당 정보를 삭제할까요?",
+            Constant.options
+          )
+          .then(res => {
+            // console.log(res); // {ok: true|false|undefined}
+            _this.isAuto = true;
+            if (res.ok) {
+              var formData = new FormData();
+              formData.append("no_person", this.$route.query.no_person);
+              formData.append(
+                "no_manage_info",
+                this.$route.query.no_manage_info
+              );
+              this.$http
+                .post("/m/debt/deleteDebt.json", formData)
+                .then(function(response) {
+                  _this.$router.push("/debt/main");
+                });
+            } else {
+              // this.$dialogs.alert("취소를 선택했습니다.", Constant.options);
+            }
           });
       } else if (key == "memo") {
         this.$router.push({
@@ -205,6 +230,8 @@ export default {
             no_manage_info: _this.$route.query.no_manage_info
           }
         });
+      } else if (key == "tel") {
+        this.callFc(debtVO.tel);
       }
     },
     openMenu: function(e) {
@@ -251,6 +278,18 @@ export default {
           no_manage_info: _this.$route.query.no_manage_info
         }
       });
+    },
+    //금융사 연결
+    callFc: function(tel) {
+      console.log("tel" + tel);
+
+      if (Constant.userAgent == "iOS") {
+        Jockey.send("phoneCall", {
+          phNum: tel
+        });
+      } else if (Constant.userAgent == "Android") {
+        window.Android.phoneCall(tel);
+      }
     }
   }
 };

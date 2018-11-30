@@ -135,13 +135,13 @@ public class DebtManagerImpl implements DebtManager {
 	}
 
 	@Override
-	public List<DebtCalendarVO> getCalendarDebtData(DebtForm debtForm) {
-		return debtMapper.getCalendarDebtData(debtForm);
+	public List<DebtCalendarVO> listCalendarDebtData(DebtForm debtForm) {
+		return debtMapper.listCalendarDebtData(debtForm);
 	}
 
 	@Override
-	public List<DebtCalendarVO> listCalendarDebtData(DebtForm debtForm) {
-		return debtMapper.listCalendarDebtData(debtForm);
+	public List<DebtCalendarVO> listDetailCalendarDebtData(DebtForm debtForm) {
+		return debtMapper.listDetailCalendarDebtData(debtForm);
 	}
 
 	@Override
@@ -183,6 +183,11 @@ public class DebtManagerImpl implements DebtManager {
 	@Override
 	public List<PersonInfo> listCalendarShareInfo(String no_person) {
 		return debtMapper.listCalendarShareInfo(no_person);
+	}
+
+	@Override
+	public List<DebtCalendarVO> listCalendarDebtDataYear(DebtForm debtForm) {
+		return debtMapper.listCalendarDebtDataYear(debtForm);
 	}
 
 }

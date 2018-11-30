@@ -19,6 +19,7 @@ public class DebtForm extends SearchForm {
     private String			display_yn		;/*부채 삭제 처리용*/
     private List<DebtForm>	list			;/*부채 삭제 관리용*/
     private String			req_yyyymmdd	;/*캘린더 list 조회*/
+    private String			req_yyyy		;/*캘린더 년별 list 조회*/
    
 	public String getNo_person() {
 		return no_person;
@@ -73,6 +74,12 @@ public class DebtForm extends SearchForm {
 	}
 	public void setReq_yyyymmdd(String req_yyyymmdd) {
 		this.req_yyyymmdd = req_yyyymmdd;
+	}
+	public String getReq_yyyy() {
+		return req_yyyy;
+	}
+	public void setReq_yyyy(String req_yyyy) {
+		this.req_yyyy = req_yyyy;
 	}
 	
 	@Override

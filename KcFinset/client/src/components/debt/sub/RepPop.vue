@@ -6,9 +6,9 @@
         <button @click="close" class="modal-close"></button>
       </div>
       <div class="debt-modal-body">
-        <p class="number">{{Common.formatNumber(curRepay.amt_repay)}} <em> 원</em></p>
-        <p class="text"><em>원금 </em> {{Common.formatNumber(curRepay.amt_repay_p)}} 원</p>
-        <p class="text"><em>이자 </em> {{Common.formatNumber(curRepay.amt_repay_i)}} 원</p>
+        <p class="number">{{Common.formatNumber(curRepay.amt_repay * 10000)}} <em> 원</em></p>
+        <p class="text"><em>원금 </em> {{Common.formatNumber(curRepay.amt_repay_p * 10000)}} 원</p>
+        <p class="text"><em>이자 </em> {{Common.formatNumber(curRepay.amt_repay_i * 10000)}} 원</p>
       </div>
       <a @click="close" class="btn-confirm">확인</a>
     </div>

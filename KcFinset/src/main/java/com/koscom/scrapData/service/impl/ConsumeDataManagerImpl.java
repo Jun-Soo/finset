@@ -38,10 +38,10 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 
 	@Override
 	public void saveConsumeData(ConsumeDataForm consumeForm) throws Exception {
-		this.setDefaultTmFrom(consumeForm);
-		this.setTmFrom(consumeForm);
-		this.saveScrCardApprovalInfo(consumeForm);
-		this.saveScrRespCashReceipt(consumeForm);
+		setDefaultTmFrom(consumeForm);
+		setTmFrom(consumeForm);
+		saveScrCardApprovalInfo(consumeForm);
+		saveScrRespCashReceipt(consumeForm);
 	}
 	
 	/**
@@ -218,7 +218,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 		}
 		try{
 			for(ConsumeDataVO consumeVO:consumeList) {
-				insertCnt+=this.createConsumeInfo(consumeVO);
+				insertCnt+= createConsumeInfo(consumeVO);
 			}
 		} catch(Exception e) {
 			logger.error("카드승인내역 스크래핑 데이터를 DB에 집어넣는 도중 에러가 발생했습니다.");
@@ -238,7 +238,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 		List<Map<String, String>> scrCashReceiptList = new ArrayList<Map<String,String>>();
 		List<ConsumeDataVO> consumeList = new ArrayList<ConsumeDataVO>();
 		int insertCnt = 0;
-		String nts = this.getNtsCode();
+		String nts = getNtsCode();
 		try{
 		scrCashReceiptList = consumeDataMapper.listScrRespCashReceipt(consumeForm);
 		if(scrCashReceiptList!=null) {
@@ -333,7 +333,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 		}
 		try{
 			for(ConsumeDataVO consumeVO:consumeList) {
-				insertCnt+=this.createConsumeInfo(consumeVO);
+				insertCnt+=createConsumeInfo(consumeVO);
 			}
 		} catch(Exception e) {
 			logger.error("현금영수증 스크래핑 데이터를 DB에 집어넣는 도중 에러가 발생했습니다.");
@@ -398,6 +398,11 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 		return nts;
 	}
 	
+	/**
+	 * 미래 할부 금액을 나누기 위한 로직 
+	 * @param consumeDataVO
+	 * @return
+	 */
 	private List<ConsumeDataVO> getInstallmentList(ConsumeDataVO consumeDataVO) {
 		List<ConsumeDataVO> returnList = new ArrayList<ConsumeDataVO>();
 		

@@ -24,7 +24,7 @@
           <a href="#">개인설정</a>
           <a @click="clickButton('/credit/counselMain')">금융달력</a>
           <a @click="clickButton('/share/main')">정보공유관리</a>
-          <a href="#">금융계산기</a>
+          <a @click="clickButton('/debt/calc')">금융계산기</a>
           <a @click="clickButton('/news/main')">뉴스</a>
         </div>
         <dl id="gnb">
@@ -37,7 +37,7 @@
 
           <dt>부채</dt>
           <dd><a @click="clickButton('/debt/main')">부채현황</a></dd>
-          <dd><a href="#">계산기</a></dd>
+          <dd><a @click="clickButton('/debt/calc')">계산기</a></dd>
           <dd><a href="#">금리인하요구</a></dd>
           <dd><a href="#">추천상품</a></dd>
 

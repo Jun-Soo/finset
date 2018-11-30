@@ -14,7 +14,7 @@
                 <div><em>최대 </em>{{Common.formatNumber(goods.amt_limit)}}<em> 만원</em></div>
               </div>
               <p class="goods-text1" v-html=goods.desc_feature></p>
-              <p class="goods-text2">저축은행중앙회 심의필 2018-00404호(2018.8.12)</p>
+              <p class="goods-text2" v-html=goods.deliberate></p>
             </a>
           </slide>
         </carousel>
@@ -32,11 +32,13 @@
       <div class="box-list goods goods-list">
         <div class="select">
           <div class="left">
-            <select v-model="orderby" @change="orderbyOnChange()">
+            <multiselect v-model="orderby" label="text" :show-labels="false" :options="options" :searchable="false" :allow-empty="false" @select="orderbyOnChange">
+            </multiselect>
+            <!-- <select v-model="orderby" @change="orderbyOnChange()">
               <option v-for="option in options" :key="option.index" v-bind:value="option.value">
                 {{ option.text }}
               </option>
-            </select>
+            </select> -->
           </div>
           <div class="right">
             <button class="btn-search" @click="clickSearch()"></button>
@@ -139,7 +141,7 @@ export default {
         { text: "한도순", value: "02" },
         { text: "기간순", value: "03" }
       ],
-      orderby: "01",
+      orderby: { text: "금리순", value: "01" },
       goodsList: []
     };
   },
@@ -225,7 +227,7 @@ export default {
       var formData = new FormData();
       formData.append("cd_goods_class_l", this.cd_goods_class_l);
       formData.append("cd_goods_class_m", this.cd_goods_class_m);
-      formData.append("orderby", this.orderby);
+      formData.append("orderby", this.orderby.value);
       this.$http
         .post(_this.urlPath + "listLoanAffiliates.json", formData)
         .then(function(response) {

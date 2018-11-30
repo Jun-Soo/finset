@@ -7,7 +7,6 @@ import org.springframework.web.multipart.MultipartFile;
 import com.koscom.domain.GoodsInfo;
 
 public class GoodsVO extends GoodsInfo implements Serializable {
-
 	private static final long serialVersionUID = -5283835109034749303L;
 	private String dt_last_apply;		//가장최근 신청한 날짜(해당상품)
 	private String no_person;	//

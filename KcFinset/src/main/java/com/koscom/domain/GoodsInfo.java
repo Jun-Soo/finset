@@ -1,7 +1,6 @@
 package com.koscom.domain;
 
 import java.io.Serializable;
-import java.util.List;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
@@ -155,6 +154,7 @@ public class GoodsInfo implements Serializable{
 	protected String prefer_interest; //우대금리
 	protected String desc_feature= "";	//(요약)상품특징
 	protected String keyword_list= "";	//키워드
+	protected String deliberate= "";	//심의필
 
 	//20170629 상품쪽 추가 사항 end
 
@@ -1577,6 +1577,12 @@ public class GoodsInfo implements Serializable{
 		this.keyword_list = keyword_list;
 	}
 
+	public String getDeliberate() {
+		return deliberate;
+	}
+	public void setDeliberate(String deliberate) {
+		this.deliberate = deliberate;
+	}
 	public String getCd_apply_type() {
 		return cd_apply_type;
 	}

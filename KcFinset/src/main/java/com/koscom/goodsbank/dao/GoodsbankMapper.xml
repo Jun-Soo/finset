@@ -57,6 +57,7 @@
 			,FC_LINK				  /* 금융사링크 */
 			,TIME_INTEREST			  /* 이자부과시기 */
 			,YN_FAVORITE
+			,DELIBERATE
 			,CD_FC
 			,YN_ALLIANCE
 			,RNUM
@@ -115,6 +116,7 @@
 				,LST.YN_FAVORITE
 			    ,LST.CD_FC
 			    ,LST.YN_ALLIANCE
+			    ,LST.DELIBERATE
 	            ,ROWNUM RNUM
 	         FROM
 	            (select GI.CD_NON_GOODS             /* 상품코드                  */
@@ -167,6 +169,7 @@
                       ,GI.DESC_ETC                 /* 기타 유의 사항            */
                       ,GI.FC_LINK				   /* 금융사링크 */
                       ,GI.TIME_INTEREST			   /* 이자부과시기 */
+                      ,GI.DELIBERATE
 					  ,(CASE WHEN (
 					  				SELECT COUNT(*)
 					  				FROM COOCON_GOODS_FAVORITE_INFO CGFI
@@ -589,6 +592,7 @@
 			DT_LST,
 			YN_FAVORITE,
 			YN_ALLIANCE,
+			DELIBERATE,
 	        ROWNUM RNUM
 	    FROM
 	        (SELECT
@@ -651,6 +655,7 @@
 				LST.DT_LST,
 			    LST.YN_FAVORITE,
 			    LST.YN_ALLIANCE,
+			    LST.DELIBERATE,
 	            ROWNUM RNUM
 	         FROM
 	            (SELECT
@@ -707,6 +712,7 @@
 					GI.YN_SRCH_RATIO_LIMIT,
 					GI.FC_LINK,
 					GI.TIME_INTEREST,
+					GI.DELIBERATE,
 					GI.ID_FRT,
 					GI.DT_FRT,
 					GI.ID_LST,
@@ -959,6 +965,7 @@
 					GI.YN_SRCH_RATIO_LIMIT,
 					GI.FC_LINK,
 					GI.TIME_INTEREST,
+					GI.DELIBERATE,
 					GI.ID_FRT,
 					GI.DT_FRT,
 					GI.ID_LST,
@@ -1191,6 +1198,7 @@
             , DESC_ETC                 /* 기타 유의 사항            */
             , FC_LINK                  /* 금융사링크            */
             , TIME_INTEREST  		   /* 이자부과시기            */
+            , DELIBERATE
             , YN_FAVORITE
 			, YN_ALLIANCE
 	        , RNUM
@@ -1249,6 +1257,7 @@
                 , LST.TIME_INTEREST  		   /* 이자부과시기            */
 			    , LST.YN_FAVORITE
 			    , LST.YN_ALLIANCE
+			    , LST.DELIBERATE
 	            , ROWNUM RNUM
 	         FROM
 	            (select GI.CD_NON_GOODS             /* 상품코드                  */
@@ -1300,8 +1309,9 @@
                       ,GI.DESC_CONTACT             /* 연락처                    */
                       ,GI.DESC_COLLATERAL          /* 대상담보                  */
                       ,GI.DESC_ETC                 /* 기타 유의 사항            */
-                      , GI.FC_LINK                 /* 금융사링크            */
-                      , GI.TIME_INTEREST  			/* 이자부과시기            */
+                      ,GI.FC_LINK                 /* 금융사링크            */
+                      ,GI.TIME_INTEREST  			/* 이자부과시기            */
+                      ,GI.DELIBERATE
 			     	, (CASE WHEN (
 			     					SELECT COUNT(*)
 			     					FROM COOCON_GOODS_FAVORITE_INFO CGFI
@@ -1410,6 +1420,7 @@
 			   ,GI.YN_SRCH_RATIO_LIMIT
 			   ,GI.FC_LINK
 			   ,GI.TIME_INTEREST
+			   ,GI.DELIBERATE
 			   ,FI.YN_ALLIANCE
 			, (CASE WHEN (
 						SELECT COUNT(*)

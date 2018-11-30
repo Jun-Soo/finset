@@ -80,13 +80,13 @@
           <p class="number big">46,570,000<em>원</em></p>
         </div>
       </div>
-      <div class="item">
+      -->
+      <div @click="goMenu('etc')" class="item">
         <div class="flex">
-          <p class="corp big">기타<em>3건</em></p>
-          <p class="number big">46,570,000<em>원</em></p>
+          <p class="corp big">기타<em>{{assetsEtcInfo.cnt_item}}건</em></p>
+          <p class="number big">{{(assetsEtcInfo.sum_amt_evaluation == null)? '-' : formatNumber(assetsEtcInfo.sum_amt_evaluation)}}<em>원</em></p>
         </div>
       </div>
-      -->
       <button class="btn-spend-add" @click="$router.push('/assets/dirInput')"></button>
     </div>
 
@@ -107,7 +107,8 @@ export default {
       assetsSumAmt: "", //자산총금액
       debtSumAmt: "", //부채총금액
       assetsBankInfo: "", //은행정보
-      assetsStockInfo: "" //증권정보
+      assetsStockInfo: "", //증권정보
+      assetsEtcInfo: "" //기타정보
     };
   },
   components: {},
@@ -138,6 +139,7 @@ export default {
           _this.debtSumAmt = response.data.debtSumAmt;
           _this.assetsBankInfo = response.data.assetsBankInfo;
           _this.assetsStockInfo = response.data.assetsStockInfo;
+          _this.assetsEtcInfo = response.data.assetsEtcInfo;
 
           _this.seen = true;
         })
@@ -165,7 +167,12 @@ export default {
         //증권메인
       } else if ("stock" == menu) {
         this.$router.push({
-          name: "AssetsStockMain",
+          name: "assetsStockMain",
+          params: {}
+        });
+      } else if ("etc" == menu) {
+        this.$router.push({
+          name: "assetsEtcMain",
           params: {}
         });
       }

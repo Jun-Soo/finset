@@ -8,6 +8,7 @@
         /* com.koscom.assets.dao.AssetsMapper.getAssetsMainInfo - 자산관리(자산메인) */
 		SELECT
 			COUNT( NO_ACCOUNT ) AS CNT_ACCOUNT,
+			COUNT( NO_PERSON ) AS CNT_ITEM,
 			SUM( AMT_BALANCE ) AS SUM_AMT_BALANCE,
 			SUM( AMT_EVALUATION ) AS SUM_AMT_EVALUATION
 		FROM
@@ -22,6 +23,10 @@
 				</when>
 				<when test="'stock'.equals(type_list)">	<!-- 증권 -->
 					AND CD_ASSETS_CLASS = '10'
+				</when>
+				<when test="'etc'.equals(type_list)">	<!-- 기타 -->
+				    AND YN_PERSON_REGIST = 'Y'
+					AND (CD_ASSETS_CLASS != '00' AND CD_ASSETS_CLASS != '10' AND CD_ASSETS_CLASS != '20')
 				</when>
 			</choose>
 			</if>
@@ -905,5 +910,68 @@
 			AND TM_TRD = #{tm_trd, jdbcType=VARCHAR}
     </update>
 
+    <insert id="createAssetsInfo" parameterType="com.koscom.assets.model.AssetsInfoVO">
+		/* com.koscom.assets.dao.AssetsMapper.createAssetsInfo - 자산관리(직접입력) */
+		INSERT INTO ASSETS_INFO(
+			NO_PERSON,
+			CD_ASSETS_CLASS,
+			CD_DETAIL_CLASS,
+			AMT_BALANCE,
+			REAL_ESTATE_ADDR,
+			NM_MODEL,
+			AMOUNT_JEWELRY,
+			ETC_ASSETS,
+			MEMO,
+			AMT_EVALUATION,
+			YN_DELETE,
+			YN_PERSON_REGIST,
+			ID_FRT,
+			DT_FRT,
+			ID_LST,
+			DT_LST
+		) VALUES(
+			#{no_person, jdbcType=VARCHAR},
+			#{cd_assets_class, jdbcType=VARCHAR},
+			#{cd_detail_class, jdbcType=VARCHAR},
+			#{amt_balance, jdbcType=VARCHAR},
+			#{real_estate_addr, jdbcType=VARCHAR},
+			#{nm_model, jdbcType=VARCHAR},
+			#{amount_jewelry, jdbcType=VARCHAR},
+			#{etc_assets, jdbcType=VARCHAR},
+			#{memo, jdbcType=VARCHAR},
+			#{amt_evaluation, jdbcType=VARCHAR},
+			'N',
+			'Y',
+			#{id_frt, jdbcType=VARCHAR},
+			SYSDATE,
+			#{id_lst, jdbcType=VARCHAR},
+			SYSDATE
+		)
+    </insert>
+
+    <select id="listAssetsEtcMain" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+        /* com.koscom.assets.dao.AssetsMapper.listAssetsEtcMain - 자산관리(기타메인) */
+		SELECT
+			AI.CD_ASSETS_CLASS,
+			CD.NM_CODE,
+			COUNT( AI.NO_PERSON ) AS CNT_ITEM,
+			SUM( AMT_EVALUATION ) AS SUM_AMT_EVALUATION
+		FROM
+			ASSETS_INFO AI
+		INNER JOIN (SELECT
+						CODE_VALUE, NM_CODE
+					FROM COMM_CD
+					WHERE CODE_GROUP = 'cd_assets_class'
+						AND (CODE_VALUE != '00' AND CODE_VALUE != '10' AND CODE_VALUE != '20')
+					) CD
+		ON CD.CODE_VALUE = AI.CD_ASSETS_CLASS
+		WHERE
+			AI.DT_EXPIRE IS NULL
+			AND AI.YN_DELETE = 'N'
+			AND AI.YN_PERSON_REGIST = 'Y'
+			AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		GROUP BY AI.CD_ASSETS_CLASS, CD.NM_CODE
+		ORDER BY AI.CD_ASSETS_CLASS
+	</select>
 
 </mapper>

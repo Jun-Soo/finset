@@ -11,6 +11,9 @@ import com.koscom.assets.dao.AssetsMapper;
 import com.koscom.assets.model.AssetsForm;
 import com.koscom.assets.model.AssetsInfoVO;
 import com.koscom.assets.service.AssetsManager;
+import com.koscom.counsel.model.CounselVO;
+import com.koscom.util.Constant;
+import com.koscom.util.ReturnClass;
 
 @Service("assetsManager")
 public class AssetsManagerImpl implements AssetsManager {
@@ -106,6 +109,19 @@ public class AssetsManagerImpl implements AssetsManager {
 	@Override
 	public int updateAssetsDetailCsInfo(AssetsInfoVO assetsInfoVO){
 		return assetsMapper.updateAssetsDetailCsInfo(assetsInfoVO);
+	}
+
+	@Override
+	public ReturnClass createAssetsInfo(AssetsInfoVO assetsInfoVO) {
+		if(1 != assetsMapper.createAssetsInfo(assetsInfoVO)){
+			return new ReturnClass(Constant.FAILED, "등록 실패하였습니다.");
+		}
+		return new ReturnClass(Constant.SUCCESS, "등록 성공하였습니다.");
+	}
+
+	@Override
+	public List<AssetsInfoVO> listAssetsEtcMain(String no_person){
+		return assetsMapper.listAssetsEtcMain(no_person);
 	}
 
 }

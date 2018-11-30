@@ -15,12 +15,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.koscom.assets.model.AssetsForm;
 import com.koscom.assets.model.AssetsInfoVO;
 import com.koscom.assets.service.AssetsManager;
+import com.koscom.counsel.model.CounselVO;
 import com.koscom.domain.PersonInfo;
 import com.koscom.main.service.MainManager;
 import com.koscom.person.service.PersonManager;
 import com.koscom.util.DateUtil;
 import com.koscom.util.FinsetException;
 import com.koscom.util.Pagination;
+import com.koscom.util.ReturnClass;
+import com.koscom.util.SessionUtil;
 
 
 @Controller
@@ -57,11 +60,14 @@ public class AssetsController {
 		AssetsInfoVO assetsBankInfo = assetsManager.getAssetsMainInfo(assetsForm);
 		assetsForm.setType_list("stock");
 		AssetsInfoVO assetsStockInfo = assetsManager.getAssetsMainInfo(assetsForm);
+		assetsForm.setType_list("etc");
+		AssetsInfoVO assetsEtcInfo = assetsManager.getAssetsMainInfo(assetsForm);
 
         model.addAttribute("assetsSumAmt", mainManager.getMainAssetsSumAmt(no_person)); //자산총금액
         model.addAttribute("debtSumAmt", mainManager.getMainDebtSumAmt(no_person)); //부채총금액
         model.addAttribute("assetsBankInfo", assetsBankInfo); //은행정보
         model.addAttribute("assetsStockInfo", assetsStockInfo); //증권정보
+        model.addAttribute("assetsEtcInfo", assetsEtcInfo); //기타정보
 
 		return "jsonView";
 	}
@@ -151,7 +157,6 @@ public class AssetsController {
 	 * VUE
      * 자산관리 - 은행 계좌상세
      * @param request
-     * @param session
      * @param AssetsForm
      * @param model
      * @return String
@@ -160,7 +165,6 @@ public class AssetsController {
 	@RequestMapping("/getAssetsBankActDetail.json")
 	public String getAssetsBankActDetail(
 	HttpServletRequest request,
-	HttpSession session,
 	AssetsForm assetsForm,
 	Model model) throws FinsetException, IOException{
 
@@ -303,7 +307,6 @@ public class AssetsController {
 	 * VUE
      * 자산관리 - 은행 입출금상세(소비정보)
      * @param request
-     * @param session
      * @param AssetsForm
      * @param model
      * @return String
@@ -312,7 +315,6 @@ public class AssetsController {
 	@RequestMapping("/getAssetsDetailCsInfo.json")
 	public String getAssetsDetailCsInfo(
 	HttpServletRequest request,
-	HttpSession session,
 	AssetsForm assetsForm,
 	Model model) throws FinsetException, IOException{
 
@@ -342,6 +344,60 @@ public class AssetsController {
 		assetsInfoVO.setNo_person(no_person);
 
 		assetsManager.updateAssetsDetailCsInfo(assetsInfoVO);
+
+		return "jsonView";
+	}
+
+	/**
+	 * VUE
+     * 자산관리 - 직접입력
+     * @param request
+     * @param session
+     * @param AssetsInfoVO
+     * @param model
+     * @return String
+     * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/createAssetsInfo.json")
+	public String createAssetsInfo(
+	HttpServletRequest request,
+	HttpSession session,
+	AssetsInfoVO assetsInfoVO,
+	Model model) throws FinsetException, IOException{
+		String no_person = (String)session.getAttribute("no_person");
+
+		assetsInfoVO.setNo_person(no_person);
+
+		ReturnClass returnClass = assetsManager.createAssetsInfo((AssetsInfoVO)SessionUtil.setUser(assetsInfoVO, session));
+		model.addAttribute("message", returnClass.getMessage());
+		model.addAttribute("result" , returnClass.getCd_result());
+
+		return "jsonView";
+	}
+
+	/**
+	 * VUE
+     * 자산관리 - 기타메인
+     * @param request
+     * @param session
+     * @param model
+     * @return String
+     * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/getAssetsEtcMainInfo.json")
+	public String getAssetsEtcMainInfo(
+	HttpServletRequest request,
+	HttpSession session,
+	Model model) throws FinsetException, IOException{
+		String no_person = (String)session.getAttribute("no_person");
+
+		AssetsForm assetsForm = new AssetsForm();
+		assetsForm.setNo_person(no_person);
+		assetsForm.setType_list("etc");
+		AssetsInfoVO sumAmt = assetsManager.getAssetsMainInfo(assetsForm);
+
+		model.addAttribute("sumAmt",sumAmt);
+		model.addAttribute("etcList", assetsManager.listAssetsEtcMain(no_person));
 
 		return "jsonView";
 	}

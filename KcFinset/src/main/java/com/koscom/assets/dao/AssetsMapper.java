@@ -99,8 +99,23 @@ public interface AssetsMapper {
 	/**
 	 * 자산 - 입출금상세(소비정보 업데이트)
 	 * @param AssetsInfoVO
-	 * @return void
+	 * @return int
 	 */
 	public int updateAssetsDetailCsInfo(AssetsInfoVO assetsInfoVO);
+
+	/**
+	 * 자산 - 직접입력
+	 * @param AssetsInfoVO
+	 * @return int
+	 */
+	public int createAssetsInfo(AssetsInfoVO assetsInfoVO);
+
+	/**
+	 * 자산 - 기타메인
+	 * @param String no_person
+	 * @return List<AssetsInfoVO>
+	 */
+	public List<AssetsInfoVO> listAssetsEtcMain(String no_person);
+
 
 }

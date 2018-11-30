@@ -3,7 +3,6 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.koscom.goods.dao.GoodsMapper">
-
 	<select id="listGoodsAllianceCredit" parameterType="com.koscom.goods.model.GoodsForm" resultType="com.koscom.goods.model.GoodsVO">
     /* com.koscom.goods.dao.GoodsMapper.listGoodsAllianceCredit  */
     <![CDATA[
@@ -20,6 +19,7 @@
 			,GI.RTO_INTEREST_TO
 			,GI.AMT_LIMIT
 			,GI.CD_LOAN_TERM
+			,GI.DELIBERATE
 			,(CASE WHEN(	SELECT COUNT(*)
 							FROM COOCON_GOODS_FAVORITE_INFO CGFI
 							WHERE CGFI.CD_FC = GI.CD_FC
@@ -40,6 +40,7 @@
 				,A.RTO_INTEREST_TO
 				,A.AMT_LIMIT
 				,A.CD_LOAN_TERM
+				,A.DELIBERATE
 			FROM GOODS_INFO A
 			WHERE A.YN_USE = 'Y'
 			) GI
@@ -81,6 +82,7 @@
                             ,GI.RTO_INTEREST_TO
                             ,GI.AMT_LIMIT
                             ,GI.CD_LOAN_TERM
+                            ,GI.DELIBERATE
                            ,(CASE WHEN( SELECT COUNT(*)
                                           FROM COOCON_GOODS_FAVORITE_INFO CGFI
                                          WHERE CGFI.CD_FC = GI.CD_FC
@@ -101,6 +103,7 @@
                                     ,A.RTO_INTEREST_TO
                                     ,A.AMT_LIMIT
                                     ,A.CD_LOAN_TERM
+                                    ,A.DELIBERATE
                                 FROM GOODS_INFO A
                                WHERE A.YN_USE = 'Y'
                             ) GI
@@ -132,6 +135,7 @@
             ,AMT_LIMIT
             ,CD_LOAN_TERM
             ,YN_FAVORITE
+            ,DELIBERATE
             ,RNUM
         FROM(SELECT LST.CD_GOODS
                     ,LST.CD_FC
@@ -147,6 +151,7 @@
                     ,LST.AMT_LIMIT
                     ,LST.CD_LOAN_TERM
                     ,LST.YN_FAVORITE
+                    ,LST.DELIBERATE
                    ,ROWNUM RNUM
                FROM (SELECT GI.CD_GOODS
                             ,GI.CD_FC
@@ -161,6 +166,7 @@
                             ,GI.RTO_INTEREST_TO
                             ,GI.AMT_LIMIT
                             ,GI.CD_LOAN_TERM
+                            ,GI.DELIBERATE
                            ,(CASE WHEN( SELECT COUNT(*)
                                           FROM COOCON_GOODS_FAVORITE_INFO CGFI
                                          WHERE CGFI.CD_FC = GI.CD_FC
@@ -182,6 +188,7 @@
                                      ,A.RTO_INTEREST_TO
                                      ,A.AMT_LIMIT
                                      ,A.CD_LOAN_TERM
+                                     ,A.DELIBERATE
                               FROM
                               	GOODS_INFO A
                               WHERE A.YN_USE = 'Y'
@@ -238,6 +245,7 @@
                         ,GI.RTO_INTEREST_TO
                         ,GI.AMT_LIMIT
                         ,GI.CD_LOAN_TERM
+                        ,GI.DELIBERATE
                         ,(CASE WHEN( SELECT COUNT(*)
                                           FROM COOCON_GOODS_FAVORITE_INFO CGFI
                                          WHERE CGFI.CD_FC = GI.CD_FC
@@ -259,6 +267,7 @@
                                  ,A.RTO_INTEREST_TO
                                  ,A.AMT_LIMIT
                                  ,A.CD_LOAN_TERM
+                                 ,A.DELIBERATE
                           	FROM
                             	GOODS_INFO A
                             WHERE A.YN_USE = 'Y'
@@ -755,6 +764,7 @@
             , DESC_FEATURE
             , YN_FAVORITE
             , KEYWORD_LIST
+            , DELIBERATE
             , RNUM
         FROM (
                 SELECT LST.NO_PERSON
@@ -801,6 +811,7 @@
                        , LST.DESC_FEATURE
                        , LST.YN_FAVORITE
                        , LST.KEYWORD_LIST
+                       , LST.DELIBERATE
                        , ROWNUM RNUM
                 FROM (
                         SELECT CGFI.NO_PERSON
@@ -847,6 +858,7 @@
                                 , GI.DESC_FEATURE
                                 , 'Y' AS YN_FAVORITE
                                 , GI.KEYWORD_LIST
+                                , GI.DELIBERATE
                         FROM COOCON_GOODS_FAVORITE_INFO CGFI
                         INNER JOIN FC_INFO FI
                         ON CGFI.CD_FC = FI.CD_FC
@@ -921,6 +933,7 @@
                     , GI.CD_COLLATERAL_LOAN_USE
                     , 'Y' AS YN_FAVORITE
                     , GI.KEYWORD_LIST
+                    , GI.DELIBERATE
                 FROM COOCON_GOODS_FAVORITE_INFO CGFI
                 INNER JOIN FC_INFO FI
                 ON CGFI.CD_FC = FI.CD_FC
@@ -999,6 +1012,7 @@
             , KEYWORD_LIST
             , FC_LINK
             , TIME_INTEREST
+            , DELIBERATE
             , RNUM
         FROM (SELECT
         			LST.NO_PERSON
@@ -1046,6 +1060,7 @@
                     , LST.KEYWORD_LIST
                     , LST.FC_LINK
                     , LST.TIME_INTEREST
+                    , LST.DELIBERATE
                     , ROWNUM RNUM
                 FROM (
                         SELECT CGFI.NO_PERSON
@@ -1093,6 +1108,7 @@
                             , GI.KEYWORD_LIST
                             , GI.FC_LINK
                             , GI.TIME_INTEREST
+                            , GI.DELIBERATE
                         FROM COOCON_GOODS_FAVORITE_INFO CGFI
                         --INNER JOIN FC_INFO FI ON CGFI.CD_FC = FI.CD_FC
                         INNER JOIN GOODSBANK_INFO GI
@@ -1175,6 +1191,7 @@
                     , GI.KEYWORD_LIST
                     , GI.FC_LINK
                     , GI.TIME_INTEREST
+                    , GI.DELIBERATE
                 FROM COOCON_GOODS_FAVORITE_INFO CGFI
                 --INNER JOIN FC_INFO FI ON CGFI.CD_FC = FI.CD_FC
                 INNER JOIN GOODSBANK_INFO GI
@@ -1260,6 +1277,7 @@
                 , GI.DESC_OVERDUE_INTEREST
                 , GI.DESC_LOAN_COST
                 , GI.TIME_INTEREST
+                , GI.DELIBERATE
                 , (CASE WHEN (
 						SELECT COUNT(*)
 						FROM COOCON_GOODS_FAVORITE_INFO CGFI

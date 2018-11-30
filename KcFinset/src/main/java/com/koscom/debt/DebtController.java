@@ -691,12 +691,19 @@ public class DebtController {
 	@RequestMapping("/listCalendarDataYear.json")
 	public String listCalendarDataYear(HttpSession session, Model model, @RequestParam(value="no_person_list[]") List<String> no_person_list, String y_trd) {
 		logger.debug("listCalendarDataYear");
-		ConsumeForm consumeForm = new ConsumeForm();
 		String no_person = (String)session.getAttribute("no_person");
+		
+		ConsumeForm consumeForm = new ConsumeForm();
 		consumeForm.setNo_person(no_person);
 		consumeForm.setNo_person_list(no_person_list);
 		consumeForm.setY_trd(y_trd);
 		model.addAttribute("listCalendarConsumeDataYear", consumeManager.listCalendarConsumeDataYear(consumeForm));
+		
+		DebtForm debtForm = new DebtForm();
+		debtForm.setNo_person(no_person);
+		debtForm.setNo_person_list(no_person_list);
+		debtForm.setReq_yyyy(y_trd);
+		model.addAttribute("listCalendarDebtDataYear", debtManager.listCalendarDebtDataYear(debtForm));
 		return "jsonView";
 	}
 }

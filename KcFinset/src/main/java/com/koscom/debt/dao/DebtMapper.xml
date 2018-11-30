@@ -1213,6 +1213,70 @@
 			AND DPRL.REQ_YYYYMM || DECODE(LENGTH(DPI.INTER_PAY_DAY), 1, '0'||DPI.INTER_PAY_DAY,DPI.INTER_PAY_DAY) = #{req_yyyymmdd	, jdbcType = VARCHAR}
     </select>
 	<select id="listCalendarDebtDataYear" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtCalendarVO">
+		SELECT
+			 SUM( AMT_REPAY ) AS AMT_REPAY
+			,REQ_YYYYMM
+		FROM
+			(
+				SELECT
+					 DPRL.AMT_REPAY AS AMT_REPAY
+					,CASE
+						WHEN(
+							DECODE( LENGTH( NVL( DPI.INTER_PAY_DAY, '1' )), 1, '0' || NVL( DPI.INTER_PAY_DAY, '1' ), DPI.INTER_PAY_DAY )
+						)<![CDATA[<]]> PSI.DT_BASIC THEN TO_CHAR( ADD_MONTHS( TO_DATE( DPRL.REQ_YYYYMM, 'YYYYMM' ),- 1 ), 'YYYYMM' )
+						ELSE DPRL.REQ_YYYYMM
+					END AS REQ_YYYYMM
+				FROM
+					 DEBT_PERSONAL_INFO DPI
+					,DEBT_PERSONAL_REPAY_LIST DPRL
+					,(
+						SELECT
+							 B.NO_MANAGE_INFO
+							,A.OFFER_NO_PERSON AS NO_PERSON
+						FROM
+							 SHARE_INFO A
+							,SHARE_INFO_DETAIL B
+						WHERE
+								REQ_NO_PERSON	= #{no_person, jdbcType = VARCHAR}
+							AND B.CD_INFO		= '01'
+							AND A.CD_SHARE		= '02'
+							AND SHARE_STATUS	= '02'
+							AND B.YN_SHARE		= 'Y'
+							AND A.SEQ_SHARE		= B.SEQ_SHARE
+					UNION SELECT
+							 NO_MANAGE_INFO
+							,NO_PERSON
+						FROM
+							DEBT_PERSONAL_INFO
+						WHERE
+							NO_PERSON = #{no_person, jdbcType = VARCHAR}
+					) SID
+					,PERSON_SET_INFO PSI
+				WHERE
+					DPRL.NO_PERSON IN
+					<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
+						#{each_person}
+					</foreach>
+					AND DPI.NO_PERSON						 = DPRL.NO_PERSON
+					AND DPI.NO_MANAGE_INFO					 = DPRL.NO_MANAGE_INFO
+					AND DPI.NO_PERSON						 = PSI.NO_PERSON
+					AND 1									 =
+						(
+							CASE
+								WHEN DPI.NO_MANAGE_INFO IN SID.NO_MANAGE_INFO THEN 1
+								ELSE 0
+							END
+						)
 
+					AND DPI.YMD_CANCEL IS NULL
+					AND TO_NUMBER( DPI.YMD_LOANEND )<![CDATA[>=]]> TO_NUMBER( TO_CHAR( SYSDATE, 'YYYYMMDD' ))
+					AND DPRL.AMT_REPAY						 IS NOT NULL
+			)
+		WHERE
+			SUBSTR( REQ_YYYYMM, 0, 4 ) = #{req_yyyy, jdbcType = VARCHAR}
+		GROUP BY
+			REQ_YYYYMM
+		ORDER BY
+			REQ_YYYYMM DESC
 	</select>
 </mapper>

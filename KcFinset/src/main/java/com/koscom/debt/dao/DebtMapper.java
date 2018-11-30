@@ -215,4 +215,11 @@ public interface DebtMapper {
 	 * @return
 	 */
 	List<PersonInfo> listCalendarShareInfo(String no_person);
+	
+	/**
+	 * 년 캘린더 데이터 리스트 조회
+	 * @param debtForm
+	 * @return
+	 */
+	List<DebtCalendarVO> listCalendarDebtDataYear(DebtForm debtForm);
 }

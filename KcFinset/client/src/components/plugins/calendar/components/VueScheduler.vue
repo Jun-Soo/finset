@@ -5,7 +5,7 @@
         <button class="prev" @click="prev"></button>
         <p>{{calendarYear}}.{{calendarMonth}}</p>
         <button class="next" @click="next"></button>
-        <button class="setting"></button>
+        <button class="setting" @click="goYear"></button>
       </div>
     </div>
     <div class="check-flex">
@@ -197,6 +197,9 @@ export default {
     },
     changeType() {
       console.log("cahnge");
+    },
+    goYear: function() {
+      this.$router.push("/common/yearCal");
     }
   },
   filters: {},

@@ -24,30 +24,6 @@
             </div>
           </div>
           <div class="body">
-            <!-- <div class="list">
-              <div>
-                <em class="red">준수</em>
-                <em class="debt">지출</em>
-                <em class="text">여의도 떡볶이</em>
-              </div>
-              <div class="won">650,000 원</div>
-            </div>
-            <div class="list">
-              <div>
-                <em class="orange">길동</em>
-                <em class="debt">지출</em>
-                <em class="text">파리크라상</em>
-              </div>
-              <div class="won">650,000 원</div>
-            </div>
-            <div class="list">
-              <div>
-                <em class="red">준수</em>
-                <em class="debt">수입</em>
-                <em class="text">과외비</em>
-              </div>
-              <div class="won">650,000 원</div>
-            </div> -->
             <div v-for="(incomeVO, index) in incomeList" :key="'income-'+index" class="list">
               <div>
                 <em :class="$refs.scheduler.settingList[shareList.findIndex(person => person.no_person === incomeVO.no_person)].color">

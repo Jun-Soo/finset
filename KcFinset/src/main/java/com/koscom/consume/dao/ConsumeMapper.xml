@@ -91,13 +91,13 @@
 					 CASE
 						WHEN DT_BASIC IS NULL
 							THEN TO_CHAR( TRUNC( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' ), 'MONTH' ), 'YYYYMMDD' )
-							ELSE TO_CHAR( ADD_MONTHS( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' ),- 1 ), 'YYYYMM' ) ||
-								 DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC )
+							ELSE #{ym_trd, jdbcType = VARCHAR} || DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC )
 					END AS DT_FROM
 					,CASE
 						WHEN DT_BASIC IS NULL
 							THEN TO_CHAR( LAST_DAY( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' )), 'YYYYMMDD' )
-							ELSE #{ym_trd, jdbcType = VARCHAR} || DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC )
+							ELSE TO_CHAR( ADD_MONTHS( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' ), 1 ), 'YYYYMM' ) ||
+								 DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC )
 					END AS DT_TO
 				FROM
 					PERSON_SET_INFO
@@ -179,12 +179,14 @@
 		   PERSON_CONSUME_CLASS_INFO PCCI,
 		   ( SELECT
 		      CASE
-		         WHEN DT_BASIC IS NULL THEN TO_CHAR( TRUNC( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' ), 'MONTH' ), 'YYYYMMDD' )
-		         ELSE TO_CHAR( ADD_MONTHS( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' ),- 1 ), 'YYYYMM' )|| DECODE( LENGTH(DT_BASIC), 1, '0' || DT_BASIC, DT_BASIC )
+		         WHEN DT_BASIC IS NULL
+		         	THEN TO_CHAR( TRUNC( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' ), 'MONTH' ), 'YYYYMMDD' )
+		         	ELSE #{ym_trd, jdbcType = VARCHAR}|| DECODE( LENGTH(DT_BASIC), 1, '0' || DT_BASIC, DT_BASIC )
 		      END AS DT_FROM,
 		      CASE
-		         WHEN DT_BASIC IS NULL THEN TO_CHAR( LAST_DAY( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' )), 'YYYYMMDD' )
-		         ELSE #{ym_trd, jdbcType = VARCHAR} || DECODE( LENGTH(DT_BASIC), 1, '0' || DT_BASIC, DT_BASIC )
+		         WHEN DT_BASIC IS NULL
+		         	THEN TO_CHAR( LAST_DAY( TO_DATE( #{ym_trd, jdbcType = VARCHAR}, 'YYYYMM' )), 'YYYYMMDD' )
+		         	ELSE TO_CHAR( ADD_MONTHS( TO_DATE( #{ym_trd, jdbcType = VARCHAR} , 'YYYYMM' ), 1 ), 'YYYYMM' ) || DECODE( LENGTH(DT_BASIC), 1, '0' || DT_BASIC, DT_BASIC )
 		      END AS DT_TO
 		   FROM
 		      PERSON_SET_INFO
@@ -1816,8 +1818,8 @@
 					,NVL( PSI.DT_BASIC, '01' )
 					,TO_CHAR( SYSDATE, 'DD' )
 					,CASE
-						WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>=]]> NVL( PSI.DT_BASIC, '01' )
-						AND TO_CHAR( TO_DATE( CI.DT_TRD, 'YYYYMMDD' ), 'DD' ) <![CDATA[>=]]> NVL( PSI.DT_BASIC, '01' ) THEN TO_CHAR( TO_DATE( CI.DT_TRD, 'YYYYMMDD' ), 'YYYYMM' )
+						WHEN /* TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>=]]> NVL( PSI.DT_BASIC, '01' ) AND*/
+						TO_CHAR( TO_DATE( CI.DT_TRD, 'YYYYMMDD' ), 'DD' ) <![CDATA[>=]]> NVL( PSI.DT_BASIC, '01' ) THEN TO_CHAR( TO_DATE( CI.DT_TRD, 'YYYYMMDD' ), 'YYYYMM' )
 						ELSE TO_CHAR( ADD_MONTHS( CI.DT_TRD,- 1 ), 'YYYYMM' )
 					END MM_BASIC
 				FROM

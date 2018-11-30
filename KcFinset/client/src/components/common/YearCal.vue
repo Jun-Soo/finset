@@ -5,7 +5,7 @@
         <button class="prev" @click="setYear('prev')"></button>
         <p>{{headDt}}</p>
         <button class="next" @click="setYear('next')"></button>
-        <button class="setting"></button>
+        <button class="setting" @click="goMonth"></button>
         <button class="today" @click="setYear('today')">TODAY</button>
       </div>
     </div>
@@ -33,61 +33,7 @@
     </div>
     <div class="calendar">
       <div class="year">
-        <!-- <div>
-          <p class="mon">1월</p>
-          <em class="income">465,000</em>
-          <em class="debt">32,000</em>
-          <em class="loan">100,000,000</em>
-          <p class="sum">+1,500,000</p>
-        </div>
-        <div>
-          <p class="mon">2월</p>
-          <em class="income">465,000</em>
-          <em class="debt">32,000</em>
-          <em class="loan">100,000,000</em>
-          <p class="sum">+1,500,000</p>
-        </div>
-        <div>
-          <p class="mon">3월</p>
-          <em class="income">465,000</em>
-          <em class="debt">32,000</em>
-          <em class="loan">100,000,000</em>
-          <p class="sum">+1,500,000</p>
-        </div>
-        <div>
-          <p class="mon">4월</p>
-        </div>
-        <div>
-          <p class="mon">5월</p>
-        </div>
-        <div>
-          <p class="mon">6월</p>
-        </div>
-        <div>
-          <p class="mon">7월</p>
-        </div>
-        <div>
-          <p class="mon">8월</p>
-        </div>
-        <div>
-          <p class="mon">9월</p>
-        </div>
-        <div>
-          <p class="mon">10월</p>
-        </div>
-        <div>
-          <p class="mon">11월</p>
-        </div>
-        <div>
-          <p class="mon">12월</p>
-        </div>
-      </div> -->
         <div v-for="(n, index) in 12" :key="index">
-          <!-- <p class="mon">2월</p>
-          <em class="income">465,000</em>
-          <em class="debt">32,000</em>
-          <em class="loan">100,000,000</em>
-          <p class="sum">+1,500,000</p> -->
           <p class="mon" v-text="n + '월'"></p>
           <em class="income" v-if="calData[index].income != 0">{{Common.formatNumber(calData[index].income)}}</em>
           <em class="debt" v-if="calData[index].consume != 0">{{Common.formatNumber(calData[index].consume)}}</em>
@@ -170,6 +116,8 @@ export default {
         });
     },
     listCalendarDataYear: function() {
+      this.setDefaultCalData();
+
       var _this = this;
 
       this.$http
@@ -181,7 +129,6 @@ export default {
           }
         })
         .then(function(response) {
-          // console.log(response.data.listCalendarConsumeDataYear);
           var list = response.data.listCalendarConsumeDataYear;
           for (var idx in list) {
             if (list[idx].type_in_out == "01") {
@@ -198,6 +145,14 @@ export default {
               );
             }
           }
+          list = response.data.listCalendarDebtDataYear;
+          for (var idx in list) {
+            _this.$set(
+              _this.calData[parseInt(list[idx].req_yyyymm.substring(4, 6)) - 1],
+              "debt",
+              list[idx].amt_repay
+            );
+          }
         });
     },
     setYear(key) {
@@ -206,14 +161,17 @@ export default {
           this.standardDt = new Date(
             this.standardDt.setFullYear(this.standardDt.getFullYear() - 1)
           );
+          this.listCalendarDataYear();
           break;
         case "next":
           this.standardDt = new Date(
             this.standardDt.setFullYear(this.standardDt.getFullYear() + 1)
           );
+          this.listCalendarDataYear();
           break;
         case "today":
           this.standardDt = new Date();
+          this.listCalendarDataYear();
           break;
         default:
           break;
@@ -258,7 +216,10 @@ export default {
         return;
       }
       this.shareList[params].isShow = !this.shareList[params].isShow;
-      this.listConsumeInfo();
+      this.listCalendarDataYear();
+    },
+    goMonth: function() {
+      this.$router.push("/common/monthCal");
     }
   }
 };

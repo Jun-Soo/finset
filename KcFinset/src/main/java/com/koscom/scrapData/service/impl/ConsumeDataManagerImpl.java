@@ -42,6 +42,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 		setTmFrom(consumeForm);
 		saveScrCardApprovalInfo(consumeForm);
 		saveScrRespCashReceipt(consumeForm);
+		saveScrTransactionDetail(consumeForm);
 	}
 	
 	/**
@@ -81,7 +82,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 	}
 	
 	/**
-	 * 소비지출 데이터를 확보하기 위해 카드 승인 내역 스크래핑 데이터 조회 및 저장- 차후 해당 VO로 받아야 한다.
+	 * 소비지출 데이터를 확보하기 위해 카드 승인 내역 스크래핑 데이터 조회 및 저장
 	 * @param consumeForm
 	 * @return
 	 */
@@ -339,6 +340,141 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 			logger.error("현금영수증 스크래핑 데이터를 DB에 집어넣는 도중 에러가 발생했습니다.");
 			e.printStackTrace();
 			throw new Exception("현금영수증 스크래핑 데이터를 DB에 집어넣는 도중 에러가 발생했습니다.");
+		}
+		return insertCnt;
+	}
+	
+	/**
+	 * 소비지출 데이터를 확보하기 위해 카드 승인 내역 스크래핑 데이터 조회 및 저장- 차후 해당 VO로 받아야 한다.
+	 * @param consumeForm
+	 * @return
+	 */
+	private int saveScrTransactionDetail(ConsumeDataForm consumeForm) throws Exception {
+		logger.debug("saveScrTransactionDetail");
+		
+		List<Map<String, String>> transactionDetailList = new ArrayList<Map<String,String>>();
+		List<ConsumeDataVO> consumeList = new ArrayList<ConsumeDataVO>();
+		int insertCnt = 0;
+		
+		try{
+			transactionDetailList = consumeDataMapper.listScrTransactionDetail(consumeForm);
+			if(transactionDetailList!=null){
+				if(transactionDetailList.size()>0) {
+					for(Map<String, String> transactionMap: transactionDetailList) {
+						//raw데이터
+						String no_person = transactionMap.get("NO_PERSON");
+						String an = transactionMap.get("AN");
+						String dt_trd = transactionMap.get("DT_TRD");
+						String tm_trd = transactionMap.get("TM_TRD");
+//						String cd_crncy = transactionMap.get("CD_CRNCY");
+						String amt_wdrl = transactionMap.get("AMT_WDRL");
+						String amt_dep = transactionMap.get("AMT_DEP");
+//						String balance = transactionMap.get("BALANCE");
+						String doc1 = transactionMap.get("DOC1"); //0: 기타, 1: 일시불, 2:할부, 3:현금서비스, 4: 포인트 일시불, 5: 포인트 할부
+						String doc2 = transactionMap.get("DOC2");
+//						String dealway1 = transactionMap.get("DEALWAY1");
+//						String dealway2 = transactionMap.get("DEALWAY2");
+//						String dt_frt = transactionMap.get("DT_FRT");
+						String cd_class = transactionMap.get("CD_CLASS");
+						String cd_type = transactionMap.get("CD_TYPE");
+						String cd_fc = transactionMap.get("CD_FC");
+						String nm_an = transactionMap.get("NM_AN");
+						
+						//실제 사용될 변수
+						String type_in_out = "";		//01:수입, 02:지출
+						if(amt_wdrl == null || amt_wdrl.equals("") ||amt_wdrl.equals("0")){
+							type_in_out = "01";
+						} else {
+							type_in_out = "02";
+						}
+						String means_consume = "04";	//디폴트는 카드
+						String nm_card = nm_an;
+						String no_card = an;
+						String type_card = null;
+						String no_biz = null;
+						String nm_biz = null;
+						String cd_consume_class = cd_class + cd_type;
+						String contents = "";
+						if(doc1 == null || doc1.equals("")) {
+							contents = doc2;
+						} else {
+							contents = doc1;
+						}
+						String memo = null;
+						String grade = null;
+						String amt_in_out = "";
+						if(type_in_out.equals("01")) {
+							amt_in_out = amt_dep;
+						} else {
+							amt_in_out = amt_wdrl;
+						}
+						String no_approval = null;
+						String mon_installment = "0";
+						String mon_remaining = "0";
+						String yn_pay_installment = "N";
+						String yn_delete = "N";
+						String yn_cancel = "N";
+						String yn_auto = "Y";
+						String yn_budget_except = "N";
+						String yn_person_regist = "N";
+						String id_frt = no_person;
+						Date dt_frt = null;
+						String id_lst = no_person;
+						Date dt_lst = null;
+
+						ConsumeDataVO consumeVO =
+								new ConsumeDataVO(
+										no_person,
+										0,
+										type_in_out,
+										means_consume,
+										cd_fc,
+										nm_card,
+										no_card,
+										type_card,
+										dt_trd,
+										tm_trd,
+										no_biz,
+										nm_biz,
+										cd_class,
+										cd_type,
+										cd_consume_class,
+										contents,
+										memo,
+										grade,
+										amt_in_out,
+										no_approval,
+										mon_installment,
+										mon_remaining,
+										yn_pay_installment,
+										yn_delete,
+										yn_cancel,
+										yn_auto,
+										yn_budget_except,
+										yn_person_regist,
+										id_frt,
+										dt_frt,
+										id_lst,
+										dt_lst
+										);
+						logger.debug(consumeVO.toString());
+						consumeList.add(consumeVO);
+					}
+				}
+			}
+		} catch (Exception e) {
+			logger.error("계좌 입출금 내역을 가져오는 도중 에러가 발생했습니다.");
+			e.printStackTrace();
+			throw new Exception("계좌 입출금 내역을 가져오는 도중 에러가 발생했습니다.");
+		}
+		try{
+			for(ConsumeDataVO consumeVO:consumeList) {
+				insertCnt+= consumeDataMapper.createConsumeInfoTransaction(consumeVO);
+			}
+		} catch(Exception e) {
+			logger.error("계좌 입출금 내역을 DB에 집어넣는 도중 에러가 발생했습니다.");
+			e.printStackTrace();
+			throw new Exception("계좌 입출금 내역을 DB에 집어넣는 도중 에러가 발생했습니다."); 
 		}
 		return insertCnt;
 	}

@@ -21,18 +21,25 @@ public interface ConsumeDataMapper {
 	String getTmFromConsumeInfo(String no_person);
 	
 	/**
-	 * 소비지출 데이터를 확보하기 위해 스크래핑 데이터 조회 - 차후 해동 VO로 받아야 한다.
+	 * 소비지출 데이터를 확보하기 위해  카드 승인 스크래핑 데이터 조회
 	 * @param consumeForm
 	 * @return
 	 */
 	List<Map<String, String>> listScrCardApprovalInfo(ConsumeDataForm consumeForm);
 	
 	/**
-	 * 소비지출 데이터를 확보하기 위해 스크래핑 데이터 조회 - 차후 해동 VO로 받아야 한다.
+	 * 소비지출 데이터를 확보하기 위해 현금영수증 스크래핑 데이터 조회
 	 * @param consumeForm
 	 * @return
 	 */
 	List<Map<String, String>> listScrRespCashReceipt(ConsumeDataForm consumeForm);
+	
+	/**
+	 * 자동 수입, 지출 등록된 계좌 입출금 데이터 조회
+	 * @param consumeForm
+	 * @return
+	 */
+	List<Map<String, String>> listScrTransactionDetail(ConsumeDataForm consumeForm);
 	
 	/**
 	 * 업종명으로 소비항목코드를 조회
@@ -55,6 +62,13 @@ public interface ConsumeDataMapper {
 	 */
 	int createConsumeInfo(ConsumeDataVO consumeVO);
 
+	/**
+	 * 소비지출 테이블에 추가(계좌 입출금)
+	 * @param consumeVO
+	 * @return
+	 */
+	int createConsumeInfoTransaction(ConsumeDataVO consumeVO);
+	
 	/**
 	 * 국세청 코드 조회
 	 * @return

@@ -134,6 +134,7 @@
 				,YN_DELETE
 				,YN_AUTO
 				,YN_BUDGET_EXCEPT
+				,YN_PERSON_REGIST
 				,ID_FRT
 				,DT_FRT
 				,ID_LST
@@ -166,6 +167,7 @@
 	             ,#{yn_delete				, jdbcType=VARCHAR} AS YN_DELETE
 	             ,#{yn_auto					, jdbcType=VARCHAR} AS YN_AUTO
 	             ,#{yn_budget_except		, jdbcType=VARCHAR} AS YN_BUDGET_EXCEPT
+	             ,#{yn_person_regist		, jdbcType=VARCHAR} AS YN_PERSON_REGIST
 	             ,#{id_frt					, jdbcType=VARCHAR} AS ID_FRT
 	             ,SYSDATE 										AS DT_FRT
 	             ,#{id_lst					, jdbcType=VARCHAR} AS ID_LST

@@ -599,12 +599,26 @@ public class ConsumeController {
     	logger.debug("getBannerData");
     	String no_person = (String) session.getAttribute("no_person");
     	consumeVO.setNo_person(no_person);
-    	
-    	if(consumeVO.getType_in_out() == "01") {
-    		model.addAttribute("bannerData", consumeManager.getBannerDataIncome(consumeVO));
-    	} else {
-    		model.addAttribute("bannerData", consumeManager.getBannerDataConsume(consumeVO));
-    	}
+		model.addAttribute("bannerData", consumeManager.getBannerData(consumeVO));
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE
+     * 이력 상세 데이터 조회
+     * @param session
+     * @param model
+     * @param consumeForm
+     * @return
+     * @throws FinsetException
+     */
+    @RequestMapping("/listConsumeAnalyze.json")
+    public String listConsumeAnalyze(HttpSession session, Model model, ConsumeForm consumeForm) throws FinsetException {
+    	logger.debug("listConsumeAnalyze");
+    	String no_person = (String) session.getAttribute("no_person");
+    	consumeForm.setNo_person(no_person);
+    	model.addAttribute("listConsumeAnalyzeMonth", consumeManager.listConsumeAnalyzeMonth(consumeForm));
+    	model.addAttribute("listConsumeAnalyzeDay", consumeManager.listConsumeAnalyzeDay(consumeForm));
     	return "jsonView";
     }
 }

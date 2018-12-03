@@ -23,7 +23,7 @@
       </div>
     </div>
 
-    <div class="container noMG">
+    <div class="container-wrap noMG">
       <div class="list-wrap">
         <div class="filter-wrap">
           <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">

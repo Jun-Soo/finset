@@ -10,8 +10,8 @@
       <div class="container pb90">
         <ul class="consume-detail">
           <li>
-            <p class="key" v-text="curTab=='01'?'입금':'결제수단'" style="width:12%"></p>
-            <p style="width:88%">
+            <p class="key" v-text="curTab=='01'?'입금':'결제수단'"></p>
+            <p>
               <multiselect v-validate="'required'" data-vv-name='수단' :disabled="!isNew" v-model="consumeVO.means_consume" ref="selMeansConsume" label="text" :show-labels="false" :options="meansConsumeOption" placeholder="결제수단" :searchable="false" :allow-empty="false" @select="selectMeans">
               </multiselect>
             </p>
@@ -49,6 +49,12 @@
             <p><input type="text" v-model="consumeVO.memo" :readonly="!isMine"></p>
           </li>
         </ul>
+
+        <div v-if="!isNew" class="consume-comment">
+          <!-- <a href="#">이번달에 <em>#번 5300원</em> 소비하였네요</a> -->
+          <a v-if="curTab=='01'" @click="goAnalyze">이번 달에 <em>{{consumeVO.contents}}</em> 수입이<em> {{bannerData}}번</em> 있었습니다.</a>
+          <a v-if="curTab=='02'" @click="goAnalyze">이번 달에 <em>{{consumeVO.contents}}</em> 지출이<em> {{bannerData}}번</em> 있었습니다.</a>
+        </div>
 
         <div v-if="isNew&&isMine" class="btn-wrap float">
           <a @click="clickSave" class="solid blue box">저장</a>
@@ -661,7 +667,6 @@ export default {
 
       var formData = new FormData();
       formData.append("type_in_out", _this.curTab);
-      formData.append("nm_card", _this.consumeVO.nm_card);
       formData.append("contents", _this.consumeVO.contents);
 
       this.$http
@@ -725,6 +730,15 @@ export default {
       } else {
         return vo.doc1;
       }
+    },
+    goAnalyze: function() {
+      this.$router.push({
+        path: "/consume/incomeAnalyze",
+        query: {
+          type_in_out: this.curTab,
+          contents: this.consumeVO.contents
+        }
+      });
     }
   }
 };

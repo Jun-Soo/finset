@@ -286,11 +286,7 @@ export default {
       return Common.formatNumber(number);
     },
     hide() {
-      console.log("ab");
-      debugger;
       this.$modals.hide("my-modal");
-
-      console.log("cd");
     },
     clickShare: function(params) {
       var no_person_list = this.filterShareList();

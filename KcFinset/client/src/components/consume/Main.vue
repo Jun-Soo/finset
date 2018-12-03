@@ -90,9 +90,6 @@
             <div class="left">
               <p class="name">{{vo.contents}}</p>
               <p class="cate">
-                <!-- <img :src="'../../assets/images/consume/icon/'+getConsumeIconSrc(vo.type_in_out, vo.cd_class) + '.png'" alt="" /> -->
-                <!-- <img src="../../assets/images/common/bu_list_shopping.png" alt="" /> -->
-                <!-- <img :src="require(getConsumeIconSrc(vo.type_in_out, vo.cd_class))" alt="" /> -->
                 <img :src="getConsumeIconSrc(vo.type_in_out, vo.cd_class)" alt="" />
                 <span v-text="vo.type_in_out == '02'?vo.nm_class+' - '+vo.nm_type:vo.nm_class"></span>
               </p>

@@ -423,22 +423,9 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	}
 
 	@Override
-	public int getBannerDataConsume(ConsumeVO consumeVO) {
-		logger.debug("getBannerDataConsume");
-		return consumeMapper.getBannerDataConsume(consumeVO);
-	}
-
-	@Override
-	public int getBannerDataIncome(ConsumeVO consumeVO) {
-		logger.debug("getBannerDataIncome");
-		List<ConsumeVO> list = consumeMapper.getBannerDataIncome(consumeVO);
-		if(list == null || list.size() != 2) {
-			return 0;
-		} else {
-			ConsumeVO firstVO = list.get(0);
-			ConsumeVO secondVO = list.get(1);
-			return Integer.parseInt(secondVO.getAmt_in_out()) - Integer.parseInt(firstVO.getAmt_in_out());
-		}
+	public int getBannerData(ConsumeVO consumeVO) {
+		logger.debug("getBannerData");
+		return consumeMapper.getBannerData(consumeVO);
 	}
 	
 	@Override
@@ -451,5 +438,17 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	public List<ConsumeVO> listCalendarConsumeDataYear(ConsumeForm consumeForm) {
 		logger.debug("listCalendarConsumeDataYear");
 		return consumeMapper.listCalendarConsumeDataYear(consumeForm);
+	}
+
+	@Override
+	public List<ConsumeVO> listConsumeAnalyzeMonth(ConsumeForm consumeForm) {
+		logger.debug("listConsumeAnalyzeMonth");
+		return consumeMapper.listConsumeAnalyzeMonth(consumeForm);
+	}
+
+	@Override
+	public List<ConsumeVO> listConsumeAnalyzeDay(ConsumeForm consumeForm) {
+		logger.debug("listConsumeAnalyzeDay");
+		return consumeMapper.listConsumeAnalyzeDay(consumeForm);
 	}
 }

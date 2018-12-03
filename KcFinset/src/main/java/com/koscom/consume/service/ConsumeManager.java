@@ -254,18 +254,11 @@ public interface ConsumeManager {
 	void createConsumeInfo(ConsumeVO consumeVO);
 	
 	/**
-	 * 소비 배너 데이터 조회
+	 * 배너 데이터 조회
 	 * @param consumeVO
 	 * @return
 	 */
-	int getBannerDataConsume(ConsumeVO consumeVO);
-	
-	/**
-	 * 수입 배너 데이터 조회
-	 * @param consumeVO
-	 * @return
-	 */
-	int getBannerDataIncome(ConsumeVO consumeVO);
+	int getBannerData(ConsumeVO consumeVO);
 	
 	/**
 	 * 현금, 스크래핑된 계좌, 카드 조회 
@@ -280,4 +273,18 @@ public interface ConsumeManager {
 	 * @return
 	 */
 	List<ConsumeVO> listCalendarConsumeDataYear(ConsumeForm consumeForm);
+	
+	/**
+	 * 월별 수입,지출상세 리스트 조회
+	 * @param consumeForm
+	 * @return
+	 */
+	List<ConsumeVO> listConsumeAnalyzeMonth(ConsumeForm consumeForm);
+	
+	/**
+	 * 일별 수입,지출상세 리스트 조회
+	 * @param consumeForm
+	 * @return
+	 */
+	List<ConsumeVO> listConsumeAnalyzeDay(ConsumeForm consumeForm);
 }

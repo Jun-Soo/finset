@@ -45,6 +45,8 @@ public class ConsumeVO implements Serializable{
 	private String 	id_lst;						// 최종수정아이디
 	private Date 	dt_lst;						// 최종수정시간
 
+	private String	nm_fc;						// 금융사명
+	
 	public ConsumeVO() {
 	}
 	public ConsumeVO(String no_person, int seq_consume, String type_in_out,
@@ -56,7 +58,7 @@ public class ConsumeVO implements Serializable{
 			String mon_installment, String mon_remaining,
 			String yn_pay_installment, String yn_cancel, String yn_delete,
 			String yn_auto, String yn_budget_except, String yn_person_regist,
-			String id_frt, Date dt_frt, String id_lst, Date dt_lst) {
+			String id_frt, Date dt_frt, String id_lst, Date dt_lst, String nm_fc) {
 		this.no_person = no_person;
 		this.seq_consume = seq_consume;
 		this.type_in_out = type_in_out;
@@ -91,8 +93,9 @@ public class ConsumeVO implements Serializable{
 		this.dt_frt = dt_frt;
 		this.id_lst = id_lst;
 		this.dt_lst = dt_lst;
+		this.nm_fc = nm_fc;
 	}
-	
+
 	public String getNo_person() {
 		return no_person;
 	}
@@ -296,6 +299,12 @@ public class ConsumeVO implements Serializable{
 	}
 	public void setDt_lst(Date dt_lst) {
 		this.dt_lst = dt_lst;
+	}
+	public String getNm_fc() {
+		return nm_fc;
+	}
+	public void setNm_fc(String nm_fc) {
+		this.nm_fc = nm_fc;
 	}
 	
 	public String toString() {

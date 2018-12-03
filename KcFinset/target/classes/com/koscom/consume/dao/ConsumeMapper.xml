@@ -1582,14 +1582,14 @@
 		UPDATE
 			CONSUME_INFO
 		SET
-			 NM_CARD			= #{nm_card		, jdbcType = VARCHAR}
-			,DT_TRD				= #{dt_trd		, jdbcType = VARCHAR}
-			,CD_CLASS			= #{cd_class	, jdbcType = VARCHAR}
-			,CD_TYPE			= #{cd_type		, jdbcType = VARCHAR}
-			,CONTENTS			= #{contents	, jdbcType = VARCHAR}
-			,AMT_IN_OUT			= #{amt_in_out	, jdbcType = VARCHAR}
-			,MEMO				= #{memo		, jdbcType = VARCHAR}
-			,YN_AUTO			= #{yn_auto		, jdbcType = VARCHAR}
+			 NM_CARD			= #{nm_card			, jdbcType = VARCHAR}
+			,DT_TRD				= #{dt_trd			, jdbcType = VARCHAR}
+			,CD_CLASS			= #{cd_class		, jdbcType = VARCHAR}
+			,CD_TYPE			= #{cd_type			, jdbcType = VARCHAR}
+			,CONTENTS			= #{contents		, jdbcType = VARCHAR}
+			,AMT_IN_OUT			= #{amt_in_out		, jdbcType = VARCHAR}
+			,MEMO				= #{memo			, jdbcType = VARCHAR}
+			,YN_AUTO			= #{yn_auto			, jdbcType = VARCHAR}
 			,YN_PERSON_REGIST	= #{yn_person_regist, jdbcType = VARCHAR}
 		WHERE
 				NO_PERSON	= #{no_person	, jdbcType = VARCHAR}
@@ -1637,6 +1637,7 @@
 					,YN_DELETE
 					,YN_AUTO
 					,YN_BUDGET_EXCEPT
+					,YN_PERSON_REGIST
 					,ID_FRT
 					,DT_FRT
 					,ID_LST
@@ -1669,6 +1670,7 @@
 					,#{yn_delete			, jdbcType = VARCHAR}
 					,#{yn_auto				, jdbcType = VARCHAR}
 					,#{yn_budget_except		, jdbcType = VARCHAR}
+					,#{yn_person_regist		, jdbcType = VARCHAR}
 					,#{no_person			, jdbcType = VARCHAR}
 					,SYSDATE
 					,#{no_person			, jdbcType = VARCHAR}

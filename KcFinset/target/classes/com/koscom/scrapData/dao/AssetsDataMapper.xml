@@ -30,11 +30,43 @@
 		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</select>
 
+	<!-- 증권사 API 조회 -->
+	<select id="listStockApiInfo" parameterType="com.koscom.scrapData.model.AssetsDataForm" resultType="com.koscom.scrapData.model.AssetsInfoDataVO">
+		SELECT
+			C.CODE_VALUE AS CD_DETAIL_CLASS,
+			SS.CD_FC,
+			SS.ACCNO,
+			SS.CASHBALANCE,
+			SS.TOTALACCVAL,
+			NVL(ROUND((( SS.PROLOSS / SS.VALATTRADE )* 100 ), 2 ), '0' ) AS RATE_RETURN,
+			SL.YN_DELETE
+		FROM
+			STOCK_SUMMARY SS
+		INNER JOIN STOCK_LIST SL
+		ON (
+				SS.NO_PERSON = SL.NO_PERSON
+				AND SS.CD_FC = SL.CD_FC
+				AND SS.ACCNO = SL.ACCNO
+			)
+		INNER JOIN(
+				SELECT
+					CODE_VALUE,
+					TRIM( SUBSTR( NM_CODE, 0, INSTR( NM_CODE, ' ', 1, 1 ))) AS NM_CODE
+				FROM
+					COMM_CD
+				WHERE
+					CODE_GROUP = 'cd_assets_stock'
+			) C
+		ON SL.ACC_TYPE = C.NM_CODE
+		WHERE SS.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</select>
+
 	<insert id="mergeAssetsInfo" parameterType="com.koscom.scrapData.model.AssetsInfoDataVO">
 		MERGE INTO ASSETS_INFO
 		USING DUAL
         ON (
         	NO_PERSON = #{no_person, jdbcType=VARCHAR}
+        	AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
         	AND NO_ACCOUNT = #{no_account, jdbcType=VARCHAR}
         	)
 		WHEN MATCHED THEN

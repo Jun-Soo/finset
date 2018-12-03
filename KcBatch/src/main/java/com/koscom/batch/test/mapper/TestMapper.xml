@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.batch.test.mapper.TestMapper">
+
+    <select id="getCooconAPIinfo" resultType="com.koscom.batch.test.domain.TestVO">
+        /* com.koscom.batch.coocon.mapper.TestMapper.getCooconAPIinfo */
+		SELECT
+			 A.CD_ORG		AS "cd_org"
+			,A.GUBUN		AS "gubun"
+			,A.ORG_TYPE		AS "org_type"
+			,A.CD_FC		AS "cd_fc"
+		FROM COOCON_API_INFO A
+		WHERE A.YN_USE = 'Y'
+		ORDER BY A.CD_ORG, A.GUBUN ASC
+    </select>
+</mapper>

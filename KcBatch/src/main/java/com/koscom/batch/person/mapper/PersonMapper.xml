@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.batch.person.mapper.PersonMapper">
+
+    <select id="getPersonInfo" parameterType="java.lang.String" resultType="com.koscom.batch.person.domain.PersonInfo">
+        /* com.koscom.batch.person.mapper.PersonMapper.getPersonInfo: 회원정보 */
+        SELECT  NO_PERSON                                  AS no_person       /* 회원관리번호       */
+               ,NM_PERSON                                  AS nm_person       /* 회원명             */
+               ,XX1.DEC_VARCHAR2_SEL(SSN_PERSON, '10', 'FS_ARIA', 'PERSON_INFO', 'SSN_PERSON')   AS ssn_person      /* 주민번호           */
+               ,PASS_PERSON                                AS pass_person     /* 패스워드           */
+               ,BGN                                        AS bgn             /* 생년월일           */
+               ,HP                                         AS hp              /* 휴대폰             */
+               ,CD_TEL                               	   AS cd_tel    	  /* 통신사구분 	    */
+               ,KCB_CI                                     AS kcb_ci          /* KCBCI              */
+               ,KCB_DI                                     AS kcb_di          /* KCBDI              */
+               ,KCB_CP                                     AS kcb_cp          /* KCBCP              */
+               ,PBL_CERT_CI                                AS pbl_cert_ci     /* 공인인증CI         */
+               ,PBL_CERT_DI                                AS pbl_cert_di     /* 공인인증DI         */
+               ,YN_USE                                     AS yn_use          /* 사용여부           */
+               ,YN_AGREE_USING                             AS yn_agree_using  /* 약관동의           */
+               ,DT_AGREE_USING                             AS dt_agree_using  /* 약관동의일자       */
+               ,DT_INSTALL                                 AS dt_install      /* 설치일자           */
+               ,YN_FINGERPRINT                             AS yn_fingerprint  /* 지문사용여부       */
+               ,YN_OS                                      AS yn_os           /* 운영체제여부       */
+               ,FCM_TOKEN                                  AS fcm_token       /* 푸쉬메세지토큰     */
+               ,CD_PUSH                                    AS cd_push         /* push msg여부       */
+               ,YN_PUSH                                    AS yn_push         /* 푸쉬메세지사용여부 */
+               ,EMAIL                                      AS email           /* 이메일             */
+               ,NICK                                       AS nick            /* 별명               */
+               ,YN_LOGOUT                                  AS yn_logout       /* 로그아웃여부       */
+               ,SEQ_NEW_DEBT_REG                           AS seq_new_debt_reg/* 부채등록번호       */
+               ,PATH_FILE1                                 AS path_file1      /* 파일패스           */
+               ,NM_FILE1                                   AS nm_file1        /* 파일명             */
+               ,STOCK_TOKEN                                AS stock_token     /* 증권토큰           */
+               ,ETC_MEMO                                   AS etc_memo        /* 비고               */
+               ,AMT_ETM_INCOME                             AS amt_etm_income  /* 추정소득금액       */
+               ,NVL(CNT_FAIL_PWD, '0')					   AS cnt_fail_pwd	  /* 비밀번호 실패건수  */
+               ,NVL(CNT_FAIL_FINGER, '0')				   AS cnt_fail_finger /* 지문인증 실패건수  */
+               ,ID_FRT                                     AS id_frt          /* 최초입력아이디     */
+               ,DT_FRT                                     AS dt_frt          /* 최초입력시간       */
+               ,ID_LST                                     AS id_lst          /* 최종수정아이디     */
+               ,DT_LST                                     AS dt_lst          /* 최종수정시간       */
+          FROM PERSON_INFO /* 회원관리 */
+         WHERE no_person = #{no_person, jdbcType=VARCHAR}
+    </select>
+
+</mapper>

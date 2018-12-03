@@ -1,0 +1,56 @@
+spring:
+  profiles:
+    active: local
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+---
+mybatis:
+  configuration:
+    lazyLoadingEnabled: true
+    aggressiveLazyLoading: false
+    mapUnderscoreToCamelCase: true
+---
+spring:
+  profiles: local
+  task:
+    fixedDelay: 1000
+    name: localTask
+  datasource:
+    url: jdbc:oracle:thin:@114.31.122.90:1521:xe
+    username: FINSET1
+    password: FINSET1
+  server:
+    port: 8300
+  scheduler:
+#    cron_1: 0 0/1 * * * *
+#    cron_2: 10 * 6 * * *
+#    cron_3: 0 0/1 6 * * *
+#    cron_4: 0 0/2 * * * *
+#    cron_5: 0 0/1 * * * *
+#    cron_6: 0 0/2 * * * *
+    cron_1: 10 * 6 * * *
+    cron_2: 10 * 6 * * *
+    cron_3: 10 * 6 * * *
+    cron_4: 10 * 6 * * *
+    cron_5: 10 * 6 * * *
+    cron_6: 10 * 6 * * *
+    cron_7: 0 54 8 * * *
+    cron_8: 0 * 1 * * *
+  batch:
+    initializer:
+      enabled: false
+    job:
+      enabled: false
+    table-prefix: FINSET1.BATCH_
+  apiUrl:
+    coocon: https://sgw.coocon.co.kr/sol/gateway/
+    fss: http://finlife.fss.or.kr/finlifeapi/companySearch.json
+    fcm : https://fcm.googleapis.com/fcm/send
+    naver : https://openapi.naver.com/v1/search/
+  push:
+    filepath: /run/fswasl/kcb_sftp/data/recv/
+  kcb:
+    filepath: D:/FINSET/TEMP/
+    #filepath: /run/fsiff/kcb_sftp/data/send/
+     
+    

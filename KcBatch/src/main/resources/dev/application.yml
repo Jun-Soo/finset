@@ -1,0 +1,47 @@
+spring:
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: oracle.jdbc.driver.OracleDriver
+---
+mybatis:
+  configuration:
+    lazyLoadingEnabled: true
+    aggressiveLazyLoading: false
+    mapUnderscoreToCamelCase: true
+---
+spring:
+  profiles: dev
+  task:
+    fixedDelay: 5000
+    name: devTask
+  datasource:
+    url: jdbc:oracle:thin:@10.30.50.12:1521:FSPDBD
+    username: finset1
+    password: finset1
+  server:
+    port: 6080
+  scheduler:
+    cron_1: 0 0 1 1 * *
+    cron_2: 0 0 1 1 * *
+    cron_3: 0 0 15 * * *
+    cron_4: 0 25 13 * * *
+    cron_5: 0 0/1 * * * *
+    cron_6: 0 0 8 * * *
+    cron_7: 0 0 1 * * *
+    cron_8: 0 0 11 * * *
+  batch:
+    initializer:
+      enabled: false
+    job:
+      enabled: false
+    table-prefix: FINSET1.BATCH_
+  apiUrl:
+    coocon: https://10.30.50.11:8100/sol/gateway/
+    fss: http://10.30.50.11:8101/finlifeapi/companySearch.json
+    fcm : https://10.30.50.11:8102/fcm/send
+    naver : https://10.30.50.11:8103/v1/search/
+  push:
+    filepath: /run/fswasl/kcb_sftp/data/recv/
+  kcb:
+    filepath: /run/fswasl/kcb_sftp/data/send/

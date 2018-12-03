@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.batch.news.mapper.NewsMapper">
+
+    <select id="getApiNewsSeq" resultType="int">
+	SELECT
+		NVL(MAX(seq_search),0)+1
+	FROM API_NEWS
+	</select>
+
+    <sql id="resultDateFormatInsert">
+		(
+			SELECT TO_DATE(RTRIM(#{result_date, jdbcType=VARCHAR}, ' +0900'), 'Dy, DD Mon YYYY HH24:MI:SS', 'NLS_DATE_LANGUAGE = American')
+			FROM DUAL
+		),
+    </sql>
+    <insert id="createApiNews" parameterType="com.koscom.batch.news.domain.NewsVO">
+		INSERT INTO API_NEWS(
+			SEQ_SEARCH,
+			SEARCH_QUERY,
+			REQ_DISPLAY_CNT,
+			SORT_OPTION,
+			RESULT_CNT,
+			RESULT_DATE,
+			ERR_CD,
+			ERR_MSG,
+			DT_FRT
+		) VALUES (
+			#{seq_search, jdbcType=NUMERIC},
+			#{search_query, jdbcType=VARCHAR},
+			#{req_display_cnt, jdbcType=NUMERIC},
+			#{sort_option, jdbcType=VARCHAR},
+			#{result_cnt, jdbcType=NUMERIC},
+			<include refid="resultDateFormatInsert"/>
+			#{err_cd, jdbcType=VARCHAR},
+			#{err_msg, jdbcType=VARCHAR},
+			SYSDATE
+		)
+   	</insert>
+
+    <select id="duplApiNewsResultByLink" parameterType="com.koscom.batch.news.domain.NewsResultVO" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM
+			API_NEWS_RESULT
+		WHERE
+			LINK = #{link, jdbcType=VARCHAR}
+   	</select>
+
+     <select id="getNewsResultNewsCompany" parameterType="com.koscom.batch.news.domain.NewsResultVO" resultType="String">
+		SELECT
+			DISTINCT NM_CODE
+		FROM
+			COMM_CD
+		WHERE
+			CODE_GROUP = 'cd_news_cp'
+			AND CODE_VALUE LIKE '%' || #{originallink, jdbcType=VARCHAR} || '%'
+   	</select>
+
+    <sql id="pubDateFormatInsert">
+		(
+			SELECT TO_DATE(RTRIM(#{pub_date, jdbcType=VARCHAR}, ' +0900'), 'Dy, DD Mon YYYY HH24:MI:SS', 'NLS_DATE_LANGUAGE = American')
+			FROM DUAL
+		),
+    </sql>
+    <insert id="createApiNewsResult" parameterType="com.koscom.batch.news.domain.NewsResultVO">
+        <selectKey keyProperty="seq_news" resultType="int" order="BEFORE">
+			(SELECT SEQ_NEWS_RESULT.NEXTVAL FROM DUAL)
+		</selectKey>
+
+		INSERT INTO API_NEWS_RESULT(
+			SEQ_NEWS,
+			SEQ_SEARCH,
+			TITLE,
+			LINK,
+			DESCRIPTION,
+			PUB_DATE,
+			NEWS_COMPANY,
+			NEWS_STATUS,
+			YN_USE,
+			DT_FRT
+		) VALUES (
+			#{seq_news},
+			#{seq_search, jdbcType=NUMERIC},
+			#{title, jdbcType=VARCHAR},
+			#{link, jdbcType=VARCHAR},
+			#{description, jdbcType=VARCHAR},
+			<include refid="pubDateFormatInsert"/>
+			#{news_company, jdbcType=VARCHAR},
+			#{news_status, jdbcType=VARCHAR},
+			#{yn_use, jdbcType=VARCHAR},
+			SYSDATE
+		)
+   	</insert>
+
+    <update id="updateErrorApiNews" parameterType="com.koscom.batch.news.domain.NewsVO">
+		UPDATE API_NEWS
+		SET
+			ERR_CD = #{err_cd, jdbcType=VARCHAR},
+			ERR_MSG = #{err_msg, jdbcType=VARCHAR}
+		WHERE SEQ_SEARCH = #{seq_search, jdbcType=NUMERIC}
+   	</update>
+
+</mapper>
+

@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.batch.kcb.mapper.KcbMapper">
+
+	<select id="listKcbSendPerson" resultType="com.koscom.batch.kcb.domain.KcbVO">
+		SELECT DISTINCT 
+			   A.NO_PERSON
+			  ,B.KCB_ID
+			  ,B.NM_PERSON
+			  ,B.HP
+		  FROM KCB_REQ_NONFI_INFO A INNER JOIN PERSON_INFO B
+		        ON A.NO_PERSON = B.NO_PERSON
+		 WHERE A.STATUS = '02'
+		   AND A.DT_REQ = TO_CHAR(SYSDATE-1, 'YYYYMMDD')
+		 ORDER BY A.NO_PERSON
+   	</select>
+
+	<select id="listKcbSendInfo" resultType="com.koscom.batch.kcb.domain.KcbVO">
+		SELECT DISTINCT
+		       A.NO_PERSON
+		      ,(SELECT KCB_ID FROM PERSON_INFO WHERE NO_PERSON = A.NO_PERSON) AS KCB_ID
+		      ,A.CD_REQ
+		      ,A.SEQ_SCRAPING_RESULT	/* 스크래핑 일련번호 */
+		      ,CASE WHEN A.CD_REQ = '01' THEN B.NO_PBLS
+		       		WHEN A.CD_REQ = '02' THEN C.NO_PBLS
+		       		ELSE NULL 
+		       END AS NO_PBLS				/* 발급번호 */
+		      ,CASE WHEN A.CD_REQ = '01' THEN TO_CHAR(B.DT_FRT, 'YYYYMMDD')
+		       		WHEN A.CD_REQ = '02' THEN TO_CHAR(C.DT_FRT, 'YYYYMMDD')
+		       		WHEN A.CD_REQ = '03' THEN TO_CHAR(D.DT_FRT, 'YYYYMMDD')
+		       END AS DT_PBLS /* 발급일자 */
+		      ,CASE WHEN B.CERT_DIVISION = 1 THEN '03'
+		            WHEN B.CERT_DIVISION = 2 THEN '02'
+		            WHEN B.CERT_DIVISION = 3 THEN '01'
+		       		ELSE NULL
+		       END AS CERT_DIVISION		/* 소득금액증명서구분코드 */
+		      ,CASE WHEN A.CD_REQ = '02' THEN C.NO_PAYER ELSE NULL END AS NO_PAYER							/* 납부자번호 */
+		      ,CASE WHEN A.CD_REQ = '02' THEN 
+			  	CASE WHEN C.MEMBER_DIVISION = '직장가입자' THEN '1' ELSE '2' END 
+			   ELSE NULL END AS MEMBER_DIVISION			/* 가입자구분 */
+		      ,CASE WHEN A.CD_REQ = '02' THEN C.NM_COMP ELSE NULL END AS NM_COMP							/* 상호명 */
+		      ,CASE WHEN A.CD_REQ = '03' THEN D.CNT_MONTH_PAY ELSE NULL END AS CNT_MONTH_PAY                /* 납부한월수 */
+		      ,CASE WHEN A.CD_REQ = '03' THEN D.AMT_PAY ELSE NULL END AS AMT_PAY                            /* 납부한금액 */
+		      ,CASE WHEN A.CD_REQ = '03' THEN D.CNT_MONTH_NOT_PAY ELSE NULL END AS CNT_MONTH_NOT_PAY        /* 납부하지않은월수 */
+		      ,CASE WHEN A.CD_REQ = '03' THEN D.AMT_NOT_PAY ELSE NULL END AS AMT_NOT_PAY                    /* 납부하지않은금액 */
+		      ,CASE WHEN A.CD_REQ = '03' THEN D.CNT_MONTH_CANNOT_PAY ELSE NULL END AS CNT_MONTH_CANNOT_PAY  /* 납부할수없는월수 */
+		      ,CASE WHEN A.CD_REQ = '03' THEN D.AMT_CANNOT_PAY ELSE NULL END AS AMT_CANNOT_PAY              /* 납부할수없는금액 */
+		      ,CASE WHEN A.CD_REQ = '03' THEN D.AMT_PAY_RETURN ELSE NULL END AS AMT_PAY_RETURN              /* 반납금납부액 */
+		      ,CASE WHEN A.CD_REQ = '03' THEN D.AMT_PAY_PRIMIUM ELSE NULL END AS AMT_PAY_PRIMIUM            /* 추납보험료납부액 */
+		  FROM KCB_REQ_NONFI_INFO A LEFT OUTER JOIN SCR_REQ_CERTIFICATION B 
+		  	    ON A.NO_PERSON = B.NO_PERSON
+		  	   AND A.SEQ_SCRAPING_RESULT = B.SEQ_SCRAPING_RESULT
+		  	   AND B.CD_TYPE = '02'
+		  	  LEFT OUTER JOIN SCR_RESP_HEALTH_PAYMENT C
+		  	    ON A.NO_PERSON = C.NO_PERSON
+			  LEFT OUTER JOIN SCR_RESP_PENSION_PAYMENT D
+		  	    ON A.NO_PERSON = D.NO_PERSON
+		 WHERE A.STATUS = '02'
+		   AND C.NO_PBLS IS NOT NULL
+		   AND A.DT_REQ = TO_CHAR(SYSDATE-1, 'YYYYMMDD')
+		 ORDER BY A.NO_PERSON
+   	</select>
+
+	<select id="listScrIncome" parameterType="com.koscom.batch.kcb.domain.KcbVO" resultType="com.koscom.batch.kcb.domain.KcbInfoVO">
+		SELECT A.NO_PERSON                /* 회원관리번호    */
+		      ,A.INCOME_DIVISION          /* 소득구분        */
+		      ,A.REVERSION_YEAR           /* 귀속연도        */
+		      ,A.AMT_INCOME               /* 소득금액        */
+		      ,A.AMT_TOTAL_DECISION_TAX   /* 총결정세금금액  */
+		      ,A.CORP_NM                  /* 사업자등록번호  */
+		      ,A.BIZ_LICENCE              /* 법인명          */
+		  FROM SCR_RESP_INCOME_DTL A
+		 WHERE A.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		   AND A.REVERSION_YEAR BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, -120), 'YYYY') AND TO_CHAR(SYSDATE, 'YYYY')
+   	</select>
+	
+	<select id="listScrHealthPayment" parameterType="com.koscom.batch.kcb.domain.KcbVO" resultType="com.koscom.batch.kcb.domain.KcbInfoVO">
+		SELECT A.NO_PERSON
+			  ,SUBSTR(A.PAY_YYYYMM, 0, 4) AS PAY_YYYY
+		      ,A.PAY_YYYYMM
+		      ,A.AMT_NT_HEALTH_INSU
+		      ,A.AMT_NT_HEALTH_INSU				/* 건강보험고지보험료       */
+			  ,A.AMT_NT_LNGTRM_CR_INS			/* 건강보험납부보험료       */
+			  ,A.AMT_PAY_HEALTH_INSU			/* 장기요양고지보험료       */
+			  ,A.AMT_PAY_LONGTERM_CARE_INSU		/* 장기요양납부보험료       */
+			  ,A.AMT_ICNT_HEALTH_INSU			/* 소득건강보험고지보험료   */
+			  ,A.AMT_ICNT_LNGTRM_CR_INS			/* 소득건강보험납부보험료   */
+			  ,A.AMT_ICPAY_HEALTH_INSU			/* 소득장기요양고지보험료   */
+			  ,A.AMT_ICPAY_LONGTERM_CARE_INSU	/* 소득장기요양납부보험료   */
+		  FROM SCR_RESP_HEALTH_PAYMENTDTL A
+		 WHERE A.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		   AND A.NO_PAYER = #{no_payer, jdbcType=VARCHAR}
+		   AND A.AMT_NT_LNGTRM_CR_INS > 0
+		   AND A.PAY_YYYYMM BETWEEN TO_CHAR(ADD_MONTHS(SYSDATE, -12), 'YYYYMM') AND TO_CHAR(SYSDATE, 'YYYYMM')
+   	</select>
+
+	<select id="listScrPensionPayment" parameterType="com.koscom.batch.kcb.domain.KcbVO" resultType="com.koscom.batch.kcb.domain.KcbInfoVO">
+		SELECT A.NO_PERSON
+			  ,A.START_YYYYMM			/* 시작년월 */
+			  ,A.END_YYYYMM				/* 종료년월 */
+			  ,A.AMT_BASE_INCOME_MONTH	/* 기준소득월액 */
+			  ,A.CNT_MONTH_PAY			/* 납부한보험료월수 */
+			  ,A.AMT_PAY				/* 납부한보험료금액 */
+			  ,A.CNT_MONTH_NOT_PAY		/* 납부하지않은월수 */
+			  ,A.AMT_NOT_PAY			/* 납부하지않은금액 */
+			  ,CASE WHEN A.TYPE = '임의' THEN '1'
+			        WHEN A.TYPE = '지역' THEN '2'
+			        WHEN A.TYPE = '사업장' THEN '3'
+			        WHEN A.TYPE = '임의계속' THEN '4'
+			   ELSE NULL END TYPE 		/* 종별 */
+			  ,A.ETC					/* 비고 */
+		  FROM SCR_RESP_PENSION_PAYMENTDTL A
+		 WHERE A.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		   AND A.AMT_PAY > 0
+   	</select>
+
+	<update id="updateReqKcbNonFi" parameterType="com.koscom.batch.kcb.domain.KcbVO">
+		UPDATE KCB_REQ_NONFI_INFO
+		   SET STATUS = #{status}
+		   	  <if test="status == '03'">
+		      ,DT_SEND = TO_CHAR(SYSDATE, 'YYYYMMDD')
+		      </if>
+		      ,CD_ERR = #{cd_err, jdbcType=VARCHAR}
+		      ,BIT_ERR = #{bit_err, jdbcType=VARCHAR}
+		      ,ID_LST = #{no_person, jdbcType=VARCHAR}
+		      ,DT_LST = TO_CHAR(SYSDATE, 'YYYYMMDD')
+		 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		   AND CD_REQ = #{cd_req, jdbcType=VARCHAR}
+		   AND DT_REQ = TO_CHAR(SYSDATE-1, 'YYYYMMDD')
+	</update>
+</mapper>
+

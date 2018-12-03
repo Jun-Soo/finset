@@ -1,0 +1,547 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.batch.fss.mapper.FssMapper">
+
+    <!-- company -->
+	<insert id="createFssCompanyResultInfo" parameterType="com.koscom.batch.fss.domain.FssCompanyResultVO">
+		INSERT INTO
+		FSS_COMPANY_RESULT(
+			 ERR_CD
+			,ERR_MSG
+			,TOTAL_COUNT
+			,MAX_PAGE_NO
+			,NOW_PAGE_NO
+			,ID_FRT
+			,DT_FRT
+			,ID_LST
+			,DT_LST)
+		VALUES (
+			 #{err_cd, jdbcType=VARCHAR} 
+			,#{err_msg, jdbcType=VARCHAR}
+			,#{total_count, jdbcType=VARCHAR}
+			,#{max_page_no, jdbcType=VARCHAR}
+			,#{now_page_no, jdbcType=VARCHAR} 
+			,#{id_frt, jdbcType=VARCHAR}
+			,SYSDATE
+			,#{id_frt, jdbcType=VARCHAR} 
+			,SYSDATE
+		)
+	</insert>
+	<update id="mergeFssCompanyProductInfo" parameterType="com.koscom.batch.fss.domain.FssCompanyProductVO">
+		MERGE INTO FSS_COMPANY_PRODUCT
+		USING DUAL
+        ON (
+        	FIN_CO_NO = #{fin_co_no, jdbcType=VARCHAR}
+        	AND DCLS_MONTH = #{dcls_month, jdbcType=VARCHAR}
+        	)
+		WHEN MATCHED THEN
+		UPDATE SET
+			KOR_CO_NM = #{kor_co_nm, jdbcType=VARCHAR},
+			DCLS_CHRG_MAN = #{dcls_chrg_man, jdbcType=VARCHAR},
+			HOMP_URL =  #{homp_url, jdbcType=VARCHAR},
+			CAL_TEL = #{cal_tel, jdbcType=VARCHAR},
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHEN NOT MATCHED THEN
+		INSERT
+			(
+				FIN_CO_NO,
+				DCLS_MONTH,
+				KOR_CO_NM,
+				DCLS_CHRG_MAN,
+				HOMP_URL,
+				CAL_TEL,
+				ID_FRT,
+				DT_FRT,
+				ID_LST,
+				DT_LST
+			)
+		VALUES(
+			#{fin_co_no, jdbcType=VARCHAR},
+			#{dcls_month, jdbcType=VARCHAR},
+			#{kor_co_nm, jdbcType=VARCHAR},
+			#{dcls_chrg_man, jdbcType=VARCHAR},
+			#{homp_url, jdbcType=VARCHAR},
+			#{cal_tel, jdbcType=VARCHAR},
+			#{id_frt, jdbcType=VARCHAR},
+			SYSDATE,
+			#{id_lst, jdbcType=VARCHAR},
+			SYSDATE
+		)
+	</update>
+	<update id="mergeFssCompanyOptionInfo" parameterType="com.koscom.batch.fss.domain.FssCompanyOptionVO">
+	    MERGE INTO FSS_COMPANY_OPTION
+		USING DUAL
+        ON (
+        	FIN_CO_NO = #{fin_co_no, jdbcType=VARCHAR}
+        	AND DCLS_MONTH = #{dcls_month, jdbcType=VARCHAR}
+        	)
+		WHEN MATCHED THEN
+		UPDATE SET
+			AREA_CD = #{area_cd, jdbcType=VARCHAR},
+			AREA_NM = #{area_nm, jdbcType=VARCHAR},
+			EXIS_YN = #{exis_yn, jdbcType=VARCHAR},
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHEN NOT MATCHED THEN
+		INSERT
+			(
+				FIN_CO_NO,
+				DCLS_MONTH,
+				AREA_CD,
+				AREA_NM,
+				EXIS_YN,
+				ID_FRT,
+				DT_FRT,
+				ID_LST,
+				DT_LST
+			)
+		VALUES(
+			#{fin_co_no, jdbcType=VARCHAR},
+			#{dcls_month, jdbcType=VARCHAR},
+			#{area_cd, jdbcType=VARCHAR},
+			#{area_nm, jdbcType=VARCHAR},
+			#{exis_yn, jdbcType=VARCHAR},
+			#{id_frt, jdbcType=VARCHAR},
+			SYSDATE,
+			#{id_lst, jdbcType=VARCHAR},
+			SYSDATE
+		)
+	</update>
+
+	<!-- mortgageLoan -->
+	<insert id="createFssMortgageLoanResultInfo" parameterType="com.koscom.batch.fss.domain.FssMortgageLoanResultVO">
+		INSERT INTO FSS_MORTGAGELOAN_RESULT
+			(ERR_CD
+			,ERR_MSG
+			,TOTAL_COUNT
+			,MAX_PAGE_NO
+			,NOW_PAGE_NO
+			,ID_FRT
+			,DT_FRT
+			,ID_LST
+			,DT_LST)
+		VALUES (
+			 #{err_cd, jdbcType=VARCHAR}
+			,#{err_msg, jdbcType=VARCHAR}
+			,#{total_count, jdbcType=VARCHAR}
+			,#{max_page_no, jdbcType=VARCHAR}
+			,#{now_page_no, jdbcType=VARCHAR}
+			,#{id_frt, jdbcType=VARCHAR}
+			,SYSDATE
+			,#{id_frt, jdbcType=VARCHAR}
+			,SYSDATE)
+	</insert>
+	<update id="mergeFssMortgageLoanProductInfo" parameterType="com.koscom.batch.fss.domain.FssMortgageLoanProductVO">
+		MERGE INTO FSS_MORTGAGELOAN_PRODUCT
+		USING DUAL
+        ON (
+        	FIN_CO_NO = #{fin_co_no, jdbcType=VARCHAR}
+        	AND FIN_PRDT_CD = #{fin_prdt_cd, jdbcType=VARCHAR}
+        	AND DCLS_MONTH = #{dcls_month, jdbcType=VARCHAR}
+        	)
+		WHEN MATCHED THEN
+		UPDATE SET
+			KOR_CO_NM = #{kor_co_nm, jdbcType=VARCHAR},
+			FIN_PRDT_NM = #{fin_prdt_nm, jdbcType=VARCHAR},
+			JOIN_WAY = #{join_way, jdbcType=VARCHAR},
+			LOAN_INCI_EXPN = #{loan_inci_expn, jdbcType=VARCHAR},
+			ERLY_RPAY_FEE = #{erly_rpay_fee, jdbcType=VARCHAR},
+			DLY_RATE = #{dly_rate, jdbcType=VARCHAR},
+			LOAN_LMT = #{loan_lmt, jdbcType=VARCHAR},
+			DCLS_STRT_DAY = #{dcls_strt_day, jdbcType=VARCHAR},
+			DCLS_END_DAY = #{dcls_end_day, jdbcType=VARCHAR},
+			FIN_CO_SUBM_DAY = #{fin_co_subm_day, jdbcType=VARCHAR},
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHEN NOT MATCHED THEN
+		INSERT
+			(
+				FIN_CO_NO,
+				FIN_PRDT_CD,
+				DCLS_MONTH,
+				KOR_CO_NM,
+				FIN_PRDT_NM,
+				JOIN_WAY,
+				LOAN_INCI_EXPN,
+				ERLY_RPAY_FEE,
+				DLY_RATE,
+				LOAN_LMT,
+				DCLS_STRT_DAY,
+				DCLS_END_DAY,
+				FIN_CO_SUBM_DAY,
+				ID_FRT,
+				DT_FRT,
+				ID_LST,
+				DT_LST
+			)
+		VALUES(
+			#{fin_co_no, jdbcType=VARCHAR},
+			#{fin_prdt_cd, jdbcType=VARCHAR},
+			#{dcls_month, jdbcType=VARCHAR},
+			#{kor_co_nm, jdbcType=VARCHAR},
+			#{fin_prdt_nm, jdbcType=VARCHAR},
+			#{join_way, jdbcType=VARCHAR},
+			#{loan_inci_expn, jdbcType=VARCHAR},
+			#{erly_rpay_fee, jdbcType=VARCHAR},
+			#{dly_rate, jdbcType=VARCHAR},
+			#{loan_lmt, jdbcType=VARCHAR},
+			#{dcls_strt_day, jdbcType=VARCHAR},
+			#{dcls_end_day, jdbcType=VARCHAR},
+			#{fin_co_subm_day, jdbcType=VARCHAR},
+			#{id_frt, jdbcType=VARCHAR},
+			SYSDATE,
+			#{id_lst, jdbcType=VARCHAR},
+			SYSDATE
+		)
+	</update>
+	<update id="mergeFssMortgageLoanOptionInfo" parameterType="com.koscom.batch.fss.domain.FssMortgageLoanOptionVO">
+		MERGE INTO FSS_MORTGAGELOAN_OPTION
+		USING DUAL
+        ON (
+        	FIN_CO_NO = #{fin_co_no, jdbcType=VARCHAR}
+        	AND FIN_PRDT_CD = #{fin_prdt_cd, jdbcType=VARCHAR}
+        	AND DCLS_MONTH = #{dcls_month, jdbcType=VARCHAR}
+        	AND MRTG_TYPE = #{mrtg_type, jdbcType=VARCHAR}
+			AND RPAY_TYPE = #{rpay_type, jdbcType=VARCHAR}
+			AND LEND_RATE_TYPE = #{lend_rate_type, jdbcType=VARCHAR}
+        	)
+		WHEN MATCHED THEN
+		UPDATE SET
+			MRTG_TYPE_NM = #{mrtg_type_nm, jdbcType=VARCHAR},
+			RPAY_TYPE_NM = #{rpay_type_nm, jdbcType=VARCHAR},
+			LEND_RATE_TYPE_NM = #{lend_rate_type_nm, jdbcType=VARCHAR},
+			LEND_RATE_MIN = #{lend_rate_min, jdbcType=VARCHAR},
+			LEND_RATE_MAX = #{lend_rate_max, jdbcType=VARCHAR},
+			LEND_RATE_AVG = #{lend_rate_avg, jdbcType=VARCHAR},
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHEN NOT MATCHED THEN
+		INSERT
+			(
+				FIN_CO_NO,
+        		FIN_PRDT_CD,
+        		DCLS_MONTH,
+        		MRTG_TYPE,
+				RPAY_TYPE,
+				LEND_RATE_TYPE,
+				MRTG_TYPE_NM,
+				RPAY_TYPE_NM,
+				LEND_RATE_TYPE_NM,
+				LEND_RATE_MIN,
+				LEND_RATE_MAX,
+				LEND_RATE_AVG,
+				ID_FRT,
+				DT_FRT,
+				ID_LST,
+				DT_LST
+			)
+		VALUES(
+			#{fin_co_no, jdbcType=VARCHAR},
+			#{fin_prdt_cd, jdbcType=VARCHAR},
+			#{dcls_month, jdbcType=VARCHAR},
+			#{mrtg_type, jdbcType=VARCHAR},
+			#{rpay_type, jdbcType=VARCHAR},
+			#{lend_rate_type, jdbcType=VARCHAR},
+			#{mrtg_type_nm, jdbcType=VARCHAR},
+			#{rpay_type_nm, jdbcType=VARCHAR},
+			#{lend_rate_type_nm, jdbcType=VARCHAR},
+			#{lend_rate_min, jdbcType=VARCHAR},
+			#{lend_rate_max, jdbcType=VARCHAR},
+			#{lend_rate_avg, jdbcType=VARCHAR},
+			#{id_frt, jdbcType=VARCHAR},
+			SYSDATE,
+			#{id_lst, jdbcType=VARCHAR},
+			SYSDATE
+		)
+	</update>
+
+	<!-- rentHouseLoan -->
+	<insert id="createFssRentHouseLoanResultInfo" parameterType="com.koscom.batch.fss.domain.FssRentHouseLoanResultVO">
+		INSERT INTO
+		FSS_RENTHOUSELOAN_RESULT(
+			ERR_CD
+			,ERR_MSG
+			,TOTAL_COUNT
+			,MAX_PAGE_NO
+			,NOW_PAGE_NO
+			,ID_FRT
+			,DT_FRT
+			,ID_LST
+			,DT_LST)
+		VALUES (
+			#{err_cd, jdbcType=VARCHAR}
+			,#{err_msg, jdbcType=VARCHAR}
+			,#{total_count, jdbcType=VARCHAR}
+			,#{max_page_no, jdbcType=VARCHAR}
+			,#{now_page_no, jdbcType=VARCHAR}
+			,#{id_frt, jdbcType=VARCHAR}
+			,SYSDATE
+			,#{id_frt, jdbcType=VARCHAR}
+			,SYSDATE
+		)
+	</insert>
+	<update id="mergeFssRentHouseLoanProductInfo" parameterType="com.koscom.batch.fss.domain.FssRentHouseLoanProductVO">
+		MERGE INTO FSS_RENTHOUSELOAN_PRODUCT
+		USING DUAL
+        ON (
+        	FIN_CO_NO = #{fin_co_no, jdbcType=VARCHAR}
+        	AND FIN_PRDT_CD = #{fin_prdt_cd, jdbcType=VARCHAR}
+        	AND DCLS_MONTH = #{dcls_month, jdbcType=VARCHAR}
+        	)
+		WHEN MATCHED THEN
+		UPDATE SET
+			KOR_CO_NM = #{kor_co_nm, jdbcType=VARCHAR},
+			FIN_PRDT_NM = #{fin_prdt_nm, jdbcType=VARCHAR},
+			JOIN_WAY = #{join_way, jdbcType=VARCHAR},
+			LOAN_INCI_EXPN = #{loan_inci_expn, jdbcType=VARCHAR},
+			ERLY_RPAY_FEE = #{erly_rpay_fee, jdbcType=VARCHAR},
+			DLY_RATE = #{dly_rate, jdbcType=VARCHAR},
+			LOAN_LMT = #{loan_lmt, jdbcType=VARCHAR},
+			DCLS_STRT_DAY = #{dcls_strt_day, jdbcType=VARCHAR},
+			DCLS_END_DAY = #{dcls_end_day, jdbcType=VARCHAR},
+			FIN_CO_SUBM_DAY = #{fin_co_subm_day, jdbcType=VARCHAR},
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHEN NOT MATCHED THEN
+		INSERT
+			(
+				FIN_CO_NO,
+				FIN_PRDT_CD,
+				DCLS_MONTH,
+				KOR_CO_NM,
+				FIN_PRDT_NM,
+				JOIN_WAY,
+				LOAN_INCI_EXPN,
+				ERLY_RPAY_FEE,
+				DLY_RATE,
+				LOAN_LMT,
+				DCLS_STRT_DAY,
+				DCLS_END_DAY,
+				FIN_CO_SUBM_DAY,
+				ID_FRT,
+				DT_FRT,
+				ID_LST,
+				DT_LST
+			)
+		VALUES(
+			#{fin_co_no, jdbcType=VARCHAR},
+			#{fin_prdt_cd, jdbcType=VARCHAR},
+			#{dcls_month, jdbcType=VARCHAR},
+			#{kor_co_nm, jdbcType=VARCHAR},
+			#{fin_prdt_nm, jdbcType=VARCHAR},
+			#{join_way, jdbcType=VARCHAR},
+			#{loan_inci_expn, jdbcType=VARCHAR},
+			#{erly_rpay_fee, jdbcType=VARCHAR},
+			#{dly_rate, jdbcType=VARCHAR},
+			#{loan_lmt, jdbcType=VARCHAR},
+			#{dcls_strt_day, jdbcType=VARCHAR},
+			#{dcls_end_day, jdbcType=VARCHAR},
+			#{fin_co_subm_day, jdbcType=VARCHAR},
+			#{id_frt, jdbcType=VARCHAR},
+			SYSDATE,
+			#{id_lst, jdbcType=VARCHAR},
+			SYSDATE
+		)
+	</update>
+	<update id="mergeFssRentHouseLoanOptionInfo" parameterType="com.koscom.batch.fss.domain.FssRentHouseLoanOptionVO">
+		MERGE INTO FSS_RENTHOUSELOAN_OPTION
+		USING DUAL
+        ON (
+        	FIN_CO_NO = #{fin_co_no, jdbcType=VARCHAR}
+        	AND FIN_PRDT_CD = #{fin_prdt_cd, jdbcType=VARCHAR}
+        	AND DCLS_MONTH = #{dcls_month, jdbcType=VARCHAR}
+        	AND RPAY_TYPE = #{rpay_type, jdbcType=VARCHAR}
+			AND LEND_RATE_TYPE = #{lend_rate_type, jdbcType=VARCHAR}
+        	)
+		WHEN MATCHED THEN
+		UPDATE SET
+			RPAY_TYPE_NM = #{rpay_type_nm, jdbcType=VARCHAR},
+			LEND_RATE_TYPE_NM = #{lend_rate_type_nm, jdbcType=VARCHAR},
+			LEND_RATE_MIN = #{lend_rate_min, jdbcType=VARCHAR},
+			LEND_RATE_MAX = #{lend_rate_max, jdbcType=VARCHAR},
+			LEND_RATE_AVG = #{lend_rate_avg, jdbcType=VARCHAR},
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHEN NOT MATCHED THEN
+		INSERT
+			(
+				FIN_CO_NO,
+				FIN_PRDT_CD,
+				DCLS_MONTH,
+				RPAY_TYPE,
+				LEND_RATE_TYPE,
+				RPAY_TYPE_NM,
+				LEND_RATE_TYPE_NM,
+				LEND_RATE_MIN,
+				LEND_RATE_MAX,
+				LEND_RATE_AVG,
+				ID_FRT,
+				DT_FRT,
+				ID_LST,
+				DT_LST
+			)
+		VALUES(
+			#{fin_co_no, jdbcType=VARCHAR},
+			#{fin_prdt_cd, jdbcType=VARCHAR},
+			#{dcls_month, jdbcType=VARCHAR},
+			#{rpay_type, jdbcType=VARCHAR},
+			#{lend_rate_type, jdbcType=VARCHAR},
+			#{rpay_type_nm, jdbcType=VARCHAR},
+			#{lend_rate_type_nm, jdbcType=VARCHAR},
+			#{lend_rate_min, jdbcType=VARCHAR},
+			#{lend_rate_max, jdbcType=VARCHAR},
+			#{lend_rate_avg, jdbcType=VARCHAR},
+			#{id_frt, jdbcType=VARCHAR},
+			SYSDATE,
+			#{id_lst, jdbcType=VARCHAR},
+			SYSDATE
+		)
+	</update>
+
+	<!-- creditLoan -->
+	<insert id="createFssCreditLoanResultInfo" parameterType="com.koscom.batch.fss.domain.FssCreditLoanResultVO">
+		INSERT INTO
+		FSS_CREDITLOAN_RESULT(
+			 ERR_CD
+			,ERR_MSG
+			,TOTAL_COUNT
+			,MAX_PAGE_NO
+			,NOW_PAGE_NO
+			,ID_FRT
+			,DT_FRT
+			,ID_LST
+			,DT_LST)
+		VALUES (
+			#{err_cd, jdbcType=VARCHAR}
+			,#{err_msg, jdbcType=VARCHAR}
+			,#{total_count, jdbcType=VARCHAR}
+			,#{max_page_no, jdbcType=VARCHAR}
+			,#{now_page_no, jdbcType=VARCHAR}
+			,#{id_frt, jdbcType=VARCHAR}
+			,SYSDATE
+			,#{id_lst, jdbcType=VARCHAR}
+			, SYSDATE
+		)
+	</insert>
+	<update id="mergeFssCreditLoanProductInfo" parameterType="com.koscom.batch.fss.domain.FssCreditLoanProductVO">
+		MERGE INTO FSS_CREDITLOAN_PRODUCT
+		USING DUAL
+        ON (
+        	FIN_CO_NO = #{fin_co_no, jdbcType=VARCHAR}
+        	AND FIN_PRDT_CD = #{fin_prdt_cd, jdbcType=VARCHAR}
+        	AND DCLS_MONTH = #{dcls_month, jdbcType=VARCHAR}
+        	)
+		WHEN MATCHED THEN
+		UPDATE SET
+			KOR_CO_NM = #{kor_co_nm, jdbcType=VARCHAR},
+			FIN_PRDT_NM = #{fin_prdt_nm, jdbcType=VARCHAR},
+			CRDT_PRDT_TYPE = #{crdt_prdt_type, jdbcType=VARCHAR},
+			CRDT_PRDT_TYPE_NM = #{crdt_prdt_type_nm, jdbcType=VARCHAR},
+			JOIN_WAY = #{join_way, jdbcType=VARCHAR},
+			CD_NAME = #{cd_name, jdbcType=VARCHAR},
+			DCLS_STRT_DAY = #{dcls_strt_day, jdbcType=VARCHAR},
+			DCLS_END_DAY = #{dcls_end_day, jdbcType=VARCHAR},
+			FIN_CO_SUBM_DAY = #{fin_co_subm_day, jdbcType=VARCHAR},
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHEN NOT MATCHED THEN
+		INSERT
+			(
+				FIN_CO_NO,
+				FIN_PRDT_CD,
+				DCLS_MONTH,
+				KOR_CO_NM,
+				FIN_PRDT_NM,
+				CRDT_PRDT_TYPE,
+				CRDT_PRDT_TYPE_NM,
+				JOIN_WAY,
+				CD_NAME,
+				DCLS_STRT_DAY,
+				DCLS_END_DAY,
+				FIN_CO_SUBM_DAY,
+				ID_FRT,
+				DT_FRT,
+				ID_LST,
+				DT_LST
+			)
+		VALUES(
+			#{fin_co_no, jdbcType=VARCHAR},
+			#{fin_prdt_cd, jdbcType=VARCHAR},
+			#{dcls_month, jdbcType=VARCHAR},
+			#{kor_co_nm, jdbcType=VARCHAR},
+			#{fin_prdt_nm, jdbcType=VARCHAR},
+			#{crdt_prdt_type, jdbcType=VARCHAR},
+			#{crdt_prdt_type_nm, jdbcType=VARCHAR},
+			#{join_way, jdbcType=VARCHAR},
+			#{cd_name, jdbcType=VARCHAR},
+			#{dcls_strt_day, jdbcType=VARCHAR},
+			#{dcls_end_day, jdbcType=VARCHAR},
+			#{fin_co_subm_day, jdbcType=VARCHAR},
+			#{id_frt, jdbcType=VARCHAR},
+			SYSDATE,
+			#{id_lst, jdbcType=VARCHAR},
+			SYSDATE
+		)
+	</update>
+	<update id="mergeFssCreditLoanOptionInfo" parameterType="com.koscom.batch.fss.domain.FssCreditLoanOptionVO">
+		MERGE INTO FSS_CREDITLOAN_OPTION
+		USING DUAL
+        ON (
+        	FIN_CO_NO = #{fin_co_no, jdbcType=VARCHAR}
+        	AND FIN_PRDT_CD = #{fin_prdt_cd, jdbcType=VARCHAR}
+        	AND DCLS_MONTH = #{dcls_month, jdbcType=VARCHAR}
+        	AND CRDT_LEND_RATE_TYPE = #{crdt_lend_rate_type, jdbcType=VARCHAR}
+        	)
+		WHEN MATCHED THEN
+		UPDATE SET
+			CRDT_LEND_RATE_TYPE_NM = #{crdt_lend_rate_type_nm, jdbcType=VARCHAR},
+			CRDT_GRAD_1 = #{crdt_grad_1, jdbcType=VARCHAR},
+			CRDT_GRAD_4 = #{crdt_grad_4, jdbcType=VARCHAR},
+			CRDT_GRAD_5 = #{crdt_grad_5, jdbcType=VARCHAR},
+			CRDT_GRAD_6 = #{crdt_grad_6, jdbcType=VARCHAR},
+			CRDT_GRAD_10 = #{crdt_grad_10, jdbcType=VARCHAR},
+			CRDT_GRAD_AVG = #{crdt_grad_avg, jdbcType=VARCHAR},
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHEN NOT MATCHED THEN
+		INSERT
+			(
+				FIN_CO_NO,
+				FIN_PRDT_CD,
+				DCLS_MONTH,
+				CRDT_LEND_RATE_TYPE,
+				CRDT_LEND_RATE_TYPE_NM,
+				CRDT_GRAD_1,
+				CRDT_GRAD_4,
+				CRDT_GRAD_5,
+				CRDT_GRAD_6,
+				CRDT_GRAD_10,
+				CRDT_GRAD_AVG,
+				ID_FRT,
+				DT_FRT,
+				ID_LST,
+				DT_LST
+			)
+		VALUES(
+			#{fin_co_no, jdbcType=VARCHAR},
+			#{fin_prdt_cd, jdbcType=VARCHAR},
+			#{dcls_month, jdbcType=VARCHAR},
+			#{crdt_lend_rate_type, jdbcType=VARCHAR},
+			#{crdt_lend_rate_type_nm, jdbcType=VARCHAR},
+			#{crdt_grad_1, jdbcType=VARCHAR},
+			#{crdt_grad_4, jdbcType=VARCHAR},
+			#{crdt_grad_5, jdbcType=VARCHAR},
+			#{crdt_grad_6, jdbcType=VARCHAR},
+			#{crdt_grad_10, jdbcType=VARCHAR},
+			#{crdt_grad_avg, jdbcType=VARCHAR},
+			#{id_frt, jdbcType=VARCHAR},
+			SYSDATE,
+			#{id_lst, jdbcType=VARCHAR},
+			SYSDATE
+		)
+	</update>
+
+</mapper>

@@ -193,7 +193,141 @@
 	                	  		AND SUBSTR(NO_CARD,-3) 	= SUBSTR(#{no_card		, jdbcType=VARCHAR},-3)
 	                	  )
 	</insert>
+<!-- 	소비지출 데이터 insert -->
+	<insert id="createConsumeInfoTransaction" parameterType="com.koscom.scrapData.model.ConsumeDataVO">
+		<selectKey keyProperty="seq_consume" resultType="java.lang.Integer" order="BEFORE">
+			(SELECT NVL(MAX(SEQ_CONSUME),0)+1 FROM CONSUME_INFO)
+		</selectKey>
+			INSERT INTO CONSUME_INFO(
+				 NO_PERSON
+				,SEQ_CONSUME
+				,TYPE_IN_OUT
+				,MEANS_CONSUME
+				,CD_FC
+				,NM_CARD
+				,NO_CARD
+				,TYPE_CARD
+				,DT_TRD
+				,TM_TRD
+				,NO_BIZ
+				,NM_BIZ
+				,CD_CLASS
+				,CD_TYPE
+				,CONTENTS
+				,MEMO
+				,GRADE
+				,AMT_IN_OUT
+				,NO_APPROVAL
+				,MON_INSTALLMENT
+				,MON_REMAINING
+				,YN_PAY_INSTALLMENT
+				,YN_CANCEL
+				,YN_DELETE
+				,YN_AUTO
+				,YN_BUDGET_EXCEPT
+				,YN_PERSON_REGIST
+				,ID_FRT
+				,DT_FRT
+				,ID_LST
+				,DT_LST
+				)
+			VALUES(
+				 #{no_person			, jdbcType = VARCHAR}
+				,#{seq_consume			, jdbcType = VARCHAR}
+				,#{type_in_out			, jdbcType = VARCHAR}
+				,#{means_consume		, jdbcType = VARCHAR}
+				,#{cd_fc				, jdbcType = VARCHAR}
+				,#{nm_card				, jdbcType = VARCHAR}
+				,#{no_card				, jdbcType = VARCHAR}
+				,#{type_card			, jdbcType = VARCHAR}
+				,#{dt_trd				, jdbcType = VARCHAR}
+				,#{tm_trd				, jdbcType = VARCHAR}
+				,#{no_biz				, jdbcType = VARCHAR}
+				,#{nm_biz				, jdbcType = VARCHAR}
+				,#{cd_class				, jdbcType = VARCHAR}
+				,#{cd_type				, jdbcType = VARCHAR}
+				,#{contents				, jdbcType = VARCHAR}
+				,#{memo					, jdbcType = VARCHAR}
+				,#{grade				, jdbcType = VARCHAR}
+				,#{amt_in_out			, jdbcType = VARCHAR}
+				,#{no_approval			, jdbcType = VARCHAR}
+				,#{mon_installment		, jdbcType = VARCHAR}
+				,#{mon_remaining		, jdbcType = VARCHAR}
+				,#{yn_pay_installment	, jdbcType = VARCHAR}
+				,#{yn_cancel			, jdbcType = VARCHAR}
+				,#{yn_delete			, jdbcType = VARCHAR}
+				,#{yn_auto				, jdbcType = VARCHAR}
+				,#{yn_budget_except		, jdbcType = VARCHAR}
+				,#{yn_person_regist		, jdbcType = VARCHAR}
+				,#{id_frt				, jdbcType = VARCHAR}
+				,SYSDATE
+				,#{id_lst				, jdbcType = VARCHAR}
+				,SYSDATE
+			)
+	</insert>
 	<select id="getNtsCode" resultType="java.lang.String">
 		SELECT CD_FC FROM FC_INFO WHERE NM_FC LIKE '%국세청%'
+	</select>
+	<select id="listScrTransactionDetail" parameterType="com.koscom.scrapData.model.ConsumeDataForm" resultType="hashmap">
+		SELECT
+			 STI.NO_PERSON
+			,STI.AN
+			,STI.DT_TRD
+			,STI.TM_TRD
+			,STI.CD_CRNCY
+			,STI.AMT_WDRL
+			,STI.AMT_DEP
+			,STI.BALANCE
+			,STI.DOC1
+			,STI.DOC2
+			,STI.DEALWAY1
+			,STI.DEALWAY2
+			,STI.DT_FRT
+			,CI.CD_CLASS
+			,CI.CD_TYPE
+			,BAAI.CD_FC
+			,BAAI.NM_AN
+		FROM
+			 SCR_TRANSACTION_DETAIL STI
+			,(
+				SELECT
+					 NO_PERSON
+					,NO_CARD
+					,CONTENTS
+					,MAX( DT_FRT ) AS DT_FRT
+					,CD_CLASS
+					,CD_TYPE
+				FROM
+					CONSUME_INFO
+				WHERE
+						NO_PERSON	= #{no_person, jdbcType = VARCHAR}
+					AND YN_AUTO		= 'Y'
+				GROUP BY
+					 NO_PERSON
+					,NO_CARD
+					,CONTENTS
+					,CD_CLASS
+					,CD_TYPE
+			) CI
+			,(
+				SELECT
+					 CD_FC
+					,AN
+					,NM_AN
+				FROM SCR_BANK_API_AN_INFO
+				WHERE
+					NO_PERSON = #{no_person, jdbcType = VARCHAR}
+			) BAAI
+		WHERE
+				STI.NO_PERSON					=	 #{no_person, jdbcType = VARCHAR}
+			AND STI.AN							=	 CI.NO_CARD
+			AND	STI.AN							=	 BAAI.AN
+			AND
+				(
+				   STI.DOC1						=	 CI.CONTENTS
+				OR STI.DOC2						=	 CI.CONTENTS
+				)
+			AND TO_NUMBER( STI.DT_TRD )<![CDATA[>=]]>TO_NUMBER( TO_CHAR( CI.DT_FRT, 'YYYYMMDD' ))
+			AND TO_NUMBER( STI.TM_TRD )<![CDATA[>]]> TO_NUMBER( TO_CHAR( CI.DT_FRT, 'HH24MISS' ))
 	</select>
 </mapper>

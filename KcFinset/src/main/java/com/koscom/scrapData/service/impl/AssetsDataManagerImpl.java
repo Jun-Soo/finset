@@ -1,5 +1,6 @@
 package com.koscom.scrapData.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -23,10 +24,12 @@ public class AssetsDataManagerImpl implements AssetsDataManager {
 	public void mergeAssetsInfoScrData(AssetsDataForm assetsDataForm) throws Exception {
 
 		//금융사계좌정보T 스크래핑 데이터 조회
-		List<AssetsInfoDataVO> scrBankApiAnInfoList = assetsDataMapper.listScrBankApiAnInfo(assetsDataForm);
+		List<AssetsInfoDataVO> scrBankApiAnInfoList = assetsDataMapper.listScrBankApiAnInfo(assetsDataForm); //은행
+		List<AssetsInfoDataVO> stockApiInfoList = assetsDataMapper.listStockApiInfo(assetsDataForm); //증권
 
 		//자산관리T insert
 		try{
+			//은행
 			if(scrBankApiAnInfoList != null){
 				for(AssetsInfoDataVO list : scrBankApiAnInfoList){
 
@@ -57,6 +60,31 @@ public class AssetsDataManagerImpl implements AssetsDataManager {
 					assetsInfoDataVO.setDt_expire(list.getDt_end()); //만기일자
 					assetsInfoDataVO.setAmt_balance(list.getCurrent_balance()); //잔액(금융사계좌정보 - 현재잔액)
 					assetsInfoDataVO.setInterest(list.getInterest_rate()); //금리
+					assetsInfoDataVO.setYn_delete(list.getYn_delete()); //삭제여부
+					assetsInfoDataVO.setYn_person_regist("N"); //사용자등록여부
+					assetsInfoDataVO.setId_frt(assetsDataForm.getNo_person()); //최초입력아이디
+					assetsInfoDataVO.setId_lst(assetsDataForm.getNo_person()); //최종수정아이디
+
+					assetsDataMapper.mergeAssetsInfo(assetsInfoDataVO);
+				}
+			}
+
+			//증권
+			if(stockApiInfoList != null){
+				for(AssetsInfoDataVO list : stockApiInfoList){
+
+					AssetsInfoDataVO assetsInfoDataVO = new AssetsInfoDataVO();
+					assetsInfoDataVO.setNo_person(assetsDataForm.getNo_person()); //회원번호
+
+					//자산분류코드
+					assetsInfoDataVO.setCd_assets_class("10");
+					assetsInfoDataVO.setCd_detail_class(list.getCd_detail_class());
+
+					assetsInfoDataVO.setCd_fc(list.getCd_fc()); //금융사코드
+					assetsInfoDataVO.setNo_account(list.getAccno()); //계좌번호(가상계좌번호)
+					assetsInfoDataVO.setAmt_balance(list.getCashbalance()); //잔액(현금잔고)
+					assetsInfoDataVO.setAmt_evaluation(list.getTotalaccval()); //평가금액(총평가금액)
+					assetsInfoDataVO.setRate_return(list.getRate_return()); //수익률
 					assetsInfoDataVO.setYn_delete(list.getYn_delete()); //삭제여부
 					assetsInfoDataVO.setYn_person_regist("N"); //사용자등록여부
 					assetsInfoDataVO.setId_frt(assetsDataForm.getNo_person()); //최초입력아이디

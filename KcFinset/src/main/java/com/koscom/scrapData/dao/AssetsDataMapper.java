@@ -15,6 +15,13 @@ public interface AssetsDataMapper {
 	List<AssetsInfoDataVO> listScrBankApiAnInfo(AssetsDataForm assetsDataForm);
 
 	/**
+	 * 증권사 API 조회
+	 * @param assetsDataForm
+	 * @return
+	 */
+	List<AssetsInfoDataVO> listStockApiInfo(AssetsDataForm assetsDataForm);
+
+	/**
 	 * 스크래핑 데이터 기반 자산관리 merge
 	 * @param assetsInfoDataVO
 	 * @return int

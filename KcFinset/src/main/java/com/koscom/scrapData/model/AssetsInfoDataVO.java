@@ -9,7 +9,7 @@ public class AssetsInfoDataVO implements Serializable{
 	 */
 	private static final long serialVersionUID = 5166033122507585874L;
 
-	//금융사 계좌정보T
+	//은행(금융사 계좌정보T)
 	private String no_person; //회원관리번호
 	private String an; //계좌번호
 	private String cd_fc; //금융사코드
@@ -29,6 +29,12 @@ public class AssetsInfoDataVO implements Serializable{
 	private String interest_date; //이자납입일
 	private String yn_delete; //삭제여부
 	private String dt_frt; //최초입력시간
+
+	//증권
+	private String accno; //가상계좌번호
+	private String acc_type; //계좌종류
+	private String cashbalance; //현금잔고
+	private String totalaccval; //총평가금액
 
 	//자산관리T
     private String cd_assets_class; //자산분류코드
@@ -196,6 +202,38 @@ public class AssetsInfoDataVO implements Serializable{
 
 	public void setDt_frt(String dt_frt) {
 		this.dt_frt = dt_frt;
+	}
+
+	public String getAccno() {
+		return accno;
+	}
+
+	public void setAccno(String accno) {
+		this.accno = accno;
+	}
+
+	public String getAcc_type() {
+		return acc_type;
+	}
+
+	public void setAcc_type(String acc_type) {
+		this.acc_type = acc_type;
+	}
+
+	public String getCashbalance() {
+		return cashbalance;
+	}
+
+	public void setCashbalance(String cashbalance) {
+		this.cashbalance = cashbalance;
+	}
+
+	public String getTotalaccval() {
+		return totalaccval;
+	}
+
+	public void setTotalaccval(String totalaccval) {
+		this.totalaccval = totalaccval;
 	}
 
 	public String getCd_assets_class() {

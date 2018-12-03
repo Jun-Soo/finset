@@ -10,6 +10,7 @@
 			COUNT( NO_ACCOUNT ) AS CNT_ACCOUNT,
 			COUNT( NO_PERSON ) AS CNT_ITEM,
 			SUM( AMT_BALANCE ) AS SUM_AMT_BALANCE,
+			( SUM(AMT_BALANCE) + SUM(AMT_EVALUATION) ) AS SUM_AMT_STOCK,
 			SUM( AMT_EVALUATION ) AS SUM_AMT_EVALUATION
 		FROM
 			ASSETS_INFO
@@ -294,7 +295,7 @@
 	</select>
 
     <update id="updateAssetsSortInfo" parameterType="com.koscom.assets.model.AssetsInfoVO">
-         /* com.koscom.assets.dao.AssetsMapper.updateAssetsSortInfo - 자산관리(은행메인 - 정렬순서 변경) */
+         /* com.koscom.assets.dao.AssetsMapper.updateAssetsSortInfo - 자산관리(정렬순서 변경) */
 		UPDATE
 			ASSETS_INFO
 		SET
@@ -909,6 +910,218 @@
 			AND DT_TRD = #{dt_trd, jdbcType=VARCHAR}
 			AND TM_TRD = #{tm_trd, jdbcType=VARCHAR}
     </update>
+
+    <select id="listAssetsStockAccount" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+        /* com.koscom.assets.dao.AssetsMapper.listAssetsStockAccount - 자산관리(증권메인 - 계좌내역) */
+       	SELECT
+    		NO_PERSON,
+			NM_PERSON,
+			RK,
+			NO_ACCOUNT,
+			NM_ACCOUNT,
+			CD_FC,
+			NM_FC,
+			AMT_STOCK,
+			PROLOSS,
+			RATE_RETURN,
+			CD_ASSETS_CLASS,
+			CD_DETAIL_CLASS,
+			SORT,
+			RNUM
+    	FROM (
+    		SELECT
+				LST.NO_PERSON,
+				LST.NM_PERSON,
+				LST.RK,
+				LST.NO_ACCOUNT,
+				LST.NM_ACCOUNT,
+				LST.CD_FC,
+				LST.NM_FC,
+				LST.AMT_STOCK,
+				LST.PROLOSS,
+				LST.RATE_RETURN,
+				LST.CD_ASSETS_CLASS,
+				LST.CD_DETAIL_CLASS,
+				LST.SORT,
+				ROWNUM RNUM
+    		FROM (
+				SELECT
+					TB.NO_PERSON,
+					TB.NM_PERSON,
+					TB.RK,
+					TB.NO_ACCOUNT,
+					TB.NM_ACCOUNT,
+					TB.CD_FC,
+					( SELECT NM_FC FROM FC_INFO WHERE CD_FC = TB.CD_FC ) AS NM_FC,
+					TB.AMT_STOCK,
+					TB.PROLOSS,
+					TB.RATE_RETURN,
+					TB.CD_ASSETS_CLASS,
+					TB.CD_DETAIL_CLASS,
+					TB.SORT
+				FROM
+					(
+						SELECT
+							AI.NO_PERSON,
+							( SELECT NM_PERSON FROM PERSON_INFO WHERE NO_PERSON = AI.NO_PERSON ) AS NM_PERSON,
+							0 AS RK,
+							AI.NO_ACCOUNT,
+							AI.NM_ACCOUNT,
+							AI.CD_FC,
+							( NVL( AI.AMT_BALANCE, 0 ) + NVL( AI.AMT_EVALUATION, 0) ) AS AMT_STOCK,
+							(SELECT PROLOSS FROM STOCK_SUMMARY WHERE NO_PERSON = AI.NO_PERSON AND ACCNO = AI.NO_ACCOUNT) AS PROLOSS,
+							AI.RATE_RETURN,
+							AI.CD_ASSETS_CLASS,
+							AI.CD_DETAIL_CLASS,
+							AI.SORT
+						FROM
+							ASSETS_INFO AI
+						WHERE
+							AI.DT_EXPIRE IS NULL
+							AND AI.YN_DELETE = 'N'
+							AND AI.CD_ASSETS_CLASS = '10'
+							AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+						<if test="@com.koscom.util.MybatisUtil@isNotEmpty(person_share_list)">
+						UNION ALL
+						SELECT
+							SI.NO_PERSON,
+							SI.NM_PERSON,
+							SI.RK,
+							AI.NO_ACCOUNT,
+							AI.NM_ACCOUNT,
+							AI.CD_FC,
+							( NVL( AI.AMT_BALANCE, 0 ) + NVL( AI.AMT_EVALUATION, 0) ) AS AMT_STOCK,
+							(SELECT PROLOSS FROM STOCK_SUMMARY WHERE NO_PERSON = AI.NO_PERSON AND ACCNO = AI.NO_ACCOUNT) AS PROLOSS,
+							AI.RATE_RETURN,
+							AI.CD_ASSETS_CLASS,
+							AI.CD_DETAIL_CLASS,
+							AI.SORT
+						FROM
+							(
+							SELECT
+								SEQ_SHARE,
+								NO_PERSON,
+								NM_PERSON,
+								ROWNUM RK
+							FROM (
+								SELECT
+									SEQ_SHARE,
+									OFFER_NO_PERSON AS NO_PERSON,
+									OFFER_NM_PERSON AS NM_PERSON
+								FROM
+									SHARE_INFO
+								WHERE SHARE_STATUS = '02'
+									AND YN_ASSET_INFO = 'Y'
+									AND REQ_NO_PERSON = #{no_person, jdbcType=VARCHAR}
+									AND OFFER_NO_PERSON IN
+										<foreach item="share_person" collection="person_share_list" open="(" separator="," close=")">
+											#{share_person}
+										</foreach>
+								ORDER BY
+									DT_FRT DESC
+								)
+							) SI
+						INNER JOIN SHARE_INFO_DETAIL SID
+						ON (
+								SI.SEQ_SHARE = SID.SEQ_SHARE
+								AND SID.CD_TYPE = '10'
+								AND SID.YN_SHARE= 'Y'
+							)
+						INNER JOIN ASSETS_INFO AI
+						ON (
+							SID.NO_CARD_ACC = AI.NO_ACCOUNT
+							AND AI.DT_EXPIRE IS NULL
+							AND AI.YN_DELETE = 'N'
+							)
+					</if>
+					) TB
+				ORDER BY TB.RK, TB.SORT, TB.AMT_BALANCE
+			) LST
+	    	WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	    )
+	    WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+	</select>
+    <select id="listAssetsStockAccountCount" parameterType="com.koscom.assets.model.AssetsForm" resultType="int">
+        /* com.koscom.assets.dao.AssetsMapper.listAssetsStockAccountCount - 자산관리(증권메인 - 계좌내역Count) */
+       	SELECT
+			COUNT(*) AS recordCount
+		FROM
+			(
+				SELECT
+					AI.NO_PERSON,
+					( SELECT NM_PERSON FROM PERSON_INFO WHERE NO_PERSON = AI.NO_PERSON ) AS NM_PERSON,
+					0 AS RK,
+					AI.NO_ACCOUNT,
+					AI.NM_ACCOUNT,
+					AI.CD_FC,
+					AI.AMT_BALANCE,
+					AI.AMT_EVALUATION,
+					AI.RATE_RETURN,
+					AI.CD_ASSETS_CLASS,
+					AI.CD_DETAIL_CLASS,
+					AI.SORT
+				FROM
+					ASSETS_INFO AI
+				WHERE
+					AI.DT_EXPIRE IS NULL
+					AND AI.YN_DELETE = 'N'
+					AND AI.CD_ASSETS_CLASS = '10'
+					AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+				<if test="@com.koscom.util.MybatisUtil@isNotEmpty(person_share_list)">
+				UNION ALL
+				SELECT
+					SI.NO_PERSON,
+					SI.NM_PERSON,
+					SI.RK,
+					AI.NO_ACCOUNT,
+					AI.NM_ACCOUNT,
+					AI.CD_FC,
+					AI.AMT_BALANCE,
+					AI.AMT_EVALUATION,
+					AI.RATE_RETURN,
+					AI.CD_ASSETS_CLASS,
+					AI.CD_DETAIL_CLASS,
+					AI.SORT
+				FROM
+					(
+						SELECT
+							SEQ_SHARE,
+							NO_PERSON,
+							NM_PERSON,
+							ROWNUM RK
+						FROM (
+								SELECT
+									SEQ_SHARE,
+									OFFER_NO_PERSON AS NO_PERSON,
+									OFFER_NM_PERSON AS NM_PERSON
+								FROM
+									SHARE_INFO
+								WHERE SHARE_STATUS = '02'
+									AND YN_ASSET_INFO = 'Y'
+									AND REQ_NO_PERSON = #{no_person, jdbcType=VARCHAR}
+									AND OFFER_NO_PERSON IN
+										<foreach item="share_person" collection="person_share_list" open="(" separator="," close=")">
+											#{share_person}
+										</foreach>
+								ORDER BY
+									DT_FRT DESC
+								)
+							) SI
+				INNER JOIN SHARE_INFO_DETAIL SID
+				ON (
+						SI.SEQ_SHARE = SID.SEQ_SHARE
+						AND SID.CD_TYPE = '10'
+						AND SID.YN_SHARE= 'Y'
+					)
+				INNER JOIN ASSETS_INFO AI
+				ON (
+					SID.NO_CARD_ACC = AI.NO_ACCOUNT
+					AND AI.DT_EXPIRE IS NULL
+					AND AI.YN_DELETE = 'N'
+					)
+				</if>
+			) TB
+	</select>
 
     <insert id="createAssetsInfo" parameterType="com.koscom.assets.model.AssetsInfoVO">
 		/* com.koscom.assets.dao.AssetsMapper.createAssetsInfo - 자산관리(직접입력) */

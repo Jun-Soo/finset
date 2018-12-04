@@ -36,8 +36,8 @@
 			C.CODE_VALUE AS CD_DETAIL_CLASS,
 			SS.CD_FC,
 			SS.ACCNO,
-			SS.CASHBALANCE,
-			SS.TOTALACCVAL,
+			NVL(SS.CASHBALANCE, 0) AS CASHBALANCE,
+			NVL(SS.TOTALACCVAL, 0) AS TOTALACCVAL,
 			NVL(ROUND((( SS.PROLOSS / SS.VALATTRADE )* 100 ), 2 ), '0' ) AS RATE_RETURN,
 			SL.YN_DELETE
 		FROM
@@ -73,7 +73,6 @@
 		UPDATE SET
 			CD_ASSETS_CLASS = #{cd_assets_class, jdbcType=VARCHAR},
 			CD_DETAIL_CLASS = #{cd_detail_class, jdbcType=VARCHAR},
-			CD_FC = #{cd_fc, jdbcType=VARCHAR},
 			NM_ACCOUNT = #{nm_account, jdbcType=VARCHAR},
 			DT_OPEN = #{dt_open, jdbcType=VARCHAR},
 			DT_EXPIRE = #{dt_expire, jdbcType=VARCHAR},

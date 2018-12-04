@@ -1,37 +1,40 @@
 <template>
   <section v-if="seen">
-      <div class="container">
-          <div class="search">
-              <div class="left checks search-check">
-                <template v-for="scKeywordInfo in scKeywordList">
-                  <input type="checkbox" v-model="scKeyword" :key="scKeywordInfo.index" :id="'news'+scKeywordInfo.code_value" :value="scKeywordInfo.code_value" @change="searchList()">
-                  <label :key="scKeywordInfo.index" :for="'news'+scKeywordInfo.code_value">{{scKeywordInfo.nm_code}}</label>
-                </template>
-              </div>
-              <div class="right">
-                <select v-model="orderby" @change="searchList()">
-                  <option v-for="option in orderByOptions" :key="option.index" :value="option.value">
-                    {{ option.text }}
-                  </option>
-                </select>
-              </div>
-          </div>
-          <div v-if="newsList.length == 0" class="nodata">등록 내역이 없습니다</div>
-          <div v-else class="board-list">
-              <div v-for="newsInfo in newsList" :key="newsInfo.index" class="list">
-                  <div class="left">
-                      <p class="title"><a @click="viewDetail(newsInfo.seq_news)" v-html="newsInfo.title"></a></p>
-                      <div class="sub">
-                          <p>{{newsInfo.news_company}}</p>
-                          <p>{{newsInfo.pub_date}}</p>
-                      </div>
-                  </div>
-                  <div class="right">
-                      <img :src="newsInfo.thumImg" alt=""/>
-                  </div>
-              </div>
-          </div>
+    <div class="container">
+      <div class="search">
+        <div class="left checks search-check">
+          <template v-for="scKeywordInfo in scKeywordList">
+            <input type="checkbox" v-model="scKeyword" :key="scKeywordInfo.index" :id="'news'+scKeywordInfo.code_value" :value="scKeywordInfo.code_value" @change="searchList()">
+            <label :key="scKeywordInfo.index" :for="'news'+scKeywordInfo.code_value">{{scKeywordInfo.nm_code}}</label>
+          </template>
+        </div>
+        <div class="right">
+          <select v-model="orderby" @change="searchList()">
+            <option v-for="option in orderByOptions" :key="option.index" :value="option.value">
+              {{ option.text }}
+            </option>
+          </select>
+          <multiselect v-model="orderbyNm" track-by="text" label="text" placeholder="정렬기준" :options="orderByOptions" :searchable="false" :allow-empty="false" @change="searchList()" @select="onSelect">
+            <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
+          </multiselect>
+        </div>
       </div>
+      <div v-if="newsList.length == 0" class="nodata">등록 내역이 없습니다</div>
+      <div v-else class="board-list">
+        <div v-for="newsInfo in newsList" :key="newsInfo.index" class="list">
+          <div class="left">
+            <p class="title"><a @click="viewDetail(newsInfo.seq_news)" v-html="newsInfo.title"></a></p>
+            <div class="sub">
+              <p>{{newsInfo.news_company}}</p>
+              <p>{{newsInfo.pub_date}}</p>
+            </div>
+          </div>
+          <div class="right">
+            <img :src="newsInfo.thumImg" alt="" />
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 
@@ -66,26 +69,28 @@ export default {
     this.$store.state.title = "뉴스";
     this.listSearchKeyword();
 
-    if(this.$store.state.scListParam.scKeyword.length != 0){
+    if (this.$store.state.scListParam.scKeyword.length != 0) {
       for (var i = 0; i < this.$store.state.scListParam.scKeyword.length; i++) {
         this.scKeyword.push(this.$store.state.scListParam.scKeyword[i]);
       }
-    }else if(this.$route.query.scKeyword != null){
+    } else if (this.$route.query.scKeyword != null) {
       for (var i = 0; i < this.$route.query.scKeyword.length; i++) {
         this.scKeyword.push(this.$route.query.scKeyword[i]);
       }
     }
 
-    if("" != this.$store.state.scListParam.orderby){
-        this.orderby = this.$store.state.scListParam.orderby
-    }else if("" != this.$route.query.orderby && this.$route.query.orderby != null){
-        this.orderby = this.$route.query.orderby
+    if ("" != this.$store.state.scListParam.orderby) {
+      this.orderby = this.$store.state.scListParam.orderby;
+    } else if (
+      "" != this.$route.query.orderby &&
+      this.$route.query.orderby != null
+    ) {
+      this.orderby = this.$route.query.orderby;
     }
 
     //store 검색조건 초기화
     this.$store.state.scListParam.scKeyword = [];
     this.$store.state.scListParam.orderby = "";
-
   },
   beforeMount() {},
   mounted() {
@@ -96,6 +101,11 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    onSelect: function(option) {
+      var _this = this;
+      _this.orderby = option.value;
+      console.log(this.orderby);
+    },
     //검색키워드list 조회
     listSearchKeyword: function() {
       var _this = this;
@@ -105,6 +115,7 @@ export default {
     searchList: function() {
       var _this = this;
       _this.page = 1;
+      _this.newsList = [];
       Common.pagination(_this.listNews);
     },
     listNews: function(callback) {
@@ -135,7 +146,6 @@ export default {
           //pagination
           if (list.length === 0) {
             callback();
-            _this.newsList = [];
             _this.seen = true;
             return;
           }

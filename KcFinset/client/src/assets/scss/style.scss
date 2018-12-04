@@ -997,6 +997,7 @@ aside.search-wrap{
         justify-content: space-between;
         grid-template-columns: 1fr 1fr 1fr;
         grid-gap: 5px;
+		
     }
 }
 
@@ -1335,7 +1336,7 @@ aside.search-wrap{
 .my-graph-wrap{
     text-align: center;
     .title{
-        margin-top: 60px;
+        margin-top: 30px;
         font-size: 19px;
         font-weight: 700;
         color: #222;
@@ -3521,40 +3522,47 @@ button.cal{
     margin-top: 20px;
     border-top: 1px solid $lineColor;
     li{
-        display: flex;
+		align-items: center;
         border-bottom: 1px solid $lineColor;
-        p{
-            width: 30%;
-            font-size: 13px;
-            color: $col2;
-            font-weight: 700;
-            line-height: 49px;
-            &:last-child{
-                text-align: right;
-                width: 70%;
-                line-height: 1;
-                input[type="text"]{
-                    line-height: 49px;
-                    text-align: right;
-                    padding: 0 10px;
-                    font-size: 14px;
-                    width: 80%;
-                    border: none;
-                }
-                .multiselect__single{
-                    font-size: 12px;
-                }
-            }
-            .btn-search{
-                width: 49px;
-                height: 49px;
-                background: url("../images/common/btn_search_write.png") no-repeat center / 49px;
-                vertical-align: middle;
-            }
-            select{
-                border: none;
-            }
-        }
+		padding: 10px 0;
+		div{
+			width: 100%;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			p{
+				width: 30%;
+				font-size: 13px;
+				color: $col2;
+				font-weight: 700;
+				line-height: 20px;
+				&:last-child{
+					text-align: right;
+					width: 70%;
+					line-height: 1;
+					input[type="text"]{
+						line-height: 49px;
+						text-align: right;
+						padding: 0 10px;
+						font-size: 14px;
+						width: 80%;
+						border: none;
+					}
+					.multiselect__single{
+						font-size: 12px;
+					}
+				}
+				.btn-search{
+					width: 49px;
+					height: 49px;
+					background: url("../images/common/btn_search_write.png") no-repeat center / 49px;
+					vertical-align: middle;
+				}
+				select{
+					border: none;
+				}
+			}
+		}
     }
 }
 
@@ -4747,6 +4755,7 @@ button.cal{
     padding-left: 20px;
     background: url("../images/common/ico_arlam.png") no-repeat left top / 13px;
     margin-top: 10px;
+	line-height: 17px;
 }
 
 

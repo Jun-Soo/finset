@@ -985,6 +985,7 @@ export const routes = [{
       {
         path: 'stockMain',
         alias: '/stockMain',
+        name: 'assetsStockMain',
         component: AssetsStockMain,
         meta: {
           allowPath: true
@@ -993,6 +994,7 @@ export const routes = [{
       {
         path: 'stockBalcDetail',
         alias: '/stockBalcDetail',
+        name: 'assetsStockBalcDetail',
         component: AssetsStockBalcDetail,
         meta: {
           allowPath: true
@@ -1001,6 +1003,7 @@ export const routes = [{
       {
         path: 'stockActDetail',
         alias: '/stockActDetail',
+        name: 'assetsStockActDetail',
         component: AssetsStockActDetail,
         meta: {
           allowPath: true
@@ -1009,6 +1012,7 @@ export const routes = [{
       {
         path: 'stockShrDetail',
         alias: '/stockShrDetail',
+        name: 'assetsStockShrDetail',
         component: AssetsStockShrDetail,
         meta: {
           allowPath: true
@@ -1017,6 +1021,7 @@ export const routes = [{
       {
         path: 'stockFndDetail',
         alias: '/stockFndDetail',
+        name: 'assetsStockFndDetail',
         component: AssetsStockFndDetail,
         meta: {
           allowPath: true

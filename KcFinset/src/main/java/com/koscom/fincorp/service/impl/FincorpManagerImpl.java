@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.koscom.domain.FincorpInfo;
 import com.koscom.fincorp.dao.FincorpMapper;
 import com.koscom.fincorp.model.FincorpVO;
 import com.koscom.fincorp.service.FincorpManager;
@@ -15,6 +16,13 @@ public class FincorpManagerImpl implements FincorpManager{
 	
 	@Autowired
 	private FincorpMapper fincorpMapper;
+
+	@Override
+	public FincorpVO getFincorpInfo(String cd_fc) {
+		FincorpInfo fincorpInfo = new FincorpInfo();
+		fincorpInfo.setCd_fc(cd_fc);
+		return fincorpMapper.getFincorpInfo(fincorpInfo);
+	}
 	
 	@Override
 	public String getNmFc(String cd_fc) {

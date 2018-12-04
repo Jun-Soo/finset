@@ -162,7 +162,7 @@ export default {
               } else {
                 if (
                   Constant.userAgent == "Android" ||
-                  Constant.userAgent == "IOS"
+                  Constant.userAgent == "iOS"
                 ) {
                   //_this.checkExistCert();
                   _this.$router.push("/scrap/fcLink");

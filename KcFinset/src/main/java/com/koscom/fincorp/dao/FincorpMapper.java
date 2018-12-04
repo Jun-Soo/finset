@@ -3,10 +3,18 @@ package com.koscom.fincorp.dao;
 import java.util.HashMap;
 import java.util.List;
 
+import com.koscom.domain.FincorpInfo;
 import com.koscom.fincorp.model.FincorpVO;
 import com.koscom.fincorp.model.FincorpfcNminfoForm;
 
 public interface FincorpMapper {
+	
+	/**
+	 * 금융사 상세정보 조회
+	 * @param FincorpInfo
+	 * @return
+	 */
+	FincorpVO getFincorpInfo(FincorpInfo fincorpInfo);
 	
 	/**
 	 * cd_fc를 통해 nm_fc를 조회

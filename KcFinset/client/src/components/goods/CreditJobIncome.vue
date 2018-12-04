@@ -139,6 +139,7 @@ export default {
   destroyed() {},
   methods: {
     selectOccupational: function(option) {
+      this.occupational = option;
       this.hide2ndDepth();
       if (option.value == "1") {
         this.korentrnm = "";

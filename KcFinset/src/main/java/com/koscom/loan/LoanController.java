@@ -1,6 +1,7 @@
 package com.koscom.loan;
 
 import java.io.IOException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -25,15 +26,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
+import com.koscom.apply.model.ApplyVO;
 import com.koscom.domain.CooconGoodsFavoriteInfo;
 import com.koscom.domain.KisCompanyOutlineInfo;
 import com.koscom.domain.KisSrchByNameInfo;
 import com.koscom.finance.model.TxFcReceiveVO;
 import com.koscom.finance.model.TxFcTransmitVO;
 import com.koscom.finance.service.FinanceManager;
+import com.koscom.fincorp.model.FincorpVO;
+import com.koscom.fincorp.service.FincorpManager;
 import com.koscom.finset.model.FinsetForm;
 import com.koscom.goods.model.GoodsForm;
+import com.koscom.goods.model.GoodsFormNSrch;
 import com.koscom.goods.model.GoodsVO;
+import com.koscom.goods.service.GoodsManager;
 import com.koscom.kisline.model.KisCompanyOutlineItemsVO;
 import com.koscom.kisline.model.KisCompanyOutlineVO;
 import com.koscom.kisline.model.KisCompanySrchVO;
@@ -73,6 +79,12 @@ public class LoanController implements Constant {
 	@Autowired
 	PushEachManager pushEachManager;
 	
+	@Autowired
+	FincorpManager fincorpManager;
+	
+	@Autowired
+	GoodsManager goodsManager;
+		
 	@Resource
 	Environment environment;
 	
@@ -447,7 +459,7 @@ public class LoanController implements Constant {
 		 */
         personVO = personManager.getPersonInfo(no_person);
         title    = "[상품조회결과]";
-        url = "/m/customercenter/frameCustomerViewResults.crz";
+        url = "/mypage/rstlInqGoods";
         if (personVO != null) {
             pushEachVO = new PushEachVO();
             fcm_token = personVO.getFcm_token();
@@ -474,6 +486,102 @@ public class LoanController implements Constant {
             throw new FinsetException("사용자가 존재하지 않습니다.no_person="+no_person);
         }
 		return JSON_VIEW;
+	}
+	
+	/** VUE
+	 * 대출신청 처리
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/reqFcPersonInfo.json")
+	public String frameLoanIncomeSuccess(HttpServletRequest request, HttpSession session ,Model model, GoodsFormNSrch goodsForm) throws IOException, ParseException, FinsetException{
+        String no_prepare = null;
+        String amt_limit  = null;
+        String cd_goods   = null;
+        String cd_fc      = null;
+        String no_bunch   = null;
+        String no_person  = null;
+
+        TxFcReceiveVO txFcReceiveVO = null;
+        FincorpVO     fincorpVO     = null;
+        String        nm_goods      = null;//상품명
+        GoodsVO       goodsVO       = null;
+        String        path_file     = null;//로그파일 경로
+
+        no_prepare = goodsForm.getNo_prepare();
+        amt_limit  = goodsForm.getAmt_limit ();
+        cd_goods   = goodsForm.getCd_goods  ();
+        cd_fc      = goodsForm.getCd_fc     ();
+        no_bunch   = goodsForm.getNo_bunch  ();
+		ApplyVO applyVO = new ApplyVO();
+		logger.debug("############################################################");
+		logger.debug("goodsForm.toString():" + goodsForm.toString());
+		logger.debug("############################################################");
+		logger.debug("no_prepare" + no_prepare);
+		logger.debug("amt_limit " + amt_limit );
+		logger.debug("cd_goods  " + cd_goods  );
+		logger.debug("cd_fc     " + cd_fc     );
+		logger.debug("no_bunch  " + no_bunch  );
+		logger.debug("############################################################");
+		applyVO.setNo_prepare(no_prepare);
+		applyVO.setAmt_apply (amt_limit );
+		applyVO.setCd_goods  (cd_goods  );
+		applyVO.setCd_fc     (cd_fc     );
+		applyVO.setNo_bunch  (no_bunch  );
+
+        logger.info("frameLoanIncomeSuccess : applyVO.toString - " + applyVO.toString());
+		logger.info("금융사코드  값 : "+cd_fc   );
+		logger.info("상품코드 값 : "   +cd_goods);
+		//==================================================namik ADD START
+		TxFcTransmitVO txFcTransmitVO = loanManager.getTxFcTransmitInfoForMsg(goodsForm.getNo_bunch());
+
+		logger.info("------------------txFcTransmitVO---------------  : "  + txFcTransmitVO.toString());
+        no_person = (String) session.getAttribute("no_person");
+
+        txFcTransmitVO.setNo_person (no_person);
+		txFcTransmitVO.setCd_goods  (cd_goods );
+		txFcTransmitVO.setPartner_cd(cd_fc    );
+
+		String site = (environment != null)?environment.getProperty("service.profile"):"";
+		model.addAttribute("site", site);
+        String message = "success";
+		String isSuccess = "true";
+        try {
+            txFcReceiveVO = financeManager.reqFcPersonInfo(txFcTransmitVO,applyVO);
+            
+        } catch (FinsetMessageException e) {
+            isSuccess = "false";
+            message = e.getMessage();
+            LogUtil.error(logger,e);
+        }
+		fincorpVO  = fincorpManager.getFincorpInfo(cd_fc);
+		goodsVO    = goodsManager.getGoodsInfo(cd_fc, cd_goods);
+        nm_goods   = goodsVO.getNm_goods();
+        path_file  = fincorpVO.getPath_file();
+        logger.debug("txFcReceiveVO="+txFcReceiveVO);
+        logger.debug("path_file    ="+path_file    );
+        logger.debug("nm_goods     ="+nm_goods     );
+        logger.debug("fincorpVO    ="+fincorpVO    );
+        logger.debug("goodsVO      ="+goodsVO      );
+        logger.debug("message      ="+message      );
+        logger.debug("isSuccess    ="+isSuccess    );
+//      session.setAttribute("txFcReceiveVO", txFcReceiveVO);
+//      session.setAttribute("path_file1"   , path_file    );
+//		session.setAttribute("nm_goods"     , nm_goods     );
+//		session.setAttribute("fincorpVO"    , fincorpVO    );
+//		session.setAttribute("goodsVO"      , goodsVO      );
+//		session.setAttribute("message"      , message      );
+//		session.setAttribute("isSuccess"    , isSuccess    );
+        model.addAttribute("txFcReceiveVO", txFcReceiveVO);
+        model.addAttribute("path_file"    , path_file    );
+        model.addAttribute("nm_goods"     , nm_goods     );
+        model.addAttribute("fincorpVO"    , fincorpVO    );
+        model.addAttribute("goodsVO"      , goodsVO      );
+        model.addAttribute("message"      , message      );
+        model.addAttribute("isSuccess"    , isSuccess    );
+		//==================================================namik ADD END
+		return "jsonView";
 	}
 	
 	public KisSrchByNameInfo getKisSrchByName(String nm, String bizno, String crpno, String prn_rst_cnt, String pge_st_no) throws JsonSyntaxException, JSONException, IOException {

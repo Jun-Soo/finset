@@ -81,6 +81,8 @@ public class FepSocket {
 
 				appendRecvBuffer(buffer,0,count);
 
+				// 전문 사이즈에서 전문길이 부분 빼기
+				size -= HEAD_LEN;
 				buffer = new byte[size];
 				int readSize =0;
 				while (readSize < size && (count = is.read(buffer)) != -1) { // 헤더부의 길이만큼 읽음.

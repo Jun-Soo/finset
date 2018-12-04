@@ -7,6 +7,63 @@
 	    <result column="img_bi" property="img_bi" jdbcType="BLOB" javaType="[B"></result>
 	</resultMap>
 	
+	<select id="getFincorpInfo" parameterType="com.koscom.domain.FincorpInfo" resultType="com.koscom.fincorp.model.FincorpVO">
+	/* com.koscom.fincorp.dao.FincorpMapper.getFincorpInfo */
+    SELECT CD_FC                /* 금융사코드             */
+	      ,CD_FIN               /* 업권 코드              */
+	      ,NO_BIZ_COMP          /* 사업자번호             */
+	      ,NM_FC                /* 금융기관명             */
+	      ,NM_CEO               /* 대표자명               */
+	      ,YN_USE               /* 사용 여부              */
+	      ,YN_ALLIANCE			/* 연계 여부              */
+	      ,YN_SCRAP             /* 스크래핑 가능여부      */
+	      ,CD_FC_COOCON         /* 쿠콘금융사코드         */
+	      ,CD_ADDR_FC           /* 주소구분               */
+	      ,POST_FC              /* 우편번호               */
+	      ,ADDR1_FC             /* 주소1                  */
+	      ,ADDR2_FC             /* 주소2                  */
+	      ,TEL                  /* 전화번호               */
+	      ,HOME_PAGE            /* 홈페이지               */
+	      ,NM_BI                /* BI파일명               */
+	      ,SIZE_BI              /* BI사이즈               */
+	      ,NM_STAFF_CONTRACT    /* 계약 담당자 이름       */
+	      ,HP_STAFF_CONTRACT    /* 계약 담당자 휴대폰번호 */
+	      ,HOME_STAFF_CONTRACT  /* 계약 담당자 연락처     */
+	      ,FAX_STAFF_CONTRACT   /* 계약 담당자 팩스번호   */
+	      ,EMAIL_STAFF_CONTRACT /* 계약 담당자 이메일     */
+	      ,NM_STAFF_ADJUST      /* 정산 담당자 이름       */
+	      ,HP_STAFF_ADJUST      /* 정산 담당자 휴대폰번호 */
+	      ,HOME_STAFF_ADJUST    /* 정산 담당자 연락처     */
+	      ,FAX_STAFF_ADJUST     /* 정산 담당자 팩스번호   */
+	      ,EMAIL_STAFF_ADJUST   /* 정산 담당자 이메일     */
+	      ,NM_STAFF_GOODS       /* 상품 담당자 이름       */
+	      ,HP_STAFF_GOODS       /* 상품 담당자 휴대폰번호 */
+	      ,HOME_STAFF_GOODS     /* 상품 담당자 연락처     */
+	      ,FAX_STAFF_GOODS      /* 상품 담당자 팩스번호   */
+	      ,EMAIL_STAFF_GOODS    /* 상품 담당자 이메일     */
+	      ,ID_EMP_GOODS         /* 상품관리자아이디       */
+	      ,CL_SERVICE           /* 서비스 이용 약관       */
+	      ,CL_PRIVATE           /* 개인신용정보 약관      */
+	      ,NM_FILE1             /* 파일명                 */
+	      ,PATH_FILE1           /* 파일경로               */
+	      ,ID_FRT               /* 최초입력아이디         */
+	      ,DT_FRT               /* 최초입력시간           */
+	      ,ID_LST               /* 최종수정아이디         */
+	      ,DT_LST               /* 최종수정시간           */
+	FROM fc_info
+     <where>
+     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+			cd_fc = #{cd_fc}
+		</if>
+<!-- 	     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fin)'> -->
+<!-- 				cd_fin = #{cd_fin} -->
+<!-- 			</if> -->
+<!-- 	     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods)'> -->
+<!-- 				AND cd_goods = #{cd_goods} -->
+<!-- 			</if> -->
+     </where>
+	</select>
+	
 	<select id="getNmFc" parameterType="String" resultType="String">
 		SELECT
 			NM_FC

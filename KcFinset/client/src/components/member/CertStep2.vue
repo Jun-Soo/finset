@@ -55,7 +55,7 @@ export default {
       ssn_birth: "",
       birthday: "",
       sex: "",
-      telComCd: "",
+      telComCd: null,
       telComNm: "",
       hp: "",
       kcb_ci: "",
@@ -131,7 +131,7 @@ export default {
       this.hp = phoneNumber;
     },
     onSelect: function(option) {
-      this.telComCd = option.value;
+      this.telComCd = option;
       console.log(this.telComCd);
     },
     nextFocus: function(val) {
@@ -140,7 +140,7 @@ export default {
       if (val == "sex" && _this.sex.length == 1) {
         this.$children[0].isOpen = true;
       }
-      if (val == "telComCd" && _this.telComCd) $("#hp").focus();
+      if (val == "telComCd" && _this.telComCd.value) $("#hp").focus();
       if (val == "hp" && _this.hp) $("").focus();
     },
     /**
@@ -160,7 +160,7 @@ export default {
           formData.append("nm_person", _this.nm_person);
           formData.append("birthday", _this.birthday);
           formData.append("sex", _this.sex);
-          formData.append("telComCd", _this.telComCd);
+          formData.append("telComCd", _this.telComCd.value);
           formData.append("hp", _this.hp);
           formData.append("smsReSndYn", _this.smsReSndYn);
           formData.append("nation", _this.nation);
@@ -269,7 +269,7 @@ export default {
       formData.append("nm_person", _this.nm_person);
       formData.append("bgn", _this.bgn);
       formData.append("birthday", _this.birthday);
-      formData.append("telComCd", _this.telComCd);
+      formData.append("telComCd", _this.telComCd.value);
       formData.append("hp", _this.hp);
       formData.append("kcb_ci", _this.kcb_ci);
       formData.append("kcb_di", _this.kcb_di);

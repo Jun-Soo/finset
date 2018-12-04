@@ -118,7 +118,7 @@ export default {
             this.$toast.center("지문 로그인 설정이 완료되었습니다.");
             if (
               Constant.userAgent == "Android" ||
-              Constant.userAgent == "IOS"
+              Constant.userAgent == "iOS"
             ) {
               //_this.checkExistCert();
               _this.$router.push("/scrap/fcLink");

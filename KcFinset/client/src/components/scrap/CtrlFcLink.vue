@@ -286,7 +286,7 @@ export default {
 
       this.checkExistCert(true);
 
-      // if (Constant.userAgent == "IOS") {
+      // if (Constant.userAgent == "iOS") {
       //   Jockey.on("updateAvaliableCertScrapInfo", function(param) {
       //     _this.resultUpdateScrapInfo(param.cd_err, param.msg_err);
       //   });
@@ -321,7 +321,7 @@ export default {
         agency = "etc";
       }
 
-      if (Constant.userAgent == "IOS") {
+      if (Constant.userAgent == "iOS") {
         Jockey.on("resultUpdateScrapInfo", function(param) {
           _this.resultUpdateScrapInfo(param.cd_err, param.msg_err);
         });

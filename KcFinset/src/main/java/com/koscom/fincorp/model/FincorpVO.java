@@ -19,6 +19,8 @@ public class FincorpVO extends FincorpInfo implements Serializable {
 	private String fileName;
 	private int fileSize;
 
+	/*스크래핑 여부 */
+	private String yn_scrap;
 	private String query;
 	private String type;
 	private String file_name;
@@ -239,6 +241,14 @@ public class FincorpVO extends FincorpInfo implements Serializable {
 
 	public void setImg_bi(byte[] img_bi) {
 		this.img_bi = img_bi;
+	}
+	
+	public String getYn_scrap() {
+		return yn_scrap;
+	}
+	
+	public void setYn_scrap(String yn_scrap) {
+		this.yn_scrap = yn_scrap;
 	}
 
 	public String getQuery() {

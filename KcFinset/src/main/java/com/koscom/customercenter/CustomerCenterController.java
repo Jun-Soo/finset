@@ -642,6 +642,30 @@ public class CustomerCenterController implements Constant {
 		logger.info("공유관리 상세");
 		return "jsonView";
 	}
+	
+	/** VUE
+     * 마이페이지 조회결과
+     * @param model
+     * @param request
+     * @param finsetForm
+     * @param session
+     * @return
+     */
+	@RequestMapping("/listGoodsResults.json")
+	public String listGoodsResults(Model model, HttpServletRequest request, FinsetForm finsetForm, HttpSession session) {
+		String no_person = (String) session.getAttribute("no_person");
+		finsetForm.setNo_person(no_person);
+
+		finsetForm.setCd_goods_gubun("01");//Default 조회 설정
+		finsetForm.setCd_goods_gubun2("02");//Default 조회 설정
+
+		Pagination pagedList = (Pagination) finsetForm.setPagedList(finsetManager.listSearchGoods(finsetForm), finsetManager.listSearchGoodsCount(finsetForm));
+
+		logger.info("list Result : " + pagedList.toString());
+		model.addAttribute("pagedList", pagedList);
+
+		return "jsonView";
+	}
 
 	/**
 	 * 마이페이지 조회결과

@@ -40,7 +40,7 @@
       </span>
     </div>
     <transition name="multiselect">
-      <div class="multiselect-overlay" v-show="isOpen">
+      <div class="multiselect-overlay" v-show="isOpen" @click="deactivate">
         <div class="multiselect__content-wrapper" v-show="isOpen" @focus="activate" tabindex="-1" @mousedown.prevent :style="{ maxHeight: optimizedHeight + 'px' }" ref="list">
           <ul class="multiselect__content" :style="contentStyle">
             <slot name="beforeList"></slot>
@@ -365,7 +365,7 @@ fieldset[disabled] .multiselect {
   min-height: 40px;
   text-align: left;
   color: #35495e;
-  z-index: 20;
+  z-index: auto;
 }
 
 .multiselect * {

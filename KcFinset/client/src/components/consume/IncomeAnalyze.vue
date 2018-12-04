@@ -8,14 +8,6 @@
     <div class="detail-list">
       <dl>
         <dt>월별</dt>
-        <!-- <dd>
-          <p>’18년 7월</p>
-          <p>535,000 원 </p>
-        </dd> -->
-        <!-- <dd>
-          <p>’18년 6월</p>
-          <p>115,000 원 </p>
-        </dd> -->
         <dd v-for="voMonth in listConsumeAnalyzeMonth" :key="voMonth.dt_trd">
           <p v-text="voMonth.dt_trd.substring(0,4) + '년 ' + voMonth.dt_trd.substring(4,6) + '월'"></p>
           <p>{{Common.formatNumber(voMonth.amt_in_out)}} 원</p>
@@ -23,20 +15,10 @@
       </dl>
       <dl>
         <dt>일별</dt>
-        <!-- <dd>
-          <p>7.12 15:00<em> 현금</em></p>
-          <p>118,107 원</p>
-        </dd>
-        <dd>
-          <p>7.11 22:00<em> 신한카드</em></p>
-          <p>125,000 원</p>
-        </dd>
-        <dd>
-          <p>7.08 21:00<em> 신한카드</em></p>
-          <p>225,000 원</p>
-        </dd> -->
-        <dd v-for="voDay in listConsumeAnalyzeDay" :key="voDay.dt_trd">
-          <p>{{Common.formatDateDot(voDay.dt_trd)}} {{formatTime(voDay.tm_trd)}} <em> {{voDay.nm_fc}}</em></p>
+        <dd v-for="(voDay, index) in listConsumeAnalyzeDay" :key="index">
+          <p>{{Common.formatDateDot(voDay.dt_trd)}} {{formatTime(voDay.tm_trd)}}
+            <em v-text="voDay.means_consume=='01'||voDay.means_consume=='04'?voDay.nm_fc:'현금'"></em>
+          </p>
           <p>{{Common.formatNumber(voDay.amt_in_out)}} 원</p>
         </dd>
       </dl>
@@ -147,9 +129,7 @@ export default {
           _this.mylabels = _this.labelData;
           _this.$set(_this.mydatasets[0], "data", _this.chartData);
 
-          console.log(response.data.listConsumeAnalyzeMonth);
           _this.listConsumeAnalyzeMonth = response.data.listConsumeAnalyzeMonth;
-          console.log(response.data.listConsumeAnalyzeDay);
           _this.listConsumeAnalyzeDay = response.data.listConsumeAnalyzeDay;
 
           _this.isNone = false;

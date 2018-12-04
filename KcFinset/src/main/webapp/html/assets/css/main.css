@@ -21,10 +21,10 @@ textarea { width: 100%; height: 70vh; padding: 20px; border: 1px solid #e5e5e5; 
 }*/ /*   전체동의   */ }
 .checks input[type="radio"], .checks input[type="checkbox"] { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
 .checks input[type="radio"]:focus, .checks input[type="checkbox"]:focus { width: 20px; height: 20px; outline: solid; }
-.checks input[type="radio"] + label { display: inline-block; position: relative; padding-left: 40px; cursor: pointer; color: #333; min-width: 0; font-weight: 700; font-size: 15px; line-height: 30px; text-align: left; vertical-align: middle; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; margin-right: 40px; position: relative; }
+.checks input[type="radio"] + label { display: inline-block; position: relative; padding-left: 40px; cursor: pointer; color: #333; min-width: 0; font-weight: 700; font-size: 15px; line-height: 30px; text-align: left; vertical-align: middle; -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; margin-right: 40px; position: relative; }
 .checks input[type="radio"] + label:before { position: absolute; left: 0; top: 0; display: inline-block; content: ""; width: 30px; height: 30px; vertical-align: middle; margin-right: 10px; background: url(../images/_form/radio.png) no-repeat left top/30px; }
 .checks input[type="radio"] + label:last-of-type { margin: 0; }
-.checks input[type="checkbox"] + label { display: inline-block; position: relative; padding-left: 40px; cursor: pointer; color: #333; min-width: 0; font-weight: 700; font-size: 15px; line-height: 30px; text-align: left; vertical-align: middle; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
+.checks input[type="checkbox"] + label { display: inline-block; position: relative; padding-left: 40px; cursor: pointer; color: #333; min-width: 0; font-weight: 700; font-size: 15px; line-height: 30px; text-align: left; vertical-align: middle; -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; }
 .checks input[type="checkbox"] + label:before { position: absolute; left: 0; top: 0; display: inline-block; content: ""; width: 30px; height: 30px; vertical-align: top; margin-right: 10px; background: url(../images/_form/checkbox.png) no-repeat left top/30px; }
 .checks input[type="radio"]:checked + label:before, .checks input[type="checkbox"]:checked + label:before { background-position: left bottom; }
 .checks input[type="checkbox"]#check-all + label { display: block; padding-left: 0; color: #62c1d0; line-height: 45px; text-align: center; border: 1px solid #62c1d0; border-radius: 45px; }
@@ -45,7 +45,7 @@ textarea { width: 100%; height: 70vh; padding: 20px; border: 1px solid #e5e5e5; 
 .filter-wrap .filter { display: table-cell; padding-right: 10px; }
 .filter-wrap .filter input[type="radio"], .filter-wrap .filter input[type="checkbox"] { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); border: 0; }
 .filter-wrap .filter input[type="radio"]:focus, .filter-wrap .filter input[type="checkbox"]:focus { width: 18px; height: 18px; outline: solid; }
-.filter-wrap .filter input[type="checkbox"] + label { display: inline-block; position: relative; padding-left: 25px; cursor: pointer; color: #333; min-width: 0; font-weight: 700; font-size: 12px; line-height: 18px; text-align: left; vertical-align: middle; -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; }
+.filter-wrap .filter input[type="checkbox"] + label { display: inline-block; position: relative; padding-left: 25px; cursor: pointer; color: #333; min-width: 0; font-weight: 700; font-size: 12px; line-height: 18px; text-align: left; vertical-align: middle; -webkit-user-select: text; -moz-user-select: text; -ms-user-select: text; }
 .filter-wrap .filter input[type="checkbox"] + label:before { position: absolute; left: 0; top: 0; display: inline-block; content: ""; width: 18px; height: 18px; vertical-align: top; background: url("../images/_form/filter.png") no-repeat left top/90px; }
 .filter-wrap .filter input[type="radio"]:checked + label:before, .filter-wrap .filter input[type="checkbox"]:checked + label:before { background-position: left bottom; }
 .filter-wrap .filter.orange input[type="checkbox"] + label:before { background-position: -18px top; }
@@ -68,7 +68,7 @@ input[type="file"]::-ms-browse { color: #fff; border: 0; background: #343f4e; wi
 ::-webkit-search-cancel-button { height: 36px; width: 36px; display: inline-block; background: url("../images/etc/search-delete.png") no-repeat right center/14px; }
 
 /*   Common   */
-.container { padding: 0 21px; }
+.container-wrap { padding: 0 21px; }
 
 /* ListStyle */
 .list-style01 { margin-top: 10px; }

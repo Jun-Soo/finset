@@ -346,6 +346,7 @@ export default {
     getCopyContents: function() {
       var _this = this;
       var depWdrlInfo = _this.depWdrlInfo;
+      console.log(this.depWdrlInfo);
       var contents = "";
       contents +=
         Common.formatDateDot(depWdrlInfo.dt_trd) +
@@ -353,10 +354,12 @@ export default {
         depWdrlInfo.tm_trd +
         "\n";
       contents += depWdrlInfo.nm_fc + " " + depWdrlInfo.an + "\n\n";
+      contents += depWdrlInfo.nm_trns + " ";
       contents +=
-        depWdrlInfo.nm_trns + " " + (depWdrlInfo.amt_dep != "0")
+        depWdrlInfo.amt_dep != "0"
           ? Common.formatNumber(depWdrlInfo.amt_dep)
-          : Common.formatNumber(depWdrlInfo.amt_wdrl) + " " + depWdrlInfo.doc1;
+          : Common.formatNumber(depWdrlInfo.amt_wdrl);
+      contents += " " + depWdrlInfo.doc1;
 
       return contents;
     },
@@ -377,17 +380,17 @@ export default {
     fnCopy: function() {
       var _this = this;
       var contents = _this.getCopyContents();
-      this.$dialogs
-        .confirm("내역을 복사하시겠습니까?\n\n" + contents, Constant.options)
-        .then(res => {
-          if (Constant.userAgent == "iOS") {
-            Jockey.send("copyToClipBoard", {
-              text: text(contents)
-            });
-          } else if (Constant.userAgent == "Android") {
-            window.Android.copyToClipBoard(contents);
-          }
-        });
+      console.log(contents);
+      Constant.options.title = "내역을 복사하시겠습니까?";
+      this.$dialogs.confirm(contents, Constant.options).then(res => {
+        if (Constant.userAgent == "iOS") {
+          Jockey.send("copyToClipBoard", {
+            text: text(contents)
+          });
+        } else if (Constant.userAgent == "Android") {
+          window.Android.copyToClipBoard(contents);
+        }
+      });
     }
   }
 };

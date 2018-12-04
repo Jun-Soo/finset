@@ -6,7 +6,7 @@
 
       <div class="filter-wrap">
         <div class="filter red">
-          <input type="checkbox" checked="checked" readonly="readonly"><label for="">{{nm_person}}</label>
+          <input type="checkbox" checked="checked" readonly="readonly"><label for="">{{this.$store.state.user.nmPerson}}</label>
         </div>
         <div v-if="personShareList.length!=0" v-for="personShareInfo in personShareList" :key="personShareInfo.index" class="filter" :class="colorList[personShareInfo.rk]">
           <input type="checkbox" v-model="person_share_list" :value="personShareInfo.no_person" :id="'chk'+personShareInfo.rk" @change="searchAccountList();">
@@ -88,7 +88,6 @@ export default {
       },
       sumAmt: "", //총금액
       depWdrlInfo: "", //최근 입출금내역
-      nm_person: "", //회원명
       colorList: ["red", "orange", "green", "blue", "purple"],
       personShareList: [], //공유자list
       person_share_list: [], //공유자list(조회용)
@@ -126,7 +125,6 @@ export default {
         .then(response => {
           _this.sumAmt = response.data.sumAmt;
           _this.depWdrlInfo = response.data.depWdrlInfo;
-          _this.nm_person = response.data.nm_person;
 
           _this.personShareList = response.data.personShareList;
           for (var idx in _this.personShareList) {

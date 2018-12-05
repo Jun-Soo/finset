@@ -372,14 +372,16 @@ export default {
     return result
   },
   calendarDimClick: function () {
-    var calendars = document.getElementsByClassName('vdp-datepicker__calendar')
-    for (var idx in calendars) {
-      if (typeof calendars[idx] === 'object') {
-        calendars[idx].style.display = 'none'
+    var children = Constant._this.$children
+    for (var index in children) {
+      if (children[index].$options._componentTag === 'datepicker') {
+        children[index].showDayView = false
+        children[index].showMonthView = false
+        children[index].showYearView = false
       }
     }
   },
-  datepickerInit: function (classNm) {
+  datepickerInit: function (classNm, vueComponent) {
     if (document.getElementsByClassName(classNm)) {
       for (var i = 0; i < document.getElementsByClassName(classNm).length; i++) {
         if (!document.getElementsByClassName(classNm)[i].children[1].children[0].classList.contains('calendar-overlay')) {
@@ -388,6 +390,7 @@ export default {
           calendarOverlay.addEventListener('click', this.calendarDimClick)
           document.getElementsByClassName(classNm)[i].children[1].prepend(calendarOverlay)
           document.getElementsByClassName(classNm)[i].children[1].children[2].style.background = '#FFFFFF'
+          Constant._this = vueComponent
         }
 
         for (var j = 1; j < document.getElementsByClassName(classNm)[i].children.length; j++) {

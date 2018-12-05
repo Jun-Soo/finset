@@ -49,8 +49,8 @@
 
     <div class="cs-top">
       <div class="links">
-        <a @click="$router.push('')" class="kakao">카카오톡 문의</a>
-        <a @click="$router.push('')" class="copy">복사</a>
+        <a @click="fnKakao();" class="kakao">카카오톡</a>
+        <a @click="fnCopy();" class="copy">복사</a>
 
       </div>
     </div>
@@ -342,6 +342,52 @@ export default {
       this.$http
         .post("/m/assets/updateAssetsDetailCsInfo.json", formData)
         .then(function(response) {});
+    },
+    getCopyContents: function() {
+      var _this = this;
+      var depWdrlInfo = _this.depWdrlInfo;
+      var contents = "";
+      contents +=
+        Common.formatDateDot(depWdrlInfo.dt_trd) +
+        " " +
+        depWdrlInfo.tm_trd +
+        "\n";
+      contents += depWdrlInfo.nm_fc + " " + depWdrlInfo.an + "\n\n";
+      contents +=
+        depWdrlInfo.nm_trns + " " + (depWdrlInfo.amt_dep != "0")
+          ? Common.formatNumber(depWdrlInfo.amt_dep)
+          : Common.formatNumber(depWdrlInfo.amt_wdrl) + " " + depWdrlInfo.doc1;
+
+      return contents;
+    },
+    //카카오톡
+    fnKakao: function() {
+      var _this = this;
+      var contents = _this.getCopyContents();
+
+      if (Constant.userAgent == "iOS") {
+        Jockey.send("shareText", {
+          text: text(contents)
+        });
+      } else if (Constant.userAgent == "Android") {
+        window.Android.shareText(contents);
+      }
+    },
+    //클립보드복사
+    fnCopy: function() {
+      var _this = this;
+      var contents = _this.getCopyContents();
+      this.$dialogs
+        .confirm("내역을 복사하시겠습니까?\n\n" + contents, Constant.options)
+        .then(res => {
+          if (Constant.userAgent == "iOS") {
+            Jockey.send("copyToClipBoard", {
+              text: text(contents)
+            });
+          } else if (Constant.userAgent == "Android") {
+            window.Android.copyToClipBoard(contents);
+          }
+        });
     }
   }
 };

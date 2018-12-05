@@ -40,40 +40,42 @@
       </span>
     </div>
     <transition name="multiselect">
-      <div class="multiselect__content-wrapper" v-show="isOpen" @focus="activate" tabindex="-1" @mousedown.prevent :style="{ maxHeight: optimizedHeight + 'px' }" ref="list">
-        <ul class="multiselect__content" :style="contentStyle">
-          <slot name="beforeList"></slot>
-          <li v-if="multiple && max === internalValue.length">
-            <span class="multiselect__option">
-              <slot name="maxElements">Maximum of {{ max }} options selected. First remove a selected option to select another.</slot>
-            </span>
-          </li>
-          <template v-if="!max || internalValue.length < max">
-            <li class="multiselect__element" v-for="(option, index) of filteredOptions" :key="index">
-              <span v-if="!(option && (option.$isLabel || option.$isDisabled))" :class="optionHighlight(index, option)" @click.stop="select(option)" @mouseenter.self="pointerSet(index)" :data-select="option && option.isTag ? tagPlaceholder : selectLabelText" :data-selected="selectedLabelText" :data-deselect="deselectLabelText" class="multiselect__option">
-                <slot name="option" :option="option" :search="search">
-                  <span>{{ getOptionLabel(option) }}</span>
-                </slot>
-              </span>
-              <span v-if="option && (option.$isLabel || option.$isDisabled)" :data-select="groupSelect && selectGroupLabelText" :data-deselect="groupSelect && deselectGroupLabelText" :class="groupHighlight(index, option)" @mouseenter.self="groupSelect && pointerSet(index)" @mousedown.prevent="selectGroup(option)" class="multiselect__option">
-                <slot name="option" :option="option" :search="search">
-                  <span>{{ getOptionLabel(option) }}</span>
-                </slot>
+      <div class="multiselect-overlay" v-show="isOpen" @click="deactivate">
+        <div class="multiselect__content-wrapper" v-show="isOpen" @focus="activate" tabindex="-1" @mousedown.prevent :style="{ maxHeight: optimizedHeight + 'px' }" ref="list">
+          <ul class="multiselect__content" :style="contentStyle">
+            <slot name="beforeList"></slot>
+            <li v-if="multiple && max === internalValue.length">
+              <span class="multiselect__option">
+                <slot name="maxElements">Maximum of {{ max }} options selected. First remove a selected option to select another.</slot>
               </span>
             </li>
-          </template>
-          <li v-show="showNoResults && (filteredOptions.length === 0 && search && !loading)">
-            <span class="multiselect__option">
-              <slot name="noResult">No elements found. Consider changing the search query.</slot>
-            </span>
-          </li>
-          <li v-show="showNoOptions && (options.length === 0 && !search && !loading)">
-            <span class="multiselect__option">
-              <slot name="noOptions">List is empty.</slot>
-            </span>
-          </li>
-          <slot name="afterList"></slot>
-        </ul>
+            <template v-if="!max || internalValue.length < max">
+              <li class="multiselect__element" v-for="(option, index) of filteredOptions" :key="index">
+                <span v-if="!(option && (option.$isLabel || option.$isDisabled))" :class="optionHighlight(index, option)" @click.stop="select(option)" @mouseenter.self="pointerSet(index)" :data-select="option && option.isTag ? tagPlaceholder : selectLabelText" :data-selected="selectedLabelText" :data-deselect="deselectLabelText" class="multiselect__option">
+                  <slot name="option" :option="option" :search="search">
+                    <span>{{ getOptionLabel(option) }}</span>
+                  </slot>
+                </span>
+                <span v-if="option && (option.$isLabel || option.$isDisabled)" :data-select="groupSelect && selectGroupLabelText" :data-deselect="groupSelect && deselectGroupLabelText" :class="groupHighlight(index, option)" @mouseenter.self="groupSelect && pointerSet(index)" @mousedown.prevent="selectGroup(option)" class="multiselect__option">
+                  <slot name="option" :option="option" :search="search">
+                    <span>{{ getOptionLabel(option) }}</span>
+                  </slot>
+                </span>
+              </li>
+            </template>
+            <li v-show="showNoResults && (filteredOptions.length === 0 && search && !loading)">
+              <span class="multiselect__option">
+                <slot name="noResult">No elements found. Consider changing the search query.</slot>
+              </span>
+            </li>
+            <li v-show="showNoOptions && (options.length === 0 && !search && !loading)">
+              <span class="multiselect__option">
+                <slot name="noOptions">List is empty.</slot>
+              </span>
+            </li>
+            <slot name="afterList"></slot>
+          </ul>
+        </div>
       </div>
     </transition>
   </div>
@@ -363,6 +365,7 @@ fieldset[disabled] .multiselect {
   min-height: 40px;
   text-align: left;
   color: #35495e;
+  z-index: auto;
 }
 
 .multiselect * {
@@ -379,7 +382,7 @@ fieldset[disabled] .multiselect {
 }
 
 .multiselect--active {
-  z-index: 50;
+  z-index: 20;
 }
 
 .multiselect--active:not(.multiselect--above) .multiselect__current,

@@ -3,45 +3,57 @@
     <div class="container">
       <ul class="debt-modify">
         <li>
-          <p class="key">결혼여부</p>
-          <p>
-            <multiselect v-model="yn_wedding" ref="yn_wedding" placeholder="결혼여부선택" track-by="text" label="text" :options="ynWeddingOptions" :searchable="false" :allow-empty="false" @select="selectYnWedding()" v-validate="'required'" data-vv-name='결혼여부'>
-            </multiselect>
-          </p>
+          <div>
+            <p class="key">결혼여부</p>
+            <p>
+              <multiselect v-model="yn_wedding" ref="yn_wedding" placeholder="결혼여부선택" track-by="text" label="text" :options="ynWeddingOptions" :searchable="false" :allow-empty="false" @select="selectYnWedding()" v-validate="'required'" data-vv-name='결혼여부'>
+              </multiselect>
+            </p>
+          </div>
           <p class="warn" v-if="errors.has('결혼여부')">{{errors.first('결혼여부')}}</p>
         </li>
         <li>
-          <p class="key">부양가족</p>
-          <p>
-            <multiselect v-model="cd_family_cnt" ref="cd_family_cnt" placeholder="부양가족선택" track-by="text" label="text" :options="options_family_cnt" :searchable="false" :allow-empty="false" @select="selectFamilyCnt()" v-validate="'required'" data-vv-name='부양가족'>
-            </multiselect>
-          </p>
+          <div>
+            <p class="key">부양가족</p>
+            <p>
+              <multiselect v-model="cd_family_cnt" ref="cd_family_cnt" placeholder="부양가족선택" track-by="text" label="text" :options="options_family_cnt" :searchable="false" :allow-empty="false" @select="selectFamilyCnt()" v-validate="'required'" data-vv-name='부양가족'>
+              </multiselect>
+            </p>
+          </div>
           <p class="warn" v-if="errors.has('부양가족')">{{errors.first('부양가족')}}</p>
         </li>
         <li>
-          <p class="key">주거형태</p>
-          <p>
-            <multiselect v-model="cd_living" ref="cd_living" placeholder="주거형태선택" track-by="text" label="text" :options="options_living" :searchable="false" :allow-empty="false" @select="selectLiving()" v-validate="'required'" data-vv-name='주거형태'>
-            </multiselect>
-          </p>
+          <div>
+            <p class="key">주거형태</p>
+            <p>
+              <multiselect v-model="cd_living" ref="cd_living" placeholder="주거형태선택" track-by="text" label="text" :options="options_living" :searchable="false" :allow-empty="false" @select="selectLiving()" v-validate="'required'" data-vv-name='주거형태'>
+              </multiselect>
+            </p>
+          </div>
           <p class="warn" v-if="errors.has('주거형태')">{{errors.first('주거형태')}}</p>
         </li>
         <li>
-          <p class="key">직업</p>
-          <p>
-            <multiselect v-model="cd_job" ref="cd_job" placeholder="직군선택" track-by="text" label="text" :options="options_job" :searchable="false" :allow-empty="false" @select="selectJob()" v-validate="'required'" data-vv-name='직업'>
-            </multiselect>
-          </p>
+          <div>
+            <p class="key">직업</p>
+            <p>
+              <multiselect v-model="cd_job" ref="cd_job" placeholder="직군선택" track-by="text" label="text" :options="options_job" :searchable="false" :allow-empty="false" @select="selectJob()" v-validate="'required'" data-vv-name='직업'>
+              </multiselect>
+            </p>
+          </div>
           <p class="warn" v-if="errors.has('직업')">{{errors.first('직업')}}</p>
         </li>
         <li>
-          <p class="key">월소득</p>
-          <p><input type="number" id="amt_mm_income" v-model="amt_mm_income" v-html="counselInfo.amt_income_total" @change="changeIncome()" v-validate="'required|numeric|max:10'" data-vv-name='월소득'></p>
+          <div>
+            <p class="key">월소득</p>
+            <p><input type="number" id="amt_mm_income" v-model="amt_mm_income" placeholder="월소득" v-html="counselInfo.amt_income_total" @change="changeIncome()" v-validate="'required|numeric|max:10'" data-vv-name='월소득'></p>
+          </div>
           <p class="warn" v-if="errors.has('월소득')">{{errors.first('월소득')}}</p>
         </li>
         <li>
-          <p class="key">월지출</p>
-          <p><input type="number" id="amt_mm_expense" v-model="amt_mm_expense" v-html="counselInfo.amt_expense_total" @change="changeExpense()" v-validate="'required|numeric|max:10'" data-vv-name='월지출'></p>
+          <div>
+            <p class="key">월지출</p>
+            <p><input type="number" id="amt_mm_expense" v-model="amt_mm_expense" placeholder="월지출" v-html="counselInfo.amt_expense_total" @change="changeExpense()" v-validate="'required|numeric|max:10'" data-vv-name='월지출'></p>
+          </div>
           <p class="warn" v-if="errors.has('월지출')">{{errors.first('월지출')}}</p>
         </li>
       </ul>

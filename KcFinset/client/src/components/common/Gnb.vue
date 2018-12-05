@@ -23,22 +23,22 @@
           <a @click="clickButton('/etc/noticeMain')">공지/이벤트</a>
           <a href="#">개인설정</a>
           <a @click="clickButton('/credit/counselMain')">금융달력</a>
-          <a @click="clickButton('/share/main')">정보공유관리</a>
+          <a @click="clickButton('/share/main?cd_share=02')">정보공유관리</a>
           <a @click="clickButton('/debt/calc')">금융계산기</a>
           <a @click="clickButton('/news/main')">뉴스</a>
         </div>
         <dl id="gnb">
           <dt>신용</dt>
-          <dd><a href="#">신용정보</a></dd>
-          <dd><a href="#">신용등급올리기</a></dd>
-          <dd><a href="#">스마트리포트</a></dd>
+          <dd><a @click="clickButton('/credit/main')">신용정보</a></dd>
+          <dd><a @click="clickButton('/credit/raiseMain')">신용등급올리기</a></dd>
+          <dd><a @click="clickButton('/credit/smartReport')">스마트리포트</a></dd>
           <dd><a @click="clickButton('/credit/counselMain')">신용상담</a></dd>
-          <dd><a href="#">신용정보제공</a></dd>
+          <dd><a @click="clickButton('/share/main?cd_share=01')">신용정보제공</a></dd>
 
           <dt>부채</dt>
           <dd><a @click="clickButton('/debt/main')">부채현황</a></dd>
           <dd><a @click="clickButton('/debt/calc')">계산기</a></dd>
-          <dd><a href="#">금리인하요구</a></dd>
+          <dd><a @click="clickButton('/debt/reqIntrCut')">금리인하요구</a></dd>
           <dd><a href="#">추천상품</a></dd>
 
           <dt>소비지출</dt>
@@ -47,10 +47,10 @@
           <dd><a @click="clickButton('/consume/payment')">카드대금 조회</a></dd>
 
           <dt>자산</dt>
-          <dd><a href="#">자산현황</a></dd>
-          <dd><a href="#">은행</a></dd>
-          <dd><a href="#">증권</a></dd>
-          <dd><a href="#">기타</a></dd>
+          <dd><a @click="clickButton('/assets/main')">자산현황</a></dd>
+          <dd><a @click="clickButton('/assets/bankMain')">은행</a></dd>
+          <dd><a @click="clickButton('/assets/stockMain')">증권</a></dd>
+          <dd><a @click="clickButton('/assets/etcMain')">기타</a></dd>
         </dl>
       </div>
     </div>

@@ -7100,9 +7100,9 @@ button.cal {
   background: url("../images/mypage/my_ico8.png") no-repeat 50% 30px/24px;
 }
 
-.mypage-links a:nth-child(9) {
+/* .mypage-links a:nth-child(9) {
   background: url("../images/mypage/my_ico9.png") no-repeat 50% 30px/24px;
-}
+} */
 
 .member-exit {
   line-height: 50px;

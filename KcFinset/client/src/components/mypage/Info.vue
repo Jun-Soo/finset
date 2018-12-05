@@ -11,7 +11,7 @@
     </div>
 
     <div class="mypage-links">
-      <a @click="$router.push('')">개인설정</a>
+      <!-- <a @click="$router.push('')">개인설정</a> -->
       <a @click="$router.push('/mypage/regAlarm')">알림설정</a>
       <a @click="$router.push('/mypage/cert')">인증/보안</a>
       <a @click="$router.push('/share/main')">공유관리</a>
@@ -38,92 +38,7 @@ export default {
       nm_person: this.$store.state.user.nmPerson,
       hp: this.$store.state.user.hp,
       email: "",
-      seen:false
-      /**
-      amt_etm_income: null
-      bgn: "199104112"
-      birthday: null
-      c1_gender: "2"
-      cd_push: "1"
-      cd_tel: "01"
-      changePwd: null
-      changePwdConfirm: null
-      chk_pwd: 0
-      cnt_fail: 0
-      cnt_fail_finger: "0"
-      cnt_fail_mode: null
-      cnt_fail_pwd: "0"
-      currentPwd: null
-      dt_agree_using: "2018-11-02 10:11:10"
-      dt_basic: null
-      dt_frt: "2018-11-02 10:11:10"
-      dt_install: null
-      dt_lst: "2018-11-05 16:16:34"
-      email: "abc@hhh.net"
-      email_idx1: "abc"
-      email_idx2: "hhh.net"
-      etc_memo: null
-      etc_memo1: null
-      fcm_token: null
-      file1: null
-      fileArray: null
-      fileName: null
-      fileSize: 0
-      hp: "01087897058"
-      hp_idx1: "01087897058"
-      hp_idx2: ""
-      hp_idx3: ""
-      id_agency: null
-      id_frt: "P000000285"
-      id_lst: "P000000285"
-      item_push: null
-      job: null
-      kcb_ci: "kcb_ci"
-      kcb_cp: "kcb_cp"
-      kcb_di: "kcb_di"
-      loan_code: null
-      nation: null
-      nick: null
-      nm_file1: null
-      nm_person: "김효진"
-      no_bunch: null
-      no_person: "P000000285"
-      no_prepare: null
-      pass_person: "5555"
-      path_file1: null
-      pbl_cert_ci: null
-      pbl_cert_di: null
-      rqstCausCd: null
-      seq: null
-      seq_new_debt_reg: null
-      sex: null
-      smsCertNo: null
-      smsReSndYn: null
-      ssn_person: null
-      ssn_person_idx1: ""
-      ssn_person_idx2: ""
-      stat_push: null
-      stock_token: null
-      svcTxSeqno: null
-      telComCd: null
-      type_push: null
-      ymd_birth: "19910411"
-      yn_agency: null
-      yn_agree_using: "Y"
-      yn_eventPush: null
-      yn_fingerprint: "Y"
-      yn_grt: null
-      yn_installment: null
-      yn_logout: "N"
-      yn_os: null
-      yn_push: "Y"
-      yn_use: "Y"
-      zone_comp: null
-      zone_etc: null
-      zone_home: null
-      zone_reg: null
-      zone_univ: null
-       */
+      seen: false
     };
   },
   components: {},
@@ -142,15 +57,15 @@ export default {
       .post("/m/customercenter/getCustomerCenterMain.json", frm)
       .then(response => {
         personInfo = response.data.personVO;
-        var tEmail =personInfo.email;
-        if( tEmail != null && tEmail != "" ){
+        var tEmail = personInfo.email;
+        if (tEmail != null && tEmail != "") {
           _this.email = tEmail;
           localStorage.removeItem("email");
           localStorage.setItem("email", tEmail);
-        }else{
+        } else {
           _this.email = "등록안됨";
         }
-        _this.seen=true;
+        _this.seen = true;
       });
   },
   beforeMount() {},

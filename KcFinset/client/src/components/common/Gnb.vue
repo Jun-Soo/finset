@@ -21,11 +21,11 @@
           <a @click="clickButton('/etc/faqMain')">고객센터</a>
           <a @click="clickButton('/mypage/cert')">인증보안</a>
           <a @click="clickButton('/etc/noticeMain')">공지/이벤트</a>
-          <a href="#">개인설정</a>
-          <a @click="clickButton('/credit/counselMain')">금융달력</a>
-          <a @click="clickButton('/share/main?cd_share=02')">정보공유관리</a>
-          <a @click="clickButton('/debt/calc')">금융계산기</a>
           <a @click="clickButton('/news/main')">뉴스</a>
+          <a @click="clickButton('/scrap/ctrlFcLink')">연동관리</a>
+          <a @click="clickButton('/share/main?cd_share=02')">정보공유관리</a>
+          <a @click="clickButton('/credit/counselMain')">금융달력</a>
+          <a @click="clickButton('/debt/calc')">금융계산기</a>
         </div>
         <dl id="gnb">
           <dt>신용</dt>
@@ -111,10 +111,15 @@ export default {
     },
     clickButton: function(page) {
       // GNB Close Event
+      if (page === "/debt/calc") {
+        this.$dialogs.alert("준비중 입니다.", Constant.options);
+        return false;
+      }
       $(".gnb-wrap").removeClass("on");
       $("body").removeClass("not-scroll");
       this.$router.push(page);
     }
+
     // goBack: function() {
     //   var historySize = history.length;
     //   if (historySize == undefined || historySize == 0) {

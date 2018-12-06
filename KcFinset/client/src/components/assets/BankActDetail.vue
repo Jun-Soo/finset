@@ -24,11 +24,8 @@
       <div class="bank-detail">
         <div class="select">
           <div class="left">
-            <select v-model="scTrnsType" @change="searchActTrnsList()">
-              <option v-for="scTrnsTypeOption in scTrnsTypeOptions" :key="scTrnsTypeOption.index" :value="scTrnsTypeOption.value">
-                {{ scTrnsTypeOption.text }}
-              </option>
-            </select>
+            <multiselect v-model="scTrnsType" ref="scTrnsType" placeholder="유형선택" track-by="text" label="text" :options="scTrnsTypeOptions" :searchable="false" :allow-empty="false" @select="onSelectTrns">
+            </multiselect>
           </div>
           <div class="right">
             <button class="btn-search"></button>
@@ -150,6 +147,12 @@ export default {
     formatDateDot: function(data) {
       return Common.formatDateDot(data);
     },
+    onSelectTrns: function(option) {
+      var _this = this;
+      _this.scTrnsType = option;
+      console.log(option);
+      _this.searchActTrnsList();
+    },
     //입출금 내역 조회
     searchActTrnsList: function() {
       var _this = this;
@@ -160,15 +163,18 @@ export default {
     listActTrns: function(callback) {
       var _this = this;
 
-      console.log("scKeyword" + _this.scKeyword);
       console.log("scTrnsType" + _this.scTrnsType);
+      console.log("scKeyword" + _this.scKeyword);
 
       var formData = new FormData();
       formData.append("page", _this.page);
       formData.append("no_person", _this.no_person);
       formData.append("no_account", _this.no_account);
+      formData.append(
+        "scTrnsType ",
+        _this.scTrnsType != "" ? _this.scTrnsType.value : ""
+      );
       formData.append("scKeyword", _this.scKeyword);
-      formData.append("scTrnsType ", _this.scTrnsType);
 
       this.$http
         .post("/m/assets/listAssetsBankActTrns.json", formData)

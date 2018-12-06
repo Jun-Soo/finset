@@ -15,6 +15,10 @@
   	-webkit-user-select : none;  
 }
 
+input,select,textarea{
+    -webkit-user-select : auto;
+}
+
 /** 추가내용: 웹 브라우저 기본 사이즈 정의 */
 html, body {
 	width: 100%;

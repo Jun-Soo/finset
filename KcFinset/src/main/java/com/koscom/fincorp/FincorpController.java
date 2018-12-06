@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.koscom.attach.service.AttachManager;
@@ -92,6 +93,13 @@ public class FincorpController {
             }
         }
     }
+    
+    @RequestMapping("/getNmFc.json")
+    public String getNmFc(Model model, HttpServletRequest request, HttpServletResponse response, String cd_fc) throws Exception {
+    	model.addAttribute("name", StringUtil.nullToString(fincorpManager.getNmFc(cd_fc)));
+		return "jsonView";
+    }
+    
     private void fileNmCheck(String fileName) throws Exception{
         if(fileName.indexOf("..") > -1){
             throw new FinsetException("지원하지 않는 파일");

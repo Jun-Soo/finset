@@ -175,7 +175,7 @@ export default {
       }
       if (cnt == 0) {
         if (this.$store.state.isLoggedIn) {
-          this.$router.push("/mypage/info");
+          this.$router.push("/scrap/ctrlFcLink");
         } else {
           this.login();
         }
@@ -187,7 +187,7 @@ export default {
         .then(function(response) {
           var result = response.data.code;
           if (_this.$store.state.isLoggedIn) {
-            _this.$router.push("/mypage/info");
+            _this.$router.push("/scrap/ctrlFcLink");
           } else {
             _this.login();
           }

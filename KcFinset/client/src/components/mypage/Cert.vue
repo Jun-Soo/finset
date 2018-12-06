@@ -55,12 +55,12 @@ export default {
       Jockey.send("checkFingerPrint");
     }
 
-    if (Constant.userAgent == "Android") {
-      //물어보깅
-      window.Android.backKeySendUrl(
-        "/m/customercenter/getCustomerCenterMain.json"
-      );
-    }
+    // if (Constant.userAgent == "Android") {
+    //   //물어보깅
+    //   window.Android.backKeySendUrl(
+    //     "/m/customercenter/getCustomerCenterMain.json"
+    //   );
+    // }
   },
   beforeMount() {},
   mounted() {},

@@ -292,13 +292,33 @@ export default {
       url: '/m/comm/getCodeList.json',
       data: data,
       contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-      type: 'POST',
+      type: 'GET',
       async: false,
       success: function (result) {
         cdList = result.codeList
       }
     })
     return cdList
+  },
+  getNmFc: function (cdFc) {
+    var data = {
+      'cd_fc': cdFc
+    }
+    var name = ''
+    $.ajax({
+      url: '/m/fincorp/getNmFc.json',
+      data: data,
+      contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
+      type: 'GET',
+      async: false,
+      success: function (result) {
+        name = result.name
+      },
+      error: function (e) {
+        name = ''
+      }
+    })
+    return name
   },
   // makeOptions: function (cdGroup, defaultText, selectValue, pType) {
   //   var type = pType

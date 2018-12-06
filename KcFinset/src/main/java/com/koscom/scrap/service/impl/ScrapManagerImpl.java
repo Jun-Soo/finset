@@ -2245,10 +2245,16 @@ public class ScrapManagerImpl implements ScrapManager {
 					jsonCardInfo.put("TYPE_LOGIN", typeLogin);
 					jsonCardInfo.put("CN", fcLinkInfo.getCn());
 					
+					//하나카드 3개월 단위 조회로 인한 예외처리
+					if("hanacard".equals(cardCode))	{
+						jsonCardInfo.put("LIMIT_DAYS", "80");
+					}
+					
 					//자동 스크래래핑 관련 은행사의 계좌 조회내역 조회(조회 시작일)				
 					ScrReqCardVO scrReqCardVO = new ScrReqCardVO();
 					scrReqCardVO.setNo_person(no_person);
 					scrReqCardVO.setCd_fc(fcLinkInfo.getCd_fc());
+					scrReqCardVO.setCd_type("02"); //01 보유카드현황, 02 승인내역, 03 청구내역, 04 한도조회, 05 포인트조회
 					ScrReqCardVO scrReqCard = scrapMapper.getScrReqCard(scrReqCardVO);
 					
 					if(scrReqCard != null)	{
@@ -2264,6 +2270,23 @@ public class ScrapManagerImpl implements ScrapManager {
 						startDate = DateUtil.addMonths(toDay, -3);
 					}
 					jsonCardInfo.put("DT_START", startDate);
+					
+					scrReqCardVO.setCd_type("03"); //01 보유카드현황, 02 승인내역, 03 청구내역, 04 한도조회, 05 포인트조회
+					scrReqCard = scrapMapper.getScrReqCard(scrReqCardVO);
+					
+					if(scrReqCard != null)	{
+						if(scrReqCard.getError_cd().equals("00000000") ||			//정상인 경우
+								scrReqCard.getError_cd().equals("42110000")	)	{	//조회내역이 없는 경우
+							startDate = scrReqCard.getYmd_end();
+						}
+						else	{
+							startDate = scrReqCard.getYmd_stt();
+						}
+					}
+					else	{
+						startDate = DateUtil.addMonths(toDay, -3).substring(0, 6);
+					}
+					jsonCardInfo.put("DT_CHARGE", startDate);
 					jsonCardArr.add(jsonCardInfo);
 				}
 				jsonRoot.put("LIST_CARD", jsonCardArr);

@@ -140,7 +140,10 @@
 export default {
   name: "MypageState",
   data() {
-    return {};
+    return {
+      page: 1,
+      goodsList: []
+    };
   },
   components: {},
   computed: {},
@@ -149,14 +152,73 @@ export default {
     this.$store.state.title = "상품신청현황";
     this.$store.state.isSetting = true;
   },
-  created() {},
+  created() {
+    //Common.pagination(this.listGoodsStatus);
+  },
   beforeMount() {},
   mounted() {},
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    listGoodsStatus: function(callback) {
+      var _this = this;
+      this.$store.state.isLoading = true;
+
+      this.$http
+        .get("/m/customercenter/listGoodsStatus.json", {
+          params: {
+            page: _this.page
+          }
+        })
+        .then(response => {
+          var list = response.data.pagedList.source;
+          if ((list || "") == "" || list.length === 0) {
+            _this.$store.state.isLoading = false;
+            _this.seen = true;
+            callback();
+            return;
+          }
+          for (var i = 0; i < list.length; i++) {
+            list[i].type_interest_length = 0;
+            if ((list[i].cd_type_interest || "") != "") {
+              list[i].type_interest_length = list[i].cd_type_interest.length;
+            }
+            list[i].icon =
+              "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + list[i].cd_fc;
+            list[i].typePay = "";
+            if ((list[i].cd_type_pay || "") != "") {
+              var cdTypePay = list[i].cd_type_pay.split(",");
+              for (var j = 0; j < cdTypePay.length; j++) {
+                if (j) {
+                  list[i].typePay += ", ";
+                }
+                list[i].typePay += Common.getCodeName(
+                  "cd_type_pay",
+                  cdTypePay[j]
+                );
+              }
+            }
+            list[i].isSelect = false;
+          }
+          if (_this.page == 1) {
+            _this.goodsList = list;
+          } else {
+            for (var key in list) {
+              _this.goodsList.push(list[key]);
+            }
+          }
+          _this.page++;
+          _this.seen = true;
+          _this.$store.state.isLoading = false;
+        })
+        .catch(e => {
+          _this.$store.state.isLoading = false;
+          _this.$toast.center(ko.messages.error);
+        });
+    }
+  }
 };
 </script>
 

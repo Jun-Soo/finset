@@ -13,6 +13,15 @@
         <p class="mt10">대출신청 후 신용등급 변동, 입력정보 오류 등으로 인해 금리/한도의 변동되거나 대출이 불가능 할 수 있습니다.</p>
         <a class="close" @click="clickClose"></a>
       </div>
+      <div class="select">
+        <div class="left">
+          <multiselect v-model="orderby" label="text" :show-labels="false" :options="options" :searchable="false" :allow-empty="false" @select="orderbyOnChange">
+          </multiselect>
+        </div>
+        <!-- <div class="right">
+            <button class="btn-search" @click="clickSearch()"></button>
+          </div> -->
+      </div>
 
       <div class="item" v-for="goods in goodsList" :key="goods.index">
         <div class="top">
@@ -31,7 +40,7 @@
         <div class="hide-con show">
           <div class="list">
             <p class="left">대출한도</p>
-            <p class="right">{{Common.formatNumber(goods.amt_limit)}} 만원</p>
+            <p class="right">{{Common.formatNumber(goods.amt_limit/10000)}} 만원</p>
           </div>
           <div class="list">
             <p class="left">대출금리</p>
@@ -73,6 +82,12 @@ export default {
       Common: Common,
       page: 1,
       selectedCount: 0,
+      options: [
+        { text: "금리순", value: "01" },
+        { text: "한도순", value: "02" },
+        { text: "기간순", value: "03" }
+      ],
+      orderby: { text: "금리순", value: "01" },
       goodsList: []
     };
   },
@@ -97,6 +112,8 @@ export default {
       this.$store.state.isLoading = true;
       var formData = new FormData();
       formData.append("page", this.page);
+      formData.append("orderby", this.orderby.value);
+
       this.$http
         .post("/m/customercenter/listGoodsResults.json", formData, {
           headers: {
@@ -146,8 +163,13 @@ export default {
           _this.$store.state.isLoading = false;
         })
         .catch(e => {
+          _this.$store.state.isLoading = false;
           _this.$toast.center(ko.messages.error);
         });
+    },
+    orderbyOnChange: function() {
+      this.page = 1;
+      Common.pagination(this.listGoodsResults);
     },
     clickClose: function() {
       $("#info").slideUp(500, "easeInOutExpo");
@@ -162,18 +184,57 @@ export default {
     },
     clickRequest: function() {
       var count = 0;
-      for (var i = 0; i < this.goodsList.length; i++) {
-        if (this.goodsList[i].isSelect) {
-          count++;
-        }
-      }
-      if (this.selectedCount > 0) {
+      if (this.selectedCount > 1) {
         this.$dialogs.alert(
           "대출은 한건만 신청할 수 있습니다.",
           Constant.options
         );
+      } else if (this.selectedCount == 0) {
+        this.$dialogs.alert("대출상품을 선택해주세요.", Constant.options);
       }
+      for (var i = 0; i < this.goodsList.length; i++) {
+        if (this.goodsList[i].isSelect) {
+          console.log(this.goodsList[i]);
+          this.reqFcPersonInfo(this.goodsList[i]);
+        }
+      }
+
       //alert(count);
+    },
+    reqFcPersonInfo: function(goods) {
+      var _this = this;
+      this.$store.state.isLoading = true;
+      var formData = new FormData();
+      formData.append("cd_fc", goods.cd_fc);
+      formData.append("cd_goods", goods.cd_goods);
+      formData.append("no_prepare", goods.no_prepare);
+      formData.append("no_bunch", goods.no_bunch);
+      formData.append("cd_goods_gubun", goods.cd_goods_gubun);
+      formData.append("amt_limit", goods.amt_limit);
+      this.$http
+        .post("/m/loan/reqFcPersonInfo.json", formData, {
+          headers: {
+            async: false,
+            "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+          }
+        })
+        .then(response => {
+          var result = response.data;
+          _this.$store.state.isLoading = false;
+          console.log(
+            "inCome:result.message=" +
+              result.message +
+              "\nresult.isSuccess=" +
+              result.isSuccess
+          );
+          setTimeout(function() {
+            _this.$router.push("/mypage/rstlInqSucc");
+          }, 100);
+        })
+        .catch(e => {
+          _this.$store.state.isLoading = false;
+          _this.$toast.center(ko.messages.error);
+        });
     }
   }
 };

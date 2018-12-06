@@ -90,6 +90,18 @@
            <if test="@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods_gubun) and @com.koscom.util.MybatisUtil@isNotEmpty(cd_goods_gubun2)">
                AND (PI.CD_GOODS_GUBUN = #{ cd_goods_gubun, jdbcType=VARCHAR } or PI.CD_GOODS_GUBUN = #{ cd_goods_gubun2, jdbcType=VARCHAR })
            </if>
+           		ORDER BY
+			<choose>
+			<when test="'01'.equals(orderby)">
+				TFR.RTO_LOAN ASC/*금리낮은순*/
+			</when>
+			<when test="'02'.equals(orderby)">
+				TFR.AMT_LIMIT DESC /*한도높은순*/
+			</when>
+			<when test="'03'.equals(orderby)">
+				NVL(GI.CD_LOAN_TERM,'-1') DESC /*기간높은순*/
+			</when>
+			</choose>
         )
         SELECT
             *

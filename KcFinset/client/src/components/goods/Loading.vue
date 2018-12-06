@@ -5,6 +5,7 @@
 </template>
 
 <script>
+import ko from "vee-validate/dist/locale/ko.js";
 export default {
   name: "",
   data() {
@@ -41,27 +42,31 @@ export default {
       this.$http
         .post("/m/loan/reqFinanceInfo.json", formData, {
           headers: {
-            async: false,
+            async: true,
             "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
           }
         })
         .then(response => {
-          var result = response.data;
-          var isSuccess = result.isSuccess;
-          var message = result.message;
-          console.log(result);
-          if (isSuccess == "false" || message != "") {
-            _this.$toast.center(message);
-          } else {
-            _this.$toast.center("한도조회 신청하였습니다.");
-          }
-          setTimeout(function() {
-            _this.$router.push("/goods/list");
-          }, 100);
+          // var result = response.data;
+          // var isSuccess = result.isSuccess;
+          // var message = result.message;
+          // console.log(result);
+          // if (isSuccess == "false" || message != "") {
+          //   _this.$toast.center(message);
+          // } else {
+          //   _this.$toast.center("한도조회 신청하였습니다.");
+          // }
+          // setTimeout(function() {
+          //   _this.$router.push("/goods/list");
+          // }, 100);
         })
         .catch(e => {
           _this.$toast.center(ko.messages.error);
         });
+      _this.$toast.center("한도조회 신청하였습니다.");
+      setTimeout(function() {
+        _this.$router.push("/goods/list");
+      }, 100);
     }
   }
 };

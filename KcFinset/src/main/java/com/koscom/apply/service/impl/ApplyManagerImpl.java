@@ -664,13 +664,6 @@ public class ApplyManagerImpl implements ApplyManager {
 		return new ReturnClass(Constant.SUCCESS, "정상 처리 하였습니다.", (Object) no_apply);
 	}
 	
-	/**
-	 * Name   : getLoanProgSts
-	 * Desc   : 대출진행현황 조회
-	 * input  : ApplyForm
-	 * output : ApplyVO
-	 * Date   : 2017.09.26
-	 */
 	@Override
 	public List<ApplyVO> listLoanProgSts(ApplyForm applyForm) {
 		return applyMapper.listLoanProgSts(applyForm);
@@ -679,5 +672,15 @@ public class ApplyManagerImpl implements ApplyManager {
 	@Override
 	public List<ApplyVO> listApplyByPrepare(String no_prepare) {
 		return applyMapper.listApplyByPrepare(no_prepare);
+	}
+	
+	@Override
+	public List<ApplyVO> listPastLoanHistory(ApplyForm applyForm) {
+		return applyMapper.listPastLoanHistory(applyForm);
+	}
+	
+	@Override
+	public int listPastLoanHistoryCount(ApplyForm applyForm) {
+		return applyMapper.listPastLoanHistoryCount(applyForm);
 	}
 }

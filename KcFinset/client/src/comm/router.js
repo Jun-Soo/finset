@@ -161,6 +161,7 @@ import MypageFavGoods from '@/components/mypage/FavGoods'
 // import MypageFavList from '@/components/mypage/FavList'
 import MypageFavDetail from '@/components/mypage/FavDetail'
 import MypageRstlInqGoods from '@/components/mypage/RstlInqGoods'
+import MypageRstlInqSucc from '@/components/mypage/RstlInqSucc'
 // import MypageGoodsList from '@/components/mypage/GoodsList'
 // import MypageGoodsDetail from '@/components/mypage/GoodsDetail'
 // import MypageRstlReqGoods from '@/components/mypage/RstlReqGoods'
@@ -1538,6 +1539,24 @@ export const routes = [{
     path: 'rstlInqGoods',
     alias: '/rstlInqGoods',
     component: MypageRstlInqGoods,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'rstlInqSucc',
+    alias: '/rstlInqSucc',
+    component: MypageRstlInqSucc,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'rstlInqSucc',
+    alias: '/rstlInqSucc',
+    component: MypageRstlInqSucc,
     meta: {
       allowPath: true,
       requiresAuth: true

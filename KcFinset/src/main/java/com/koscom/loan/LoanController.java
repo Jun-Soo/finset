@@ -566,13 +566,15 @@ public class LoanController implements Constant {
         logger.debug("goodsVO      ="+goodsVO      );
         logger.debug("message      ="+message      );
         logger.debug("isSuccess    ="+isSuccess    );
-//      session.setAttribute("txFcReceiveVO", txFcReceiveVO);
-//      session.setAttribute("path_file1"   , path_file    );
-//		session.setAttribute("nm_goods"     , nm_goods     );
-//		session.setAttribute("fincorpVO"    , fincorpVO    );
-//		session.setAttribute("goodsVO"      , goodsVO      );
-//		session.setAttribute("message"      , message      );
-//		session.setAttribute("isSuccess"    , isSuccess    );
+        // 결과화면을 위한 정보 세션에 저장
+        session.setAttribute("txFcReceiveVO", txFcReceiveVO);
+        session.setAttribute("path_file1"   , path_file    );
+		session.setAttribute("nm_goods"     , nm_goods     );
+		session.setAttribute("fincorpVO"    , fincorpVO    );
+		session.setAttribute("goodsVO"      , goodsVO      );
+		session.setAttribute("message"      , message      );
+		session.setAttribute("isSuccess"    , isSuccess    );
+		
         model.addAttribute("txFcReceiveVO", txFcReceiveVO);
         model.addAttribute("path_file"    , path_file    );
         model.addAttribute("nm_goods"     , nm_goods     );
@@ -580,6 +582,81 @@ public class LoanController implements Constant {
         model.addAttribute("goodsVO"      , goodsVO      );
         model.addAttribute("message"      , message      );
         model.addAttribute("isSuccess"    , isSuccess    );
+		//==================================================namik ADD END
+		return "jsonView";
+	}
+	
+	/**
+	 * 대출신청 완료 페이지
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/getLoanIncomeSuccess.json")
+	public String getLoanIncomeSuccess(HttpServletRequest request, HttpSession session ,Model model, GoodsForm goodsForm) {
+        Object objTxFcReceiveVO = null;
+        Object objFincorpVO     = null;
+        Object objNm_goods      = null;//상품명
+        Object objGoodsVO       = null;
+        Object objPath_file1    = null;//로그파일 경로
+        Object objMessage       = null;//전문메세지
+        Object objIsSuccess     = null;//전문메세지
+
+        TxFcReceiveVO txFcReceiveVO = null;
+        FincorpVO     fincorpVO     = null;
+        String        nm_goods      = null;//상품명
+        GoodsVO       goodsVO       = null;
+        String        path_file1    = null;//로그파일 경로
+        String        message       = null;//전문메세지
+        String        isSuccess     = null;
+
+        objTxFcReceiveVO = session.getAttribute("txFcReceiveVO");
+        objFincorpVO     = session.getAttribute("fincorpVO"    );
+        objNm_goods      = session.getAttribute("nm_goods"     );
+        objGoodsVO       = session.getAttribute("goodsVO"      );
+        objPath_file1    = session.getAttribute("path_file1"   );
+        objMessage       = session.getAttribute("message"      );
+        objIsSuccess     = session.getAttribute("isSuccess"    );
+        LogUtil.debugLn(logger,"frameLoanIncomeSuccessAfter.crz1");
+        txFcReceiveVO = (objTxFcReceiveVO != null && (objTxFcReceiveVO.getClass() == TxFcReceiveVO.class))? (TxFcReceiveVO)objTxFcReceiveVO : null;
+        fincorpVO     = (objFincorpVO     != null && (objFincorpVO    .getClass() == FincorpVO    .class))? (FincorpVO    )objFincorpVO     : null;
+        nm_goods      = (objNm_goods      != null && (objNm_goods     .getClass() == String       .class))? (String       )objNm_goods      : null;
+        goodsVO       = (objGoodsVO       != null && (objGoodsVO      .getClass() == GoodsVO      .class))? (GoodsVO      )objGoodsVO       : null;
+        path_file1    = (objPath_file1    != null && (objPath_file1   .getClass() == String       .class))? (String       )objPath_file1    : null;
+        message       = (objMessage       != null && (objMessage      .getClass() == String       .class))? (String       )objMessage       : null;
+        isSuccess     = (objIsSuccess     != null && (objIsSuccess    .getClass() == String       .class))? (String       )objIsSuccess     : null;
+        logger.debug("frameLoanIncomeSuccessAfter.objTxFcReceiveVO="+objTxFcReceiveVO);
+        logger.debug("frameLoanIncomeSuccessAfter.objFincorpVO    ="+objFincorpVO    );
+        logger.debug("frameLoanIncomeSuccessAfter.objNm_goods     ="+objNm_goods     );
+        logger.debug("frameLoanIncomeSuccessAfter.objGoodsVO      ="+objGoodsVO      );
+        logger.debug("frameLoanIncomeSuccessAfter.objPath_file1   ="+objPath_file1   );
+        logger.debug("frameLoanIncomeSuccessAfter.objMessage      ="+objMessage      );
+        logger.debug("frameLoanIncomeSuccessAfter.objIsSuccess    ="+objIsSuccess    );
+        logger.debug("frameLoanIncomeSuccessAfter.txFcReceiveVO="+txFcReceiveVO);
+        logger.debug("frameLoanIncomeSuccessAfter.fincorpVO    ="+fincorpVO    );
+        logger.debug("frameLoanIncomeSuccessAfter.nm_goods     ="+nm_goods     );
+        logger.debug("frameLoanIncomeSuccessAfter.goodsVO      ="+goodsVO      );
+        logger.debug("frameLoanIncomeSuccessAfter.path_file1   ="+path_file1   );
+        logger.debug("frameLoanIncomeSuccessAfter.message      ="+message      );
+        logger.debug("frameLoanIncomeSuccessAfter.isSuccess    ="+isSuccess    );
+       
+        LogUtil.debugLn(logger,"frameLoanIncomeSuccessAfter.crz2");
+
+        logger.debug("txFcReceiveVO="+txFcReceiveVO);
+        logger.debug("fincorpVO    ="+fincorpVO    );
+        logger.debug("nm_goods     ="+nm_goods     );
+        logger.debug("goodsVO      ="+goodsVO      );
+        logger.debug("path_file1   ="+path_file1   );
+        logger.debug("message      ="+message      );
+        logger.debug("isSuccess    ="+isSuccess    );
+
+		if(txFcReceiveVO != null) {model.addAttribute("txFcReceiveVO", txFcReceiveVO);}
+		if(fincorpVO     != null) {model.addAttribute("fincorpVO"    , fincorpVO    );}
+		if(nm_goods      != null) {model.addAttribute("nm_goods"     , nm_goods     );}
+		if(goodsVO       != null) {model.addAttribute("goodsVO"      , goodsVO      );}
+		if(path_file1    != null) {model.addAttribute("path_file1"   , path_file1   );}
+		if(message       != null) {model.addAttribute("message"      , message      );}
+		if(isSuccess     != null) {model.addAttribute("isSuccess"    , isSuccess    );}
 		//==================================================namik ADD END
 		return "jsonView";
 	}

@@ -279,4 +279,235 @@
 				</if>
 		    ) A
 	</select>
+	
+	<select id="listPastLoanHistory"  parameterType="com.koscom.apply.model.ApplyForm" resultType="com.koscom.apply.model.ApplyVO">
+		/* com.koscom.apply.dao.ApplyMapper.listPastLoanHistory : */
+			SELECT NO_APPLY
+				  ,NO_PREPARE
+				  ,NO_PERSON
+				  ,CD_APPLY_DOC_BOX
+				  ,CD_APPLY_COMP
+				  ,CD_GOODS
+				  ,CD_ADVERTISEMENT
+				  ,YMD_APPLY
+				  ,AMT_APPLY
+				  ,ID_APPLY
+				  ,ETC_APPLY_PATH
+				  ,AMT_APPROVAL
+				  ,YMD_APPROVAL
+				  ,YMD_LST_COMP
+				  ,HIS_LST_COMP
+				  ,NM_WRITER
+				  ,CD_COLLECT_PATH
+				  ,CD_CONTACT_PATH
+				  ,CD_COLLECT_METHOD
+				  ,ETC_MEMO,NM_AGENCY
+				  ,NM_CEO_AGENCY
+				  ,URL_HOMEPAGE_AGENCY
+				  ,MEMO_TO_APPLY
+				  ,MEMO_FROM_APPLY
+				  ,NO_AGENCY_PERSON
+				  ,DT_AGENCY_FRT
+				  ,YMD_EARLY_REPAYMENT
+				  ,YEAR_TERM
+				  ,RTO_LOAN
+				  ,CD_FC
+				  ,NO_BUNCH
+				  ,DENY_DESC
+				  ,NO_FC_REQ
+				  ,PATH_FILE1
+				  ,NM_GOODS
+				  ,CD_LOAN_TERM
+				  ,CD_TYPE_PAY
+				  ,CD_TYPE_INTEREST
+				  ,FC_TELNO
+				  ,RN
+				  ,RNUM
+		      FROM (
+		            SELECT LST.NO_APPLY
+						  ,LST.NO_PREPARE
+						  ,LST.NO_PERSON
+						  ,LST.CD_APPLY_DOC_BOX
+						  ,LST.CD_APPLY_COMP
+						  ,LST.CD_GOODS
+						  ,LST.CD_ADVERTISEMENT
+						  ,LST.YMD_APPLY
+						  ,LST.AMT_APPLY
+						  ,LST.ID_APPLY
+						  ,LST.ETC_APPLY_PATH
+						  ,LST.AMT_APPROVAL
+						  ,LST.YMD_APPROVAL
+						  ,LST.YMD_LST_COMP
+						  ,LST.HIS_LST_COMP
+						  ,LST.NM_WRITER
+						  ,LST.CD_COLLECT_PATH
+						  ,LST.CD_CONTACT_PATH
+						  ,LST.CD_COLLECT_METHOD
+						  ,LST.ETC_MEMO,NM_AGENCY
+						  ,LST.NM_CEO_AGENCY
+						  ,LST.URL_HOMEPAGE_AGENCY
+						  ,LST.MEMO_TO_APPLY
+						  ,LST.MEMO_FROM_APPLY
+						  ,LST.NO_AGENCY_PERSON
+						  ,LST.DT_AGENCY_FRT
+						  ,LST.YMD_EARLY_REPAYMENT
+						  ,LST.YEAR_TERM
+						  ,LST.RTO_LOAN
+						  ,LST.CD_FC
+						  ,LST.NO_BUNCH
+						  ,LST.DENY_DESC
+						  ,LST.NO_FC_REQ
+						  ,LST.PATH_FILE1
+						  ,LST.NM_GOODS
+						  ,LST.CD_LOAN_TERM
+						  ,LST.CD_TYPE_PAY
+						  ,LST.CD_TYPE_INTEREST
+						  ,LST.FC_TELNO
+						  ,LST.RN
+		                 , ROWNUM RNUM
+		              FROM (
+		                    SELECT A.NO_APPLY
+								  ,A.NO_PREPARE
+								  ,A.NO_PERSON
+								  ,A.CD_APPLY_DOC_BOX
+								  ,A.CD_APPLY_COMP
+								  ,A.CD_GOODS
+								  ,A.CD_ADVERTISEMENT
+								  ,A.YMD_APPLY
+								  ,A.AMT_APPLY
+								  ,A.ID_APPLY
+								  ,A.ETC_APPLY_PATH
+								  ,A.AMT_APPROVAL
+								  ,A.YMD_APPROVAL
+								  ,A.YMD_LST_COMP
+								  ,A.HIS_LST_COMP
+								  ,A.NM_WRITER
+								  ,A.CD_COLLECT_PATH
+								  ,A.CD_CONTACT_PATH
+								  ,A.CD_COLLECT_METHOD
+								  ,A.ETC_MEMO,NM_AGENCY
+								  ,A.NM_CEO_AGENCY
+								  ,A.URL_HOMEPAGE_AGENCY
+								  ,A.MEMO_TO_APPLY
+								  ,A.MEMO_FROM_APPLY
+								  ,A.NO_AGENCY_PERSON
+								  ,A.DT_AGENCY_FRT
+								  ,A.YMD_EARLY_REPAYMENT
+								  ,A.YEAR_TERM
+								  ,A.RTO_LOAN
+								  ,A.CD_FC
+								  ,A.NO_BUNCH
+								  ,A.DENY_DESC
+								  ,A.NO_FC_REQ
+								  ,A.PATH_FILE1
+								  ,A.NM_GOODS
+								  ,A.CD_LOAN_TERM
+								  ,A.CD_TYPE_PAY
+								  ,A.CD_TYPE_INTEREST
+								  ,A.FC_TELNO
+								  ,A.RN
+		                      FROM (
+		                            SELECT AI.NO_APPLY
+		                                 , AI.NO_PREPARE
+		                                 , AI.NO_PERSON
+		                                 , AI.CD_APPLY_DOC_BOX
+		                                 , AI.CD_APPLY_COMP
+		                                 , AI.CD_GOODS
+		                                 , AI.CD_ADVERTISEMENT
+		                                 , AI.YMD_APPLY
+		                                 , AI.AMT_APPLY
+		                                 , AI.ID_APPLY
+		                                 , AI.ETC_APPLY_PATH
+		                                 , AI.AMT_APPROVAL
+		                                 , AI.YMD_APPROVAL
+		                                 , AI.YMD_LST_COMP
+		                                 , AI.HIS_LST_COMP
+		                                 , AI.NM_WRITER
+		                                 , AI.CD_COLLECT_PATH
+		                                 , AI.CD_CONTACT_PATH
+		                                 , AI.CD_COLLECT_METHOD
+		                                 , AI.ETC_MEMO
+		                                 , AI.NM_AGENCY
+		                                 , AI.NM_CEO_AGENCY
+		                                 , AI.URL_HOMEPAGE_AGENCY
+		                                 , AI.MEMO_TO_APPLY
+		                                 , AI.MEMO_FROM_APPLY
+		                                 , AI.NO_AGENCY_PERSON
+		                                 , AI.DT_AGENCY_FRT
+		                                 , AI.YMD_EARLY_REPAYMENT
+		                                 , TFR.YEAR_TERM --, AI.YEAR_TERM
+		                                 , TFR.RTO_LOAN --, AI.RTO_LOAN
+		                                 , AI.CD_FC
+		                                 , AI.NO_BUNCH
+		                                 , AI.ID_FRT
+		                                 , TO_CHAR(AI.DT_FRT, 'YYYYMMDD') AS DT_FRT
+		                                 , AI.ID_LST
+		                                 , TO_CHAR(AI.DT_LST, 'YYYYMMDD') AS DT_LST
+										 , DI.DENY_DESC
+										 , TFR.NO_FC_REQ
+										 , FI.PATH_FILE1
+										 , GI.NM_GOODS
+										 , GI.CD_LOAN_TERM
+										 , GI.CD_TYPE_PAY
+										 , GI.CD_TYPE_INTEREST
+										 , FI.TEL AS FC_TELNO
+		                                 , ROW_NUMBER() OVER (PARTITION BY AI.NO_PERSON ORDER BY NVL(AI.DT_FRT, AI.DT_LST) DESC) RN
+		                              FROM APPLY_INFO AI LEFT OUTER JOIN TX_FC_RECEIVE TFR ON AI.NO_BUNCH = TFR.NO_BUNCH AND AI.CD_GOODS = TFR.CD_GOODS AND AI.CD_FC = TFR.CD_FC
+									                     LEFT OUTER JOIN DENY_INFO DI ON DI.NO_PERSON = AI.NO_PERSON AND DI.NO_PREPARE = AI.NO_PREPARE AND DI.CD_FC = AI.CD_FC AND DI.CD_GOODS = AI.CD_GOODS AND AI.CD_APPLY_DOC_BOX = '70'
+									                     LEFT OUTER JOIN FC_INFO FI ON FI.CD_FC = AI.CD_FC
+									                     LEFT OUTER JOIN GOODS_INFO GI ON GI.CD_FC = AI.CD_FC AND GI.CD_GOODS = AI.CD_GOODS
+		                             WHERE AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		                             ORDER BY TFR.NO_FC_REQ DESC
+		                           ) A
+		                   ) LST
+		             WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+		        )
+		    WHERE RNUM >= #{startPosition, jdbcType=NUMERIC}
+	</select>
+
+	<select id="listPastLoanHistoryCount"  parameterType="com.koscom.apply.model.ApplyForm" resultType="int">
+		/* com.koscom.apply.dao.ApplyMapper.listPastLoanHistoryCount : */
+		SELECT COUNT(*) AS recordCount, SUM(TO_NUMBER(NVL(A.amt_approval,0))) AS amtTotAppr, SUM(TO_NUMBER(NVL(A.amt_apply,0))) AS amtTotApply
+		  FROM (
+			    SELECT AI.NO_APPLY
+			         , AI.NO_PREPARE
+			         , AI.NO_PERSON
+			         , AI.CD_APPLY_DOC_BOX
+			         , AI.CD_APPLY_COMP
+    			     , AI.CD_GOODS
+				     , AI.CD_ADVERTISEMENT
+				     , AI.YMD_APPLY
+				     , AI.AMT_APPLY
+				     , AI.ID_APPLY
+				     , AI.ETC_APPLY_PATH
+				     , AI.AMT_APPROVAL
+				     , AI.YMD_APPROVAL
+                	 , AI.YMD_LST_COMP
+				     , AI.HIS_LST_COMP
+				     , AI.NM_WRITER
+				     , AI.CD_COLLECT_PATH
+				     , AI.CD_CONTACT_PATH
+				     , AI.CD_COLLECT_METHOD
+				     , AI.ETC_MEMO
+				     , AI.NM_AGENCY
+				     , AI.NM_CEO_AGENCY
+				     , AI.URL_HOMEPAGE_AGENCY
+				     , AI.MEMO_TO_APPLY
+				     , AI.MEMO_FROM_APPLY
+				     , AI.NO_AGENCY_PERSON
+				     , AI.DT_AGENCY_FRT
+				     , AI.YMD_EARLY_REPAYMENT
+				     , AI.YEAR_TERM
+				     , AI.RTO_LOAN
+				     , AI.CD_FC
+				     , AI.NO_BUNCH
+ 					 , AI.ID_FRT
+					 , TO_CHAR(AI.DT_FRT, 'YYYYMMDD') AS DT_FRT
+ 					 , AI.ID_LST
+					 , TO_CHAR(AI.DT_LST, 'YYYYMMDD') AS DT_LST
+				     , ROW_NUMBER() OVER (PARTITION BY AI.NO_PERSON ORDER BY NVL(AI.DT_FRT, AI.DT_LST) DESC) RN
+			      FROM APPLY_INFO AI
+			     WHERE AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		        ) A
+	</select>
 </mapper>

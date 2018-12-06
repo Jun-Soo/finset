@@ -15,6 +15,7 @@ public class FinsetForm extends SearchForm implements Serializable {
 	String cd_fc = "";
 	String cd_goods = "";
 	String ssn_person = "";
+	String orderby = "";
 
 	private String cd_goods_gubun;          // 상품구분
 	private String cd_goods_gubun2;          // 상품구분
@@ -72,6 +73,14 @@ public class FinsetForm extends SearchForm implements Serializable {
 
 	public void setSsn_person(String ssn_person) {
 		this.ssn_person = ssn_person;
+	}
+
+	public String getOrderby() {
+		return orderby;
+	}
+
+	public void setOrderby(String orderby) {
+		this.orderby = orderby;
 	}
 
 	@Override

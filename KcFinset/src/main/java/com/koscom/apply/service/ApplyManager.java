@@ -66,4 +66,18 @@ public interface ApplyManager {
 	 * @return
 	 */
 	ReturnClass delApplyInfo(ApplyVO applyVO) throws ParseException, IOException;
+	
+	/**
+	 * 과거 진행 내역 조회
+	 * @param applyForm
+	 * @return ApplyVO
+	 */
+	public List<ApplyVO> listPastLoanHistory(ApplyForm applyForm);
+	
+	/**
+	 * 과거 진행 내역 건수
+	 * @param applyForm
+	 * @return int
+	 */
+	public int listPastLoanHistoryCount(ApplyForm applyForm);
 }

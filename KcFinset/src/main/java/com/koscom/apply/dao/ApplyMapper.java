@@ -56,4 +56,18 @@ public interface ApplyMapper {
 	 * @return ApplyVO 
 	 */
 	List<ApplyVO> listLoanProgSts(ApplyForm applyForm);
+	
+	/**
+	 * 과거 진행 내역 조회
+	 * @param applyForm
+	 * @return List<ApplyVO>
+	 */
+	List<ApplyVO> listPastLoanHistory(ApplyForm applyForm);
+	
+	/**
+	 * 과거 진행 내역 건수
+	 * @param applyForm
+	 * @return List<ApplyVO>
+	 */
+	int listPastLoanHistoryCount(ApplyForm applyForm);
 }

@@ -2,6 +2,7 @@ package com.koscom.customercenter;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.text.ParseException;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -19,6 +20,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.koscom.apply.model.ApplyForm;
+import com.koscom.apply.service.ApplyManager;
 import com.koscom.board.model.BoardForm;
 import com.koscom.board.model.BoardInfoVO;
 import com.koscom.board.service.BoardManager;
@@ -32,6 +35,7 @@ import com.koscom.domain.PersonShareInfo;
 import com.koscom.domain.PersonShareMessageInfo;
 import com.koscom.env.model.CodeInfo;
 import com.koscom.env.service.CodeManager;
+import com.koscom.finance.service.FinanceManager;
 import com.koscom.finset.model.FinsetForm;
 import com.koscom.finset.model.FinsetVO;
 import com.koscom.finset.service.FinsetManager;
@@ -79,6 +83,12 @@ public class CustomerCenterController implements Constant {
 
 	@Autowired
 	CacheManager cacheManager;
+	
+	@Autowired
+	FinanceManager financeManager;
+	
+	@Autowired
+	ApplyManager applyManager;
 
 	@Resource
 	Environment environment;
@@ -664,6 +674,60 @@ public class CustomerCenterController implements Constant {
 		logger.info("list Result : " + pagedList.toString());
 		model.addAttribute("pagedList", pagedList);
 
+		return "jsonView";
+	}
+	
+	/** VUE
+	 * 마이페이지 신청상품 진행현황
+	 * @param request
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/listGoodsStatus.json")
+	public String listGoodsStatus(HttpServletRequest request, Model model, ApplyForm applyForm, HttpSession session) throws IOException, ParseException, FinsetException {
+
+		String no_person = (String) session.getAttribute("no_person");
+        String site = (environment != null)?environment.getProperty("service.profile"):"";
+
+		applyForm.setPage(applyForm.getPage());
+		applyForm.setNo_person(no_person);
+//		//진행중인 대출상품 업데이트
+		ReturnClass rc      = null;
+		String cd_result = null;   // 작업결과코드 00.성공, 01.실패, 10.정상접수, 92.기타오류, 93,필수항목누락
+        /**
+         * 에러메세지
+         */
+		String      message = ""  ;
+		/**
+		 * 조회처리 성공여부
+		 */
+		boolean     isSuccess = true;
+		try {
+			rc = financeManager.getLoanProgSts(applyForm);
+			cd_result = (rc != null)? rc.getCd_result():null;
+//			throw new FinsetMessageException("TEST 에러 메세지입니다.");
+		} catch (FinsetMessageException e) {
+			LogUtil.error(logger, e);
+			message = e.getMessage();
+			isSuccess = false;
+		} catch (IOException e) {
+            LogUtil.error(logger, e);
+            message = e.getMessage();
+            isSuccess = false;
+		}
+
+		if(Constant.SUCCESS.equals(cd_result) ){
+			logger.info("대출 진행 상태 조회 성공");
+		}
+		// 과거 내역 조회
+		Pagination pagedListPastHis = (Pagination) applyForm.setPagedList(applyManager.listPastLoanHistory(applyForm), applyManager.listPastLoanHistoryCount(applyForm));
+		if(isSuccess == false) {
+			message = "대출진행상태조회 실패하였습니다.";
+		}
+		model.addAttribute("pagedListPastHis", pagedListPastHis);
+		model.addAttribute("message"         , message         );
+		model.addAttribute("site"            , site            );
+		model.addAttribute("isSuccess"       , isSuccess       );
 		return "jsonView";
 	}
 

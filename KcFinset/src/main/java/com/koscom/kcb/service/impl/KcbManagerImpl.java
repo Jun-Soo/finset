@@ -521,12 +521,25 @@ public class KcbManagerImpl implements KcbManager {
 			String 		parseHtml = "";
 			
 			try {
+
+				String kcbHost = "";
+				String domain  = kcb_600420.getResDomain();
+				String kcbURI  = kcb_600420.getKcbURI();
 				
-				rtnMap = JsoupUtil.getCrawling(kcb_600420.getKcbURI());
+				if(domain.indexOf("api") > -1) {
+					kcbHost = environment.getProperty("kcbApi");
+					kcbURI	= kcbURI.replace("api.allcredit.co.kr", kcbHost);
+				} else {
+					kcbHost = environment.getProperty("kcbMaff");
+					kcbURI	= kcbURI.replace("maff.allcredit.co.kr", kcbHost);
+				}
+				
+				logger.error("kcbURI ==== " + kcbURI);
+				
+				rtnMap = JsoupUtil.getCrawling(kcbURI);
 				parseHtml = ((Document)rtnMap.get("doc")).html();
 				
 				String 	href 	= Pattern.compile("\\s").matcher(parseHtml).replaceAll("");
-				String	domain  = kcb_600420.getResDomain();
 				int 	start 	= href.indexOf("href=")+6;
 				int 	end 	= href.lastIndexOf("\";");
 
@@ -537,14 +550,7 @@ public class KcbManagerImpl implements KcbManager {
 				logger.error("href ==== " + href);
 				logger.error("domain ==== " + href);
 				
-				String URL		= "";
-				if(domain.indexOf("api") > -1) {
-					URL = environment.getProperty("kcbApi");
-				} else {
-					URL = environment.getProperty("kcbMaff");
-				}
-				
-				URL = URL + href;
+				String URL		= kcbHost + href;
 				
 				logger.debug("URL ==== " + URL);
 				logger.debug("JSESSIONID ==== " + rtnMap.get("jsessionId").toString());

@@ -525,15 +525,26 @@ public class KcbManagerImpl implements KcbManager {
 				rtnMap = JsoupUtil.getCrawling(kcb_600420.getKcbURI());
 				parseHtml = ((Document)rtnMap.get("doc")).html();
 				
-				//logger.error("parseHtml ==== " + parseHtml);
-				
 				String 	href 	= Pattern.compile("\\s").matcher(parseHtml).replaceAll("");
+				String	domain  = kcb_600420.getResDomain();
 				int 	start 	= href.indexOf("href=")+6;
-				int 	end 	= href.indexOf("href=")+40;
+				int 	end 	= href.lastIndexOf("\";");
+
+				logger.error("href ==== " + href);
 				
 				href = href.substring(start, end);
 				
-				String URL = kcb_600420.getResProtocol() + kcb_600420.getResDomain() + href;
+				logger.error("href ==== " + href);
+				logger.error("domain ==== " + href);
+				
+				String URL		= "";
+				if(domain.indexOf("api") > -1) {
+					URL = environment.getProperty("kcbApi");
+				} else {
+					URL = environment.getProperty("kcbMaff");
+				}
+				
+				URL = URL + href;
 				
 				logger.debug("URL ==== " + URL);
 				logger.debug("JSESSIONID ==== " + rtnMap.get("jsessionId").toString());

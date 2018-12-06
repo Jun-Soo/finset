@@ -232,6 +232,7 @@ aside .wrap .list-wrap a .banner .right { width: 27.8787; display: table-cell; v
 aside .wrap .list-wrap a .banner .right img { width: 62px; }
 aside .wrap .hash { display: grid; grid-template-columns: 1fr 1fr; grid-gap: 10px; padding-bottom: 20px; }
 aside .wrap .hash a { line-height: 28px; border: 1px solid #e5e5e5; text-align: center; }
+aside .wrap .hash a:active { background: #62c1d0; color: #fff; }
 aside.on:before { display: block; }
 aside.on button { background-position: right bottom; }
 aside.on .wrap { height: auto; }

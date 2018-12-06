@@ -45,7 +45,6 @@ input[type="number"] {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  -webkit-user-select: auto;
 }
 
 input[type="tel"] {
@@ -85,7 +84,6 @@ textarea {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  -webkit-user-select: auto;
 }
 
 .checks {
@@ -1253,6 +1251,11 @@ aside .wrap .hash a {
   line-height: 28px;
   border: 1px solid #e5e5e5;
   text-align: center;
+}
+
+aside .wrap .hash a:active {
+  background: #62c1d0;
+  color: #fff;
 }
 
 aside.on:before {
@@ -7100,9 +7103,9 @@ button.cal {
   background: url("../images/mypage/my_ico8.png") no-repeat 50% 30px/24px;
 }
 
-/* .mypage-links a:nth-child(9) {
+.mypage-links a:nth-child(9) {
   background: url("../images/mypage/my_ico9.png") no-repeat 50% 30px/24px;
-} */
+}
 
 .member-exit {
   line-height: 50px;
@@ -7537,6 +7540,10 @@ button.cal {
 
 .cs-top .links a.copy {
   background: url("../images/assets/copy.png") no-repeat center top/60px;
+}
+
+.cs-top .links a.share {
+  background: url("../images/assets/share.png") no-repeat center top/60px;
 }
 
 .cs-top .cs-search {

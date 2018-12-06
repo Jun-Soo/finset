@@ -77,6 +77,10 @@ aside{
                 line-height: 28px;
                 border: 1px solid $lineColor;
                 text-align: center;
+                &:active{
+                    background: $col4;
+                    color: #fff;
+                }
             }
         }
     }

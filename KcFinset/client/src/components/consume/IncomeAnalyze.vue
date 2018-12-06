@@ -2,7 +2,8 @@
   <section>
     <div class="graph-wrapper mt30">
       <!-- <img src="../../assets/images/consume/graph.png" width="100%" alt="" /> -->
-      <chartjs-line v-if="!isNone" :labels="mylabels" :datasets="mydatasets" :option="myoption" :bind="true"></chartjs-line>
+      <chartjs-bar v-if="!isNone" :labels="mylabels" :datasets="mydatasets" :option="myoption" :bind="true">
+      </chartjs-bar>
     </div>
 
     <div class="detail-list">
@@ -39,23 +40,21 @@ export default {
       mydatasets: [
         {
           label: " ",
-          fill: false,
-          lineTension: 0.2,
-          backgroundColor: "rgba(75,192,192,0.4)",
-          borderColor: "rgba(228,42,59,1)",
+          backgroundColor: "rgba(228,42,59,0.6)",
+          borderColor: "rgba(228,42,59,0.6)",
           borderCapStyle: "butt",
           borderDash: [],
           borderDashOffset: 0.0,
           borderJoinStyle: "miter",
-          pointBorderColor: "rgba(234,85,100,1)",
-          pointBackgroundColor: "#fff",
-          pointBorderWidth: 1,
-          pointHoverRadius: 5,
-          pointHoverBackgroundColor: "rgba(234,85,100,1)",
-          pointHoverBorderColor: "rgba(220,220,220,1)",
-          pointHoverBorderWidth: 2,
-          pointRadius: 1,
-          pointHitRadius: 10,
+          // pointBorderColor: "rgba(234,85,100,1)",
+          // pointBackgroundColor: "#fff",
+          // pointBorderWidth: 1,
+          // pointHoverRadius: 5,
+          // pointHoverBackgroundColor: "rgba(234,85,100,1)",
+          // pointHoverBorderColor: "rgba(220,220,220,1)",
+          // pointHoverBorderWidth: 2,
+          // pointRadius: 1,
+          // pointHitRadius: 10,
           data: [],
           spanGaps: false
         }

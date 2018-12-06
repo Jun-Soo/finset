@@ -29,12 +29,12 @@
           <dl>
             <dt class="sum">
               <p class="title">합계</p>
-              <p><input readonly type="text" :value="sumGoal"></p>
+              <p><input readonly type="text" :value="sumGoal1"></p>
             </dt>
-            <dd v-for="(vo, index) in listDetailGoal" :key="vo.cd_class">
+            <dd v-for="(vo, index) in listDetailGoal1" :key="vo.cd_class">
               <p>{{vo.nm_class}}</p>
               <input type="hidden" :name="'list['+index+'].cd_class'" :value="vo.cd_class" />
-              <p><input :name="'list['+index+'].amt_budget'" class="each_amt" type="text" v-model="vo.amt_budget" :readonly="curLabel != 'custom'" v-validate="'required|numeric'" :data-vv-name="vo.nm_class"></p>
+              <p><input :name="'list['+index+'].amt_budget'" class="each_amt" type="number" v-model="vo.amt_budget" :readonly="curLabel != 'custom'" v-validate="'required|numeric'" :data-vv-name="vo.nm_class"></p>
               <p class="warn" v-if="errors.has(vo.nm_class)">{{errors.first(vo.nm_class)}}</p>
             </dd>
           </dl>
@@ -46,17 +46,15 @@
           <dl>
             <dt class="sum">
               <p class="title">합계</p>
-              <p><input readonly type="text" :value="sumGoal"></p>
+              <p><input readonly type="text" :value="sumGoal2"></p>
             </dt>
-            <dd v-for="(vo, index) in listDetailGoal" :key="index">
-              <p v-if="vo.cd_type == '01' || vo.cd_type == '04'">{{vo.nm_card}}</p>
-              <p v-else-if="vo.cd_type == '02'">현금</p>
-              <p v-else-if="vo.cd_type == '03'">현금영수증</p>
+            <dd v-for="(vo, index) in listDetailGoal2" :key="index">
+              <p>{{vo.nm_card}}</p>
               <input v-if="vo.cd_type != '02'" type="hidden" :name="'list['+index+'].cd_fc'" :value="vo.cd_fc" />
               <input type="hidden" :name="'list['+index+'].cd_type'" :value="vo.cd_type" />
               <input v-if="vo.cd_type == '01' || vo.cd_type == '04'" type="hidden" :name="'list['+index+'].no_card'" :value="vo.no_card" />
               <input v-if="vo.cd_type == '01' || vo.cd_type == '04'" type="hidden" :name="'list['+index+'].nm_card'" :value="vo.nm_card" />
-              <p><input :name="'list['+index+'].amt_budget'" class="each_amt" type="text" v-model="vo.amt_budget" :readonly="curLabel != 'custom'" v-validate="'required|numeric'" :data-vv-name="vo.nm_card"></p>
+              <p><input :name="'list['+index+'].amt_budget'" class="each_amt" type="number" v-model="vo.amt_budget" :readonly="curLabel != 'custom'" v-validate="'required|numeric'" :data-vv-name="vo.nm_card"></p>
               <p class="warn" v-if="errors.has(vo.nm_card)">{{errors.first(vo.nm_card)}}</p>
             </dd>
           </dl>
@@ -72,28 +70,45 @@
 
 <script>
 import ko from "vee-validate/dist/locale/ko.js";
+import Common from "@/assets/js/common.js";
 
 export default {
   name: "ConsumeRegGoal",
   data() {
     return {
-      seen: false,
+      seen: true,
       curTab: "01",
       curLabel: "custom",
-      listDetailGoal: []
+      listDetailGoal1: {},
+      listDetailGoal2: {}
     };
   },
   components: {},
   computed: {
-    sumGoal: function() {
+    sumGoal1: function() {
       var sum = 0;
-      for (var idx in this.listDetailGoal) {
-        if (isNaN(parseInt(this.listDetailGoal[idx].amt_budget))) {
+      for (var idx in this.listDetailGoal1) {
+        if (isNaN(parseInt(this.listDetailGoal1[idx].amt_budget))) {
           return "숫자를 입력해주세요";
         }
-        sum += parseInt(this.listDetailGoal[idx].amt_budget);
+        sum += parseInt(this.listDetailGoal1[idx].amt_budget);
       }
-      return sum;
+      return Common.formatNumber(sum);
+    },
+    sumGoal2: function() {
+      var sum = 0;
+      for (var idx in this.listDetailGoal2) {
+        if (isNaN(parseInt(this.listDetailGoal2[idx].amt_budget))) {
+          return "숫자를 입력해주세요";
+        }
+        sum += parseInt(this.listDetailGoal2[idx].amt_budget);
+      }
+      return Common.formatNumber(sum);
+    }
+  },
+  watch: {
+    fields: function(key) {
+      console.log(key);
     }
   },
   beforeCreate() {
@@ -125,8 +140,13 @@ export default {
           params: { cd_set: _this.curTab }
         })
         .then(function(response) {
-          _this.listDetailGoal = response.data.listDetailGoal;
-          _this.seen = true;
+          if (_this.curTab == "01") {
+            _this.listDetailGoal1 = response.data.listDetailGoal;
+          } else {
+            _this.listDetailGoal2 = response.data.listDetailGoal;
+          }
+
+          // _this.seen = true;
         });
     },
     listPrevMonthConsume: function() {
@@ -139,13 +159,13 @@ export default {
           var list = response.data.listPrevMonthConsume;
           if (_this.curTab == "01") {
             for (var idx in list) {
-              _this.listDetailGoal.filter(
+              _this.listDetailGoal1.filter(
                 goal => goal.cd_class == list[idx].cd_class
               )[0].amt_budget = list[idx].amt_expense;
             }
           } else {
             for (var idx in list) {
-              _this.listDetailGoal.filter(
+              _this.listDetailGoal2.filter(
                 goal =>
                   goal.cd_type == list[idx].cd_type &&
                   goal.cd_fc == list[idx].cd_fc &&
@@ -166,13 +186,13 @@ export default {
           var list = response.data.listAverageConsume;
           if (_this.curTab == "01") {
             for (var idx in list) {
-              _this.listDetailGoal.filter(
+              _this.listDetailGoal1.filter(
                 goal => goal.cd_class == list[idx].cd_class
               )[0].amt_budget = list[idx].amt_expense;
             }
           } else {
             for (var idx in list) {
-              _this.listDetailGoal.filter(
+              _this.listDetailGoal2.filter(
                 goal =>
                   goal.cd_type == list[idx].cd_type &&
                   goal.cd_fc == list[idx].cd_fc &&

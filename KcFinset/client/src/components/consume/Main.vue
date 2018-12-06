@@ -121,7 +121,7 @@ export default {
       shareList: [],
       isScrap: false,
       isGoal: false,
-      curDate: "",
+      curDate: new Date(),
       curTab: "00",
       standardDt: new Date(),
       income: "",
@@ -158,10 +158,20 @@ export default {
       if (this.isScrap == true) {
         if (param) {
         } else {
-          this.progressOption = {
-            text: "설정된 예산이 없습니다",
-            max: 0
-          };
+          if (
+            this.curDate.getFullYear() == this.standardDt.getFullYear() &&
+            this.curDate.getMonth() == this.standardDt.getMonth()
+          ) {
+            this.progressOption = {
+              text: "예산을 설정하여 목표를 이루세요",
+              max: 0
+            };
+          } else {
+            this.progressOption = {
+              text: "설정된 예산이 없습니다",
+              max: 0
+            };
+          }
         }
       } else {
         this.progressOption = {
@@ -179,6 +189,7 @@ export default {
   created() {
     if (this.$store.state.user.dt_basic > this.standardDt.getDate()) {
       this.standardDt.setMonth(this.standardDt.getMonth() - 1);
+      this.curDate.setMonth(this.curDate.getMonth() - 1);
     }
     this.ym = this.formatHead(this.getYm(this.standardDt));
     this.listConsumeShareInfo();
@@ -331,7 +342,10 @@ export default {
           _this.$router.push("/consume/payment");
           break;
         case "calendar":
-          _this.$router.push("/common/monthCal");
+          _this.$router.push({
+            path: "/common/monthCal",
+            query: { type: "consume" }
+          });
           break;
         case "settlement":
           _this.$router.push("/consume/settlement");
@@ -390,7 +404,12 @@ export default {
       if (!this.isScrap) {
         this.$router.push("/scrap/CtrlFcLink");
       } else if (!this.isGoal) {
-        this.$router.push("/consume/regGoal");
+        if (
+          this.curDate.getFullYear() == this.standardDt.getFullYear() &&
+          this.curDate.getMonth() == this.standardDt.getMonth()
+        ) {
+          this.$router.push("/consume/regGoal");
+        }
       }
     }
   }

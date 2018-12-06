@@ -1,9 +1,10 @@
 <template>
   <div id="wrapper" v-if="seen">
-    <VueScheduler v-if="isMonth" :events="events" event-display="name" @event-clicked="openDetail" :shareList="shareList" :clickShare="clickShare" :sumData="sumData" @curYM="curYM" ref="scheduler" />
+    <VueScheduler v-if="isMonth" :events="events" event-display="name" @event-clicked="openDetail" :shareList="shareList" :clickShare="clickShare" :sumData="sumData" :type="type" :settingList="settingList" @curYM="curYM" ref="scheduler" />
 
-    <vue-modal name="my-modal" transitionName="zoom-in" theme="width: 90%">
-      <div slot="body" class="modal-con" data-modal-con="modal01">
+    <vue-modal name="my-modal" transitionName="fade" theme="width: 90%">
+      <EventPop slot="body" :modalDate="modalDate" :incomeList="incomeList" :consumeList="consumeList" :debtList="debtList" :incomeTotal="incomeTotal" :consumeTotal="consumeTotal" :debtTotal="debtTotal" :settingList="settingList" :shareList="shareList" />
+      <!-- <div slot="body" class="modal-con" data-modal-con="modal01" style="display:block;">
         <div class="top">
           {{modalDate}}
           <button class="modal-close"></button>
@@ -51,25 +52,26 @@
                 <em :class="$refs.scheduler.settingList[shareList.findIndex(person => person.no_person === debtVO.no_person)].color">
                   {{shareList.filter(person => person.no_person === debtVO.no_person)[0].nm_person}}
                 </em>
-                <em class="loan">부채</em>
+                <em class="loan">대출</em>
                 <em class="text" v-text="(debtVO.nm_fc||'')==''?debtVO.creditor:debtVO.nm_fc"></em>
               </div>
               <div class="won">{{Common.formatNumber(debtVO.amt_repay)}} 원</div>
             </div>
           </div>
         </div>
-      </div>
+      </div> -->
     </vue-modal>
   </div>
 </template>
 
 <script>
 import Common from "../../assets/js/common.js";
+import EventPop from "./sub/EventPop";
 import VueScheduler from "../plugins/calendar/components/VueScheduler";
 import "../plugins/calendar/lib/main.css";
 
 export default {
-  name: "CommonCalendar",
+  name: "CommonMonthCal",
   data() {
     return {
       seen: false,
@@ -81,20 +83,29 @@ export default {
         sumConsume: 0,
         sumDebt: 0
       },
-      incomeTotal: 0,
-      consumeTotal: 0,
-      debtTotal: 0,
+      incomeTotal: "0",
+      consumeTotal: "0",
+      debtTotal: "0",
       incomeList: null,
       consumeList: null,
       debtList: null,
       shareList: [],
       standardDt: new Date(),
       isMonth: true,
-      Common: Common
+      Common: Common,
+      type: "",
+      settingList: [
+        { color: "red", id: "chk1" },
+        { color: "orange", id: "chk2" },
+        { color: "green", id: "chk3" },
+        { color: "blue", id: "chk4" },
+        { color: "purple", id: "chk5" }
+      ]
     };
   },
   components: {
-    VueScheduler
+    VueScheduler,
+    EventPop
   },
   // computed: {
   // },
@@ -106,6 +117,7 @@ export default {
     this.standardDt = Common.formatDate(this.standardDt)
       .replace(/[-]/g, "")
       .substr(0, 6);
+    this.type = this.$route.query.type;
     this.listCalendarShareInfo();
   },
   beforeMount() {},
@@ -239,7 +251,7 @@ export default {
             _this.incomeTotal = Common.formatNumber(response.data.incomeTotal);
             _this.incomeList = response.data.incomeList;
           } else {
-            _this.incomeTotal = 0;
+            _this.incomeTotal = "0";
             _this.incomeList = null;
           }
           if (isActiveConsume) {
@@ -248,14 +260,14 @@ export default {
             );
             _this.consumeList = response.data.consumeList;
           } else {
-            _this.consumeTotal = 0;
+            _this.consumeTotal = "0";
             _this.consumeList = null;
           }
           if (isActiveDebt) {
             _this.debtTotal = Common.formatNumber(response.data.debtTotal);
             _this.debtList = response.data.debtList;
           } else {
-            _this.debtTotal = 0;
+            _this.debtTotal = "0";
             _this.debtList = null;
           }
 
@@ -265,22 +277,6 @@ export default {
     curYM(ym) {
       this.standardDt = ym;
       this.listCalendarData(ym);
-    },
-    formatModalDate(date) {
-      var mm = date.getMonth() + 1;
-      var dd = date.getDate();
-
-      var weekdays = new Array(7);
-      weekdays[0] = "월요일";
-      weekdays[1] = "화요일";
-      weekdays[2] = "수요일";
-      weekdays[3] = "목요일";
-      weekdays[4] = "금요일";
-      weekdays[5] = "토요일";
-      weekdays[6] = "일요일";
-
-      var weekday = weekdays[date.getDay()];
-      return mm + "." + dd + ". " + weekday;
     },
     formatNumber(number) {
       return Common.formatNumber(number);
@@ -309,6 +305,22 @@ export default {
         }
       }
       return shareList;
+    },
+    formatModalDate(date) {
+      var mm = date.getMonth() + 1;
+      var dd = date.getDate();
+
+      var weekdays = new Array(7);
+      weekdays[0] = "월요일";
+      weekdays[1] = "화요일";
+      weekdays[2] = "수요일";
+      weekdays[3] = "목요일";
+      weekdays[4] = "금요일";
+      weekdays[5] = "토요일";
+      weekdays[6] = "일요일";
+
+      var weekday = weekdays[date.getDay()];
+      return mm + "." + dd + ". " + weekday;
     }
   }
 };

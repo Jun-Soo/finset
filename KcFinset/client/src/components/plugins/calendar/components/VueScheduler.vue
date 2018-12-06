@@ -6,6 +6,7 @@
         <p>{{calendarYear}}.{{calendarMonth}}</p>
         <button class="next" @click="next"></button>
         <button class="setting" @click="goYear"></button>
+        <button class="today" @click="goToToday">TODAY</button>
       </div>
     </div>
     <div class="check-flex">
@@ -95,6 +96,14 @@ export default {
     sumData: {
       type: Object,
       default: {}
+    },
+    type: {
+      type: String,
+      default: ""
+    },
+    settingList: {
+      type: Array,
+      default: []
     }
   },
   data() {
@@ -105,13 +114,6 @@ export default {
       isActiveIncome: true,
       isActiveConsume: true,
       isActiveDebt: true,
-      settingList: [
-        { color: "red", id: "chk1" },
-        { color: "orange", id: "chk2" },
-        { color: "green", id: "chk3" },
-        { color: "blue", id: "chk4" },
-        { color: "purple", id: "chk5" }
-      ],
       Common: Common
     };
   },
@@ -145,7 +147,12 @@ export default {
       }
     });
     ////화면 이동 로직
-
+    if (this.type == "debt") {
+      this.isActiveConsume = false;
+      this.isActiveIncome = false;
+    } else if (this.type == "consume") {
+      this.isActiveDebt = false;
+    }
     //  Bind events
     this.bindEvents();
   },
@@ -167,7 +174,8 @@ export default {
       });
     },
     goToToday() {
-      this.activeDate = moment(this.today).locale("ko");
+      this.activeDate = moment(this.initialDate).locale("en");
+      this.$emit("curYM", this.activeDate.format("YYYYMM"));
     },
     prev(e) {
       this.activeDate = moment(

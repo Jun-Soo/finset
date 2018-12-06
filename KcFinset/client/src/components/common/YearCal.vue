@@ -12,22 +12,24 @@
 
     <div class="check-flex">
       <div class="income">
-        <!-- <button class="on">수입</button> -->
+        <button class="on">수입</button>
         <em>{{sumIncome}}</em>
       </div>
       <div class="debt">
-        <!-- <button class="on">지출</button> -->
+        <button class="on">지출</button>
         <em>{{sumConsume}}</em>
       </div>
       <div class="loan">
-        <!-- <button>대출</button> -->
+        <button class="on">대출</button>
         <em>{{sumDebt}}</em>
       </div>
     </div>
-    <div class="list-wrap">
-      <div class="filter-wrap">
-        <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
-          <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
+    <div class="container-wrap noMG">
+      <div class="list-wrap">
+        <div class="filter-wrap">
+          <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
+            <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
+          </div>
         </div>
       </div>
     </div>
@@ -114,6 +116,30 @@ export default {
   created() {},
   beforeMount() {},
   mounted() {
+    //화면 이동 로직
+    var _this = this;
+    let origMousePoint;
+    $(document).on("mousedown", "section", function(event) {
+      origMousePoint = event.clientX;
+    });
+    $(document).on("mouseup", "section", function(event) {
+      if (origMousePoint - event.clientX > 150) {
+        _this.setYear("next");
+      } else if (origMousePoint - event.clientX < -150) {
+        _this.setYear("prev");
+      }
+    });
+    $(document).on("touchstart", "section", function(event) {
+      origMousePoint = event.touches[0].clientX;
+    });
+    $(document).on("touchend", "section", function(event) {
+      if (origMousePoint - event.changedTouches[0].clientX > 150) {
+        _this.setYear("next");
+      } else if (origMousePoint - event.changedTouches[0].clientX < -150) {
+        _this.setYear("prev");
+      }
+    });
+    ////화면 이동 로직
     this.calData = this.getDefaultCalData();
     this.listCalendarShareInfo();
   },

@@ -134,7 +134,9 @@ export default {
   beforeMount() {},
   mounted() {},
   beforeUpdate() {},
-  updated() {},
+  updated() {
+    Common.datepickerInit("div-date", this);
+  },
   beforeDestroy() {},
   destroyed() {},
   methods: {
@@ -197,15 +199,4 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
-.vdp-datepicker__calendar {
-  position: fixed;
-  font-size: 13px;
-  line-height: 40px;
-}
-.vdp-datepicker__calendar header {
-  position: static;
-}
-.div-date {
-  text-align: right;
-}
 </style>

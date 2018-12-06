@@ -12,16 +12,17 @@
           <li>
             <p class="key" v-text="curTab=='01'?'입금':'결제수단'"></p>
             <p>
-              <multiselect v-validate="'required'" data-vv-name='수단' :disabled="!isNew" v-model="consumeVO.means_consume" ref="selMeansConsume" label="text" :show-labels="false" :options="meansConsumeOption" placeholder="결제수단" :searchable="false" :allow-empty="false" @select="selectMeans">
+              <multiselect v-validate="'required'" data-vv-name="수단" :disabled="!isNew" v-model="consumeVO.means_consume" label="text" :show-labels="false" :options="meansConsumeOption" :placeholder="meansConsumeText + ' 선택'" :searchable="false" :allow-empty="false" @select="selectMeans">
               </multiselect>
             </p>
+            <p class="warn" v-if="errors.has('수단')" v-text="meansConsumeText + ' 항목은 필수 정보입니다'"></p>
           </li>
           <li>
             <p class="key">금액</p>
             <p>
               <input type="text" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액"><em>원</em>
-              <!-- <p class="warn" v-if="errors.has('이메일')">{{errors.first('금액')}}</p> -->
             </p>
+            <p class="warn" v-if="errors.has('금액')">{{errors.first('금액')}}</p>
           </li>
           <li>
             <p class="key">카테고리</p>
@@ -33,16 +34,13 @@
           <li>
             <p class="key" v-text="curTab=='01'?'출처':'결제처'"></p>
             <p><input type="text" v-model="consumeVO.contents" :readonly="chkReadonly" v-validate="'required'" data-vv-name="출처"></p>
+            <p class="warn" v-if="errors.has('출처')" v-text="contentsText + ' 항목은 필수 정보입니다'"></p>
           </li>
           <li>
             <p class="key">날짜</p>
-            <!-- <p v-if="isNew&&isPersonRegist"> -->
             <p>
-              <datepicker v-model="consumeVO.dt_trd" :language="ko" :format="formatDateDot" class="div-date" :disabled="chkReadonly"></datepicker>
+              <datepicker v-model="consumeVO.dt_trd" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDateDot" class="div-date" :disabled="chkReadonly"></datepicker>
             </p>
-            <!-- <p v-if="!isNew||!isPersonRegist" readonly>
-              <input type="text" :value="formatDateDot(consumeVO.dt_trd)" readonly="readonly">
-            </p> -->
           </li>
           <li class="memo">
             <p class="key">메모</p>
@@ -51,9 +49,8 @@
         </ul>
 
         <div v-if="!isNew" class="consume-comment">
-          <!-- <a href="#">이번달에 <em>#번 5300원</em> 소비하였네요</a> -->
-          <a v-if="curTab=='01'" @click="goAnalyze">이번 달에 <em>{{consumeVO.contents}}</em> 수입이<em> {{bannerData}}번</em> 있었습니다.</a>
-          <a v-if="curTab=='02'" @click="goAnalyze">이번 달에 <em>{{consumeVO.contents}}</em> 지출이<em> {{bannerData}}번</em> 있었습니다.</a>
+          <a v-if="curTab=='01'" @click="goAnalyze">이번 달에 <em>{{nmBanner}}</em> 수입이<em> {{bannerData}}번</em> 있었습니다.</a>
+          <a v-if="curTab=='02'" @click="goAnalyze">이번 달에 <em>{{nmBanner}}</em> 지출이<em> {{bannerData}}번</em> 있었습니다.</a>
         </div>
 
         <div v-if="isNew&&isMine" class="btn-wrap float">
@@ -142,6 +139,7 @@ export default {
   data() {
     return {
       seen: false,
+      Common: Common,
       curTab: "02",
       consumeCategory: {},
       orgClass: "",
@@ -162,7 +160,8 @@ export default {
       ko: ko,
       dt_trans: "",
       meansConsumeOption: [],
-      isAuto: true
+      isAuto: true,
+      nmBanner: ""
     };
   },
   components: {
@@ -189,6 +188,20 @@ export default {
         return false;
       } else {
         return true;
+      }
+    },
+    meansConsumeText: function() {
+      if (this.curTab == "01") {
+        return "입금";
+      } else {
+        return "결제수단";
+      }
+    },
+    contentsText: function() {
+      if (this.curTab == "01") {
+        return "출처";
+      } else {
+        return "결제처";
       }
     }
   },
@@ -222,14 +235,11 @@ export default {
         this.$route.query.isPersonRegist == true;
     }
     this.setDefault();
-    Common.datepickerInit("div-date");
   },
   beforeMount() {},
   mounted() {},
   beforeUpdate() {},
-  updated() {
-    Common.datepickerInit("div-date");
-  },
+  updated() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {
@@ -451,7 +461,7 @@ export default {
             _this.curClass = vo.cd_class;
             _this.orgClass = vo.cd_class;
           }
-
+          _this.nmBanner = vo.contents;
           _this.getBannerData();
         });
     },
@@ -526,18 +536,16 @@ export default {
       var means_consume = this.consumeVO.means_consume.means_consume;
 
       formData.append("means_consume", means_consume);
-      formData.append(
-        "cd_fc",
-        means_consume == "02" ? null : this.consumeVO.cd_fc
-      );
+      if (means_consume != "02") {
+        formData.append("cd_fc", this.consumeVO.cd_fc);
+      }
       formData.append(
         "nm_card",
         means_consume == "02" ? "현금" : this.consumeVO.nm_card
       );
-      formData.append(
-        "no_card",
-        means_consume == "02" ? null : this.consumeVO.no_card
-      );
+      if (means_consume != "02") {
+        formData.append("no_card", this.consumeVO.no_card);
+      }
       formData.append(
         "dt_trd",
         Common.formatDate(this.consumeVO.dt_trd).replace(/[-]/g, "")
@@ -570,6 +578,9 @@ export default {
         : formData.append("yn_auto", "N");
 
       formData.append("yn_budget_except", "N");
+      this.isPersonRegist
+        ? formData.append("yn_person_regist", "Y")
+        : formData.append("yn_person_regist", "N");
 
       this.$http
         .post("/m/consume/createConsumeInfo.json", formData)
@@ -705,7 +716,7 @@ export default {
     setDefault: function() {
       this.consumeVO = {
         dt_trd: new Date(),
-        means_consume: "default"
+        means_consume: null
       };
       this.curClass = "";
       this.curType = "";

@@ -1,7 +1,7 @@
 <template>
   <section>
     <div class="container memo-detail pb90">
-      <textarea v-model="memoVO.memo_text"></textarea>
+      <textarea v-model="memoVO.memo_text" :style="'resize:none;'"></textarea>
     </div>
 
     <div class="btn-wrap float">

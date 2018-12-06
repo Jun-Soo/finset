@@ -65,7 +65,7 @@
             </a>
           </slide>
           <slide class="item">
-            <a>
+            <a @click="clickBanner('calendar')">
               <div class="banner">
                 <div class="left">
                   <p class="key">캘린더</p>
@@ -140,9 +140,9 @@
             </div>
           </div>
         </div>
-        <div class="btn-wrap">
+        <!-- <div class="btn-wrap">
           <a @click="registerDebt" class="solid">부채등록</a>
-        </div>
+        </div> -->
       </div>
     </section>
   </div>
@@ -325,6 +325,12 @@ export default {
       switch (key) {
         case "goods":
           _this.$router.push("/goods/list");
+          break;
+        case "calendar":
+          _this.$router.push({
+            path: "/common/monthCal",
+            query: { type: "debt" }
+          });
           break;
         case "news":
           _this.$router.push({

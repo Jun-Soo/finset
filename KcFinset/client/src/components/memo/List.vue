@@ -6,8 +6,6 @@
           <li v-for="(memoVO, index) in memoList" :key="index">
             <a @click="detailMemo(memoVO.seq_memo_info)">
               <p v-text="memoVO.memo_head"></p>
-              <!-- <p>이번달 월급이 늦게 들어올거 같아서 이자납입일을 낮춤</p> -->
-              <!-- <p>{{memoVO.memo_text}}</p> -->
               <p v-text="memoVO.memo_text"></p>
             </a>
           </li>

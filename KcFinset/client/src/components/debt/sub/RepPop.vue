@@ -43,7 +43,6 @@ export default {
   beforeMount() {},
   mounted() {
     var modal = document.getElementById("modal-con");
-
     if (modal) {
       var marginWidth = modal.offsetWidth / 2;
       modal.style.marginLeft = "-" + marginWidth + "px";

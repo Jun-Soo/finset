@@ -2,9 +2,11 @@
   <section v-if="seen">
     <div class="cert-check-wrap">
       <p class="title">회원정보</p>
-      <select @change="modifyDt_basic" v-model="dt_basic">
+      <!-- <select @change="modifyDt_basic" v-model="dt_basic">
         <option v-for="(n, index) in 31" :key="index" :value="n">매월 {{n}}일</option>
-      </select>
+      </select> -->
+      <multiselect v-model="dt_basic" label="text" :show-labels="false" :options="dt_basic_option" :searchable="false" :allow-empty="false" @select="modifyDt_basic">
+      </multiselect>
     </div>
 
     <dl class="setting-wrap">
@@ -37,7 +39,8 @@ export default {
     return {
       seen: false,
       yn_installment: "N",
-      dt_basic: 1
+      dt_basic: { text: "1일", value: "1" },
+      dt_basic_option: []
     };
   },
   components: {},
@@ -48,6 +51,9 @@ export default {
   },
   created() {
     this.getPersonSetInfo();
+    for (var i = 1; i <= 31; i++) {
+      this.dt_basic_option.push({ text: i + "일", value: i + "" });
+    }
   },
   beforeMount() {},
   mounted() {},
@@ -75,7 +81,11 @@ export default {
         .then(function(response) {
           var personInfo = response.data.personInfo;
           _this.yn_installment = personInfo.yn_installment;
-          _this.dt_basic = personInfo.dt_basic;
+          // _this.dt_basic = personInfo.dt_basic;
+          _this.dt_basic = {
+            text: personInfo.dt_basic + "일",
+            value: personInfo.dt_basic + ""
+          };
           _this.seen = true;
         });
     },
@@ -90,11 +100,11 @@ export default {
     modifyDt_basic: function(param) {
       var _this = this;
       var formData = new FormData();
-      formData.append("dt_basic", this.dt_basic);
+      formData.append("dt_basic", param.value);
       this.$http
         .post("/m/consume/modifyDt_basic.json", formData)
         .then(function(response) {
-          this.$store.state.user.dt_basic = this.dt_basic;
+          this.$store.state.user.dt_basic = param.value;
         });
     }
   }

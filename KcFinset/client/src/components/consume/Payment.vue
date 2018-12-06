@@ -63,7 +63,7 @@ export default {
       settingList: [
         { color: "red", id: "chk1" },
         { color: "orange", id: "chk2" },
-        { color: "greend", id: "chk3" },
+        { color: "green", id: "chk3" },
         { color: "blue", id: "chk4" },
         { color: "purple", id: "chk5" }
       ],

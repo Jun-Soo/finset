@@ -200,7 +200,7 @@ export default {
         var _this = this;
         this.$dialogs
           .confirm(
-            "선택하신 부채 정보는 모두 삭제되어 이후 조회가 불가능합니다.\r\n\r\n해당 정보를 삭제할까요?",
+            "선택하신 부채 정보는 모두 삭제되어 이후 조회가 불가능합니다.\n\n해당 정보를 삭제할까요?",
             Constant.options
           )
           .then(res => {

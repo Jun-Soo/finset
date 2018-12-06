@@ -30,6 +30,7 @@
       </div>
       <div class="wrap">
         <input type="text" class="cate" v-model="nmCate">
+        <p class="warn">{{errors.first('금액')}}</p>
       </div>
       <div class="action btn1">
         <a @click="addCate" class="solid">확인</a>

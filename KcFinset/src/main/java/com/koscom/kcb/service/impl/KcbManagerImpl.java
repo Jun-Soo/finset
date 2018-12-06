@@ -523,15 +523,17 @@ public class KcbManagerImpl implements KcbManager {
 			try {
 
 				String kcbHost = "";
-				String domain  = kcb_600420.getResDomain();
+				String domain  = kcb_600420.getResProtocol() + kcb_600420.getResDomain();
 				String kcbURI  = kcb_600420.getKcbURI();
+				
+				logger.error("domain ==== " + domain);
 				
 				if(domain.indexOf("api") > -1) {
 					kcbHost = environment.getProperty("kcbApi");
-					kcbURI	= kcbURI.replace("api.allcredit.co.kr", kcbHost);
+					kcbURI	= kcbURI.replace(domain, kcbHost);
 				} else {
 					kcbHost = environment.getProperty("kcbMaff");
-					kcbURI	= kcbURI.replace("maff.allcredit.co.kr", kcbHost);
+					kcbURI	= kcbURI.replace(domain, kcbHost);
 				}
 				
 				logger.error("kcbURI ==== " + kcbURI);

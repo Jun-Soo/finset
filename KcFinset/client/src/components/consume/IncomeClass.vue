@@ -29,8 +29,8 @@
         <button v-text="isModify?'수입 카테고리 수정':'수입 카테고리 추가'"></button>
       </div>
       <div class="wrap">
-        <input type="text" class="cate" v-model="nmCate">
-        <p class="warn">{{errors.first('금액')}}</p>
+        <input type="text" class="cate" v-model="nmCate" v-validate="'required'" data-vv-name="카테고리명">
+        <p class="warn" v-if="errors.has('카테고리명')">{{errors.first('카테고리명')}}</p>
       </div>
       <div class="action btn1">
         <a @click="addCate" class="solid">확인</a>
@@ -42,6 +42,7 @@
 <script>
 import draggable from "vuedraggable";
 import Constant from "@/assets/js/constant.js";
+import ko from "vee-validate/dist/locale/ko.js";
 import "@/assets/js/jquery.easing.1.3.js";
 
 export default {
@@ -99,31 +100,36 @@ export default {
       this.isShowAdd = true;
     },
     closeAdd: function() {
+      this.errors.clear();
       this.isShowAdd = false;
     },
     addCate: function() {
       var _this = this;
-      var formData = new FormData();
-      if (this.isModify) {
-        formData.append("type_in_out", "01");
-        formData.append("cd_class", this.curClass);
-        formData.append("nm_class", this.nmCate);
-        var _this = this;
-        this.$http
-          .post("/m/consume/modifyPersonConsumeClassNmClass.json", formData)
-          .then(function(response) {
-            _this.closeAdd();
-            _this.listPersonIncomeClassInfo();
-          });
-      } else {
-        formData.append("nm_class", this.nmCate);
-        this.$http
-          .post("/m/consume/createPersonConsumeClassIncome.json", formData)
-          .then(function(response) {
-            _this.closeAdd();
-            _this.listPersonIncomeClassInfo();
-          });
-      }
+      this.$validator.validateAll().then(res => {
+        if (res) {
+          var formData = new FormData();
+          if (this.isModify) {
+            formData.append("type_in_out", "01");
+            formData.append("cd_class", this.curClass);
+            formData.append("nm_class", this.nmCate);
+            var _this = this;
+            this.$http
+              .post("/m/consume/modifyPersonConsumeClassNmClass.json", formData)
+              .then(function(response) {
+                _this.closeAdd();
+                _this.listPersonIncomeClassInfo();
+              });
+          } else {
+            formData.append("nm_class", this.nmCate);
+            this.$http
+              .post("/m/consume/createPersonConsumeClassIncome.json", formData)
+              .then(function(response) {
+                _this.closeAdd();
+                _this.listPersonIncomeClassInfo();
+              });
+          }
+        }
+      });
     },
     modifyCate: function(cd_class, nm_class) {
       this.isModify = true;

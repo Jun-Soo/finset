@@ -106,11 +106,6 @@ export default {
       return Common.formatNumber(sum);
     }
   },
-  watch: {
-    fields: function(key) {
-      console.log(key);
-    }
-  },
   beforeCreate() {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "예산설정";
@@ -238,7 +233,7 @@ export default {
               _this.$toast.center("저장되었습니다");
             });
         } else {
-          _this.$toast.center(ko.messages.require);
+          // _this.$toast.center(ko.messages.require);
         }
       });
     }

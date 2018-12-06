@@ -8,7 +8,7 @@
             <div class="btn-menu-wrap" :class="{'on':isOpen}" v-if="isMine">
               <button id="btn-menu-pop" class="btn-menu-pop" @click="openMenu"></button>
               <div class="menu">
-                <!-- <a @click="clickMenu('modify')">수정</a> -->
+                <a @click="clickMenu('modify')">수정</a>
                 <a @click="clickMenu('delete')">삭제</a>
                 <a @click="clickMenu('memo')">메모</a>
                 <a @click="clickMenu('tel')">전화걸기</a>

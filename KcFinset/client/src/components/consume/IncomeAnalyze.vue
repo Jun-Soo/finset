@@ -36,7 +36,7 @@ export default {
   data() {
     return {
       isNone: true,
-      mylabels: [],
+      mylabels: ["0", "0", "0"],
       mydatasets: [
         {
           label: " ",
@@ -59,8 +59,6 @@ export default {
           spanGaps: false
         }
       ],
-      chartData: [],
-      labelData: [],
       myoption: {
         legend: {
           display: false
@@ -95,6 +93,7 @@ export default {
   created() {
     this.$store.state.header.type = "sub";
     this.$store.state.title = this.$route.query.contents + " 이력 상세";
+    this.createDefaultLabel();
     this.listConsumeAnalyze();
   },
   beforeMount() {},
@@ -104,6 +103,18 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    createDefaultLabel: function() {
+      var labelDate = new Date();
+      if (this.$store.state.user.dt_basic > labelDate.getDate()) {
+        labelDate.setMonth(new Date().getMonth() - 4);
+      } else {
+        labelDate.setMonth(new Date().getMonth() - 3);
+      }
+      for (var i = 0; i < 3; i++) {
+        labelDate.setMonth(labelDate.getMonth() + 1);
+        this.$set(this.mylabels, i, Common.formatDate(labelDate, "yyyymm"));
+      }
+    },
     listConsumeAnalyze: function() {
       var _this = this;
       var formData = new FormData();
@@ -114,20 +125,17 @@ export default {
       this.$http
         .post("/m/consume/listConsumeAnalyze.json", formData)
         .then(function(response) {
-          _this.labelData = [];
-          _this.chartData = [];
-
           var list = response.data.listConsumeAnalyzeMonth;
+          console.log(list);
           for (var idx in list) {
-            _this.labelData.push(Common.formatDate(list[idx].dt_trd, "yyyymm"));
-            _this.chartData.push(list[idx].amt_in_out);
+            _this.$set(
+              _this.mydatasets[0].data,
+              _this.mylabels.indexOf(
+                Common.formatDate(list[idx].dt_trd, "yyyymm")
+              ),
+              list[idx].amt_in_out
+            );
           }
-          _this.labelData.reverse();
-          _this.chartData.reverse();
-
-          _this.mylabels = _this.labelData;
-          _this.$set(_this.mydatasets[0], "data", _this.chartData);
-
           _this.listConsumeAnalyzeMonth = response.data.listConsumeAnalyzeMonth;
           _this.listConsumeAnalyzeDay = response.data.listConsumeAnalyzeDay;
 

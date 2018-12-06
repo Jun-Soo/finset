@@ -52,7 +52,8 @@
         <button v-text="headTitle"></button>
       </div>
       <div class="wrap">
-        <input type="text" class="cate" v-model="nmCate">
+        <input type="text" class="cate" v-model="nmCate" v-validate="'required'" data-vv-name="이름">
+        <p class="warn" v-if="errors.has('이름')">{{errors.first('이름')}}</p>
       </div>
       <div class="action btn1">
         <a @click="confirmCate" class="solid">확인</a>
@@ -174,6 +175,7 @@ export default {
       this.isShowAdd = true;
     },
     closeAdd: function() {
+      this.errors.clear();
       this.isShowAdd = false;
     },
     slideUpAll: function() {
@@ -286,49 +288,59 @@ export default {
     },
     confirmCate: function() {
       var _this = this;
-      var formData = new FormData();
-      formData.append("type_in_out", "02");
-      if (!this.isModify) {
-        if (this.isClass) {
-          formData.append("nm_class", _this.nmCate);
-          this.$http
-            .post("/m/consume/createPersonConsumeClassClass.json", formData)
-            .then(function(response) {
-              _this.closeAdd();
-              _this.listPersonConsumeClassInfo();
-            });
-        } else {
-          formData.append("cd_class", _this.curCdClass);
-          formData.append("nm_type", _this.nmCate);
-          this.$http
-            .post("/m/consume/createPersonConsumeClassType.json", formData)
-            .then(function(response) {
-              _this.closeAdd();
-              _this.listPersonConsumeClassInfo();
-            });
+      this.$validator.validateAll().then(res => {
+        if (res) {
+          var formData = new FormData();
+          formData.append("type_in_out", "02");
+          if (!this.isModify) {
+            if (this.isClass) {
+              formData.append("nm_class", _this.nmCate);
+              this.$http
+                .post("/m/consume/createPersonConsumeClassClass.json", formData)
+                .then(function(response) {
+                  _this.closeAdd();
+                  _this.listPersonConsumeClassInfo();
+                });
+            } else {
+              formData.append("cd_class", _this.curCdClass);
+              formData.append("nm_type", _this.nmCate);
+              this.$http
+                .post("/m/consume/createPersonConsumeClassType.json", formData)
+                .then(function(response) {
+                  _this.closeAdd();
+                  _this.listPersonConsumeClassInfo();
+                });
+            }
+          } else {
+            if (this.isClass) {
+              formData.append("cd_class", this.curCdClass);
+              formData.append("nm_class", this.nmCate);
+              this.$http
+                .post(
+                  "/m/consume/modifyPersonConsumeClassNmClass.json",
+                  formData
+                )
+                .then(function(response) {
+                  _this.closeAdd();
+                  _this.listPersonConsumeClassInfo();
+                });
+            } else {
+              formData.append("cd_class", this.curCdClass);
+              formData.append("cd_type", this.curCdType);
+              formData.append("nm_type", this.nmCate);
+              this.$http
+                .post(
+                  "/m/consume/modifyPersonConsumeClassNmType.json",
+                  formData
+                )
+                .then(function(response) {
+                  _this.closeAdd();
+                  _this.listPersonConsumeClassInfo();
+                });
+            }
+          }
         }
-      } else {
-        if (this.isClass) {
-          formData.append("cd_class", this.curCdClass);
-          formData.append("nm_class", this.nmCate);
-          this.$http
-            .post("/m/consume/modifyPersonConsumeClassNmClass.json", formData)
-            .then(function(response) {
-              _this.closeAdd();
-              _this.listPersonConsumeClassInfo();
-            });
-        } else {
-          formData.append("cd_class", this.curCdClass);
-          formData.append("cd_type", this.curCdType);
-          formData.append("nm_type", this.nmCate);
-          this.$http
-            .post("/m/consume/modifyPersonConsumeClassNmType.json", formData)
-            .then(function(response) {
-              _this.closeAdd();
-              _this.listPersonConsumeClassInfo();
-            });
-        }
-      }
+      });
     }
   }
 };

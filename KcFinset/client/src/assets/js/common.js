@@ -262,6 +262,39 @@ export default {
       return ''
     }
   },
+  formatDateDB: function (date, pattern) {
+    var yyyy = ''
+    var mm = ''
+    var dd = ''
+    if (typeof date === 'string') {
+      yyyy = date.substring(0, 4)
+      mm = date.substring(4, 6)
+      dd = date.substring(6, 8)
+    } else if (typeof date === 'object') {
+      yyyy = date.getFullYear()
+      mm = date.getMonth() + 1
+      if (mm < 10) {
+        mm = '0' + mm
+      }
+      dd = date.getDate()
+      if (dd < 10) {
+        dd = '0' + dd
+      }
+    }
+    if (date != null && date !== '') {
+      if (((pattern || '') === '') || pattern === 'yyyymmdd') {
+        return yyyy + mm + dd
+      } else if (pattern === 'yyyymm') {
+        return yyyy + mm
+      } else if (pattern === 'mmdd') {
+        return mm + dd
+      } else {
+        return ''
+      }
+    } else {
+      return ''
+    }
+  },
   getCodeName: function (group, code) {
     var data = {
       'group': group,

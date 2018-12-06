@@ -238,7 +238,7 @@ aside.on .wrap { height: auto; }
 aside:before { width: 100%; height: 200vh; position: fixed; bottom: 0; left: 0; content: ""; background: rgba(0, 0, 0, 0.8); z-index: -1; display: none; }
 
 /*   Common   */
-h3 { color: #333; font-size: 12px; font-weight: 700; }
+h3 { color: #333; font-size: 12px; font-weight: 500; }
 
 .loading { height: 80vh; background: url("../images/common/loading.svg") no-repeat center/25%; text-align: center; padding-top: 50vh; line-height: 20px; font-size: 15px; color: #888888; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
 .loading.fail { background: url("../images/common/loading_fail.png") no-repeat center/75px; }

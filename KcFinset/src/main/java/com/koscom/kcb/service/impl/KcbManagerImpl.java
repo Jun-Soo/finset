@@ -524,20 +524,23 @@ public class KcbManagerImpl implements KcbManager {
 
 				String kcbHost = "";
 				String kcbURI  = kcb_600420.getKcbURI();
+				String domain  = kcb_600420.getResDomain();
 				
 				logger.error("kcbURI ==== " + kcbURI);
 				
 				if(kcbURI.indexOf("api") > -1) {
 					if(kcbURI.indexOf("443/") > -1) {
 						kcbHost = environment.getProperty("kcbHost");
-						kcbURI	= kcbURI.replace("api.allcredit.co.kr", kcbHost);
+						kcbURI	= kcbURI.replace("api.allcredit.co.kr", kcbHost).replace("https", "http");
 					} else {
 						kcbHost = environment.getProperty("kcbApi");
-						kcbURI	= kcbURI.replace("api.allcredit.co.kr", kcbHost);
+						kcbURI	= kcbURI.replace("api.allcredit.co.kr", kcbHost).replace("https", "http");
 					}
+					domain	= domain.replace("api.allcredit.co.kr", kcbHost);
 				} else {
 					kcbHost = environment.getProperty("kcbMaff");
 					kcbURI	= kcbURI.replace("maff.allcredit.co.kr", kcbHost);
+					domain	= domain.replace("maff.allcredit.co.kr", kcbHost);
 				}
 				
 				logger.error("kcbURI ==== " + kcbURI);
@@ -552,14 +555,10 @@ public class KcbManagerImpl implements KcbManager {
 				logger.error("href ==== " + href);
 				
 				href = href.substring(start, end);
+				String URL		= "http://" + domain + href;
 				
-				logger.error("href ==== " + href);
-				logger.error("domain ==== " + href);
-				
-				String URL		= kcbHost + href;
-				
-				logger.debug("URL ==== " + URL);
-				logger.debug("JSESSIONID ==== " + rtnMap.get("jsessionId").toString());
+				logger.error("URL ==== " + URL);
+				logger.error("JSESSIONID ==== " + rtnMap.get("jsessionId").toString());
 				doc = JsoupUtil.getCrawlingCookie(URL, rtnMap.get("jsessionId").toString());   
 					   
 				//logger.error("JSOUP ==== " + doc.html().substring(0, 100));

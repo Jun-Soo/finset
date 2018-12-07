@@ -73,6 +73,13 @@ public interface ConsumeMapper {
 	List<PersonTransDetailVO> listPersonTransDetail(ConsumeForm consumeForm);
 	
 	/**
+	 * 소비분류 코드 존재 여부 확인
+	 * @param no_person
+	 * @return
+	 */
+	Integer chkPersonConsumeClassInfoExist(String no_person);
+	
+	/**
 	 * 소비 분류, 항목 기본생성
 	 * @param no_person
 	 * @return

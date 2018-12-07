@@ -324,4 +324,16 @@ public interface PersonManager {
 	 */
 	ReturnClass procPersonInfoDelQuit(String no_person) throws UnsupportedEncodingException, FinsetException, IOException;
 
+	/**
+	 * 개인설정 존재여부 확인
+	 * @param no_person
+	 * @return
+	 */
+	boolean chkPersonSetExist(String no_person);
+	
+	/**
+	 * 개인설정 기본 값 설정
+	 * @param no_person
+	 */
+	void insertDefaultPersonSet(String no_person);
 }

@@ -433,6 +433,14 @@
        ORDER BY
 			STD.DT_TRD DESC, STD.TM_TRD DESC
 	</select>
+	<select id="chkPersonConsumeClassInfoExist" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT
+			COUNT( 1 )
+		FROM
+			PERSON_CONSUME_CLASS_INFO
+		WHERE
+			NO_PERSON = #{no_person, jdbcType = VARCHAR}
+	</select>
 	<insert id="createDefaultConsumeClassInfo" parameterType="java.lang.String">
 		INSERT INTO
 			PERSON_CONSUME_CLASS_INFO(

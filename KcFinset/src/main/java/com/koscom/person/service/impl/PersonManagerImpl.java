@@ -6,7 +6,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -631,4 +630,18 @@ public class PersonManagerImpl implements PersonManager {
 
 		return new ReturnClass(Constant.SUCCESS,"탈퇴가 완료되었습니다.");
 		}
+
+	@Override
+	public boolean chkPersonSetExist(String no_person) {
+		if(personMapper.chkPersonSetExist(no_person) < 1) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	@Override
+	public void insertDefaultPersonSet(String no_person) {
+		personMapper.insertDefaultPersonSet(no_person);
+	}
 }

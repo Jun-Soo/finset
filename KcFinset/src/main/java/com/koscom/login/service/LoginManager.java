@@ -33,6 +33,7 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.web.util.UrlPathHelper;
 
+import com.koscom.consume.service.ConsumeManager;
 import com.koscom.credit.service.CreditManager;
 import com.koscom.domain.PersonLoginHistInfo;
 import com.koscom.domain.PersonShareInfo;
@@ -68,6 +69,9 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 	@Autowired
 	private KcbManager kcbManager;
 
+	@Autowired
+	private ConsumeManager consumeManager;
+	
 	@Resource
 	Environment environment;
 	
@@ -294,6 +298,15 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 				     }
 				 }
 			}
+	        
+	        //개일 설정 확인 및 설정
+	        if(!personManager.chkPersonSetExist(no_person)) {
+	        	personManager.insertDefaultPersonSet(no_person);
+	        }
+	        //소비지출 데이터 확인 및 설정
+	        if(!consumeManager.chkPersonConsumeClassInfoExist(no_person)) {
+	        	consumeManager.createDefaultConsumeClassInfo(no_person);
+	        }
 
 		} catch (Exception e) {
 			LogUtil.error(logger, e);

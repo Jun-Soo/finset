@@ -1277,6 +1277,14 @@
             )
     </insert>
 
+	<select id="chkPersonSetExist" parameterType="java.lang.String" resultType="java.lang.Integer">
+		SELECT
+			COUNT( 1 )
+		FROM
+			PERSON_SET_INFO
+		WHERE
+			NO_PERSON = #{no_person, jdbcType = VARCHAR}
+	</select>
     <insert id="insertDefaultPersonSet" parameterType="java.lang.String">
 		INSERT
 			INTO

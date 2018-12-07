@@ -12,7 +12,6 @@ import com.koscom.person.model.PersonCertificateInfoVO;
 import com.koscom.person.model.PersonShareInfoForm;
 import com.koscom.person.model.PersonSmsListVO;
 import com.koscom.person.model.PersonVO;
-import com.koscom.util.ReturnClass;
 
 /**
  * Person Dao Interface
@@ -378,6 +377,13 @@ public interface PersonMapper {
 	 */
 	void createPersonQuit(PersonVO personVO);
 
+	/**
+	 * 개인설정 존재여부 확인
+	 * @param no_person
+	 * @return
+	 */
+	Integer chkPersonSetExist(String no_person);
+	
 	/**
 	 * 개인설정 기본 값 설정
 	 * @param no_person

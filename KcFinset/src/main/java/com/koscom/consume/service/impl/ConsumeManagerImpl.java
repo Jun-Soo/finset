@@ -167,7 +167,16 @@ public class ConsumeManagerImpl implements ConsumeManager {
 		
 		return returnList;
 	}
-
+	@Override
+	public boolean chkPersonConsumeClassInfoExist(String no_person) {
+		logger.debug("chkPersonConsumeClassInfoExist");
+		if(consumeMapper.chkPersonConsumeClassInfoExist(no_person) < 1) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+	
 	@Override
 	public int createDefaultConsumeClassInfo(String no_person) {
 		logger.debug("createDefaultConsumeClassInfo");

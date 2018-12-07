@@ -133,6 +133,8 @@ export default {
       this.$store.state.isScrap = false;
       this.$parent.startScrapSt();
     }
+
+    this.$store.state.isLoading = false;
   },
   beforeMount() {},
   mounted() {},

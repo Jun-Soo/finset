@@ -290,11 +290,11 @@ export default {
     }
     if (date != null && date !== '') {
       if (((pattern || '') === '') || pattern === 'yyyymmdd') {
-        return yyyy + mm + dd
+        return yyyy + '' + mm + '' + dd
       } else if (pattern === 'yyyymm') {
-        return yyyy + mm
+        return yyyy + '' + mm
       } else if (pattern === 'mmdd') {
-        return mm + dd
+        return mm + '' + dd
       } else {
         return ''
       }

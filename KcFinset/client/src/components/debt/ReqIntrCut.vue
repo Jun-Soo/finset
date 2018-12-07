@@ -35,7 +35,7 @@
               <p>기준일</p>
               <p>
                 <datepicker v-model="creditFixDate" ref="creditFixOpen" :opend="Common.datepickerInit('div-date', this)" :language="dateKo" :format="formatDate" class="div-date"></datepicker>
-                <button @click="openCreditFixPicker"></button>
+                <button @click="openCreditFixPicker" class="cal"></button>
               </p>
             </div>
             <p class="text">최근 신용등급이 2등급 이상 오른 경우 상승하기 전에 개설 했던 대출에 대해서 금리인하권을 요구 할 수 있습니다.</p>
@@ -48,7 +48,7 @@
               <p>이직일</p>
               <p>
                 <datepicker v-model="turnoverDate" ref="turnoverOpen" :opend="Common.datepickerInit('div-date', this)" :language="dateKo" :format="formatDate" class="div-date"></datepicker>
-                <button @click="openTurnoverPicker"></button>
+                <button @click="openTurnoverPicker" class="cal"></button>
               </p>
             </div>
             <!--
@@ -97,7 +97,7 @@
               <p>기준일</p>
               <p>
                 <datepicker v-model="debtFixDate" ref="debtFixOpen" :opend="Common.datepickerInit('div-date', this)" :language="dateKo" :format="formatDate" class="div-date"></datepicker>
-                <button @click="openDebtFixPicker"></button>
+                <button @click="openDebtFixPicker" class="cal"></button>
               </p>
             </div>
             <div class="flex">
@@ -122,7 +122,7 @@
               <p>기준일</p>
               <p>
                 <datepicker v-model="posFixDate" ref="posFixOpen" :opend="Common.datepickerInit('div-date', this)" :language="dateKo" :format="formatDate" class="div-date"></datepicker>
-                <button @click="openPosFixPicker"></button>
+                <button @click="openPosFixPicker" class="cal"></button>
               </p>
             </div>
             <p class="text">동일 직장내 직위가 상승한 경우 요구가 가능합니다.</p>
@@ -135,7 +135,7 @@
               <p>기준일</p>
               <p>
                 <datepicker v-model="certFixDate" ref="certFixOpen" :opend="Common.datepickerInit('div-date', this)" :language="dateKo" :format="formatDate" class="div-date"></datepicker>
-                <button @click="openCertFixPicker"></button>
+                <button @click="openCertFixPicker" class="cal"></button>
               </p>
             </div>
             <div class="flex">
@@ -460,4 +460,8 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
+.vdp-datepicker.div-date {
+  display: inline-block;
+  width: calc(100% - 175px);
+}
 </style>

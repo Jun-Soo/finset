@@ -444,4 +444,8 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
+.vdp-datepicker.div-date {
+  display: inline-block;
+  width: calc(100% - 40px);
+}
 </style>

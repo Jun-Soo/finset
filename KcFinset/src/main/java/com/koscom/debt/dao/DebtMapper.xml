@@ -980,7 +980,7 @@
 			AND DPI.DISPLAY_YN = 'Y'
 			AND DPI.NO_PERSON = #{no_person, jdbcType = VARCHAR}
 			AND ADD_MONTHS(TO_DATE(DPI.YMD_LOAN,'YYYYMMDD'), 3) <![CDATA[<]]> SYSDATE
-			AND TO_DATE(DPI.YMD_LOAN,'YYYY-MM-DD') <![CDATA[<]]> #{fixDate, jdbcType = VARCHAR}
+			AND TO_DATE(DPI.YMD_LOAN,'YYYYMMDD') <![CDATA[<]]> #{fixDate, jdbcType = VARCHAR}
 		ORDER BY DPI.YMD_LOAN DESC
 	</select>
 	<select id="listReqIntrCutIncome" parameterType="com.koscom.debt.model.ReqIntrCutForm" resultType="com.koscom.debt.model.DebtVO">
@@ -1035,7 +1035,7 @@
 			AND(T.AMT_ETM_INCOME * 1.15) <![CDATA[<=]]> #{income, jdbcType = VARCHAR}
 		ORDER BY T.YMD_LOAN DESC
 	</select>
-	
+
 	<insert id="createDebtPersonalInfo" parameterType="com.koscom.debt.model.DebtVO">
 		<selectKey keyProperty="no_manage_info" resultType="string" order="BEFORE">
 			(SELECT TO_CHAR(SEQ_DEBT_PERSONAL_INFO.NEXTVAL) FROM DUAL)

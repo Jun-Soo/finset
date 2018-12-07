@@ -6,6 +6,7 @@
 </template>
 
 <script>
+import Common from "./assets/js/common.js";
 import Spinner from "./components/common/Spinner.vue";
 import ko from "vee-validate/dist/locale/ko.js";
 import Constant from "./assets/js/constant.js";
@@ -21,6 +22,13 @@ export default {
   },
   components: {
     Spinner
+  },
+  watch: {
+    $route: function(to, from) {
+      if (Constant._this != undefined) {
+        Common.removeScroll();
+      }
+    }
   },
   computed: {
     spinnerIsVisible: function() {

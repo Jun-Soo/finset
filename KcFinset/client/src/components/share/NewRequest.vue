@@ -81,7 +81,7 @@ export default {
     window.resultSendSms = this.resultSendSms;
 
     //test
-    // this.resultAddress("박준수", "01026882453");
+    this.resultAddress("박준수", "01026882453");
   },
   beforeMount() {},
   mounted() {},
@@ -143,40 +143,46 @@ export default {
 
       if (!_this.validShareInfoNewReq()) return false;
 
-      console.log("cd_share" + _this.cd_share);
-      console.log("share_status" + _this.share_status);
-      console.log("offer_nm_person" + _this.offer_nm_person);
-      console.log("offer_hp" + _this.offer_hp);
+      Constant.options.title =
+        _this.offer_nm_person + "님에게 공유 요청을 하시겠습니까?";
+      this.$dialogs.confirm("", Constant.options).then(res => {
+        if (res.ok) {
+          console.log("cd_share" + _this.cd_share);
+          console.log("share_status" + _this.share_status);
+          console.log("offer_nm_person" + _this.offer_nm_person);
+          console.log("offer_hp" + _this.offer_hp);
 
-      var formData = new FormData();
-      formData.append("cd_share", _this.cd_share);
-      formData.append("share_status", _this.share_status);
-      formData.append("offer_nm_person", _this.offer_nm_person);
-      formData.append("offer_hp", _this.offer_hp);
-      if (_this.cd_share == "01") {
-        formData.append("yn_credit_info", _this.yn_credit_info);
-        formData.append("yn_debt_info", _this.yn_debt_info);
-      } else {
-        formData.append("yn_asset_info", _this.yn_asset_info);
-        formData.append("yn_consume_info", _this.yn_consume_info);
-        formData.append("yn_debt_info", _this.yn_debt_info);
-      }
-
-      this.$http
-        .post("/m/customercenter/createPersonShareInfo.json", formData)
-        .then(function(response) {
-          _this.$toast.center(response.data.message);
-          if ("00" == response.data.cdResult) {
-            _this.seq_share = response.data.seq_share;
-            _this.sendMsg(
-              response.data.typeMessage,
-              response.data.req_nm_person
-            ); //문자발송
+          var formData = new FormData();
+          formData.append("cd_share", _this.cd_share);
+          formData.append("share_status", _this.share_status);
+          formData.append("offer_nm_person", _this.offer_nm_person);
+          formData.append("offer_hp", _this.offer_hp);
+          if (_this.cd_share == "01") {
+            formData.append("yn_credit_info", _this.yn_credit_info);
+            formData.append("yn_debt_info", _this.yn_debt_info);
+          } else {
+            formData.append("yn_asset_info", _this.yn_asset_info);
+            formData.append("yn_consume_info", _this.yn_consume_info);
+            formData.append("yn_debt_info", _this.yn_debt_info);
           }
-        })
-        .catch(e => {
-          _this.$toast.center(ko.messages.error);
-        });
+
+          this.$http
+            .post("/m/customercenter/createPersonShareInfo.json", formData)
+            .then(function(response) {
+              _this.$toast.center(response.data.message);
+              if ("00" == response.data.cdResult) {
+                _this.seq_share = response.data.seq_share;
+                _this.sendMsg(
+                  response.data.typeMessage,
+                  response.data.req_nm_person
+                ); //문자발송
+              }
+            })
+            .catch(e => {
+              _this.$toast.center(ko.messages.error);
+            });
+        }
+      });
     },
     //문자 / push발송
     sendMsg: function(typeMessage, req_nm_person) {

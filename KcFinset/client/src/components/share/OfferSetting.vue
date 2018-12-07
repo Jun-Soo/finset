@@ -30,7 +30,7 @@
 
     <div v-if="cd_share=='01'" class="box-list noMG list02">
       <p class="header">정보 제공 항목</p>
-      <div v-if="reqInfo.yn_credit_info=='Y'" class="item"> 
+      <div v-if="reqInfo.yn_credit_info=='Y'" class="item">
         <div class="flex">
           <p class="corp big">신용등급(연체정보 포함)</p>
           <p><button @click="changeItem('credit');" class="btn-onoff" :class="{on: yn_credit_info=='Y'}"></button></p>
@@ -98,7 +98,7 @@
     </div>
 
     <div v-if="shareInfo.share_status=='02'" class="btn-wrap">
-        <a @click="settingStatus('04');" class="stroke blue">공유 취소</a>
+      <a @click="settingStatus('04');" class="stroke blue">공유 취소</a>
     </div>
 
     <!-- 공유상태에 따라 버튼 달라짐 -->
@@ -151,9 +151,9 @@ export default {
   beforeCreate() {},
   created() {
     var cd_share;
-    if("" != Constant.params.cd_share && Constant.params.cd_share != null){
+    if ("" != Constant.params.cd_share && Constant.params.cd_share != null) {
       cd_share = Constant.params.cd_share;
-    }else{
+    } else {
       cd_share = this.$route.query.cd_share;
     }
     this.$store.state.header.type = "sub";
@@ -164,9 +164,9 @@ export default {
     }
     this.cd_share = cd_share;
 
-    if("" != Constant.params.seq_share && Constant.params.seq_share != null){
+    if ("" != Constant.params.seq_share && Constant.params.seq_share != null) {
       this.seq_share = Constant.params.seq_share;
-    }else{
+    } else {
       this.seq_share = this.$route.query.seq_share;
     }
     this.getSettingInfo();
@@ -216,30 +216,39 @@ export default {
           }
 
           //자산
-          if("Y" == _this.yn_asset_info){
+          if ("Y" == _this.yn_asset_info) {
             for (var idx in _this.assetList) {
-              if("01" == _this.shareInfo.share_status
-                || ("02" == _this.shareInfo.share_status && "Y"== _this.assetList[idx].yn_share)){
+              if (
+                "01" == _this.shareInfo.share_status ||
+                ("02" == _this.shareInfo.share_status &&
+                  "Y" == _this.assetList[idx].yn_share)
+              ) {
                 _this.assetKeys.push(_this.assetList[idx].rnum);
               }
             }
           }
 
           //소비
-          if("Y" == _this.yn_consume_info){
+          if ("Y" == _this.yn_consume_info) {
             for (var idx in _this.consumeList) {
-              if("01" == _this.shareInfo.share_status
-                || ("02" == _this.shareInfo.share_status && "Y"== _this.consumeList[idx].yn_share)){
+              if (
+                "01" == _this.shareInfo.share_status ||
+                ("02" == _this.shareInfo.share_status &&
+                  "Y" == _this.consumeList[idx].yn_share)
+              ) {
                 _this.consumeKeys.push(_this.consumeList[idx].rnum);
               }
             }
           }
 
           //부채
-          if("Y" == _this.yn_debt_info){
+          if ("Y" == _this.yn_debt_info) {
             for (var idx in _this.debtList) {
-              if("01" == _this.shareInfo.share_status
-                || ("02" == _this.shareInfo.share_status && "Y"== _this.debtList[idx].yn_share)){
+              if (
+                "01" == _this.shareInfo.share_status ||
+                ("02" == _this.shareInfo.share_status &&
+                  "Y" == _this.debtList[idx].yn_share)
+              ) {
                 _this.debtKeys.push(_this.debtList[idx].rnum);
               }
             }
@@ -278,11 +287,13 @@ export default {
           }
         }
       } else {
-        if ("asset" == nm_item) { //자산
+        if ("asset" == nm_item) {
+          //자산
           if ("" == _this.yn_asset_info) {
             _this.yn_asset_info = "Y";
 
-            for (var idx in _this.assetList) { //모두 체크
+            for (var idx in _this.assetList) {
+              //모두 체크
               _this.assetKeys.push(_this.assetList[idx].rnum);
             }
           } else {
@@ -290,7 +301,8 @@ export default {
 
             _this.assetKeys = []; //모두 체크해제
           }
-        } else if ("consume" == nm_item) { //소비
+        } else if ("consume" == nm_item) {
+          //소비
           if ("" == _this.yn_consume_info) {
             _this.yn_consume_info = "Y";
 
@@ -302,7 +314,8 @@ export default {
 
             _this.consumeKeys = [];
           }
-        } else if ("debt" == nm_item) { //부채
+        } else if ("debt" == nm_item) {
+          //부채
           if ("" == _this.yn_debt_info) {
             _this.yn_debt_info = "Y";
 
@@ -320,22 +333,31 @@ export default {
     //체크박스 변경
     changeCheckItem: function(nm_item) {
       var _this = this;
-      if ("asset" == nm_item) { //자산
-        if (_this.assetKeys.length != 0) { //하나라도 선택되면 Y
+      if ("asset" == nm_item) {
+        //자산
+        if (_this.assetKeys.length != 0) {
+          //하나라도 선택되면 Y
           _this.yn_asset_info = "Y";
-        } else { //선택된게 없으면 N
+        } else {
+          //선택된게 없으면 N
           _this.yn_asset_info = "N";
         }
-      } else if ("consume" == nm_item) { //소비
-        if (_this.consumeKeys.length != 0) { //하나라도 선택되면 Y
+      } else if ("consume" == nm_item) {
+        //소비
+        if (_this.consumeKeys.length != 0) {
+          //하나라도 선택되면 Y
           _this.yn_consume_info = "Y";
-        } else { //선택된게 없으면 N
+        } else {
+          //선택된게 없으면 N
           _this.yn_consume_info = "N";
         }
-      } else if ("debt" == nm_item) { //부채
-        if (_this.debtKeys.length != 0) { //하나라도 선택되면 Y
+      } else if ("debt" == nm_item) {
+        //부채
+        if (_this.debtKeys.length != 0) {
+          //하나라도 선택되면 Y
           _this.yn_debt_info = "Y";
-        } else { //선택된게 없으면 N
+        } else {
+          //선택된게 없으면 N
           _this.yn_debt_info = "N";
         }
       }
@@ -343,25 +365,41 @@ export default {
     //공유상태변경(거절, 공유취소)
     settingStatus: function(share_status) {
       var _this = this;
+      var dgTitle = "";
+      //거절
+      if ("03" == share_status) {
+        dgTitle = "공유 요청을 거절하시겠습니까?";
 
-      console.log("seq_share" + _this.seq_share);
+        //공유취소
+      } else if ("04" == share_status) {
+        dgTitle = "공유를 취소하시겠습니까?";
+      }
+      Constant.options.title = dgTitle;
+      this.$dialogs.confirm("", Constant.options).then(res => {
+        if (res.ok) {
+          console.log("seq_share" + _this.seq_share);
 
-      var formData = new FormData();
-      formData.append("seq_share", _this.seq_share);
-      _this.share_status = share_status;
-      formData.append("share_status", share_status);
+          var formData = new FormData();
+          formData.append("seq_share", _this.seq_share);
+          _this.share_status = share_status;
+          formData.append("share_status", share_status);
 
-      this.$http
-        .post("/m/customercenter/updatePersonShareInfoSetStatus.json", formData)
-        .then(function(response) {
-          _this.$toast.center(response.data.message);
-          if ("00" == response.data.cdResult) {
-            _this.sendPush(); //문자발송
-          }
-        })
-        .catch(e => {
-          _this.$toast.center(ko.messages.error);
-        });
+          this.$http
+            .post(
+              "/m/customercenter/updatePersonShareInfoSetStatus.json",
+              formData
+            )
+            .then(function(response) {
+              _this.$toast.center(response.data.message);
+              if ("00" == response.data.cdResult) {
+                _this.sendPush(); //문자발송
+              }
+            })
+            .catch(e => {
+              _this.$toast.center(ko.messages.error);
+            });
+        }
+      });
     },
     //공유항목변경(허용, 저장)
     settingItems: function(share_status) {
@@ -370,60 +408,82 @@ export default {
       //validation 체크
       if (!_this.validItems()) return false;
 
-      if ("01" == _this.cd_share) {
-        if (_this.yn_credit_info != _this.shareInfo.yn_credit_info)
-          _this.changeCnt++;
-        if (_this.yn_debt_info != _this.shareInfo.yn_debt_info)
-          _this.changeCnt++;
-      } else {
-        //금융정보일 경우 계좌정보 셋팅
-        _this.setAccounts();
+      var dgTitle = "";
+      //허용
+      if ("02" == share_status) {
+        dgTitle = "공유 요청을 허용하시겠습니까?";
+
+        //저장(항목변경)
+      } else if ("07" == share_status) {
+        dgTitle = "공유항목을 변경하시겠습니까?";
       }
-
-      if ("07" == share_status && _this.changeCnt == 0) {
-        _this.$toast.center("변경사항이 없습니다.");
-        return false;
-      }
-
-      console.log("cd_share" + _this.cd_share);
-      console.log("seq_share" + _this.seq_share);
-      console.log("share_status" + share_status);
-      console.log("yn_credit_info" + _this.yn_credit_info);
-      console.log("yn_debt_info" + _this.yn_debt_info);
-      console.log("yn_asset_info" + _this.yn_asset_info);
-      console.log("yn_consume_info" + _this.yn_consume_info);
-      console.log("addAssetList_length" + _this.addAssetList.length);
-      console.log("addConsumeList_length" + _this.addConsumeList.length);
-      console.log("addDebtList_length" + _this.addDebtList.length);
-
-      var formData = new FormData();
-      formData.append("cd_share", _this.cd_share);
-      formData.append("seq_share", _this.seq_share);
-      _this.share_status = share_status;
-      formData.append("share_status", share_status);
-      if ("01" == _this.cd_share) { //신용
-        formData.append("yn_credit_info", _this.yn_credit_info);
-        formData.append("yn_debt_info", _this.yn_debt_info);
-      } else { //금융
-        formData.append("yn_asset_info", _this.yn_asset_info);
-        formData.append("yn_consume_info", _this.yn_consume_info);
-        formData.append("yn_debt_info", _this.yn_debt_info);
-        formData.append("addAssetList", JSON.stringify(_this.addAssetList));
-        formData.append("addConsumeList", JSON.stringify(_this.addConsumeList));
-        formData.append("addDebtList", JSON.stringify(_this.addDebtList));
-      }
-
-      this.$http
-        .post("/m/customercenter/updatePersonShareInfoSetItems.json", formData)
-        .then(function(response) {
-          _this.$toast.center(response.data.message);
-          if ("00" == response.data.cdResult) {
-            _this.sendPush(); //문자발송
+      Constant.options.title = dgTitle;
+      this.$dialogs.confirm("", Constant.options).then(res => {
+        if (res.ok) {
+          if ("01" == _this.cd_share) {
+            if (_this.yn_credit_info != _this.shareInfo.yn_credit_info)
+              _this.changeCnt++;
+            if (_this.yn_debt_info != _this.shareInfo.yn_debt_info)
+              _this.changeCnt++;
+          } else {
+            //금융정보일 경우 계좌정보 셋팅
+            _this.setAccounts();
           }
-        })
-        .catch(e => {
-          _this.$toast.center(ko.messages.error);
-        });
+
+          if ("07" == share_status && _this.changeCnt == 0) {
+            _this.$toast.center("변경사항이 없습니다.");
+            return false;
+          }
+
+          console.log("cd_share" + _this.cd_share);
+          console.log("seq_share" + _this.seq_share);
+          console.log("share_status" + share_status);
+          console.log("yn_credit_info" + _this.yn_credit_info);
+          console.log("yn_debt_info" + _this.yn_debt_info);
+          console.log("yn_asset_info" + _this.yn_asset_info);
+          console.log("yn_consume_info" + _this.yn_consume_info);
+          console.log("addAssetList_length" + _this.addAssetList.length);
+          console.log("addConsumeList_length" + _this.addConsumeList.length);
+          console.log("addDebtList_length" + _this.addDebtList.length);
+
+          var formData = new FormData();
+          formData.append("cd_share", _this.cd_share);
+          formData.append("seq_share", _this.seq_share);
+          _this.share_status = share_status;
+          formData.append("share_status", share_status);
+          if ("01" == _this.cd_share) {
+            //신용
+            formData.append("yn_credit_info", _this.yn_credit_info);
+            formData.append("yn_debt_info", _this.yn_debt_info);
+          } else {
+            //금융
+            formData.append("yn_asset_info", _this.yn_asset_info);
+            formData.append("yn_consume_info", _this.yn_consume_info);
+            formData.append("yn_debt_info", _this.yn_debt_info);
+            formData.append("addAssetList", JSON.stringify(_this.addAssetList));
+            formData.append(
+              "addConsumeList",
+              JSON.stringify(_this.addConsumeList)
+            );
+            formData.append("addDebtList", JSON.stringify(_this.addDebtList));
+          }
+
+          this.$http
+            .post(
+              "/m/customercenter/updatePersonShareInfoSetItems.json",
+              formData
+            )
+            .then(function(response) {
+              _this.$toast.center(response.data.message);
+              if ("00" == response.data.cdResult) {
+                _this.sendPush(); //문자발송
+              }
+            })
+            .catch(e => {
+              _this.$toast.center(ko.messages.error);
+            });
+        }
+      });
     },
     //항목 선택여부 체크
     validItems: function() {
@@ -471,8 +531,8 @@ export default {
             }
           }
 
-          if(!isEqRnum && "Y" == _this.assetList[i].yn_share) {
-             _this.changeCnt++;
+          if (!isEqRnum && "Y" == _this.assetList[i].yn_share) {
+            _this.changeCnt++;
           }
           isEqRnum = false;
         }
@@ -493,8 +553,8 @@ export default {
             }
           }
 
-          if(!isEqRnum && "Y" == _this.consumeList[i].yn_share) {
-             _this.changeCnt++;
+          if (!isEqRnum && "Y" == _this.consumeList[i].yn_share) {
+            _this.changeCnt++;
           }
           isEqRnum = false;
         }
@@ -515,8 +575,8 @@ export default {
             }
           }
 
-          if(!isEqRnum && "Y" == _this.debtList[i].yn_share) {
-             _this.changeCnt++;
+          if (!isEqRnum && "Y" == _this.debtList[i].yn_share) {
+            _this.changeCnt++;
           }
           isEqRnum = false;
         }

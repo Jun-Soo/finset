@@ -34,7 +34,8 @@
             <div class="flex">
               <p>기준일</p>
               <p>
-                <input type="text" v-model="creditFixDate" readonly="readonly">
+                <datepicker v-model="creditFixDate" ref="creditFixOpen" :opend="Common.datepickerInit('div-date', this)" :language="dateKo" :format="formatDate" class="div-date"></datepicker>
+                <button @click="openCreditFixPicker"></button>
               </p>
             </div>
             <p class="text">최근 신용등급이 2등급 이상 오른 경우 상승하기 전에 개설 했던 대출에 대해서 금리인하권을 요구 할 수 있습니다.</p>
@@ -46,7 +47,8 @@
             <div class="flex">
               <p>이직일</p>
               <p>
-                <input type="text" v-model="turnoverDate" readonly="readonly">
+                <datepicker v-model="turnoverDate" ref="turnoverOpen" :opend="Common.datepickerInit('div-date', this)" :language="dateKo" :format="formatDate" class="div-date"></datepicker>
+                <button @click="openTurnoverPicker"></button>
               </p>
             </div>
             <!--
@@ -94,7 +96,8 @@
             <div class="flex">
               <p>기준일</p>
               <p>
-                <input type="text" v-model="debtFixDate" readonly="readonly">
+                <datepicker v-model="debtFixDate" ref="debtFixOpen" :opend="Common.datepickerInit('div-date', this)" :language="dateKo" :format="formatDate" class="div-date"></datepicker>
+                <button @click="openDebtFixPicker"></button>
               </p>
             </div>
             <div class="flex">
@@ -118,7 +121,8 @@
             <div class="flex">
               <p>기준일</p>
               <p>
-                <input type="text" v-model="posFixDate" readonly="readonly">
+                <datepicker v-model="posFixDate" ref="posFixOpen" :opend="Common.datepickerInit('div-date', this)" :language="dateKo" :format="formatDate" class="div-date"></datepicker>
+                <button @click="openPosFixPicker"></button>
               </p>
             </div>
             <p class="text">동일 직장내 직위가 상승한 경우 요구가 가능합니다.</p>
@@ -130,7 +134,8 @@
             <div class="flex">
               <p>기준일</p>
               <p>
-                <input type="text" v-model="certFixDate" readonly="readonly">
+                <datepicker v-model="certFixDate" ref="certFixOpen" :opend="Common.datepickerInit('div-date', this)" :language="dateKo" :format="formatDate" class="div-date"></datepicker>
+                <button @click="openCertFixPicker"></button>
               </p>
             </div>
             <div class="flex">
@@ -171,12 +176,17 @@ import Common from "./../../assets/js/common.js";
 import Constant from "./../../assets/js/constant.js";
 import ko from "vee-validate/dist/locale/ko.js";
 
+import datepicker from "vuejs-datepicker";
+import { dateKo } from "vuejs-datepicker/dist/locale";
+
 import ReqIntrCutInfo from "./ReqIntrCutInfo.vue";
 
 export default {
   name: "debtReqIntrCut",
   data() {
     return {
+      Common: Common,
+      dateKo: dateKo,
       isInit: true, //초기화면 여부
       currentDate: "", //오늘날짜
       ynCredit: false, //신용 항목
@@ -216,6 +226,7 @@ export default {
     };
   },
   components: {
+    datepicker: datepicker,
     ReqIntrCutInfo: ReqIntrCutInfo
   },
   computed: {},
@@ -252,6 +263,22 @@ export default {
 
       _this.currentDate = yyyy + "-" + mm + "-" + dd;
     },
+    //datePicker
+    openCreditFixPicker: function() {
+      this.$refs.creditFixOpen.showCalendar();
+    },
+    openTurnoverPicker: function() {
+      this.$refs.turnoverOpen.showCalendar();
+    },
+    openDebtFixPicker: function() {
+      this.$refs.debtFixOpen.showCalendar();
+    },
+    openPosFixPicker: function() {
+      this.$refs.posFixOpen.showCalendar();
+    },
+    openCertFixPicker: function() {
+      this.$refs.certFixOpen.showCalendar();
+    },
     //금리인하list 조회
     getReqIntrCut: function() {
       var _this = this;
@@ -266,21 +293,24 @@ export default {
       if (_this.ynCert) cutItems.push("06");
 
       console.log("cutItems" + cutItems);
-      console.log("creditFixDate" + _this.creditFixDate);
-      console.log("turnoverDate" + _this.turnoverDate);
+      console.log("creditFixDate" + Common.formatDateDB(_this.creditFixDate));
+      console.log("turnoverDate" + Common.formatDateDB(_this.turnoverDate));
       console.log("income" + _this.income);
-      console.log("debtFixDate" + _this.debtFixDate);
-      console.log("posFixDate" + _this.posFixDate);
-      console.log("certFixDate" + _this.certFixDate);
+      console.log("debtFixDate" + Common.formatDateDB(_this.debtFixDate));
+      console.log("posFixDate" + Common.formatDateDB(_this.posFixDate));
+      console.log("certFixDate" + Common.formatDateDB(_this.certFixDate));
 
       var formData = new FormData();
       formData.append("cutItems", cutItems);
-      formData.append("creditFixDate", _this.creditFixDate);
-      formData.append("turnoverDate", _this.turnoverDate);
+      formData.append(
+        "creditFixDate",
+        Common.formatDateDB(_this.creditFixDate)
+      );
+      formData.append("turnoverDate", Common.formatDateDB(_this.turnoverDate));
       formData.append("income", _this.income);
-      formData.append("debtFixDate", _this.debtFixDate);
-      formData.append("posFixDate", _this.posFixDate);
-      formData.append("certFixDate", _this.certFixDate);
+      formData.append("debtFixDate", Common.formatDateDB(_this.debtFixDate));
+      formData.append("posFixDate", Common.formatDateDB(_this.posFixDate));
+      formData.append("certFixDate", Common.formatDateDB(_this.certFixDate));
 
       this.$http
         .post("/m/debt/listReqIntrCut.json", formData)
@@ -339,12 +369,16 @@ export default {
     formatNumber: function(data) {
       return Common.formatNumber(data);
     },
+    formatDate: function(data) {
+      return Common.formatDate(data);
+    },
     formatDateDot: function(data) {
       return Common.formatDateDot(data);
     },
     getCodeName: function(data) {
       return Common.getCodeName("debt_cut_items", data);
     },
+    //info
     openInfo: function() {
       var _this = this;
       _this.$modals.show("info-modal");

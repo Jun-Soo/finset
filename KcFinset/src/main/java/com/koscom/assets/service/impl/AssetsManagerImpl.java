@@ -111,6 +111,50 @@ public class AssetsManagerImpl implements AssetsManager {
 		return assetsMapper.updateAssetsDetailCsInfo(assetsInfoVO);
 	}
 
+
+	@Override
+	public List<AssetsInfoVO> listAssetsStockMainAccount(AssetsForm assetsForm){
+		return assetsMapper.listAssetsStockMainAccount(assetsForm);
+	}
+	@Override
+	public int listAssetsStockMainAccountCount(AssetsForm assetsForm){
+		return assetsMapper.listAssetsStockMainAccountCount(assetsForm);
+	}
+
+	@Override
+	public AssetsInfoVO getAssetsStockInfo(AssetsForm assetsForm){
+		return assetsMapper.getAssetsStockInfo(assetsForm);
+	}
+
+	@Override
+	public AssetsInfoVO getAssetsStockSumInfo(AssetsForm assetsForm){
+		return assetsMapper.getAssetsStockSumInfo(assetsForm);
+	}
+
+	@Override
+	public List<AssetsInfoVO> listAssetsStockDetailCompany(AssetsForm assetsForm){
+		return assetsMapper.listAssetsStockDetailCompany(assetsForm);
+	}
+	@Override
+	public List<AssetsInfoVO> listAssetsStockDetailAccount(AssetsForm assetsForm){
+		return assetsMapper.listAssetsStockDetailAccount(assetsForm);
+	}
+	@Override
+	public int listAssetsStockDetailAccountCount(AssetsForm assetsForm){
+		return assetsMapper.listAssetsStockDetailAccountCount(assetsForm);
+	}
+
+	@Override
+	public AssetsInfoVO getAssetsStockShrInfo(AssetsForm assetsForm){
+		return assetsMapper.getAssetsStockShrInfo(assetsForm);
+	}
+
+	@Override
+	public AssetsInfoVO getAssetsStockFndInfo(AssetsForm assetsForm){
+		return assetsMapper.getAssetsStockFndInfo(assetsForm);
+	}
+
+
 	@Override
 	public ReturnClass createAssetsInfo(AssetsInfoVO assetsInfoVO) {
 		if(1 != assetsMapper.createAssetsInfo(assetsInfoVO)){

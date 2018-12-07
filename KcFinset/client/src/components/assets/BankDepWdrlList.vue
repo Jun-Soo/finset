@@ -15,21 +15,19 @@
         <div class="form">
           <p>은행계좌선택</p>
           <p>
-            <select v-model="scAccount" @change="searchDepWdrlList()">
-              <option value="">전체</option>
-              <template v-for="scAccountInfo in scAccountList">
-                <option :key="scAccountInfo.index" :value="scAccountInfo.no_account">{{scAccountInfo.nm_fc}}({{scAccountInfo.no_account}})</option>
-              </template>
-            </select>
+            <multiselect v-model="scAccount" ref="scAccount" placeholder="계좌선택" track-by="text" label="text" :options="scAccountOptions" :searchable="false" :allow-empty="false" @select="onSelectAcc">
+            </multiselect>
           </p>
         </div>
         <div class="wrap">
           <div class="date-pick">
             <p>
-              <input v-model="txt_dt_from" type="text" readonly="readonly"><button></button>
+              <datepicker v-model="txt_dt_from" ref="txtDtFromOpen" :opend="Common.datepickerInit('div-date', this)" :language="dateKo" :format="formatDate" class="div-date"></datepicker>
+              <button @click="openDtFromPicker"></button>
             </p>
             <p>
-              <input v-model="txt_dt_to" type="text" readonly="readonly"><button></button>
+              <datepicker v-model="txt_dt_to" ref="txtDtToOpen" :opend="Common.datepickerInit('div-date', this)" :language="dateKo" :format="formatDate" class="div-date"></datepicker>
+              <button @click="openDtToPicker"></button>
             </p>
           </div>
           <div @click="searchDepWdrlList()" class="btn-wrap mt20">
@@ -41,14 +39,12 @@
       <div class="bank-detail noMG">
         <div class="select">
           <div class="left">
-            <select v-model="scTrnsType" @change="searchDepWdrlList()">
-              <option v-for="scTrnsTypeOption in scTrnsTypeOptions" :key="scTrnsTypeOption.index" :value="scTrnsTypeOption.value">
-                {{ scTrnsTypeOption.text }}
-              </option>
-            </select>
+            <multiselect v-model="scTrnsType" ref="scTrnsType" placeholder="유형선택" track-by="text" label="text" :options="scTrnsTypeOptions" :searchable="false" :allow-empty="false" @select="onSelectTrns">
+            </multiselect>
           </div>
           <div class="right">
-            <button class="btn-search"></button>
+            <span>{{scKeyword}}</span>
+            <button class="btn-search" @click="openScKeywordMd();"></button>
           </div>
         </div>
 
@@ -83,13 +79,13 @@
       </div>
     </section>
 
-    <aside class="search-wrap">
+    <aside class="search-wrap" :class="{on: isShowScKeyword}">
       <div class="top">
-        <button>검색</button>
+        <button @click="closeScKeywordMd();">검색</button>
       </div>
       <div class="wrap">
         <div class="hash">
-          <a v-for="scKeywordInfo in scKeywordList" :key="scKeywordInfo.index"># {{scKeywordInfo.doc1}}</a>
+          <a @click="clickScKeyword(scKeywordInfo.doc1)" v-for="scKeywordInfo in scKeywordList" :key="scKeywordInfo.index" :class="{on: scKeywordInfo.doc1==scKeyword}"># {{scKeywordInfo.doc1}}</a>
         </div>
       </div>
     </aside>
@@ -99,20 +95,26 @@
 <script>
 import Common from "./../../assets/js/common.js";
 import Constant from "./../../assets/js/constant.js";
-
 import ko from "vee-validate/dist/locale/ko.js";
+
+import datepicker from "vuejs-datepicker";
+import { dateKo } from "vuejs-datepicker/dist/locale";
 
 export default {
   name: "assetsBankDepWdrlList",
   data() {
     return {
-      seen: "",
+      seen: false,
+      Common: Common,
+      dateKo: dateKo,
       scTermType: "", //기간type
       scAccountList: [], //검색 계좌list
+      scAccountOptions: [],
       scAccount: "", //검색 계좌
       currentDate: "", //오늘 날짜
       txt_dt_from: "", //검색 시작일
       txt_dt_to: "", //검색 종료일
+      isShowScKeyword: false, //검색키워드 modal 보여주기
       scKeywordList: [],
       scKeyword: "",
       scTrnsTypeOptions: [
@@ -127,7 +129,9 @@ export default {
       colorList: ["red", "orange", "green", "blue", "purple"]
     };
   },
-  components: {},
+  components: {
+    datepicker: datepicker
+  },
   computed: {},
   beforeCreate() {
     this.$store.state.header.type = "sub";
@@ -168,10 +172,14 @@ export default {
     },
     getDateStr(myDate) {
       var month = myDate.getMonth() + 1;
+      var day = myDate.getDate();
       if (month < 10) {
         month = "0" + month;
       }
-      return myDate.getFullYear() + "-" + month + "-" + myDate.getDate();
+      if (day < 10) {
+        day = "0" + day;
+      }
+      return myDate.getFullYear() + "-" + month + "-" + day;
     },
     //검색조건 조회
     getSearchCondition: function() {
@@ -181,42 +189,76 @@ export default {
           params: {}
         })
         .then(response => {
-          _this.scAccountList = response.data.scAccountList;
+          //계좌list 셋팅(검색용)
+          var scAccountList = response.data.scAccountList;
+          _this.scAccountList = scAccountList;
+          _this.scAccountOptions.push({ text: "전체", value: "" });
+          for (var i = 0; i < scAccountList.length; i++) {
+            _this.scAccountOptions.push({
+              text:
+                scAccountList[i].nm_fc +
+                "(" +
+                scAccountList[i].no_account +
+                ")",
+              value: scAccountList[i].no_account
+            });
+          }
+
           _this.currentDate = response.data.currentDate;
           _this.scKeywordList = response.data.scKeywordList;
 
           //store값 셋팅
-          if ("" != this.$store.state.scListParam.scTermType) {
-            _this.scTermType = this.$store.state.scListParam.scTermType;
-            _this.setTermType(this.scTermType);
+          //날짜유형
+          if (typeof this.$store.state.scListParam.query1 != "undefined") {
+            _this.scTermType = this.$store.state.scListParam.query1;
+            _this.setTermType(_this.scTermType);
           }
-          if ("" != this.$store.state.scListParam.scAccount) {
-            _this.scAccount = this.$store.state.scListParam.scAccount;
+          //계좌(multiselect)
+          if (typeof this.$store.state.scListParam.query2 != "undefined") {
+            for (var i = 0; i < _this.scAccountOptions.length; i++) {
+              if (
+                _this.scAccountOptions[i].value ==
+                _this.$store.state.scListParam.query2
+              ) {
+                _this.scAccount = _this.scAccountOptions[i];
+              }
+            }
           }
-          if ("" != this.$store.state.scListParam.txt_dt_from) {
-            _this.txt_dt_from = this.$store.state.scListParam.txt_dt_from;
+          //날짜시작일
+          if (typeof this.$store.state.scListParam.query3 != "undefined") {
+            _this.txt_dt_from = this.$store.state.scListParam.query3;
           } else {
             _this.txt_dt_from = _this.currentDate;
           }
-          if ("" != this.$store.state.scListParam.txt_dt_to) {
-            _this.txt_dt_to = this.$store.state.scListParam.txt_dt_to;
+          //날짜종료일
+          if (typeof this.$store.state.scListParam.query4 != "undefined") {
+            _this.txt_dt_to = this.$store.state.scListParam.query4;
           } else {
             _this.txt_dt_to = _this.currentDate;
           }
-          if ("" != this.$store.state.scListParam.scKeyword) {
-            _this.scKeyword = this.$store.state.scListParam.scKeyword;
+          //계좌유형(multiselect)
+          if (typeof this.$store.state.scListParam.query5 != "undefined") {
+            for (var i = 0; i < _this.scTrnsTypeOptions.length; i++) {
+              if (
+                _this.scTrnsTypeOptions[i].value ==
+                _this.$store.state.scListParam.query5
+              ) {
+                _this.scTrnsType = _this.scTrnsTypeOptions[i];
+              }
+            }
           }
-          if ("" != this.$store.state.scListParam.scTrnsType) {
-            _this.scTrnsType = this.$store.state.scListParam.scTrnsType;
+          //검색키워드
+          if (typeof this.$store.state.scListParam.query6 != "undefined") {
+            _this.scKeyword = this.$store.state.scListParam.query6;
           }
 
           //store 검색조건 초기화
-          this.$store.state.scListParam.scTermType = "";
-          this.$store.state.scListParam.scAccount = "";
-          this.$store.state.scListParam.txt_dt_from = "";
-          this.$store.state.scListParam.txt_dt_to = "";
-          this.$store.state.scListParam.scKeyword = "";
-          this.$store.state.scListParam.scTrnsType = "";
+          this.$store.state.scListParam.query1 = undefined; //날짜유형
+          this.$store.state.scListParam.query2 = undefined; //계좌
+          this.$store.state.scListParam.query3 = undefined; //날짜시작일
+          this.$store.state.scListParam.query4 = undefined; //날짜종료일
+          this.$store.state.scListParam.query5 = undefined; //계좌유형
+          this.$store.state.scListParam.query6 = undefined; //검색키워드
 
           _this.searchDepWdrlList();
         })
@@ -224,28 +266,61 @@ export default {
           this.$toast.center(ko.messages.error);
         });
     },
-    //검색
-    searchDepWdrlList: function() {
+    //multiselect
+    onSelectAcc: function(option) {
       var _this = this;
-      _this.page = 1;
-      _this.depWdrlList = [];
-      _this.getDepWdrlTotalAmt();
-      Common.pagination(_this.listDepWdrl);
+      _this.scAccount = option;
+      console.log(option);
+      _this.searchDepWdrlList();
+    },
+    onSelectTrns: function(option) {
+      var _this = this;
+      _this.scTrnsType = option;
+      console.log(option);
+      _this.searchDepWdrlList();
+    },
+    //datePicker
+    openDtFromPicker: function() {
+      this.$refs.txtDtFromOpen.showCalendar();
+    },
+    openDtToPicker: function() {
+      this.$refs.txtDtToOpen.showCalendar();
+    },
+    //검색키워드
+    openScKeywordMd: function() {
+      var _this = this;
+      _this.isShowScKeyword = true;
+    },
+    closeScKeywordMd: function() {
+      var _this = this;
+      _this.isShowScKeyword = false;
+    },
+    clickScKeyword: function(doc1) {
+      var _this = this;
+      _this.scKeyword = doc1;
+      _this.closeScKeywordMd();
+      _this.searchDepWdrlList();
     },
     //입금 / 출금 총액
     getDepWdrlTotalAmt: function() {
       var _this = this;
 
-      console.log("txt_dt_from" + _this.txt_dt_from);
-      console.log("txt_dt_to" + _this.txt_dt_to);
+      console.log("txt_dt_from" + Common.formatDateDB(_this.txt_dt_from));
+      console.log("txt_dt_to" + Common.formatDateDB(_this.txt_dt_to));
       console.log("scTrnsType" + _this.scTrnsType);
       console.log("scKeyword" + _this.scKeyword);
 
       var formData = new FormData();
-      formData.append("scAccount", _this.scAccount);
-      formData.append("txt_dt_from", _this.txt_dt_from);
-      formData.append("txt_dt_to", _this.txt_dt_to);
-      formData.append("scTrnsType", _this.scTrnsType);
+      formData.append(
+        "scAccount",
+        _this.scAccount != "" ? _this.scAccount.value : ""
+      );
+      formData.append("txt_dt_from", Common.formatDateDB(_this.txt_dt_from));
+      formData.append("txt_dt_to", Common.formatDateDB(_this.txt_dt_to));
+      formData.append(
+        "scTrnsType",
+        _this.scTrnsType != "" ? _this.scTrnsType.value : ""
+      );
       formData.append("scKeyword", _this.scKeyword);
 
       this.$http
@@ -260,27 +335,44 @@ export default {
     formatNumber: function(data) {
       return Common.formatNumber(data);
     },
+    formatDate: function(data) {
+      return Common.formatDate(data);
+    },
     formatDateDot: function(data) {
       return Common.formatDateDot(data);
     },
     getCodeName: function(code_group, code_value) {
       return Common.getCodeName(code_group, code_value);
     },
+    //검색
+    searchDepWdrlList: function() {
+      var _this = this;
+      _this.page = 1;
+      _this.depWdrlList = [];
+      _this.getDepWdrlTotalAmt();
+      Common.pagination(_this.listDepWdrl);
+    },
     //입출금list
     listDepWdrl: function(callback) {
       var _this = this;
 
-      console.log("txt_dt_from" + _this.txt_dt_from);
-      console.log("txt_dt_to" + _this.txt_dt_to);
+      console.log("txt_dt_from" + Common.formatDateDB(_this.txt_dt_from));
+      console.log("txt_dt_to" + Common.formatDateDB(_this.txt_dt_to));
       console.log("scTrnsType" + _this.scTrnsType);
       console.log("scKeyword" + _this.scKeyword);
 
       var formData = new FormData();
       formData.append("page", _this.page);
-      formData.append("scAccount", _this.scAccount);
-      formData.append("txt_dt_from", _this.txt_dt_from);
-      formData.append("txt_dt_to", _this.txt_dt_to);
-      formData.append("scTrnsType", _this.scTrnsType);
+      formData.append(
+        "scAccount",
+        _this.scAccount != "" ? _this.scAccount.value : ""
+      );
+      formData.append("txt_dt_from", Common.formatDateDB(_this.txt_dt_from));
+      formData.append("txt_dt_to", Common.formatDateDB(_this.txt_dt_to));
+      formData.append(
+        "scTrnsType",
+        _this.scTrnsType != "" ? _this.scTrnsType.value : ""
+      );
       formData.append("scKeyword", _this.scKeyword);
 
       this.$http
@@ -302,7 +394,6 @@ export default {
           //pagination
           if (list.length === 0) {
             callback();
-            _this.depWdrlList = [];
             _this.seen = true;
             return;
           }
@@ -329,12 +420,12 @@ export default {
       var _this = this;
 
       //store 검색조건 유지
-      this.$store.state.scListParam.scTermType = _this.scTermType;
-      this.$store.state.scListParam.scAccount = _this.scAccount;
-      this.$store.state.scListParam.txt_dt_from = _this.txt_dt_from;
-      this.$store.state.scListParam.txt_dt_to = _this.txt_dt_to;
-      this.$store.state.scListParam.scKeyword = _this.scKeyword;
-      this.$store.state.scListParam.scTrnsType = _this.scTrnsType;
+      this.$store.state.scListParam.query1 = _this.scTermType; //날짜유형
+      this.$store.state.scListParam.query2 = _this.scAccount.value; //계좌
+      this.$store.state.scListParam.query3 = _this.txt_dt_from; //날짜시작일
+      this.$store.state.scListParam.query4 = _this.txt_dt_to; //날짜종료일
+      this.$store.state.scListParam.query5 = _this.scTrnsType.value; //계좌유형
+      this.$store.state.scListParam.query6 = _this.scKeyword; //검색키워드
 
       this.$router.push({
         name: "assetsBankDepWdrlDetail",

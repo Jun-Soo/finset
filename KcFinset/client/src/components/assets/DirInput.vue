@@ -225,39 +225,45 @@ export default {
     },
     createAssets: function() {
       var _this = this;
+
       this.$validator.validateAll().then(res => {
         if (res) {
-          var cd_assets_class = _this.cd_assets_class.value;
-          var formData = new FormData();
-          formData.append("cd_assets_class", cd_assets_class);
-          if (
-            "30" == cd_assets_class ||
-            "50" == cd_assets_class ||
-            "60" == cd_assets_class
-          ) {
-            formData.append("cd_detail_class", _this.cd_detail_class.value);
-          }
-          formData.append("real_estate_addr", _this.real_estate_addr);
-          formData.append("nm_model", _this.nm_model);
-          formData.append("amount_jewelry", _this.amount_jewelry);
-          formData.append("amt_balance", _this.amt_balance);
-          formData.append("etc_assets", _this.etc_assets);
-          formData.append("amt_evaluation", _this.amt_evaluation);
-          formData.append("memo", _this.memo);
-
-          this.$http
-            .post("/m/assets/createAssetsInfo.json", formData)
-            .then(response => {
-              this.$toast.center(response.data.message);
-              if ("00" == response.data.result) {
-                _this.$router.push("/assets/main");
+          Constant.options.title = "자산정보를 등록하시겠습니까?";
+          this.$dialogs.confirm("", Constant.options).then(res => {
+            if (res.ok) {
+              var cd_assets_class = _this.cd_assets_class.value;
+              var formData = new FormData();
+              formData.append("cd_assets_class", cd_assets_class);
+              if (
+                "30" == cd_assets_class ||
+                "50" == cd_assets_class ||
+                "60" == cd_assets_class
+              ) {
+                formData.append("cd_detail_class", _this.cd_detail_class.value);
               }
-            })
-            .catch(e => {
-              this.$toast.center(ko.messages.error);
-            });
-        } else {
-          this.$toast.center(ko.messages.require);
+              formData.append("real_estate_addr", _this.real_estate_addr);
+              formData.append("nm_model", _this.nm_model);
+              formData.append("amount_jewelry", _this.amount_jewelry);
+              formData.append("amt_balance", _this.amt_balance);
+              formData.append("etc_assets", _this.etc_assets);
+              formData.append("amt_evaluation", _this.amt_evaluation);
+              formData.append("memo", _this.memo);
+
+              this.$http
+                .post("/m/assets/createAssetsInfo.json", formData)
+                .then(response => {
+                  this.$toast.center(response.data.message);
+                  if ("00" == response.data.result) {
+                    _this.$router.push("/assets/main");
+                  }
+                })
+                .catch(e => {
+                  this.$toast.center(ko.messages.error);
+                });
+            } else {
+              this.$toast.center(ko.messages.require);
+            }
+          });
         }
       });
     }

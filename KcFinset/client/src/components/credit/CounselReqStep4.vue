@@ -69,46 +69,56 @@ export default {
     createCounsel: function() {
       var _this = this;
 
-      var formData = new FormData();
-      formData.append("yn_wedding", this.$route.query.yn_wedding);
-      formData.append("cd_family_cnt", this.$route.query.cd_family_cnt);
-      formData.append("cd_living", this.$route.query.cd_living);
-      formData.append("cd_job", this.$route.query.cd_job);
-      formData.append("amt_mm_income", this.$route.query.amt_mm_income);
-      formData.append("amt_mm_expense", this.$route.query.amt_mm_expense);
-      formData.append("inquiry_contents", _this.inquiry_contents);
+      Constant.options.title = "상담을 신청하시겠습니까?";
+      this.$dialogs.confirm("", Constant.options).then(res => {
+        if (res.ok) {
+          var formData = new FormData();
+          formData.append("yn_wedding", this.$route.query.yn_wedding);
+          formData.append("cd_family_cnt", this.$route.query.cd_family_cnt);
+          formData.append("cd_living", this.$route.query.cd_living);
+          formData.append("cd_job", this.$route.query.cd_job);
+          formData.append("amt_mm_income", this.$route.query.amt_mm_income);
+          formData.append("amt_mm_expense", this.$route.query.amt_mm_expense);
+          formData.append("inquiry_contents", _this.inquiry_contents);
 
-      this.$http
-        .post("/m/credit/createCreditCounselInfo.json", formData)
-        .then(response => {
-          this.$toast.center(response.data.message);
-          if ("00" == response.data.result) {
-            _this.$router.push("/credit/counselReqStep5");
-          }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
-        });
+          this.$http
+            .post("/m/credit/createCreditCounselInfo.json", formData)
+            .then(response => {
+              this.$toast.center(response.data.message);
+              if ("00" == response.data.result) {
+                _this.$router.push("/credit/counselReqStep5");
+              }
+            })
+            .catch(e => {
+              this.$toast.center(ko.messages.error);
+            });
+        }
+      });
     },
     //수정
     updateCounsel: function() {
       var _this = this;
 
-      var formData = new FormData();
-      formData.append("counsel_seq", _this.counsel_seq);
-      formData.append("inquiry_contents", _this.inquiry_contents);
+      Constant.options.title = "상담내용을 수정하시겠습니까?";
+      this.$dialogs.confirm("", Constant.options).then(res => {
+        if (res.ok) {
+          var formData = new FormData();
+          formData.append("counsel_seq", _this.counsel_seq);
+          formData.append("inquiry_contents", _this.inquiry_contents);
 
-      this.$http
-        .post("/m/credit/updateCreditCounselInfo.json", formData)
-        .then(response => {
-          this.$toast.center(response.data.message);
-          if ("00" == response.data.result) {
-            _this.$router.push("/credit/counselReqStep5");
-          }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
-        });
+          this.$http
+            .post("/m/credit/updateCreditCounselInfo.json", formData)
+            .then(response => {
+              this.$toast.center(response.data.message);
+              if ("00" == response.data.result) {
+                _this.$router.push("/credit/counselMain");
+              }
+            })
+            .catch(e => {
+              this.$toast.center(ko.messages.error);
+            });
+        }
+      });
     }
   }
 };

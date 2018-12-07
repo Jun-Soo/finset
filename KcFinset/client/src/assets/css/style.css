@@ -1253,7 +1253,7 @@ aside .wrap .hash a {
   text-align: center;
 }
 
-aside .wrap .hash a:active {
+aside .wrap .hash a.on {
   background: #62c1d0;
   color: #fff;
 }

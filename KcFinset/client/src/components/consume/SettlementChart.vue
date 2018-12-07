@@ -86,61 +86,90 @@ export default {
     let _dataList2 = [];
     let fromMon = this.dt_from.getMonth();
     let toMon = this.dt_to.getMonth();
+    if (this.dataPeriod == "yr") {
+      // if (this.dt_from.getFullYear() === this.dt_to.getFullYear()) {// 12개월 이내에서 돼야함
+      for (let k = fromMon; k <= toMon; k++) {
+        this.mylabels.push(k + 1 + "월");
+        for (var i in _chartList) {
+          if (_chartList[i].type_in_out == "02") {
+            // console.log( _chartList[i].dt_trd.substring(4, 6));
+            if (k + 1 == _chartList[i].dt_trd.substring(4, 6)) {
+              _dataList1.push(_chartList[i].amt_in_out); //지출
+            } else {
+              _dataList1.push("");
+            }
+          } else {
+            if (k + 1 == _chartList[i].dt_trd.substring(4, 6)) {
+              _dataList2.push(_chartList[i].amt_in_out); //지출
+            } else {
+              _dataList2.push("");
+            }
+          } //else
+        } //for
+      } //for
+
+      //   // } else {
+      //   //코딩해야됭 -> 머냐먼
+      //   // }
+    } else if (this.dataPeriod == "mon") {
+      //   //   // console.log(today.getMonth());
+      //   for (let k = fromMon; k <= toMon; k++) {
+      //     this.mylabels.push(k + 1 + "");
+      //     for (var i in _chartList) {
+      //       if (_chartList[i].type_in_out == "02") {
+      //         if (k + 1 == _chartList[i].dt_trd.substring(4, 6)) {
+      //           _dataList1.push(_chartList[i].amt_in_out); //지출
+      //         } else {
+      //           _dataList1.push("");
+      //         }
+    } else {
+      //         if (k + 1 == _chartList[i].dt_trd.substring(4, 6)) {
+      //           _dataList2.push(_chartList[i].amt_in_out); //지출
+      //         } else {
+      //           _dataList2.push("");
+      //         }
+      //       } //else
+      //     } //for
+      //   } //for
+      //   for (var k = this.fromMon; k <= this.toMon; k++) {
+      //     this.mylabels.push(k + "월");
+      //   }
+      //   // } else if (this.dataPeriod == "week") {
+    }
     debugger;
-    // if (this.dataPeriod == "yr") {
-    //   // if (this.dt_from.getFullYear() === this.dt_to.getFullYear()) {// 12개월 이내에서 돼야함
-    //   for (let k = fromMon; k <= toMon; k++) {
-    //     this.mylabels.push(k + 1 + "월");
-    //     for (var i in _chartList) {
-    //       if (_chartList[i].type_in_out == "02") {
-    //         if (k + 1 == _chartList[i].dt_trd.substring(4, 6)) {
-    //           _dataList1.push(_chartList[i].amt_in_out); //지출
-    //         } else {
-    //           _dataList1.push("");
-    //         }
-    //       } else {
-    //         if (k + 1 == _chartList[i].dt_trd.substring(4, 6)) {
-    //           _dataList2.push(_chartList[i].amt_in_out); //지출
-    //         } else {
-    //           _dataList2.push("");
-    //         }
-    //       } //else
-    //     } //for
-    //   } //for
-
-    //   // } else {
-    //   //코딩해야됭 -> 머냐먼
-    //   // }
-    // } else if (this.dataPeriod == "mon") {
-    //   //   // console.log(today.getMonth());
-    //   for (let k = fromMon; k <= toMon; k++) {
-    //     this.mylabels.push(k + 1 + "");
-    //     for (var i in _chartList) {
-    //       if (_chartList[i].type_in_out == "02") {
-    //         if (k + 1 == _chartList[i].dt_trd.substring(4, 6)) {
-    //           _dataList1.push(_chartList[i].amt_in_out); //지출
-    //         } else {
-    //           _dataList1.push("");
-    //         }
-    //       } else {
-    //         if (k + 1 == _chartList[i].dt_trd.substring(4, 6)) {
-    //           _dataList2.push(_chartList[i].amt_in_out); //지출
-    //         } else {
-    //           _dataList2.push("");
-    //         }
-    //       } //else
-    //     } //for
-    //   } //for
-
-    //   for (var k = this.fromMon; k <= this.toMon; k++) {
-    //     this.mylabels.push(k + "월");
-    //   }
-    //   // } else if (this.dataPeriod == "week") {
-    // }
-
-    // for(var k in this.chartList){
-    //   this.mylabels.push(this.chartList[k].);
-    // }
+    _dataList1 = [
+      "",
+      "",
+      "",
+      "10285",
+      "",
+      "1111",
+      "22222",
+      "",
+      "",
+      "",
+      "",
+      "22221"
+    ];
+    _dataList2 = [
+      "",
+      "",
+      "",
+      "10285",
+      "",
+      "120000",
+      "300000",
+      "",
+      "30000",
+      "",
+      "",
+      "22221"
+    ];
+    this.$set(this.mydatasets[0], "data", _dataList1);
+    this.$set(this.mydatasets[1], "data", _dataList2);
+    console.log(this.mydatasets[1].data);
+    // this.mydatasets[0].data = _dataList1;
+    // this.mydatasets[1].data = _dataList2;
   },
   beforeUpdate() {},
   updated() {

@@ -530,10 +530,10 @@ public class KcbManagerImpl implements KcbManager {
 				if(kcbURI.indexOf("api") > -1) {
 					if(kcbURI.indexOf("443/") > -1) {
 						kcbHost = environment.getProperty("kcbHost");
-						kcbURI	= kcbURI.replace("api.allcredit.co.kr", kcbHost);
+						kcbURI	= kcbURI.replace("api.allcredit.co.kr", kcbHost).replace("https", "http");
 					} else {
 						kcbHost = environment.getProperty("kcbApi");
-						kcbURI	= kcbURI.replace("api.allcredit.co.kr", kcbHost);
+						kcbURI	= kcbURI.replace("api.allcredit.co.kr", kcbHost).replace("https", "http");
 					}
 				} else {
 					kcbHost = environment.getProperty("kcbMaff");
@@ -556,7 +556,7 @@ public class KcbManagerImpl implements KcbManager {
 				logger.error("href ==== " + href);
 				logger.error("domain ==== " + href);
 				
-				String URL		= kcbHost + href;
+				String URL		= "http://" + kcbHost + href;
 				
 				logger.debug("URL ==== " + URL);
 				logger.debug("JSESSIONID ==== " + rtnMap.get("jsessionId").toString());

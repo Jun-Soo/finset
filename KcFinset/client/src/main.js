@@ -15,6 +15,7 @@ import VueModal from './components/plugins/modal/index'
 import Multiselect from './components/plugins/vue-multiselect/src/index'
 import SlimDialog from 'v-slim-dialog'
 import datepicker from 'vuejs-datepicker'
+import VueAnalytics from 'vue-analytics'
 
 import 'jquery'
 
@@ -29,6 +30,11 @@ import 'vue2-toast/lib/toast.css'
 import './assets/css/v-slim-dialog.css'
 import './assets/css/reset.css'
 import './assets/css/style.css'
+
+Vue.use(VueAnalytics, {
+  id: 'UA-126626513-1',
+  router
+})
 
 Vue.use(VeeValidate, {
   events: '',

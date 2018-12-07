@@ -3957,11 +3957,12 @@ aside.search-wrap .action.btn1 {
   margin-bottom: 10px;
 }
 
-.bank-detail .select div {
+.bank-detail .select div.left {
   width: 50%;
 }
 
 .bank-detail .select div.right {
+  width: 50%;
   text-align: right;
 }
 

@@ -410,9 +410,9 @@ fieldset[disabled] .multiselect {
 .multiselect__input,
 .multiselect__single {
   position: relative;
-  display: inline-block;
+  /* display: inline-block; */
   min-height: 20px;
-  line-height: 20px;
+  line-height: 40px;
   border: none;
   border-radius: 5px;
   background: #fff;

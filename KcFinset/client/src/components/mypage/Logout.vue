@@ -30,7 +30,7 @@ export default {
     var frm = new FormData();
     _this.$http.post("/m/login/framePersonLogout.json", frm).then(response => {
       _this.$store.commit("LOGOUT");
-
+      // localStorage.clear();
       if (Constant.userAgent == "iOS") {
         Jockey.send("loginFlag", {
           flag: "N"

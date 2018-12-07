@@ -22,6 +22,13 @@ public class ConsumeForm implements Serializable{
 	private String			y_trd;					//거래년
 	private String			contents;				//내용
 	
+	
+	private String dt_from; 		//소비 통계 날짜 조회 범위 
+	private String dt_to;
+	private String orderType;		//소비 통계 정렬 타입
+	private String listType;		//소비 통계 정렬 타입
+	
+	
 	public ConsumeForm() {
 	}
 	public ConsumeForm(String no_person, List<String> no_person_list,
@@ -106,6 +113,33 @@ public class ConsumeForm implements Serializable{
 	}
 	public void setContents(String contents) {
 		this.contents = contents;
+	}
+	
+	public String getDt_from() {
+		return dt_from;
+	}
+	public void setDt_from(String dt_from) {
+		this.dt_from = dt_from;
+	}
+	public String getDt_to() {
+		return dt_to;
+	}
+	public void setDt_to(String dt_to) {
+		this.dt_to = dt_to;
+	}
+	
+	public String getOrderType() {
+		return orderType;
+	}
+	public void setOrderType(String orderType) {
+		this.orderType = orderType;
+	}
+	
+	public String getListType() {
+		return listType;
+	}
+	public void setListType(String listType) {
+		this.listType = listType;
 	}
 	
 	public String toString() {

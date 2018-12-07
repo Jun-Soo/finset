@@ -358,4 +358,46 @@ public interface ConsumeMapper {
 	 * @return
 	 */
 	List<ConsumeVO> listConsumeAnalyzeDay(ConsumeForm consumeForm);
+	
+	/**
+	 * 년 통계 데이터 조회
+	 * @param consumeForm
+	 * @return
+	 */
+	List<ConsumeVO> listSettlementConsumeDataYear(ConsumeForm consumeForm);
+	
+	/**
+	 * 주 통계 데이터 조회
+	 * @param consumeForm
+	 * @return
+	 */
+	List<ConsumeVO> listSettlementConsumeDataWeek(ConsumeForm consumeForm);
+	
+	/**
+	 * 일 통계 데이터 조회
+	 * @param consumeForm
+	 * @return
+	 */
+	List<ConsumeVO> listSettlementConsumeDataDay(ConsumeForm consumeForm);
+	
+	/**
+	 * 통계 카테고리별 리스트
+	 * @param consumeForm
+	 * @return
+	 */
+	List<ConsumeVO> getListforSettlementByCategory(ConsumeForm consumeForm);
+	
+	/**
+	 * 통계 수단별 또는 가맹점별 리스트
+	 * @param consumeForm
+	 * @return
+	 */
+	List<ConsumeVO> getListforSettlementByMeans(ConsumeForm consumeForm);
+	
+	/**
+	 * 통계 상세 페이지 리스트
+	 * @param consumeForm
+	 * @return
+	 */
+	List<ConsumeVO> getSettlementDetail(ConsumeForm consumeForm);
 }

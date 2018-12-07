@@ -451,4 +451,40 @@ public class ConsumeManagerImpl implements ConsumeManager {
 		logger.debug("listConsumeAnalyzeDay");
 		return consumeMapper.listConsumeAnalyzeDay(consumeForm);
 	}
+	
+	@Override
+	public List<ConsumeVO> listSettlementConsumeDataYear(ConsumeForm consumeForm) {
+		logger.debug("listSettlementConsumeDataYear");
+		return consumeMapper.listSettlementConsumeDataYear(consumeForm);
+	}
+	
+	@Override
+	public List<ConsumeVO> listSettlementConsumeDataWeek(ConsumeForm consumeForm) {
+		logger.debug("listSettlementConsumeDataWeek");
+		return consumeMapper.listSettlementConsumeDataWeek(consumeForm);
+	}
+	
+	@Override
+	public List<ConsumeVO> listSettlementConsumeDataDay(ConsumeForm consumeForm) {
+		logger.debug("listSettlementConsumeDataDay");
+		return consumeMapper.listSettlementConsumeDataDay(consumeForm);
+	}
+	
+	@Override
+	public List<ConsumeVO> getListforSettlementByCategory(ConsumeForm consumeForm) {
+		logger.debug("getListforSettlementByCategory");
+		return consumeMapper.getListforSettlementByCategory(consumeForm);
+	}
+	
+	@Override
+	public List<ConsumeVO> getListforSettlementByMeans(ConsumeForm consumeForm) {
+		logger.debug("getListforSettlementByMeans");
+		return consumeMapper.getListforSettlementByMeans(consumeForm);
+	}
+	
+	@Override
+	public List<ConsumeVO> getSettlementDetail(ConsumeForm consumeForm) {
+		logger.debug("getSettlementDetail");
+		return consumeMapper.getSettlementDetail(consumeForm);
+	}
 }

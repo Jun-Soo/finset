@@ -38,10 +38,10 @@
 
       <div class="calc-top">
         <p class="key">연소득</p>
-        <p class="value">3,400<em>만원</em></p>
+        <p class="value"><input type="number" placeholder="0"><em>만원</em></p>
       </div>
 
-      <div class="calc-acco">
+      <div class="calc-acco" v-for="(each, idx) in dtiList" :key="idx">
         <div class="top">
           <p class="key"><span>2,500<em>만원</em></span><em>주택담보</em><em>원리금분할</em><em>3.75%</em></p>
           <p class="value"><a @click="delDebt" class="del"></a></p>
@@ -86,7 +86,7 @@
 
       <div class="calc-top">
         <p class="key">연소득</p>
-        <p class="value"><input type="number"><em>만원</em></p>
+        <p class="value"><input type="number" placeholder="입력"><em>만원</em></p>
       </div>
 
       <div class="calc-search">
@@ -95,25 +95,10 @@
         <p><button @click="$router.push('/debt/calcSearch')"></button></p>
       </div>
 
-      <div class="calc-acco">
+      <div class="calc-acco" v-for="(each, idx) in dsrList" :key="idx">
         <div class="top">
           <p class="key"><span>2,500<em> 만원</em></span><em>4.5%</em></p>
-          <p class="value"><a href="#" class="del"></a></p>
-          <button class="ui"></button>
-        </div>
-        <div class="acco-body-wrap">
-          <div class="body">
-            <p class="key">대출금액</p>
-            <p><input type="text" placeholder="만원"></p>
-            <p class="key">대출이율</p>
-            <p><input type="text" placeholder="%"></p>
-          </div>
-        </div>
-      </div>
-      <div class="calc-acco">
-        <div class="top">
-          <p class="key"><span>2,500<em> 만원</em></span><em>4.5%</em></p>
-          <p class="value"><a href="#" class="del"></a></p>
+          <p class="value"><a @click="delDebt" class="del"></a></p>
           <button class="ui"></button>
         </div>
         <div class="acco-body-wrap">
@@ -127,48 +112,48 @@
       </div>
 
       <div class="btn-wrap">
-        <a href="#" class="solid">추가하기</a>
+        <a @click="addDebt" class="solid">추가하기</a>
       </div>
     </div>
     <!-- LOAN -->
     <div v-if="curTab=='02'" class="box-list noMG pb90">
 
-      <div class="calc-acco" v-for="each in loanList" :key="each.key">
+      <div class="calc-acco" v-for="(each, idx) in loanList" :key="idx">
         <div class="top">
-          <p class="key"><span>2,500<em> 만원</em></span><em>원리금분할</em><em>3.75%</em></p>
-          <p class="value"><a href="#" class="del"></a></p>
+          <p class="key"><span>{{loanList[idx].loanAmount}}<em> 만원</em></span><em v-if="loanList[idx].repay_options_ltv!=null&&loanList[idx].repay_options_ltv!=''">{{loanList[idx].repay_options_ltv["text"]}}</em><em v-if="loanList[idx].loanRate!=null&&loanList[idx].loanRate!=''">{{loanList[idx].loanRate}}%</em></p>
+          <p class="value"><a @click="delDebt(idx)" class="del"></a></p>
           <button class="ui"></button>
         </div>
         <div class="acco-body-wrap">
           <div class="body">
             <p class="key">대출금액</p>
-            <p><input type="text" placeholder="만원"></p>
+            <p><input type="text" v-model="loanList[idx].loanAmount" placeholder="만원"></p>
             <p class="key">대출이율</p>
-            <p><input type="text" placeholder="%"></p>
+            <p><input type="text" v-model="loanList[idx].loanRate" placeholder="%"></p>
             <p class="key">대출기간</p>
             <p>
-              <select>
-                <option>5년</option>
-              </select>
+              <multiselect v-model="loanList[idx].loanPeriod" track-by="text" label="text" placeholder="대출기간" :options="loanPeriod" :searchable="false" :allow-empty="false">
+                <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
+              </multiselect>
             </p>
             <p class="key">거치기간</p>
             <p>
-              <select>
-                <option>5년</option>
-              </select>
+              <multiselect v-model="loanList[idx].holdingPeriod" track-by="text" label="text" placeholder="대출기간" :options="holdingPeriod" :searchable="false" :allow-empty="false">
+                <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
+              </multiselect>
             </p>
             <p class="key">상환방식</p>
             <p>
-              <select>
-                <option>만기일시상환</option>
-              </select>
+              <multiselect v-model="loanList[idx].repay_options_ltv" track-by="text" label="text" placeholder="대출기간" :options="repay_options_ltv" :searchable="false" :allow-empty="false">
+                <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
+              </multiselect>
             </p>
           </div>
         </div>
 
       </div>
       <div class="btn-wrap">
-        <a href="#" class="solid">추가하기</a>
+        <a @click="addDebt" class="solid">추가하기</a>
       </div>
     </div>
     <div class="btn-wrap noMG">
@@ -199,6 +184,34 @@ export default {
         { text: "기타 대출", value: "07" }
       ],
       repay_options: [
+        //상환방식
+        { text: "원리금분할", value: "01" },
+        { text: "원급분할", value: "02" },
+        { text: "만기일시", value: "03" }
+      ],
+      //tab02
+      loanPeriod: [
+        //대출기간
+        { text: "1년", value: 1 },
+        { text: "2년", value: 2 },
+        { text: "3년", value: 3 },
+        { text: "4년", value: 4 },
+        { text: "5년", value: 5 },
+        { text: "10년", value: 10 },
+        { text: "20년", value: 20 }
+      ],
+      holdingPeriod: [
+        //거치기간
+        { text: "없음", value: 0 },
+        { text: "1년", value: 1 },
+        { text: "2년", value: 2 },
+        { text: "3년", value: 3 },
+        { text: "4년", value: 4 },
+        { text: "5년", value: 5 },
+        { text: "10년", value: 10 }
+      ],
+      repay_options_ltv: [
+        //상환방식
         { text: "원리금분할", value: "01" },
         { text: "원급분할", value: "02" },
         { text: "만기일시", value: "03" }
@@ -216,6 +229,10 @@ export default {
   },
   computed: {},
   watch: {
+    loanList: function(newL, oldL) {
+      debugger;
+      this.answer = "";
+    }
     // whenever question changes, this function will run
     // question: function(newQuestion, oldQuestion) {
     //   this.answer = "Waiting for you to stop typing...";
@@ -229,6 +246,7 @@ export default {
   created() {
     this.curTab = "00";
     this.curTabName = "dsr";
+    this.getDebtList();
   },
   beforeMount() {},
   mounted() {},
@@ -243,8 +261,54 @@ export default {
       _this.curTabName = tab.srcElement.name;
     },
     initData: function() {},
-    addDebt: function() {},
-    delDebt: function() {}
+    addDebt: function(obj) {
+      let _this = this;
+      let tJson = {};
+      if (_this.curTab == "00") {
+        _this.dtiList.push(tJson);
+      } else if (_this.curTab == "01") {
+        _this.dsrList.push(tJson);
+      } else if (_this.curTab == "02") {
+        _this.loanList.push(tJson);
+      }
+    },
+    delDebt: function(idx) {
+      let _this = this;
+      debugger;
+      if (_this.curTab == "00") {
+        _this.dtiList.splice(idx, 1);
+      } else if (_this.curTab == "01") {
+        _this.dsrList.splice(idx, 1);
+      } else if (_this.curTab == "02") {
+        _this.loanList.splice(idx, 1);
+      }
+    },
+    onSelect: function(option, idx) {
+      // this.loanPeriod = option.value;
+      // this.loanList[idx] = option.value;
+      console.log(option.value);
+    },
+
+    getDebtList: function() {
+      let _this = this;
+      let url = "/m/debt/getDebtListforCalc.json";
+      let frm = new FormData();
+      // frm.append('',);
+
+      // this.$http
+      //   .get("/m/debt/listDebtPg.json", {
+      //     params: { no_person_list: no_person_list }
+      //   })
+      this.$http
+        .get(url)
+        // {
+        //   params: { no_person_list: [this.$store.state.user.noPerson] }
+        // })
+
+        .then(function(response) {
+          debugger;
+        });
+    }
   }
 };
 </script>

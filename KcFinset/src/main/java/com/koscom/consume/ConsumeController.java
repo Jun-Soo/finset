@@ -621,4 +621,81 @@ public class ConsumeController {
     	model.addAttribute("listConsumeAnalyzeDay", consumeManager.listConsumeAnalyzeDay(consumeForm));
     	return "jsonView";
     }
+    
+    /**
+     * VUE
+     * 통계 : 날짜 값을 받아 차트 데이터 조회 
+     * @param session
+     * @param model
+     * @param consumeForm
+     * @return
+     * @throws FinsetException
+     */
+    @RequestMapping("/listConsumeforSettlement.json")
+    public String listConsumeforSettlement(HttpSession session, Model model, ConsumeForm consumeForm) throws FinsetException {
+    	logger.debug("listConsumeforSettlement");
+    	String type = consumeForm.getContents();
+    	if("yr".equals(type)) {
+    		model.addAttribute("listSettlementConsumeData", consumeManager.listSettlementConsumeDataYear(consumeForm));
+    	} else if ("mon".equals(type)) {
+    		model.addAttribute("listSettlementConsumeData", consumeManager.listSettlementConsumeDataWeek(consumeForm));
+    	} else if("week".equals(type)) {
+    		model.addAttribute("listSettlementConsumeData", consumeManager.listSettlementConsumeDataDay(consumeForm));
+    	} else {
+    		//에러처리 페이지 필요
+    	}	
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE
+     * 통계 : 차트 선택시 범위에 따라 조회되는 데이터 
+     * @param session
+     * @param model
+     * @param consumeForm
+     * @return
+     * @throws FinsetException
+     */
+    @RequestMapping("/getRangeListforSettlement.json")
+    public String getRangeListforSettlement(HttpSession session, Model model, ConsumeForm consumeForm) throws FinsetException {
+    	logger.debug("listConsumeforSettlement");
+    	String typeOfSearch = consumeForm.getContents();
+    	if("category".equals(typeOfSearch)) { //카테고리별
+    		model.addAttribute("rangeList", consumeManager.listSettlementConsumeDataYear(consumeForm));
+    	} else if ("store".equals(typeOfSearch)) { //가맹점별
+    		model.addAttribute("rangeList", consumeManager.listSettlementConsumeDataWeek(consumeForm));
+    	} else if("means".equals(typeOfSearch)) { //수단별
+    		model.addAttribute("rangeList", consumeManager.listSettlementConsumeDataDay(consumeForm));
+    	} else {
+    		//에러처리 페이지 필요
+    	}
+    	
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE
+     * 통계 : 상세 페이지 리스트
+     * @param session
+     * @param model
+     * @param consumeForm
+     * @return
+     * @throws FinsetException
+     */
+    @RequestMapping("/getSettlementDetail.json")
+    public String getSettlementDetail(HttpSession session, Model model, ConsumeForm consumeForm) throws FinsetException {
+    	logger.debug("getSettlementDetail");
+    	String typeOfSearch = consumeForm.getContents();
+    	if("category".equals(typeOfSearch)) { //카테고리별
+    		model.addAttribute("rangeList", consumeManager.listSettlementConsumeDataYear(consumeForm));
+    	} else if ("store".equals(typeOfSearch)) { //가맹점별
+    		model.addAttribute("rangeList", consumeManager.listSettlementConsumeDataWeek(consumeForm));
+    	} else if("means".equals(typeOfSearch)) { //수단별
+    		model.addAttribute("rangeList", consumeManager.listSettlementConsumeDataDay(consumeForm));
+    	} else {
+    		//에러처리 페이지 필요
+    	}
+    	
+    	return "jsonView";
+    }
 }

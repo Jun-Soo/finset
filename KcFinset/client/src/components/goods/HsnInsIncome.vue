@@ -4,24 +4,29 @@
       <p>소득정보를 입력해 주세요</p>
       <ul class="debt-modify">
         <li>
-          <p class="key">구분</p>
-          <p>
-            <multiselect v-model="job_class" ref="job_class" label="text" :show-labels="false" :options="options_job_class" placeholder="직업 구분" :searchable="false" :allow-empty="false" @select="selectJobClass" v-validate="'required'" data-vv-name='직업'>
-            </multiselect>
-          </p>
+          <div>
+            <p class="key">구분</p>
+            <p>
+              <multiselect v-model="job_class" ref="job_class" label="text" :show-labels="false" :options="options_job_class" placeholder="직업 구분" :searchable="false" :allow-empty="false" @select="selectJobClass" v-validate="'required'" data-vv-name='직업'>
+              </multiselect>
+            </p>
+          </div>
+          <p class="warn" v-if="errors.has('직업')">{{errors.first('직업')}}</p>
         </li>
-        <p class="warn" v-if="errors.has('직업')">{{errors.first('직업')}}</p>
         <li v-if="job_class.value == '1'">
-          <p class="key">연소득</p>
-          <p><input type="text" v-model="amt_year_income" v-validate="'required'" data-vv-name='연소득'>만원</p>
+          <div>
+            <p class="key">연소득</p>
+            <p><input type="text" v-model="amt_year_income" v-validate="'required'" data-vv-name='연소득'>만원</p>
+          </div>
+          <p class="warn" v-if="errors.has('연소득')">{{errors.first('연소득')}}</p>
         </li>
-        <p class="warn" v-if="errors.has('연소득')">{{errors.first('연소득')}}</p>
-
         <li v-else-if="job_class.value == '2'">
-          <p class="key">연매출</p>
-          <p><input type="text" v-model="amt_year_sale" v-validate="'required'" data-vv-name='연매출'>만원</p>
+          <div>
+            <p class="key">연매출</p>
+            <p><input type="text" v-model="amt_year_sale" v-validate="'required'" data-vv-name='연매출'>만원</p>
+          </div>
+          <p class="warn" v-if="errors.has('연매출')">{{errors.first('연매출')}}</p>
         </li>
-        <p class="warn" v-if="errors.has('연매출')">{{errors.first('연매출')}}</p>
       </ul>
       <div class="btn-wrap float">
         <a class="solid blue box" @click="clickNext()">다음</a>

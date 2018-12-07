@@ -4,61 +4,75 @@
       <p>주택정보를 입력해 주세요</p>
       <ul class="debt-modify">
         <li>
-          <p class="key">종류</p>
-          <p>
-            <multiselect v-model="selectObj.building_type" ref="sel_building_type" label="text" :show-labels="false" :options="options_building_type" placeholder="종류 선택" :searchable="false" :allow-empty="false" @select="listAddrRegionFirst" v-validate="'required'" data-vv-name='종류'>
-            </multiselect>
-          </p>
+          <div>
+            <p class="key">종류</p>
+            <p>
+              <multiselect v-model="selectObj.building_type" ref="sel_building_type" label="text" :show-labels="false" :options="options_building_type" placeholder="종류 선택" :searchable="false" :allow-empty="false" @select="listAddrRegionFirst" v-validate="'required'" data-vv-name='종류'>
+              </multiselect>
+            </p>
+          </div>
+          <p class="warn" v-if="errors.has('종류')">{{errors.first('종류')}}</p>
         </li>
-        <p class="warn" v-if="errors.has('종류')">{{errors.first('종류')}}</p>
         <li>
-          <p class="key">시/도</p>
-          <p>
-            <multiselect v-model="selectObj.region1" ref="sel_region1" label="text" :show-labels="false" :options="options_sel_region1" placeholder="시/도 선택" :searchable="false" :allow-empty="false" @select="listAddrRegionSecond" v-validate="'required'" data-vv-name='시/도'>
-            </multiselect>
-          </p>
+          <div>
+            <p class="key">시/도</p>
+            <p>
+              <multiselect v-model="selectObj.region1" ref="sel_region1" label="text" :show-labels="false" :options="options_sel_region1" placeholder="시/도 선택" :searchable="false" :allow-empty="false" @select="listAddrRegionSecond" v-validate="'required'" data-vv-name='시/도'>
+              </multiselect>
+            </p>
+          </div>
+          <p class="warn" v-if="errors.has('시/도')">{{errors.first('시/도')}}</p>
         </li>
-        <p class="warn" v-if="errors.has('시/도')">{{errors.first('시/도')}}</p>
         <li>
-          <p class="key">시/군/구</p>
-          <p>
-            <multiselect v-model="selectObj.region2" ref="sel_region2" label="text" :show-labels="false" :options="options_sel_region2" placeholder="시/군/구 선택" :searchable="false" :allow-empty="false" @select="listAddrRegionThird" v-validate="'required'" data-vv-name='시/군/구'>
-            </multiselect>
-          </p>
+          <div>
+            <p class="key">시/군/구</p>
+            <p>
+              <multiselect v-model="selectObj.region2" ref="sel_region2" label="text" :show-labels="false" :options="options_sel_region2" placeholder="시/군/구 선택" :searchable="false" :allow-empty="false" @select="listAddrRegionThird" v-validate="'required'" data-vv-name='시/군/구'>
+              </multiselect>
+            </p>
+          </div>
+          <p class="warn" v-if="errors.has('시/군/구')">{{errors.first('시/군/구')}}</p>
         </li>
-        <p class="warn" v-if="errors.has('시/군/구')">{{errors.first('시/군/구')}}</p>
         <li>
-          <p class="key">읍/면/동</p>
-          <p>
-            <multiselect v-model="selectObj.region3" ref="sel_region3" label="text" :show-labels="false" :options="options_sel_region3" placeholder="읍/면/동 선택" :searchable="false" :allow-empty="false" @select="listSrchApartment" v-validate="'required'" data-vv-name='읍/면/동'>
-            </multiselect>
-          </p>
+          <div>
+            <p class="key">읍/면/동</p>
+            <p>
+              <multiselect v-model="selectObj.region3" ref="sel_region3" label="text" :show-labels="false" :options="options_sel_region3" placeholder="읍/면/동 선택" :searchable="false" :allow-empty="false" @select="listSrchApartment" v-validate="'required'" data-vv-name='읍/면/동'>
+              </multiselect>
+            </p>
+          </div>
+          <p class="warn" v-if="errors.has('읍/면/동')">{{errors.first('읍/면/동')}}</p>
         </li>
-        <p class="warn" v-if="errors.has('읍/면/동')">{{errors.first('읍/면/동')}}</p>
         <li>
-          <p class="key">아파트명</p>
-          <p>
-            <multiselect v-model="selectObj.apartment" ref="sel_apartment" label="text" :show-labels="false" :options="options_sel_apartment" placeholder="아파트명 선택" :searchable="false" :allow-empty="false" @select="scrapKbMarketPrice" v-validate="'required'" data-vv-name='아파트명'>
-            </multiselect>
-          </p>
+          <div>
+            <p class="key">아파트명</p>
+            <p>
+              <multiselect v-model="selectObj.apartment" ref="sel_apartment" label="text" :show-labels="false" :options="options_sel_apartment" placeholder="아파트명 선택" :searchable="false" :allow-empty="false" @select="scrapKbMarketPrice" v-validate="'required'" data-vv-name='아파트명'>
+              </multiselect>
+            </p>
+          </div>
+          <p class="warn" v-if="errors.has('아파트명')">{{errors.first('아파트명')}}</p>
         </li>
-        <p class="warn" v-if="errors.has('아파트명')">{{errors.first('아파트명')}}</p>
         <li>
-          <p class="key">공급면적/전용면적</p>
-          <p>
-            <multiselect v-model="selectObj.pricePyeong" ref="sel_pricePyeong" label="text" :show-labels="false" :options="options_sel_pricePyeong" placeholder="면적 선택" :searchable="false" :allow-empty="false" @select="selectPricePyeong" v-validate="'required'" data-vv-name='면적'>
-            </multiselect>
-          </p>
+          <div>
+            <p class="key">공급면적/전용면적</p>
+            <p>
+              <multiselect v-model="selectObj.pricePyeong" ref="sel_pricePyeong" label="text" :show-labels="false" :options="options_sel_pricePyeong" placeholder="면적 선택" :searchable="false" :allow-empty="false" @select="selectPricePyeong" v-validate="'required'" data-vv-name='면적'>
+              </multiselect>
+            </p>
+          </div>
+          <p class="warn" v-if="errors.has('면적')">{{errors.first('면적')}}</p>
         </li>
-        <p class="warn" v-if="errors.has('면적')">{{errors.first('면적')}}</p>
         <li>
-          <p class="key">층수</p>
-          <p>
-            <multiselect v-model="selectObj.floor" ref="sel_floor" label="text" :show-labels="false" :options="options_sel_floor" placeholder="층수 선택" :searchable="false" :allow-empty="false" v-validate="'required'" data-vv-name='층수'>
-            </multiselect>
-          </p>
+          <div>
+            <p class="key">층수</p>
+            <p>
+              <multiselect v-model="selectObj.floor" ref="sel_floor" label="text" :show-labels="false" :options="options_sel_floor" placeholder="층수 선택" :searchable="false" :allow-empty="false" v-validate="'required'" data-vv-name='층수'>
+              </multiselect>
+            </p>
+          </div>
+          <p class="warn" v-if="errors.has('층수')">{{errors.first('층수')}}</p>
         </li>
-        <p class="warn" v-if="errors.has('층수')">{{errors.first('층수')}}</p>
       </ul>
       <div class="btn-wrap float">
         <a @click="clickNext()" class="solid blue box">다음</a>

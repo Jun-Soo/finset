@@ -8,10 +8,12 @@
       </div>
       <div class="date">
         <p>
-          <datepicker v-model="dt_from" :format="formatDateDot" :language="ko" class="div-date" :disabled="chkReadonly"></datepicker>
+          <datepicker v-model="dt_from" ref="datepicker1" :opend="Common.datepickerInit('div-date', this)" :format="formatDateDot" :language="ko" class="div-date"></datepicker>
+          <button class="cal" @click="openDatepicker1"></button>
         </p>
         <p>
-          <datepicker v-model="dt_to" :language="ko" :format="formatDateDot" class="div-date" :disabled="chkReadonly"></datepicker>
+          <datepicker v-model="dt_to" ref="datepicker2" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDateDot" class="div-date"></datepicker>
+          <button class="cal" @click="openDatepicker2"></button>
         </p>
       </div>
       <div class="filter-wrap mt20">
@@ -36,7 +38,7 @@
           </div>
         </div>
         <!-- <div class="graph"> -->
-        <Graph v-if="chartList" :chartList="chartList" :consumeForm="consumeForm" :dt_from="dt_from" :dt_to="dt_to" :dataPeriod="dataPeriod"></Graph>
+        <Graph v-if="chartList" v-model="chartList" :chartList="chartList" :consumeForm="consumeForm" :dt_from="dt_from" :dt_to="dt_to" :dataPeriod="dataPeriod"></Graph>
       </div>
       <!-- </div> -->
     </div>
@@ -51,12 +53,10 @@
     <div class="box-list list02 noMG">
 
       <div class="select pb20">
-        <!-- <multiselect v-model="repay" track-by="text" label="text" placeholder="카테고리별" :options="options" :searchable="false" :allow-empty="false" @select="onSelect">
-          <template slot="singleLabel" slot-scope="{ repay_options }">{{ repay_options.text }}</template>
+        <multiselect v-model="repay" track-by="text" label="text" placeholder="카테고리별" :options="options" :searchable="false" :allow-empty="false" @select="onSelect">
         </multiselect>
         <multiselect v-model="repay" track-by="text" label="text" placeholder="금액순" :options="options" :searchable="false" :allow-empty="false" @select="onSelect">
-          <template slot="singleLabel" slot-scope="{ repay_options }">{{ repay_options.text }}</template>
-        </multiselect> -->
+        </multiselect>
       </div>
 
       <div class="item">
@@ -102,6 +102,7 @@ import Common from "@/assets/js/common.js";
 import Constant from "@/assets/js/constant.js";
 import datepicker from "vuejs-datepicker";
 import { ko } from "vuejs-datepicker/dist/locale";
+import moment from "moment";
 
 export default {
   name: "ConsumeSettlement",
@@ -125,7 +126,8 @@ export default {
       dt_basic: this.$store.state.user.dt_basic,
       chartList: [],
       consumeForm: null,
-      seen: false
+      seen: false,
+      Common: Common
       // dataMonthList: [],
       // dataWeekList: []
     };
@@ -155,7 +157,7 @@ export default {
         ); //기준일
       } else if (this.dataPeriod == "week") {
         // console.log(this.$moment(today).isoWeekday(7));
-        this.dt_from = new Date(this.$moment(today).add(-7, "days")); //7일전
+        this.dt_from = new Date(moment(today).add(-7, "days")); //7일전
         // this.dt_from = new Date(this.$moment(today).isoWeekday(0)); //주 초 (일요일부터)
       }
 
@@ -247,6 +249,16 @@ export default {
           _this.dataPeriod = "yr";
           // _this.getChartList();
         });
+    },
+    getRangeList: function() {
+      let _this = this;
+      //event는 마우스 이벤트(클릭), el은 해당 데이터를 묶어서 던져줌
+    },
+    openDatepicker1: function() {
+      this.$refs.datepicker1.showCalendar();
+    },
+    openDatepicker2: function() {
+      this.$refs.datepicker2.showCalendar();
     }
   }
 };

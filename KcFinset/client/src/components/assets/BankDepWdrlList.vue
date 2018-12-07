@@ -22,11 +22,11 @@
         <div class="wrap">
           <div class="date-pick">
             <p>
-              <datepicker v-model="txt_dt_from" ref="txtDtFromOpen" :opend="Common.datepickerInit('div-date', this)" :language="dateKo" :format="formatDate" class="div-date"></datepicker>
+              <datepicker v-model="txt_dt_from" ref="txtDtFromOpen" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDate" class="div-date"></datepicker>
               <button @click="openDtFromPicker"></button>
             </p>
             <p>
-              <datepicker v-model="txt_dt_to" ref="txtDtToOpen" :opend="Common.datepickerInit('div-date', this)" :language="dateKo" :format="formatDate" class="div-date"></datepicker>
+              <datepicker v-model="txt_dt_to" ref="txtDtToOpen" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDate" class="div-date"></datepicker>
               <button @click="openDtToPicker"></button>
             </p>
           </div>
@@ -95,10 +95,10 @@
 <script>
 import Common from "./../../assets/js/common.js";
 import Constant from "./../../assets/js/constant.js";
-import ko from "vee-validate/dist/locale/ko.js";
+import korean from "vee-validate/dist/locale/ko.js";
 
 import datepicker from "vuejs-datepicker";
-import { dateKo } from "vuejs-datepicker/dist/locale";
+import { ko } from "vuejs-datepicker/dist/locale";
 
 export default {
   name: "assetsBankDepWdrlList",
@@ -106,7 +106,7 @@ export default {
     return {
       seen: false,
       Common: Common,
-      dateKo: dateKo,
+      ko: ko,
       scTermType: "", //기간type
       scAccountList: [], //검색 계좌list
       scAccountOptions: [],
@@ -263,7 +263,7 @@ export default {
           _this.searchDepWdrlList();
         })
         .catch(e => {
-          this.$toast.center(ko.messages.error);
+          this.$toast.center(korean.messages.error);
         });
     },
     //multiselect
@@ -329,7 +329,7 @@ export default {
           _this.totalAmt = response.data.totalAmt;
         })
         .catch(e => {
-          _this.$toast.center(ko.messages.error);
+          _this.$toast.center(korean.messages.error);
         });
     },
     formatNumber: function(data) {
@@ -412,7 +412,7 @@ export default {
           _this.seen = true;
         })
         .catch(e => {
-          _this.$toast.center(ko.messages.error);
+          _this.$toast.center(korean.messages.error);
         });
     },
     //상세페이지로 이동

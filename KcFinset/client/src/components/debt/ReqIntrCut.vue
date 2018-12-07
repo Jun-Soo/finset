@@ -34,7 +34,7 @@
             <div class="flex">
               <p>기준일</p>
               <p>
-                <datepicker v-model="creditFixDate" ref="creditFixOpen" :opend="Common.datepickerInit('div-date', this)" :language="dateKo" :format="formatDate" class="div-date"></datepicker>
+                <datepicker v-model="creditFixDate" ref="creditFixOpen" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDate" class="div-date"></datepicker>
                 <button @click="openCreditFixPicker" class="cal"></button>
               </p>
             </div>
@@ -47,7 +47,7 @@
             <div class="flex">
               <p>이직일</p>
               <p>
-                <datepicker v-model="turnoverDate" ref="turnoverOpen" :opend="Common.datepickerInit('div-date', this)" :language="dateKo" :format="formatDate" class="div-date"></datepicker>
+                <datepicker v-model="turnoverDate" ref="turnoverOpen" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDate" class="div-date"></datepicker>
                 <button @click="openTurnoverPicker" class="cal"></button>
               </p>
             </div>
@@ -96,7 +96,7 @@
             <div class="flex">
               <p>기준일</p>
               <p>
-                <datepicker v-model="debtFixDate" ref="debtFixOpen" :opend="Common.datepickerInit('div-date', this)" :language="dateKo" :format="formatDate" class="div-date"></datepicker>
+                <datepicker v-model="debtFixDate" ref="debtFixOpen" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDate" class="div-date"></datepicker>
                 <button @click="openDebtFixPicker" class="cal"></button>
               </p>
             </div>
@@ -121,7 +121,7 @@
             <div class="flex">
               <p>기준일</p>
               <p>
-                <datepicker v-model="posFixDate" ref="posFixOpen" :opend="Common.datepickerInit('div-date', this)" :language="dateKo" :format="formatDate" class="div-date"></datepicker>
+                <datepicker v-model="posFixDate" ref="posFixOpen" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDate" class="div-date"></datepicker>
                 <button @click="openPosFixPicker" class="cal"></button>
               </p>
             </div>
@@ -134,7 +134,7 @@
             <div class="flex">
               <p>기준일</p>
               <p>
-                <datepicker v-model="certFixDate" ref="certFixOpen" :opend="Common.datepickerInit('div-date', this)" :language="dateKo" :format="formatDate" class="div-date"></datepicker>
+                <datepicker v-model="certFixDate" ref="certFixOpen" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDate" class="div-date"></datepicker>
                 <button @click="openCertFixPicker" class="cal"></button>
               </p>
             </div>
@@ -174,10 +174,10 @@
 <script>
 import Common from "./../../assets/js/common.js";
 import Constant from "./../../assets/js/constant.js";
-import ko from "vee-validate/dist/locale/ko.js";
+import korean from "vee-validate/dist/locale/ko.js";
 
 import datepicker from "vuejs-datepicker";
-import { dateKo } from "vuejs-datepicker/dist/locale";
+import { ko } from "vuejs-datepicker/dist/locale";
 
 import ReqIntrCutInfo from "./ReqIntrCutInfo.vue";
 
@@ -186,7 +186,7 @@ export default {
   data() {
     return {
       Common: Common,
-      dateKo: dateKo,
+      ko: ko,
       isInit: true, //초기화면 여부
       currentDate: "", //오늘날짜
       ynCredit: false, //신용 항목
@@ -329,7 +329,7 @@ export default {
           console.log(_this.debtList);
         })
         .catch(e => {
-          _this.$toast.center(ko.messages.error);
+          _this.$toast.center(korean.messages.error);
         });
     },
     validate: function() {
@@ -462,6 +462,5 @@ export default {
 <style lang="scss">
 .vdp-datepicker.div-date {
   display: inline-block;
-  width: calc(100% - 175px);
 }
 </style>

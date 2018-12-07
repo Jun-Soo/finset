@@ -8,12 +8,18 @@
       <p>직장명을 직접 입력해 주세요<br>사업자 번호는 “-” 없이 입력해 주세요</p>
       <ul class="debt-modify">
         <li>
-          <p class="key">직장명</p>
-          <p><input type="text" placeholder="직장명 입력" v-model="nm_comp" @keyup="chkValidate"></p>
+          <div>
+            <p class="key">직장명</p>
+            <p><input type="text" placeholder="직장명 입력" v-model="nm_comp" @keyup="chkValidate" v-validate="'required'" data-vv-name='직장명'></p>
+          </div>
+          <p class=" warn" v-if="errors.has('직장명')">{{errors.first('직장명')}}</p>
         </li>
         <li>
-          <p class="key">사업자번호</p>
-          <p><input type="text" placeholder="사업자 번호 입력" v-model="no_biz_comp" @keyup="chkValidate"></p>
+          <div>
+            <p class="key">사업자번호</p>
+            <p><input type="text" placeholder="사업자 번호 입력" v-model="no_biz_comp" @keyup="chkValidate" v-validate="'required'" data-vv-name='사업자번호'></p>
+          </div>
+          <p class=" warn" v-if="errors.has('사업자번호')">{{errors.first('사업자번호')}}</p>
         </li>
       </ul>
       <div class="btn-wrap float" v-if="showConfirm">
@@ -53,22 +59,26 @@ export default {
       }
     },
     clickConfirm: function() {
-      if (this.nm_comp == "") {
-        this.$toast.center("직장명을 입력해주세요.");
-        return false;
-      } else if (this.no_biz_comp == "") {
-        this.$toast.center("사업자번호를 입력해주세요.");
-        return false;
-      }
-      var isValid = this.checkBizID(this.no_biz_comp);
-      if (isValid == false) {
-        this.$toast.center("사업자번호가 잘못되었습니다.");
-        return false;
-      }
+      // if (this.nm_comp == "") {
+      //   this.$toast.center("직장명을 입력해주세요.");
+      //   return false;
+      // } else if (this.no_biz_comp == "") {
+      //   this.$toast.center("사업자번호를 입력해주세요.");
+      //   return false;
+      // }
+      this.$validator.validateAll().then(res => {
+        if (res) {
+          var isValid = this.checkBizID(this.no_biz_comp);
+          if (isValid == false) {
+            this.$toast.center("사업자번호가 잘못되었습니다.");
+            return false;
+          }
 
-      this.$parent.$parent.korentrnm = this.nm_comp;
-      this.$parent.$parent.bizno = this.no_biz_comp;
-      this.$emit("popclose");
+          this.$parent.$parent.korentrnm = this.nm_comp;
+          this.$parent.$parent.bizno = this.no_biz_comp;
+          this.$emit("popclose");
+        }
+      });
     },
     checkBizID: function(bizID) {
       //사업자등록번호 체크

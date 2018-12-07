@@ -9,12 +9,7 @@
           </template>
         </div>
         <div class="right">
-          <select v-model="orderby" @change="searchList()">
-            <option v-for="option in orderByOptions" :key="option.index" :value="option.value">
-              {{ option.text }}
-            </option>
-          </select>
-          <multiselect v-model="orderbyNm" track-by="text" label="text" placeholder="정렬기준" :options="orderByOptions" :searchable="false" :allow-empty="false" @change="searchList()" @select="onSelect">
+          <multiselect v-model="orderBy" track-by="text" label="text" placeholder="정렬기준선택" :options="orderByOptions" :searchable="false" :allow-empty="false" @select="onSelect">
             <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
           </multiselect>
         </div>
@@ -45,17 +40,18 @@ import ko from "vee-validate/dist/locale/ko.js";
 import defThumImg from "./../../assets/images/common/news_dummy.png";
 
 export default {
-  name: "NewsMain",
+  name: "newsMain",
   data() {
     return {
       seen: false,
       scKeywordList: [],
       scKeyword: [],
       orderByOptions: [
+        { text: "선택", value: "" },
         { text: "최신날짜", value: "01" },
         { text: "많이 본 뉴스", value: "02" }
       ],
-      orderby: "01",
+      orderBy: "",
       newsList: [],
       totalPage: "",
       page: 1
@@ -69,9 +65,10 @@ export default {
     this.$store.state.title = "뉴스";
     this.listSearchKeyword();
 
-    if (this.$store.state.scListParam.scKeyword.length != 0) {
-      for (var i = 0; i < this.$store.state.scListParam.scKeyword.length; i++) {
-        this.scKeyword.push(this.$store.state.scListParam.scKeyword[i]);
+    //검색키워드 셋팅
+    if (typeof this.$store.state.scListParam.query1 != "undefined") {
+      for (var i = 0; i < this.$store.state.scListParam.query1.length; i++) {
+        this.scKeyword.push(this.$store.state.scListParam.query1[i]);
       }
     } else if (this.$route.query.scKeyword != null) {
       for (var i = 0; i < this.$route.query.scKeyword.length; i++) {
@@ -79,18 +76,31 @@ export default {
       }
     }
 
-    if ("" != this.$store.state.scListParam.orderby) {
-      this.orderby = this.$store.state.scListParam.orderby;
+    //정렬기준 셋팅
+    if (typeof this.$store.state.scListParam.query2 != "undefined") {
+      for (var i = 0; i < this.orderByOptions.length; i++) {
+        if (
+          this.orderByOptions[i].value == this.$store.state.scListParam.query2
+        ) {
+          this.orderBy = this.orderByOptions[i];
+        }
+      }
     } else if (
-      "" != this.$route.query.orderby &&
-      this.$route.query.orderby != null
+      "" != this.$route.query.orderBy &&
+      this.$route.query.orderBy != null
     ) {
-      this.orderby = this.$route.query.orderby;
+      for (var i = 0; i < this.orderByOptions.length; i++) {
+        if (this.orderByOptions[i].value == this.$route.query.orderBy) {
+          this.orderBy = this.orderByOptions[i];
+        }
+      }
+    } else {
+      this.orderBy = this.orderByOptions[1]; //기본정렬 - 최신날짜순 셋팅
     }
 
     //store 검색조건 초기화
-    this.$store.state.scListParam.scKeyword = [];
-    this.$store.state.scListParam.orderby = "";
+    this.$store.state.scListParam.query1 = undefined; //분류
+    this.$store.state.scListParam.query2 = undefined; //정렬기준
   },
   beforeMount() {},
   mounted() {
@@ -103,8 +113,8 @@ export default {
   methods: {
     onSelect: function(option) {
       var _this = this;
-      _this.orderby = option.value;
-      console.log(this.orderby);
+      _this.orderBy = option;
+      _this.searchList();
     },
     //검색키워드list 조회
     listSearchKeyword: function() {
@@ -121,12 +131,15 @@ export default {
     listNews: function(callback) {
       var _this = this;
 
-      console.log("orderby" + _this.orderby);
+      console.log("orderBy" + _this.orderBy);
       console.log("scKeyword" + _this.scKeyword);
 
       var formData = new FormData();
       formData.append("page", _this.page);
-      formData.append("orderby", _this.orderby);
+      formData.append(
+        "orderBy",
+        _this.orderBy != "" ? _this.orderBy.value : ""
+      );
       formData.append("scKeyword", _this.scKeyword);
 
       this.$http
@@ -171,8 +184,8 @@ export default {
     viewDetail: function(seq_news) {
       var _this = this;
 
-      this.$store.state.scListParam.scKeyword = _this.scKeyword;
-      this.$store.state.scListParam.orderby = _this.orderby;
+      this.$store.state.scListParam.query1 = _this.scKeyword;
+      this.$store.state.scListParam.query2 = _this.orderBy.value;
 
       this.$router.push({
         name: "newsDetail",

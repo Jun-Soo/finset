@@ -2269,7 +2269,7 @@ public class ScrapManagerImpl implements ScrapManager {
 					else	{
 						startDate = DateUtil.addMonths(toDay, -3);
 					}
-					jsonCardInfo.put("DT_START", startDate);
+					jsonCardInfo.put("DT_APPROVAL", startDate);
 					
 					scrReqCardVO.setCd_type("03"); //01 보유카드현황, 02 승인내역, 03 청구내역, 04 한도조회, 05 포인트조회
 					scrReqCard = scrapMapper.getScrReqCard(scrReqCardVO);

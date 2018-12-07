@@ -4,37 +4,45 @@
       <p>대출 상환정보를 입력해 주세요</p>
       <ul class="debt-modify">
         <li>
-          <p class="key">거치여부</p>
-          <p>
-            <multiselect v-model="yn_loan_mount" ref="yn_loan_mount" label="text" :show-labels="false" :options="options_yn_loan_mount" placeholder="거치여부 선택" :searchable="false" :allow-empty="false" @select="selectYnLoanMount" v-validate="'required'" data-vv-name='거치여부'>
-            </multiselect>
-          </p>
+          <div>
+            <p class="key">거치여부</p>
+            <p>
+              <multiselect v-model="yn_loan_mount" ref="yn_loan_mount" label="text" :show-labels="false" :options="options_yn_loan_mount" placeholder="거치여부 선택" :searchable="false" :allow-empty="false" @select="selectYnLoanMount" v-validate="'required'" data-vv-name='거치여부'>
+              </multiselect>
+            </p>
+          </div>
+          <p class="warn" v-if="errors.has('거치여부')">{{errors.first('거치여부')}}</p>
         </li>
-        <p class="warn" v-if="errors.has('거치여부')">{{errors.first('거치여부')}}</p>
         <li>
-          <p class="key">거치기간</p>
-          <p>
-            <multiselect v-model="cd_loan_mount" ref="cd_loan_mount" label="text" :show-labels="false" :options="options_cd_loan_mount" placeholder="거치기간 선택" :searchable="false" :allow-empty="false" @select="selectCdLoanMount" v-validate="'required'" data-vv-name='거치기간'>
-            </multiselect>
-          </p>
+          <div>
+            <p class="key">거치기간</p>
+            <p>
+              <multiselect v-model="cd_loan_mount" ref="cd_loan_mount" label="text" :show-labels="false" :options="options_cd_loan_mount" placeholder="거치기간 선택" :searchable="false" :allow-empty="false" @select="selectCdLoanMount" v-validate="'required'" data-vv-name='거치기간'>
+              </multiselect>
+            </p>
+          </div>
+          <p class="warn" v-if="errors.has('거치기간')">{{errors.first('거치기간')}}</p>
         </li>
-        <p class="warn" v-if="errors.has('거치기간')">{{errors.first('거치기간')}}</p>
         <li>
-          <p class="key">상환방식</p>
-          <p>
-            <multiselect v-model="cd_type_pay" ref="cd_type_pay" label="text" :show-labels="false" :options="options_cd_type_pay" placeholder="상환방식 선택" :searchable="false" :allow-empty="false" @select="selectCdTypePay" v-validate="'required'" data-vv-name='상환방식'>
-            </multiselect>
-          </p>
+          <div>
+            <p class="key">상환방식</p>
+            <p>
+              <multiselect v-model="cd_type_pay" ref="cd_type_pay" label="text" :show-labels="false" :options="options_cd_type_pay" placeholder="상환방식 선택" :searchable="false" :allow-empty="false" @select="selectCdTypePay" v-validate="'required'" data-vv-name='상환방식'>
+              </multiselect>
+            </p>
+          </div>
+          <p class="warn" v-if="errors.has('상환방식')">{{errors.first('상환방식')}}</p>
         </li>
-        <p class="warn" v-if="errors.has('상환방식')">{{errors.first('상환방식')}}</p>
         <li>
-          <p class="key">상환기간</p>
-          <p>
-            <multiselect v-model="cd_loan_term" ref="cd_loan_term" label="text" :show-labels="false" :options="options_cd_loan_term" placeholder="상환기간 선택" :searchable="false" :allow-empty="false" @select="selectCdLoanTerm" v-validate="'required'" data-vv-name='상환기간'>
-            </multiselect>
-          </p>
+          <div>
+            <p class="key">상환기간</p>
+            <p>
+              <multiselect v-model="cd_loan_term" ref="cd_loan_term" label="text" :show-labels="false" :options="options_cd_loan_term" placeholder="상환기간 선택" :searchable="false" :allow-empty="false" @select="selectCdLoanTerm" v-validate="'required'" data-vv-name='상환기간'>
+              </multiselect>
+            </p>
+          </div>
+          <p class="warn" v-if="errors.has('상환기간')">{{errors.first('상환기간')}}</p>Z
         </li>
-        <p class="warn" v-if="errors.has('상환기간')">{{errors.first('상환기간')}}</p>
       </ul>
       <div class="btn-wrap float">
         <a class="solid blue box" @click="clickSearch()">조회</a>

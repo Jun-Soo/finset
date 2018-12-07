@@ -32,7 +32,7 @@
       <div class="box-list goods goods-list">
         <div class="select">
           <div class="left">
-            <multiselect v-model="orderby" label="text" :show-labels="false" :options="options" :searchable="false" :allow-empty="false" @select="orderbyOnChange">
+            <multiselect class="multiselect-basic" v-model="orderby" label="text" :show-labels="false" :options="options" :searchable="false" :allow-empty="false" @select="orderbyOnChange">
             </multiselect>
             <!-- <select v-model="orderby" @change="orderbyOnChange()">
               <option v-for="option in options" :key="option.index" v-bind:value="option.value">
@@ -77,13 +77,13 @@
         <button>검색</button>
       </div>
       <div class="wrap">
-        <div class="check-wrap">
+        <!-- <div class="check-wrap">
           <div class="key">종류</div>
           <div class="search-check">
             <div><input type="checkbox" id="chk1" :checked="isCheckApart" @click="clickCheckApart()"><label for="chk1">아파트</label></div>
             <div><input type="checkbox" id="chk2" :checked="isCheckEtc" @click="clickCheckEtc()"><label for="chk2">아파트외</label></div>
           </div>
-        </div>
+        </div> -->
         <div class="check-wrap">
           <div class="key">금리방식</div>
           <div class="search-check">
@@ -100,8 +100,8 @@
         </div>
       </div>
       <div class="action">
-        <a class="stroke">초기화</a>
-        <a class="solid">적용</a>
+        <a class="stroke" @click="clickStroke()">초기화</a>
+        <a class="solid" @click="clickSolid()">적용</a>
       </div>
     </aside>
   </div>
@@ -136,6 +136,8 @@ export default {
       page: 1,
       cd_goods_class_l: "01",
       cd_goods_class_m: "01,03,08,09",
+      cd_ratio_type: "01,02,03",
+      cd_type_pay: "01,02,03",
       options: [
         { text: "금리순", value: "01" },
         { text: "한도순", value: "02" },
@@ -179,6 +181,12 @@ export default {
         this.isCheckWorker = true;
         this.isCheckSelf = true;
       } else if ("loanHome" == this.curTab) {
+        this.isCheckApart = true;
+        this.isCheckEtc = true;
+        this.isCheckFixed = true;
+        this.isCheckFloating = true;
+        this.isCheckDiv = true;
+        this.isCheckBullet = true;
       }
     },
     clickSolid: function() {
@@ -192,7 +200,37 @@ export default {
         Common.pagination(this.$refs.form.listGoods);
         this.clickSearch();
       } else if ("loanHome" == this.curTab) {
+        this.cd_ratio_type = "03";
+        this.cd_type_pay = "01";
+        // if (this.isCheckApart)
+        // if (this.isCheckEtc)
+        if (this.isCheckFixed) this.cd_ratio_type = this.cd_ratio_type + ", 01";
+        if (this.isCheckFloating)
+          this.cd_ratio_type = this.cd_ratio_type + ", 02";
+        if (this.isCheckDiv) this.cd_type_pay = this.cd_type_pay + ", 02";
+        if (this.isCheckBullet) this.cd_type_pay = this.cd_type_pay + ", 03";
       }
+    },
+    clickCheckApart: function() {
+      this.isCheckApart = !this.isCheckApart;
+    },
+    clickCheckEtc: function() {
+      this.isCheckEtc = !this.isCheckEtc;
+    },
+    clickCheckFixed: function() {
+      this.isCheckFixed = !this.isCheckFixed;
+    },
+    clickCheckFloating: function() {
+      this.isCheckFloating = !this.isCheckFloating;
+    },
+    clickCheckDiv: function() {
+      this.isCheckDiv = !this.isCheckDiv;
+    },
+    clickCheckBullet: function() {
+      this.isCheckBullet = !this.isCheckBullet;
+    },
+    clickSearch: function() {
+      this.isSearch = !this.isSearch;
     },
     orderbyOnChange: function() {
       this.page = 1;
@@ -227,6 +265,8 @@ export default {
       var formData = new FormData();
       formData.append("cd_goods_class_l", this.cd_goods_class_l);
       formData.append("cd_goods_class_m", this.cd_goods_class_m);
+      formData.append("cd_ratio_type", this.cd_ratio_type);
+      formData.append("cd_type_pay", this.cd_type_pay);
       formData.append("orderby", this.orderby.value);
       this.$http
         .post(_this.urlPath + "listLoanAffiliates.json", formData)

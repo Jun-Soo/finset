@@ -135,39 +135,55 @@ export default {
     //요청취소, 공유종료
     settingReq: function(share_status) {
       var _this = this;
-
-      console.log("seq_share" + _this.seq_share);
-
-      var formData = new FormData();
-      formData.append("seq_share", _this.seq_share);
-      _this.share_status = share_status;
-      formData.append("share_status", share_status);
-
+      var dgTitle = "";
+      //요청취소
       if ("05" == share_status) {
-        console.log("offer_hp" + _this.shareInfo.offer_hp);
-        formData.append("offer_hp", _this.shareInfo.offer_hp);
-      }
+        dgTitle = "공유 요청을 취소하시겠습니까?";
 
-      this.$http
-        .post("/m/customercenter/updatePersonShareInfoSetStatus.json", formData)
-        .then(function(response) {
-          _this.$toast.center(response.data.message);
-          if ("00" == response.data.cdResult) {
-            var typeMsg;
-            if ("05" == share_status) {
-              //요청취소인경우 발송type flag값 존재
-              typeMsg = response.data.typeMessage; //문자발송
-            } else if ("04" == share_status) {
-              //공유종료인경우 push
-              typeMsg = "push";
-              _this.share_status = "04_1";
-            }
-            _this.sendMsg(typeMsg); //문자발송
+        //공유종료
+      } else if ("04" == share_status) {
+        dgTitle = "공유를 취소하시겠습니까?";
+      }
+      Constant.options.title = dgTitle;
+      this.$dialogs.confirm("", Constant.options).then(res => {
+        if (res.ok) {
+          console.log("seq_share" + _this.seq_share);
+
+          var formData = new FormData();
+          formData.append("seq_share", _this.seq_share);
+          _this.share_status = share_status;
+          formData.append("share_status", share_status);
+
+          if ("05" == share_status) {
+            console.log("offer_hp" + _this.shareInfo.offer_hp);
+            formData.append("offer_hp", _this.shareInfo.offer_hp);
           }
-        })
-        .catch(e => {
-          _this.$toast.center(ko.messages.error);
-        });
+
+          this.$http
+            .post(
+              "/m/customercenter/updatePersonShareInfoSetStatus.json",
+              formData
+            )
+            .then(function(response) {
+              _this.$toast.center(response.data.message);
+              if ("00" == response.data.cdResult) {
+                var typeMsg;
+                if ("05" == share_status) {
+                  //요청취소인경우 발송type flag값 존재
+                  typeMsg = response.data.typeMessage; //문자발송
+                } else if ("04" == share_status) {
+                  //공유종료인경우 push
+                  typeMsg = "push";
+                  _this.share_status = "04_1";
+                }
+                _this.sendMsg(typeMsg); //문자발송
+              }
+            })
+            .catch(e => {
+              _this.$toast.center(ko.messages.error);
+            });
+        }
+      });
     },
     //문자 / push발송
     sendMsg: function(typeMessage) {
@@ -249,28 +265,35 @@ export default {
         return false;
       }
 
-      console.log("seq_share" + _this.seq_share);
+      Constant.options.title = "업데이트 요청하시겠습니까?";
+      this.$dialogs.confirm("", Constant.options).then(res => {
+        if (res.ok) {
+          console.log("seq_share" + _this.seq_share);
 
-      var formData = new FormData();
-      formData.append("share_status", "06");
-      formData.append("seq_share", _this.seq_share);
-      this.$http
-        .post("/m/customercenter/sendPersonShareInfoPush.json", formData)
-        .then(function(response) {
-          if ("00" == response.data.cdResult) {
-            _this.$toast.center("업데이트 요청되었습니다.");
-            _this.reqUpdateYn = "Y";
-          } else if ("01" == response.data.cdResult) {
-            _this.$toast.center("하루에 한번 <br/>업데이트 요청 가능합니다.");
-            _this.reqUpdateYn = "Y";
-          } else {
-            _this.$toast.center("업데이트 요청 실패했습니다.");
-            return false;
-          }
-        })
-        .catch(e => {
-          _this.$toast.center(ko.messages.error);
-        });
+          var formData = new FormData();
+          formData.append("share_status", "06");
+          formData.append("seq_share", _this.seq_share);
+          this.$http
+            .post("/m/customercenter/sendPersonShareInfoPush.json", formData)
+            .then(function(response) {
+              if ("00" == response.data.cdResult) {
+                _this.$toast.center("업데이트 요청되었습니다.");
+                _this.reqUpdateYn = "Y";
+              } else if ("01" == response.data.cdResult) {
+                _this.$toast.center(
+                  "하루에 한번 <br/>업데이트 요청 가능합니다."
+                );
+                _this.reqUpdateYn = "Y";
+              } else {
+                _this.$toast.center("업데이트 요청 실패했습니다.");
+                return false;
+              }
+            })
+            .catch(e => {
+              _this.$toast.center(ko.messages.error);
+            });
+        }
+      });
     },
     //공유관리 메인으로 이동
     goShareInfoMain: function() {

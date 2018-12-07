@@ -600,31 +600,58 @@
 		/* com.koscom.person.dao.PersonMapper.listPersonShareInfoAsset : 공유관리 - 공유설정(자산정보 계좌list) */
 	    SELECT
 	    	ROWNUM AS RNUM,
-			TB.YN_SHARE,
+			SID.YN_SHARE,
 			TB.CD_ASSETS_CLASS,
 	    	TB.NO_ACCOUNT,
 	    	TB.NM_ACCOUNT
 	    FROM (
 	    		SELECT
-					SID.YN_SHARE,
 					AI.CD_ASSETS_CLASS,
 					AI.NO_ACCOUNT,
 					AI.NM_ACCOUNT
 				FROM
 					ASSETS_INFO AI
-				LEFT OUTER JOIN SHARE_INFO_DETAIL SID
-						ON (
-								SID.SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
-								AND SID.CD_INFO = '02'
-								AND AI.CD_ASSETS_CLASS = SID.CD_TYPE
-								AND AI.NO_ACCOUNT = SID.NO_CARD_ACC
-								AND AI.NO_PERSON = SID.ID_FRT
-							)
-				WHERE AI.DT_EXPIRE IS NULL
+				WHERE (AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 					AND AI.YN_DELETE = 'N'
+					AND AI.CD_ASSETS_CLASS = '00'
 					AND AI.NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
-				ORDER BY AI.NM_ACCOUNT
+				UNION ALL
+				SELECT
+					AI.CD_ASSETS_CLASS,
+					AI.NO_ACCOUNT,
+					( (SELECT NM_FC FROM FC_INFO WHERE CD_FC = SL.CD_FC) || ' - '
+					|| C.NM_CODE2 || ' (' || SL.REAL_ACCNO || ')' ) AS NM_ACCOUNT
+				FROM
+					ASSETS_INFO AI
+				INNER JOIN STOCK_LIST SL
+				ON (SL.NO_PERSON = AI.NO_PERSON
+					AND SL.ACCNO = AI.NO_ACCOUNT)
+				INNER JOIN
+				(
+				SELECT
+					CODE_VALUE,
+					TRIM( SUBSTR( NM_CODE, 0, INSTR( NM_CODE, ' ', 1, 1 ))) AS NM_CODE1,
+					TRIM( SUBSTR( NM_CODE, INSTR( NM_CODE, ' ', 1, 1 ), LENGTH( NM_CODE ))) AS NM_CODE2
+				FROM
+					COMM_CD
+				WHERE
+					CODE_GROUP = 'cd_assets_stock'
+				) C
+				ON SL.ACC_TYPE = C.NM_CODE1
+				WHERE (AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
+					AND AI.YN_DELETE = 'N'
+					AND AI.CD_ASSETS_CLASS = '10'
+					AND AI.NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
+				ORDER BY CD_ASSETS_CLASS, NM_ACCOUNT
 			) TB
+		LEFT OUTER JOIN SHARE_INFO_DETAIL SID
+		ON (
+			SID.SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+			AND SID.CD_INFO = '02'
+			AND SID.CD_TYPE = TB.CD_ASSETS_CLASS
+			AND SID.NO_CARD_ACC = TB.NO_ACCOUNT
+			AND SID.ID_FRT = #{offer_no_person, jdbcType=VARCHAR}
+			)
 	</select>
 
 	<!-- personMapper.listPersonShareInfoConsume 공유관리 - 공유설정(소비정보 계좌list) -->

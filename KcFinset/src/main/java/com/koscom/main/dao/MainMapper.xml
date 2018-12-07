@@ -85,7 +85,7 @@
 				FROM
 					ASSETS_INFO
 				WHERE
-					DT_EXPIRE IS NULL
+					(DT_EXPIRE IS NULL OR DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 					AND YN_DELETE = 'N'
 					AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
 			) TB

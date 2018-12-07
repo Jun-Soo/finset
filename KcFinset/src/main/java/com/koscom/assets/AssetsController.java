@@ -93,11 +93,9 @@ public class AssetsController {
 		assetsForm.setType_list("bank");
 		AssetsInfoVO sumAmt = assetsManager.getAssetsMainInfo(assetsForm);
 		AssetsInfoVO depWdrlInfo = assetsManager.getAssetsBankDepWdrlInfo(assetsForm);
-		PersonInfo personInfo = personManager.getPersonInfo(no_person);
 
         model.addAttribute("sumAmt", sumAmt); //은행총금액
         model.addAttribute("depWdrlInfo", depWdrlInfo); //최근 입출금 내역
-        model.addAttribute("nm_person", personInfo.getNm_person());
         model.addAttribute("personShareList", assetsManager.listAssetsSharePerson(assetsForm)); //공유자list
 
 		return "jsonView";
@@ -131,7 +129,7 @@ public class AssetsController {
 
 	/**
 	 * VUE
-     * 자산관리 - 은행 메인 계좌 정렬순서변경
+     * 자산관리 - 계좌 정렬순서변경
      * @param request
      * @param session
      * @param AssetsInfoVO
@@ -344,6 +342,171 @@ public class AssetsController {
 		assetsInfoVO.setNo_person(no_person);
 
 		assetsManager.updateAssetsDetailCsInfo(assetsInfoVO);
+
+		return "jsonView";
+	}
+
+	/**
+	 * VUE
+     * 자산관리 - 증권 메인
+     * @param request
+     * @param session
+     * @param model
+     * @return String
+     * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/getAssetsStockMainInfo.json")
+	public String getAssetsStockMainInfo(
+	HttpServletRequest request,
+	HttpSession session,
+	Model model) throws FinsetException, IOException{
+		String no_person = (String)session.getAttribute("no_person");
+
+		AssetsForm assetsForm = new AssetsForm();
+		assetsForm.setNo_person(no_person);
+		assetsForm.setType_list("stock");
+		AssetsInfoVO sumAmt = assetsManager.getAssetsMainInfo(assetsForm);
+
+        model.addAttribute("sumAmt", sumAmt); //증권총금액
+        model.addAttribute("personShareList", assetsManager.listAssetsSharePerson(assetsForm)); //공유자list
+
+		return "jsonView";
+	}
+
+	/**
+	 * VUE
+     * 자산관리 - 증권 메인 계좌내역
+     * @param request
+     * @param session
+     * @param AssetsForm
+     * @param model
+     * @return String
+     * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/listAssetsStockMainAccount.json")
+	public String listAssetsStockMainAccount(
+	HttpServletRequest request,
+	HttpSession session,
+	AssetsForm assetsForm,
+	Model model) throws FinsetException, IOException{
+		String no_person = (String)session.getAttribute("no_person");
+
+		assetsForm.setNo_person(no_person);
+
+		Pagination pagedList = assetsForm.setPagedList(assetsManager.listAssetsStockMainAccount(assetsForm),assetsManager.listAssetsStockMainAccountCount(assetsForm));
+		model.addAttribute("pagedList", pagedList);
+
+		return "jsonView";
+	}
+
+	/**
+	 * VUE
+     * 자산관리 - 증권 계좌상세
+     * @param request
+     * @param AssetsForm
+     * @param model
+     * @return String
+     * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/getAssetsStockInfo.json")
+	public String getAssetsStockInfo(
+	HttpServletRequest request,
+	AssetsForm assetsForm,
+	Model model) throws FinsetException, IOException{
+
+		model.addAttribute("stockInfo", assetsManager.getAssetsStockInfo(assetsForm));
+
+		return "jsonView";
+	}
+
+	/**
+	 * VUE
+     * 자산관리 - 증권 전체잔고 상세
+     * @param request
+     * @param session
+     * @param AssetsForm
+     * @param model
+     * @return String
+     * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/getAssetsStockSumInfo.json")
+	public String getAssetsStockSumInfo(
+	HttpServletRequest request,
+	HttpSession session,
+	AssetsForm assetsForm,
+	Model model) throws FinsetException, IOException{
+		String no_person = (String)session.getAttribute("no_person");
+
+		assetsForm.setNo_person(no_person);
+
+		model.addAttribute("scCompanyList", assetsManager.listAssetsStockDetailCompany(assetsForm));
+		model.addAttribute("stockSumInfo", assetsManager.getAssetsStockSumInfo(assetsForm));
+
+		return "jsonView";
+	}
+
+	/**
+	 * VUE
+     * 자산관리 - 증권 상세 계좌내역
+     * @param request
+     * @param session
+     * @param AssetsForm
+     * @param model
+     * @return String
+     * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/listAssetsStockDetailAccount.json")
+	public String listAssetsStockDetailAccount(
+	HttpServletRequest request,
+	HttpSession session,
+	AssetsForm assetsForm,
+	Model model) throws FinsetException, IOException{
+		String no_person = (String)session.getAttribute("no_person");
+
+		assetsForm.setNo_person(no_person);
+
+		Pagination pagedList = assetsForm.setPagedList(assetsManager.listAssetsStockDetailAccount(assetsForm),assetsManager.listAssetsStockDetailAccountCount(assetsForm));
+		model.addAttribute("pagedList", pagedList);
+
+		return "jsonView";
+	}
+
+	/**
+	 * VUE
+     * 자산관리 - 증권 주식상세
+     * @param request
+     * @param AssetsForm
+     * @param model
+     * @return String
+     * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/getAssetsStockShrInfo.json")
+	public String getAssetsStockShrInfo(
+	HttpServletRequest request,
+	AssetsForm assetsForm,
+	Model model) throws FinsetException, IOException{
+
+		model.addAttribute("shrInfo", assetsManager.getAssetsStockShrInfo(assetsForm));
+
+		return "jsonView";
+	}
+
+	/**
+	 * VUE
+     * 자산관리 - 증권 펀드상세
+     * @param request
+     * @param AssetsForm
+     * @param model
+     * @return String
+     * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/getAssetsStockFndInfo.json")
+	public String getAssetsStockFndInfo(
+	HttpServletRequest request,
+	AssetsForm assetsForm,
+	Model model) throws FinsetException, IOException{
+
+		model.addAttribute("fndInfo", assetsManager.getAssetsStockFndInfo(assetsForm));
 
 		return "jsonView";
 	}

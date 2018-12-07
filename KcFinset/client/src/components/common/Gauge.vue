@@ -2,71 +2,23 @@
   <div id="container">
     <svg :viewBox="viewBoxDimensions" preserveAspectRatio="xMidYMid meet">
       <!-- background circle -->
-      <path
-        id="backgroundBar"
-        ref="backgroundBar"
-        :d="backgroundBarPath"
-        :stroke-width="strokeWidth"
-        fill="none"
-      />
+      <path id="backgroundBar" ref="backgroundBar" :d="backgroundBarPath" :stroke-width="strokeWidth" fill="none" />
 
       <!-- data circle -->
-      <path
-        id="dataBar"
-        ref="dataBar"
-        :d="dataBarPath"
-        :stroke-width="strokeWidth"
-        fill="none"
-        >
-        <!-- dataBar animation -->
-        <animateTransform
-          ref="dataBarAnimate"
-          attributeName="transform"
-          type="rotate"
-          :from="rotateFrom"
-          :to="rotateTo"
-          dur="2s"
-          begin="1s"
-          fill="freeze"
-          keySplines="0.1 0.8 0.2 1;"
-          keyTimes="0; 1"
-          calcMode="spline"
-        />
+      <path id="dataBar" ref="dataBar" :d="dataBarPath" :stroke-width="strokeWidth" fill="none">
       </path>
 
       <!-- hide bottom half of circle-->
-      <rect id="clipRectangle"
-        :x="rectOffsetX"
-        :y="centerY"
-        :width="rectWidth"
-        :height="rectHeight"
-      />
+      <rect id="clipRectangle" :x="rectOffsetX" :y="centerY" :width="rectWidth" :height="rectHeight" />
 
       <!-- beautify -->
-      <circle id="leftEndPoint" :cx="leftX" :cy="centerY" :r="beautifyCircleRadius"/>
-      <circle id="rightEndPoint" :cx="rightX" :cy="centerY" :r="beautifyCircleRadius"/>
+      <circle id="leftEndPoint" :cx="leftX" :cy="centerY" :r="beautifyCircleRadius" />
+      <circle id="rightEndPoint" :cx="rightX" :cy="centerY" :r="beautifyCircleRadius" />
 
       <!-- data point (beautify) -->
-      <circle
-        id="dataPoint"
-        :cx="leftX"
-        :cy="centerY"
-        :r="beautifyCircleRadius"
-        >
+      <circle id="dataPoint" ref="dataPoint" :cx="leftX" :cy="centerY" :r="beautifyCircleRadius">
         <!-- dataBar point animation -->
-        <animateTransform
-          ref="dataPointAnimate"
-          attributeName="transform"
-          type="rotate"
-          :from="rotateFrom"
-          :to="rotateTo"
-          dur="2s"
-          begin="1s"
-          fill="freeze"
-          keySplines="0.1 0.8 0.2 1;"
-          keyTimes="0; 1"
-          calcMode="spline"
-        />
+
       </circle>
 
       <text id="centerText" text-anchor="middle" :x="centerX" :y="centerY">
@@ -88,7 +40,10 @@ export default {
       viewBoxWidth: 100, // svg안 viewBox의 width.
       viewBoxHeight: 50, // svg안 viewBox의 height.
       radius: 50, // 게이지 반지름.
-      strokeWidth: 7 //게이지 두께.
+      strokeWidth: 7, //게이지 두께.
+      animationDelay: "300", // mount이후 애니메이션 시작까지 delay 시간 (ms)
+      animationDuration: "1s", // 애니메이션 시간 (sec)
+      animationType: "ease-in" // 애니메이션 타입 (linear, ease-in, ease-out, ease-in-out)
     };
   },
   props: {
@@ -120,7 +75,7 @@ export default {
     },
     backgroundBarPath() {
       let startingPoint = "M" + this.leftX + "," + this.centerY;
-      let arc = "a1,1 0 0 1" + this.radius * 2 + ",0";
+      let arc = "a1,1 0 0 1 " + this.radius * 2 + ",0";
       // e.g. M0,0 a1,1 0 0 1 100,0'
       // M0,0 = 0,0 으로 포인터 옮김
       // a = arc 를 그림 (현재 포인터 기준)
@@ -133,7 +88,7 @@ export default {
     },
     dataBarPath() {
       let startingPoint = "M" + this.leftX + "," + this.centerY;
-      let arc = "a1,1 1 0 0" + this.radius * 2 + ",0";
+      let arc = "a1,1 1 0 0 " + this.radius * 2 + ",0";
       return startingPoint + " " + arc;
     },
     centerX() {
@@ -175,6 +130,24 @@ export default {
   },
   methods: {
     test() {}
+  },
+  mounted: function() {
+    let rotate = "rotate(" + this.rotateAngle + "deg)";
+    let dataPointStyle = this.$refs.dataPoint.style;
+    let dataBarStyle = this.$refs.dataBar.style;
+
+    dataPointStyle.transition =
+      this.animationDuration + " " + this.animationType;
+
+    dataBarStyle.transition = this.animationDuration + " " + this.animationType;
+
+    setTimeout(
+      function() {
+        dataPointStyle.transform = rotate;
+        dataBarStyle.transform = rotate;
+      }.bind(rotate, dataPointStyle, dataBarStyle),
+      this.animationDelay
+    ); // 2000 - 2초 후에 애니메이션 시작
   }
 };
 </script>
@@ -187,6 +160,7 @@ export default {
   --backgroundColor: #ffffff; /* svg 백그라운드 색 */
   --backgroundBarColor: #d2d3d7; /* 게이지 기본 색 */
   --dataBarColor: #fc6e6d; /* 게이지 data 색 */
+  --transformOrigin: 50px 50px;
 }
 
 svg {
@@ -204,6 +178,7 @@ svg {
   /* data circle */
   stroke: var(--dataBarColor);
   clip-path: url(#clipRectangle);
+  transform-origin: var(--transformOrigin);
 }
 
 #clipRectangle {
@@ -222,6 +197,7 @@ svg {
 
 #dataPoint {
   fill: var(--dataBarColor);
+  transform-origin: var(--transformOrigin);
 }
 
 #centerText {

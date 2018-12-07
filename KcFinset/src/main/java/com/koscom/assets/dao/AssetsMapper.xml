@@ -15,7 +15,7 @@
 		FROM
 			ASSETS_INFO
 		WHERE
-			DT_EXPIRE IS NULL
+			(DT_EXPIRE IS NULL OR DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 			AND YN_DELETE = 'N'
 			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(type_list)">
 			<choose>
@@ -151,7 +151,7 @@
 						FROM
 							ASSETS_INFO AI
 						WHERE
-							AI.DT_EXPIRE IS NULL
+							(AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 							AND AI.YN_DELETE = 'N'
 							AND AI.CD_ASSETS_CLASS = '00'
 							AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
@@ -203,7 +203,7 @@
 						INNER JOIN ASSETS_INFO AI
 						ON (
 							SID.NO_CARD_ACC = AI.NO_ACCOUNT
-							AND AI.DT_EXPIRE IS NULL
+							AND (AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 							AND AI.YN_DELETE = 'N'
 							)
 					</if>
@@ -235,7 +235,7 @@
 				FROM
 					ASSETS_INFO AI
 				WHERE
-					AI.DT_EXPIRE IS NULL
+					(AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 					AND AI.YN_DELETE = 'N'
 					AND AI.CD_ASSETS_CLASS = '00'
 					AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
@@ -287,7 +287,7 @@
 				INNER JOIN ASSETS_INFO AI
 				ON (
 					SID.NO_CARD_ACC = AI.NO_ACCOUNT
-					AND AI.DT_EXPIRE IS NULL
+					AND (AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 					AND AI.YN_DELETE = 'N'
 					)
 				</if>
@@ -462,7 +462,7 @@
 				FROM
 					ASSETS_INFO AI
 				WHERE
-					AI.DT_EXPIRE IS NULL
+					(AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 					AND AI.YN_DELETE = 'N'
 					AND AI.CD_ASSETS_CLASS = '00'
 					AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
@@ -508,7 +508,7 @@
 				INNER JOIN ASSETS_INFO AI
 				ON (
 					SID.NO_CARD_ACC = AI.NO_ACCOUNT
-					AND AI.DT_EXPIRE IS NULL
+					AND (AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 					AND AI.YN_DELETE = 'N'
 					)
 			) TB
@@ -563,7 +563,7 @@
 				FROM
 					ASSETS_INFO AI
 				WHERE
-					AI.DT_EXPIRE IS NULL
+					(AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 					AND AI.YN_DELETE = 'N'
 					AND AI.CD_ASSETS_CLASS = '00'
 					AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
@@ -609,7 +609,7 @@
 				INNER JOIN ASSETS_INFO AI
 				ON (
 					SID.NO_CARD_ACC = AI.NO_ACCOUNT
-					AND AI.DT_EXPIRE IS NULL
+					AND (AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 					AND AI.YN_DELETE = 'N'
 					)
 			) TB
@@ -692,7 +692,7 @@
 						FROM
 							ASSETS_INFO AI
 						WHERE
-							AI.DT_EXPIRE IS NULL
+							(AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 							AND AI.YN_DELETE = 'N'
 							AND AI.CD_ASSETS_CLASS = '00'
 							AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
@@ -738,7 +738,7 @@
 						INNER JOIN ASSETS_INFO AI
 						ON (
 							SID.NO_CARD_ACC = AI.NO_ACCOUNT
-							AND AI.DT_EXPIRE IS NULL
+							AND (AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 							AND AI.YN_DELETE = 'N'
 							)
 					) SHAI
@@ -790,7 +790,7 @@
 					FROM
 						ASSETS_INFO AI
 					WHERE
-						AI.DT_EXPIRE IS NULL
+						(AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 						AND AI.YN_DELETE = 'N'
 						AND AI.CD_ASSETS_CLASS = '00'
 						AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
@@ -834,7 +834,7 @@
 					INNER JOIN ASSETS_INFO AI
 					ON (
 						SID.NO_CARD_ACC = AI.NO_ACCOUNT
-						AND AI.DT_EXPIRE IS NULL
+						AND (AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 						AND AI.YN_DELETE = 'N'
 						)
 				) SHAI
@@ -911,8 +911,8 @@
 			AND TM_TRD = #{tm_trd, jdbcType=VARCHAR}
     </update>
 
-    <select id="listAssetsStockAccount" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
-        /* com.koscom.assets.dao.AssetsMapper.listAssetsStockAccount - 자산관리(증권메인 - 계좌내역) */
+    <select id="listAssetsStockMainAccount" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+        /* com.koscom.assets.dao.AssetsMapper.listAssetsStockMainAccount - 자산관리(증권메인 - 계좌내역) */
        	SELECT
     		NO_PERSON,
 			NM_PERSON,
@@ -926,6 +926,7 @@
 			RATE_RETURN,
 			CD_ASSETS_CLASS,
 			CD_DETAIL_CLASS,
+			NM_DETAIL_CLASS,
 			SORT,
 			RNUM
     	FROM (
@@ -942,6 +943,7 @@
 				LST.RATE_RETURN,
 				LST.CD_ASSETS_CLASS,
 				LST.CD_DETAIL_CLASS,
+				LST.NM_DETAIL_CLASS,
 				LST.SORT,
 				ROWNUM RNUM
     		FROM (
@@ -958,6 +960,7 @@
 					TB.RATE_RETURN,
 					TB.CD_ASSETS_CLASS,
 					TB.CD_DETAIL_CLASS,
+					(SELECT TRIM( SUBSTR( NM_CODE, INSTR( NM_CODE, ' ', 1, 1 ), LENGTH( NM_CODE ))) AS NM_CODE FROM COMM_CD WHERE CODE_GROUP = 'cd_assets_stock' AND CODE_VALUE = TB.CD_DETAIL_CLASS ) AS NM_DETAIL_CLASS,
 					TB.SORT
 				FROM
 					(
@@ -977,7 +980,7 @@
 						FROM
 							ASSETS_INFO AI
 						WHERE
-							AI.DT_EXPIRE IS NULL
+							(AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 							AND AI.YN_DELETE = 'N'
 							AND AI.CD_ASSETS_CLASS = '10'
 							AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
@@ -1030,7 +1033,7 @@
 						INNER JOIN ASSETS_INFO AI
 						ON (
 							SID.NO_CARD_ACC = AI.NO_ACCOUNT
-							AND AI.DT_EXPIRE IS NULL
+							AND (AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 							AND AI.YN_DELETE = 'N'
 							)
 					</if>
@@ -1041,8 +1044,8 @@
 	    )
 	    WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
 	</select>
-    <select id="listAssetsStockAccountCount" parameterType="com.koscom.assets.model.AssetsForm" resultType="int">
-        /* com.koscom.assets.dao.AssetsMapper.listAssetsStockAccountCount - 자산관리(증권메인 - 계좌내역Count) */
+    <select id="listAssetsStockMainAccountCount" parameterType="com.koscom.assets.model.AssetsForm" resultType="int">
+        /* com.koscom.assets.dao.AssetsMapper.listAssetsStockMainAccountCount - 자산관리(증권메인 - 계좌내역Count) */
        	SELECT
 			COUNT(*) AS recordCount
 		FROM
@@ -1063,7 +1066,7 @@
 				FROM
 					ASSETS_INFO AI
 				WHERE
-					AI.DT_EXPIRE IS NULL
+					(AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 					AND AI.YN_DELETE = 'N'
 					AND AI.CD_ASSETS_CLASS = '10'
 					AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
@@ -1116,11 +1119,351 @@
 				INNER JOIN ASSETS_INFO AI
 				ON (
 					SID.NO_CARD_ACC = AI.NO_ACCOUNT
-					AND AI.DT_EXPIRE IS NULL
+					AND (AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 					AND AI.YN_DELETE = 'N'
 					)
 				</if>
 			) TB
+	</select>
+
+    <select id="getAssetsStockInfo" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+		/* com.koscom.assets.dao.AssetsMapper.getAssetsStockInfo - 자산관리(증권 - 계좌 개별정보) */
+       SELECT
+			SS.CD_FC,
+			( SELECT NM_FC FROM FC_INFO WHERE SS.CD_FC = CD_FC ) AS NM_FC,
+			SS.ACCNO,
+			NVL( TO_CHAR(( SS.TOTALACCVAL + SS.CASHBALANCE )), '-' ) AS AMT_STOCK,
+			NVL( SS.CASHAVWITHDRAW, '-' ) AS CASHAVWITHDRAW,
+			NVL( SS.SUBSMARGIN, '-' ) AS SUBSMARGIN,
+			NVL( SS.RECEIVABLE, '-' ) AS RECEIVABLE,
+			NVL( SS.LOANCREDIT, '-' ) AS LOANCREDIT,
+			NVL( SS.VALUEATCUR, '-' ) AS VALUEATCUR,
+			NVL( SS.PROLOSS, 0 ) AS PROLOSS
+		FROM
+			STOCK_SUMMARY SS
+		WHERE SS.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND SS.ACCNO = #{no_account, jdbcType=VARCHAR}
+    </select>
+
+    <select id="getAssetsStockSumInfo" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+		/* com.koscom.assets.dao.AssetsMapper.getAssetsStockSumInfo - 자산관리(증권 - 전체잔고정보) */
+       SELECT
+			NVL( TO_CHAR(( SUM( TOTALACCVAL )+ SUM( CASHBALANCE ))), '-' ) AS AMT_STOCK,
+			NVL( TO_CHAR( SUM( CASHAVWITHDRAW )), '-' ) AS CASHAVWITHDRAW,
+			NVL( TO_CHAR( SUM( SUBSMARGIN )), '-' ) AS SUBSMARGIN,
+			NVL( TO_CHAR( SUM( RECEIVABLE )), '-' ) AS RECEIVABLE,
+			NVL( TO_CHAR( SUM( LOANCREDIT )), '-' ) AS LOANCREDIT,
+			NVL( TO_CHAR( SUM( VALUEATCUR )), '-' ) AS VALUEATCUR,
+			NVL( SUM(PROLOSS), 0) AS PROLOSS
+		FROM
+			STOCK_SUMMARY
+		WHERE (NO_PERSON = #{no_person, jdbcType=VARCHAR}
+				<if test="@com.koscom.util.MybatisUtil@isNotEmpty(person_share_list)">
+					OR NO_PERSON IN
+					<foreach item="share_person" collection="person_share_list" open="(" separator="," close=")">
+						#{share_person}
+					</foreach>
+				</if>
+				)
+    </select>
+
+    <select id="listAssetsStockDetailCompany" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+        /* com.koscom.assets.dao.AssetsMapper.listAssetsStockDetailCompany - 자산관리(증권 - 증권사list(검색용)) */
+        SELECT
+			DISTINCT
+			FI.NM_FC,
+			SL.CD_FC
+		FROM
+			STOCK_LIST SL
+		INNER JOIN FC_INFO FI ON
+			SL.CD_FC = FI.CD_FC
+		WHERE
+			SL.YN_DELETE = 'N'
+			AND (SL.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(person_share_list)">
+						OR SL.NO_PERSON IN
+						<foreach item="share_person" collection="person_share_list" open="(" separator="," close=")">
+							#{share_person}
+						</foreach>
+					</if>
+				)
+    </select>
+
+    <select id="listAssetsStockDetailAccount" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+		/* com.koscom.assets.dao.AssetsMapper.listAssetsStockDetailAccount - 자산관리(증권 - 상세 계좌list) */
+        SELECT
+    		NO_PERSON,
+    		CD_FC,
+			ACC_TYPE,
+			ACC_CODE,
+			ACC_NM,
+			VALATCUR,
+			PROLOSS,
+			EARNINGRATE,
+			TOT_SUM,
+			PERCENT,
+			RNUM
+    	FROM (
+    		SELECT
+				LST.NO_PERSON,
+				LST.CD_FC,
+				LST.ACC_TYPE,
+				LST.ACC_CODE,
+				LST.ACC_NM,
+				LST.VALATCUR,
+				LST.PROLOSS,
+				LST.EARNINGRATE,
+				LST.TOT_SUM,
+				LST.PERCENT,
+				ROWNUM RNUM
+    		FROM (
+        		SELECT
+					TB.NO_PERSON,
+					TB.CD_FC,
+					TB.ACC_TYPE,
+					TB.ACC_CODE,
+					TB.ACC_NM,
+					TB.VALATCUR,
+					TB.PROLOSS,
+					TB.EARNINGRATE,
+					SUM( TB.VALATCUR ) OVER( PARTITION BY TB.NO_PERSON ) AS TOT_SUM,
+					ROUND(( TB.VALATCUR / SUM( TB.VALATCUR ) OVER( PARTITION BY TB.NO_PERSON ))* 100, 1 ) AS PERCENT
+				FROM
+					(
+						SELECT
+							T.NO_PERSON,
+							T.CD_FC,
+							T.ACC_TYPE,
+							T.ACC_CODE,
+							T.ACC_NM,
+							SUM( T.VALATTRADE ) AS VALATTRADE,
+							SUM( T.VALATCUR ) AS VALATCUR,
+							SUM( T.PROLOSS ) AS PROLOSS,
+							CASE
+								WHEN SUM( T.VALATTRADE ) <![CDATA[>]]> 0 THEN ROUND( SUM( T.PROLOSS )/ SUM( T.VALATTRADE )* 100, 2 )
+								ELSE 0
+							END AS EARNINGRATE
+						FROM
+							(
+								SELECT
+									NO_PERSON,
+									CD_FC,
+									'cash' AS ACC_TYPE,
+									'' AS ACC_CODE,
+									'현금' AS ACC_NM,
+									'0' AS VALATTRADE,
+									CASHBALANCE AS VALATCUR,
+									'0' AS PROLOSS,
+									0 AS EARNINGRATE
+								FROM
+									STOCK_SUMMARY
+								WHERE 1=1
+									<if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_account)">
+										AND ACCNO = #{no_account, jdbcType=VARCHAR}
+									</if>
+							UNION ALL SELECT
+									NO_PERSON,
+									CD_FC,
+									'shr' AS ACC_TYPE,
+									ISINCODE AS ACC_CODE,
+									SUBSTR(ISINCODE, 4, 6) AS ACC_NM,
+									VALATTRADE AS VALATTRADE,
+									VALATCUR AS VALATCUR,
+									PROLOSS,
+									EARNINGRATE
+								FROM
+									STOCK_EQUITYLIST
+								WHERE 1=1
+									<if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_account)">
+										AND ACCNO = #{no_account, jdbcType=VARCHAR}
+									</if>
+							UNION ALL SELECT
+									NO_PERSON,
+									CD_FC,
+									'fnd' AS ACC_TYPE,
+									FUNDCODE AS ACC_CODE,
+									FUNDNAME AS ACC_NM,
+									VALATTRADE AS VALATTRADE,
+									VALATCUR AS VALATCUR,
+									PROLOSS,
+									EARNINGRATE
+								FROM
+									STOCK_FUNDLIST
+								WHERE 1=1
+									<if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_account)">
+										AND ACCNO = #{no_account, jdbcType=VARCHAR}
+									</if>
+								ORDER BY
+									ACC_NM
+							) T
+						GROUP BY
+							T.NO_PERSON,
+							T.CD_FC,
+							T.ACC_TYPE,
+							T.ACC_CODE,
+							T.ACC_NM
+					) TB
+				WHERE 1=1
+					AND (TB.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+						<if test="@com.koscom.util.MybatisUtil@isNotEmpty(person_share_list)">
+							OR TB.NO_PERSON IN
+							<foreach item="share_person" collection="person_share_list" open="(" separator="," close=")">
+								#{share_person}
+							</foreach>
+						</if>
+						)
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(scAccType)">
+						AND TB.ACC_TYPE = #{scAccType, jdbcType=VARCHAR}
+					</if>
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(scCompany)">
+					    AND TB.CD_FC = #{scCompany, jdbcType=VARCHAR}
+					</if>
+				ORDER BY
+						<choose>
+				    	    <when test="'01'.equals(orderBy)">
+				    	        TB.VALATCUR DESC, /*평가금액순*/
+				    	    </when>
+				    	    <when test="'02'.equals(orderBy)">
+				    	        TB.EARNINGRATE DESC, /*상승률순*/
+				    	    </when>
+				    	    <when test="'03'.equals(orderBy)">
+				    	    	ROUND((TB.VALATCUR / SUM(TB.VALATCUR) OVER (PARTITION BY TB.NO_PERSON)) * 100, 3) DESC, /*비중순*/
+				    	    </when>
+				    	</choose>
+				    TB.CD_FC, TB.ACC_TYPE, TB.ACC_NM
+			) LST
+	    	WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	    )
+	    WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+    </select>
+
+    <select id="listAssetsStockDetailAccountCount" parameterType="com.koscom.assets.model.AssetsForm" resultType="int">
+    	/* com.koscom.assets.dao.AssetsMapper.listAssetsStockDetailAccountCount - 자산관리(증권 - 계좌listCount) */
+        SELECT
+			COUNT(*) AS recordCount
+		FROM
+			(
+				SELECT
+					T.NO_PERSON,
+					T.CD_FC,
+					T.ACC_TYPE,
+					T.ACC_CODE,
+					T.ACC_NM,
+					SUM( T.VALATTRADE ) AS VALATTRADE,
+					SUM( T.VALATCUR ) AS VALATCUR,
+					SUM( T.PROLOSS ) AS PROLOSS,
+					CASE
+						WHEN SUM( T.VALATTRADE ) <![CDATA[>]]> 0 THEN ROUND( SUM( T.PROLOSS )/ SUM( T.VALATTRADE )* 100, 2 )
+						ELSE 0
+					END AS EARNINGRATE
+				FROM
+					(
+						SELECT
+							NO_PERSON,
+							CD_FC,
+							'cash' AS ACC_TYPE,
+							'' AS ACC_CODE,
+							'현금' AS ACC_NM,
+							'0' AS VALATTRADE,
+							CASHBALANCE AS VALATCUR,
+							'0' AS PROLOSS,
+							0 AS EARNINGRATE
+						FROM
+							STOCK_SUMMARY
+						WHERE 1=1
+							<if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_account)">
+								AND ACCNO = #{no_account, jdbcType=VARCHAR}
+							</if>
+					UNION ALL SELECT
+							NO_PERSON,
+							CD_FC,
+							'shr' AS ACC_TYPE,
+							ISINCODE AS ACC_CODE,
+							SUBSTR(ISINCODE,4,6) AS ACC_NM,
+							VALATTRADE AS VALATTRADE,
+							VALATCUR AS VALATCUR,
+							PROLOSS,
+							EARNINGRATE
+						FROM
+							STOCK_EQUITYLIST
+						WHERE 1=1
+							<if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_account)">
+								AND ACCNO = #{no_account, jdbcType=VARCHAR}
+							</if>
+					UNION ALL SELECT
+							NO_PERSON,
+							CD_FC,
+							'fnd' AS ACC_TYPE,
+							FUNDCODE AS ACC_CODE,
+							FUNDNAME AS ACC_NM,
+							VALATTRADE AS VALATTRADE,
+							VALATCUR AS VALATCUR,
+							PROLOSS,
+							EARNINGRATE
+						FROM
+							STOCK_FUNDLIST
+						WHERE 1=1
+							<if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_account)">
+								AND ACCNO = #{no_account, jdbcType=VARCHAR}
+							</if>
+						ORDER BY
+							ACC_NM
+					) T
+				GROUP BY
+					T.NO_PERSON,
+					T.CD_FC,
+					T.ACC_TYPE,
+					T.ACC_CODE,
+					T.ACC_NM
+			) TB
+		WHERE 1=1
+			AND (TB.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+				<if test="@com.koscom.util.MybatisUtil@isNotEmpty(person_share_list)">
+					OR TB.NO_PERSON IN
+					<foreach item="share_person" collection="person_share_list" open="(" separator="," close=")">
+						#{share_person}
+					</foreach>
+				</if>
+				)
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(scAccType)">
+				AND TB.ACC_TYPE = #{scAccType, jdbcType=VARCHAR}
+			</if>
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(scCompany)">
+				AND TB.CD_FC = #{scCompany, jdbcType=VARCHAR}
+			</if>
+	</select>
+
+    <select id="getAssetsStockShrInfo" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+		/* com.koscom.assets.dao.AssetsMapper.getAssetsStockShrInfo - 자산관리(증권 - 주식정보) */
+        SELECT
+			ISINCODE,
+			SUBSTR( ISINCODE, 4, 6 ) ISINCODE_NM,
+			VALATCUR,
+			PROLOSS,
+			EARNINGRATE,
+			QTY,
+			VALATTRADE,
+			( VALATTRADE / QTY ) AS AVG_VALATTRADE
+		FROM
+			STOCK_EQUITYLIST
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND ACCNO = #{no_account, jdbcType=VARCHAR}
+			AND ISINCODE = #{acc_code, jdbcType=VARCHAR}
+    </select>
+
+    <select id="getAssetsStockFndInfo" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+    	/* com.koscom.assets.dao.AssetsMapper.getAssetsStockFndInfo - 자산관리(증권 - 펀드정보) */
+        SELECT
+			FUNDNAME,
+			VALATCUR,
+			PROLOSS,
+			EARNINGRATE,
+			VALATTRADE
+		FROM
+			STOCK_FUNDLIST
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND ACCNO = #{no_account, jdbcType=VARCHAR}
+			AND FUNDCODE = #{acc_code, jdbcType=VARCHAR}
 	</select>
 
     <insert id="createAssetsInfo" parameterType="com.koscom.assets.model.AssetsInfoVO">
@@ -1179,7 +1522,7 @@
 					) CD
 		ON CD.CODE_VALUE = AI.CD_ASSETS_CLASS
 		WHERE
-			AI.DT_EXPIRE IS NULL
+			(AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 			AND AI.YN_DELETE = 'N'
 			AND AI.YN_PERSON_REGIST = 'Y'
 			AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}

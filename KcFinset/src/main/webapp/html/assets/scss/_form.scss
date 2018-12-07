@@ -36,6 +36,20 @@ input[type="text"],input[type="password"],input[type="tel"],input[type="email"],
 	@include box-sizing(border-box);
 }
 
+input[type="month"]{
+	background:url(../images/_form/select.png) no-repeat right center $white;
+    @include appearance(none);
+    &::-webkit-inner-spin-button{
+        -webkit-appearance: none;
+        display: none;
+    }
+    &::-webkit-calendar-picker-indicator {
+        -webkit-appearance: none;
+        //display: none;
+        opacity: 0;
+    }
+}
+
 input[type="tel"]{
 	width: 110px;
 }

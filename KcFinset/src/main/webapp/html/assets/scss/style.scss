@@ -1994,7 +1994,7 @@ aside.search-wrap{
             top: 0;
             background: url(../images/main/ico_setting.png) no-repeat center / contain;
         }
-        .today{
+        .today, .year,.month{
             height: auto;
             width: auto;
             line-height: 28px;
@@ -2005,8 +2005,16 @@ aside.search-wrap{
             background: #fff;
             border-radius: 50px;
             position: absolute;
-            left: 0;
             top: -5px;
+        }
+        .today{
+            left: 0;
+        }
+        .year{
+            right: 45px;
+        }
+        .month{
+            right: 0;
         }
     } 
     .wrap{
@@ -2767,8 +2775,13 @@ button.cal{
                                 width: 33px;
                                 height: 33px;
                                 border: 1px solid $lineColor;
-                                background: url("../images/common/btn_accodion_search.png") no-repeat center / contain;
                                 margin: 0;
+                                &.search{
+                                    background: url("../images/common/btn_accodion_search.png") no-repeat center / contain;
+                                }
+                                &.cal{
+                                    background: url("../images/common/btn_cal.png") no-repeat center / 16px;
+                                }
                             }
                             input[type="text"],input[type="number"]{
                                 line-height: 35px;
@@ -2985,16 +2998,16 @@ button.cal{
             button{
                 background: url("../images/common/btn_loan.png") no-repeat center top / 107px;
                 color: #e52638;
-                border: 1px solid #e52638;
+                border: 1px solid #e9626f;
                 border-radius: 50px;
                 &.on{
                     background-position: center bottom;
                     color: #fff;
-                    background-color: #e52638;
+                    background-color: #e9626f;
                 }
             }
             em{
-                color: #e52638;
+                color: #e9626f;
                 font-weight: 700;
                 margin-top: 10px;
                 display: inline-block;
@@ -5446,25 +5459,39 @@ button.cal{
                         left: 50%;
                         top: 0;
                         margin-left: -20px;
+                        background-size: 40px;
+                        background-position: center top;
                     }
                     &:nth-child(1){
                         &:before{
-                            background: url("../images/mypage/ico_request.png") no-repeat center top / 40px;
+                            background-image: url("../images/mypage/ico_request.png");
                         }
                     }
                     &:nth-child(2){
                         &:before{
-                            background: url("../images/mypage/ico_ask.png") no-repeat center top / 40px;
+                            background-image: url("../images/mypage/ico_ask.png");
                         }
                     }
                     &:nth-child(3){
                         &:before{
-                            background: url("../images/mypage/ico_audit.png") no-repeat center top / 40px;
+                            background-image: url("../images/mypage/ico_audit.png");
                         }
                     }
                     &:nth-child(4){
-                        &:before{
-                            background: url("../images/mypage/ico_deposit2.png") no-repeat center top / 40px;
+                        &.deposit{
+                             &:before{
+                                background-image: url("../images/mypage/ico_deposit2.png");
+                            }   
+                        }
+                        &.cancel{
+                             &:before{
+                                background-image: url("../images/mypage/ico_cancel2.png");
+                            }   
+                        }
+                        &.reject{
+                             &:before{
+                                background-image: url("../images/mypage/ico_reject2.png");
+                            }   
                         }
                     }
                     &.on{

@@ -141,11 +141,8 @@
             <div class="flex">
               <p>자격증</p>
               <p>
-                <select v-model="certification" v-validate="'required'" data-vv-name='자격증'>
-                  <option v-for="cert in certList" :key="cert.index" :value="cert.value">
-                    {{ cert.text }}
-                  </option>
-                </select>
+                <multiselect v-model="certification" ref="certification" placeholder="자격증선택" track-by="text" label="text" :options="certList" :searchable="false" :allow-empty="false" @select="onSelectCert">
+                </multiselect>
               </p>
               <p class="warn" v-if="errors.has('자격증')">{{errors.first('자격증')}}</p>
             </div>
@@ -279,6 +276,11 @@ export default {
     openCertFixPicker: function() {
       this.$refs.certFixOpen.showCalendar();
     },
+    //multiselect
+    onSelectCert: function(option) {
+      var _this = this;
+      _this.certification = option;
+    },
     //금리인하list 조회
     getReqIntrCut: function() {
       var _this = this;
@@ -358,7 +360,10 @@ export default {
       }
       //자격증
       if (_this.ynCert) {
-        if ("" == _this.certification) {
+        if (
+          typeof _this.certification.value == "undefined" ||
+          "" == _this.certification.value
+        ) {
           _this.$toast.center("자격증을 선택해 주세요");
           return false;
         }

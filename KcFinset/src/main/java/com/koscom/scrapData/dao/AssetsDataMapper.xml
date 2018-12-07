@@ -52,13 +52,13 @@
 		INNER JOIN(
 				SELECT
 					CODE_VALUE,
-					TRIM( SUBSTR( NM_CODE, 0, INSTR( NM_CODE, ' ', 1, 1 ))) AS NM_CODE
+					ETC
 				FROM
 					COMM_CD
 				WHERE
 					CODE_GROUP = 'cd_assets_stock'
 			) C
-		ON SL.ACC_TYPE = C.NM_CODE
+		ON SL.ACC_TYPE = TO_CHAR(C.ETC)
 		WHERE SS.NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</select>
 

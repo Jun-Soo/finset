@@ -49,7 +49,7 @@
 
     <div class="cs-top">
       <div class="links">
-        <a @click="fnKakao();" class="kakao">카카오톡</a>
+        <a @click="fnShare();" class="share">공유하기</a>
         <a @click="fnCopy();" class="copy">복사</a>
 
       </div>
@@ -117,7 +117,8 @@ export default {
       csNmType: "", //소비 - 카테고리명
       csYnAuto: "N", //소비 - 자동적용여부
       isShowCategory: false, //카테고리 표시여부
-      consumeInfo: "" //소비정보
+      consumeInfo: "", //소비정보
+      isNew: true //소비 신규등록여부
     };
   },
   components: {},
@@ -256,17 +257,19 @@ export default {
         .then(response => {
           var consumeInfo = response.data.consumeInfo;
 
-          if (_this.depWdrlInfo.cd_trns == "02") {
-            _this.csCurClass = consumeInfo.cd_class;
-            _this.csNmClass = consumeInfo.nm_class;
-            _this.csCurType = consumeInfo.cd_type;
-            _this.csNmType = consumeInfo.nm_type;
-          } else {
-            _this.csCurClass = consumeInfo.cd_class;
-            _this.csNmClass = consumeInfo.nm_class;
-          }
+          if (consumeInfo != null) {
+            if (_this.depWdrlInfo.cd_trns == "02") {
+              _this.csCurClass = consumeInfo.cd_class;
+              _this.csNmClass = consumeInfo.nm_class;
+              _this.csCurType = consumeInfo.cd_type;
+              _this.csNmType = consumeInfo.nm_type;
+            } else {
+              _this.csCurClass = consumeInfo.cd_class;
+              _this.csNmClass = consumeInfo.nm_class;
+            }
 
-          _this.consumeInfo = consumeInfo;
+            _this.consumeInfo = consumeInfo;
+          }
         });
     },
     setCsCategoryText: function() {
@@ -318,8 +321,23 @@ export default {
     },
     clickConfirm: function() {
       var _this = this;
-      _this.modifyConsume();
-      //TODO confirm csYnAuto설정
+      if (
+        (_this.consumeInfo != null && _this.consumeInfo != "") ||
+        !_this.isNew
+      ) {
+        _this.modifyConsume();
+      } else {
+        Constant.options.title =
+          "동일 항목에 대해서 이후에도 적용하시겠습니까?";
+        this.$dialogs.confirm("", Constant.options).then(res => {
+          if (res.ok) {
+            _this.csYnAuto = "Y";
+          } else {
+            _this.csYnAuto = "N";
+          }
+          _this.modifyConsume();
+        });
+      }
       _this.setCsCategoryText();
       _this.isShowCategory = false;
     },
@@ -342,11 +360,12 @@ export default {
       this.$http
         .post("/m/assets/updateAssetsDetailCsInfo.json", formData)
         .then(function(response) {});
+
+      _this.isNew = false;
     },
     getCopyContents: function() {
       var _this = this;
       var depWdrlInfo = _this.depWdrlInfo;
-      console.log(this.depWdrlInfo);
       var contents = "";
       contents +=
         Common.formatDateDot(depWdrlInfo.dt_trd) +
@@ -363,14 +382,14 @@ export default {
 
       return contents;
     },
-    //카카오톡
-    fnKakao: function() {
+    //공유하기
+    fnShare: function() {
       var _this = this;
       var contents = _this.getCopyContents();
 
       if (Constant.userAgent == "iOS") {
         Jockey.send("shareText", {
-          text: text(contents)
+          text: contents
         });
       } else if (Constant.userAgent == "Android") {
         window.Android.shareText(contents);
@@ -380,15 +399,16 @@ export default {
     fnCopy: function() {
       var _this = this;
       var contents = _this.getCopyContents();
-      console.log(contents);
       Constant.options.title = "내역을 복사하시겠습니까?";
       this.$dialogs.confirm(contents, Constant.options).then(res => {
-        if (Constant.userAgent == "iOS") {
-          Jockey.send("copyToClipBoard", {
-            text: text(contents)
-          });
-        } else if (Constant.userAgent == "Android") {
-          window.Android.copyToClipBoard(contents);
+        if (res.ok) {
+          if (Constant.userAgent == "iOS") {
+            Jockey.send("copyToClipBoard", {
+              text: contents
+            });
+          } else if (Constant.userAgent == "Android") {
+            window.Android.copyToClipBoard(contents);
+          }
         }
       });
     }

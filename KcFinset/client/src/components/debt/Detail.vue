@@ -8,7 +8,7 @@
             <div class="btn-menu-wrap" :class="{'on':isOpen}" v-if="isMine">
               <button id="btn-menu-pop" class="btn-menu-pop" @click="openMenu"></button>
               <div class="menu">
-                <!-- <a @click="clickMenu('modify')">수정</a> -->
+                <a @click="clickMenu('modify')">수정</a>
                 <a @click="clickMenu('delete')">삭제</a>
                 <a @click="clickMenu('memo')">메모</a>
                 <a @click="clickMenu('tel')">전화걸기</a>
@@ -197,7 +197,6 @@ export default {
           }
         });
       } else if (key == "delete") {
-        var _this = this;
         this.$dialogs
           .confirm(
             "선택하신 부채 정보는 모두 삭제되어 이후 조회가 불가능합니다.\n\n해당 정보를 삭제할까요?",
@@ -231,7 +230,7 @@ export default {
           }
         });
       } else if (key == "tel") {
-        this.callFc(debtVO.tel);
+        this.callFc(this.debtVO.tel);
       }
     },
     openMenu: function(e) {

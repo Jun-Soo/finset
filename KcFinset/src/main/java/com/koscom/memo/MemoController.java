@@ -82,6 +82,15 @@ public class MemoController {
 		return "jsonView";
 	}
 	
+	/**
+	 * 메모 텍스트 수정
+	 * VUE
+	 * @param session
+	 * @param memoVO
+	 * @param model
+	 * @return
+	 * @throws FinsetException
+	 */
 	@RequestMapping("/updateMemoText.json")
 	public String updateMemoText(HttpSession session, MemoVO memoVO, Model model) throws FinsetException {
 		logger.debug("In update text, the memoVO is " + memoVO);
@@ -105,6 +114,15 @@ public class MemoController {
 			memoManager.updateMemoAlarm(memoVO);
 			model.addAttribute("code","00");
 		}
+		return "jsonView";
+	}
+	
+	@RequestMapping("/deleteMemo.json")
+	public String deleteMemo(HttpSession session, MemoVO memoVO, Model model) throws FinsetException {
+		logger.debug("deleteMemo");
+		String no_person = (String) session.getAttribute("no_person");
+		memoVO.setNo_person(no_person);
+		memoManager.delMemo(memoVO);
 		return "jsonView";
 	}
 }

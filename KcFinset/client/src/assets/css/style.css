@@ -1253,7 +1253,7 @@ aside .wrap .hash a {
   text-align: center;
 }
 
-aside .wrap .hash a:active {
+aside .wrap .hash a.on {
   background: #62c1d0;
   color: #fff;
 }
@@ -3957,11 +3957,12 @@ aside.search-wrap .action.btn1 {
   margin-bottom: 10px;
 }
 
-.bank-detail .select div {
+.bank-detail .select div.left {
   width: 50%;
 }
 
 .bank-detail .select div.right {
+  width: 50%;
   text-align: right;
 }
 
@@ -3969,6 +3970,7 @@ aside.search-wrap .action.btn1 {
   width: 35px;
   height: 35px;
   background: url("../images/common/btn-search.png") no-repeat center/contain;
+  vertical-align: middle;
 }
 
 .bank-detail .inout {
@@ -4695,7 +4697,7 @@ button.cal {
 .check-flex div.loan button.on {
   background-position: center bottom;
   color: #fff;
-  background-color: #e52638;
+  background-color: #e9626f;
 }
 
 .check-flex div.loan em {
@@ -5283,13 +5285,13 @@ button.cal {
   border-top: 1px solid #e5e5e5;
 }
 
-.debt-modify li {
+.debt-modify>li {
   align-items: center;
   border-bottom: 1px solid #e5e5e5;
   padding: 10px 0;
 }
 
-.debt-modify li div {
+.debt-modify li>div {
   width: 100%;
   display: flex;
   justify-content: space-between;
@@ -6184,7 +6186,7 @@ button.cal {
 }
 
 .consume-detail li p {
-  width: 50%;
+  width: 70%;
   font-size: 13px;
   color: #9b9489;
   font-weight: 700;
@@ -7676,6 +7678,14 @@ button.cal {
   line-height: 18px;
 }
 
+.vdp-datepicker {
+  display: inline-block;
+}
+
+.consume-detail li p.key {
+  width: 30%
+}
+
 .vdp-datepicker__calendar {
   z-index: 100;
   position: fixed;
@@ -7685,6 +7695,14 @@ button.cal {
 
 .vdp-datepicker__calendar header {
   position: static;
+}
+
+span.cell.day.selected.today {
+  color: #fff;
+}
+
+.vdp-datepicker.div-date input[type="text"]:disabled {
+  background: transparent;
 }
 
 .calendar-overlay {
@@ -7712,4 +7730,46 @@ button.cal {
 .v-dialog.active .v-dialog-overlay,
 .v-dialog:target .v-dialog-overlay {
   background: rgba(0, 0, 0, 0.4) !important;
+}
+
+.goal-list-wrap input[type="number"] {
+  text-align: right;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.inout-setting .flex li .btn-cate.btn-search {
+  padding-right: 20px;
+  background: url("../images/consume/btn_cate.png") no-repeat right center/10px;
+}
+
+.bank-detail .select div.left {
+  width: 50%;
+}
+
+.multiselect-basic {
+  text-align: left;
+  display: inline-block;
+  border: 1px solid #dedede;
+  background: #fff;
+  box-sizing: border-box;
+  height: 35px;
+}
+
+.multiselect-basic .multiselect__select {
+  right: 12px
+}
+
+.multiselect-basic .multiselect__tags {
+  text-align: left;
+  line-height: 35px;
+  height: 35px;
+}
+
+.vdp-datepicker.div-date>div {
+  text-align: right;
+}
+
+.vdp-datepicker.div-date>div.vdp-datepicker__calendar {
+  text-align: left;
 }

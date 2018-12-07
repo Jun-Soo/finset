@@ -3,15 +3,19 @@
     <div class="container">
       <ul class="debt-modify">
         <li>
-          <p class="key">상환일</p>
-          <p>
-            <datepicker v-model="req_yyyymm" :language="ko" :format="formatDate"></datepicker>
-            <button class="cal"></button>
-          </p>
+          <div>
+            <p class="key">상환일</p>
+            <p>
+              <datepicker ref="datepicker" v-model="req_yyyymm" :language="ko" :format="formatDate" :opend="Common.datepickerInit('div-date', this)"></datepicker>
+              <button class="cal" @click="openDatepicker"></button>
+            </p>
+          </div>
         </li>
         <li>
-          <p class="key">금액</p>
-          <p><input type="text" v-model="amt_repay" placeholder="상환금액을 입력하세요"><em>만원</em></p>
+          <div>
+            <p class="key">금액</p>
+            <p><input type="text" v-model="amt_repay" placeholder="상환금액을 입력하세요"><em>만원</em></p>
+          </div>
         </li>
       </ul>
       <div class="btn-wrap float">
@@ -31,10 +35,10 @@ export default {
   name: "DebtRepayment",
   data() {
     return {
+      Common: Common,
       ko: ko,
       req_yyyymm: new Date(),
-      amt_repay: "",
-      temp: "20180111"
+      amt_repay: ""
     };
   },
   components: {
@@ -58,6 +62,9 @@ export default {
     createRepayment: function() {},
     formatDate: function(date) {
       return Common.formatDate(date, "yyyymmdd");
+    },
+    openDatepicker: function() {
+      this.$refs.datepicker.showCalendar();
     }
   }
 };

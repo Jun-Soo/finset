@@ -26,13 +26,12 @@ const store = new Vuex.Store({
       noManageInfo: ''
     },
     scListParam: {
-      scKeyword: [],
-      orderby: '01',
-      scTermType: '',
-      scAccount: '',
-      txt_dt_from: '',
-      txt_dt_to: '',
-      scTrnsType: ''
+      query1: undefined,
+      query2: undefined,
+      query3: undefined,
+      query4: undefined,
+      query5: undefined,
+      query6: undefined
     },
     returnUrl: '',
     proxyUrl: '',

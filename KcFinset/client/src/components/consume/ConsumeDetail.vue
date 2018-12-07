@@ -39,7 +39,8 @@
           <li>
             <p class="key">날짜</p>
             <p>
-              <datepicker v-model="consumeVO.dt_trd" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDateDot" class="div-date" :disabled="chkReadonly"></datepicker>
+              <datepicker v-model="consumeVO.dt_trd" ref="datepicker" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDateDot" class="div-date" :disabled="chkReadonly"></datepicker>
+              <button class="cal" @click="openDatepicker"></button>
             </p>
           </li>
           <li class="memo">
@@ -98,7 +99,7 @@
         <a @click="clickConfirm" class="solid">확인</a>
       </div>
     </aside>
-    <vue-modal transitionName="fade" name="transModal">
+    <vue-modal transitionName="fade" name="transModal" :onClose="closeTransModal">
       <div slot="body" class="container pop-wrap">
         <div class="pop-top">
           <p class="title" v-text="curTab=='01'?'입금내역':'출금내역'"></p>
@@ -160,7 +161,7 @@ export default {
       ko: ko,
       dt_trans: "",
       meansConsumeOption: [],
-      isAuto: true,
+      isAuto: false,
       nmBanner: ""
     };
   },
@@ -372,9 +373,8 @@ export default {
         )
         .then(res => {
           // console.log(res); // {ok: true|false|undefined}
-          _this.isAuto = true;
           if (res.ok) {
-            _this.deleteConsume();
+            _this.isAuto = true;
           } else {
             // this.$dialogs.alert("취소를 선택했습니다.", Constant.options);
           }
@@ -400,16 +400,18 @@ export default {
     },
     clickDelete: function() {
       var _this = this;
-      this.$dialogs
-        .confirm("정말로 삭제하시겠습니까?", Constant.options)
-        .then(res => {
-          // console.log(res); // {ok: true|false|undefined}
-          if (res.ok) {
-            _this.deleteConsume();
-          } else {
-            // this.$dialogs.alert("취소를 선택했습니다.", Constant.options);
-          }
-        });
+      var text = "정말로 삭제하시겠습니까?";
+      if (this.consumeVO.yn_pay_installment == "Y") {
+        text += "\n\n동일 할부 내역도\n같이 삭제됩니다.";
+      }
+      this.$dialogs.confirm(text, Constant.options).then(res => {
+        // console.log(res); // {ok: true|false|undefined}
+        if (res.ok) {
+          _this.deleteConsume();
+        } else {
+          // this.$dialogs.alert("취소를 선택했습니다.", Constant.options);
+        }
+      });
     },
     selectMeans: function(meansOption) {
       this.setDefault();
@@ -424,8 +426,11 @@ export default {
       this.isShowCategory = true;
     },
     closeTransModal: function() {
-      this.consumeVO.means_consume = "04";
+      this.setDefault();
       this.isShowTrans = false;
+    },
+    openDatepicker: function() {
+      this.$refs.datepicker.showCalendar();
     },
     //데이터 이동부분
     getConsumeInfo: function() {
@@ -440,7 +445,7 @@ export default {
         .then(function(response) {
           var vo = response.data.consumeVO;
           vo.dt_trd = new Date(Common.formatDateDot(vo.dt_trd));
-          vo.nm_card = _this.formatNmCard(vo.nm_card);
+          // vo.nm_card = _this.formatNmCard(vo.nm_card);
           vo.amt_in_out = _this.chkReadonly
             ? _this.formatNumber(vo.amt_in_out)
             : vo.amt_in_out;
@@ -609,6 +614,8 @@ export default {
         "memo",
         this.consumeVO.memo == undefined ? "" : this.consumeVO.memo
       );
+      formData.append("no_approval", this.consumeVO.no_approval);
+      formData.append("yn_pay_installment", this.consumeVO.yn_pay_installment);
       this.isPersonRegist
         ? formData.append("yn_person_regist", "Y")
         : formData.append("yn_person_regist", "N");
@@ -666,10 +673,11 @@ export default {
 
       var formData = new FormData();
       formData.append("seq_consume", this.consumeVO.seq_consume);
+      formData.append("no_approval", this.consumeVO.no_approval);
+      formData.append("yn_pay_installment", this.consumeVO.yn_pay_installment);
       this.$http
         .post("/m/consume/deleteConsumeInfo.json", formData)
         .then(function(response) {
-          // _this.closeModal();
           _this.$router.go(-1);
         });
     },

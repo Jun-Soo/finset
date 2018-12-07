@@ -1,14 +1,14 @@
 <template>
   <div v-if="seen">
     <section>
-      <div class="dept-top">
+      <div class="dept-top" v-if="!isNone">
         <div class="wrap">
           <div class="balance">
             <p class="key">대출잔액</p>
             <p class="value">{{formatNumber(debtSummary.amt_remain * 10000)}}<em>원</em></p>
           </div>
           <div class="graph">
-            <chartjs-line v-if="!isNone" :labels="mylabels" :datasets="mydatasets" :option="myoption" :bind="true"></chartjs-line>
+            <chartjs-line :labels="mylabels" :datasets="mydatasets" :option="myoption" :bind="true"></chartjs-line>
           </div>
           <div class="flex2 bar-graph">
             <div class="item">
@@ -51,7 +51,7 @@
               </div>
             </a>
           </slide>
-          <slide class="item">
+          <!-- <slide class="item">
             <a @click="clickBanner('calc')">
               <div class="banner">
                 <div class="left">
@@ -63,7 +63,7 @@
                 </div>
               </div>
             </a>
-          </slide>
+          </slide> -->
           <slide class="item">
             <a @click="clickBanner('calendar')">
               <div class="banner">
@@ -112,33 +112,38 @@
             <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
           </div>
         </div>
-        <div class="item" v-for="vo in debtList" :key="vo.no_manage_info" @click="goDetail(vo.no_person, vo.no_manage_info)">
-          <div class="top">
-            <p v-if="vo.debt_yn == null || vo.debt_yn == 'N'" class="symbol"><img :src="vo.imgSrc" alt="" />{{vo.nm_fc}}</p>
-            <p v-if="vo.debt_yn == 'Y'" class="symbol"><img :src="vo.imgSrc" alt="" />{{vo.creditor}}</p>
-            <p class="text blue">{{vo.debt_type}}
-              <span class="circle" :class="settingList[shareList.findIndex(person => person.no_person === vo.no_person)].color"></span>
-            </p>
-          </div>
-          <div class="number-wrap">
-            <div class="left">
-              <p class="key">잔액</p>
-              <p class="number">{{formatNumber(vo.amt_remain * 10000)}}<em>원</em></p>
+        <div v-if="!isNone">
+          <div class="item" v-for="vo in debtList" :key="vo.no_manage_info" @click="goDetail(vo.no_person, vo.no_manage_info)">
+            <div class="top">
+              <p v-if="vo.debt_yn == null || vo.debt_yn == 'N'" class="symbol"><img :src="vo.imgSrc" alt="" />{{vo.nm_fc}}</p>
+              <p v-if="vo.debt_yn == 'Y'" class="symbol"><img :src="vo.imgSrc" alt="" />{{vo.creditor}}</p>
+              <p class="text blue">{{vo.debt_type}}
+                <span class="circle" :class="settingList[shareList.findIndex(person => person.no_person === vo.no_person)].color"></span>
+              </p>
+            </div>
+            <div class="number-wrap">
+              <div class="left">
+                <p class="key">잔액</p>
+                <p class="number">{{formatNumber(vo.amt_remain * 10000)}}<em>원</em></p>
+              </div>
+            </div>
+            <div class="bar">
+              <p :style="vo.eachStyle"></p>
+            </div>
+            <div class="text-wrap">
+              <div class="left">
+                <p class="key"><span>상환금액</span><span>이자율</span></p>
+                <p class="value"><span>{{formatNumber((vo.amt_contract-vo.amt_remain) * 10000)}}<em>원</em></span><span>{{vo.ever_interest}}<em>%</em></span></p>
+              </div>
+              <div class="right">
+                <p class="key"><span>원금</span></p>
+                <p class="value"><span>{{formatNumber(vo.amt_contract * 10000)}}<em>원</em></span></p>
+              </div>
             </div>
           </div>
-          <div class="bar">
-            <p :style="vo.eachStyle"></p>
-          </div>
-          <div class="text-wrap">
-            <div class="left">
-              <p class="key"><span>상환금액</span><span>이자율</span></p>
-              <p class="value"><span>{{formatNumber((vo.amt_contract-vo.amt_remain) * 10000)}}<em>원</em></span><span>{{vo.ever_interest}}<em>%</em></span></p>
-            </div>
-            <div class="right">
-              <p class="key"><span>원금</span></p>
-              <p class="value"><span>{{formatNumber(vo.amt_contract * 10000)}}<em>원</em></span></p>
-            </div>
-          </div>
+        </div>
+        <div v-else class="nodata">
+          부채 내역이 없습니다.
         </div>
         <!-- <div class="btn-wrap">
           <a @click="registerDebt" class="solid">부채등록</a>
@@ -260,6 +265,10 @@ export default {
         })
         .then(function(response) {
           var debtList = response.data.debtList;
+          if ((debtList || "") == "" || debtList.length == 0) {
+            _this.isNone = true;
+            return;
+          }
           for (var idx in debtList) {
             debtList[idx].eachStyle = "width:" + debtList[idx].rate_repay + "%";
             debtList[idx].imgSrc =

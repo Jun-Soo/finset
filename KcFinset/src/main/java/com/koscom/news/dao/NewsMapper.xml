@@ -94,10 +94,10 @@
 				<include refid="listApiNews_WHERE"/>
 				ORDER BY
 				<choose>
-				<when test="'01'.equals(orderby)">
+				<when test="'01'.equals(orderBy)">
 					ANR.PUB_DATE DESC /*최신날짜순*/,
 				</when>
-				<when test="'02'.equals(orderby)">
+				<when test="'02'.equals(orderBy)">
 					ANR.HITS DESC /*조회수순*/,
 				</when>
 				</choose>

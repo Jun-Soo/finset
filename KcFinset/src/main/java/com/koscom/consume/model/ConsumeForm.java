@@ -10,38 +10,30 @@ public class ConsumeForm implements Serializable{
 	
 	private static final long serialVersionUID = -8962717273270567578L;
 
-	//CONSUME_INFO list, SCR_TRANSACTION_DETAIL 조회용
-	private String	no_person;				//회원 관리 번호
-	private List<String> no_person_list;	//회원 관리 번호 리스트
-	private String	no_card;				//카드(계좌) 번호
-	
-	//CONSUME_INFO get 조회용
-	private int		seq_consume;			//일련번호
-	
-	//CONUSME_INFO list 조회용
-	private String	ym_trd;					//거래 년월
-	
-	//CONSUME_INFO 수입,지출 조회
-	private String	type_in_out;			//수입,지출 구분 - 01:수입, 02:지출
-	
-	//CONSUME_INFO 캘린더 list 조회
-	private String ymd_trd;					//거래 년월일
-	
-	//CONSUME_INFO 년 캘린더 list 조회
-	private String y_trd;					//거래년
-	
-	//CONSUME_INFO 이력 상세 조회
-	private String contents;				//내용
+	private String			no_person;				//회원 관리 번호
+	private List<String> 	no_person_list;			//회원 관리 번호 리스트
+	private String			no_card;				//카드(계좌) 번호
+	private int				seq_consume;			//일련번호
+	private String			yn_pay_installment;		//할부분할여부
+	private String			no_approval;			//승인번호
+	private String			ym_trd;					//거래 년월
+	private String			type_in_out;			//수입,지출 구분 - 01:수입, 02:지출
+	private String			ymd_trd;				//거래 년월일
+	private String			y_trd;					//거래년
+	private String			contents;				//내용
 	
 	public ConsumeForm() {
 	}
 	public ConsumeForm(String no_person, List<String> no_person_list,
-			String no_card, int seq_consume, String ym_trd, String type_in_out,
+			String no_card, int seq_consume, String yn_pay_installment,
+			String no_approval, String ym_trd, String type_in_out,
 			String ymd_trd, String y_trd, String contents) {
 		this.no_person = no_person;
 		this.no_person_list = no_person_list;
 		this.no_card = no_card;
 		this.seq_consume = seq_consume;
+		this.yn_pay_installment = yn_pay_installment;
+		this.no_approval = no_approval;
 		this.ym_trd = ym_trd;
 		this.type_in_out = type_in_out;
 		this.ymd_trd = ymd_trd;
@@ -72,6 +64,18 @@ public class ConsumeForm implements Serializable{
 	}
 	public void setSeq_consume(int seq_consume) {
 		this.seq_consume = seq_consume;
+	}
+	public String getYn_pay_installment() {
+		return yn_pay_installment;
+	}
+	public void setYn_pay_installment(String yn_pay_installment) {
+		this.yn_pay_installment = yn_pay_installment;
+	}
+	public String getNo_approval() {
+		return no_approval;
+	}
+	public void setNo_approval(String no_approval) {
+		this.no_approval = no_approval;
 	}
 	public String getYm_trd() {
 		return ym_trd;

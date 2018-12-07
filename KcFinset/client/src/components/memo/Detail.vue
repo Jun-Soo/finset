@@ -4,8 +4,10 @@
       <textarea v-model="memoVO.memo_text" :style="'resize:none;'"></textarea>
     </div>
 
-    <div class="btn-wrap float">
-      <a @click="updateMemoText" class="blue box solid">수정</a>
+    <!-- <div class="btn-wrap float"> -->
+    <div class="btn-wrap float col2">
+      <a @click="deleteMemo">삭제</a>
+      <a @click="updateMemoText" class="btn-solid">수정</a>
     </div>
   </section>
 </template>
@@ -51,6 +53,16 @@ export default {
       formData.append("memo_text", _this.memoVO.memo_text);
       this.$http
         .post("/m/memo/updateMemoText.json", formData)
+        .then(function(response) {
+          _this.$router.go(-1);
+        });
+    },
+    deleteMemo: function() {
+      var _this = this;
+      var formData = new FormData();
+      formData.append("seq_memo_info", _this.memoVO.seq_memo_info);
+      this.$http
+        .post("/m/memo/deleteMemo.json", formData)
         .then(function(response) {
           _this.$router.go(-1);
         });

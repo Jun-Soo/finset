@@ -1,10 +1,10 @@
 <template>
   <div :tabindex="searchable ? -1 : tabindex" :class="{ 'multiselect--active': isOpen, 'multiselect--disabled': disabled, 'multiselect--above': isAbove }" @focus="activate()" @blur="searchable ? false : deactivate()" @keydown.self.down.prevent="pointerForward()" @keydown.self.up.prevent="pointerBackward()" @keydown.enter.tab.stop.self="addPointerElement($event)" @keyup.esc="deactivate()" class="multiselect">
     <slot name="caret" :toggle="toggle">
-      <div @mousedown.prevent.stop="toggle()" class="multiselect__select"></div>
+      <div @mousedown.prevent.stop="toggle()" class="multiselect__select" :class="{'multiLeft': alignLeft}"></div>
     </slot>
     <slot name="clear" :search="search"></slot>
-    <div ref="tags" class="multiselect__tags">
+    <div ref="tags" class="multiselect__tags" :class="{'multiLeft': alignLeft}">
       <slot name="selection" :search="search" :remove="removeElement" :values="visibleValues" :is-open="isOpen">
         <div class="multiselect__tags-wrap" v-show="visibleValues.length > 0">
           <template v-for="(option, index) of visibleValues" @mousedown.prevent>
@@ -224,6 +224,10 @@ export default {
     tabindex: {
       type: Number,
       default: 0
+    },
+    alignLeft: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -361,7 +365,7 @@ fieldset[disabled] .multiselect {
   box-sizing: content-box;
   display: block;
   position: relative;
-  width: 100%;
+  min-width: 50%;
   min-height: 40px;
   text-align: left;
   color: #35495e;
@@ -406,9 +410,9 @@ fieldset[disabled] .multiselect {
 .multiselect__input,
 .multiselect__single {
   position: relative;
-  display: inline-block;
+  /* display: inline-block; */
   min-height: 20px;
-  line-height: 20px;
+  line-height: 40px;
   border: none;
   border-radius: 5px;
   background: #fff;
@@ -453,6 +457,7 @@ fieldset[disabled] .multiselect {
 
 .multiselect__tags {
   min-height: 40px;
+  min-width: 80%;
   display: block;
   padding: 0px 20px 0 8px;
   /*border-radius: 5px;*/
@@ -461,7 +466,11 @@ fieldset[disabled] .multiselect {
   font-size: 14px;
   text-align: right;
   margin-top: 5px;
-  /* line-height: 40px; */
+  line-height: 40px;
+}
+
+.multiselect__tags.multiLeft {
+  text-align: left;
 }
 
 .multiselect__tag {
@@ -533,10 +542,9 @@ fieldset[disabled] .multiselect {
   display: block;
   position: absolute;
   box-sizing: border-box;
-  width: 40px;
-  height: 32px;
+  max-width: 20px;
+  height: 100%;
   right: 1px;
-  top: 5px;
   padding: 4px 8px;
   margin: 0;
   text-decoration: none;
@@ -548,9 +556,14 @@ fieldset[disabled] .multiselect {
     right center/10px;
 }
 
+.multiselect__select.multiLeft {
+  background: url("../../../../assets/images/consume/btn_cate.png") no-repeat
+    left center/10px;
+  padding-right: 120px;
+}
 .multiselect__placeholder {
   color: #adadad;
-  display: inline-block;
+  /* display: inline-block; */
   margin-bottom: 10px;
   padding-top: 8px;
 }
@@ -672,8 +685,9 @@ fieldset[disabled] .multiselect {
 
 .multiselect--disabled .multiselect__current,
 .multiselect--disabled .multiselect__select {
-  background: #ededed;
-  color: #a6a6a6;
+  /* background: #ededed; */
+  /* color: #a6a6a6; */
+  background: transparent;
 }
 
 .multiselect__option--disabled {

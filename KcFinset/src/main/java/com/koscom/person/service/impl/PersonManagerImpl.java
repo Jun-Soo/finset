@@ -330,43 +330,45 @@ public class PersonManagerImpl implements PersonManager {
 			personMapper.deletePsersonShareInfoDetail(personShareInfo);
 		}
 
-		//계좌list insert
-		PersonShareInfo detailShareInfo = new PersonShareInfo();
-		detailShareInfo.setSeq_share(personShareInfo.getSeq_share());
-		detailShareInfo.setYn_share("Y");
-		detailShareInfo.setId_frt(personShareInfo.getId_frt());
-		detailShareInfo.setId_lst(personShareInfo.getId_lst());
-        Gson gson = new Gson();
-        Type type = new TypeToken<ArrayList<PersonShareInfo>>() {}.getType();
-		String addDetailStr = "";
-        ArrayList<PersonShareInfo> addDetailList = new ArrayList<PersonShareInfo>();
+		//금융정보제공일 경우 계좌list insert
+		if("02".equals(personShareInfo.getCd_share())){
+			PersonShareInfo detailShareInfo = new PersonShareInfo();
+			detailShareInfo.setSeq_share(personShareInfo.getSeq_share());
+			detailShareInfo.setYn_share("Y");
+			detailShareInfo.setId_frt(personShareInfo.getId_frt());
+			detailShareInfo.setId_lst(personShareInfo.getId_lst());
+	        Gson gson = new Gson();
+	        Type type = new TypeToken<ArrayList<PersonShareInfo>>() {}.getType();
+			String addDetailStr = "";
+	        ArrayList<PersonShareInfo> addDetailList = new ArrayList<PersonShareInfo>();
 
 
-		//자산
-		addDetailStr = personShareInfo.getAddAssetList();
-        addDetailList = gson.fromJson(addDetailStr, type);
-		for(PersonShareInfo addAssetInfo : addDetailList){
-			detailShareInfo.setCd_info("02");
-			detailShareInfo.setCd_type(addAssetInfo.getCd_assets_class());
-			detailShareInfo.setNo_card_acc(addAssetInfo.getNo_account());
-			personMapper.createPersonShareInfoDetail(detailShareInfo);
-		}
-		//소비
-        addDetailStr = personShareInfo.getAddConsumeList();
-		addDetailList = gson.fromJson(addDetailStr, type);
-		for(PersonShareInfo addConsumeInfo : addDetailList){
-			detailShareInfo.setCd_info("03");
-			detailShareInfo.setCd_type(addConsumeInfo.getCode_value());
-			detailShareInfo.setNo_card_acc(addConsumeInfo.getNo_card());
-			personMapper.createPersonShareInfoDetail(detailShareInfo);
-		}
-		//부채
-		addDetailStr = personShareInfo.getAddDebtList();
-		addDetailList = gson.fromJson(addDetailStr, type);
-		for(PersonShareInfo addDebtInfo : addDetailList){
-			detailShareInfo.setCd_info("01");
-			detailShareInfo.setNo_manage_info(addDebtInfo.getNo_manage_info());
-			personMapper.createPersonShareInfoDetail(detailShareInfo);
+			//자산
+			addDetailStr = personShareInfo.getAddAssetList();
+	        addDetailList = gson.fromJson(addDetailStr, type);
+			for(PersonShareInfo addAssetInfo : addDetailList){
+				detailShareInfo.setCd_info("02");
+				detailShareInfo.setCd_type(addAssetInfo.getCd_assets_class());
+				detailShareInfo.setNo_card_acc(addAssetInfo.getNo_account());
+				personMapper.createPersonShareInfoDetail(detailShareInfo);
+			}
+			//소비
+	        addDetailStr = personShareInfo.getAddConsumeList();
+			addDetailList = gson.fromJson(addDetailStr, type);
+			for(PersonShareInfo addConsumeInfo : addDetailList){
+				detailShareInfo.setCd_info("03");
+				detailShareInfo.setCd_type(addConsumeInfo.getCode_value());
+				detailShareInfo.setNo_card_acc(addConsumeInfo.getNo_card());
+				personMapper.createPersonShareInfoDetail(detailShareInfo);
+			}
+			//부채
+			addDetailStr = personShareInfo.getAddDebtList();
+			addDetailList = gson.fromJson(addDetailStr, type);
+			for(PersonShareInfo addDebtInfo : addDetailList){
+				detailShareInfo.setCd_info("01");
+				detailShareInfo.setNo_manage_info(addDebtInfo.getNo_manage_info());
+				personMapper.createPersonShareInfoDetail(detailShareInfo);
+			}
 		}
 
 		if(1 != personMapper.updatePersonShareInfoSetItems(personShareInfo)) {

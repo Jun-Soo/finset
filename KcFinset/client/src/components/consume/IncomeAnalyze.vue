@@ -1,12 +1,11 @@
 <template>
   <section>
-    <div class="graph-wrapper mt30">
-      <!-- <img src="../../assets/images/consume/graph.png" width="100%" alt="" /> -->
+    <div class="graph-wrapper mt30" v-if="!isNoData">
       <chartjs-bar v-if="!isNone" :labels="mylabels" :datasets="mydatasets" :option="myoption" :bind="true">
       </chartjs-bar>
     </div>
 
-    <div class="detail-list">
+    <div class="detail-list" v-if="!isNoData">
       <dl>
         <dt>월별</dt>
         <dd v-for="voMonth in listConsumeAnalyzeMonth" :key="voMonth.dt_trd">
@@ -24,6 +23,9 @@
         </dd>
       </dl>
     </div>
+    <div class="nodata" v-if="isNoData">
+      3개월 이내에 상세 내역이 없습니다
+    </div>
 
   </section>
 </template>
@@ -36,7 +38,7 @@ export default {
   data() {
     return {
       isNone: true,
-      mylabels: [],
+      mylabels: ["0", "0", "0"],
       mydatasets: [
         {
           label: " ",
@@ -46,21 +48,10 @@ export default {
           borderDash: [],
           borderDashOffset: 0.0,
           borderJoinStyle: "miter",
-          // pointBorderColor: "rgba(234,85,100,1)",
-          // pointBackgroundColor: "#fff",
-          // pointBorderWidth: 1,
-          // pointHoverRadius: 5,
-          // pointHoverBackgroundColor: "rgba(234,85,100,1)",
-          // pointHoverBorderColor: "rgba(220,220,220,1)",
-          // pointHoverBorderWidth: 2,
-          // pointRadius: 1,
-          // pointHitRadius: 10,
           data: [],
           spanGaps: false
         }
       ],
-      chartData: [],
-      labelData: [],
       myoption: {
         legend: {
           display: false
@@ -86,7 +77,8 @@ export default {
       },
       listConsumeAnalyzeMonth: {},
       listConsumeAnalyzeDay: {},
-      Common: Common
+      Common: Common,
+      isNoData: true
     };
   },
   components: {},
@@ -95,6 +87,7 @@ export default {
   created() {
     this.$store.state.header.type = "sub";
     this.$store.state.title = this.$route.query.contents + " 이력 상세";
+    this.createDefaultLabel();
     this.listConsumeAnalyze();
   },
   beforeMount() {},
@@ -104,6 +97,18 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    createDefaultLabel: function() {
+      var labelDate = new Date();
+      if (this.$store.state.user.dt_basic > labelDate.getDate()) {
+        labelDate.setMonth(new Date().getMonth() - 4);
+      } else {
+        labelDate.setMonth(new Date().getMonth() - 3);
+      }
+      for (var i = 0; i < 3; i++) {
+        labelDate.setMonth(labelDate.getMonth() + 1);
+        this.$set(this.mylabels, i, Common.formatDate(labelDate, "yyyymm"));
+      }
+    },
     listConsumeAnalyze: function() {
       var _this = this;
       var formData = new FormData();
@@ -114,20 +119,22 @@ export default {
       this.$http
         .post("/m/consume/listConsumeAnalyze.json", formData)
         .then(function(response) {
-          _this.labelData = [];
-          _this.chartData = [];
-
           var list = response.data.listConsumeAnalyzeMonth;
-          for (var idx in list) {
-            _this.labelData.push(Common.formatDate(list[idx].dt_trd, "yyyymm"));
-            _this.chartData.push(list[idx].amt_in_out);
+          if (list == null || list.length == 0) {
+            _this.isNoData = true;
+            return;
+          } else {
+            _this.isNoData = false;
           }
-          _this.labelData.reverse();
-          _this.chartData.reverse();
-
-          _this.mylabels = _this.labelData;
-          _this.$set(_this.mydatasets[0], "data", _this.chartData);
-
+          for (var idx in list) {
+            _this.$set(
+              _this.mydatasets[0].data,
+              _this.mylabels.indexOf(
+                Common.formatDate(list[idx].dt_trd, "yyyymm")
+              ),
+              list[idx].amt_in_out
+            );
+          }
           _this.listConsumeAnalyzeMonth = response.data.listConsumeAnalyzeMonth;
           _this.listConsumeAnalyzeDay = response.data.listConsumeAnalyzeDay;
 

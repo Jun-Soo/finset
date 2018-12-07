@@ -36,6 +36,9 @@ public class GoodsForm extends SearchForm implements Serializable {
     private String cd_goods_class_m; 	//중분류
     private String[] cd_goods_array_m; 	//중분류[]
     private String cd_goods_class_s; 	//소분류
+    
+    private String cd_ratio_type; 	//금리방식
+	private String cd_type_pay; 	//상환방식
 
     private String cd_goods_alliance; //제휴상품코드
     private String curTab; //제휴상품코드
@@ -226,4 +229,20 @@ public class GoodsForm extends SearchForm implements Serializable {
     public void setSt(String st) {
         this.st = st;
     }
+    
+    public String getCd_ratio_type() {
+		return cd_ratio_type;
+	}
+	
+	public void setCd_ratio_type(String cd_ratio_type) {
+		this.cd_ratio_type = cd_ratio_type;
+	}
+	
+	public String getCd_type_pay() {
+		return cd_type_pay;
+	}
+	
+	public void setCd_type_pay(String cd_type_pay) {
+		this.cd_type_pay = cd_type_pay;
+	}
 }

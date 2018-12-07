@@ -266,10 +266,17 @@ export default {
     var yyyy = ''
     var mm = ''
     var dd = ''
+
     if (typeof date === 'string') {
-      yyyy = date.substring(0, 4)
-      mm = date.substring(4, 6)
-      dd = date.substring(6, 8)
+      if (date.length === 10) {
+        yyyy = date.substring(0, 4)
+        mm = date.substring(5, 7)
+        dd = date.substring(8, 10)
+      } else {
+        yyyy = date.substring(0, 4)
+        mm = date.substring(4, 6)
+        dd = date.substring(6, 8)
+      }
     } else if (typeof date === 'object') {
       yyyy = date.getFullYear()
       mm = date.getMonth() + 1
@@ -283,11 +290,11 @@ export default {
     }
     if (date != null && date !== '') {
       if (((pattern || '') === '') || pattern === 'yyyymmdd') {
-        return yyyy + mm + dd
+        return yyyy + '' + mm + '' + dd
       } else if (pattern === 'yyyymm') {
-        return yyyy + mm
+        return yyyy + '' + mm
       } else if (pattern === 'mmdd') {
-        return mm + dd
+        return mm + '' + dd
       } else {
         return ''
       }

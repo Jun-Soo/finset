@@ -36,7 +36,7 @@
     <div class="cert-wrap">
       <p class="title">휴대폰인증</p>
       <div class="grid phone">
-        <multiselect v-model="telComNm" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @select="onSelect">
+        <multiselect v-model="telComNm" track-by="text" label="text" placeholder="통신사" :options="options" v-bind:disabled="isDisabled" :searchable="false" :allow-empty="false" @select="onSelect">
           <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
         </multiselect>
         <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>

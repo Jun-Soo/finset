@@ -1,28 +1,24 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="balance-top">
       <div class="item">
-        <div class="top name">삼성인도중소형Focus증권자H (주식-파생)-Ce</div>
+        <div class="top name">{{fndInfo.fundname}}</div>
         <div class="body">
           <div class="flex">
             <p>평가금액</p>
-            <p class="number"><em>1,200,000</em> 원</p>
+            <p class="number"><em>{{formatNumber(fndInfo.valatcur)}}</em> 원</p>
           </div>
           <div class="flex">
             <p>평가손익</p>
-            <p class="red">+111,800 (10.23%)</p>
+            <p class="red">{{formatNumber(fndInfo.proloss)}} ({{fndInfo.earningrate}}%)</p>
           </div>
           <div class="flex">
             <p>보유주수</p>
-            <p>10주</p>
+            <p>-주</p>
           </div>
           <div class="flex">
-            <p>매입단가</p>
-            <p>3,082,800 원</p>
-          </div>
-          <div class="flex">
-            <p>평균매입단가</p>
-            <p>308,280 원</p>
+            <p>매수금액</p>
+            <p>{{formatNumber(fndInfo.valattrade)}} 원</p>
           </div>
         </div>
       </div>
@@ -31,10 +27,21 @@
 </template>
 
 <script>
+import Common from "./../../assets/js/common.js";
+import Constant from "./../../assets/js/constant.js";
+
+import ko from "vee-validate/dist/locale/ko.js";
+
 export default {
   name: "assetsStockFndDetail",
   data() {
-    return {};
+    return {
+      seen: false,
+      no_person: "",
+      no_account: "",
+      acc_code: "",
+      fndInfo: ""
+    };
   },
   components: {},
   computed: {},
@@ -42,14 +49,47 @@ export default {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "펀드 상세";
   },
-  created() {},
+  created() {
+    this.no_person = this.$route.query.no_person;
+    this.no_account = this.$route.query.no_account;
+    this.acc_code = this.$route.query.acc_code;
+
+    this.getAssetsStockFndInfo();
+  },
   beforeMount() {},
   mounted() {},
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    //펀드정보조회
+    getAssetsStockFndInfo: function() {
+      var _this = this;
+
+      var formData = new FormData();
+      formData.append("no_person", _this.no_person);
+      formData.append("no_account", _this.no_account);
+      formData.append("acc_code", _this.acc_code);
+
+      this.$http
+        .post("/m/assets/getAssetsStockFndInfo.json", formData)
+        .then(function(response) {
+          var fndInfo = response.data.fndInfo;
+          if (fndInfo.proloss > 0) {
+            fndInfo.proloss = "+" + fndInfo.proloss;
+          }
+          _this.fndInfo = fndInfo;
+          _this.seen = true;
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+        });
+    },
+    formatNumber: function(data) {
+      return Common.formatNumber(data);
+    }
+  }
 };
 </script>
 

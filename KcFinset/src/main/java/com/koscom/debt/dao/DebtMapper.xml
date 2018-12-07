@@ -1281,4 +1281,43 @@
 		ORDER BY
 			REQ_YYYYMM DESC
 	</select>
+	<select id="getDebtListforCalc" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtVO">
+		SELECT 	
+				 A.NO_PERSON
+				,A.NO_MANAGE_INFO
+				,A.CD_FC
+				,A.INTEREST_FIXED_YN AS INTEREST_METHOD
+				,A.INTEREST
+				,A.REPAYMENT
+				,A.CD_TYPE_DEAL
+				,A.CD_USE_FUND
+				,A.YN_CREDIT
+				,A.YN_LOAN
+				, CASE
+					WHEN A.YN_CREDIT = 'Y' AND A.CD_TYPE_DEAL IN('1','2','3') THEN '신용'
+					WHEN A.YN_LOAN = 'Y' AND A.CD_TYPE_DEAL IN('1','2','3') THEN '담보'
+					WHEN A.CD_TYPE_DEAL IN('4','5','6') THEN '카드론'
+					ELSE ''
+				END || 
+				CASE
+					WHEN A.CD_TYPE_DEAL IN('1','4') THEN '(분할)'
+					WHEN A.CD_TYPE_DEAL IN('2','5') THEN '(일시)'
+					WHEN A.CD_TYPE_DEAL IN('3','6') THEN '(한도)'
+					WHEN A.CD_TYPE_DEAL IN('A') THEN '리스'
+					ELSE ''
+				END
+				,FN_AMT_VIEW(A.AMT_CONTRACT) AS AMT_CONTRACT 	/*대출금액*/
+				,FN_AMT_VIEW(A.AMT_REMAIN) AS AMT_REMAIN 		/*대출잔액*/
+				,A.LOAN_MOUNT									/*거치기간*/
+				,A.YMD_LOAN
+				,A.YMD_LOANEND
+				,A.YMD_CANCEL
+				,FN_AMT_VIEW(FN_ETM_INCOME_AMT(A.NO_PERSON)) AS AMT_ETM_INCOME /*연소득*/
+				,TRIM( TO_CHAR( FN_ETM_INTEREST( A.NO_PERSON, A.NO_MANAGE_INFO ), '990.99' )) AS EVER_INTEREST /*금리*/
+		FROM
+			DEBT_PERSONAL_INFO A
+		WHERE
+			a.no_person = #{no_person, jdbcType = VARCHAR}
+			AND a.YMD_CANCEL IS NULL
+	</select>
 </mapper>

@@ -181,4 +181,11 @@ public interface DebtManager {
 	 * @return
 	 */
 	List<DebtCalendarVO> listCalendarDebtDataYear(DebtForm debtForm);
+	
+	/**
+	 * 계산기에 사용하는 사용자 부채 리스트 조회 
+	 * @param debtForm
+	 * @return
+	 */
+	List<DebtVO> getDebtListforCalc(DebtForm debtForm);
 }

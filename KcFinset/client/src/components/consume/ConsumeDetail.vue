@@ -445,7 +445,7 @@ export default {
         .then(function(response) {
           var vo = response.data.consumeVO;
           vo.dt_trd = new Date(Common.formatDateDot(vo.dt_trd));
-          vo.nm_card = _this.formatNmCard(vo.nm_card);
+          // vo.nm_card = _this.formatNmCard(vo.nm_card);
           vo.amt_in_out = _this.chkReadonly
             ? _this.formatNumber(vo.amt_in_out)
             : vo.amt_in_out;

@@ -685,8 +685,9 @@ fieldset[disabled] .multiselect {
 
 .multiselect--disabled .multiselect__current,
 .multiselect--disabled .multiselect__select {
-  background: #ededed;
-  color: #a6a6a6;
+  /* background: #ededed; */
+  /* color: #a6a6a6; */
+  background: transparent;
 }
 
 .multiselect__option--disabled {

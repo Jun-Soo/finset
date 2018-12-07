@@ -1,12 +1,11 @@
 <template>
   <section>
-    <div class="graph-wrapper mt30">
-      <!-- <img src="../../assets/images/consume/graph.png" width="100%" alt="" /> -->
+    <div class="graph-wrapper mt30" v-if="!isNoData">
       <chartjs-bar v-if="!isNone" :labels="mylabels" :datasets="mydatasets" :option="myoption" :bind="true">
       </chartjs-bar>
     </div>
 
-    <div class="detail-list">
+    <div class="detail-list" v-if="!isNoData">
       <dl>
         <dt>월별</dt>
         <dd v-for="voMonth in listConsumeAnalyzeMonth" :key="voMonth.dt_trd">
@@ -23,6 +22,9 @@
           <p>{{Common.formatNumber(voDay.amt_in_out)}} 원</p>
         </dd>
       </dl>
+    </div>
+    <div class="nodata" v-if="isNoData">
+      3개월 이내에 상세 내역이 없습니다
     </div>
 
   </section>
@@ -46,15 +48,6 @@ export default {
           borderDash: [],
           borderDashOffset: 0.0,
           borderJoinStyle: "miter",
-          // pointBorderColor: "rgba(234,85,100,1)",
-          // pointBackgroundColor: "#fff",
-          // pointBorderWidth: 1,
-          // pointHoverRadius: 5,
-          // pointHoverBackgroundColor: "rgba(234,85,100,1)",
-          // pointHoverBorderColor: "rgba(220,220,220,1)",
-          // pointHoverBorderWidth: 2,
-          // pointRadius: 1,
-          // pointHitRadius: 10,
           data: [],
           spanGaps: false
         }
@@ -84,7 +77,8 @@ export default {
       },
       listConsumeAnalyzeMonth: {},
       listConsumeAnalyzeDay: {},
-      Common: Common
+      Common: Common,
+      isNoData: true
     };
   },
   components: {},
@@ -126,7 +120,12 @@ export default {
         .post("/m/consume/listConsumeAnalyze.json", formData)
         .then(function(response) {
           var list = response.data.listConsumeAnalyzeMonth;
-          console.log(list);
+          if (list == null || list.length == 0) {
+            _this.isNoData = true;
+            return;
+          } else {
+            _this.isNoData = false;
+          }
           for (var idx in list) {
             _this.$set(
               _this.mydatasets[0].data,

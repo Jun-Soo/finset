@@ -107,6 +107,7 @@ export default {
   /* background: blue; */
   background: #fff;
   border: 1px solid #62c1d0;
+  box-sizing: border-box;
 }
 .progressBar #background h4 {
   /* progressBar 기본 텍스트 색상 */
@@ -120,6 +121,7 @@ export default {
   /* background: red; */
   background: #62c1d0;
   border: 1px solid #62c1d0;
+  box-sizing: border-box;
 }
 .progressBar #container #foreground h4 {
   /* progressBar 데이터 텍스트 색상 */

@@ -23,7 +23,7 @@
                 <p class="value">잠자는 주식 계좌를<br>찾아드립니다</p>
               </div>
               <div class="right">
-                <img src="../../assets/images/main/banner_ico.png" alt="" />
+                <img src="../../assets/images/assets/main_banner1.png" alt="" />
               </div>
             </div>
           </a>
@@ -37,7 +37,7 @@
                 <p class="value">공인 인증 한번으로<br>나의 토지를 찾아보세요</p>
               </div>
               <div class="right">
-                <img src="../../assets/images/main/banner_ico.png" alt="" />
+                <img src="../../assets/images/assets/main_banner2.png" alt="" />
               </div>
             </div>
           </a>
@@ -51,7 +51,7 @@
                 <p class="value">자산별 진단을 받아보세요</p>
               </div>
               <div class="right">
-                <img src="../../assets/images/main/banner_ico.png" alt="" />
+                <img src="../../assets/images/assets/main_banner3.png" alt="" />
               </div>
             </div>
           </a>

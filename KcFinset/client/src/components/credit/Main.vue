@@ -30,7 +30,7 @@
                 <p class="value">클릭 한번으로<br />신용점수를 올리세요</p>
               </div>
               <div class="right">
-                <img src="../../assets/images/main/banner_ico.png" alt="" />
+                <img src="../../assets/images/credit/main_banner1.png" alt="" />
               </div>
             </div>
           </a>
@@ -43,7 +43,7 @@
                 <p class="value">나의 신용상태가 궁금하다면 ?</p>
               </div>
               <div class="right">
-                <img src="../../assets/images/main/banner_ico.png" alt="" />
+                <img src="../../assets/images/credit/main_banner2.png" alt="" />
               </div>
             </div>
           </a>
@@ -56,7 +56,7 @@
                 <p class="value">신용을 관리하기 위한 꿀팁과<br />뉴스를 확인하세요</p>
               </div>
               <div class="right">
-                <img src="../../assets/images/main/banner_ico.png" alt="" />
+                <img src="../../assets/images/credit/main_banner3.png" alt="" />
               </div>
             </div>
           </a>

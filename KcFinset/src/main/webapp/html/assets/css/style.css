@@ -1161,6 +1161,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .consume-detail li p:last-child { text-align: right; }
 .consume-detail li p:last-child input[type="text"] { line-height: 49px; text-align: right; padding: 0 10px; font-size: 14px; width: 80%; border: none; }
 .consume-detail li p:last-child .btn-cate { padding-right: 20px; background: url("../images/consume/btn_cate.png") no-repeat right center/10px; }
+.consume-detail li p:last-child .cal { display: inline-block; width: 33px; height: 33px; border: 1px solid #e5e5e5; margin: 0; background: url("../images/common/btn_cal.png") no-repeat center/16px; }
 .consume-detail li p select { border: none; }
 .consume-detail li.memo { display: block; }
 .consume-detail li.memo p { width: 100%; line-height: 40px; }

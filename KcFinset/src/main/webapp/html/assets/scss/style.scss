@@ -4364,6 +4364,14 @@ button.cal{
                     padding-right: 20px;
                     background: url("../images/consume/btn_cate.png") no-repeat right center / 10px;
                 }
+                .cal{
+                    display: inline-block;
+                    width: 33px;
+                    height: 33px;
+                    border: 1px solid $lineColor;
+                    margin: 0;
+                    background: url("../images/common/btn_cal.png") no-repeat center / 16px;
+                }
             }
             select{
                 border: none;

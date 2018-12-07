@@ -3969,6 +3969,7 @@ aside.search-wrap .action.btn1 {
 .bank-detail .select div.right button {
   width: 35px;
   height: 35px;
+  vertical-align: middle;
   background: url("../images/common/btn-search.png") no-repeat center/contain;
 }
 
@@ -4188,6 +4189,11 @@ aside.search-wrap .action.btn1 {
   font-size: 14px;
   color: #222;
   font-weight: 700;
+}
+
+.inout-setting .flex li .btn-cate.btn-search {
+  padding-right: 20px;
+  background: url("../images/consume/btn_cate.png") no-repeat right center/10px;
 }
 
 .btn-wrap {

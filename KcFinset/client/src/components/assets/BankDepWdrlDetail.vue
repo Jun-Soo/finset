@@ -49,7 +49,7 @@
 
     <div class="cs-top">
       <div class="links">
-        <a @click="fnShare();" class="kakao">공유하기</a>
+        <a @click="fnShare();" class="share">공유하기</a>
         <a @click="fnCopy();" class="copy">복사</a>
 
       </div>

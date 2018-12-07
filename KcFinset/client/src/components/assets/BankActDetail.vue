@@ -271,7 +271,7 @@ export default {
             </multiselect>
           </div>
           <div class="right">
-            <span>{{scKeyword}}</span>
+            <span class="pr10">{{scKeyword}}</span>
             <button class="btn-search" @click="openScKeywordMd();"></button>
           </div>
         </div>

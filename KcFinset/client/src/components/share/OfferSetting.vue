@@ -55,7 +55,8 @@
           <div class="small">
             <p v-for="assetInfo in assetList" :key="assetInfo.index">
               <input type="checkbox" v-model="assetKeys" :value="assetInfo.rnum" :id="'asset'+assetInfo.rnum" @change="changeCheckItem('asset');">
-              <label :for="'asset'+assetInfo.rnum">{{assetInfo.nm_account}} ({{assetInfo.no_account}})</label>
+              <label v-if="assetInfo.cd_assets_class == '00'" :for="'asset'+assetInfo.rnum">{{assetInfo.nm_account}} ({{assetInfo.no_account}})</label>
+              <label v-else-if="assetInfo.cd_assets_class == '10'" :for="'asset'+assetInfo.rnum">{{assetInfo.nm_account}}</label>
             </p>
           </div>
         </div>

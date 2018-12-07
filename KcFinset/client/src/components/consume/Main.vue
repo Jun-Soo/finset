@@ -31,7 +31,7 @@
                   <p class="value">수입과 지출 내역이 확인가능한<br>습관 달력을 이용해 보세요</p>
                 </div>
                 <div class="right">
-                  <img src="../../assets/images/main/banner_ico.png" alt="" />
+                  <img src="../../assets/images/consume/main_banner3.png" alt="" />
                 </div>
               </div>
             </a>
@@ -44,7 +44,7 @@
                   <p class="value">이전에 지출한 카드 대금을<br>한눈에 확인 하세요</p>
                 </div>
                 <div class="right">
-                  <img src="../../assets/images/main/banner_ico.png" alt="" />
+                  <img src="../../assets/images/consume/main_banner1.png" alt="" />
                 </div>
               </div>
             </a>
@@ -57,7 +57,7 @@
                   <p class="value">지금까지 사용한 소비와 수입<br>통계를 확인해 보세요</p>
                 </div>
                 <div class="right">
-                  <img src="../../assets/images/main/banner_ico.png" alt="" />
+                  <img src="../../assets/images/consume/main_banner2.png" alt="" />
                 </div>
               </div>
             </a>

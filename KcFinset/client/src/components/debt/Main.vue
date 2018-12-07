@@ -46,7 +46,7 @@
                   <p class="value">나의 상황에 맞는<br>상품을 추천합니다</p>
                 </div>
                 <div class="right">
-                  <img src="../../assets/images/main/banner_ico.png" alt="" />
+                  <img src="../../assets/images/debt/main_banner3.png" alt="" />
                 </div>
               </div>
             </a>
@@ -59,7 +59,7 @@
                   <p class="value">DSR(상환능력), LTV 등을<br>직접 계산해 보세요</p>
                 </div>
                 <div class="right">
-                  <img src="../../assets/images/main/banner_ico.png" alt="" />
+                  <img src="../../assets/images/main_banner1.png" alt="" />
                 </div>
               </div>
             </a>
@@ -72,7 +72,7 @@
                   <p class="value">상환일, 이자납입일을 달력으로<br>관리하시면 더 ~ 편리합니다</p>
                 </div>
                 <div class="right">
-                  <img src="../../assets/images/main/banner_ico.png" alt="" />
+                  <img src="../../assets/images/debt/main_banner4.png" alt="" />
                 </div>
               </div>
             </a>
@@ -85,7 +85,7 @@
                   <p class="value">금리 등 관련 뉴스를<br>조회합니다</p>
                 </div>
                 <div class="right">
-                  <img src="../../assets/images/main/banner_ico.png" alt="" />
+                  <img src="../../assets/images/debt/main_banner2.png" alt="" />
                 </div>
               </div>
             </a>
@@ -98,7 +98,7 @@
                   <p class="value">금리인하요구 조건이 맞는지<br>확인해보세요</p>
                 </div>
                 <div class="right">
-                  <img src="../../assets/images/main/banner_ico.png" alt="" />
+                  <img src="../../assets/images/debt/main_banner5.png" alt="" />
                 </div>
               </div>
             </a>

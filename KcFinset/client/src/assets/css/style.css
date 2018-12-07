@@ -47,6 +47,22 @@ input[type="number"] {
   box-sizing: border-box;
 }
 
+input[type="month"] {
+  background: url(../images/_form/select.png) no-repeat right center #fff;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+}
+
+input[type="month"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  display: none;
+}
+
+input[type="month"]::-webkit-calendar-picker-indicator {
+  -webkit-appearance: none;
+  opacity: 0;
+}
+
 input[type="tel"] {
   width: 110px;
 }
@@ -3568,7 +3584,9 @@ aside.search-wrap .action.btn1 {
   background: url(../images/main/ico_setting.png) no-repeat center/contain;
 }
 
-.spend-top .date-wrap .today {
+.spend-top .date-wrap .today,
+.spend-top .date-wrap .year,
+.spend-top .date-wrap .month {
   height: auto;
   width: auto;
   line-height: 28px;
@@ -3579,8 +3597,19 @@ aside.search-wrap .action.btn1 {
   background: #fff;
   border-radius: 50px;
   position: absolute;
-  left: 0;
   top: -5px;
+}
+
+.spend-top .date-wrap .today {
+  left: 0;
+}
+
+.spend-top .date-wrap .year {
+  right: 45px;
+}
+
+.spend-top .date-wrap .month {
+  right: 0;
 }
 
 .spend-top .wrap {
@@ -4469,8 +4498,15 @@ button.cal {
   width: 33px;
   height: 33px;
   border: 1px solid #e5e5e5;
-  background: url("../images/common/btn_accodion_search.png") no-repeat center/contain;
   margin: 0;
+}
+
+.accodion ul li .con .flex p:last-child button.search {
+  background: url("../images/common/btn_accodion_search.png") no-repeat center/contain;
+}
+
+.accodion ul li .con .flex p:last-child button.cal {
+  background: url("../images/common/btn_cal.png") no-repeat center/16px;
 }
 
 .accodion ul li .con .flex p:last-child input[type="text"],
@@ -4690,7 +4726,7 @@ button.cal {
 .check-flex div.loan button {
   background: url("../images/common/btn_loan.png") no-repeat center top/107px;
   color: #e52638;
-  border: 1px solid #e52638;
+  border: 1px solid #e9626f;
   border-radius: 50px;
 }
 
@@ -4701,7 +4737,7 @@ button.cal {
 }
 
 .check-flex div.loan em {
-  color: #e52638;
+  color: #e9626f;
   font-weight: 700;
   margin-top: 10px;
   display: inline-block;
@@ -7432,22 +7468,32 @@ button.cal {
   left: 50%;
   top: 0;
   margin-left: -20px;
+  background-size: 40px;
+  background-position: center top;
 }
 
 .goods-state .item .step .step-wrap p:nth-child(1):before {
-  background: url("../images/mypage/ico_request.png") no-repeat center top/40px;
+  background-image: url("../images/mypage/ico_request.png");
 }
 
 .goods-state .item .step .step-wrap p:nth-child(2):before {
-  background: url("../images/mypage/ico_ask.png") no-repeat center top/40px;
+  background-image: url("../images/mypage/ico_ask.png");
 }
 
 .goods-state .item .step .step-wrap p:nth-child(3):before {
-  background: url("../images/mypage/ico_audit.png") no-repeat center top/40px;
+  background-image: url("../images/mypage/ico_audit.png");
 }
 
-.goods-state .item .step .step-wrap p:nth-child(4):before {
-  background: url("../images/mypage/ico_deposit2.png") no-repeat center top/40px;
+.goods-state .item .step .step-wrap p:nth-child(4).deposit:before {
+  background-image: url("../images/mypage/ico_deposit2.png");
+}
+
+.goods-state .item .step .step-wrap p:nth-child(4).cancel:before {
+  background-image: url("../images/mypage/ico_cancel2.png");
+}
+
+.goods-state .item .step .step-wrap p:nth-child(4).reject:before {
+  background-image: url("../images/mypage/ico_reject2.png");
 }
 
 .goods-state .item .step .step-wrap p.on:before {

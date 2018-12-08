@@ -317,18 +317,12 @@ public interface ConsumeManager {
 	List<ConsumeVO> listSettlementConsumeDataDay(ConsumeForm consumeForm);
 	
 	/**
-	 * 통계 카테고리별 리스트
+	 * 통계 범위별  리스트
 	 * @param consumeForm
 	 * @return
 	 */
-	List<ConsumeVO> getListforSettlementByCategory(ConsumeForm consumeForm);
+	List<ConsumeVO> getRangeListforSettlement(ConsumeForm consumeForm);
 	
-	/**
-	 * 통계 수단별 또는 가맹점별 리스트
-	 * @param consumeForm
-	 * @return
-	 */
-	List<ConsumeVO> getListforSettlementByMeans(ConsumeForm consumeForm);
 	
 	/**
 	 * 통계 상세 페이지 리스트

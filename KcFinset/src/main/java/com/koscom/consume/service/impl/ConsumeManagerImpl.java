@@ -480,16 +480,12 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	}
 	
 	@Override
-	public List<ConsumeVO> getListforSettlementByCategory(ConsumeForm consumeForm) {
-		logger.debug("getListforSettlementByCategory");
-		return consumeMapper.getListforSettlementByCategory(consumeForm);
+	public List<ConsumeVO> getRangeListforSettlement(ConsumeForm consumeForm) {
+		logger.debug("getRangeListforSettlement");
+		return consumeMapper.getRangeListforSettlement(consumeForm);
 	}
 	
-	@Override
-	public List<ConsumeVO> getListforSettlementByMeans(ConsumeForm consumeForm) {
-		logger.debug("getListforSettlementByMeans");
-		return consumeMapper.getListforSettlementByMeans(consumeForm);
-	}
+	
 	
 	@Override
 	public List<ConsumeVO> getSettlementDetail(ConsumeForm consumeForm) {

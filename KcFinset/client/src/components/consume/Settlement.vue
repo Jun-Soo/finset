@@ -30,22 +30,22 @@
         <div class="flex">
           <div>
             <p class="key"><strong>수입</strong>(만원)</p>
-            <p class="value">4,350</p>
+            <p class="value">{{incomeSum}}</p>
           </div>
           <div>
             <p class="key"><strong>지출</strong>(만원)</p>
-            <p class="value">4,350</p>
+            <p class="value">{{consumeSum}}</p>
           </div>
         </div>
         <!-- <div class="graph"> -->
-        <Graph v-if="chartList" v-model="chartList" :chartList="chartList" :consumeForm="consumeForm" :dt_from="dt_from" :dt_to="dt_to" :dataPeriod="dataPeriod"></Graph>
+        <Graph v-if="chartList" ref="graph" v-model="chartList" :chartList="chartList" :consumeForm="consumeForm" :dt_from="dt_from" :dt_to="dt_to" :dataPeriod="dataPeriod"></Graph>
       </div>
       <!-- </div> -->
     </div>
 
     <div class="tab">
       <div class="wrap">
-        <a id="00" name="consume" :class="{'on':curTab === '00'}" @click="clickTab">지출</a>
+        <a id="02" name="consume" :class="{'on':curTab === '02'}" @click="clickTab">지출</a>
         <a id="01" name="income" :class="{'on':curTab === '01'}" @click="clickTab">수입</a>
       </div>
     </div>
@@ -53,44 +53,27 @@
     <div class="box-list list02 noMG">
 
       <div class="select pb20">
-        <multiselect v-model="repay" track-by="text" label="text" placeholder="카테고리별" :options="options" :searchable="false" :allow-empty="false" @select="onSelect">
+        <multiselect track-by="text" v-model="listType" label="text" :preselect-first="true" :options="type1" :searchable="false" :allow-empty="false">
         </multiselect>
-        <multiselect v-model="repay" track-by="text" label="text" placeholder="금액순" :options="options" :searchable="false" :allow-empty="false" @select="onSelect">
+        <multiselect track-by="text" v-model="orderType" label="text" :preselect-first="true" :options="type2" :searchable="false" :allow-empty="false">
         </multiselect>
       </div>
 
-      <div class="item">
+      <div class="item" v-for="(item, idx) in rangeList" :key="idx">
         <a @click="clickItem" class="block">
           <div class="flex">
-            <p class="key"><img src="../../assets/images/common/bu_list_drug.png" width="15px" class="mr5" alt="" />식비 <em>(120건)</em></p>
-            <p class="number">118,107<em>원</em></p>
+            <p class="key"><img src="../../assets/images/common/bu_list_drug.png" width="15px" class="mr5" alt="" />{{item.nm_class}} <em>({{item.grade}})</em></p>
+            <p class="number">{{item.amt_in_out}}<em>원</em></p>
           </div>
           <div class="bar">
-            <p style="width: 50%"></p>
+            <p v-bind:style="{width:item.percentage+'%'}"></p>
           </div>
           <div class="flex">
-            <p>2%</p>
+            <p>{{item.percentage}}%</p>
             <p></p>
           </div>
         </a>
       </div>
-
-      <div class="item">
-        <a @click="clickItem" class="block">
-          <div class="flex">
-            <p class="key"><img src="../../assets/images/common/bu_list_drug.png" width="15px" class="mr5" alt="" />식비 <em>(120건)</em></p>
-            <p class="number">118,107<em>원</em></p>
-          </div>
-          <div class="bar">
-            <p style="width: 50%"></p>
-          </div>
-          <div class="flex">
-            <p>2%</p>
-            <p></p>
-          </div>
-        </a>
-      </div>
-
     </div>
 
   </section>
@@ -108,7 +91,7 @@ export default {
   name: "ConsumeSettlement",
   data() {
     return {
-      curTab: "00",
+      curTab: "02",
       curTabName: "consume",
       dataPeriod: "",
       shareList: [],
@@ -125,11 +108,25 @@ export default {
       chkReadonly: false,
       dt_basic: this.$store.state.user.dt_basic,
       chartList: [],
-      consumeForm: null,
       seen: false,
-      Common: Common
-      // dataMonthList: [],
-      // dataWeekList: []
+      Common: Common,
+      consumeSum: 0,
+      incomeSum: 0,
+      consumeForm: {},
+      listType: "",
+      orderType: "",
+      type1: [
+        { text: "카테고리별", value: "category" },
+        { text: "가맹점별", value: "store" },
+        { text: "수단별", value: "means" }
+      ],
+      type2: [
+        { text: "금액순", value: "sum" },
+        { text: "건수순", value: "count" }
+      ],
+      prdFromDt: "",
+      prdToDt: "",
+      rangeList: []
     };
   },
   components: {
@@ -143,8 +140,6 @@ export default {
       if (this.dataPeriod == "yr") {
         this.dt_from = new Date(today.getFullYear().toString());
       } else if (this.dataPeriod == "mon") {
-        // console.log(today.getMonth());
-        console.log(this.dt_basic);
         let mon = null;
         if (dt_basic < today.getDate()) {
           mon = (today.getMonth() + 1).toString();
@@ -212,18 +207,32 @@ export default {
       param.append("no_person_list", _this.filterShareList());
       console.log(param);
       _this.$http.post(url, param).then(function(response) {
-        debugger;
         _this.chartList = response.data.listSettlementConsumeData;
         _this.consumeForm = response.data.consumeForm;
         _this.seen = true;
-        // if (_this.dataPeriod == "yr") {
-        //   _this.dataYearList = response.data.listSettlementConsumeDataYear;
-        // } else if (_this.dataPeriod == "mon") {
-        //   _this.dataMonthList = response.data.listSettlementConsumeDataWeek;
-        // } else if (_this.dataPeriod == "week") {
-        //   _this.dataWeekList = response.data.listSettlementConsumeDataDay;
-        // }
+        _this.getSum();
       });
+    },
+    /**
+     * 수입, 지출 합계 계산
+     */
+    getSum: function() {
+      let _this = this;
+      let chartList = _this.chartList;
+      this.consumeSum = 0;
+      this.incomeSum = 0;
+      for (var k in chartList) {
+        if (chartList[k].type_in_out == "02") {
+          this.consumeSum += parseInt(chartList[k].amt_in_out);
+        } else if (chartList[k].type_in_out == "01") {
+          this.incomeSum += parseInt(chartList[k].amt_in_out);
+        }
+      }
+      //만원단위
+      this.consumeSum = Math.round(this.consumeSum / 10000);
+      this.incomeSum = Math.round(this.incomeSum / 10000);
+      // this.consumeSum = Math.round(this.consumeSum);
+      // this.incomeSum = Math.round(this.incomeSum);
     },
     filterShareList: function() {
       var shareList = new Array();
@@ -246,19 +255,76 @@ export default {
             list[idx].isShow = true;
           }
           _this.shareList = list;
-          _this.dataPeriod = "yr";
+          _this.dataPeriod = "mon";
           // _this.getChartList();
         });
     },
     getRangeList: function() {
-      let _this = this;
       //event는 마우스 이벤트(클릭), el은 해당 데이터를 묶어서 던져줌
+      var _this = this;
+      var frm = new FormData();
+      frm.append("listType", _this.listType.value);
+      frm.append("orderType", _this.orderType.value);
+      frm.append("type_in_out", _this.curTab);
+      frm.append("no_person_list", _this.filterShareList());
+      frm.append("no_person", _this.$store.state.user.noPerson);
+      frm.append("dt_from", _this.prdFromDt);
+      frm.append("dt_to", _this.prdToDt);
+      frm.append("chartType", _this.dataPeriod);
+
+      this.$http
+        .post("/m/consume/getRangeListforSettlement.json", frm)
+        .then(function(response) {
+          debugger;
+          _this.rangeList = response.data.rangeList;
+          _this.calcPercentage(_this.rangeList);
+          for (var i in _this.rangeList) {
+            _this.rangeList[i].amt_in_out = _this.numberWithCommas(
+              _this.rangeList[i].amt_in_out
+            );
+          }
+          console.log(_this.rangeList);
+        });
     },
     openDatepicker1: function() {
       this.$refs.datepicker1.showCalendar();
     },
     openDatepicker2: function() {
       this.$refs.datepicker2.showCalendar();
+    },
+    clickChart: function(rangeDate, typePeriod) {
+      if (typePeriod == "yr") {
+        //기준일인지 아닌지 확인
+        let yearNmon = rangeDate.substring(0, 6);
+        this.prdFromDt = yearNmon;
+        this.prdToDt = moment(yearNmon + this.dt_basic, "YYYYMMDD")
+          .subtract(1, "days")
+          .add(1, "month")
+          .format("YYYYMMDD");
+        // console.log(this.shareList);
+        this.getRangeList();
+      } else if (typePeriod == "mon") {
+        this.prdFromDt = rangeDate;
+        this.prdToDt = moment(rangeDate, "YYYYMMDD")
+          .add(6, "days")
+          .format("YYYYMMDD");
+        console.log(this.prdToDt);
+        this.getRangeList();
+      } else {
+      }
+    },
+    calcPercentage: function(obj) {
+      let total = 0;
+      for (var h in obj) {
+        total += parseInt(obj[h].amt_in_out);
+      }
+      for (var h in obj) {
+        obj[h].percentage = Math.round((obj[h].amt_in_out / total) * 100);
+      }
+    },
+    numberWithCommas: function(x) {
+      debugger;
+      return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
   }
 };

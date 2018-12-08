@@ -27,6 +27,7 @@ public class ConsumeForm implements Serializable{
 	private String dt_to;
 	private String orderType;		//소비 통계 정렬 타입
 	private String listType;		//소비 통계 정렬 타입
+	private String chartType; 		//chart 타입
 	
 	
 	public ConsumeForm() {
@@ -142,6 +143,12 @@ public class ConsumeForm implements Serializable{
 		this.listType = listType;
 	}
 	
+	public String getChartType() {
+		return chartType;
+	}
+	public void setChartType(String chartType) {
+		this.chartType = chartType;
+	}
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}	

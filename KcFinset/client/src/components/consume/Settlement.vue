@@ -17,16 +17,13 @@
         </p>
       </div>
       <div class="filter-wrap mt20">
-        <!-- <div class="filter" :class="settingList[index].color">
-        <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
-      </div> -->
         <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
           <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
         </div>
       </div>
     </div>
     <div class="container">
-      <div class="report-con">
+      <div v-if="chartList.length!=0" class="report-con">
         <div class="flex">
           <div>
             <p class="key"><strong>수입</strong>(만원)</p>
@@ -37,16 +34,17 @@
             <p class="value">{{consumeSum}}</p>
           </div>
         </div>
-        <!-- <div class="graph"> -->
         <Graph v-if="chartList" ref="graph" v-model="chartList" :chartList="chartList" :consumeForm="consumeForm" :dt_from="dt_from" :dt_to="dt_to" :dataPeriod="dataPeriod"></Graph>
       </div>
-      <!-- </div> -->
+      <div class="nodata" v-else-if="chartList.length==0">
+        조회하신 범위에 수입, 지출 내역이 없습니다
+      </div>
     </div>
 
     <div class="tab">
       <div class="wrap">
-        <a id="02" name="consume" :class="{'on':curTab === '02'}" @click="clickTab">지출</a>
-        <a id="01" name="income" :class="{'on':curTab === '01'}" @click="clickTab">수입</a>
+        <a id="02" name="consume" :class="{'on':curTab === '02'}" @change="changeTab">지출</a>
+        <a id="01" name="income" :class="{'on':curTab === '01'}" @change="changeTab">수입</a>
       </div>
     </div>
 
@@ -60,9 +58,12 @@
       </div>
 
       <div class="item" v-for="(item, idx) in rangeList" :key="idx">
-        <a @click="clickItem" class="block">
+        <a @click="goDetail(item)" class="block">
           <div class="flex">
-            <p class="key"><img src="../../assets/images/common/bu_list_drug.png" width="15px" class="mr5" alt="" />{{item.nm_class}} <em>({{item.grade}})</em></p>
+
+            <p class="key" v-if="listType.value=='category'"><img :src="getConsumeIconSrc(item.type_in_out, item.cd_class)" alt="" />{{item.nm_class}} <em>({{item.grade}})</em></p>
+            <p class="key" v-else-if="listType.value=='store'"><img src="../../assets/images/common/bu_list_drug.png" width="15px" class="mr5" alt="" />{{item.contents}} <em>({{item.grade}})</em></p>
+            <p class="key" v-else-if="listType.value=='means'"><img src="../../assets/images/common/bu_list_drug.png" width="15px" class="mr5" alt="" />{{item.nm_card}} <em>({{item.grade}})</em></p>
             <p class="number">{{item.amt_in_out}}<em>원</em></p>
           </div>
           <div class="bar">
@@ -126,7 +127,12 @@ export default {
       ],
       prdFromDt: "",
       prdToDt: "",
-      rangeList: []
+      rangeList: [],
+      incomeList: [],
+      consumeList: [],
+      chartEl: {},
+      initYN: true,
+      lastToolTip: {}
     };
   },
   components: {
@@ -158,6 +164,22 @@ export default {
 
       //chart setting
       this.getChartList();
+    },
+    listType: function() {
+      if (!this.initYN) {
+        console.log(this.listType.value);
+        this.getRangeList();
+      }
+    },
+    orderType: function() {
+      if (!this.initYN) {
+        console.log(this.orderType.value);
+        this.getRangeList();
+      }
+    },
+    chartList: function() {
+      this.initRangeList();
+      // this.getRangeList();
     }
   },
   beforeCreate() {
@@ -171,23 +193,100 @@ export default {
   beforeMount() {},
   mounted() {},
   beforeUpdate() {},
-  updated() {},
+  updated() {
+    this.initYN = false;
+  },
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    changeDt: function() {
-      // this.dataPeriod =
+    getConsumeIconSrc: function(type_in_out, cd_class) {
+      let cd;
+      if ((cd_class || "") == "" || (type_in_out || "") == "") {
+        cd = "99";
+      } else if (type_in_out == "01") {
+      } else {
+        //default로 설정된 cd_class가 24까지밖에 없음
+        if (parseInt(cd_class) > 24) {
+          cd = "99";
+        } else {
+          cd = cd_class;
+        }
+      }
+      if (cd == undefined) {
+        return require("@/assets/images/consume/icon/99.png");
+      }
+      return require("@/assets/images/consume/icon/" + cd + ".png");
     },
-    clickItem: function() {
-      this.$router.push("/consume/consumeIncomeStats");
+    clickShare: function(params) {
+      var no_person_list = this.filterShareList();
+      if (no_person_list.length <= 1 && this.shareList[params].isShow == true) {
+        return;
+      }
+      this.shareList[params].isShow = !this.shareList[params].isShow;
+      this.getChartList();
+    },
+    goDetail: function(idx) {
+      debugger;
+      let param = "";
+      let listType = this.listType.value;
+      if (listType == "category") {
+        param =
+          "?dt_trd=" +
+          idx.dt_trd +
+          "&listType=" +
+          listType +
+          "&nm_class=" +
+          idx.nm_class +
+          "&type_in_out=" +
+          idx.type_in_out +
+          "&chartType=" +
+          this.dataPeriod +
+          "&personList=" +
+          this.filterShareList();
+      } else if (listType == "store") {
+        param =
+          "?dt_trd=" +
+          idx.dt_trd +
+          "&listType=" +
+          listType +
+          "&contents=" +
+          idx.contents +
+          "&type_in_out=" +
+          idx.type_in_out +
+          "&chartType=" +
+          this.dataPeriod +
+          "&personList=" +
+          this.filterShareList();
+      } else if (listType == "means") {
+        param =
+          "?dt_trd=" +
+          idx.dt_trd +
+          "&listType=" +
+          listType +
+          "&type_in_out=" +
+          idx.type_in_out +
+          "&chartType=" +
+          this.dataPeriod +
+          "&personList=" +
+          this.filterShareList();
+        localStorage.setItem("no_card", idx.no_card);
+        localStorage.setItem("nm_card", idx.nm_card);
+      }
+      localStorage.setItem("shareList", this.shareList);
+      this.$router.push("/consume/consumeIncomeStats" + param);
     },
     formatDateDot: function(date, pattern) {
       return Common.formatDateDot(date, pattern);
     },
-    clickTab: function(tab) {
+    changeTab: function(tab) {
       let _this = this;
       _this.curTab = tab.srcElement.id;
       _this.curTabName = tab.srcElement.name;
+      if (_this.curTab == "01") {
+        _this.rangeList = _this.incomeList;
+      } else {
+        _this.rangeList = _this.consumeList;
+      }
     },
     initData: function() {},
     getChartList: function() {
@@ -255,9 +354,15 @@ export default {
             list[idx].isShow = true;
           }
           _this.shareList = list;
-          _this.dataPeriod = "mon";
+          _this.dataPeriod = "yr";
           // _this.getChartList();
         });
+    },
+    initRangeList: function() {
+      let _this = this;
+      _this.rangeList = [];
+      _this.consumeList = [];
+      _this.incomeList = [];
     },
     getRangeList: function() {
       //event는 마우스 이벤트(클릭), el은 해당 데이터를 묶어서 던져줌
@@ -275,13 +380,41 @@ export default {
       this.$http
         .post("/m/consume/getRangeListforSettlement.json", frm)
         .then(function(response) {
-          debugger;
-          _this.rangeList = response.data.rangeList;
-          _this.calcPercentage(_this.rangeList);
-          for (var i in _this.rangeList) {
-            _this.rangeList[i].amt_in_out = _this.numberWithCommas(
-              _this.rangeList[i].amt_in_out
+          let totalRangeList = response.data.rangeList;
+          _this.initRangeList();
+
+          _this.calcPercentage(totalRangeList);
+
+          for (var i in totalRangeList) {
+            //금액에 , 찍기
+            totalRangeList[i].amt_in_out = _this.numberWithCommas(
+              totalRangeList[i].amt_in_out
             );
+
+            //수입 지출 List 나눠담기
+            if (totalRangeList[i].type_in_out == "02") {
+              _this.consumeList.push(totalRangeList[i]);
+            } else {
+              _this.incomeList.push(totalRangeList[i]);
+            }
+          } //for
+          console.log(_this.listType);
+
+          // 차트 선택시 수입 지출 탭바꾸기
+          let datasetIdx =
+            _this.chartEl[0]._chart.chart.tooltip._active[0]._datasetIndex; //tooltip이 없어지면 index값 undefined 남****고치기
+          if (datasetIdx != "undefined") {
+            let _tab = { srcElement: {} };
+            if (datasetIdx == 0) {
+              _tab.srcElement.id = "02";
+              _tab.srcElement.name = "지출";
+            } else {
+              _tab.srcElement.id = "01";
+              _tab.srcElement.name = "수입";
+            }
+            _this.changeTab(_tab);
+          } else {
+            _this.rangeList = [];
           }
           console.log(_this.rangeList);
         });
@@ -292,7 +425,7 @@ export default {
     openDatepicker2: function() {
       this.$refs.datepicker2.showCalendar();
     },
-    clickChart: function(rangeDate, typePeriod) {
+    clickChart: function(rangeDate, typePeriod, el) {
       if (typePeriod == "yr") {
         //기준일인지 아닌지 확인
         let yearNmon = rangeDate.substring(0, 6);
@@ -301,29 +434,42 @@ export default {
           .subtract(1, "days")
           .add(1, "month")
           .format("YYYYMMDD");
-        // console.log(this.shareList);
-        this.getRangeList();
       } else if (typePeriod == "mon") {
         this.prdFromDt = rangeDate;
         this.prdToDt = moment(rangeDate, "YYYYMMDD")
           .add(6, "days")
           .format("YYYYMMDD");
-        console.log(this.prdToDt);
-        this.getRangeList();
       } else {
+        this.prdFromDt = rangeDate;
+        this.prdToDt = rangeDate;
       }
+      this.chartEl = el;
+      console.log(el);
+      this.getRangeList();
     },
     calcPercentage: function(obj) {
-      let total = 0;
+      let incomeTotal = 0;
+      let consumeTotal = 0;
       for (var h in obj) {
-        total += parseInt(obj[h].amt_in_out);
+        if (obj[h].type_in_out == "02") {
+          consumeTotal += parseInt(obj[h].amt_in_out);
+        } else {
+          incomeTotal += parseInt(obj[h].amt_in_out);
+        }
       }
       for (var h in obj) {
-        obj[h].percentage = Math.round((obj[h].amt_in_out / total) * 100);
+        if (obj[h].type_in_out == "02") {
+          obj[h].percentage = Math.round(
+            (obj[h].amt_in_out / consumeTotal) * 100
+          );
+        } else {
+          obj[h].percentage = Math.round(
+            (obj[h].amt_in_out / incomeTotal) * 100
+          );
+        }
       }
     },
     numberWithCommas: function(x) {
-      debugger;
       return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
   }

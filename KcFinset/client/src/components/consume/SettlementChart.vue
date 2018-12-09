@@ -11,7 +11,7 @@ import Common from "@/assets/js/common.js";
 import moment from "moment";
 
 export default {
-  name: "ConsumeSettlement",
+  name: "SettlementChart",
   data() {
     return {
       mylabels: [],
@@ -27,7 +27,7 @@ export default {
           //수입
           backgroundColor: "#62c1d0",
           borderColor: "#62c1d0",
-          borderWidth: 1,
+          borderWidth: 2,
           data: []
         }
       ],
@@ -37,8 +37,6 @@ export default {
         },
         events: ["click"]
       },
-      dateFrom: null, //받는 값
-      dateTo: null, //받는 값
       rangeDate: [] //차트에 뿌려지는 label 날짜값
     };
   },
@@ -67,12 +65,7 @@ export default {
   watch: {
     chartList: function() {
       console.log("watched");
-      // this.createChart('chartjs-bar', this.planetChartData);
-      // this.$set(this.mylabels, []);
-
       this.drawChart();
-      // this.$refs.chart.update();
-      // this.$refs.chart.renderChart();
     }
   },
   beforeCreate() {
@@ -107,18 +100,17 @@ export default {
      */
     drawChart: function() {
       console.log("drawchart!");
-      let _chartList = this.chartList;
-      let _dataList1 = [];
-      let _dataList2 = [];
+      var _chartList = this.chartList;
+      var _dataList1 = [];
+      var _dataList2 = [];
       this.mylabels = [];
-      this.dateFrom = null;
-      this.dateTo = null;
       this.rangeDate = [];
 
+      //연 클릭시
       if (this.dataPeriod == "yr") {
-        let fromMon = this.dt_from.getMonth();
-        let toMon = this.dt_to.getMonth();
-        for (let k = fromMon; k <= toMon; k++) {
+        var fromMon = this.dt_from.getMonth();
+        var toMon = this.dt_to.getMonth();
+        for (var k = fromMon; k <= toMon; k++) {
           this.mylabels.push(k + 1 + "월");
           this.rangeDate.push(
             moment(this.dt_from)
@@ -144,9 +136,10 @@ export default {
           }
         } //for
       } else if (this.dataPeriod == "mon") {
+        //월 클릭시
         // console.log(moment(moment(this.dt_from).weekday(1)).diff(moment(this.dt_to).weekday(1), "days"));
         // console.log(Math.abs(moment(moment(this.dt_from).weekday(1)).diff(moment(this.dt_to).weekday(1), "days")) + 2);
-        let range = Math.ceil(
+        var range = Math.ceil(
           (Math.abs(
             moment(moment(this.dt_from).weekday(1)).diff(
               moment(this.dt_to).weekday(1),
@@ -156,16 +149,16 @@ export default {
             2) /
             7
         ); //기간
-        // let date = [];
-        for (let k = 0; k < range; k++) {
-          let dtFrom_Monday = moment(this.dt_from).weekday(1);
+        // var date = [];
+        for (var k = 0; k < range; k++) {
+          var dtFrom_Monday = moment(this.dt_from).weekday(1);
           // console.log(dtFrom_Monday.add((7*k), "days").format("YYYYMMDD"));
           // console.log(dtFrom_Monday.format('YYYYMMDD'));
           this.rangeDate.push(
             dtFrom_Monday.add(7 * k, "days").format("YYYYMMDD")
           );
           this.mylabels.push(dtFrom_Monday.format("MM[월]DD[일]"));
-          for (let j in _chartList) {
+          for (var j in _chartList) {
             if (this.rangeDate[k] == _chartList[j].dt_trd) {
               if (_chartList[j].type_in_out == "02") {
                 _dataList1.push(_chartList[j].amt_in_out);
@@ -185,15 +178,17 @@ export default {
           }
         } //for
       } else {
-        let range = Math.abs(moment(this.dt_to).diff(this.dt_from, "days")) + 2; //기간
-        // let date = []; //날짜 형태
-        for (let k = 0; k < range; k++) {
+        //주 클릭시
+        var range = Math.abs(moment(this.dt_to).diff(this.dt_from, "days")) + 2; //기간
+        // var date = []; //날짜 형태
+        debugger;
+        for (var k = 0; k < range; k++) {
           this.rangeDate.push(
             moment(this.dt_from)
               .add(k, "days")
               .format("YYYYMMDD")
           );
-          let day = moment(this.dt_from)
+          var day = moment(this.dt_from)
             .add(k, "days")
             .format("DD")
             .toString();
@@ -202,12 +197,16 @@ export default {
           }
           this.mylabels.push(day + "일");
 
-          for (let j in _chartList) {
+          for (var j in _chartList) {
             if (this.rangeDate[k] == _chartList[j].dt_trd) {
               if (_chartList[j].type_in_out == "02") {
-                _dataList1.push(_chartList[j].amt_in_out);
+                _dataList1.push(
+                  this.numberWithCommas(_chartList[j].amt_in_out)
+                );
               } else {
-                _dataList2.push(_chartList[j].amt_in_out);
+                _dataList2.push(
+                  this.numberWithCommas(_chartList[j].amt_in_out)
+                );
               }
             } else {
               continue;
@@ -221,8 +220,8 @@ export default {
             _dataList2.push("");
           }
         } //for
-        console.log(this.rangeDate);
-      }
+        debugger;
+      } //else
 
       this.$set(this.mydatasets[0], "data", _dataList1);
       this.$set(this.mydatasets[1], "data", _dataList2);
@@ -232,6 +231,10 @@ export default {
       if (el[0] != undefined) {
         var index = el[0]._index;
         var label = el[0]._model.label;
+        // this.$refs.chart.get
+        // ConsumeSettlement.getElementAtEvent();
+        // ConsumeSettlement.getDatasetAtEvent();
+        console.log(el[0]._chart.chart.tooltip._active);
         //사용해야 되는 데이터
         console.log(
           index +
@@ -242,8 +245,11 @@ export default {
             "////" +
             this.dataPeriod
         );
-        this.$parent.clickChart(this.rangeDate[index], this.dataPeriod);
+        this.$parent.clickChart(this.rangeDate[index], this.dataPeriod, el);
       }
+    },
+    numberWithCommas: function(x) {
+      return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
   }
 };

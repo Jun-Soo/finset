@@ -485,8 +485,6 @@ public class ConsumeManagerImpl implements ConsumeManager {
 		return consumeMapper.getRangeListforSettlement(consumeForm);
 	}
 	
-	
-	
 	@Override
 	public List<ConsumeVO> getSettlementDetail(ConsumeForm consumeForm) {
 		logger.debug("getSettlementDetail");

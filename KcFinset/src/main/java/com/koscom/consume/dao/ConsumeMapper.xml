@@ -2312,7 +2312,7 @@
 			ORDER BY
 				MM.TYPE_IN_OUT,
 				<if test="@com.koscom.util.MybatisUtil@contains('sum',orderType)">
-					AMT_IN_OUT DESC
+					TO_NUMBER(AMT_IN_OUT) DESC
 				</if>
 				<if test="@com.koscom.util.MybatisUtil@contains('count',orderType)">
 					GRADE DESC
@@ -2320,42 +2320,91 @@
 				
 	</select>
 	<select id="getSettlementDetail" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.ConsumeVO">
-		SELECT
-				  A.NO_PERSON
-				, B.NM_CLASS
-				, A.CD_CLASS
-				, A.CONTENTS
-				, A.AMT_IN_OUT
-				, A.DT_TRD
-				, A.NM_CARD
-				, A.NO_CARD
-				, C.NM_FC
-			FROM 
-				  CONSUME_INFO A
-				, CONSUME_CLASS_INFO B
-				, FC_INFO C
-			WHERE 
-				A.CD_CLASS = B.CD_CLASS
-				AND A.TYPE_IN_OUT = B.TYPE_IN_OUT
-				AND C.CD_FC = A.CD_FC
-				AND A.NO_PERSON IN 
-					<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
-						#{each_person}
-					</foreach>
-				AND A.DT_TRD <![CDATA[>=]]>  #{dt_from, jdbcType = VARCHAR}
-				AND A.DT_TRD <![CDATA[<=]]>  #{dt_to, jdbcType = VARCHAR}
-				AND A.TYPE_IN_OUT = #{type_in_out, jdbcType = VARCHAR}
-				AND YN_CANCEL = 'N'
-				AND YN_DELETE = 'N'
-				AND YN_BUDGET_EXCEPT = 'N'
+			SELECT
+				MM.NO_PERSON,
+				MM.DT_TRD,
+				MM.TM_TRD,
+				MM.NM_CARD, 
+				MM.NO_CARD, 
+				MM.NM_CLASS, 
+				MM.CONTENTS, 
+				MM.AMT_IN_OUT,
+				MM.TYPE_IN_OUT AS TYPE_IN_OUT,
+				MM.NM_FC
+			FROM
+				(
+					SELECT
+						CI.NO_PERSON
+						,CI.SEQ_CONSUME
+						,CI.TYPE_IN_OUT
+						,CI.MEANS_CONSUME
+						,CI.CD_FC
+						,CI.NO_CARD
+						,CI.NM_CARD
+						,CI.DT_TRD
+						,CI.TM_TRD
+						,FI.NM_FC
+						,PCCI.NM_CLASS
+						,PCCI.NM_TYPE
+						,CI.CONTENTS
+						,CI.AMT_IN_OUT
+						,CI.YN_AUTO
+						,NVL( PSI.DT_BASIC, '01' )
+						,TO_CHAR( SYSDATE, 'DD' )
+						,CASE
+							WHEN 
+							TO_CHAR( TO_DATE( CI.DT_TRD, 'YYYYMMDD' ), 'DD' ) >= NVL( PSI.DT_BASIC, '01' ) THEN TO_CHAR( TO_DATE( CI.DT_TRD, 'YYYYMMDD' ), 'YYYYMM' )
+							ELSE TO_CHAR( ADD_MONTHS( CI.DT_TRD,- 1 ), 'YYYYMM' )
+						END MM_BASIC
+						,TO_CHAR( TRUNC( TO_DATE( CI.DT_TRD ), 'IW' ), 'YYYYMMDD' ) AS START_WEEK
+					FROM
+						CONSUME_INFO CI,
+						PERSON_CONSUME_CLASS_INFO PCCI,
+						PERSON_SET_INFO PSI,
+						FC_INFO FI
+					WHERE
+						CI.NO_PERSON IN
+						<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
+							#{each_person}
+						</foreach>
+						AND CI.NO_PERSON = PCCI.NO_PERSON
+						AND CI.CD_CLASS = PCCI.CD_CLASS
+						AND CI.CD_TYPE = PCCI.CD_TYPE
+						AND CI.NO_PERSON = PSI.NO_PERSON
+						AND CI.CD_FC = FI.CD_FC
+						AND YN_CANCEL = 'N'
+						AND YN_DELETE = 'N'
+						AND YN_BUDGET_EXCEPT = 'N'
+				) MM
+			WHERE
+				1 = 1
+				AND MM.TYPE_IN_OUT = #{type_in_out, jdbcType = VARCHAR}
+				<if test="@com.koscom.util.MybatisUtil@contains('yr', chartType)">
+					AND  MM.MM_BASIC = #{dt_from, jdbcType = VARCHAR}
+				</if>
+				<if test="@com.koscom.util.MybatisUtil@contains('mon',chartType)">
+					AND  MM.START_WEEK = #{dt_from, jdbcType = VARCHAR}
+				</if>
+				<if test="@com.koscom.util.MybatisUtil@contains('week',chartType)">
+					 AND  MM.DT_TRD = #{dt_from, jdbcType = VARCHAR}
+				</if>
+				<if test="@com.koscom.util.MybatisUtil@contains('category',listType)">
+					AND MM.NM_CLASS = #{contents, jdbcType = VARCHAR}
+				</if>
+				<if test="@com.koscom.util.MybatisUtil@contains('store',listType)">
+					AND MM.CONTENTS= #{contents, jdbcType = VARCHAR}
+				</if>
+				<if test="@com.koscom.util.MybatisUtil@contains('means',listType)">
+					AND MM.NM_CARD= #{contents, jdbcType = VARCHAR}
+					AND MM.NO_CARD= #{no_card, jdbcType = VARCHAR} 
+				</if>
 			ORDER BY
-			   <choose>
-					<when test="@com.koscom.util.MybatisUtil@contains('sum',orderType)">
-						A.AMT_IN_OUT DESC	
-					</when>
-					<otherwise>
-						A.DT_TRD DESC
-					</otherwise> 
-				</choose>
+				<if test="@com.koscom.util.MybatisUtil@contains('date',orderType)">
+					MM.DT_TRD DESC,
+					MM.TM_TRD DESC
+				</if>
+				<if test="@com.koscom.util.MybatisUtil@contains('amt',orderType)">
+					TO_NUMBER(AMT_IN_OUT) DESC
+				</if>
 	</select>	   
 </mapper>

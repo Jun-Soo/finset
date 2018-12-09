@@ -675,17 +675,8 @@ public class ConsumeController {
     @RequestMapping("/getSettlementDetail.json")
     public String getSettlementDetail(HttpSession session, Model model, ConsumeForm consumeForm) throws FinsetException {
     	logger.debug("getSettlementDetail");
-    	String typeOfSearch = consumeForm.getContents();
-    	if("category".equals(typeOfSearch)) { //카테고리별
-    		model.addAttribute("rangeList", consumeManager.listSettlementConsumeDataYear(consumeForm));
-    	} else if ("store".equals(typeOfSearch)) { //가맹점별
-    		model.addAttribute("rangeList", consumeManager.listSettlementConsumeDataWeek(consumeForm));
-    	} else if("means".equals(typeOfSearch)) { //수단별
-    		model.addAttribute("rangeList", consumeManager.listSettlementConsumeDataDay(consumeForm));
-    	} else {
-    		//에러처리 페이지 필요
-    	}
-    	
+    	logger.debug(consumeForm.toString());
+    	model.addAttribute("rangeList", consumeManager.getSettlementDetail(consumeForm));
     	return "jsonView";
     }
 }

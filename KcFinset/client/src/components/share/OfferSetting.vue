@@ -366,17 +366,17 @@ export default {
     //공유상태변경(거절, 공유취소)
     settingStatus: function(share_status) {
       var _this = this;
-      var dgTitle = "";
+
+      Constant.options.title = "FINSET";
+      var dgContents = "";
       //거절
       if ("03" == share_status) {
-        dgTitle = "공유 요청을 거절하시겠습니까?";
-
+        dgContents = "공유 요청을 거절하시겠습니까?";
         //공유취소
       } else if ("04" == share_status) {
-        dgTitle = "공유를 취소하시겠습니까?";
+        dgContents = "공유를 취소하시겠습니까?";
       }
-      Constant.options.title = dgTitle;
-      this.$dialogs.confirm("", Constant.options).then(res => {
+      this.$dialogs.confirm(dgContnest, Constant.options).then(res => {
         if (res.ok) {
           console.log("seq_share" + _this.seq_share);
 
@@ -409,17 +409,17 @@ export default {
       //validation 체크
       if (!_this.validItems()) return false;
 
-      var dgTitle = "";
+      Constant.options.title = "FINSET";
+      var dgContents = "";
       //허용
       if ("02" == share_status) {
-        dgTitle = "공유 요청을 허용하시겠습니까?";
+        dgContents = "공유 요청을 허용하시겠습니까?";
 
         //저장(항목변경)
       } else if ("07" == share_status) {
-        dgTitle = "공유항목을 변경하시겠습니까?";
+        dgContents = "공유항목을 변경하시겠습니까?";
       }
-      Constant.options.title = dgTitle;
-      this.$dialogs.confirm("", Constant.options).then(res => {
+      this.$dialogs.confirm(dgContents, Constant.options).then(res => {
         if (res.ok) {
           if ("01" == _this.cd_share) {
             if (_this.yn_credit_info != _this.shareInfo.yn_credit_info)

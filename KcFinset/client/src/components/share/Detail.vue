@@ -157,66 +157,70 @@ export default {
         return false;
       }
 
-      Constant.options.title = "업데이트 요청하시겠습니까?";
-      this.$dialogs.confirm("", Constant.options).then(res => {
-        if (res.ok) {
-          console.log("seq_share" + _this.seq_share);
+      Constant.options.title = "FINSET";
+      this.$dialogs
+        .confirm("업데이트 요청하시겠습니까?", Constant.options)
+        .then(res => {
+          if (res.ok) {
+            console.log("seq_share" + _this.seq_share);
 
-          var formData = new FormData();
-          formData.append("share_status", "06");
-          formData.append("seq_share", _this.seq_share);
-          this.$http
-            .post("/m/customercenter/sendPersonShareInfoPush.json", formData)
-            .then(function(response) {
-              if ("00" == response.data.cdResult) {
-                _this.$toast.center("업데이트 요청되었습니다.");
-                _this.reqUpdateYn = "Y";
-              } else if ("01" == response.data.cdResult) {
-                _this.$toast.center(
-                  "하루에 한번 <br/>업데이트 요청 가능합니다."
-                );
-                _this.reqUpdateYn = "Y";
-              } else {
-                _this.$toast.center("업데이트 요청 실패했습니다.");
-                return false;
-              }
-            })
-            .catch(e => {
-              _this.$toast.center(ko.messages.error);
-            });
-        }
-      });
+            var formData = new FormData();
+            formData.append("share_status", "06");
+            formData.append("seq_share", _this.seq_share);
+            this.$http
+              .post("/m/customercenter/sendPersonShareInfoPush.json", formData)
+              .then(function(response) {
+                if ("00" == response.data.cdResult) {
+                  _this.$toast.center("업데이트 요청되었습니다.");
+                  _this.reqUpdateYn = "Y";
+                } else if ("01" == response.data.cdResult) {
+                  _this.$toast.center(
+                    "하루에 한번 <br/>업데이트 요청 가능합니다."
+                  );
+                  _this.reqUpdateYn = "Y";
+                } else {
+                  _this.$toast.center("업데이트 요청 실패했습니다.");
+                  return false;
+                }
+              })
+              .catch(e => {
+                _this.$toast.center(ko.messages.error);
+              });
+          }
+        });
     },
     //공유종료
     settingExit: function() {
       var _this = this;
 
-      Constant.options.title = "공유를 취소하시겠습니까?";
-      this.$dialogs.confirm("", Constant.options).then(res => {
-        if (res.ok) {
-          console.log("seq_share" + _this.seq_share);
+      Constant.options.title = "FINSET";
+      this.$dialogs
+        .confirm("공유를 취소하시겠습니까?", Constant.options)
+        .then(res => {
+          if (res.ok) {
+            console.log("seq_share" + _this.seq_share);
 
-          var formData = new FormData();
-          formData.append("seq_share", _this.seq_share);
-          formData.append("share_status", "04");
+            var formData = new FormData();
+            formData.append("seq_share", _this.seq_share);
+            formData.append("share_status", "04");
 
-          this.$http
-            .post(
-              "/m/customercenter/updatePersonShareInfoSetStatus.json",
-              formData
-            )
-            .then(function(response) {
-              _this.$toast.center(response.data.message);
-              if ("00" == response.data.cdResult) {
-                _this.share_status = "04_1";
-                _this.sendPush(); //문자발송
-              }
-            })
-            .catch(e => {
-              _this.$toast.center(ko.messages.error);
-            });
-        }
-      });
+            this.$http
+              .post(
+                "/m/customercenter/updatePersonShareInfoSetStatus.json",
+                formData
+              )
+              .then(function(response) {
+                _this.$toast.center(response.data.message);
+                if ("00" == response.data.cdResult) {
+                  _this.share_status = "04_1";
+                  _this.sendPush(); //문자발송
+                }
+              })
+              .catch(e => {
+                _this.$toast.center(ko.messages.error);
+              });
+          }
+        });
     },
     //push발송
     sendPush: function() {

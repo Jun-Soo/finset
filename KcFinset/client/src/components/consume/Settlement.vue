@@ -47,34 +47,32 @@
         <a id="01" name="income" :class="{'on':curTab === '01'}" @change="changeTab">수입</a>
       </div>
     </div>
+<div class="box-list list02 noMG">
+    <div class="select pb20">
+      <multiselect class="multiselect-basic" track-by="text" v-model="listType" label="text" :preselect-first="true" :options="type1" :searchable="false" :allow-empty="false">
+      </multiselect>
+      <multiselect class="multiselect-basic" track-by="text" v-model="orderType" label="text" :preselect-first="true" :options="type2" :searchable="false" :allow-empty="false">
+      </multiselect>
+    </div>
 
-    <div class="box-list list02 noMG">
+    <div class="item" v-for="(item, idx) in rangeList" :key="idx">
+      <a @click="goDetail(item)" class="block">
+        <div class="flex">
 
-      <div class="select pb20">
-        <multiselect track-by="text" v-model="listType" label="text" :preselect-first="true" :options="type1" :searchable="false" :allow-empty="false">
-        </multiselect>
-        <multiselect track-by="text" v-model="orderType" label="text" :preselect-first="true" :options="type2" :searchable="false" :allow-empty="false">
-        </multiselect>
-      </div>
-
-      <div class="item" v-for="(item, idx) in rangeList" :key="idx">
-        <a @click="goDetail(item)" class="block">
-          <div class="flex">
-
-            <p class="key" v-if="listType.value=='category'"><img :src="getConsumeIconSrc(item.type_in_out, item.cd_class)" alt="" />{{item.nm_class}} <em>({{item.grade}})</em></p>
-            <p class="key" v-else-if="listType.value=='store'"><img src="../../assets/images/common/bu_list_drug.png" width="15px" class="mr5" alt="" />{{item.contents}} <em>({{item.grade}})</em></p>
-            <p class="key" v-else-if="listType.value=='means'"><img src="../../assets/images/common/bu_list_drug.png" width="15px" class="mr5" alt="" />{{item.nm_card}} <em>({{item.grade}})</em></p>
-            <p class="number">{{item.amt_in_out}}<em>원</em></p>
-          </div>
-          <div class="bar">
-            <p v-bind:style="{width:item.percentage+'%'}"></p>
-          </div>
-          <div class="flex">
-            <p>{{item.percentage}}%</p>
-            <p></p>
-          </div>
-        </a>
-      </div>
+          <p class="key" v-if="listType.value=='category'"><img :src="getConsumeIconSrc(item.type_in_out, item.cd_class)"  width="15px" class="mr5" alt="" />{{item.nm_class}} <em>({{item.grade}})</em></p>
+          <p class="key" v-else-if="listType.value=='store'"><img :src="getConsumeIconSrc(item.type_in_out, item.cd_class)" width="15px" class="mr5" alt="" />{{item.contents}} <em>({{item.grade}})</em></p>
+          <p class="key" v-else-if="listType.value=='means'"><img :src="getConsumeIconSrc(item.type_in_out, item.cd_class)" width="15px" class="mr5" alt="" />{{item.nm_card}} <em>({{item.grade}})</em></p>
+          <p class="number">{{item.amt_in_out}}<em>원</em></p>
+        </div>
+        <div class="bar">
+          <p v-bind:style="{width:item.percentage+'%'}"></p>
+        </div>
+        <div class="flex">
+          <p>{{item.percentage}}%</p>
+          <p></p>
+        </div>
+      </a>
+    </div>
     </div>
 
   </section>
@@ -167,13 +165,13 @@ export default {
     },
     listType: function() {
       if (!this.initYN) {
-        console.log(this.listType.value);
+        // console.log(this.listType.value);
         this.getRangeList();
       }
     },
     orderType: function() {
       if (!this.initYN) {
-        console.log(this.orderType.value);
+        // console.log(this.orderType.value);
         this.getRangeList();
       }
     },
@@ -226,7 +224,6 @@ export default {
       this.getChartList();
     },
     goDetail: function(idx) {
-      debugger;
       let param = "";
       let listType = this.listType.value;
       if (listType == "category") {
@@ -304,7 +301,7 @@ export default {
         Common.formatDateDot(_this.dt_to).replace(/[.]/g, "")
       );
       param.append("no_person_list", _this.filterShareList());
-      console.log(param);
+      // console.log(param);
       _this.$http.post(url, param).then(function(response) {
         _this.chartList = response.data.listSettlementConsumeData;
         _this.consumeForm = response.data.consumeForm;
@@ -398,7 +395,7 @@ export default {
               _this.incomeList.push(totalRangeList[i]);
             }
           } //for
-          console.log(_this.listType);
+          // console.log(_this.listType);
 
           // 차트 선택시 수입 지출 탭바꾸기
           let datasetIdx =
@@ -416,7 +413,7 @@ export default {
           } else {
             _this.rangeList = [];
           }
-          console.log(_this.rangeList);
+          // console.log(_this.rangeList);
         });
     },
     openDatepicker1: function() {
@@ -444,7 +441,7 @@ export default {
         this.prdToDt = rangeDate;
       }
       this.chartEl = el;
-      console.log(el);
+      // console.log(el);
       this.getRangeList();
     },
     calcPercentage: function(obj) {

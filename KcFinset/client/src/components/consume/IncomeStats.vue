@@ -68,7 +68,6 @@ export default {
   watch: {
     orderType: function() {
       if (!this.initYN) {
-        console.log(this.orderType.value);
         this.seen = false;
         this.getSettlementDetail();
       }
@@ -80,7 +79,6 @@ export default {
     this.$store.state.title = "지출상세";
   },
   created() {
-    // console.log(this.$route.query);
     this.dataSet(this.$route.query);
     this.listConsumeShareInfo();
   },

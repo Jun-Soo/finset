@@ -42,7 +42,7 @@
           </slide>
         </carousel>
       </div>
-      <div class="btn-wrap">
+      <div class="btn-wrap float">
         <router-link to="/member/certStep1">
           <a class="btn-next" role="button">시작하기</a>
         </router-link>
@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import Constant from "@/assets/js/constant.js";
 
 export default {
   name: 'Intro',
@@ -70,6 +71,9 @@ export default {
   beforeCreate() {
   },
   created() {
+    if (Constant.userAgent == "Android") {
+      window.Android.setEndApp("Y");
+    }
   },
   beforeMount() {
   },

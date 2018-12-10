@@ -64,7 +64,7 @@ export default {
   },
   watch: {
     chartList: function() {
-      console.log("watched");
+      // console.log("watched");
       this.drawChart();
     }
   },
@@ -72,18 +72,20 @@ export default {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "수입·지출 보고서";
   },
-  created() {},
+  created() {
+    this.drawChart();
+  },
   beforeMount() {},
   mounted() {
     //chart 클릭시 이벤트 발생하는 부분
-    this.drawChart();
     this.$set(this.$refs.chart.option, "onClick", this._clickChart);
     this.$refs.chart.renderChart();
+    // console.log("mounted");
   },
   beforeUpdate() {},
   updated() {
     // this.$refs.chart.renderChart();
-    console.log("updated");
+    // console.log("updated");
   },
   beforeDestroy() {},
   destroyed() {},
@@ -99,7 +101,7 @@ export default {
      * 7. day 일땐, 일별로 chart를 그린다
      */
     drawChart: function() {
-      console.log("drawchart!");
+      // console.log("drawchart!");
       var _chartList = this.chartList;
       var _dataList1 = [];
       var _dataList2 = [];
@@ -151,7 +153,7 @@ export default {
         ); //기간
         // var date = [];
         for (var k = 0; k < range; k++) {
-          var dtFrom_Monday = moment(this.dt_from).weekday(1);
+          var dtFrom_Monday = moment(this.dt_from).weekday(1); //월요일계산
           // console.log(dtFrom_Monday.add((7*k), "days").format("YYYYMMDD"));
           // console.log(dtFrom_Monday.format('YYYYMMDD'));
           this.rangeDate.push(
@@ -179,9 +181,7 @@ export default {
         } //for
       } else {
         //주 클릭시
-        var range = Math.abs(moment(this.dt_to).diff(this.dt_from, "days")) + 2; //기간
-        // var date = []; //날짜 형태
-        debugger;
+        var range = Math.abs( moment(this.dt_to).diff(this.dt_from, "days")) + 2; //기간
         for (var k = 0; k < range; k++) {
           this.rangeDate.push(
             moment(this.dt_from)
@@ -200,13 +200,9 @@ export default {
           for (var j in _chartList) {
             if (this.rangeDate[k] == _chartList[j].dt_trd) {
               if (_chartList[j].type_in_out == "02") {
-                _dataList1.push(
-                  this.numberWithCommas(_chartList[j].amt_in_out)
-                );
+                _dataList1.push(_chartList[j].amt_in_out);
               } else {
-                _dataList2.push(
-                  this.numberWithCommas(_chartList[j].amt_in_out)
-                );
+                _dataList2.push(_chartList[j].amt_in_out);
               }
             } else {
               continue;
@@ -220,7 +216,6 @@ export default {
             _dataList2.push("");
           }
         } //for
-        debugger;
       } //else
 
       this.$set(this.mydatasets[0], "data", _dataList1);
@@ -231,20 +226,6 @@ export default {
       if (el[0] != undefined) {
         var index = el[0]._index;
         var label = el[0]._model.label;
-        // this.$refs.chart.get
-        // ConsumeSettlement.getElementAtEvent();
-        // ConsumeSettlement.getDatasetAtEvent();
-        console.log(el[0]._chart.chart.tooltip._active);
-        //사용해야 되는 데이터
-        console.log(
-          index +
-            "////" +
-            label +
-            "////" +
-            this.rangeDate[index] +
-            "////" +
-            this.dataPeriod
-        );
         this.$parent.clickChart(this.rangeDate[index], this.dataPeriod, el);
       }
     },

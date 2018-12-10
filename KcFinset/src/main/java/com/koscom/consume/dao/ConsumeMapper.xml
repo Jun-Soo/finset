@@ -2219,9 +2219,10 @@
 					MM.START_WEEK AS DT_TRD,
 				</if>
 				<if test="@com.koscom.util.MybatisUtil@contains('week',chartType)">
-					 MM.DT_TRD AS DT_TRD,
+					 MM.DT_TRD AS DT_TRD, 
 				</if>
 				<if test="@com.koscom.util.MybatisUtil@contains('category',listType)">
+					MM.CD_CLASS,
 					MM.NM_CLASS,
 					COUNT( MM.NM_CLASS ) AS GRADE,
 				</if>
@@ -2247,6 +2248,7 @@
 						,CI.NO_CARD
 						,CI.NM_CARD
 						,CI.DT_TRD
+						,PCCI.CD_CLASS
 						,PCCI.NM_CLASS
 						,PCCI.NM_TYPE
 						,CI.CONTENTS
@@ -2291,6 +2293,7 @@
 			GROUP BY
 				<if test="@com.koscom.util.MybatisUtil@contains('category',listType)">
 					MM.NM_CLASS,
+					MM.CD_CLASS,
 				</if>
 				<if test="@com.koscom.util.MybatisUtil@contains('store',listType)">
 					MM.CONTENTS,

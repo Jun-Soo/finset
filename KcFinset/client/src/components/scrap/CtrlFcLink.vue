@@ -1,16 +1,16 @@
 <template>
-  <section>
+  <section @click="clickClear">
     <div class="con-top cert-top">
       <p>공인인증서로<em>한번에 등록하세요</em></p>
-      <a @click="checkExistCert(false)">바로가기</a>
+      <a @click="checkExistCert(false, $event)">바로가기</a>
     </div>
 
     <div class="tab">
       <div class="wrap">
-        <a :class="{'on':curTab === 'bank'}" @click="tabOnClick('bank')">은행</a>
-        <a :class="{'on':curTab === 'card'}" @click="tabOnClick('card')">카드</a>
-        <a :class="{'on':curTab === 'stock'}" @click="tabOnClick('stock')">증권</a>
-        <a :class="{'on':curTab === 'etc'}" @click="tabOnClick('etc')">기타</a>
+        <a :class="{'on':curTab === 'bank'}" @click="tabOnClick('bank', $event)">은행</a>
+        <a :class="{'on':curTab === 'card'}" @click="tabOnClick('card', $event)">카드</a>
+        <a :class="{'on':curTab === 'stock'}" @click="tabOnClick('stock', $event)">증권</a>
+        <a :class="{'on':curTab === 'etc'}" @click="tabOnClick('etc', $event)">기타</a>
       </div>
     </div>
 
@@ -19,21 +19,21 @@
         <div class="flex">
           <p class="symbol"><img :src="bank.icon" alt="" />{{bank.nm_fc}}</p>
           <div class="btn-menu-wrap" :class="{'on':bank.isClickMenu}" v-if="bank.yn_link==='Y'">
-            <button class="btn-menu-pop" @click="clickMenu(bank.cd_fc)"></button>
+            <button class="btn-menu-pop" @click="clickMenu(bank.cd_fc, $event)"></button>
             <div class="menu" v-if="bank.isClickLink">
-              <a @click="clickCert(bank)">공인인증서</a>
-              <a @click="clickId(bank)">아이디/비번</a>
+              <a @click="clickCert(bank, $event)">공인인증서</a>
+              <a @click="clickId(bank, $event)">아이디/비번</a>
             </div>
             <div class="menu" v-else>
-              <a @click="clickUnlink(bank)">연결해제</a>
-              <a @click="clickLink(bank.cd_fc)">연동정보 변경</a>
+              <a @click="clickUnlink(bank, $event)">연결해제</a>
+              <a @click="clickLink(bank.cd_fc, $event)">연동정보 변경</a>
             </div>
           </div>
           <div class="btn-menu-wrap" :class="{'on':bank.isClickLink}" v-else>
-            <a class="btn-interlock" @click="clickLink(bank.cd_fc)">연동하기</a>
+            <a class="btn-interlock" @click="clickLink(bank.cd_fc, $event)">연동하기</a>
             <div class="menu">
-              <a @click="clickCert(bank)">공인인증서</a>
-              <a @click="clickId(bank)">아이디/비번</a>
+              <a @click="clickCert(bank, $event)">공인인증서</a>
+              <a @click="clickId(bank, $event)">아이디/비번</a>
             </div>
           </div>
         </div>
@@ -46,21 +46,21 @@
         <div class="flex">
           <p class="symbol"><img :src="card.icon" alt="" />{{card.nm_fc}}</p>
           <div class="btn-menu-wrap" :class="{'on':card.isClickMenu}" v-if="card.yn_link==='Y'">
-            <button class="btn-menu-pop" @click="clickMenu(card.cd_fc)"></button>
+            <button class="btn-menu-pop" @click="clickMenu(card.cd_fc, $event)"></button>
             <div class="menu" v-if="card.isClickLink">
-              <a @click="clickCert(card)">공인인증서</a>
-              <a @click="clickId(card)">아이디/비번</a>
+              <a @click="clickCert(card, $event)">공인인증서</a>
+              <a @click="clickId(card, $event)">아이디/비번</a>
             </div>
             <div class="menu" v-else>
-              <a @click="clickUnlink(card)">연결해제</a>
-              <a @click="clickLink(card.cd_fc)">연동정보 변경</a>
+              <a @click="clickUnlink(card, $event)">연결해제</a>
+              <a @click="clickLink(card.cd_fc, $event)">연동정보 변경</a>
             </div>
           </div>
           <div class="btn-menu-wrap" :class="{'on':card.isClickLink}" v-else>
-            <a class="btn-interlock" @click="clickLink(card.cd_fc)">연동하기</a>
+            <a class="btn-interlock" @click="clickLink(card.cd_fc, $event)">연동하기</a>
             <div class="menu">
-              <a @click="clickCert(card)">공인인증서</a>
-              <a @click="clickId(card)">아이디/비번</a>
+              <a @click="clickCert(card, $event)">공인인증서</a>
+              <a @click="clickId(card, $event)">아이디/비번</a>
             </div>
           </div>
         </div>
@@ -72,13 +72,13 @@
         <div class="flex">
           <p class="symbol"><img :src="stock.icon" alt="" />{{stock.nm_fc}}</p>
           <div class="btn-menu-wrap" :class="{'on':stock.isClickMenu}" v-if="stock.yn_link==='Y'">
-            <button class="btn-menu-pop" @click="clickMenu(stock.cd_fc)"></button>
+            <button class="btn-menu-pop" @click="clickMenu(stock.cd_fc, $event)"></button>
             <div class="menu">
-              <a @click="clickUnlink(stock)">연결해제</a>
+              <a @click="clickUnlink(stock, $event)">연결해제</a>
             </div>
           </div>
           <div class="btn-menu-wrap" :class="{'on':stock.isClickLink}" v-else>
-            <a class="btn-interlock" @click="clickCert(stock)">연동하기</a>
+            <a class="btn-interlock" @click="clickCert(stock, $event)">연동하기</a>
           </div>
         </div>
         <p class="warn" v-if="stock.cd_link_stat=='99' && stock.rsn_link_message != null && stock.rsn_link_message.length> 0"><a>{{stock.rsn_link_message}}</a></p>
@@ -89,21 +89,21 @@
         <div class="flex">
           <p class="symbol"><img :src="etc.icon" alt="" />{{etc.nm_fc}}</p>
           <div class="btn-menu-wrap" :class="{'on':etc.isClickMenu}" v-if="etc.yn_link==='Y'">
-            <button class="btn-menu-pop" @click="clickMenu(etc.cd_fc)"></button>
+            <button class="btn-menu-pop" @click="clickMenu(etc.cd_fc, $event)"></button>
             <div class="menu" v-if="etc.isClickLink">
-              <a @click="clickCert(etc)">공인인증서</a>
-              <a @click="clickId(etc)">아이디/비번</a>
+              <a @click="clickCert(etc, $event)">공인인증서</a>
+              <a @click="clickId(etc, $event)">아이디/비번</a>
             </div>
             <div class="menu" v-else>
-              <a @click="clickUnlink(etc)">연결해제</a>
-              <a @click="clickLink(etc.cd_fc)">연동정보 변경</a>
+              <a @click="clickUnlink(etc, $event)">연결해제</a>
+              <a @click="clickLink(etc.cd_fc, $event)">연동정보 변경</a>
             </div>
           </div>
           <div class="btn-menu-wrap" :class="{'on':etc.isClickLink}" v-else>
-            <a class="btn-interlock" @click="clickLink(etc.cd_fc)">연동하기</a>
+            <a class="btn-interlock" @click="clickLink(etc.cd_fc, $event)">연동하기</a>
             <div class="menu">
-              <a @click="clickCert(etc)">공인인증서</a>
-              <a @click="clickId(etc)">아이디/비번</a>
+              <a @click="clickCert(etc, $event)">공인인증서</a>
+              <a @click="clickId(etc, $event)">아이디/비번</a>
             </div>
           </div>
         </div>
@@ -152,7 +152,7 @@ export default {
     if (this.$route.params.tab) {
       this.curTab = this.$route.params.tab;
     }
-    this.tabOnClick(this.curTab);
+    this.tabOnClick(this.curTab, null);
     this.listFcLinkInfo();
   },
   beforeUpdate() {},
@@ -161,10 +161,41 @@ export default {
   destroyed() {},
 
   methods: {
-    tabOnClick: function(type) {
-      this.curTab = type;
+    closeAllMemu: function() {
+      // 전체 메뉴 닫기
+      for (var i = 0; i < this.bankList.length; i++) {
+        this.$set(this.bankList[i], "isClickMenu", false);
+        this.$set(this.bankList[i], "isClickLink", false);
+        // this.bankList[i].isClickMenu = false;
+        // this.bankList[i].isClickLink = false;
+      }
+      for (var i = 0; i < this.cardList.length; i++) {
+        this.cardList[i].isClickMenu = false;
+        this.cardList[i].isClickLink = false;
+      }
+      for (var i = 0; i < this.stockList.length; i++) {
+        this.stockList[i].isClickMenu = false;
+        this.stockList[i].isClickLink = false;
+      }
+      for (var i = 0; i < this.etcList.length; i++) {
+        // this.etcList[i].isClickMenu = false;
+        this.etcList[i].isClickLink = false;
+        this.$set(this.etcList[i], "isClickMenu", false);
+      }
     },
-    clickMenu: function(cd_fc) {
+    tabOnClick: function(type, event) {
+      if (event) {
+        event.stopPropagation();
+      }
+      this.curTab = type;
+      this.closeAllMemu();
+    },
+    clickClear: function() {
+      console.log("clickClear");
+      this.closeAllMemu();
+    },
+    clickMenu: function(cd_fc, event) {
+      event.stopPropagation();
       if (this.curTab == "bank") {
         for (var i = 0; i < this.bankList.length; i++) {
           if (this.bankList[i].cd_fc == cd_fc) {
@@ -211,7 +242,8 @@ export default {
         }
       }
     },
-    clickLink: function(cd_fc) {
+    clickLink: function(cd_fc, event) {
+      event.stopPropagation();
       if (this.curTab == "bank") {
         for (var i = 0; i < this.bankList.length; i++) {
           if (this.bankList[i].cd_fc == cd_fc) {
@@ -247,7 +279,8 @@ export default {
         }
       }
     },
-    clickUnlink: function(bank) {
+    clickUnlink: function(bank, event) {
+      event.stopPropagation();
       var _this = this;
       var formData = new FormData();
       console.log(this.$store.state);
@@ -265,7 +298,8 @@ export default {
           }
         });
     },
-    clickCert: function(fcInfo) {
+    clickCert: function(fcInfo, event) {
+      event.stopPropagation();
       var no_person = this.$store.state.user.noPerson;
       var cd_coocon = fcInfo.cd_coocon;
       var nm_code = fcInfo.nm_code;
@@ -284,7 +318,7 @@ export default {
       this.agency = agency;
       this.cd_coocon = cd_coocon;
 
-      this.checkExistCert(true);
+      this.checkExistCert(true, null);
 
       // if (Constant.userAgent == "iOS") {
       //   Jockey.on("updateAvaliableCertScrapInfo", function(param) {
@@ -304,7 +338,8 @@ export default {
       //   );
       // }
     },
-    clickId: function(bank) {
+    clickId: function(bank, event) {
+      event.stopPropagation();
       var _this = this;
       var no_person = this.$store.state.user.noPerson;
       var cd_coocon = bank.cd_coocon;
@@ -385,7 +420,10 @@ export default {
         });
     },
     // 공인인증서 유무 체크
-    checkExistCert: function(isSingle) {
+    checkExistCert: function(isSingle, event) {
+      if (event) {
+        event.stopPropagation();
+      }
       var _this = this;
       this.isSingle = isSingle;
       console.log("userAgent::" + Constant.userAgent);

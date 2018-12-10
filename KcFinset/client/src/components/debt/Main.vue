@@ -123,7 +123,7 @@
             </div>
             <div class="number-wrap">
               <div class="left">
-                <p class="key">잔액</p>
+                <p class="key"><span>잔액</span></p>
                 <p class="number">{{formatNumber(vo.amt_remain * 10000)}}<em>원</em></p>
               </div>
             </div>
@@ -131,13 +131,21 @@
               <p :style="vo.eachStyle"></p>
             </div>
             <div class="text-wrap">
-              <div class="left">
+              <!-- <div class="left">
                 <p class="key"><span>상환금액</span><span>이자율</span></p>
                 <p class="value"><span>{{formatNumber((vo.amt_contract-vo.amt_remain) * 10000)}}<em>원</em></span><span>{{vo.ever_interest}}<em>%</em></span></p>
               </div>
               <div class="right">
                 <p class="key"><span>원금</span></p>
                 <p class="value"><span>{{formatNumber(vo.amt_contract * 10000)}}<em>원</em></span></p>
+              </div> -->
+              <div class="left">
+                <p class="key"><span>상환금액</span></p>
+                <p class="value"><span>{{formatNumber((vo.amt_contract-vo.amt_remain) * 10000)}}<em>원</em></span></p>
+              </div>
+              <div class="right">
+                <p class="key"><span>이자율</span></p>
+                <p class="value"><span>{{vo.ever_interest}}<em>%</em></span></p>
               </div>
             </div>
           </div>
@@ -267,6 +275,7 @@ export default {
           var debtList = response.data.debtList;
           if ((debtList || "") == "" || debtList.length == 0) {
             _this.isNone = true;
+            _this.seen = true;
             return;
           }
           for (var idx in debtList) {
@@ -290,7 +299,6 @@ export default {
               "%";
             _this.mylabels = response.data.dateList;
             _this.$set(_this.mydatasets[0], "data", response.data.dataList);
-            _this.isNone = false;
           } else {
             debtSummary = new Object();
             debtSummary.rate_amt_contract = "0";
@@ -298,6 +306,7 @@ export default {
             debtSummary.dsrStyle = "width:0%";
           }
           _this.debtSummary = debtSummary;
+          _this.isNone = false;
           _this.seen = true;
         });
     },

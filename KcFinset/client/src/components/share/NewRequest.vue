@@ -11,24 +11,39 @@
       </div>
     </div>
 
-    <div class="box-list noMG list02">
-      <div v-if="this.cd_share=='01'" class="item pb10">
-        <div class="checks">
-          <p class="title">정보 제공 항목</p>
-          <div class="small">
-            <p><input type="checkbox" id="credit" v-model="yn_credit_info" true-value="Y" false-value=""><label for="credit">신용등급(연체정보 포함)</label></p>
-            <p><input type="checkbox" id="cDebt" v-model="yn_debt_info" true-value="Y" false-value=""><label for="cDebt">대출개설 및 잔고 현황</label></p>
-          </div>
+    <div v-if="cd_share=='01'" class="box-list noMG list02">
+      <p class="header">정보 제공 항목</p>
+      <div class="item">
+        <div class="flex">
+          <p class="corp big">신용등급(연체정보 포함)</p>
+          <p><button @click="changeItem('credit');" class="btn-onoff" :class="{on: yn_credit_info=='Y'}"></button></p>
         </div>
       </div>
-      <div v-else-if="this.cd_share=='02'" class="item pb10">
-        <div class="checks">
-          <p class="title">정보 통합 관리 항목</p>
-          <div class="small">
-            <p><input type="checkbox" id="asset" v-model="yn_asset_info" true-value="Y" false-value=""><label for="asset">자산</label></p>
-            <p><input type="checkbox" id="consume" v-model="yn_consume_info" true-value="Y" false-value=""><label for="consume">소비</label></p>
-            <p><input type="checkbox" id="fDebt" v-model="yn_debt_info" true-value="Y" false-value=""><label for="fDebt">부채</label></p>
-          </div>
+      <div class="item">
+        <div class="flex">
+          <p class="corp big">대출개설 및 잔고 현황</p>
+          <p><button @click="changeItem('debt');" class="btn-onoff" :class="{on: yn_debt_info=='Y'}"></button></p>
+        </div>
+      </div>
+    </div>
+    <div v-else-if="cd_share=='02'" class="box-list noMG list02">
+      <p class="header">정보 통합 관리 항목</p>
+      <div class="item">
+        <div class="flex">
+          <p class="corp big">자산</p>
+          <p><button @click="changeItem('asset');" class="btn-onoff" :class="{on: yn_credit_info=='Y'}"></button></p>
+        </div>
+      </div>
+      <div class="item">
+        <div class="flex">
+          <p class="corp big">소비</p>
+          <p><button @click="changeItem('consume');" class="btn-onoff" :class="{on: yn_debt_info=='Y'}"></button></p>
+        </div>
+      </div>
+      <div class="item">
+        <div class="flex">
+          <p class="corp big">부채</p>
+          <p><button @click="changeItem('debt');" class="btn-onoff" :class="{on: yn_debt_info=='Y'}"></button></p>
         </div>
       </div>
     </div>
@@ -106,6 +121,51 @@ export default {
       var _this = this;
       _this.offer_nm_person = src_nm_person;
       _this.offer_hp = src_hp;
+    },
+    //항목변경
+    changeItem: function(nm_item) {
+      var _this = this;
+
+      if ("01" == _this.cd_share) {
+        //신용정보
+        if ("credit" == nm_item) {
+          //신용
+          if ("" == _this.yn_credit_info) {
+            _this.yn_credit_info = "Y";
+          } else {
+            _this.yn_credit_info = "";
+          }
+        } else if ("debt" == nm_item) {
+          if ("" == _this.yn_debt_info) {
+            _this.yn_debt_info = "Y";
+          } else {
+            _this.yn_debt_info = "";
+          }
+        }
+      } else {
+        if ("asset" == nm_item) {
+          //자산
+          if ("" == _this.yn_asset_info) {
+            _this.yn_asset_info = "Y";
+          } else {
+            _this.yn_asset_info = "";
+          }
+        } else if ("consume" == nm_item) {
+          //소비
+          if ("" == _this.yn_consume_info) {
+            _this.yn_consume_info = "Y";
+          } else {
+            _this.yn_consume_info = "";
+          }
+        } else if ("debt" == nm_item) {
+          //부채
+          if ("" == _this.yn_debt_info) {
+            _this.yn_debt_info = "Y";
+          } else {
+            _this.yn_debt_info = "";
+          }
+        }
+      }
     },
     //validate체크
     validShareInfoNewReq() {

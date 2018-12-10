@@ -107,7 +107,7 @@
       </div>
 
       <div class="list01 box-list pb90">
-        <div class="filter-wrap">
+        <div class="filter-wrap" v-if="shareList.length != 1">
           <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
             <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
           </div>
@@ -118,7 +118,7 @@
               <p v-if="vo.debt_yn == null || vo.debt_yn == 'N'" class="symbol"><img :src="vo.imgSrc" alt="" />{{vo.nm_fc}}</p>
               <p v-if="vo.debt_yn == 'Y'" class="symbol"><img :src="vo.imgSrc" alt="" />{{vo.creditor}}</p>
               <p class="text blue">{{vo.debt_type}}
-                <span class="circle" :class="settingList[shareList.findIndex(person => person.no_person === vo.no_person)].color"></span>
+                <span class="circle" :class="settingList[shareList.findIndex(person => person.no_person === vo.no_person)].color" v-if="shareList.length != 1"></span>
               </p>
             </div>
             <div class="number-wrap">

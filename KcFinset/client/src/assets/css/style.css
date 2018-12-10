@@ -6233,7 +6233,8 @@ button.cal {
   text-align: right;
 }
 
-.consume-detail li p:last-child input[type="text"] {
+.consume-detail li p:last-child input[type="text"],
+.consume-detail li p:last-child input[type="tel"] {
   line-height: 49px;
   text-align: right;
   padding: 0 10px;
@@ -7778,7 +7779,7 @@ span.cell.day.selected.today {
   background: rgba(0, 0, 0, 0.4) !important;
 }
 
-.goal-list-wrap input[type="number"] {
+.goal-list-wrap input[type="tel"] {
   text-align: right;
   width: 100%;
   padding: 0 10px;

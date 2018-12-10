@@ -5,7 +5,8 @@
         <button class="prev" @click="setYear('prev')"></button>
         <p>{{headDt}}</p>
         <button class="next" @click="setYear('next')"></button>
-        <button class="setting" @click="goMonth"></button>
+        <!-- <button class="setting" @click="goMonth"></button> -->
+        <button class="month" @click="goMonth">월</button>
         <button class="today" @click="setYear('today')">TODAY</button>
       </div>
     </div>

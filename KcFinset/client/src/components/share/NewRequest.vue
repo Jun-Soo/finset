@@ -180,6 +180,11 @@ export default {
         return false;
       }
 
+      if (this.$store.state.user.hp == _this.offer_hp) {
+        _this.$toast.center("본인에게 공유가 되지 않습니다.");
+        return false;
+      }
+
       if ("01" == _this.cd_share) {
         if (!_this.yn_credit_info && !_this.yn_debt_info) {
           _this.$toast.center("항목을 선택해 주세요.");

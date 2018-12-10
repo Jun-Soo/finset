@@ -4,7 +4,7 @@
     <section id="content">
       <div class="cert-wrap">
         <p class="title">회원정보</p>
-        <input type="text" class="form-control" name="nm_person" id="nm_person" v-model="nm_person" v-validate="'required|max:8'" v-bind:disabled="isDisabled" autocomplete="off" placeholder="이름을 입력하세요" data-vv-name='이름' />
+        <input type="text" class="form-control" name="nm_person" id="nm_person" ref="nmperson" v-model="nm_person" v-validate="'required|max:8'" v-bind:disabled="isDisabled" autocomplete="off" placeholder="이름을 입력하세요" data-vv-name='이름' />
         <p class="warn" v-if="errors.has('이름')">{{errors.first('이름')}}</p>
         <div class="grid">
           <div class="number"><input type="number" placeholder="생년월일6자리" name="ssn_birth" id="ssn_birth" v-model="ssn_birth" v-validate="'required|length:6|max:6'" v-on:keyup="nextFocus('birth')" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='생년월일'></div>
@@ -75,15 +75,15 @@ export default {
         { text: "KT알뜰폰", value: "05" },
         { text: "LG알뜰폰", value: "06" }
       ],
-      location: [
-        { label: "SKT", key: "01" },
-        { label: "KT", key: "02" },
-        { label: "LG", key: "03" },
-        { label: "SK알뜰폰", key: "04" },
-        { label: "KT알뜰폰", key: "05" },
-        { label: "LG알뜰폰", key: "06" }
-      ],
-      locationModal: false,
+      // location: [
+      //   { label: "SKT", key: "01" },
+      //   { label: "KT", key: "02" },
+      //   { label: "LG", key: "03" },
+      //   { label: "SK알뜰폰", key: "04" },
+      //   { label: "KT알뜰폰", key: "05" },
+      //   { label: "LG알뜰폰", key: "06" }
+      // ],
+      // locationModal: false,
       timeId: "",
       timerObj: null,
       timer: null,
@@ -111,7 +111,9 @@ export default {
     this.time = this.minutes * 60;
   },
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    $("#nm_person").focus();
+  },
   beforeUpdate() {},
   updated() {
     if (this.smsCertNo) window.scrollTo(0, window.innerHeight);

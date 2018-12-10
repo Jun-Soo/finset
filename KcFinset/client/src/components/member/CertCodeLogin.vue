@@ -186,6 +186,7 @@ export default {
               _this.$router.push("/main");
             }
           } else {
+            this.$store.state.isLoading = false;
             this.initClassPass();
             _this.password = "";
             //비밀번호 틀린 누적횟수 증가

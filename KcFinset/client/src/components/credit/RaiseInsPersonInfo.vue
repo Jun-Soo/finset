@@ -13,18 +13,22 @@
     </div>
     <div class="cert-check-wrap" v-if="scrap_code=='nts'">
       <p class="title">가입형태</p>
-      <select v-model="cert_division">
+      <multiselect v-model="cert_division" label="text" :show-labels="false" :options="options_division" :searchable="false" :allow-empty="false">
+      </multiselect>
+      <!-- <select v-model="cert_division">
         <option v-for="option in options" v-bind:key="option.value" v-bind:value="option.value">
           {{ option.text }}
         </option>
-      </select>
+      </select> -->
       <p class="title">대상기간</p>
-      <select v-model="inquiry_year">
+      <multiselect v-model="inquiry_year" label="text" :show-labels="false" :options="options_year" :searchable="false" :allow-empty="false">
+      </multiselect>
+      <!-- <select v-model="inquiry_year">
         <option v-for="year in inquiry_years" :key="year.index" :value=year>{{year}}년 </option>
-      </select>
+      </select> -->
     </div>
 
-    <div class="btn-wrap" v-if="isShowButton">
+    <div class="btn-wrap float" v-if="isShowButton">
       <a class="solid blue box" @click="checkExistCert()">확인</a>
     </div>
   </section>
@@ -45,14 +49,14 @@ export default {
       nhis_end_ym: "",
       nps_start_ym: "",
       nps_end_ym: "",
-      inquiry_years: "",
-      cert_division: "1",
-      inquiry_year: "",
-      options: [
+      cert_division: { text: "근로소득자용", value: "1" },
+      inquiry_year: {},
+      options_division: [
         { text: "근로소득자용", value: "1" },
         { text: "연말정산한 사업소득자용", value: "2" },
         { text: "종합소득세 신고자용", value: "3" }
-      ]
+      ],
+      options_year: []
     };
   },
   components: {},
@@ -97,8 +101,15 @@ export default {
             _this.nps_start_ym = result.nps_start_ym;
             _this.nps_end_ym = result.nps_end_ym;
 
-            _this.inquiry_years = result.inquiry_years;
-            _this.inquiry_year = result.inquiry_years[0];
+            var list = result.inquiry_years;
+            for (var i = 0; i < list.length; i++) {
+              _this.options_year.push({
+                text: list[i] + "년",
+                value: list[i]
+              });
+            }
+            _this.inquiry_year = { text: list[0] + "년", value: list[0] };
+
             _this.seen = true;
           } else {
             this.$toast.center(ko.messages.error);
@@ -140,9 +151,9 @@ export default {
           ssnPerson: ssnPerson,
           nhisStartYm: _this.nhis_start_ym,
           nhisEndYm: _this.nhis_end_ym,
-          certDivision: _this.cert_division,
-          ntsStartIncomeY: _this.inquiry_year,
-          ntsEndIncomeY: _this.inquiry_year,
+          certDivision: _this.cert_division.value,
+          ntsStartIncomeY: _this.inquiry_year.value,
+          ntsEndIncomeY: _this.inquiry_year.value,
           npsStartYm: _this.nps_start_ym,
           npsEndYm: _this.nps_end_ym
         });
@@ -154,9 +165,9 @@ export default {
           ssnPerson,
           _this.nhis_start_ym,
           _this.nhis_end_ym,
-          _this.cert_division,
-          _this.inquiry_year,
-          _this.inquiry_year,
+          _this.cert_division.value,
+          _this.inquiry_year.value,
+          _this.inquiry_year.value,
           _this.nps_start_ym,
           _this.nps_end_ym
         );
@@ -164,12 +175,15 @@ export default {
     },
     checkExistCert: function() {
       var scrapCode = this.scrap_code;
+      var _this = this;
+      alert(this.cert_division.value);
+      alert(this.inquiry_year.value);
       if (Constant.userAgent == "iOS") {
         //공인인증서 유무 체크 결과 콜백 이벤트
         Jockey.on("resultCheckCert", function(param) {
           var iscert = "false";
           if (param.isCert == 1) iscert = "true";
-          resultCheckCert(iscert);
+          _this.resultCheckCert(iscert);
         });
         Jockey.send("checkExistCert");
       } else if (Constant.userAgent == "Android") {
@@ -209,8 +223,11 @@ export default {
         this.frmSimpleDoc();
       } else {
         // 공인인증서가 없을 경우
-        alert("공인인증서가 없습니다.");
-        this.$router.push("/credit/raiseMain");
+        this.$dialogs
+          .alert("공인인증서가 없습니다.", Constant.options)
+          .then(res => {
+            this.$router.push("/credit/raiseMain");
+          });
       }
     },
     resultCreditRatingUpgrade: function(result, scrapCode) {

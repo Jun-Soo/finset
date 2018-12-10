@@ -2,7 +2,7 @@
   <section v-if="seen">
     <form name="frmFcLinkList" id="frmFcLinkList"></form>
     <div class="box-list noMG list02 pb90">
-      <div v-for="linkedFcInfo in linkedFcInfoList" :key="linkedFcInfo.index">
+      <div v-if="isData" v-for="linkedFcInfo in linkedFcInfoList" :key="linkedFcInfo.index">
         <p class="header" v-if="checkType(linkedFcInfo.nm_code)">{{linkedFcInfo.nm_code}}</p>
         <div class="item">
           <div class="flex">
@@ -11,7 +11,11 @@
           </div>
         </div>
       </div>
+      <div v-else>
+        <div class="nodata">연동가능한 금융사가 없습니다</div>
+      </div>
     </div>
+
     <div class="btn-wrap col2">
       <a @click="clickCancel()">취소</a>
       <a class="btn-solid" v-on:click="updateLinkedFcInfo()">연결</a>
@@ -29,6 +33,7 @@ export default {
   data() {
     return {
       seen: false,
+      isData: false,
       noPerson: this.$store.state.user.noPerson,
       password: localStorage.getItem("tempPwd"),
       cn: this.$route.params.cn,
@@ -50,7 +55,16 @@ export default {
     this.getLinkedFcInfo();
   },
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    // 로그인이 되어있으면 관리화면으로 안되어 있으면 어플 종료
+    if (this.$store.state.isLoggedIn) {
+      this.$store.state.header.backPath = "/scrap/CtrlFcLink";
+    } else {
+      if (Constant.userAgent == "Android") {
+        window.Android.setEndApp("Y");
+      }
+    }
+  },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
@@ -99,12 +113,12 @@ export default {
             _this.$store.commit("LOGIN", response.data);
             _this.$router.push("/main");
           } else {
-            this.$toast.center(ko.messages.loginErr);
+            _this.$toast.center(ko.messages.loginErr);
             return;
           }
         })
         .catch(e => {
-          this.$toast.center(ko.messages.error);
+          _this.$toast.center(ko.messages.error);
         });
     },
     //자동스크래핑 가능 금융사 조회
@@ -118,15 +132,19 @@ export default {
         .post("/m/scrap/scrapFcLinkList.json", formData)
         .then(function(response) {
           var list = response.data.linkedFcInfoList;
-          for (var i = 0; i < list.length; i++) {
-            list[i].icon =
-              "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + list[i].cd_fc;
-            list[i].yn_link_origin = list[i].yn_link;
+          if ((list || "") != "") {
+            for (var i = 0; i < list.length; i++) {
+              list[i].icon =
+                "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + list[i].cd_fc;
+              list[i].yn_link_origin = list[i].yn_link;
+            }
+            _this.linkedFcInfoList = list;
+            _this.isData = true;
           }
-          _this.linkedFcInfoList = list;
           _this.seen = true;
         })
         .catch(e => {
+          _this.seen = true;
           this.$toast.center(ko.messages.error);
         });
     },
@@ -137,39 +155,39 @@ export default {
       $("#frmFcLinkList").html("");
       for (var i = 0; i < this.linkedFcInfoList.length; i++) {
         if (
-          this.linkedFcInfoList[i].yn_link_origin !=
-          this.linkedFcInfoList[i].yn_link
+          _this.linkedFcInfoList[i].yn_link_origin !=
+          _this.linkedFcInfoList[i].yn_link
         ) {
           //실제 action을 보낼 form 태그 안에 input 태그를 생성
           $("#frmFcLinkList").append(
-            this.getInputStr(
+            _this.getInputStr(
               "no_person",
               cnt,
-              this.linkedFcInfoList[i].no_person
+              _this.linkedFcInfoList[i].no_person
             )
           );
           $("#frmFcLinkList").append(
-            this.getInputStr(
+            _this.getInputStr(
               "cd_agency",
               cnt,
-              this.linkedFcInfoList[i].cd_agency
+              _this.linkedFcInfoList[i].cd_agency
             )
           );
           $("#frmFcLinkList").append(
-            this.getInputStr("cd_fc", cnt, this.linkedFcInfoList[i].cd_fc)
+            _this.getInputStr("cd_fc", cnt, _this.linkedFcInfoList[i].cd_fc)
           );
           $("#frmFcLinkList").append(
-            this.getInputStr("cn", cnt, this.linkedFcInfoList[i].cn)
+            _this.getInputStr("cn", cnt, _this.linkedFcInfoList[i].cn)
           );
           $("#frmFcLinkList").append(
-            this.getInputStr(
+            _this.getInputStr(
               "type_login",
               cnt,
-              this.linkedFcInfoList[i].type_login
+              _this.linkedFcInfoList[i].type_login
             )
           );
           $("#frmFcLinkList").append(
-            this.getInputStr("yn_link", cnt, this.linkedFcInfoList[i].yn_link)
+            _this.getInputStr("yn_link", cnt, this.linkedFcInfoList[i].yn_link)
           );
           cnt++;
         }
@@ -194,7 +212,7 @@ export default {
           }
         })
         .catch(e => {
-          this.$toast.center(ko.messages.error);
+          _this.$toast.center(ko.messages.error);
         });
     },
     clickCancel: function() {

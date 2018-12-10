@@ -196,9 +196,6 @@ export default {
           this.cd_goods_class_m = this.cd_goods_class_m + ",01";
         if (this.isCheckSelf)
           this.cd_goods_class_m = this.cd_goods_class_m + ",02";
-        this.listGoods();
-        Common.pagination(this.$refs.form.listGoods);
-        this.clickSearch();
       } else if ("loanHome" == this.curTab) {
         this.cd_ratio_type = "03";
         this.cd_type_pay = "01";
@@ -210,6 +207,9 @@ export default {
         if (this.isCheckDiv) this.cd_type_pay = this.cd_type_pay + ", 02";
         if (this.isCheckBullet) this.cd_type_pay = this.cd_type_pay + ", 03";
       }
+      this.page = 1;
+      this.loadGoodsTab(this.curTab);
+      this.clickSearch();
     },
     clickCheckApart: function() {
       this.isCheckApart = !this.isCheckApart;

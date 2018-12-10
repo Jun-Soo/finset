@@ -47,6 +47,16 @@ public class GoodsManagerImpl implements GoodsManager {
 	}
 	
 	@Override
+	public List<GoodsVO> listGoodsAllianceHouse(GoodsForm goodsForm) {
+		return goodsMapper.listGoodsAllianceHouse(goodsForm);
+	}
+	
+	@Override
+	public int listGoodsAllianceHouseCount(GoodsForm goodsForm) {
+		return goodsMapper.listGoodsAllianceHouseCount(goodsForm);
+	}
+	
+	@Override
 	public List<GoodsVO> listGoodsAllianceBiz(GoodsForm goodsForm) {
 		return goodsMapper.listGoodsAllianceBiz(goodsForm);
 	}

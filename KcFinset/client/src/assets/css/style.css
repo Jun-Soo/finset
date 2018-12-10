@@ -1998,6 +1998,7 @@ aside.search-wrap .action.btn1 {
 .list01 .item .text-wrap .left .value {
   font-size: 14px;
   color: #666;
+  margin-top: 10px;
 }
 
 .list01 .item .text-wrap .left .value span {
@@ -2906,7 +2907,6 @@ aside.search-wrap .action.btn1 {
 .my-main-list .list .item .left a {
   color: #9b9489;
   font-size: 12px;
-  background: url(../images/main/arrow_graph.png) no-repeat center right/6px;
   padding-right: 10px;
 }
 
@@ -3193,13 +3193,13 @@ aside.search-wrap .action.btn1 {
   margin-top: 10px;
   background: url(../images/main/btn_arrow.png) no-repeat right center #f0efed;
   background-size: 20px;
-  padding: 15px 20px;
+  padding: 5px 20px;
   border-radius: 10px;
 }
 
 .credit-change .link a {
   display: block;
-  font-size: 12px;
+  font-size: 14px;
   line-height: 17px;
   color: #666;
   padding: 10px 20px;
@@ -3249,7 +3249,7 @@ aside.search-wrap .action.btn1 {
 }
 
 .credit-status .wrap .item .value {
-  font-size: 15px;
+  font-size: 18px;
   font-weight: 700;
   margin-top: 5px;
   color: #62c1d0;

@@ -20,7 +20,7 @@
           <li>
             <p class="key">금액</p>
             <p>
-              <input type="text" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액"><em>원</em>
+              <input type="tel" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액"><em>원</em>
             </p>
             <p class="warn" v-if="errors.has('금액')">{{errors.first('금액')}}</p>
           </li>
@@ -54,10 +54,10 @@
           <a v-if="curTab=='02'" @click="goAnalyze">이번 달에 <em>{{nmBanner}}</em> 지출이<em> {{bannerData}}번</em> 있었습니다.</a>
         </div>
 
-        <div v-if="isNew&&isMine" class="btn-wrap float">
+        <div v-if="isNew&&isMine&&chkNecessary" class="btn-wrap float">
           <a @click="clickSave" class="solid blue box">저장</a>
         </div>
-        <div v-if="!isNew&&isMine" class="btn-wrap col2">
+        <div v-if="!isNew&&isMine&&chkNecessary" class="btn-wrap col2">
           <a @click="clickDelete">삭제</a>
           <a @click="clickSave" class="btn-solid">저장</a>
         </div>
@@ -203,6 +203,18 @@ export default {
         return "출처";
       } else {
         return "결제처";
+      }
+    },
+    chkNecessary: function() {
+      if (
+        (this.consumeVO.means_consume || "") != "" &&
+        (this.consumeVO.amt_in_out || "") != "" &&
+        (this.consumeVO.cd_class || "") != "" &&
+        (this.consumeVO.contents || "") != ""
+      ) {
+        return true;
+      } else {
+        return false;
       }
     }
   },

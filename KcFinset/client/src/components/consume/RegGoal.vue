@@ -29,12 +29,12 @@
           <dl>
             <dt class="sum">
               <p class="title">합계</p>
-              <p><input readonly type="text" :value="sumGoal1"></p>
+              <p><input readonly type="tel" :value="sumGoal1"></p>
             </dt>
             <dd v-for="(vo, index) in listDetailGoal1" :key="vo.cd_class">
               <p>{{vo.nm_class}}</p>
               <input type="hidden" :name="'list['+index+'].cd_class'" :value="vo.cd_class" />
-              <p><input :name="'list['+index+'].amt_budget'" class="each_amt" type="number" v-model="vo.amt_budget" :readonly="curLabel != 'custom'" v-validate="'required|numeric'" :data-vv-name="vo.nm_class"></p>
+              <p><input :name="'list['+index+'].amt_budget'" class="each_amt" type="tel" v-model="vo.amt_budget" :readonly="curLabel != 'custom'" v-validate="'required|numeric'" :data-vv-name="vo.nm_class"></p>
               <p class="warn" v-if="errors.has(vo.nm_class)">{{errors.first(vo.nm_class)}}</p>
             </dd>
           </dl>

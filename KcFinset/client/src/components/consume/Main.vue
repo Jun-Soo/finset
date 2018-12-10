@@ -110,6 +110,7 @@
 <script>
 import Common from "@/assets/js/common.js";
 import Progress from "@/components/plugins/progress/Progress.vue";
+import ko from "vee-validate/dist/locale/ko.js";
 
 export default {
   name: "ConsumeMain",
@@ -213,6 +214,10 @@ export default {
           }
           _this.shareList = list;
           _this.listConsumeInfo();
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+          _this.seen = true;
         });
     },
     listConsumeInfo: function() {
@@ -254,6 +259,10 @@ export default {
           }
           _this.isScrap = response.data.isScrap;
           _this.consumeList = response.data.listConsumeInfo;
+          _this.seen = true;
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
           _this.seen = true;
         });
     },

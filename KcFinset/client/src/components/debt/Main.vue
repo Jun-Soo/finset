@@ -163,6 +163,8 @@
 
 <script>
 import Common from "@/assets/js/common.js";
+import ko from "vee-validate/dist/locale/ko.js";
+
 export default {
   name: "DebtMain",
   data() {
@@ -259,6 +261,10 @@ export default {
           }
           _this.shareList = list;
           _this.listDebtPg();
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+          _this.seen = true;
         });
     },
     listDebtPg: function() {
@@ -307,6 +313,10 @@ export default {
           }
           _this.debtSummary = debtSummary;
           _this.isNone = false;
+          _this.seen = true;
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
           _this.seen = true;
         });
     },

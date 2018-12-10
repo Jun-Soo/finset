@@ -81,7 +81,7 @@ export default {
     window.resultSendSms = this.resultSendSms;
 
     //test
-    this.resultAddress("박준수", "01026882453");
+    // this.resultAddress("박준수", "01026882453");
   },
   beforeMount() {},
   mounted() {},

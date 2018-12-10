@@ -80,7 +80,7 @@
       <div class="wrap">
         <div class="item">
           <a @click="$router.push('/credit/cardInfo')">
-            <p class="key">8월 카드이용</p>
+            <p class="key">{{useMonth}}월 카드이용</p>
             <p class="value">{{formatNumber(cardSumAmt)}}<em>원</em></p>
           </a>
         </div>
@@ -119,6 +119,7 @@ export default {
     return {
       seen: false,
       currentDate: "", //현재일자
+      useMonth: "",
       //신용 기본정보
       baseInfo: "",
       b_grade_credit: "", //신용등급
@@ -144,6 +145,7 @@ export default {
     this.$store.state.header.type = "main";
     this.$store.state.header.active = "credit";
 
+    this.setUseMonth();
     this.getCreditMainInfo();
   },
   beforeMount() {},
@@ -153,6 +155,21 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    //이용월 셋팅
+    setUseMonth: function() {
+      var _this = this;
+      var date = new Date();
+
+      if (date.getDate() < 15) {
+        date.setMonth(date.getMonth() - 1);
+      }
+
+      if (date.getMonth() == 0) {
+        _this.useMonth = "12";
+      } else {
+        _this.useMonth = date.getMonth();
+      }
+    },
     // 신용정보 조회
     getCreditMainInfo: function() {
       var _this = this;

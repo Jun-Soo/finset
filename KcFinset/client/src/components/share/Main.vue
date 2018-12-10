@@ -1,10 +1,12 @@
 <template>
   <section v-if="seen">
-    <div class="con-top share-top">
-      <p v-if="cd_share=='01'">한번의 클릭으로 간편하게<br>신용 정보를 공유할 수 있습니다.<br><br><br>
-        <em>* 신용정보는 당일에 한해서만 정보를 볼 수 있습니다.</em>
-      </p>
-      <p v-else-if="cd_share=='02'"><em>finset 정보 공유를 통해</em> <br>가족간의 흩어진 정보를<br>한눈에 볼수 있으며, <br><em>한번의 클릭으로 간편하게</em><br>정보를 통합 관리<em>할 수 있습니다.</em></p>
+
+    <div v-if="cd_share=='01'" class="con-top share-top">
+      <p><em>몇번의 클릭으로</em><br>가족간의 흩어진 정보를<br><em>관리 하세요.</em></p>
+      <p class="text">신용정보는 당일에 한해서만 정보를 볼 수 있습니다.</p>
+    </div>
+    <div v-else-if="cd_share=='02'" class="con-top share-top">
+      <p><em>finset 정보 공유를 통해</em> <br>가족간의 흩어진 정보를<br>한눈에 볼수 있으며, <br><em>한번의 클릭으로 간편하게</em><br>정보를 통합 관리<em>할 수 있습니다.</em></p>
     </div>
 
     <div class="tab">

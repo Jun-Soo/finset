@@ -48,7 +48,7 @@
         </div>
       </div>
 
-      <div class="btn-wrap" style="margin-bottom:100px;">
+      <div class="btn-wrap mb80">
         <a @click="goHistory('req')" class="stroke blue">이전 내역 보기</a>
       </div>
 
@@ -91,7 +91,7 @@
         </div>
       </div>
 
-      <div class="btn-wrap">
+      <div class="btn-wrap mb35">
         <a @click="goHistory('offer')" class="stroke blue">이전 내역 보기</a>
       </div>
     </template>

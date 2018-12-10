@@ -224,6 +224,7 @@ $mobileSize: "600px";
 
   &__wrapper {
     width: 100%;
+    height: 100%;
   }
 
   &__content {
@@ -231,6 +232,7 @@ $mobileSize: "600px";
     margin-bottom: 5%;
     margin-top: 5%;
     width: 50%;
+    height: 100%;
     background-color: #fff;
     transition: all 0.5s ease;
 

@@ -4,62 +4,6 @@
 
     <vue-modal name="my-modal" transitionName="fade" theme="width: 90%">
       <EventPop slot="body" :modalDate="modalDate" :incomeList="incomeList" :consumeList="consumeList" :debtList="debtList" :incomeTotal="incomeTotal" :consumeTotal="consumeTotal" :debtTotal="debtTotal" :settingList="settingList" :shareList="shareList" />
-      <!-- <div slot="body" class="modal-con" data-modal-con="modal01" style="display:block;">
-        <div class="top">
-          {{modalDate}}
-          <button class="modal-close"></button>
-        </div>
-        <div class="cal-con">
-          <div class="cal-top">
-            <div>
-              <em class="income">수입</em>
-              <p>{{incomeTotal}} 원</p>
-            </div>
-            <div>
-              <em class="debt">지출</em>
-              <p>{{consumeTotal}} 원</p>
-            </div>
-            <div>
-              <em class="loan">대출</em>
-              <p>{{debtTotal}} 원</p>
-            </div>
-          </div>
-          <div class="body">
-            <div v-for="(incomeVO, index) in incomeList" :key="'income-'+index" class="list">
-              <div>
-                <em :class="$refs.scheduler.settingList[shareList.findIndex(person => person.no_person === incomeVO.no_person)].color">
-                  {{shareList.filter(person => person.no_person === incomeVO.no_person)[0].nm_person}}
-                </em>
-                <em class="income">수입</em>
-                <em class="text">{{incomeVO.contents}}</em>
-              </div>
-              <div class="won">{{Common.formatNumber(incomeVO.amt_in_out)}} 원</div>
-            </div>
-
-            <div v-for="(consumeVO, index) in consumeList" :key="'consume-'+index" class="list">
-              <div>
-                <em :class="$refs.scheduler.settingList[shareList.findIndex(person => person.no_person === consumeVO.no_person)].color">
-                  {{shareList.filter(person => person.no_person === consumeVO.no_person)[0].nm_person}}
-                </em>
-                <em class="debt">지출</em>
-                <em class="text">{{consumeVO.contents}}</em>
-              </div>
-              <div class="won">{{Common.formatNumber(consumeVO.amt_in_out)}} 원</div>
-            </div>
-
-            <div v-for="(debtVO, index) in debtList" :key="'debt-'+index" class="list">
-              <div>
-                <em :class="$refs.scheduler.settingList[shareList.findIndex(person => person.no_person === debtVO.no_person)].color">
-                  {{shareList.filter(person => person.no_person === debtVO.no_person)[0].nm_person}}
-                </em>
-                <em class="loan">대출</em>
-                <em class="text" v-text="(debtVO.nm_fc||'')==''?debtVO.creditor:debtVO.nm_fc"></em>
-              </div>
-              <div class="won">{{Common.formatNumber(debtVO.amt_repay)}} 원</div>
-            </div>
-          </div>
-        </div>
-      </div> -->
     </vue-modal>
   </div>
 </template>

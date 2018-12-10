@@ -68,7 +68,7 @@
     <aside class="search-wrap" :class="{'on':isShowCategory}">
       <div class="top" @click="closeCategory">
         <button>카테고리</button>
-        <a class="btn-setting"></a>
+        <a class="btn-setting" @click="clickSetting"></a>
       </div>
       <div v-if="curTab == '02'" class="select-cate">
         <div class="cate-wrap">
@@ -431,6 +431,10 @@ export default {
     },
     openDatepicker: function() {
       this.$refs.datepicker.showCalendar();
+    },
+    clickSetting: function(event) {
+      event.stopPropagation();
+      this.$router.push("/consume/setting");
     },
     //데이터 이동부분
     getConsumeInfo: function() {

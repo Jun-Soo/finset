@@ -135,7 +135,7 @@ export default {
         { color: "purple", id: "chk5" }
       ],
       progressOption: {
-        text: "예산을 설정하여 목표를 이루세요",
+        text: "공인 인증서를 등록하여 소비내역을 관리하세요",
         max: 0
       }
     };

@@ -125,6 +125,13 @@ public interface PersonMapper {
 	int modifyFingerPrint(PersonVO personVO);
 
 	/**
+	 * 이메일 조회
+	 * @param	String no_person
+	 * @return	String
+	 */
+	String getPersonEmail(String no_person);
+	
+	/**
 	 * 이메일 업데이트
 	 * @param 	personVO
 	 * @return	int

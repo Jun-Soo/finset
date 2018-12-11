@@ -50,7 +50,7 @@ export default {
     value: {
       // 게이지 값. 0~1.
       type: Number,
-      default: 0.0
+      default: 0.34
     },
     text: {
       // 게이지 중앙에 보이는 텍스트.
@@ -123,7 +123,6 @@ export default {
       return [0, this.centerX, this.centerY].join(" ");
     },
     rotateTo() {
-      console.log(this, "rotateto");
       let angle = 180 * this.value;
       return [angle, this.centerX, this.centerY].join(" ");
     }
@@ -131,7 +130,7 @@ export default {
   methods: {
     test() {}
   },
-  mounted: function() {
+  updated() {
     let rotate = "rotate(" + this.rotateAngle + "deg)";
     let dataPointStyle = this.$refs.dataPoint.style;
     let dataBarStyle = this.$refs.dataBar.style;
@@ -141,13 +140,16 @@ export default {
 
     dataBarStyle.transition = this.animationDuration + " " + this.animationType;
 
+    dataPointStyle.transform = rotate;
+    dataBarStyle.transform = rotate;
+
     setTimeout(
       function() {
         dataPointStyle.transform = rotate;
         dataBarStyle.transform = rotate;
       }.bind(rotate, dataPointStyle, dataBarStyle),
       this.animationDelay
-    ); // 2000 - 2초 후에 애니메이션 시작
+    );
   }
 };
 </script>
@@ -179,6 +181,7 @@ svg {
   stroke: var(--dataBarColor);
   clip-path: url(#clipRectangle);
   transform-origin: var(--transformOrigin);
+  transform: rotate(0deg);
 }
 
 #clipRectangle {

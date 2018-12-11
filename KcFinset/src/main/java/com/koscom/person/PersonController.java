@@ -410,6 +410,30 @@ public class PersonController {
 	}
 	
 	/**
+	 * 이메일 조회
+	 * @param model
+	 * @param request
+	 * @param fcmVO
+	 * @return
+	 */
+	@RequestMapping("/getPersonEmail.json")
+	public String getPersonEmail(
+			HttpServletRequest request,
+			HttpSession session,
+			String no_person,
+			Model model) {
+
+		logger.info("no_person : "+no_person);
+		//personVO.setNo_person(no_person);
+		String email = personManager.getPersonEmail(no_person);
+
+		logger.info("email     : "+email);
+		model.addAttribute("email" , email);
+		
+		return "jsonView";
+	}
+	
+	/**
 	 * 이메일 업데이트
 	 * @param model
 	 * @param request

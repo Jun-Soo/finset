@@ -103,6 +103,13 @@ public interface PersonManager {
 	 * @return	ReturnClass
 	 */
 	ReturnClass modifyFingerPrint(PersonVO personVO);
+	
+	/**
+	 * 이메일 조회
+	 * @param 	String
+	 * @return	String
+	 */
+	String getPersonEmail(String no_person);
 
 	/**
 	 * 이메일 업데이트

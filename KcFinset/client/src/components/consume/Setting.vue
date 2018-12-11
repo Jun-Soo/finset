@@ -2,10 +2,7 @@
   <section v-if="seen">
     <div class="cert-check-wrap">
       <p class="title">회원정보</p>
-      <!-- <select @change="modifyDt_basic" v-model="dt_basic">
-        <option v-for="(n, index) in 31" :key="index" :value="n">매월 {{n}}일</option>
-      </select> -->
-      <multiselect v-model="dt_basic" label="text" :show-labels="false" :options="dt_basic_option" :searchable="false" :allow-empty="false" @select="modifyDt_basic">
+      <multiselect v-model="dt_basic" label="text" :show-labels="false" :options="dt_basic_option" :searchable="false" :allow-empty="false" @select="modifyDt_basic" class="multiselect-basic mt10">
       </multiselect>
     </div>
 

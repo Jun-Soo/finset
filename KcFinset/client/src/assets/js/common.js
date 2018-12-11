@@ -432,7 +432,7 @@ export default {
     return result
   },
   calendarDimClick: function () {
-    var children = Constant._this.$children
+    var children = Constant.vueComponent.$children
     for (var index in children) {
       if (children[index].$options._componentTag === 'datepicker') {
         children[index].showDayView = false
@@ -450,14 +450,17 @@ export default {
           calendarOverlay.addEventListener('click', this.calendarDimClick)
           document.getElementsByClassName(classNm)[i].children[1].prepend(calendarOverlay)
           document.getElementsByClassName(classNm)[i].children[1].children[2].style.background = '#FFFFFF'
-          Constant._this = vueComponent
+          Constant.vueComponent = vueComponent
         }
 
         for (var j = 1; j < document.getElementsByClassName(classNm)[i].children.length; j++) {
           // let leftMargin = document.getElementsByClassName(classNm)[i].offsetWidth - 300
           // document.getElementsByClassName(classNm)[i].children[j].style.marginLeft = leftMargin + 'px'
-          document.getElementsByClassName(classNm)[i].children[j].style.top = (document.body.clientHeight - 200) / 2 + 'px'
-          document.getElementsByClassName(classNm)[i].children[j].style.left = (document.body.clientWidth - 300) / 2 + 'px'
+          console.log(document.body.clientHeight)
+          // document.getElementsByClassName(classNm)[i].children[j].style.top = (document.body.clientHeight - 200) / 2 + 'px'
+          // document.getElementsByClassName(classNm)[i].children[j].style.left = (document.body.clientWidth - 300) / 2 + 'px'
+          document.getElementsByClassName(classNm)[i].children[j].style.top = (document.documentElement.clientHeight - 200) / 2 + 'px'
+          document.getElementsByClassName(classNm)[i].children[j].style.left = (document.documentElement.clientWidth - 300) / 2 + 'px'
         }
       }
     }

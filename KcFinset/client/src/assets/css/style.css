@@ -7726,7 +7726,8 @@ button.cal {
 }
 
 .vdp-datepicker {
-  display: inline-block;
+  /* display: inline-block; */
+  display: inline;
 }
 
 .consume-detail li p.key {
@@ -7815,6 +7816,7 @@ span.cell.day.selected.today {
 
 .vdp-datepicker.div-date>div {
   text-align: right;
+  display: inline;
 }
 
 .vdp-datepicker.div-date>div.vdp-datepicker__calendar {

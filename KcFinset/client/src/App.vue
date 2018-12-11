@@ -26,7 +26,7 @@ export default {
   watch: {
     $route: function(to, from) {
       if (Constant._this != undefined) {
-        // Common.removeScroll();
+        Common.removeScroll();
       }
     }
   },

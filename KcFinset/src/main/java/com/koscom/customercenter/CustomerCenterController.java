@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import com.koscom.scrap.service.ScrapManager;
 import com.koscom.util.*;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -83,10 +84,10 @@ public class CustomerCenterController implements Constant {
 
 	@Autowired
 	CacheManager cacheManager;
-	
+
 	@Autowired
 	FinanceManager financeManager;
-	
+
 	@Autowired
 	ApplyManager applyManager;
 
@@ -106,6 +107,24 @@ public class CustomerCenterController implements Constant {
 	public String frameCustomerCenterMain(HttpServletRequest request, HttpSession session, Model model) throws FinsetException, IOException {
 		String no_person = (String) session.getAttribute("no_person");
 		PersonVO personVO = personManager.getPersonInfo(no_person);
+		String hp = personVO.getHp();
+		if(StringUtils.isNotEmpty(hp)){
+			if(hp.length() == 10){
+				hp = hp.substring(0,3) + "-"
+					+ hp.substring(3,6) + "-"
+					+ hp.substring(6,hp.length());
+			}else if(hp.length() == 11){
+				hp = hp.substring(0,3) + "-"
+					+ hp.substring(3,7) + "-"
+					+ hp.substring(7,hp.length());
+			}else if(hp.length() > 11){
+				hp = hp.substring(0,hp.length()-11) + "-"
+					+ hp.substring(hp.length()-11,hp.length()-8) + "-"
+					+ hp.substring(hp.length()-8,hp.length()-4) + "-"
+					+ hp.substring(hp.length()-4,hp.length());
+			}
+			personVO.setHp(hp);
+		}
 		model.addAttribute("personVO", personVO);
 		logger.info("personVO====MAIN======" + personVO.toString());
 		return "jsonView";
@@ -652,7 +671,7 @@ public class CustomerCenterController implements Constant {
 		logger.info("공유관리 상세");
 		return "jsonView";
 	}
-	
+
 	/** VUE
      * 마이페이지 조회결과
      * @param model
@@ -676,7 +695,7 @@ public class CustomerCenterController implements Constant {
 
 		return "jsonView";
 	}
-	
+
 	/** VUE
 	 * 마이페이지 신청상품 진행현황
 	 * @param request
@@ -951,7 +970,7 @@ public class CustomerCenterController implements Constant {
 
 		return "jsonView";
 	}
-	
+
 	/** VUE
 	 * 마이페이지 알림 리스트
 	 * @param request
@@ -965,10 +984,10 @@ public class CustomerCenterController implements Constant {
 		Pagination pagedList = (Pagination) pushEachForm.setPagedList(pushEachManager.listPushNotification(pushEachForm), pushEachManager.listPushNotificationCount(pushEachForm));
 		model.addAttribute("pagedList", pagedList);
 		model.addAttribute("pushEachForm", pushEachForm);
-		
+
 		return "jsonView";
 	}
-	
+
 	/** VUE
 	 * 마이페이지 관심상품
 	 * @param request
@@ -981,10 +1000,10 @@ public class CustomerCenterController implements Constant {
 		goodsForm.setNo_person(no_person);
 
 		Pagination pagedList = null;
-		
+
 		logger.info("cd_goods_alliance  : "+ goodsForm.getCd_goods_alliance());
 		logger.info("++++++++++++++++cd_goods_class  : "+ goodsForm.getCd_goods_class());
-		
+
 		if( "01".equals(goodsForm.getCd_goods_alliance()) ){//일반상품
 			pagedList = (Pagination) goodsForm.setPagedList(goodsManager.listGoodsFavoriteNoAlliance(goodsForm), goodsManager.getGoodsFavoriteNoAllianceCount(goodsForm));
 		}else if( "02".equals(goodsForm.getCd_goods_alliance()) ){//제휴상품
@@ -1026,7 +1045,7 @@ public class CustomerCenterController implements Constant {
 		}
 		return "jsonView";
 	}
-	
+
 	/**
 	 * 마이페이지 인증/보안
 	 * @param request

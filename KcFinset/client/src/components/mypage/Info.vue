@@ -4,7 +4,7 @@
       <p class="key">이름</p>
       <p class="value">{{nm_person}}</p>
       <p class="key">휴대폰번호</p>
-      <p class="value">{{hp}}</p>
+      <p class="value">{{viewHp}}</p>
       <p class="key">이메일주소</p>
       <p class="value email" id="email">{{email}}</p>
       <p class="link"><a @click="$router.push('/mypage/email')">수정</a></p>
@@ -37,6 +37,7 @@ export default {
       no_person: this.$store.state.user.noPerson,
       nm_person: this.$store.state.user.nmPerson,
       hp: this.$store.state.user.hp,
+      viewHp: "",
       email: "",
       seen: false
     };
@@ -65,6 +66,7 @@ export default {
         } else {
           _this.email = "등록안됨";
         }
+        _this.viewHp = personInfo.hp;
         _this.seen = true;
       });
   },

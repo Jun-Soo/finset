@@ -612,7 +612,7 @@ aside.search-wrap{
                 .value{
                     font-size: 14px;
                     color: #666;
-                    margin-top: 10px;
+                    //margin-top: 10px;
                     span{
                         font-size: inherit;
                         color: #666;
@@ -962,11 +962,7 @@ aside.search-wrap{
                 color: #222;
             }
             .small{
-                margin-top: 15px;
-                //margin-bottom: 15px;
-                p{
-                    margin-bottom: 10px;
-                }
+                margin-top: 10px;
             }
         }
         .bar{
@@ -1409,25 +1405,19 @@ aside.search-wrap{
         .item{
             display: flex;
             width: 100%;
-            position: relative;
             .left{
                 width: 70%;
                 a{
                     color: $col2;
                     font-size: 12px;
-                    //background: url(../images/main/arrow_graph.png) no-repeat center right / 6px;
+                    background: url(../images/main/arrow_graph.png) no-repeat center right / 6px;
                     padding-right: 10px;
                 }
                 p{
                     color: #222;
                     font-weight: 700;
                     font-size: 24px;
-                    margin-top: 30px;
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                    text-align: center;
-                    width: 100%;
+                    margin-top: 15px;
                     em{
                         font-size: 12px;
                         color: inherit;
@@ -1473,19 +1463,16 @@ aside.search-wrap{
                     width: 100%;
                     text-align: center;
                     a{
-                        //width: auto;
+                        width: auto;
                         height: auto;
                         text-indent: 0;
                         border-radius: 0;
                         background: url("../images/mypage/ico_nodata.png") no-repeat right center / 20px;
                         line-height: 20px;
-                        //padding-right: 30px;
+                        padding-right: 30px;
                         font-size: 18px;
                         color: #222;
                         margin-top: 15px;
-                        width: 100%;
-                        display: block;
-                        @include box-sizing(borber-box);
                     }
                 }
             }
@@ -1531,7 +1518,7 @@ aside.search-wrap{
     padding: 0 21px;
     .time{
         margin-top: 20px;
-        text-align: right;
+        text-align: center;
         font-size: 12px;
         color: #888;
         &:before{
@@ -1669,11 +1656,11 @@ aside.search-wrap{
         margin-top: 10px;
         background: url(../images/main/btn_arrow.png) no-repeat right center #f0efed;
         background-size: 20px;
-        padding: 5px 20px;
+        padding: 15px 20px;
         border-radius: 10px;
         a{
             display: block;
-            font-size: 14px;
+            font-size: 12px;
             line-height: 17px;
             color: #666;
             padding: 10px 20px;
@@ -1715,7 +1702,7 @@ aside.search-wrap{
                 color: #333;
             }
             .value{
-                font-size: 18px;
+                font-size: 15px;
                 font-weight: 700;
                 margin-top: 5px;
                 color: $col4;
@@ -2007,7 +1994,7 @@ aside.search-wrap{
             top: 0;
             background: url(../images/main/ico_setting.png) no-repeat center / contain;
         }
-        .today, .year,.month{
+        .today{
             height: auto;
             width: auto;
             line-height: 28px;
@@ -2018,16 +2005,8 @@ aside.search-wrap{
             background: #fff;
             border-radius: 50px;
             position: absolute;
-            top: -5px;
-        }
-        .today{
             left: 0;
-        }
-        .year{
-            right: 45px;
-        }
-        .month{
-            right: 0;
+            top: -5px;
         }
     } 
     .wrap{
@@ -2342,13 +2321,15 @@ aside.search-wrap{
         display: flex;
         margin-bottom: 10px;
         div{
-            width: 50%;
+            //width: 50%;
             &.right{
                 text-align: right;
+				width: 50%;
                 button{
                     width: 35px;
                     height: 35px;
                     background: url("../images/common/btn-search.png") no-repeat center / contain;
+					vertical-align: middle;
                 }
             }
         }
@@ -2788,13 +2769,8 @@ button.cal{
                                 width: 33px;
                                 height: 33px;
                                 border: 1px solid $lineColor;
+                                background: url("../images/common/btn_accodion_search.png") no-repeat center / contain;
                                 margin: 0;
-                                &.search{
-                                    background: url("../images/common/btn_accodion_search.png") no-repeat center / contain;
-                                }
-                                &.cal{
-                                    background: url("../images/common/btn_cal.png") no-repeat center / 16px;
-                                }
                             }
                             input[type="text"],input[type="number"]{
                                 line-height: 35px;
@@ -3011,7 +2987,7 @@ button.cal{
             button{
                 background: url("../images/common/btn_loan.png") no-repeat center top / 107px;
                 color: #e52638;
-                border: 1px solid #e9626f;
+                border: 1px solid #e52638;
                 border-radius: 50px;
                 &.on{
                     background-position: center bottom;
@@ -3020,7 +2996,7 @@ button.cal{
                 }
             }
             em{
-                color: #e9626f;
+                color: #e52638;
                 font-weight: 700;
                 margin-top: 10px;
                 display: inline-block;
@@ -3547,7 +3523,7 @@ button.cal{
 .debt-modify{
     margin-top: 20px;
     border-top: 1px solid $lineColor;
-    li{
+    >li{
 		align-items: center;
         border-bottom: 1px solid $lineColor;
 		padding: 10px 0;
@@ -4358,7 +4334,7 @@ button.cal{
         display: flex;
         border-bottom: 1px solid $lineColor;
         p{
-            width: 50%;
+            width: 70%;
             font-size: 13px;
             color: $col2;
             font-weight: 700;
@@ -4376,14 +4352,6 @@ button.cal{
                 .btn-cate{
                     padding-right: 20px;
                     background: url("../images/consume/btn_cate.png") no-repeat right center / 10px;
-                }
-                .cal{
-                    display: inline-block;
-                    width: 33px;
-                    height: 33px;
-                    border: 1px solid $lineColor;
-                    margin: 0;
-                    background: url("../images/common/btn_cal.png") no-repeat center / 16px;
                 }
             }
             select{
@@ -4866,8 +4834,8 @@ button.cal{
 //   지문인증 설정   //
 
 .cert-finger{
-    //padding-top: 305px;
-    //background: url("../images/member/fingerprint.png") no-repeat 50% 150px;
+    padding-top: 305px;
+    background: url("../images/member/fingerprint.png") no-repeat 50% 150px;
     background-size: 117px;
     p{
         text-align: center;
@@ -5480,39 +5448,25 @@ button.cal{
                         left: 50%;
                         top: 0;
                         margin-left: -20px;
-                        background-size: 40px;
-                        background-position: center top;
                     }
                     &:nth-child(1){
                         &:before{
-                            background-image: url("../images/mypage/ico_request.png");
+                            background: url("../images/mypage/ico_request.png") no-repeat center top / 40px;
                         }
                     }
                     &:nth-child(2){
                         &:before{
-                            background-image: url("../images/mypage/ico_ask.png");
+                            background: url("../images/mypage/ico_ask.png") no-repeat center top / 40px;
                         }
                     }
                     &:nth-child(3){
                         &:before{
-                            background-image: url("../images/mypage/ico_audit.png");
+                            background: url("../images/mypage/ico_audit.png") no-repeat center top / 40px;
                         }
                     }
                     &:nth-child(4){
-                        &.deposit{
-                             &:before{
-                                background-image: url("../images/mypage/ico_deposit2.png");
-                            }   
-                        }
-                        &.cancel{
-                             &:before{
-                                background-image: url("../images/mypage/ico_cancel2.png");
-                            }   
-                        }
-                        &.reject{
-                             &:before{
-                                background-image: url("../images/mypage/ico_reject2.png");
-                            }   
+                        &:before{
+                            background: url("../images/mypage/ico_deposit2.png") no-repeat center top / 40px;
                         }
                     }
                     &.on{
@@ -5603,9 +5557,6 @@ button.cal{
             }
             &.copy{
                 background: url("../images/assets/copy.png") no-repeat center top / 60px;
-            }
-            &.share{
-                background: url("../images/assets/share.png") no-repeat center top / 60px;
             }
         }
     }
@@ -5733,7 +5684,196 @@ button.cal{
 }
 
 
+/* 추가사항 */
 
+.vdp-datepicker {
+
+	display:inline;
+
+}
+
+
+.consume-detail li p.key {
+
+	width: 30%
+
+}
+
+
+
+.vdp-datepicker.div-date>div {
+
+  text-align: right;
+
+  display: inline;
+
+}
+
+
+
+.vdp-datepicker.div-date>div.vdp-datepicker__calendar {
+
+  text-align: left;
+
+}
+
+
+
+.vdp-datepicker__calendar {
+
+  z-index: 100;
+
+  position: fixed;
+
+  font-size: 13px;
+
+  line-height: 40px;
+
+}
+
+
+
+.vdp-datepicker__calendar header {
+
+  position: static;
+
+}
+
+
+
+span.cell.day.selected.today {
+
+	color: #fff;
+
+}
+
+
+
+.vdp-datepicker.div-date input[type="text"]:disabled {
+
+  background: transparent;
+
+}
+
+
+
+.calendar-overlay {
+
+  width: 100%;
+
+  height: 200vh;
+
+  position: fixed;
+
+  top: 0 !important;
+
+  bottom: 0 !important;
+
+  left: 0 !important;
+
+  background: rgba(0, 0, 0, 0.4);
+
+  z-index: -1;
+
+}
+
+
+
+.multiselect-overlay {
+
+  width: 100%;
+
+  height: 200vh;
+
+  position: fixed;
+
+  top: 0 !important;
+
+  bottom: 0 !important;
+
+  left: 0 !important;
+
+  background: rgba(0, 0, 0, 0.4);
+
+  z-index: 50;
+
+}
+
+
+
+.v-dialog.active .v-dialog-overlay,
+
+.v-dialog:target .v-dialog-overlay {
+
+  background: rgba(0, 0, 0, 0.4) !important;
+
+}
+
+
+
+.goal-list-wrap input[type="number"] {
+
+	text-align: right;
+
+	width: 100%;
+
+	padding: 0 10px;
+
+}
+
+
+
+.inout-setting .flex li .btn-cate.btn-search {
+
+	padding-right: 20px;
+
+	background: url("../images/consume/btn_cate.png") no-repeat right center/10px;
+
+}
+
+.bank-detail .select div.left {
+
+	width: 50%;
+
+}
+
+
+
+.multiselect-basic{
+
+	text-align: left;
+
+	display: inline-block;
+
+	border: 1px solid #dedede;
+
+	background: #fff;
+
+	box-sizing: border-box;
+
+	height: 35px;
+
+}
+
+
+
+.multiselect-basic .multiselect__select{
+
+	right:12px
+
+}
+
+
+
+.multiselect-basic .multiselect__tags{
+
+	text-align: left;
+
+	line-height: 35px;
+
+	height: 35px;
+	
+}
 
 
 

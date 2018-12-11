@@ -1,15 +1,15 @@
 <template>
   <section v-if="seen">
     <form name="frmFcLinkList" id="frmFcLinkList"></form>
-    <div class="box-list noMG list02 pb90" v-if="isData">
+    <div v-if="isData" class="box-list noMG list02 pb90">
       <div v-for="linkedFcInfo in linkedFcInfoList" :key="linkedFcInfo.index">
-        <p class="header" v-if="checkType(linkedFcInfo.nm_code)">{{linkedFcInfo.nm_code}}</p>
+        <!-- <p class="header" v-if="checkType(linkedFcInfo.nm_code)">{{linkedFcInfo.nm_code}}</p>
         <div class="item">
           <div class="flex">
             <p class="symbol"><img :src="linkedFcInfo.icon" alt="" />{{linkedFcInfo.nm_fc}}</p>
-            <p><button class="btn-onoff" :class="{'on':isLinked(linkedFcInfo.yn_link)}" :id="linkedFcInfo.cd_fc" @click="changeLinked(linkedFcInfo.cd_fc)"></button></p>
+            <p><button class="btn-onoff" :class="{'on':isLinked(linkedFcInfo.yn_link)}" @click="changeLinked(linkedFcInfo.cd_fc)"></button></p>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
     <div v-else>
@@ -18,7 +18,7 @@
 
     <div class="btn-wrap col2">
       <a @click="clickCancel()">취소</a>
-      <a class="btn-solid" v-on:click="updateLinkedFcInfo()">연결</a>
+      <a class="btn-solid" @click="updateLinkedFcInfo()">연결</a>
     </div>
   </section>
 </template>
@@ -53,10 +53,12 @@ export default {
   },
   created() {
     this.getLinkedFcInfo();
+    console.log("getLinkedFcInfo called");
   },
   beforeMount() {},
   mounted() {
     // 로그인이 되어있으면 관리화면으로 안되어 있으면 어플 종료
+    console.log("mount start");
     if (this.$store.state.isLoggedIn) {
       this.$store.state.header.backPath = "/scrap/CtrlFcLink";
     } else {
@@ -64,6 +66,7 @@ export default {
         window.Android.setEndApp("Y");
       }
     }
+    console.log("mount end");
   },
   beforeUpdate() {},
   updated() {},
@@ -142,10 +145,13 @@ export default {
               list[i].yn_link_origin = list[i].yn_link;
               console.log(i + "st loop end");
             }
+            console.log("loop end");
             _this.linkedFcInfoList = list;
             _this.isData = true;
+            console.log("if end");
           }
           _this.seen = true;
+          console.log("function end");
         })
         .catch(e => {
           _this.seen = true;

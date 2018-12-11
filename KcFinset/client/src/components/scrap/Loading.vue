@@ -1,6 +1,6 @@
 <template>
   <div class="loading">
-    <span v-html=normalMessage></span><br><small v-html=smallMessage></small>
+    <span v-html="normalMessage"></span><br><small v-html="smallMessage"></small>
   </div>
 </template>
 

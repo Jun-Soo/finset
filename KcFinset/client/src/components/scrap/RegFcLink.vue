@@ -61,7 +61,6 @@ export default {
   },
   created() {
     this.getLinkedFcInfo();
-    console.log("getLinkedFcInfo called");
   },
   beforeMount() {},
   mounted() {
@@ -141,9 +140,9 @@ export default {
               list[i].icon =
                 "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + list[i].cd_fc;
               list[i].yn_link_origin = list[i].yn_link;
-            }
-            if (i && list[i].nm_code == list[i - 1].nm_code) {
-              list[i].nm_code == "";
+              if (i > 0 && list[i].nm_code == list[i - 1].nm_code) {
+                list[i].nm_code == "";
+              }
             }
             _this.linkedFcInfoList = list;
             _this.isData = true;

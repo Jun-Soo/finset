@@ -3,13 +3,13 @@
     <form name="frmFcLinkList" id="frmFcLinkList"></form>
     <div v-if="isData" class="box-list noMG list02 pb90">
       <div v-for="linkedFcInfo in linkedFcInfoList" :key="linkedFcInfo.index">
-        <!-- <p class="header" v-if="checkType(linkedFcInfo.nm_code)">{{linkedFcInfo.nm_code}}</p>
+        <p class="header" v-if="checkType(linkedFcInfo.nm_code)">{{linkedFcInfo.nm_code}}</p>
         <div class="item">
           <div class="flex">
             <p class="symbol"><img :src="linkedFcInfo.icon" alt="" />{{linkedFcInfo.nm_fc}}</p>
             <p><button class="btn-onoff" :class="{'on':isLinked(linkedFcInfo.yn_link)}" @click="changeLinked(linkedFcInfo.cd_fc)"></button></p>
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
     <div v-else>
@@ -74,6 +74,7 @@ export default {
   destroyed() {},
   methods: {
     isLinked: function(yn_linked) {
+      console.log("isLinked : " + yn_linked);
       return yn_linked == "Y";
     },
     changeLinked: function(cd_fc) {
@@ -87,9 +88,10 @@ export default {
         }
       }
     },
-    checkType: function(type) {
-      if (this.type != type) {
-        this.type = type;
+    checkType: function(nmCode) {
+      console.log("checkType  : " + nmCode);
+      if (this.type != nmCode) {
+        this.type = nmCode;
         return true;
       }
       return false;

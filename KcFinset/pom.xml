@@ -428,6 +428,12 @@
 							<targetPath>WEB-INF/classes</targetPath>
 						</webResource>
 					</webResources>
+					<packagingexcludes>
+	                    src/main/webapp/fonts/**,
+	                    src/main/webapp/html/**,
+	                    src/main/webapp/images/**,
+	                    src/main/webapp/img/**
+	                </packagingexcludes>
 				</configuration>
 			</plugin>
 		</plugins>

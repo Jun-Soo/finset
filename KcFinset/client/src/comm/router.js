@@ -1504,8 +1504,7 @@ export const routes = [{
     alias: '/certPerson',
     component: MypageCertPerson,
     meta: {
-      allowPath: true,
-      requiresAuth: true
+      allowPath: true
     }
   },
   {
@@ -1513,8 +1512,7 @@ export const routes = [{
     alias: '/chgPwd',
     component: MypageChgPwd,
     meta: {
-      allowPath: true,
-      requiresAuth: true
+      allowPath: true
     }
   },
   {

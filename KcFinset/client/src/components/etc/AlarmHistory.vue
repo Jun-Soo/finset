@@ -1,32 +1,30 @@
 <template>
   <section v-if="seen">
-    <div class="container">
-      <div class="nodata" v-if="alarmList.length == 0">알림 내역이 없습니다.</div>
-      <div class="alarm-history" v-else v-for="(item, idx) in alarmList" :key="item.rnum">
-        <div v-if="idx==0 || (idx!=0&&item.dt_frt!=alarmList[idx-1].dt_frt)">
-          <p class="date">{{formatDateDot(item.dt_frt)}}</p>
-          <div v-for="_item in alarmList" :key="_item.rnum" v-if="_item.dt_frt==item.dt_frt">
-            <div class="alarm-list">
-              <div class="item">
-                <a v-if="_item.link_addr!=null||_item.link_addr!=undefined" @click="moveDetailPage(_item.link_addr)">
-                  <p v-if="_item.push_divcd=='02'" class="ico alarm-credit">{{_item.title}}</p>
-                  <p v-else-if="_item.push_divcd=='03'" class="ico alarm-debt">{{_item.title}}</p>
-                  <p v-else-if="_item.push_divcd=='04'" class="ico alarm-goods">{{_item.title}}</p>
-                  <p v-else-if="_item.push_divcd=='05'" class="ico alarm-event">{{_item.title}}</p>
-                  <p v-else-if="_item.push_divcd=='06'" class="ico alarm-share">{{_item.title}}</p>
-                  <p v-else class="ico alarm">{{_item.title}}</p>
-                  <p class="text">{{_item.body}}</p>
-                </a>
-                <a v-else>
-                  <p v-if="_item.push_divcd=='02'" class="ico alarm-credit">{{_item.title}}</p>
-                  <p v-else-if="_item.push_divcd=='03'" class="ico alarm-debt">{{_item.title}}</p>
-                  <p v-else-if="_item.push_divcd=='04'" class="ico alarm-goods">{{_item.title}}</p>
-                  <p v-else-if="_item.push_divcd=='05'" class="ico alarm-event">{{_item.title}}</p>
-                  <p v-else-if="_item.push_divcd=='06'" class="ico alarm-share">{{_item.title}}</p>
-                  <p v-else class="ico alarm">{{_item.title}}</p>
-                  <p class="text">{{_item.body}}</p>
-                </a>
-              </div>
+    <div class="nodata" v-if="alarmList.length == 0">알림 내역이 없습니다.</div>
+    <div class="alarm-history" v-else v-for="(item, idx) in alarmList" :key="item.rnum">
+      <div v-if="idx==0 || (idx!=0&&item.dt_frt!=alarmList[idx-1].dt_frt)">
+        <p class="date">{{formatDateDot(item.dt_frt)}}</p>
+        <div v-for="_item in alarmList" :key="_item.rnum" v-if="_item.dt_frt==item.dt_frt">
+          <div class="alarm-list">
+            <div class="item">
+              <a v-if="_item.link_addr!=null||_item.link_addr!=undefined" @click="moveDetailPage(_item.link_addr)">
+                <p v-if="_item.push_divcd=='02'" class="ico alarm-credit">{{_item.title}}</p>
+                <p v-else-if="_item.push_divcd=='03'" class="ico alarm-debt">{{_item.title}}</p>
+                <p v-else-if="_item.push_divcd=='04'" class="ico alarm-goods">{{_item.title}}</p>
+                <p v-else-if="_item.push_divcd=='05'" class="ico alarm-event">{{_item.title}}</p>
+                <p v-else-if="_item.push_divcd=='06'" class="ico alarm-share">{{_item.title}}</p>
+                <p v-else class="ico alarm">{{_item.title}}</p>
+                <p class="text">{{_item.body}}</p>
+              </a>
+              <a v-else>
+                <p v-if="_item.push_divcd=='02'" class="ico alarm-credit">{{_item.title}}</p>
+                <p v-else-if="_item.push_divcd=='03'" class="ico alarm-debt">{{_item.title}}</p>
+                <p v-else-if="_item.push_divcd=='04'" class="ico alarm-goods">{{_item.title}}</p>
+                <p v-else-if="_item.push_divcd=='05'" class="ico alarm-event">{{_item.title}}</p>
+                <p v-else-if="_item.push_divcd=='06'" class="ico alarm-share">{{_item.title}}</p>
+                <p v-else class="ico alarm">{{_item.title}}</p>
+                <p class="text">{{_item.body}}</p>
+              </a>
             </div>
           </div>
         </div>

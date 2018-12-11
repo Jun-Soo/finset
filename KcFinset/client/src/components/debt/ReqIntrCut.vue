@@ -78,14 +78,14 @@
                       </div>
                       <div class="flex">
                           <p>변경전</p>
-                          <p><input type="text" placeholder="원"></p>
+                          <p><input type="text"><em class="pl5">원</em></p>
                       </div>
                       -->
             <div class="flex">
               <p>연소득</p>
-              <!-- <p><input type="number" v-model="income" placeholder="원" v-validate="'required'" data-vv-name='연소득'></p>
+              <!-- <p><input type="number" v-model="income" v-validate="'required'" data-vv-name='연소득'><em class="pl5">원</em></p>
               <p class="warn" v-if="errors.has('연소득')">{{errors.first('연소득')}}</p> -->
-              <p><input type="number" v-model="income" placeholder="원" autocomplete="off"></p>
+              <p><input type="number" v-model="income" autocomplete="off"><em class="pl5">원</em></p>
             </div>
             <p class="text">신규 및 연장 시점 대비 연소득이 15% 이상 상승된 경우 요구가 가능합니다.</p>
           </div>
@@ -102,15 +102,15 @@
             </div>
             <div class="flex">
               <p>변경전</p>
-              <!-- <p><input type="number" v-model="debtBfAmt" placeholder="원" v-validate="'required'" data-vv-name='변경전 금액'></p>
+              <!-- <p><input type="number" v-model="debtBfAmt" v-validate="'required'" data-vv-name='변경전 금액'><em class="pl5">원</em></p>
               <p class="warn" v-if="errors.has('변경전 금액')">{{errors.first('변경전 금액')}}</p> -->
-              <p><input type="number" v-model="debtBfAmt" placeholder="원" autocomplete="off"></p>
+              <p><input type="number" v-model="debtBfAmt" autocomplete="off"><em class="pl5">원</em></p>
             </div>
             <div class="flex">
               <p>변경후</p>
-              <!-- <p><input type="number" v-model="debtAtAmt" placeholder="원" v-validate="'required'" data-vv-name='변경후 금액'></p>
+              <!-- <p><input type="number" v-model="debtAtAmt" v-validate="'required'" data-vv-name='변경후 금액'><em class="pl5">원</em></p>
               <p class="warn" v-if="errors.has('변경후 금액')">{{errors.first('변경후 금액')}}</p> -->
-              <p><input type="number" v-model="debtAtAmt" placeholder="원" autocomplete="off"></p>
+              <p><input type="number" v-model="debtAtAmt" autocomplete="off"><em class="pl5">원</em></p>
             </div>
             <p class="text">신규 및 연장 시점 대비 부채가 현저히 낮아진 경우(15%) 요구가 가능합니다.</p>
           </div>
@@ -158,8 +158,8 @@
       </div>
       -->
     <div class="btn-wrap col2">
-      <a class="stroke" @click="init()">초기화</a>
-      <a class="solid" @click="getReqIntrCut()">검색</a>
+      <a @click="init()">초기화</a>
+      <a class="btn-solid" @click="getReqIntrCut()">검색</a>
     </div>
 
     <vue-modal transitionName="zoom-in" name="info-modal" v-on:popclose="closeInfo()">

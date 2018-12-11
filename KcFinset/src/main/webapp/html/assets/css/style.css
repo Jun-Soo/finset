@@ -811,9 +811,10 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .accodion ul { margin-top: 20px; }
 .accodion ul li { border: 1px solid #e5e5e5; margin-bottom: 10px; }
 .accodion ul li .top { padding: 20px; position: relative; }
-.accodion ul li .top:after { position: absolute; right: 0; top: 50%; margin-top: -30px; display: inline-block; content: ""; width: 60px; height: 60px; background: url("../images/common/accodion_arrow.png") no-repeat left top/60px; }
-.accodion ul li .top a { display: inline-block; position: relative; padding-left: 40px; color: #333; font-weight: 700; font-size: 15px; line-height: 19px; padding-top: 5px; }
-.accodion ul li .top a:before { position: absolute; left: 0; top: 0; display: inline-block; content: ""; width: 30px; height: 30px; vertical-align: top; margin-right: 10px; background: url(../images/_form/checkbox.png) no-repeat left top/30px; }
+.accodion ul li .top em { position: absolute; right: 0; top: 50%; margin-top: -30px; display: inline-block; width: 60px; height: 60px; background: url("../images/common/accodion_arrow.png") no-repeat left top/60px; cursor: pointer; }
+.accodion ul li .top span { display: inline-block; position: relative; padding-left: 40px; color: #333; font-weight: 700; font-size: 15px; line-height: 19px; padding-top: 5px; }
+.accodion ul li .top span:before { position: absolute; left: 0; top: 0; display: inline-block; content: ""; width: 30px; height: 30px; vertical-align: top; margin-right: 10px; background: url(../images/_form/checkbox.png) no-repeat left top/30px; }
+.accodion ul li .top span.on:before { background-position: left bottom; }
 .accodion ul li .con { padding: 20px; display: none; }
 .accodion ul li .con .flex { display: flex; margin-bottom: 10px; }
 .accodion ul li .con .flex p { width: 50%; line-height: 35px; }
@@ -823,8 +824,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .accodion ul li .con .flex p:last-child input[type="text"], .accodion ul li .con .flex p:last-child input[type="number"] { line-height: 35px; height: 33px; width: 126px; font-size: 15px; text-align: right; padding: 0 15px; }
 .accodion ul li .con .text { font-size: 12px; line-height: 16px; color: #888; }
 .accodion ul li.on .top { border-bottom: 1px solid #e5e5e5; }
-.accodion ul li.on .top:after { background-position: left bottom; }
-.accodion ul li.on .top a:before { background-position: left bottom; }
+.accodion ul li.on .top em { background-position: left bottom; }
 .accodion ul li.on .con { display: block; }
 
 /*   POP   */
@@ -1126,7 +1126,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .box-list .add-cate { border-radius: 50px; line-height: 45px; text-align: center; font-size: 15px; color: #fff; font-weight: 700; background: #213e6a; display: block; width: 100%; margin-top: 10px; }
 
 .goal-list-wrap { padding-bottom: 50px; }
-.goal-list-wrap dl { border: 1px solid #e5e5e5; background: #fff; }
+.goal-list-wrap dl { border: 1px solid #e5e5e5; background: #fff; padding-bottom: 20px; }
 .goal-list-wrap .sum, .goal-list-wrap dd { display: grid; grid-template-columns: 1fr 1fr; background: #fff; }
 .goal-list-wrap .sum input[type="text"], .goal-list-wrap dd input[type="text"] { line-height: 33px; }
 .goal-list-wrap .sum p, .goal-list-wrap dd p { padding: 5px 0; line-height: 35px; color: #9b9489; font-size: 13px; font-weight: 700; }
@@ -1134,9 +1134,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .goal-list-wrap .sum p:last-child, .goal-list-wrap dd p:last-child { padding-right: 15px; }
 .goal-list-wrap .sum p { padding: 10px 0; border-bottom: 1px solid #e5e5e5; }
 .goal-list-wrap .sum p:first-child { color: #333; font-size: 15px; font-weight: 700; }
-.goal-list-wrap dd:first-of-type { padding-top: 20px; }
-.goal-list-wrap dd:last-child { padding-bottom: 20px; }
-.goal-list-wrap .warn { margin: 0 0 10px 10px; }
+.goal-list-wrap .warn { margin-left: 10px; }
 
 .graph-wrapper { padding: 0 21px; }
 

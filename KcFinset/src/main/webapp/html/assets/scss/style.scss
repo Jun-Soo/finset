@@ -2713,18 +2713,18 @@ button.cal{
             .top{
                 padding: 20px;
                 position: relative;
-                    &:after{
+                em{
                     position: absolute;
                     right: 0;
                     top: 50%;
                     margin-top: -30px;
                     display: inline-block;
-                    content: "";
                     width: 60px;
                     height: 60px;
                     background:url("../images/common/accodion_arrow.png") no-repeat left top / 60px;
+					cursor: pointer;
                 }
-                a{
+                span{
                     display: inline-block;
                     position: relative;
                     padding-left:40px;
@@ -2745,6 +2745,11 @@ button.cal{
                         margin-right: 10px;
                         background:url(../images/_form/checkbox.png) no-repeat left top / 30px;
                     }
+					&.on{
+						&:before{
+							background-position: left bottom;
+						}
+					}
                 }
             }
             .con{
@@ -2792,13 +2797,8 @@ button.cal{
             &.on{
                 .top{
                     border-bottom: 1px solid $lineColor;
-                    &:after{
+                    em{
                         background-position: left bottom;
-                    }
-                    a{
-                        &:before{
-                            background-position: left bottom;
-                        }
                     }
                 }
                 .con{
@@ -4240,6 +4240,7 @@ button.cal{
     dl{
         border: 1px solid $lineColor;
 		background: #fff;
+		padding-bottom: 20px;
     }
     .sum,dd{
         display: grid;
@@ -4273,16 +4274,8 @@ button.cal{
             border-bottom: 1px solid $lineColor;
         }
     }
-    dd{
-        &:first-of-type{
-            padding-top: 20px;
-        }
-        &:last-child{
-            padding-bottom: 20px;
-        }
-    }
 	.warn{
-		margin: 0 0 10px 10px;
+		margin-left: 10px;
 	}
 }
 

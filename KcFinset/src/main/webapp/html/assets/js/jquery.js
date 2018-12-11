@@ -76,10 +76,9 @@ $(function(){
     ////////////////////     아코디온     ////////////////////
     
     
-    $(document).on("click",".accodion .top a",function(e){
+    $(document).on("click",".accodion .top em",function(){
         
         $(this).closest("li").toggleClass("on");
-        e.preventDefault();
         
     });
     

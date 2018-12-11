@@ -462,10 +462,10 @@ fieldset[disabled] .multiselect {
   padding: 0px 20px 0 8px;
   /*border-radius: 5px;*/
   /*border: 1px solid #e8e8e8;*/
-  background: #fff;
+  /* background: #fff; */
   font-size: 14px;
   text-align: right;
-  margin-top: 5px;
+  /* margin-top: 5px; */
   line-height: 40px;
 }
 

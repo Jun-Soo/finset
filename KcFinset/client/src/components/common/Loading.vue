@@ -19,7 +19,10 @@ export default {
   component: {},
   // computed () {
   // },
-  beforeCreate() {},
+  beforeCreate() {
+    this.$store.state.header.type = "";
+    this.$store.state.title = "금융사 연동";
+  },
   created() {
     var params = Common.getParams();
 

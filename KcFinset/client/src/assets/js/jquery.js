@@ -42,9 +42,8 @@ $(function () {
   //   e.preventDefault()
   // })
 
-  $(document).on('click', '.accodion .top a', function (e) {
+  $(document).on('click', '.accodion .top em', function (e) {
     $(this).closest('li').toggleClass('on')
-    e.preventDefault()
   })
 
   // $(document).on('click', '[data-acco]', function (e) {

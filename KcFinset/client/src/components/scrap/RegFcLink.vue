@@ -3,7 +3,7 @@
     <form name="frmFcLinkList" id="frmFcLinkList"></form>
     <div v-if="isData" class="box-list noMG list02 pb90">
       <div v-for="linkedFcInfo in linkedFcInfoList" :key="linkedFcInfo.index">
-        <p class="header" v-if="checkType(linkedFcInfo.nm_code)">{{linkedFcInfo.nm_code}}</p>
+        <p class="header" v-if="linkedFcInfo.nm_code != ''">{{linkedFcInfo.nm_code}}</p>
         <div class="item">
           <div class="flex">
             <p class="symbol"><img :src="linkedFcInfo.icon" alt="" />{{linkedFcInfo.nm_fc}}</p>
@@ -47,7 +47,10 @@ export default {
     };
   },
   computed: {
-    testType() {
+    getType() {
+      return this.type;
+    },
+    setType() {
       return this.type;
     }
   },
@@ -63,7 +66,6 @@ export default {
   beforeMount() {},
   mounted() {
     // 로그인이 되어있으면 관리화면으로 안되어 있으면 어플 종료
-    console.log("mount start");
     if (this.$store.state.isLoggedIn) {
       this.$store.state.header.backPath = "/scrap/CtrlFcLink";
     } else {
@@ -71,12 +73,9 @@ export default {
         window.Android.setEndApp("Y");
       }
     }
-    console.log("mount end");
   },
   beforeUpdate() {},
-  updated() {
-    console.log("updated");
-  },
+  updated() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {
@@ -95,14 +94,6 @@ export default {
           }
         }
       }
-    },
-    checkType: function(nmCode) {
-      console.log("checkType  : " + nmCode);
-      if (this.testType != nmCode) {
-        this.type = nmCode;
-        return true;
-      }
-      return false;
     },
     login: function() {
       var _this = this;
@@ -145,23 +136,19 @@ export default {
         .post("/m/scrap/scrapFcLinkList.json", formData)
         .then(function(response) {
           var list = response.data.linkedFcInfoList;
-          console.log(response.data);
           if ((list || "") != "") {
-            console.log("start loop");
             for (var i = 0; i < list.length; i++) {
-              console.log(i + "st loop start");
               list[i].icon =
                 "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + list[i].cd_fc;
               list[i].yn_link_origin = list[i].yn_link;
-              console.log(i + "st loop end");
             }
-            console.log("loop end");
+            if (i && list[i].nm_code == list[i - 1].nm_code) {
+              list[i].nm_code == "";
+            }
             _this.linkedFcInfoList = list;
             _this.isData = true;
-            console.log("if end");
           }
           _this.seen = true;
-          console.log("function end");
         })
         .catch(e => {
           _this.seen = true;

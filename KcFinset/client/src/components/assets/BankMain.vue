@@ -4,11 +4,11 @@
       <p class="key">나의 은행 예금은</p>
       <p class="value"><em>{{(sumAmt.sum_amt_balance==null)? '-' : formatNumber(Math.round(sumAmt.sum_amt_balance/10000))}}</em>만원</p>
 
-      <div class="filter-wrap">
+      <div v-if="personShareList.length!=0" class="filter-wrap">
         <div class="filter red">
           <input type="checkbox" checked="checked" readonly="readonly"><label for="">{{this.$store.state.user.nmPerson}}</label>
         </div>
-        <div v-if="personShareList.length!=0" v-for="personShareInfo in personShareList" :key="personShareInfo.index" class="filter" :class="colorList[personShareInfo.rk]">
+        <div v-for="personShareInfo in personShareList" :key="personShareInfo.index" class="filter" :class="colorList[personShareInfo.rk]">
           <input type="checkbox" v-model="person_share_list" :value="personShareInfo.no_person" :id="'chk'+personShareInfo.rk" @change="searchAccountList();">
           <label :for="'chk'+personShareInfo.rk">{{personShareInfo.nm_person}}</label>
         </div>
@@ -31,7 +31,7 @@
               <p class="symbol"><img :src="accountMyInfo.fcImg" alt="" />{{accountMyInfo.nm_fc}}</p>
               <p class="text">
                 <em class="blue bold">{{getCodeName('cd_assets_bank',accountMyInfo.cd_detail_class)}}</em>
-                <span class="circle" :class="colorList[accountMyInfo.rk]">{{accountMyInfo.nm_person}}</span>
+                <span v-if="personShareList.length!=0" class="circle" :class="colorList[accountMyInfo.rk]">{{accountMyInfo.nm_person}}</span>
               </p>
             </div>
             <div class="text-wrap">
@@ -227,6 +227,13 @@ export default {
     viewDetail: function(menu, no_person, nm_person, no_account, colorIndex) {
       var _this = this;
 
+      var yn_share = "";
+      if (_this.personShareList.length != 0) {
+        yn_share = "Y";
+      } else {
+        yn_share = "N";
+      }
+
       if ("act" == menu) {
         this.$router.push({
           name: "assetsBankActDetail",
@@ -234,13 +241,16 @@ export default {
             no_person: no_person,
             nm_person: nm_person,
             no_account: no_account,
+            yn_share: yn_share,
             colorIndex: colorIndex
           }
         });
       } else if ("dwl" == menu) {
         this.$router.push({
           name: "assetsBankDepWdrlList",
-          params: {}
+          query: {
+            yn_share: yn_share
+          }
         });
       }
     }

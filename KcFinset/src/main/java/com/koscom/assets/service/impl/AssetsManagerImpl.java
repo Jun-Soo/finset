@@ -79,8 +79,8 @@ public class AssetsManagerImpl implements AssetsManager {
 	}
 
 	@Override
-	public List<AssetsInfoVO> listAssetsAccount(String no_person){
-		return assetsMapper.listAssetsAccount(no_person);
+	public List<AssetsInfoVO> listAssetsAccount(AssetsForm assetsForm){
+		return assetsMapper.listAssetsAccount(assetsForm);
 	}
 
 	@Override

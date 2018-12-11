@@ -219,7 +219,7 @@ public class AssetsController {
 		assetsForm.setNo_person(no_person);
 
 		model.addAttribute("currentDate",DateUtil.getCurrentDate(DateUtil.DATE_PATTERN_DASH));
-		model.addAttribute("scAccountList", assetsManager.listAssetsAccount(no_person));
+		model.addAttribute("scAccountList", assetsManager.listAssetsAccount(assetsForm));
 		model.addAttribute("scKeywordList", assetsManager.listAssetsSearchKeyword(assetsForm));
 
 		return "jsonView";

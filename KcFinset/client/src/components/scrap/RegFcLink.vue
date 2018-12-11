@@ -7,7 +7,7 @@
         <div class="item">
           <div class="flex">
             <p class="symbol"><img :src="linkedFcInfo.icon" alt="" />{{linkedFcInfo.nm_fc}}</p>
-            <p><button class="btn-onoff" :class="{'on':isLinked(linkedFcInfo.yn_link)}" :id=linkedFcInfo.cd_fc @click="changeLinked(linkedFcInfo.cd_fc)"></button></p>
+            <p><button class="btn-onoff" :class="{'on':isLinked(linkedFcInfo.yn_link)}" :id="linkedFcInfo.cd_fc" @click="changeLinked(linkedFcInfo.cd_fc)"></button></p>
           </div>
         </div>
       </div>

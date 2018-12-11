@@ -31,13 +31,13 @@
       <div class="item">
         <div class="flex">
           <p class="corp big">자산</p>
-          <p><button @click="changeItem('asset');" class="btn-onoff" :class="{on: yn_credit_info=='Y'}"></button></p>
+          <p><button @click="changeItem('asset');" class="btn-onoff" :class="{on: yn_asset_info=='Y'}"></button></p>
         </div>
       </div>
       <div class="item">
         <div class="flex">
           <p class="corp big">소비</p>
-          <p><button @click="changeItem('consume');" class="btn-onoff" :class="{on: yn_debt_info=='Y'}"></button></p>
+          <p><button @click="changeItem('consume');" class="btn-onoff" :class="{on: yn_consume_info=='Y'}"></button></p>
         </div>
       </div>
       <div class="item">
@@ -48,7 +48,7 @@
       </div>
     </div>
 
-    <div class="btn-wrap float">
+    <div v-if="isShowBtn" class="btn-wrap float">
       <a @click="createShareInfo();" class="solid blue box">공유 요청</a>
     </div>
 
@@ -72,10 +72,11 @@ export default {
       offer_hp: "", //검색 사용자번호
       seq_share: "", //seq
       //checkbox
-      yn_credit_info: "", //신용정보여부
-      yn_debt_info: "", //부채정보여부
-      yn_asset_info: "", //자산정보여부
-      yn_consume_info: "" //소비정보여부
+      yn_credit_info: "Y", //신용정보여부
+      yn_debt_info: "Y", //부채정보여부
+      yn_asset_info: "Y", //자산정보여부
+      yn_consume_info: "Y", //소비정보여부
+      isShowBtn: true //버튼보여주기
     };
   },
   components: {},
@@ -143,6 +144,7 @@ export default {
           }
         }
       } else {
+        console.log(nm_item);
         if ("asset" == nm_item) {
           //자산
           if ("" == _this.yn_asset_info) {
@@ -166,6 +168,22 @@ export default {
           }
         }
       }
+
+      _this.isShowBtn = true;
+
+      if ("01" == _this.cd_share) {
+        if (!_this.yn_credit_info && !_this.yn_debt_info) {
+          _this.isShowBtn = false;
+        }
+      } else {
+        if (
+          !_this.yn_asset_info &&
+          !_this.yn_consume_info &&
+          !_this.yn_debt_info
+        ) {
+          _this.isShowBtn = false;
+        }
+      }
     },
     //validate체크
     validShareInfoNewReq() {
@@ -183,22 +201,6 @@ export default {
       if (this.$store.state.user.hp == _this.offer_hp) {
         _this.$toast.center("본인에게 공유가 되지 않습니다.");
         return false;
-      }
-
-      if ("01" == _this.cd_share) {
-        if (!_this.yn_credit_info && !_this.yn_debt_info) {
-          _this.$toast.center("항목을 선택해 주세요.");
-          return false;
-        }
-      } else {
-        if (
-          !_this.yn_asset_info &&
-          !_this.yn_consume_info &&
-          !_this.yn_debt_info
-        ) {
-          _this.$toast.center("항목을 선택해 주세요.");
-          return false;
-        }
       }
       return true;
     },

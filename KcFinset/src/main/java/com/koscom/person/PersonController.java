@@ -224,18 +224,6 @@ public class PersonController {
 	}
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 	/**
 	 * 본인인증화면 (보안코드 찾기)
 	 * @param model
@@ -318,9 +306,16 @@ public class PersonController {
 			HttpSession session,
 			PersonVO personVO,
 			Model model) {
-
+		
 		String no_person = (String) session.getAttribute("no_person");
-		PersonVO vo = personManager.getPersonInfo(no_person);
+//		LogUtil.debugLn(logger,no_person);
+		PersonVO vo = new PersonVO();
+		if(no_person != null && !("").equals(no_person)) {
+			vo = personManager.getPersonInfo(no_person);
+		} else {
+			vo = personManager.getPersonInfoHp(personVO.getHp());
+		}
+		
 		String p_nm_person  = personVO.getNm_person();
 		String db_nm_person = vo.getNm_person();
 		String p_hp         = personVO.getHp();

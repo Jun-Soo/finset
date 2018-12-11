@@ -51,6 +51,7 @@
       <div class="select pb20">
         <multiselect class="multiselect-basic" track-by="text" v-model="listType" label="text" :preselect-first="true" :options="type1" :searchable="false" :allow-empty="false">
         </multiselect>
+        <p></p>
         <multiselect class="multiselect-basic" track-by="text" v-model="orderType" label="text" :preselect-first="true" :options="type2" :searchable="false" :allow-empty="false">
         </multiselect>
       </div>

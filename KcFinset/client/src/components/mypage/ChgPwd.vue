@@ -41,7 +41,7 @@ import Constant from "./../../assets/js/constant.js";
 import ko from "vee-validate/dist/locale/ko.js";
 
 export default {
-  name: "certCodeLogin",
+  name: "chgPwd",
   data() {
     return {
       errMsg: "",
@@ -55,7 +55,11 @@ export default {
       classPass1: "",
       classPass2: "",
       classPass3: "",
-      classPass4: ""
+      classPass4: "",
+      pw1: "",
+      pw2: "",
+      pw3: "",
+      pw4: ""
     };
   },
   component: {},
@@ -97,18 +101,34 @@ export default {
       _this.classPass2 = "";
       _this.classPass3 = "";
       _this.classPass4 = "";
+      _this.pw1 = "";
+      _this.pw2 = "";
+      _this.pw3 = "";
+      _this.pw4 = "";
     },
     btnClick: function(val) {
       var _this = this;
       var type = "confirmPage";
+
       if (_this.password.length < 4) {
         _this.password += val;
       }
-      if (_this.password.length > 0) _this.classPass1 = "active";
-      if (_this.password.length > 1) _this.classPass2 = "active";
-      if (_this.password.length > 2) _this.classPass3 = "active";
+      if (_this.password.length > 0) {
+        _this.classPass1 = "border-color: #111";
+        _this.pw1 = val;
+      }
+
+      if (_this.password.length > 1) {
+        _this.classPass2 = "border-color: #111";
+        _this.pw2 = val;
+      }
+      if (_this.password.length > 2) {
+        _this.classPass3 = "border-color: #111";
+        _this.pw3 = val;
+      }
       if (_this.password.length > 3) {
-        _this.classPass4 = "active";
+        _this.classPass4 = "border-color: #111";
+        _this.pw4 = val;
 
         if (!_this.tempPwd) {
           localStorage.setItem("_tempPwd", _this.password);
@@ -116,24 +136,34 @@ export default {
           if (_this.tempPwd != _this.password) {
             //앞 비밀번호와 같은지 확인
             _this.password = "";
-            _this.backClick();
+            _this.initClassPass();
+            // _this.backClick();
             this.$toast.center(ko.messages.notMatchPwd);
             return;
           } else {
             type = "changePwd";
           }
         }
+
         this.nextPage(type); //confirmPage 일경우 redirect , 재확인일경우 changePwd
       }
     },
     backClick: function() {
       var _this = this;
-      this.initClassPass();
+      if (_this.password.length == 4) {
+        _this.pw4 = "";
+        _this.classPass4 = "";
+      } else if (_this.password.length == 3) {
+        _this.pw3 = "";
+        _this.classPass3 = "";
+      } else if (_this.password.length == 2) {
+        _this.pw2 = "";
+        _this.classPass2 = "";
+      } else if (_this.password.length == 1) {
+        _this.pw1 = "";
+        _this.classPass1 = "";
+      }
       _this.password = _this.password.substr(0, _this.password.length - 1);
-      if (_this.password.length > 0) _this.classPass1 = "active";
-      if (_this.password.length > 1) _this.classPass2 = "active";
-      if (_this.password.length > 2) _this.classPass3 = "active";
-      if (_this.password.length > 3) _this.classPass4 = "active";
     },
     nextPage: function(type) {
       var _this = this;
@@ -154,8 +184,15 @@ export default {
             var result = response.data;
             localStorage.removeItem("_tempPwd");
             if (result.result == "00") {
-              this.$toast.center("비밀번호설정이 완료 되었습니다.");
-              this.$router.push("/mypage/cert");
+              _this.$toast.center("비밀번호설정이 완료 되었습니다.");
+              if (_this.$store.state.isLoggedIn) {
+                _this.$router.push("/mypage/cert");
+              } else {
+                _this.$toast.center("로그인 페이지로 이동합니다.");
+                setTimeout(function() {
+                  _this.$router.push("/member/certCodeLogin");
+                }, 1000);
+              }
             } else {
               this.$toast.center(result.message);
               _this.password = "";

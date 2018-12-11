@@ -23,12 +23,12 @@
     </div>
     <div class="cert-wrap">
       <p class="title">회원정보</p>
-      <input type="text" class="form-control" name="nm_person" id="nm_person" v-model="nm_person" v-validate="'required|max:8'" v-bind:disabled="isDisabled" autocomplete="off" placeholder="이름을 입력하세요" data-vv-name='이름' />
+      <input type="text" ref="nm_person" class="form-control" name="nm_person" id="nm_person" v-model="nm_person" v-validate="'required|max:8'" v-bind:disabled="isDisabled" autocomplete="off" placeholder="이름을 입력하세요" data-vv-name='이름' />
       <p class="warn" v-if="errors.has('이름')">{{errors.first('이름')}}</p>
       <div class="grid">
         <div class="number"><input type="number" placeholder="생년월일6자리" name="ssn_birth" id="ssn_birth" v-model="ssn_birth" v-validate="'required|length:6|max:6'" v-on:keyup="nextFocus('birth')" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='생년월일'></div>
         <div class="dash">-</div>
-        <div class="number last"><input type="password" pattern="[0-9]*" name="sex" id="sex" v-model="sex" inputmode="numeric" maxlength="1" style="-webkit-text-security:disc" v-on:change="nextFocus('sex')" v-bind:disabled="isDisabled" autocomplete="off" v-validate="'required|between:0,9|length:1|max:1'" data-vv-name='성별'>******</div>
+        <div class="number last"><input type="password" pattern="[0-9]*" name="sex" id="sex" v-model="sex" inputmode="numeric" maxlength="1" style="-webkit-text-security:disc" v-bind:disabled="isDisabled" autocomplete="off" v-validate="'required|between:0,9|length:1|max:1'" data-vv-name='성별'>******</div>
       </div>
       <p class="warn" v-if="errors.has('생년월일')">{{errors.first('생년월일')}}</p>
       <p class="warn" v-if="errors.has('성별')">{{errors.first('성별')}}</p>
@@ -36,7 +36,7 @@
     <div class="cert-wrap">
       <p class="title">휴대폰인증</p>
       <div class="grid phone">
-        <multiselect v-model="telComNm" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @select="onSelect">
+        <multiselect ref="telCom" class="multiselect-basic" v-model="telComNm" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @select="onSelect">
           <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
         </multiselect>
         <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
@@ -48,7 +48,7 @@
       </div>
       <p class="warn" id="certNoWarning" name="certNoWarning" v-if="timer==='00:00'">인증번호를 재전송 해주세요.</p>
     </div>
-    <div class="btn-wrap" id="confirmed_div" v-if="smsCertNo&&timer!='00:00'">
+    <div class="btn-wrap float" id="confirmed_div" v-if="smsCertNo&&timer!='00:00'">
       <a id="confirmed_certify" class="btn-next" v-on:click="confirmedCertify()">다음</a>
     </div>
     <vue-modal transitionName="zoom-in" name="my-modal1" v-on:popclose="closePop('1')">
@@ -80,6 +80,7 @@ export default {
   data() {
     return {
       errMsg: "",
+      no_person: "",
       /* form */
       nm_person: "",
       ssn_birth: "",
@@ -129,9 +130,22 @@ export default {
     Terms9: Terms9,
     Terms10: Terms10
   },
+  watch: {
+    chkAll: function() {
+      if (this.chkAll) {
+        $("#nm_person").focus();
+      }
+    },
+    sex: function() {
+      this.$refs.telCom.$el.focus();
+    }
+  },
   computed: {},
   beforeCreate() {},
   created() {
+    window.setCertNumber = this.setCertNumber;
+    window.setRequestPhoneNumber = this.setRequestPhoneNumber;
+
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
       window.Android.reqSMSPermission();
@@ -139,6 +153,7 @@ export default {
     this.$store.state.title = "본인확인";
     this.$store.state.header.type = "sub";
     this.time = this.minutes * 60;
+    console.log(this.$store.state.user.noPerson);
   },
   beforeMount() {},
   mounted() {},
@@ -195,13 +210,13 @@ export default {
     },
     onSelect: function(option) {
       this.telComCd = option.value;
-      console.log(this.telComCd);
     },
     nextFocus: function(val) {
       var _this = this;
       if (val == "birth" && _this.ssn_birth.length == 6) $("#sex").focus();
       if (val == "sex" && _this.sex.length == 1) {
-        $("#telComCd").focus();
+        _this.telComCd.focus();
+        // $("#telComCd").focus();
         this.$children[0].isOpen = true;
       }
       if (val == "telComCd" && _this.telComCd) $("#hp").focus();
@@ -228,6 +243,8 @@ export default {
                 this.$toast.center(response.data.message);
                 return false;
               }
+              // _this.$store.state.user.noPerson =
+              //   response.data.personVO.no_person;
               _this.kcmRequestCertNo();
             })
             .catch(e => {

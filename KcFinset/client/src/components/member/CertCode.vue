@@ -7,10 +7,10 @@
           {{ certMessage }}
         </p>
         <div class="pass-wrap">
-          <input type="password" v-bind:style="classPass1" name="pass_number" v-model="classPass1" id="pass_number1" maxlength="1" readonly />
-          <input type="password" v-bind:style="classPass2" name="pass_number" v-model="classPass2" id="pass_number2" maxlength="1" readonly />
-          <input type="password" v-bind:style="classPass3" name="pass_number" v-model="classPass3" id="pass_number3" maxlength="1" readonly />
-          <input type="password" v-bind:style="classPass4" name="pass_number" v-model="classPass4" id="pass_number4" maxlength="1" readonly />
+          <input type="password" v-bind:style="classPass1" name="pass_number" v-model="pw1" id="pass_number1" maxlength="1" readonly />
+          <input type="password" v-bind:style="classPass2" name="pass_number" v-model="pw2" id="pass_number2" maxlength="1" readonly />
+          <input type="password" v-bind:style="classPass3" name="pass_number" v-model="pw3" id="pass_number3" maxlength="1" readonly />
+          <input type="password" v-bind:style="classPass4" name="pass_number" v-model="pw4" id="pass_number4" maxlength="1" readonly />
         </div>
         <div class="number">
           <a v-on:click="btnClick('1')">1</a>
@@ -53,7 +53,11 @@ export default {
       classPass1: "",
       classPass2: "",
       classPass3: "",
-      classPass4: ""
+      classPass4: "",
+      pw1: "",
+      pw2: "",
+      pw3: "",
+      pw4: ""
     };
   },
   component: {},
@@ -99,18 +103,34 @@ export default {
       _this.classPass2 = "";
       _this.classPass3 = "";
       _this.classPass4 = "";
+      _this.pw1 = "";
+      _this.pw2 = "";
+      _this.pw3 = "";
+      _this.pw4 = "";
     },
     btnClick: function(val) {
       var _this = this;
       var type = "confirmPage";
+
       if (_this.password.length < 4) {
         _this.password += val;
       }
-      if (_this.password.length > 0) _this.classPass1 = "active";
-      if (_this.password.length > 1) _this.classPass2 = "active";
-      if (_this.password.length > 2) _this.classPass3 = "active";
+      if (_this.password.length > 0) {
+        _this.classPass1 = "border-color: #111";
+        _this.pw1 = val;
+      }
+
+      if (_this.password.length > 1) {
+        _this.classPass2 = "border-color: #111";
+        _this.pw2 = val;
+      }
+      if (_this.password.length > 2) {
+        _this.classPass3 = "border-color: #111";
+        _this.pw3 = val;
+      }
       if (_this.password.length > 3) {
-        _this.classPass4 = "active";
+        _this.classPass4 = "border-color: #111";
+        _this.pw4 = val;
 
         if (!_this.tempPwd) {
           localStorage.setItem("tempPwd", _this.password);
@@ -118,24 +138,34 @@ export default {
           if (_this.tempPwd != _this.password) {
             //앞 비밀번호와 같은지 확인
             _this.password = "";
-            _this.backClick();
+            _this.initClassPass();
+            // _this.backClick();
             this.$toast.center(ko.messages.notMatchPwd);
             return;
           } else {
             type = "changePwd";
           }
         }
+
         this.nextPage(type); //confirmPage 일경우 redirect , 재확인일경우 changePwd
       }
     },
     backClick: function() {
       var _this = this;
-      this.initClassPass();
+      if (_this.password.length == 4) {
+        _this.pw4 = "";
+        _this.classPass4 = "";
+      } else if (_this.password.length == 3) {
+        _this.pw3 = "";
+        _this.classPass3 = "";
+      } else if (_this.password.length == 2) {
+        _this.pw2 = "";
+        _this.classPass2 = "";
+      } else if (_this.password.length == 1) {
+        _this.pw1 = "";
+        _this.classPass1 = "";
+      }
       _this.password = _this.password.substr(0, _this.password.length - 1);
-      if (_this.password.length > 0) _this.classPass1 = "active";
-      if (_this.password.length > 1) _this.classPass2 = "active";
-      if (_this.password.length > 2) _this.classPass3 = "active";
-      if (_this.password.length > 3) _this.classPass4 = "active";
     },
     nextPage: function(type) {
       var _this = this;

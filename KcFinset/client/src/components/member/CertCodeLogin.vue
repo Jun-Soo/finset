@@ -29,7 +29,7 @@
           <a v-on:click="btnClick('0')">0</a>
           <a class="del" v-on:click="backClick()"></a>
         </div>
-        <p class="text"><a href=""><u>비밀번호를 재설정 하시겠습니까?</u></a></p>
+        <p class="text"><a @click="goCertPerson"><u>비밀번호를 재설정 하시겠습니까?</u></a></p>
       </div>
     </section>
   </div>
@@ -86,6 +86,14 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    goCertPerson: function() {
+      let _this = this;
+      this.errMsg = "비밀번호 재설정 화면으로 이동합니다.";
+      this.$toast.center(this.errMsg);
+      setTimeout(function() {
+        _this.$router.push("/mypage/certPerson");
+      }, 1000);
+    },
     initClassPass: function() {
       var _this = this;
       _this.classPass1 = "";
@@ -264,7 +272,28 @@ export default {
               window.Android.closeWebView();
               return false;
             }
-          } // ㅊㅓ리 필요~
+          } else {
+            _this.$store.state.isLoading = false;
+            _this.initClassPass();
+            _this.password = "";
+            //비밀번호 틀린 누적횟수 증가
+            console.log("login failed : ");
+            _this.cntFailPwd += 1;
+            if (_this.cntFailPwd < 5) {
+              _this.errMsg =
+                "비밀번호가 일치하지 않습니다. (" + _this.cntFailPwd + "/5)";
+            } else if (_this.cntFailPwd == 5) {
+              //지문인식 5번 모두 틀린 경우
+              // _this.errMsg = "비밀번호 재설정 화면으로 이동합니다.";
+              // this.$toast.center(_this.errMsg);
+              // setTimeout(function() {
+              //   _this.$router.push("/mypage/certPerson");
+              // }, 1000);
+            }
+            if (response.data.result == "21" || response.data.result == "22") {
+              _this.modifyPwdFailCnt("pwd"); //cnt값 db에 저장
+            }
+          }
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);

@@ -934,6 +934,7 @@ public class ScrapManagerImpl implements ScrapManager {
 				
 				//금융사 연동 정보 추가
 	        	fcLinkInfo.setYn_link("Y");
+	        	fcLinkInfo.setCd_fc(cd_fc);
 	        	fcLinkInfo.setCd_link_stat("99");
 	        	fcLinkInfo.setId_frt(no_person);
 	        	fcLinkInfo.setId_lst(no_person);

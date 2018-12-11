@@ -156,6 +156,11 @@ public class PersonManagerImpl implements PersonManager {
 	}
 
 	@Override
+	public String getPersonEmail(String no_person) {
+		return personMapper.getPersonEmail(no_person);
+	}
+	
+	@Override
 	public ReturnClass modifyPersonEmail(PersonVO personVO) {
 
 		String email = personVO.getEmail();

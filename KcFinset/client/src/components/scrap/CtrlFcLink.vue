@@ -154,6 +154,8 @@ export default {
     }
     this.tabOnClick(this.curTab, null);
     this.listFcLinkInfo();
+
+    this.$store.state.header.backPath = "/main";
   },
   beforeUpdate() {},
   updated() {},

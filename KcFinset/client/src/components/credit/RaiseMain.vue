@@ -6,24 +6,24 @@
         <a @click="openPop()">제도 설명 보기</a>
       </div>
 
-      <div class="box-list list01">
+      <div class="box-list list01 noMG">
         <div class="item" @click="clickItem('nhis')">
           <div class="top">
-            <p class="symbol"><img src="/m/fincorp/getFinCorpIcon.crz?cd_fc=0010471" alt="" />국민건강보험</p>
+            <p class="symbol"><img src="/m/fincorp/getFinCorpIcon.crz?cd_fc=2000174" alt="" />국민건강보험</p>
             <p v-if="(nhis_status||'')!=''" class="text" :class="nps_status=='완료'?'red':'blue'"> {{nhis_status}}<em>{{ formatDate(nhis_date) }}</em></p>
           </div>
           <p class="text-result">최근 1년간 건강보험료 납부 내역 등록</p>
         </div>
         <div class="item" @click="clickItem('nps')">
           <div class="top">
-            <p class="symbol"><img src="/m/fincorp/getFinCorpIcon.crz?cd_fc=0010471" alt="" />국민연금</p>
+            <p class="symbol"><img src="/m/fincorp/getFinCorpIcon.crz?cd_fc=2000196" alt="" />국민연금</p>
             <p v-if="(nps_status||'')!=''" class="text" :class="nps_status=='완료'?'red':'blue'"> {{ nps_status }}<em>{{ formatDate(nps_date) }}</em></p>
           </div>
           <p class="text-result">최근 1년간 국민연금 납부 내역 등록</p>
         </div>
         <div class="item" @click="clickItem('nts')">
           <div class="top">
-            <p class="symbol"><img src="/m/fincorp/getFinCorpIcon.crz?cd_fc=0010471" alt="" />국세청 HomeTax</p>
+            <p class="symbol"><img src="/m/fincorp/getFinCorpIcon.crz?cd_fc=2000077" alt="" />국세청 HomeTax</p>
             <p v-if="(nts_status||'')!=''" class="text" :class="nps_status=='완료'?'red':'blue'"> {{ nts_status }}<em>{{ formatDate(nts_date) }}</em></p>
           </div>
           <p class="text-result">직전 귀속년도 소득 등록</p>

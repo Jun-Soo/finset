@@ -50,6 +50,7 @@ export default {
       isCheckCert: false,
       showButton: true,
       isGetCertContent: false,
+      emailFromDB: "",
       emailtext: "",
       uuid: "",
       financeTerms: "",
@@ -72,6 +73,7 @@ export default {
     window.resultCheckDevicesUUID = this.resultCheckDevicesUUID;
     window.resultCertSignInfo = this.resultCertSignInfo;
     this.checkUUID();
+    this.getPersonEmail();
   },
   beforeMount() {},
   mounted() {
@@ -88,6 +90,23 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    getPersonEmail() {
+      var _this = this;
+      this.$http
+        .get("/m/person/getPersonEmail.json", {
+          params: {
+            no_person: this.$store.state.user.noPerson
+          }
+        })
+        .then(function(response) {
+          console.log("response.data.email : " + response.data.email);
+          _this.emailFromDB = response.data.email || "";
+          console.log("_this.emailFromDB : " + _this.emailFromDB);
+          if (_this.emailFromDB != "") {
+            _this.emailtext = _this.emailFromDB;
+          }
+        });
+    },
     clickCheck: function(type) {
       switch (type) {
         case "bank":
@@ -150,6 +169,10 @@ export default {
       var _this = this;
       this.$validator.validateAll().then(res => {
         if (res) {
+          if (_this.emailtext != _this.emailFromDB) {
+            _this.updateEmail();
+          }
+
           // 증권 연동이 아닐경우 로딩페이지로 이동
           if (_this.isCheckStock == false) {
             _this.nextStep();
@@ -169,6 +192,19 @@ export default {
           this.$toast.center(ko.messages.require);
         }
       });
+    },
+    updateEmail: function() {
+      var _this = this;
+      var formData = new FormData();
+      console.log("updateEmail call");
+      formData.append("no_person", this.$store.state.user.noPerson);
+      formData.append("email", this.emailtext);
+      this.$http
+        .post("/m/person/modifyPersonEmail.json", formData)
+        .then(function(response) {
+          var result = response.data.result;
+          console.log("updateEmail result : " + result);
+        });
     },
     //금융정보제공동의서 조회
     getTermsContent: function(isShow) {

@@ -176,8 +176,6 @@ export default {
     checkExistCert: function() {
       var scrapCode = this.scrap_code;
       var _this = this;
-      alert(this.cert_division.value);
-      alert(this.inquiry_year.value);
       if (Constant.userAgent == "iOS") {
         //공인인증서 유무 체크 결과 콜백 이벤트
         Jockey.on("resultCheckCert", function(param) {

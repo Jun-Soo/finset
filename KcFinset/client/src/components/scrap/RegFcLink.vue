@@ -1,8 +1,8 @@
 <template>
   <section v-if="seen">
     <form name="frmFcLinkList" id="frmFcLinkList"></form>
-    <div class="box-list noMG list02 pb90">
-      <div v-if="isData" v-for="linkedFcInfo in linkedFcInfoList" :key="linkedFcInfo.index">
+    <div class="box-list noMG list02 pb90" v-if="isData">
+      <div v-for="linkedFcInfo in linkedFcInfoList" :key="linkedFcInfo.index">
         <p class="header" v-if="checkType(linkedFcInfo.nm_code)">{{linkedFcInfo.nm_code}}</p>
         <div class="item">
           <div class="flex">
@@ -11,9 +11,9 @@
           </div>
         </div>
       </div>
-      <div v-else>
-        <div class="nodata">연동가능한 금융사가 없습니다</div>
-      </div>
+    </div>
+    <div v-else>
+      <div class="nodata">연동가능한 금융사가 없습니다</div>
     </div>
 
     <div class="btn-wrap col2">
@@ -132,11 +132,15 @@ export default {
         .post("/m/scrap/scrapFcLinkList.json", formData)
         .then(function(response) {
           var list = response.data.linkedFcInfoList;
+          console.log(response.data);
           if ((list || "") != "") {
+            console.log("start loop");
             for (var i = 0; i < list.length; i++) {
+              console.log(i + "st loop start");
               list[i].icon =
                 "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + list[i].cd_fc;
               list[i].yn_link_origin = list[i].yn_link;
+              console.log(i + "st loop end");
             }
             _this.linkedFcInfoList = list;
             _this.isData = true;
@@ -145,7 +149,7 @@ export default {
         })
         .catch(e => {
           _this.seen = true;
-          this.$toast.center(ko.messages.error);
+          _this.$toast.center(ko.messages.error);
         });
     },
     updateLinkedFcInfo: function() {

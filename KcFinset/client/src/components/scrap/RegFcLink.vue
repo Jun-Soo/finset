@@ -46,6 +46,11 @@ export default {
       type: ""
     };
   },
+  // computed: {
+  //   type: function() {
+  //     return "";
+  //   }
+  // },
   component: {},
   beforeCreate() {
     this.$store.state.header.type = "sub";
@@ -93,10 +98,10 @@ export default {
     },
     checkType: function(nmCode) {
       console.log("checkType  : " + nmCode);
-      if (this.type != nmCode) {
-        this.type = nmCode;
-        return true;
-      }
+      // if (this.type != nmCode) {
+      //   this.type = nmCode;
+      //   return true;
+      // }
       return false;
     },
     login: function() {

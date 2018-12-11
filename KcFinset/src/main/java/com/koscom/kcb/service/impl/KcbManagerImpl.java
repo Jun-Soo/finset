@@ -61,6 +61,7 @@ import com.koscom.kcb.model.KcbOverdueSteadpayInfo;
 import com.koscom.kcb.model.KcbReqNonfiInfoVO;
 import com.koscom.kcb.model.Kcb_600420;
 import com.koscom.kcb.service.KcbManager;
+import com.koscom.person.dao.PersonMapper;
 import com.koscom.person.model.PersonEtmIncomeInfo;
 import com.koscom.person.model.PersonVO;
 import com.koscom.scrap.dao.ScrapMapper;
@@ -99,6 +100,9 @@ public class KcbManagerImpl implements KcbManager {
 	
 	@Autowired
 	private ScrapMapper scrapMapper;
+	
+	@Autowired
+	private PersonMapper personMapper;
 	
 	@Value("${service.profile}")
     private String profile;
@@ -1549,6 +1553,14 @@ public class KcbManagerImpl implements KcbManager {
 				kcbContactInfo.setEmail(email);
 				
 				creditMapper.saveKcbContactInfo(kcbContactInfo);
+				
+				//PERSON_INFO에 이메일이 없을 경우 세팅해 주어야 한다
+				PersonVO personVO = personMapper.getPersonInfo(no_person);
+				if(personVO.getEmail() == null || personVO.getEmail().equals("")) {
+				} else {
+					personVO.setEmail(email);
+					personMapper.modifyPersonEmail(personVO);
+				}
 			}
 			
 			//TODO 5. 거래형태, 자금용도

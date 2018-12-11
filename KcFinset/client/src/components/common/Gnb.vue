@@ -24,7 +24,7 @@
           <a @click="clickButton('/news/main')">뉴스</a>
           <a @click="clickButton('/scrap/ctrlFcLink')">연동관리</a>
           <a @click="clickButton('/share/main?cd_share=02')">정보공유관리</a>
-          <a @click="clickButton('/credit/counselMain')">금융달력</a>
+          <a @click="clickButton('/common/monthCal')">금융달력</a>
           <a @click="clickButton('/debt/calc')">금융계산기</a>
         </div>
         <dl id="gnb">

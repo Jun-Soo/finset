@@ -853,6 +853,8 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .box-agree.drop p { border: none; }
 .box-agree.drop p input[type="checkbox"] + label { font-size: 13px; line-height: 19px; color: #666; }
 
+.drop-top { background: #f5f5f5; text-align: center; font-size: 14px; line-height: 24px; font-weight: 700; padding: 20px 0; }
+
 .memo-list li { margin-bottom: 15px; }
 .memo-list li a { display: block; border: 1px solid #e5e5e5; padding: 20px; border-radius: 10px; }
 .memo-list li a p { line-height: 19px; font-size: 13px; color: #333; }
@@ -1124,7 +1126,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .box-list .add-cate { border-radius: 50px; line-height: 45px; text-align: center; font-size: 15px; color: #fff; font-weight: 700; background: #213e6a; display: block; width: 100%; margin-top: 10px; }
 
 .goal-list-wrap { padding-bottom: 50px; }
-.goal-list-wrap dl { border: 1px solid #e5e5e5; }
+.goal-list-wrap dl { border: 1px solid #e5e5e5; background: #fff; }
 .goal-list-wrap .sum, .goal-list-wrap dd { display: grid; grid-template-columns: 1fr 1fr; background: #fff; }
 .goal-list-wrap .sum input[type="text"], .goal-list-wrap dd input[type="text"] { line-height: 33px; }
 .goal-list-wrap .sum p, .goal-list-wrap dd p { padding: 5px 0; line-height: 35px; color: #9b9489; font-size: 13px; font-weight: 700; }
@@ -1134,6 +1136,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .goal-list-wrap .sum p:first-child { color: #333; font-size: 15px; font-weight: 700; }
 .goal-list-wrap dd:first-of-type { padding-top: 20px; }
 .goal-list-wrap dd:last-child { padding-bottom: 20px; }
+.goal-list-wrap .warn { margin: 0 0 10px 10px; }
 
 .graph-wrapper { padding: 0 21px; }
 
@@ -1150,7 +1153,8 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .report-con .graph img { width: 100%; }
 
 .consume-detail { margin-top: 20px; border-top: 1px solid #e5e5e5; }
-.consume-detail li { display: flex; border-bottom: 1px solid #e5e5e5; }
+.consume-detail div { border-bottom: 1px solid #e5e5e5; padding-bottom: 15px; }
+.consume-detail li { display: flex; }
 .consume-detail li p { width: 70%; font-size: 13px; color: #9b9489; font-weight: 700; line-height: 49px; }
 .consume-detail li p:last-child { text-align: right; }
 .consume-detail li p:last-child input[type="text"] { line-height: 49px; text-align: right; padding: 0 10px; font-size: 14px; width: 80%; border: none; }

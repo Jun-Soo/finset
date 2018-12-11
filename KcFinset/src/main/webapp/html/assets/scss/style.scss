@@ -2910,6 +2910,17 @@ button.cal{
     }
 }
 
+//   회원탈퇴   //
+
+.drop-top{
+	background: #f5f5f5;
+	text-align: center;
+	font-size: 14px;
+	line-height: 24px;
+	font-weight: 700;
+	padding: 20px 0;
+}
+
 .memo-list{
     li{
         margin-bottom: 15px;
@@ -4228,6 +4239,7 @@ button.cal{
     padding-bottom: 50px;
     dl{
         border: 1px solid $lineColor;
+		background: #fff;
     }
     .sum,dd{
         display: grid;
@@ -4269,6 +4281,9 @@ button.cal{
             padding-bottom: 20px;
         }
     }
+	.warn{
+		margin: 0 0 10px 10px;
+	}
 }
 
 .graph-wrapper{
@@ -4330,9 +4345,13 @@ button.cal{
 .consume-detail{
     margin-top: 20px;
     border-top: 1px solid $lineColor;
+	div{
+		border-bottom: 1px solid $lineColor;
+		padding-bottom: 15px;
+	}
     li{
         display: flex;
-        border-bottom: 1px solid $lineColor;
+        
         p{
             width: 70%;
             font-size: 13px;

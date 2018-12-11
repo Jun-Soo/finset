@@ -1333,6 +1333,14 @@
 					<foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
 			        	#{item, jdbcType=VARCHAR}
 				    </foreach>
+				     AND GI.CD_RATIO_TYPE IN
+				    <foreach item="item" collection="cd_ratio_type_array" index="index" open="(" separator="," close=")">
+			        	#{item, jdbcType=VARCHAR}
+				    </foreach>
+				      AND GI.CD_TYPE_PAY IN
+				    <foreach item="item" collection="cd_type_pay_array" index="index" open="(" separator="," close=")">
+			        	#{item, jdbcType=VARCHAR}
+				    </foreach>
                    ORDER BY NVL(FI.YN_ALLIANCE, 'N') DESC, <choose>
                             <when test="'01'.equals(orderby)">
                                 GI.RTO_INTEREST_FROM ASC/*금리낮은순*/,
@@ -1363,6 +1371,14 @@
 	 	  AND GI.CD_GOODS_CLASS_M IN
 	 	  <foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
 		  	#{item, jdbcType=VARCHAR}
+		  </foreach>
+		  AND GI.CD_RATIO_TYPE IN
+		  <foreach item="item" collection="cd_ratio_type_array" index="index" open="(" separator="," close=")">
+			#{item, jdbcType=VARCHAR}
+		  </foreach>
+		  AND GI.CD_TYPE_PAY IN
+		  <foreach item="item" collection="cd_type_pay_array" index="index" open="(" separator="," close=")">
+		   	#{item, jdbcType=VARCHAR}
 		  </foreach>
 	</select>
 	

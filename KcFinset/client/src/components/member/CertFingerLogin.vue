@@ -83,12 +83,15 @@ export default {
             } else if (Constant.userAgent == "Android") {
               window.Android.setNoPerson(_this.username, _this.hp);
             }
+
+            _this.$store.state.user.cntFailFinger = 0;
             _this.$store.state.user.authToken = null;
             _this.$store.commit("LOGIN", response.data);
             _this.changeLoginDB();
             _this.$router.push("/main");
           } else {
             this.$toast.center(ko.messages.loginErr);
+
             if (response.data.result == "21") {
               //ID오류
             } else if (response.data.result == "22") {
@@ -150,7 +153,7 @@ export default {
           window.Android.closeFingerPrint();
         }
 
-        if (this.$store.state.ynReload == "Y") {
+        if (_this.$store.state.ynReload == "Y") {
           if (Constant.userAgent == "Android") {
             window.Android.closeWebView();
           } else if (Constant.userAgent == "iOS") {
@@ -167,12 +170,12 @@ export default {
           }
 
           _this.password = _this.$store.state.user.authToken;
-          this.login();
+          _this.login();
         }
       } else {
         //지문 틀린 누적횟수 증가
         _this.cntFailFinger += 1;
-        this.modifyPwdFailCnt("finger", _this.cntFailFinger);
+        _this.modifyPwdFailCnt("finger", _this.cntFailFinger);
 
         if (_this.cntFailFinger < 5) {
           _this.errMsg = "다시 시도해 주세요. (" + _this.cntFailFinger + "/5)";
@@ -186,16 +189,16 @@ export default {
           }
 
           var data = { no_person: _this.username, yn_fingerprint: "N" };
-          this.$http
+          _this.$http
             .get("/m/person/modifyFingerPrint.json", {
               params: data
             })
             .then(response => {
-              this.$store.state.user.ynFingerprint = "N";
-              this.$router.push("/member/certCodeLogin");
+              _this.$store.state.user.ynFingerprint = "N";
+              _this.$router.push("/member/certCodeLogin");
             })
             .catch(e => {
-              this.$toast.center(ko.messages.error);
+              _this.$toast.center(ko.messages.error);
             });
         }
         return false;

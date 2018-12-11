@@ -47,7 +47,6 @@ export default {
       scKeywordList: [],
       scKeyword: [],
       orderByOptions: [
-        { text: "선택", value: "" },
         { text: "최신날짜", value: "01" },
         { text: "많이 본 뉴스", value: "02" }
       ],
@@ -74,6 +73,10 @@ export default {
       for (var i = 0; i < this.$route.query.scKeyword.length; i++) {
         this.scKeyword.push(this.$route.query.scKeyword[i]);
       }
+    } else {
+      for (var i = 0; i < this.scKeywordList.length; i++) {
+        this.scKeyword.push(this.scKeywordList[i].code_value);
+      }
     }
 
     //정렬기준 셋팅
@@ -95,7 +98,7 @@ export default {
         }
       }
     } else {
-      this.orderBy = this.orderByOptions[1]; //기본정렬 - 최신날짜순 셋팅
+      this.orderBy = this.orderByOptions[0]; //기본정렬 - 최신날짜순 셋팅
     }
 
     //store 검색조건 초기화

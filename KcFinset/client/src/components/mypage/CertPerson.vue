@@ -160,12 +160,6 @@ export default {
     });
 
     if (this.smsCertNo) window.scrollTo(0, window.innerHeight);
-    // var tmp = $("#smsCertNo").readOnly;
-    // // debugger;
-    // if (this.clicked && tmp) {
-    //   $("#smsCertNo").removeAttr("readonly");
-    // }
-    //if (this.smsCertNo) window.scrollTo(0, window.innerHeight);
   },
   beforeDestroy() {},
   destroyed() {},
@@ -310,8 +304,8 @@ export default {
       });
     },
     /*
-    * 인증 번호 확인
-    */
+     * 인증 번호 확인
+     */
     confirmedCertify: function() {
       var _this = this;
       var regExp = /^[0-9]+$/;

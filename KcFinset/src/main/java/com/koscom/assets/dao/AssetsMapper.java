@@ -68,10 +68,10 @@ public interface AssetsMapper {
 
 	/**
 	 * 자산 - 은행 계좌list
-	 * @param String
+	 * @param AssetsForm
 	 * @return List<AssetsInfoVO>
 	 */
-	public List<AssetsInfoVO> listAssetsAccount(String no_person);
+	public List<AssetsInfoVO> listAssetsAccount(AssetsForm assetsForm);
 
 	/**
 	 * 자산 - 은행 입출금내역

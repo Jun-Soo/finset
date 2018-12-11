@@ -72,8 +72,10 @@ public class LoanHomeMortgageController implements Constant {
 //			goodsForm.setCd_goods_class_m("05,08");
 //		}
 		goodsForm.setCd_goods_array_m(goodsForm.getCd_goods_class_m().split(","));
+		goodsForm.setCd_ratio_type_array(goodsForm.getCd_ratio_type().split(","));
+		goodsForm.setCd_type_pay_array(goodsForm.getCd_type_pay().split(","));
 		
-		model.addAttribute("goodsList", goodsManager.listGoodsAllianceCredit(goodsForm));
+		model.addAttribute("goodsList", goodsManager.listGoodsAllianceHouse(goodsForm));
 		return "jsonView";
 	}
 	
@@ -94,7 +96,12 @@ public class LoanHomeMortgageController implements Constant {
 //		if(StringUtil.isEmpty(goodsbankForm.getCd_goods_class_m())) {
 //			goodsbankForm.setCd_goods_class_m("05,08");
 //		}
+		logger.info("goodsbankForm.getCd_ratio_type()   : " + goodsbankForm.getCd_ratio_type());
+		logger.info("goodsbankForm.getCd_type_pay()     : " + goodsbankForm.getCd_type_pay());
 		goodsbankForm.setCd_goods_array_m(goodsbankForm.getCd_goods_class_m().split(","));
+		goodsbankForm.setCd_ratio_type_array(goodsbankForm.getCd_ratio_type().split(","));
+		goodsbankForm.setCd_type_pay_array(goodsbankForm.getCd_type_pay().split(","));
+		
 		Pagination pagedList = (Pagination) goodsbankForm.setPagedList(goodsbankManager.listGoodsNoAllianceHouse(goodsbankForm), goodsbankManager.listGoodsNoAllianceHouseCount(goodsbankForm));
 		model.addAttribute("pagedList", pagedList);
 		return "jsonView";

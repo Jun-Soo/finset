@@ -65,7 +65,7 @@
             <p :key="depWdrlInfo.index" v-if="depWdrlInfo.dateCol" class="date">{{formatDateDot(depWdrlInfo.dt_trd)}}</p>
             <div :key="depWdrlInfo.index" @click="viewDetail(depWdrlInfo.no_person, depWdrlInfo.no_account, depWdrlInfo.dt_trd, depWdrlInfo.tm_trd, depWdrlInfo.rk);" class="item">
               <div class="flex">
-                <p><em class="circle" :class="colorList[depWdrlInfo.rk]">{{depWdrlInfo.nm_person}}</em><em>{{depWdrlInfo.doc1}}</em></p>
+                <p><em v-if="yn_share=='Y'" class="circle" :class="colorList[depWdrlInfo.rk]">{{depWdrlInfo.nm_person}}</em><em>{{depWdrlInfo.doc1}}</em></p>
                 <p v-if="'0'!=depWdrlInfo.amt_dep"><em class="number blue">{{formatNumber(depWdrlInfo.amt_dep)}}</em>원</p>
                 <p v-else><em class="number red">{{('-'+formatNumber(depWdrlInfo.amt_wdrl))}}</em>원</p>
               </div>
@@ -126,6 +126,7 @@ export default {
       totalAmt: "", //입금 / 출금 총액
       page: 1,
       depWdrlList: [], //입출금list
+      yn_share: "", //공유여부
       colorList: ["red", "orange", "green", "blue", "purple"]
     };
   },
@@ -138,6 +139,8 @@ export default {
     this.$store.state.title = "입출금내역";
   },
   created() {
+    this.yn_share = this.$route.query.yn_share;
+
     this.getSearchCondition();
   },
   beforeMount() {},
@@ -186,7 +189,7 @@ export default {
       var _this = this;
       this.$http
         .get("/m/assets/getAssetsBankDepWdrlSc.json", {
-          params: {}
+          params: { yn_share: _this.yn_share }
         })
         .then(response => {
           //계좌list 셋팅(검색용)
@@ -311,6 +314,7 @@ export default {
       console.log("scKeyword" + _this.scKeyword);
 
       var formData = new FormData();
+      formData.append("yn_share", _this.yn_share);
       formData.append(
         "scAccount",
         _this.scAccount != "" ? _this.scAccount.value : ""
@@ -363,6 +367,7 @@ export default {
 
       var formData = new FormData();
       formData.append("page", _this.page);
+      formData.append("yn_share", _this.yn_share);
       formData.append(
         "scAccount",
         _this.scAccount != "" ? _this.scAccount.value : ""

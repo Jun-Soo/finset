@@ -1,20 +1,24 @@
 <template>
   <section v-if="seen">
     <form name="frmFcLinkList" id="frmFcLinkList"></form>
-    <div class="box-list noMG list02 pb90">
+    <div v-if="isData" class="box-list noMG list02 pb90">
       <div v-for="linkedFcInfo in linkedFcInfoList" :key="linkedFcInfo.index">
-        <p class="header" v-if="checkType(linkedFcInfo.nm_code)">{{linkedFcInfo.nm_code}}</p>
+        <p class="header" v-if="linkedFcInfo.nm_code != ''">{{linkedFcInfo.nm_code}}</p>
         <div class="item">
           <div class="flex">
             <p class="symbol"><img :src="linkedFcInfo.icon" alt="" />{{linkedFcInfo.nm_fc}}</p>
-            <p><button class="btn-onoff" :class="{'on':isLinked(linkedFcInfo.yn_link)}" :id=linkedFcInfo.cd_fc @click="changeLinked(linkedFcInfo.cd_fc)"></button></p>
+            <p><button class="btn-onoff" :class="{'on':isLinked(linkedFcInfo.yn_link)}" @click="changeLinked(linkedFcInfo.cd_fc)"></button></p>
           </div>
         </div>
       </div>
     </div>
+    <div v-else>
+      <div class="nodata">연동가능한 금융사가 없습니다</div>
+    </div>
+
     <div class="btn-wrap col2">
       <a @click="clickCancel()">취소</a>
-      <a class="btn-solid" v-on:click="updateLinkedFcInfo()">연결</a>
+      <a class="btn-solid" @click="updateLinkedFcInfo()">연결</a>
     </div>
   </section>
 </template>
@@ -29,6 +33,7 @@ export default {
   data() {
     return {
       seen: false,
+      isData: false,
       noPerson: this.$store.state.user.noPerson,
       password: localStorage.getItem("tempPwd"),
       cn: this.$route.params.cn,
@@ -41,6 +46,14 @@ export default {
       type: ""
     };
   },
+  computed: {
+    getType() {
+      return this.type;
+    },
+    setType() {
+      return this.type;
+    }
+  },
   component: {},
   beforeCreate() {
     this.$store.state.header.type = "sub";
@@ -50,16 +63,27 @@ export default {
     this.getLinkedFcInfo();
   },
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    // 로그인이 되어있으면 관리화면으로 안되어 있으면 어플 종료
+    if (this.$store.state.isLoggedIn) {
+      this.$store.state.header.backPath = "/scrap/CtrlFcLink";
+    } else {
+      if (Constant.userAgent == "Android") {
+        window.Android.setEndApp("Y");
+      }
+    }
+  },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {
     isLinked: function(yn_linked) {
+      console.log("isLinked : " + yn_linked);
       return yn_linked == "Y";
     },
     changeLinked: function(cd_fc) {
+      console.log("changeLinked : " + cd_fc);
       for (var i = 0; i < this.linkedFcInfoList.length; i++) {
         if (this.linkedFcInfoList[i].cd_fc == cd_fc) {
           if (this.linkedFcInfoList[i].yn_link == "N") {
@@ -69,13 +93,6 @@ export default {
           }
         }
       }
-    },
-    checkType: function(type) {
-      if (this.type != type) {
-        this.type = type;
-        return true;
-      }
-      return false;
     },
     login: function() {
       var _this = this;
@@ -99,12 +116,12 @@ export default {
             _this.$store.commit("LOGIN", response.data);
             _this.$router.push("/main");
           } else {
-            this.$toast.center(ko.messages.loginErr);
+            _this.$toast.center(ko.messages.loginErr);
             return;
           }
         })
         .catch(e => {
-          this.$toast.center(ko.messages.error);
+          _this.$toast.center(ko.messages.error);
         });
     },
     //자동스크래핑 가능 금융사 조회
@@ -118,16 +135,23 @@ export default {
         .post("/m/scrap/scrapFcLinkList.json", formData)
         .then(function(response) {
           var list = response.data.linkedFcInfoList;
-          for (var i = 0; i < list.length; i++) {
-            list[i].icon =
-              "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + list[i].cd_fc;
-            list[i].yn_link_origin = list[i].yn_link;
+          if ((list || "") != "") {
+            for (var i = 0; i < list.length; i++) {
+              list[i].icon =
+                "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + list[i].cd_fc;
+              list[i].yn_link_origin = list[i].yn_link;
+              if (i > 0 && list[i].nm_code == list[i - 1].nm_code) {
+                list[i].nm_code == "";
+              }
+            }
+            _this.linkedFcInfoList = list;
+            _this.isData = true;
           }
-          _this.linkedFcInfoList = list;
           _this.seen = true;
         })
         .catch(e => {
-          this.$toast.center(ko.messages.error);
+          _this.seen = true;
+          _this.$toast.center(ko.messages.error);
         });
     },
     updateLinkedFcInfo: function() {
@@ -137,39 +161,39 @@ export default {
       $("#frmFcLinkList").html("");
       for (var i = 0; i < this.linkedFcInfoList.length; i++) {
         if (
-          this.linkedFcInfoList[i].yn_link_origin !=
-          this.linkedFcInfoList[i].yn_link
+          _this.linkedFcInfoList[i].yn_link_origin !=
+          _this.linkedFcInfoList[i].yn_link
         ) {
           //실제 action을 보낼 form 태그 안에 input 태그를 생성
           $("#frmFcLinkList").append(
-            this.getInputStr(
+            _this.getInputStr(
               "no_person",
               cnt,
-              this.linkedFcInfoList[i].no_person
+              _this.linkedFcInfoList[i].no_person
             )
           );
           $("#frmFcLinkList").append(
-            this.getInputStr(
+            _this.getInputStr(
               "cd_agency",
               cnt,
-              this.linkedFcInfoList[i].cd_agency
+              _this.linkedFcInfoList[i].cd_agency
             )
           );
           $("#frmFcLinkList").append(
-            this.getInputStr("cd_fc", cnt, this.linkedFcInfoList[i].cd_fc)
+            _this.getInputStr("cd_fc", cnt, _this.linkedFcInfoList[i].cd_fc)
           );
           $("#frmFcLinkList").append(
-            this.getInputStr("cn", cnt, this.linkedFcInfoList[i].cn)
+            _this.getInputStr("cn", cnt, _this.linkedFcInfoList[i].cn)
           );
           $("#frmFcLinkList").append(
-            this.getInputStr(
+            _this.getInputStr(
               "type_login",
               cnt,
-              this.linkedFcInfoList[i].type_login
+              _this.linkedFcInfoList[i].type_login
             )
           );
           $("#frmFcLinkList").append(
-            this.getInputStr("yn_link", cnt, this.linkedFcInfoList[i].yn_link)
+            _this.getInputStr("yn_link", cnt, this.linkedFcInfoList[i].yn_link)
           );
           cnt++;
         }
@@ -194,7 +218,7 @@ export default {
           }
         })
         .catch(e => {
-          this.$toast.center(ko.messages.error);
+          _this.$toast.center(ko.messages.error);
         });
     },
     clickCancel: function() {

@@ -52,6 +52,8 @@ export default {
       formData.append("page", _parent.page);
       formData.append("cd_goods_class_l", _parent.cd_goods_class_l);
       formData.append("cd_goods_class_m", _parent.cd_goods_class_m);
+      formData.append("cd_ratio_type", _parent.cd_ratio_type);
+      formData.append("cd_type_pay", _parent.cd_type_pay);
       formData.append("orderby", _parent.orderby.value);
       this.$http
         .post(_parent.urlPath + "listLoanNoAffiliates.json", formData)

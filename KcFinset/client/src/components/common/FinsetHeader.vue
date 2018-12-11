@@ -14,7 +14,7 @@
 
     </div>
     <div v-else-if="this.$store.state.header.type == 'sub'" id='header' class="sub-top">
-      <a @click="$router.go(-1)" class="btn-back"></a>
+      <a @click="clickBack" class="btn-back"></a>
       <p class="title">{{this.$store.state.title}}</p>
       <a v-if="isSetting" @click="$router.go('')" class="setting"></a>
     </div>
@@ -68,7 +68,18 @@ export default {
   destroyed() {},
   methods: {
     androidBackFn: function() {
-      this.$router.go(-1);
+      if (this.$store.state.header.backPath == "") {
+        this.$router.go(-1);
+      } else {
+        this.$router.push(this.$store.state.header.backPath);
+      }
+    },
+    clickBack: function() {
+      if (this.$store.state.header.backPath == "") {
+        this.$router.go(-1);
+      } else {
+        this.$router.push(this.$store.state.header.backPath);
+      }
     }
   }
 };

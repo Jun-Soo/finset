@@ -435,7 +435,8 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .list02 .item .share span.state { color: #62c1d0; font-weight: 700; }
 .list02 .item .share span.state em { display: inline-block; padding-left: 10px; margin-left: 10px; border-left: 1px solid #e5e5e5; color: #62c1d0; }
 .list02 .item .checks .title { font-size: 14px; font-weight: 700; color: #222; }
-.list02 .item .checks .small { margin-top: 10px; }
+.list02 .item .checks .small { margin-top: 15px; }
+.list02 .item .checks .small p { margin-bottom: 10px; }
 .list02 .item .bar { position: relative; height: 3px; background: #ecebe8; border-radius: 5px; margin-top: 10px; }
 .list02 .item .bar p { position: absolute; height: 3px; background: #62c1d0; border-radius: 5px; }
 .list02 .item .warn { color: #e52638; padding-left: 20px; background: url("../images/common/ico_arlam.png") no-repeat left 15px/13px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e5e5; }
@@ -530,10 +531,10 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 
 .my-main-list { margin-top: 50px; border-bottom: 1px solid #e5e5e5; }
 .my-main-list .list { border-top: 1px solid #e5e5e5; padding: 25px 21px; }
-.my-main-list .list .item { display: flex; width: 100%; }
+.my-main-list .list .item { display: flex; width: 100%; position: relative; }
 .my-main-list .list .item .left { width: 70%; }
 .my-main-list .list .item .left a { color: #9b9489; font-size: 12px; padding-right: 10px; }
-.my-main-list .list .item .left p { color: #222; font-weight: 700; font-size: 24px; margin-top: 15px; }
+.my-main-list .list .item .left p { color: #222; font-weight: 700; font-size: 24px; margin-top: 30px; position: absolute; left: 0; top: 0; text-align: center; width: 100%; }
 .my-main-list .list .item .left p em { font-size: 12px; color: inherit; margin-left: 5px; }
 .my-main-list .list .item .right { text-align: right; width: 30%; }
 .my-main-list .list .item .right a { display: inline-block; width: 16px; height: 16px; border-radius: 100%; text-indent: -9999px; background: url(../images/main/btn_more.png) no-repeat center #9b9489; background-size: 8px; }
@@ -544,7 +545,7 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .my-main-list .list.no .item { display: block; }
 .my-main-list .list.no .item .left { width: 100%; }
 .my-main-list .list.no .item .right { width: 100%; text-align: center; }
-.my-main-list .list.no .item .right a { width: auto; height: auto; text-indent: 0; border-radius: 0; background: url("../images/mypage/ico_nodata.png") no-repeat right center/20px; line-height: 20px; padding-right: 30px; font-size: 18px; color: #222; margin-top: 15px; }
+.my-main-list .list.no .item .right a { height: auto; text-indent: 0; border-radius: 0; background: url("../images/mypage/ico_nodata.png") no-repeat right center/20px; line-height: 20px; font-size: 18px; color: #222; margin-top: 15px; width: 100%; display: block; -moz-box-sizing: borber-box; -webkit-box-sizing: borber-box; box-sizing: borber-box; }
 
 .my-links { padding: 0 21px; margin-top: 40px; padding-bottom: 95px; }
 .my-links .wrap { display: flex; margin-left: -8px; }
@@ -554,7 +555,7 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .my-links .wrap a:nth-child(3) { background: url(../images/main/ico3.png) no-repeat 20px 20px/20px; }
 
 .credit-top { padding: 0 21px; }
-.credit-top .time { margin-top: 20px; text-align: center; font-size: 12px; color: #888; }
+.credit-top .time { margin-top: 20px; text-align: right; font-size: 12px; color: #888; }
 .credit-top .time:before { display: inline-block; width: 10px; height: 10px; content: ""; background: url(../images/main/credit_time.png) no-repeat center/contain; margin-right: 5px; }
 .credit-top .wrap { display: flex; padding: 25px 0; border: 1px solid #e5e5e5; border-radius: 10px; margin-top: 10px; }
 .credit-top .wrap .item { width: 33.3%; border-left: 1px solid #e5e5e5; text-align: center; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
@@ -1262,7 +1263,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .certcode-wrap .number a.finger { background: url("../images/member/btn_fingerprint.png") no-repeat center top/75px; }
 .certcode-wrap .number a.finger:active { background: url("../images/member/btn_fingerprint.png") no-repeat center bottom #62c1d0; background-size: 75px; }
 
-.cert-finger { padding-top: 305px; background: url("../images/member/fingerprint.png") no-repeat 50% 150px; background-size: 117px; }
+.cert-finger { background-size: 117px; }
 .cert-finger p { text-align: center; font-size: 15px; }
 
 /*   스크랩   */

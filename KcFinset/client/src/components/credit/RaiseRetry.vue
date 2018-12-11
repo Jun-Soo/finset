@@ -5,7 +5,7 @@
     </div>
     <div class="btn-wrap col2">
       <a class="btn-solid" @click="clickRetry()">재전송</a>
-      <a href="#" class="btn-stroke" @click="clickGohome()">홈으로</a>
+      <a class="btn-stroke" @click="clickGohome()">홈으로</a>
     </div>
   </section>
 </template>

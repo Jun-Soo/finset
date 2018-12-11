@@ -1,6 +1,6 @@
 <template>
   <div class="loading">
-    <span v-html=normalMessage></span><br><small v-html=smallMessage></small>
+    <span v-html="normalMessage"></span><br><small v-html="smallMessage"></small>
   </div>
 </template>
 
@@ -25,7 +25,10 @@ export default {
   component: {},
   // computed () {
   // },
-  beforeCreate() {},
+  beforeCreate() {
+    this.$store.state.header.type = "";
+    this.$store.state.title = "금융사 연동";
+  },
   created() {
     window.resultUpdateScrapInfo = this.resultUpdateScrapInfo;
     window.resultCheckAvaliableScrapList = this.resultCheckAvaliableScrapList;

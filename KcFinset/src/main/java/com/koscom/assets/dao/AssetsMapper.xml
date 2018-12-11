@@ -69,7 +69,7 @@
 	</select>
 
     <select id="listAssetsSharePerson" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
-        /* com.koscom.assets.dao.AssetsMapper.getAssetsBankDepWdrlInfo - 자산관리(은행메인 - 공유자list) */
+        /* com.koscom.assets.dao.AssetsMapper.listAssetsSharePerson - 자산관리(은행메인 - 공유자list) */
        	SELECT NO_PERSON,
        			NM_PERSON,
        			ROWNUM RK
@@ -432,7 +432,7 @@
 			) TB
 	</select>
 
-    <select id="listAssetsAccount" parameterType="java.lang.String" resultType="com.koscom.assets.model.AssetsInfoVO">
+    <select id="listAssetsAccount" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
         /* com.koscom.assets.dao.AssetsMapper.listAssetsAccount - 자산관리(계좌list) */
        SELECT
 			TB.NO_PERSON,
@@ -466,6 +466,8 @@
 					AND AI.YN_DELETE = 'N'
 					AND AI.CD_ASSETS_CLASS = '00'
 					AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+				<if test="@com.koscom.util.MybatisUtil@isNotEmpty(yn_share)">
+				<if test='"Y".equals(yn_share)'>
 				UNION ALL
 				SELECT
 					SI.NO_PERSON,
@@ -511,6 +513,8 @@
 					AND (AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 					AND AI.YN_DELETE = 'N'
 					)
+				</if>
+				</if>
 			) TB
 		ORDER BY TB.RK, TB.AMT_BALANCE
     </select>
@@ -567,6 +571,8 @@
 					AND AI.YN_DELETE = 'N'
 					AND AI.CD_ASSETS_CLASS = '00'
 					AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+				<if test="@com.koscom.util.MybatisUtil@isNotEmpty(yn_share)">
+				<if test='"Y".equals(yn_share)'>
 				UNION ALL
 				SELECT
 					SI.NO_PERSON,
@@ -612,6 +618,8 @@
 					AND (AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 					AND AI.YN_DELETE = 'N'
 					)
+				</if>
+				</if>
 			) TB
 		INNER JOIN SCR_TRANSACTION_DETAIL STD
 		ON ( STD.NO_PERSON = TB.NO_PERSON
@@ -696,6 +704,8 @@
 							AND AI.YN_DELETE = 'N'
 							AND AI.CD_ASSETS_CLASS = '00'
 							AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+						<if test="@com.koscom.util.MybatisUtil@isNotEmpty(yn_share)">
+						<if test='"Y".equals(yn_share)'>
 						UNION ALL
 						SELECT
 							SI.NO_PERSON,
@@ -741,6 +751,8 @@
 							AND (AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 							AND AI.YN_DELETE = 'N'
 							)
+						</if>
+						</if>
 					) SHAI
 				INNER JOIN SCR_TRANSACTION_DETAIL STD
 				ON ( STD.NO_PERSON = SHAI.NO_PERSON
@@ -794,6 +806,8 @@
 						AND AI.YN_DELETE = 'N'
 						AND AI.CD_ASSETS_CLASS = '00'
 						AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(yn_share)">
+					<if test='"Y".equals(yn_share)'>
 					UNION ALL
 					SELECT
 						SI.NO_PERSON,
@@ -837,6 +851,8 @@
 						AND (AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 						AND AI.YN_DELETE = 'N'
 						)
+					</if>
+					</if>
 				) SHAI
 			INNER JOIN SCR_TRANSACTION_DETAIL STD
 			ON ( STD.NO_PERSON = SHAI.NO_PERSON

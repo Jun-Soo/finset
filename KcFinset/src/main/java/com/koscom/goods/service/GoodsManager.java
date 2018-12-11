@@ -26,6 +26,20 @@ public interface GoodsManager {
 	int listGoodsAllianceCreditCount(GoodsForm goodsForm);
 	
 	/**
+	 * 제휴사 상품목록 조회(주택담보)
+	 * @param GoodsForm
+	 * @return GoodsVO
+	 */
+	List<GoodsVO> listGoodsAllianceHouse(GoodsForm goodsForm);
+	
+	/**
+	 * 제휴사 상품목록 카운트 조회(주택담보)
+	 * @param goodsForm
+	 * @return
+	 */
+	int listGoodsAllianceHouseCount(GoodsForm goodsForm);
+	
+	/**
 	 * 제휴사 상품목록 조회(사업자신용)
 	 * @param GoodsForm
 	 * @return GoodsVO

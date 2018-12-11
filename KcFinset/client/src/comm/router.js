@@ -211,6 +211,7 @@ import TemplateChartSingleLine from '@/components/template/ChartsingleLine'
 import TemplateChartSingleLine2 from '@/components/template/ChartSingleLine2'
 import TemplateChartMultipleBar from '@/components/template/ChartMultipleBar'
 
+import Store from '@/comm/store'
 Vue.use(Router)
 
 export const routes = [{
@@ -1503,8 +1504,7 @@ export const routes = [{
     alias: '/certPerson',
     component: MypageCertPerson,
     meta: {
-      allowPath: true,
-      requiresAuth: true
+      allowPath: true
     }
   },
   {
@@ -1512,8 +1512,7 @@ export const routes = [{
     alias: '/chgPwd',
     component: MypageChgPwd,
     meta: {
-      allowPath: true,
-      requiresAuth: true
+      allowPath: true
     }
   },
   {
@@ -1676,6 +1675,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  Store.state.header.backPath = ''
   if (to.path === '/index.html') {
     next('/home?hp=' + to.query.hp)
   } else {

@@ -9,10 +9,10 @@
         <p class="textred" v-if="cntFailPwd > 0"> {{ errMsg }} </p>
 
         <div class="pass-wrap">
-          <input type="password" v-bind:style="classPass1" v-model="classPass1" id="pass_number1" maxlength="1" readonly />
-          <input type="password" v-bind:style="classPass2" v-model="classPass2" id="pass_number2" maxlength="1" readonly />
-          <input type="password" v-bind:style="classPass3" v-model="classPass3" id="pass_number3" maxlength="1" readonly />
-          <input type="password" v-bind:style="classPass4" v-model="classPass4" id="pass_number4" maxlength="1" readonly />
+          <input type="password" v-bind:style="classPass1" v-model="pw1" id="pass_number1" maxlength="1" readonly />
+          <input type="password" v-bind:style="classPass2" v-model="pw2" id="pass_number2" maxlength="1" readonly />
+          <input type="password" v-bind:style="classPass3" v-model="pw3" id="pass_number3" maxlength="1" readonly />
+          <input type="password" v-bind:style="classPass4" v-model="pw4" id="pass_number4" maxlength="1" readonly />
         </div>
         <div class="number">
           <a v-on:click="btnClick('1')">1</a>
@@ -48,7 +48,7 @@ export default {
     return {
       errMsg: "",
       cntFailPwd: this.$store.state.user.cntFailPwd,
-      cntFailFinger: this.$store.state.user.cntFailFinger,
+      // cntFailFinger: this.$store.state.user.cntFailFinger,
       ynFingerprint: this.$store.state.user.ynFingerprint,
       username: this.$store.state.user.noPerson,
       password: "",
@@ -57,7 +57,11 @@ export default {
       classPass1: "",
       classPass2: "",
       classPass3: "",
-      classPass4: ""
+      classPass4: "",
+      pw1: "",
+      pw2: "",
+      pw3: "",
+      pw4: ""
     };
   },
   component: {},
@@ -88,17 +92,32 @@ export default {
       _this.classPass2 = "";
       _this.classPass3 = "";
       _this.classPass4 = "";
+      _this.pw1 = "";
+      _this.pw2 = "";
+      _this.pw3 = "";
+      _this.pw4 = "";
     },
     btnClick: function(val) {
       var _this = this;
       if (_this.password.length < 4) {
         _this.password += val;
       }
-      if (_this.password.length > 0) _this.classPass1 = "border-color: #111";
-      if (_this.password.length > 1) _this.classPass2 = "border-color: #111";
-      if (_this.password.length > 2) _this.classPass3 = "border-color: #111";
+      if (_this.password.length > 0) {
+        _this.classPass1 = "border-color: #111";
+        _this.pw1 = val;
+      }
+
+      if (_this.password.length > 1) {
+        _this.classPass2 = "border-color: #111";
+        _this.pw2 = val;
+      }
+      if (_this.password.length > 2) {
+        _this.classPass3 = "border-color: #111";
+        _this.pw3 = val;
+      }
       if (_this.password.length > 3) {
         _this.classPass4 = "border-color: #111";
+        _this.pw4 = val;
 
         //validator
         if (this.$store.state.ynReload == "Y") {
@@ -114,12 +133,20 @@ export default {
     },
     backClick: function() {
       var _this = this;
-      this.initClassPass();
+      if (_this.password.length == 4) {
+        _this.pw4 = "";
+        _this.classPass4 = "";
+      } else if (_this.password.length == 3) {
+        _this.pw3 = "";
+        _this.classPass3 = "";
+      } else if (_this.password.length == 2) {
+        _this.pw2 = "";
+        _this.classPass2 = "";
+      } else if (_this.password.length == 1) {
+        _this.pw1 = "";
+        _this.classPass1 = "";
+      }
       _this.password = _this.password.substr(0, _this.password.length - 1);
-      if (_this.password.length > 0) _this.classPass1 = "border-color: #111";
-      if (_this.password.length > 1) _this.classPass2 = "border-color: #111";
-      if (_this.password.length > 2) _this.classPass3 = "border-color: #111";
-      if (_this.password.length > 3) _this.classPass4 = "border-color: #111";
     },
     //비밀번호 틀린횟수 변경
     modifyPwdFailCnt: function(mode) {
@@ -135,7 +162,7 @@ export default {
         })
         .then(response => {
           var result = response.data;
-          console.log(result);
+          console.log("modifyPwdFailCnt :" + result);
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);
@@ -161,7 +188,7 @@ export default {
           }
         })
         .then(response => {
-          console.log(response.data.result);
+          console.log("login: " + response.data);
           if (response.data.result == "10") {
             //정상
             if (Constant.userAgent == "iOS") {
@@ -177,9 +204,12 @@ export default {
               window.Android.loginFlag("Y");
             }
             _this.$store.state.user.authToken = null;
+            _this.$store.state.user.cntFailPwd = 0;
+            // _this.$store.state.user.cntFailFinger = 0;
             _this.$store.commit("LOGIN", response.data);
 
             _this.changeLoginDB();
+
             if (_this.$store.state.linkUrl) {
               _this.$router.push(_this.$store.state.linkUrl);
             } else {
@@ -190,6 +220,7 @@ export default {
             this.initClassPass();
             _this.password = "";
             //비밀번호 틀린 누적횟수 증가
+            console.log("login failed : ");
             _this.cntFailPwd += 1;
             if (_this.cntFailPwd < 5) {
               _this.errMsg =
@@ -203,7 +234,7 @@ export default {
               }, 1000);
             }
             if (response.data.result == "21" || response.data.result == "22") {
-              _this.modifyPwdFailCnt("pwd");
+              _this.modifyPwdFailCnt("pwd"); //cnt값 db에 저장
             }
           }
         })
@@ -224,7 +255,7 @@ export default {
       this.$http
         .post("/m/login/loginChkCode.json", formData)
         .then(response => {
-          console.log(response.data.result);
+          console.log("passCheck :" + response.data.result);
           if (response.data.result == "00") {
             //정상
             if (Constant.userAgent == "iOS") {
@@ -233,7 +264,7 @@ export default {
               window.Android.closeWebView();
               return false;
             }
-          }
+          } // ㅊㅓ리 필요~
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);
@@ -258,62 +289,6 @@ export default {
         .catch(e => {
           this.$toast.center(ko.messages.error);
         });
-    },
-    /***
-     * Native Call function
-     **/
-    resultFingerPrint: function(result) {
-      var _this = this;
-      if (result == true || result == 1) {
-        //지문인식 성공
-        if (Constant.userAgent == "Android") {
-          window.Android.closeFingerPrint();
-        }
-
-        if (this.$store.state.ynReload == "Y") {
-          if (Constant.userAgent == "Android") {
-            window.Android.closeWebView();
-          } else if (Constant.userAgent == "iOS") {
-            Jockey.send("closeWebView");
-          }
-          return false;
-        } else {
-          _this.password = _this.$store.state.user.authToken;
-          _this.login();
-        }
-      } else {
-        //지문 틀린 누적횟수 증가
-        _this.cntFailFinger += 1;
-        this.modifyPwdFailCnt("finger", _this.cntFailFinger);
-
-        if (_this.cntFailFinger < 5) {
-          _this.errMsg =
-            "지문이 일치하지 않습니다. (" + _this.cntFailFinger + "/5)";
-        } else if (_this.cntFailFinger == 5) {
-          //지문인식 5번 모두 틀린 경우
-          _this.errMsg = "지문이 비활성화 됩니다.";
-          this.$toast.center(_this.errMsg);
-          if (Constant.userAgent == "Android") {
-            window.Android.closeFingerPrint();
-          }
-
-          var data = {
-            yn_fingerprint: "N",
-            no_person: _this.username
-          };
-          this.$http
-            .get("/m/person/modifyFingerPrint.json", {
-              params: data
-            })
-            .then(response => {
-              this.$store.state.user.ynFingerprint = "N";
-            })
-            .catch(e => {
-              this.$toast.center(ko.messages.error);
-            });
-        }
-        return false;
-      }
     }
   }
 };

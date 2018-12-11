@@ -24,7 +24,7 @@
         </div>
       </div>
 
-      <div class="btn-wrap float">
+      <div class="btn-wrap float" v-if="showButton">
         <a href="#" class="btn-next" @click="clickNext()">다음</a>
       </div>
     </section>
@@ -48,6 +48,7 @@ export default {
       isCheckStock: true,
       isCheckNts: true,
       isCheckCert: false,
+      showButton: true,
       isGetCertContent: false,
       emailtext: "",
       uuid: "",
@@ -80,6 +81,7 @@ export default {
       this.isCheckEtc = false;
       this.isCheckStock = true;
     }
+    this.checkButton();
   },
   beforeUpdate() {},
   updated() {},
@@ -100,6 +102,19 @@ export default {
         case "nts":
           this.isCheckNts = !this.isCheckNts;
           break;
+      }
+      this.checkButton();
+    },
+    checkButton: function() {
+      if (
+        !this.isCheckBank &&
+        !this.isCheckCard &&
+        !this.isCheckStock &&
+        !this.isCheckNts
+      ) {
+        this.showButton = false;
+      } else {
+        this.showButton = true;
       }
     },
     clickCheckCert: function(event) {

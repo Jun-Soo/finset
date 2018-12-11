@@ -74,7 +74,7 @@
       </div>
 
       <div class="spend-list box-list noMG">
-        <div class="list-wrap">
+        <div class="list-wrap" v-if="shareList.length != 1">
           <div class="filter-wrap">
             <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
               <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
@@ -96,7 +96,7 @@
             </div>
             <div class="right">
               <p :class="chkType(vo.type_in_out)" class="number">{{formatNumber(vo.amt_in_out,vo.type_in_out=='02',vo.type_in_out=='01')}}<em>원</em></p>
-              <p class="circle red"><span :class="settingList[shareList.findIndex(person => person.no_person === vo.no_person)].color"></span></p>
+              <p class="circle red" v-if="shareList.length != 1"><span :class="settingList[shareList.findIndex(person => person.no_person === vo.no_person)].color"></span></p>
               <p class="text">{{formatMeansConsume(vo.means_consume)}}</p>
             </div>
           </div>

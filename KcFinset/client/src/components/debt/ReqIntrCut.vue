@@ -25,11 +25,11 @@
       </div>
     </div>
 
-    <div class="accodion" style="margin-bottom:100px;">
+    <div class="accodion">
       <div class="info-massage">아래의 기준은 은행별로 상이 할 수 있습니다.</div>
       <ul>
-        <li :class="{on: ynCredit}">
-          <div class="top"><a @click="changeItems('credit')">최근에 신용등급이 오르셨나요 ?</a></div>
+        <li>
+          <div class="top"><span :class="{on: ynCredit}">최근에 신용등급이 오르셨나요 ?</span><em @click="closeItem('credit')"></em></div>
           <div class="con">
             <div class="flex">
               <p>기준일</p>
@@ -41,8 +41,8 @@
             <p class="text">최근 신용등급이 2등급 이상 오른 경우 상승하기 전에 개설 했던 대출에 대해서 금리인하권을 요구 할 수 있습니다.</p>
           </div>
         </li>
-        <li :class="{on: ynTurnover}">
-          <div class="top"><a @click="changeItems('turnover')">최근 직장 변동이 있으셨나요 ?</a></div>
+        <li>
+          <div class="top"><span :class="{on: ynTurnover}">최근 직장 변동이 있으셨나요 ?</span><em @click="closeItem('turnover')"></em></div>
           <div class="con">
             <div class="flex">
               <p>이직일</p>
@@ -64,8 +64,8 @@
             <!-- <p class="text">신용등급이 향상된 직장으로 이직한 경우 요구 가능합니다.</p> -->
           </div>
         </li>
-        <li :class="{on: ynIncome}">
-          <div class="top"><a @click="changeItems('income')">최근 연소득이 증가하셨나요 ?</a></div>
+        <li>
+          <div class="top"><span :class="{on: ynIncome}">최근 연소득이 증가하셨나요 ?</span><em @click="closeItem('income')"></em></div>
           <div class="con">
             <!--
                       <div class="flex">
@@ -90,8 +90,8 @@
             <p class="text">신규 및 연장 시점 대비 연소득이 15% 이상 상승된 경우 요구가 가능합니다.</p>
           </div>
         </li>
-        <li :class="{on: ynDebt}">
-          <div class="top"><a @click="changeItems('debt')">최근 부채가 감소하셨나요 ?</a></div>
+        <li>
+          <div class="top"><span :class="{on: ynDebt}">최근 부채가 감소하셨나요 ?</span><em @click="closeItem('debt')"></em></div>
           <div class="con">
             <div class="flex">
               <p>기준일</p>
@@ -115,8 +115,8 @@
             <p class="text">신규 및 연장 시점 대비 부채가 현저히 낮아진 경우(15%) 요구가 가능합니다.</p>
           </div>
         </li>
-        <li :class="{on: ynPos}">
-          <div class="top"><a @click="changeItems('pos')">동일 직장내에서 직위가 상승 하셨나요 ?</a></div>
+        <li>
+          <div class="top"><span :class="{on: ynPos}">동일 직장내에서 직위가 상승 하셨나요 ?</span><em @click="closeItem('pos')"></em></div>
           <div class="con">
             <div class="flex">
               <p>기준일</p>
@@ -128,8 +128,8 @@
             <p class="text">동일 직장내 직위가 상승한 경우 요구가 가능합니다.</p>
           </div>
         </li>
-        <li :class="{on: ynCert}">
-          <div class="top"><a @click="changeItems('cert')">전문 자격증을 취득하셨나요 ?</a></div>
+        <li>
+          <div class="top"><span :class="{on: ynCert}">전문 자격증을 취득하셨나요 ?</span><em @click="closeItem('cert')"></em></div>
           <div class="con">
             <div class="flex">
               <p>기준일</p>
@@ -152,14 +152,9 @@
       </ul>
     </div>
 
-    <!--
-      <div class="btn-wrap">
-          <a href="#" class="solid blue box">검색</a>
-      </div>
-      -->
-    <div class="btn-wrap col2">
-      <a @click="init()">초기화</a>
-      <a class="btn-solid" @click="getReqIntrCut()">검색</a>
+    <div class="btn-wrap">
+      <a @click="init()" class="stroke blue box">초기화</a>
+      <a @click="getReqIntrCut()" class="solid blue box mt10">검색</a>
     </div>
 
     <vue-modal transitionName="zoom-in" name="info-modal" v-on:popclose="closeInfo()">
@@ -226,6 +221,89 @@ export default {
     datepicker: datepicker,
     ReqIntrCutInfo: ReqIntrCutInfo
   },
+  watch: {
+    //신용
+    creditFixDate: function() {
+      if ("" != this.creditFixDate) {
+        this.ynCredit = true;
+      } else {
+        this.ynCredit = false;
+      }
+    },
+    //이직
+    turnoverDate: function() {
+      if ("" != this.turnoverDate) {
+        this.ynTurnover = true;
+      } else {
+        this.ynTurnover = false;
+      }
+    },
+    //연소득
+    income: function() {
+      if ("" != this.income) {
+        this.ynIncome = true;
+      } else {
+        this.ynIncome = false;
+      }
+    },
+    //부채
+    debtFixDate: function() {
+      if (
+        "" != this.debtFixDate &&
+        "" != this.debtBfAmt &&
+        "" != this.debtAtAmt
+      ) {
+        this.ynDebt = true;
+      } else {
+        this.ynDebt = false;
+      }
+    },
+    debtBfAmt: function() {
+      if (
+        "" != this.debtFixDate &&
+        "" != this.debtBfAmt &&
+        "" != this.debtAtAmt
+      ) {
+        this.ynDebt = true;
+      } else {
+        this.ynDebt = false;
+      }
+    },
+    debtAtAmt: function() {
+      if (
+        "" != this.debtFixDate &&
+        "" != this.debtBfAmt &&
+        "" != this.debtAtAmt
+      ) {
+        this.ynDebt = true;
+      } else {
+        this.ynDebt = false;
+      }
+    },
+    //직위
+    posFixDate: function() {
+      if ("" != this.posFixDate) {
+        this.ynPos = true;
+      } else {
+        this.ynPos = false;
+      }
+    },
+    //자격증
+    certFixDate: function() {
+      if ("" != this.certFixDate && "" != this.certification.value) {
+        this.ynCert = true;
+      } else {
+        this.ynCert = false;
+      }
+    },
+    certification: function() {
+      if ("" != this.certFixDate && "" != this.certification.value) {
+        this.ynCert = true;
+      } else {
+        this.ynCert = false;
+      }
+    }
+  },
   computed: {},
   beforeCreate() {
     this.$store.state.header.type = "sub";
@@ -233,7 +311,6 @@ export default {
   },
   created() {
     this.setCurrentDate();
-    this.changeItems("init");
   },
   beforeMount() {},
   mounted() {},
@@ -260,7 +337,7 @@ export default {
 
       _this.currentDate = yyyy + "-" + mm + "-" + dd;
     },
-    //datePicker
+    //datepicker
     openCreditFixPicker: function() {
       this.$refs.creditFixOpen.showCalendar();
     },
@@ -336,35 +413,23 @@ export default {
     },
     validate: function() {
       var _this = this;
-      if (_this.ynIncome) {
-        //연소득
-        if ("" == _this.income) {
-          _this.$toast.center("연소득을 입력해 주세요");
-          return false;
-        }
+      if (
+        !_this.ynCredit &&
+        !_this.ynTurnover &&
+        !_this.ynIncome &&
+        !_this.ynDebt &&
+        !_this.ynPos &&
+        !_this.ynCert
+      ) {
+        _this.$toast.center("항목을 입력해 주세요");
+        return false;
       }
       if (_this.ynDebt) {
+        console.log(Number(_this.debtAtAmt));
+        console.log(Number(_this.debtBfAmt));
         //부채
-        if ("" == _this.debtBfAmt) {
-          _this.$toast.center("변경전 금액을 입력해 주세요");
-          return false;
-        }
-        if ("" == _this.debtAtAmt) {
-          _this.$toast.center("변경후 금액을 입력해 주세요");
-          return false;
-        }
-        if (Number(_this.debtAtAmt) >= Number(_this.debtBfAmt) * 1.15) {
+        if (Number(_this.debtBfAmt) * 0.85 < Number(_this.debtAtAmt)) {
           _this.$toast.center("부채 감소 기준에 부합하지 않습니다");
-          return false;
-        }
-      }
-      //자격증
-      if (_this.ynCert) {
-        if (
-          typeof _this.certification.value == "undefined" ||
-          "" == _this.certification.value
-        ) {
-          _this.$toast.center("자격증을 선택해 주세요");
           return false;
         }
       }
@@ -404,51 +469,40 @@ export default {
         window.Android.phoneCall(tel);
       }
     },
-    //항목변경
-    changeItems: function(item) {
+    closeItem: function(item) {
       var _this = this;
-      var currentDate = _this.currentDate;
+      // var currentDate = _this.currentDate;
 
       if ("credit" == item) {
-        _this.ynCredit = !_this.ynCredit;
+        _this.creditFixDate = "";
       } else if ("turnover" == item) {
-        _this.ynTurnover = !_this.ynTurnover;
+        _this.turnoverDate = "";
       } else if ("income" == item) {
-        _this.ynIncome = !_this.ynIncome;
-      } else if ("debt" == item) {
-        _this.ynDebt = !_this.ynDebt;
-      } else if ("pos" == item) {
-        _this.ynPos = !_this.ynPos;
-      } else if ("cert" == item) {
-        _this.ynCert = !_this.ynCert;
-      } else if ("init" == item) {
-        _this.ynCredit = false;
-        _this.ynTurnover = false;
-        _this.ynIncome = false;
-        _this.ynDebt = false;
-        _this.ynPos = false;
-        _this.ynCert = false;
-      }
-
-      if (!_this.ynCredit) {
-        this.creditFixDate = currentDate;
-      }
-      if (!_this.ynTurnover) {
-        _this.turnoverDate = currentDate;
-      }
-      if (!_this.ynIncome) {
         _this.income = "";
-      }
-      if (!_this.ynDebt) {
-        _this.debtFixDate = currentDate;
+      } else if ("debt" == item) {
+        _this.debtFixDate = "";
         _this.debtBfAmt = "";
         _this.debtAtAmt = "";
-      }
-      if (!_this.ynPos) {
-        _this.posFixDate = currentDate;
-      }
-      if (!_this.ynCert) {
-        _this.certFixDate = currentDate;
+      } else if ("pos" == item) {
+        _this.posFixDate = "";
+      } else if ("cert" == item) {
+        _this.certFixDate = "";
+        _this.certification = "";
+      } else if ("init" == item) {
+        //신용
+        _this.creditFixDate = "";
+        //이직
+        _this.turnoverDate = "";
+        //연소득
+        _this.income = "";
+        //부채
+        _this.debtFixDate = "";
+        _this.debtBfAmt = "";
+        _this.debtAtAmt = "";
+        //직위
+        _this.posFixDate = "";
+        //자격증
+        _this.certFixDate = "";
         _this.certification = "";
       }
     },
@@ -457,7 +511,8 @@ export default {
       var _this = this;
 
       _this.isInit = true;
-      _this.changeItems("init");
+      $("li").removeClass("on");
+      _this.closeItem("init");
     }
   }
 };

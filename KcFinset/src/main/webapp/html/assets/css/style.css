@@ -536,7 +536,7 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .my-main-list .list .item .left p { color: #222; font-weight: 700; font-size: 24px; margin-top: 15px; position: absolute; left: 0; text-align: center; width: 100%; }
 .my-main-list .list .item .left p em { font-size: 12px; color: inherit; margin-left: 5px; }
 .my-main-list .list .item .right { text-align: right; width: 30%; }
-.my-main-list .list .item .right a { display: inline-block; width: 16px; height: 16px; border-radius: 100%; text-indent: -9999px; background: url(../images/main/btn_more.png) no-repeat center #9b9489; background-size: 8px; }
+.my-main-list .list .item .right a { display: inline-block; width: 20px; height: 20px; border-radius: 100%; text-indent: -9999px; background: url(../images/mypage/ico_nodata.png) no-repeat center; background-size: 20px; }
 .my-main-list .list .item .right p { margin-top: 20px; font-size: 14px; }
 .my-main-list .list .item .right p.plus { color: #e52638; }
 .my-main-list .list .item .right p.minus { color: #62c1d0; }
@@ -821,6 +821,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .accodion ul li .con .flex p:first-child { font-size: 14px; font-weight: 700; color: #222; }
 .accodion ul li .con .flex p:last-child { text-align: right; line-height: 0; }
 .accodion ul li .con .flex p:last-child button { display: inline-block; width: 33px; height: 33px; border: 1px solid #e5e5e5; background: url("../images/common/btn_accodion_search.png") no-repeat center/contain; margin: 0; }
+.accodion ul li .con .flex p:last-child button.cal { background: url("../images/common/btn_cal.png") no-repeat center/18px; }
 .accodion ul li .con .flex p:last-child input[type="text"], .accodion ul li .con .flex p:last-child input[type="number"] { line-height: 35px; height: 33px; width: 126px; font-size: 15px; text-align: right; padding: 0 15px; }
 .accodion ul li .con .text { font-size: 12px; line-height: 16px; color: #888; }
 .accodion ul li.on .top { border-bottom: 1px solid #e5e5e5; }
@@ -1160,7 +1161,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .consume-detail li p { width: 70%; font-size: 13px; color: #9b9489; font-weight: 700; line-height: 49px; }
 .consume-detail li p:last-child { text-align: right; }
 .consume-detail li p:last-child input[type="text"] { line-height: 49px; text-align: right; padding: 0 10px; font-size: 14px; width: 80%; border: none; }
-.consume-detail li p:last-child .btn-cate { padding-right: 20px; background: url("../images/consume/btn_cate.png") no-repeat right center/10px; }
+.consume-detail li p:last-child .btn-cate { padding-right: 20px; background: url("../images/consume/btn_cate.png") no-repeat right center/10px; color: #454545; text-align: right; }
 .consume-detail li p select { border: none; }
 .consume-detail li.memo { display: block; }
 .consume-detail li.memo p { width: 100%; line-height: 40px; }

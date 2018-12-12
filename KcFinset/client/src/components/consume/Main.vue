@@ -134,54 +134,82 @@ export default {
         { color: "blue", id: "chk4" },
         { color: "purple", id: "chk5" }
       ],
-      progressOption: {
-        text: "공인 인증서를 등록하여 소비내역을 관리하세요",
-        max: 0
-      }
+      progressText: "설정된 예산이 없습니다",
+      progressMax: 0
     };
   },
   components: {
     Progress
   },
-  // computed () {
-  // },
-  watch: {
-    isScrap: function(param) {
-      if (param) {
-      } else {
-        this.progressOption = {
+  computed: {
+    progressOption: function() {
+      if (!this.isScrap) {
+        return {
           text: "공인 인증서를 등록하여 소비내역을 관리하세요",
           max: 0
         };
-      }
-    },
-    isGoal: function(param) {
-      if (this.isScrap == true) {
-        if (param) {
+      } else if (!this.isGoal) {
+        if (
+          this.curDate.getFullYear() == this.standardDt.getFullYear() &&
+          this.curDate.getMonth() == this.standardDt.getMonth()
+        ) {
+          return {
+            text: "예산을 설정하여 목표를 이루세요",
+            max: 0
+          };
         } else {
-          if (
-            this.curDate.getFullYear() == this.standardDt.getFullYear() &&
-            this.curDate.getMonth() == this.standardDt.getMonth()
-          ) {
-            this.progressOption = {
-              text: "예산을 설정하여 목표를 이루세요",
-              max: 0
-            };
-          } else {
-            this.progressOption = {
-              text: "설정된 예산이 없습니다",
-              max: 0
-            };
-          }
+          return {
+            text: "설정된 예산이 없습니다",
+            max: 0
+          };
         }
       } else {
-        this.progressOption = {
-          text: "공인 인증서를 등록하여 소비내역을 관리하세요",
-          max: 0
+        return {
+          text: this.progressText,
+          max: this.progressMax
         };
       }
     }
   },
+  // watch: {
+  //   isScrap: function(param) {
+  //     console.log("isScrap:" + param);
+  //     if (param) {
+  //     } else {
+  //       this.progressOption = {
+  //         text: "공인 인증서를 등록하여 소비내역을 관리하세요",
+  //         max: 0
+  //       };
+  //     }
+  //   },
+  //   isGoal: function(param) {
+  //     console.log("isGoal:" + param);
+  //     if (this.isScrap == true) {
+  //       if (param) {
+  //       } else {
+  //         if (
+  //           this.curDate.getFullYear() == this.standardDt.getFullYear() &&
+  //           this.curDate.getMonth() == this.standardDt.getMonth()
+  //         ) {
+  //           this.progressOption = {
+  //             text: "예산을 설정하여 목표를 이루세요",
+  //             max: 0
+  //           };
+  //         } else {
+  //           this.progressOption = {
+  //             text: "설정된 예산이 없습니다",
+  //             max: 0
+  //           };
+  //         }
+  //       }
+  //     } else {
+  //       this.progressOption = {
+  //         text: "공인 인증서를 등록하여 소비내역을 관리하세요",
+  //         max: 0
+  //       };
+  //     }
+  //   }
+  // },
   beforeCreate() {
     this.$store.state.header.type = "main";
     this.$store.state.header.active = "consume";
@@ -221,6 +249,7 @@ export default {
         });
     },
     listConsumeInfo: function() {
+      this.$store.state.isLoading = true;
       var _this = this;
       this.$http
         .get("/m/consume/listConsumeInfo.json", {
@@ -238,7 +267,8 @@ export default {
             _this.isGoal = false;
           } else {
             _this.isGoal = true;
-            _this.progressOption.text =
+            // _this.progressOption.text =
+            _this.progressText =
               consumeGoal.amt_expense / consumeGoal.amt_budget > 1
                 ? Common.formatNumber(
                     consumeGoal.amt_expense - consumeGoal.amt_budget + ""
@@ -252,17 +282,20 @@ export default {
                   "원 (" +
                   Common.formatNumber(consumeGoal.amt_budget) +
                   "원)";
-            _this.progressOption.max =
+            // _this.progressOption.max =
+            _this.progressMax =
               consumeGoal.amt_expense / consumeGoal.amt_budget > 1
                 ? 1
                 : consumeGoal.amt_expense / consumeGoal.amt_budget;
           }
           _this.isScrap = response.data.isScrap;
           _this.consumeList = response.data.listConsumeInfo;
+          _this.$store.state.isLoading = false;
           _this.seen = true;
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);
+          _this.$store.state.isLoading = false;
           _this.seen = true;
         });
     },

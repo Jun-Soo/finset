@@ -15,7 +15,7 @@
       </div>
       <div class="select">
         <div class="left">
-          <multiselect v-model="orderby" label="text" :show-labels="false" :options="options" :searchable="false" :allow-empty="false" @select="orderbyOnChange">
+          <multiselect class="multiselect-basic" v-model="orderby" label="text" :show-labels="false" :options="options" :searchable="false" :allow-empty="false" @select="orderbyOnChange">
           </multiselect>
         </div>
         <!-- <div class="right">

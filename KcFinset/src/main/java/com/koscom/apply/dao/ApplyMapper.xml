@@ -445,7 +445,7 @@
 		                                 , TO_CHAR(AI.DT_LST, 'YYYYMMDD') AS DT_LST
 										 , DI.DENY_DESC
 										 , TFR.NO_FC_REQ
-										 , FI.PATH_FILE1
+										 , FI.PATH_FILE AS PATH_FILE1
 										 , GI.NM_GOODS
 										 , GI.CD_LOAN_TERM
 										 , GI.CD_TYPE_PAY

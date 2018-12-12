@@ -1684,6 +1684,7 @@ router.beforeEach((to, from, next) => {
     if (to.meta.allowPath) {
       if (to.meta.requiresAuth) {
         if (to.meta.backCasePath && !Store.state.header.fromPath) Store.state.header.fromPath = from.fullPath
+        if (to.fullPath == Store.state.header.fromPath) Store.state.header.fromPath = ''
 
         const accessToken = localStorage.getItem('accessToken')
         if (!accessToken) {

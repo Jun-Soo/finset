@@ -120,7 +120,7 @@ public class KcbManagerImpl implements KcbManager {
         boolean isSuccess = false;
 
         if(!"REAL".equals(profile)) {
-			logger.error("continue");
+			logger.info("continue");
 //			info.setYn_craw_test("Y");
 //			info.setNoPerson(person.getNo_person());
 //			info.setNmCust(person.getNm_person());
@@ -391,7 +391,7 @@ public class KcbManagerImpl implements KcbManager {
 		for(int i=0; i<info.crawPageCnt; i++) {
 			
 			// 멀티쓰레드 처리 시작
-			logger.error(":::::::::::: 쓰레드 ::::::::::::   " + i);
+			logger.info(":::::::::::: 쓰레드 ::::::::::::   " + i);
 			KcbThreadManager thread = new KcbThreadManager(info, i);
 			threadQueue.add(thread);
 			thread.start();
@@ -463,7 +463,7 @@ public class KcbManagerImpl implements KcbManager {
 			KcbCreditInfoVO infoTemp = new KcbCreditInfoVO();
 			
 			String profile = "Y".equals(info.getYn_craw_test()) ? "LOCAL" : "REAL";
-			logger.error("profile ==== " + profile);
+			logger.info("profile ==== " + profile);
 			try {
 				
 				infoTemp = info.clone();
@@ -481,7 +481,7 @@ public class KcbManagerImpl implements KcbManager {
 
 				if("REAL".equals(profile)) {
 					
-					logger.error("reqMenuCode ==== " + infoTemp.getReq_menu_code());
+					logger.info("reqMenuCode ==== " + infoTemp.getReq_menu_code());
 					ReturnClass kcbCbData = procKcbCb(infoTemp);
 					if(infoTemp.getNmIf() != null && infoTemp.getNmIf().equals("600420")) {
 						
@@ -490,8 +490,8 @@ public class KcbManagerImpl implements KcbManager {
 
 							Kcb_600420 kcb_600420 = (Kcb_600420)retObject;
 							
-							logger.error("[KCB ]kcbURI == \n" + kcb_600420.getKcbURI());
-							logger.error("[KCB ]MenuCode == \n" + kcb_600420.getReqsMenuCode());
+							logger.info("[KCB ]kcbURI == \n" + kcb_600420.getKcbURI());
+							logger.info("[KCB ]MenuCode == \n" + kcb_600420.getReqsMenuCode());
 
 							// 크롤링 (등록사유코드 09 && 메뉴코드 210)
 							logger.debug("[KCB ] Crawling Start");
@@ -531,7 +531,7 @@ public class KcbManagerImpl implements KcbManager {
 				String kcbURI  = kcb_600420.getKcbURI();
 				String domain  = kcb_600420.getResDomain();
 				
-				logger.error("kcbURI ==== " + kcbURI);
+				logger.info("kcbURI ==== " + kcbURI);
 				
 				if(kcbURI.indexOf("api") > -1) {
 					if(kcbURI.indexOf("443/") > -1) {
@@ -548,7 +548,7 @@ public class KcbManagerImpl implements KcbManager {
 					domain	= domain.replace("maff.allcredit.co.kr", kcbHost);
 				}
 				
-				logger.error("kcbURI ==== " + kcbURI);
+				logger.info("kcbURI ==== " + kcbURI);
 				
 				rtnMap = JsoupUtil.getCrawling(kcbURI);
 				parseHtml = ((Document)rtnMap.get("doc")).html();
@@ -557,13 +557,13 @@ public class KcbManagerImpl implements KcbManager {
 				int 	start 	= href.indexOf("href=")+6;
 				int 	end 	= href.lastIndexOf("\";");
 
-				logger.error("href ==== " + href);
+				logger.info("href ==== " + href);
 				
 				href = href.substring(start, end);
 				String URL		= "http://" + domain + href;
 				
-				logger.error("URL ==== " + URL);
-				logger.error("JSESSIONID ==== " + rtnMap.get("jsessionId").toString());
+				logger.info("URL ==== " + URL);
+				logger.info("JSESSIONID ==== " + rtnMap.get("jsessionId").toString());
 				doc = JsoupUtil.getCrawlingCookie(URL, rtnMap.get("jsessionId").toString());   
 					   
 				//logger.error("JSOUP ==== " + doc.html().substring(0, 100));

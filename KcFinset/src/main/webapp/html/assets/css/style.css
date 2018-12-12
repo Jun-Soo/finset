@@ -1418,6 +1418,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .cs-top .links a.kakao { background: url("../images/etc/kakao.png") no-repeat center top/60px; }
 .cs-top .links a.email { background: url("../images/etc/email.png") no-repeat center top/60px; }
 .cs-top .links a.copy { background: url("../images/assets/copy.png") no-repeat center top/60px; }
+.cs-top .links a.share { background: url("../images/assets/share.png") no-repeat center top/60px; }
 .cs-top .cs-search { line-height: 38px; border: 1px solid #e5e5e5; padding-left: 36px; background: url("../images/etc/cs_search.png") no-repeat left top/36px; text-align: left; }
 .cs-top .cs-search input { width: 95%; line-height: 38px; }
 

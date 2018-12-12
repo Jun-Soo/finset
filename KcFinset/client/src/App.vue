@@ -41,6 +41,9 @@ export default {
     window.resultCheckDevicesUUID = this.resultCheckDevicesUUID;
     window.pushUrlLink = this.pushUrlLink;
   },
+  mounted() {
+    this.orderCssFile();
+  },
   methods: {
     sendPush: function() {
       var push_msg;
@@ -135,6 +138,17 @@ export default {
     // linkUrl 페이지로 전환
     pushUrlLink: function(linkUrl) {
       this.$router.push(linkUrl);
+    },
+    // 임시로 css파일을 하단으로 내리는 로직
+    orderCssFile: function() {
+      var head = document.head.childNodes;
+      console.log(head);
+      for (var i in head) {
+        if (head[i].nodeName == "LINK") {
+          var link = document.head.removeChild(head[i]);
+          document.head.appendChild(link);
+        }
+      }
     }
   }
 };

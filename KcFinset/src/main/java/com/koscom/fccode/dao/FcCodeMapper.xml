@@ -7,7 +7,18 @@
 		SELECT NVL(B.CD_FC, A.CD_FC) AS CD_FC 
 		  FROM FC_INFO A LEFT OUTER JOIN FC_NM_INFO B
 		       ON A.CD_FC = B.CD_FC
-		 WHERE (B.NM_FC = REGEXP_REPLACE(#{nm_fc, jdbcType=VARCHAR}, '( ){1,}', '') OR A.NM_FC = REGEXP_REPLACE(#{nm_fc, jdbcType=VARCHAR}, '( ){1,}', ''))  
+		 WHERE (B.NM_FC = REGEXP_REPLACE(#{nm_fc, jdbcType=VARCHAR}, '( ){1,}', '') OR A.NM_FC = REGEXP_REPLACE(#{nm_fc, jdbcType=VARCHAR}, '( ){1,}', ''))
+		   AND B.YN_USE = 'Y' 
+		   AND ROWNUM = 1
+	</select>
+	<select id="selectCdFcWithCdFin" parameterType="com.koscom.fccode.model.FcCodeForm" resultType="String">
+		SELECT NVL(B.CD_FC, A.CD_FC) AS CD_FC 
+		  FROM FC_INFO A LEFT OUTER JOIN FC_NM_INFO B
+		       ON A.CD_FC = B.CD_FC
+		 WHERE (B.NM_FC = REGEXP_REPLACE(#{nm_fc, jdbcType=VARCHAR}, '( ){1,}', '') OR A.NM_FC = REGEXP_REPLACE(#{nm_fc, jdbcType=VARCHAR}, '( ){1,}', ''))
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fin)'>
+				AND A.CD_FIN = #{cd_fin, jdbcType = VARCHAR}
+			</if>
 		   AND B.YN_USE = 'Y' 
 		   AND ROWNUM = 1
 	</select>

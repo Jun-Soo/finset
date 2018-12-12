@@ -456,7 +456,6 @@ export default {
         for (var j = 1; j < document.getElementsByClassName(classNm)[i].children.length; j++) {
           // let leftMargin = document.getElementsByClassName(classNm)[i].offsetWidth - 300
           // document.getElementsByClassName(classNm)[i].children[j].style.marginLeft = leftMargin + 'px'
-          console.log(document.body.clientHeight)
           // document.getElementsByClassName(classNm)[i].children[j].style.top = (document.body.clientHeight - 200) / 2 + 'px'
           // document.getElementsByClassName(classNm)[i].children[j].style.left = (document.body.clientWidth - 300) / 2 + 'px'
           document.getElementsByClassName(classNm)[i].children[j].style.top = (document.documentElement.clientHeight - 200) / 2 + 'px'

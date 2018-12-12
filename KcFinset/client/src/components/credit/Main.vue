@@ -68,9 +68,14 @@
       <div class="top">
         <p class="title">나의 신용정보 변동</p>
       </div>
-      <div class="link">
+      <div v-if="changeInfo != null" class="link">
         <a @click="$router.push('/credit/detail')">
           {{ ch_dt_info+" "+ch_nm_fc+" "+ch_change_contents+"되었습니다" }}
+        </a>
+      </div>
+      <div v-else class="link">
+        <a>
+          신용정보 변동 내역이 없습니다
         </a>
       </div>
     </div>

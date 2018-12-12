@@ -554,7 +554,7 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .my-links .wrap a:nth-child(3) { background: url(../images/main/ico3.png) no-repeat 20px 20px/20px; }
 
 .credit-top { padding: 0 21px; }
-.credit-top .time { margin-top: 20px; text-align: center; font-size: 12px; color: #888; }
+.credit-top .time { margin-top: 20px; text-align: right; font-size: 12px; color: #888; }
 .credit-top .time:before { display: inline-block; width: 10px; height: 10px; content: ""; background: url(../images/main/credit_time.png) no-repeat center/contain; margin-right: 5px; }
 .credit-top .wrap { display: flex; padding: 25px 0; border: 1px solid #e5e5e5; border-radius: 10px; margin-top: 10px; }
 .credit-top .wrap .item { width: 33.3%; border-left: 1px solid #e5e5e5; text-align: center; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
@@ -582,8 +582,8 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .credit-change .top { display: flex; width: 100%; }
 .credit-change .top .title { font-size: 14px; font-weight: 700; color: #222; width: 50%; }
 .credit-change .top .period { font-size: 12px; color: #888; text-align: right; width: 50%; }
-.credit-change .link { margin-top: 10px; background: url(../images/main/btn_arrow.png) no-repeat right center #f0efed; background-size: 20px; padding: 15px 20px; border-radius: 10px; }
-.credit-change .link a { display: block; font-size: 12px; line-height: 17px; color: #666; padding: 10px 20px; background: url("../images/main/ico_comment.png") no-repeat left center/14px; }
+.credit-change .link { margin-top: 10px; background: url(../images/main/btn_arrow.png) no-repeat right center #f0efed; background-size: 20px; padding: 5px 10px; border-radius: 10px; }
+.credit-change .link a { display: block; font-size: 14px; line-height: 17px; color: #666; padding: 10px 20px; background: url("../images/main/ico_comment.png") no-repeat left center/14px; }
 .credit-change .link a em { font-size: 12px; }
 
 .credit-status { margin-top: 50px; padding-bottom: 95px; }
@@ -592,7 +592,7 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .credit-status .wrap a { display: block; }
 .credit-status .wrap .item { width: 50%; text-align: center; padding-top: 36px; margin-top: 30px; }
 .credit-status .wrap .item .key { font-size: 10px; font-weight: 700; color: #333; }
-.credit-status .wrap .item .value { font-size: 15px; font-weight: 700; margin-top: 5px; color: #62c1d0; }
+.credit-status .wrap .item .value { font-size: 18px; font-weight: 700; margin-top: 5px; color: #62c1d0; }
 .credit-status .wrap .item .value em { font-size: 15px; font-weight: 400; padding-left: 2px; }
 .credit-status .wrap .item:nth-child(1) { background: url(../images/main/credit_ico1.png) no-repeat center 3px/24px; }
 .credit-status .wrap .item:nth-child(2) { background: url(../images/main/credit_ico2.png) no-repeat center 5px/24px; }
@@ -918,6 +918,9 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .bar-top .bar-text-wrap p em { font-size: 14px; color: #666; padding-left: 10px; }
 .bar-top .bar-text-wrap p.bar-text { text-align: left; }
 .bar-top .bar-text-wrap p.bar-card { text-align: right; }
+
+.total-cards { font-size: 14px; color: #9b9489; margin-top: 10px; text-align: right; }
+.total-cards em { font-size: 14px; color: #666; padding-left: 10px; }
 
 .credit-inquiry-top { padding: 0 21px; text-align: center; }
 .credit-inquiry-top .key { color: #9b9489; font-size: 14px; font-weight: 700; margin-top: 30px; }

@@ -4873,12 +4873,18 @@ button.cal{
 //   지문인증 설정   //
 
 .cert-finger{
-    padding-top: 305px;
-    background: url("../images/member/fingerprint.png") no-repeat 50% 150px;
-    background-size: 117px;
-    p{
-        text-align: center;
-        font-size: 15px;   
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+    div{
+        background: url("../images/member/fingerprint.svg") no-repeat 50% 0;
+        background-size: 120px;
+        p{
+            text-align: center;
+            font-size: 15px;   
+            margin-top: 20px;
+        }
     }
 }
 

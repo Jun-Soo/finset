@@ -1262,8 +1262,9 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .certcode-wrap .number a.finger { background: url("../images/member/btn_fingerprint.png") no-repeat center top/75px; }
 .certcode-wrap .number a.finger:active { background: url("../images/member/btn_fingerprint.png") no-repeat center bottom #62c1d0; background-size: 75px; }
 
-.cert-finger { padding-top: 305px; background: url("../images/member/fingerprint.png") no-repeat 50% 150px; background-size: 117px; }
-.cert-finger p { text-align: center; font-size: 15px; }
+.cert-finger { display: flex; align-items: center; justify-content: center; height: 70vh; }
+.cert-finger div { background: url("../images/member/fingerprint.svg") no-repeat 50% 0; background-size: 120px; }
+.cert-finger div p { text-align: center; font-size: 15px; margin-top: 20px; }
 
 /*   스크랩   */
 .debt-regist .title { color: #222; font-size: 20px; line-height: 27px; }

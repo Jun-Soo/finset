@@ -5,7 +5,7 @@ select { /*padding: .58em .5em;  */ padding-left: 14px; padding-right: 40px; fon
 
 select::-ms-expand { display: none; }
 
-input[type="text"], input[type="password"], input[type="tel"], input[type="email"], input[type="number"] { line-height: 38px; height: 40px; text-indent: 10px; width: 100%; font-size: 14px; border: 1px solid #ccc; vertical-align: middle; padding-left: 5px; -moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0; -moz-appearance: none; -webkit-appearance: none; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+input[type="text"], input[type="password"], input[type="tel"], input[type="email"], input[type="number"] { line-height: 38px; height: 40px; text-indent: 10px; width: 100%; font-size: 14px; border: 1px solid #ccc; vertical-align: middle; padding-left: 5px; -moz-border-radius: 0; -webkit-border-radius: 0; border-radius: 0; -moz-appearance: none; -webkit-appearance: none; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; -webkit-user-select: auto;}
 
 input[type="month"] { background: url(../images/_form/select.png) no-repeat right center #fff; -moz-appearance: none; -webkit-appearance: none; }
 input[type="month"]::-webkit-inner-spin-button { -webkit-appearance: none; display: none; }
@@ -17,7 +17,7 @@ input[type="email"] { width: 200px; }
 
 input[type="button"] { height: 30px; line-height: 30px; background: #e52638; color: #fff; text-align: center; min-width: 130px; border: none; font-size: 12px; cursor: pointer; margin: 0 2px; -moz-appearance: none; -webkit-appearance: none; }
 
-textarea { width: 100%; height: 70vh; padding: 20px; border: 1px solid #e5e5e5; color: #666; line-height: 17px; font-size: 12px; vertical-align: baseline; -moz-appearance: none; -webkit-appearance: none; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+textarea { width: 100%; height: 70vh; padding: 20px; border: 1px solid #e5e5e5; color: #666; line-height: 17px; font-size: 12px; vertical-align: baseline; -moz-appearance: none; -webkit-appearance: none; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; -webkit-user-select: auto;}
 
 .checks { /*input[type="radio"]:focus+label, input[type="checkbox"]:focus+label{
 	border: 1px dotted #000;

@@ -16,7 +16,7 @@
       </div>
     </div>
 
-    <div class="btn-wrap noMG">
+    <div class="btn-wrap float">
       <a class="solid box blue" @click="clickSend()">전송하기</a>
     </div>
   </section>

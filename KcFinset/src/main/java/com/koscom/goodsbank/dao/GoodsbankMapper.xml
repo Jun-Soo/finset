@@ -345,13 +345,13 @@
 ]]>
 						ORDER BY NVL(FI.YN_ALLIANCE, 'N') DESC, <choose>
 									<when test="'01'.equals(orderby)">
-										GI.RTO_INTEREST_FROM ASC/*금리낮은순*/,
+										TO_NUMBER(GI.RTO_INTEREST_FROM) ASC/*금리낮은순*/,
 									</when>
 									<when test="'02'.equals(orderby)">
-										GI.DESC_MAX_LIMIT DESC/*한도높은순*/,
+										TO_NUMBER(GI.DESC_MAX_LIMIT) DESC /*한도높은순*/,
 									</when>
 									<when test="'03'.equals(orderby)">
-										NVL(GI.MAX_LOAN_TERM,'-1') DESC/*기간높은순*/,
+										TO_NUMBER(NVL(GI.MAX_LOAN_TERM,'-1')) DESC/*기간높은순*/,
 									</when>
 								</choose>
 		                      YN_FAVORITE DESC
@@ -891,13 +891,13 @@
 ]]>
 				ORDER BY NVL(FI.YN_ALLIANCE, 'N') DESC, <choose>
                             <when test="'01'.equals(orderby)">
-                                GI.RTO_INTEREST_FROM ASC/*금리낮은순*/,
+                                TO_NUMBER(GI.RTO_INTEREST_FROM) ASC/*금리낮은순*/,
                             </when>
                             <when test="'02'.equals(orderby)">
-                                GI.DESC_MAX_LIMIT DESC/*한도높은순*/,
+                                TO_NUMBER(GI.DESC_MAX_LIMIT) DESC/*한도높은순*/,
                             </when>
                             <when test="'03'.equals(orderby)">
-								NVL(GI.MAX_LOAN_TERM,'-1') DESC/*기간높은순*/,
+								TO_NUMBER(NVL(GI.MAX_LOAN_TERM,'-1')) DESC/*기간높은순*/,
                             </when>
 						</choose>
 					    YN_FAVORITE DESC
@@ -1343,13 +1343,13 @@
 				    </foreach>
                    ORDER BY NVL(FI.YN_ALLIANCE, 'N') DESC, <choose>
                             <when test="'01'.equals(orderby)">
-                                GI.RTO_INTEREST_FROM ASC/*금리낮은순*/,
+                                TO_NUMBER(GI.RTO_INTEREST_FROM) ASC/*금리낮은순*/,
                             </when>
                             <when test="'02'.equals(orderby)">
-                                GI.DESC_MAX_LIMIT DESC/*한도높은순*/,
+                                TO_NUMBER(GI.DESC_MAX_LIMIT) DESC/*한도높은순*/,
                             </when>
                             <when test="'03'.equals(orderby)">
-								NVL(GI.MAX_LOAN_TERM,'-1') DESC/*기간높은순*/,
+								TO_NUMBER(NVL(GI.MAX_LOAN_TERM,'-1')) DESC/*기간높은순*/,
                             </when>
 						</choose>
 					    YN_FAVORITE DESC

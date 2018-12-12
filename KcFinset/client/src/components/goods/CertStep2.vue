@@ -10,10 +10,10 @@
           <div class="number"><input type="number" placeholder="생년월일6자리" name="ssn_birth" id="ssn_birth" v-model="ssn_birth" v-validate="'required|length:6|max:6'" v-on:keyup="nextFocus('birth')" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='생년월일'></div>
           <div class="dash">-</div>
           <!-- <div class="number last"><input type="password" pattern="[0-9]*" name="sex" id="sex" v-model="sex" inputmode="numeric" maxlength="1" style="-webkit-text-security:disc" v-on:change="nextFocus('sex')" v-bind:disabled="isDisabled" autocomplete="off" v-validate="'required|between:0,9|length:1|max:1'" data-vv-name='성별'>******</div> -->
-          <div class="number"><input type="password" name="ssn2" id="ssn2" @click="showSecureKeypad()" placeholder="주민번호뒷자리" maxlength="7" autocomplete="off" readonly="readonly" v-validate="'required|length:7|max:7'" data-vv-name='주민번호 뒷자리'></div>
+          <div class="number"><input type="password" name="ssn2" id="ssn2" @click="showSecureKeypad()" placeholder="주민번호뒷자리" maxlength="7" autocomplete="off" readonly="readonly" v-validate="'required|length:7|max:7'" data-vv-name='주민번호뒷자리'></div>
         </div>
         <p class="warn" v-if="errors.has('생년월일')">{{errors.first('생년월일')}}</p>
-        <p class="warn" v-if="errors.has('성별')">{{errors.first('성별')}}</p>
+        <p class="warn" v-if="errors.has('주민번호뒷자리')">{{errors.first('주민번호뒷자리')}}</p>
       </div>
       <div class="cert-wrap">
         <p class="title">휴대폰인증</p>

@@ -1,7 +1,7 @@
 <template>
   <section @click="clickClear">
     <div class="con-top cert-top">
-      <p>공인인증서로<em>한번에 등록하세요</em></p>
+      <p>공인인증서로<em> 한번에 등록하세요</em></p>
       <a @click="checkExistCert(false, $event)">바로가기</a>
     </div>
 
@@ -166,23 +166,28 @@ export default {
     closeAllMemu: function() {
       // 전체 메뉴 닫기
       for (var i = 0; i < this.bankList.length; i++) {
-        this.$set(this.bankList[i], "isClickMenu", false);
-        this.$set(this.bankList[i], "isClickLink", false);
-        // this.bankList[i].isClickMenu = false;
-        // this.bankList[i].isClickLink = false;
+        let bank = this.bankList[i];
+        bank.isClickMenu = false;
+        bank.isClickLink = false;
+        this.$set(this.bankList, i, bank);
       }
       for (var i = 0; i < this.cardList.length; i++) {
-        this.cardList[i].isClickMenu = false;
-        this.cardList[i].isClickLink = false;
+        let card = this.cardList[i];
+        card.isClickMenu = false;
+        card.isClickLink = false;
+        this.$set(this.cardList, i, card);
       }
       for (var i = 0; i < this.stockList.length; i++) {
-        this.stockList[i].isClickMenu = false;
-        this.stockList[i].isClickLink = false;
+        let stock = this.stockList[i];
+        stock.isClickMenu = false;
+        stock.isClickLink = false;
+        this.$set(this.stockList, i, stock);
       }
       for (var i = 0; i < this.etcList.length; i++) {
-        // this.etcList[i].isClickMenu = false;
-        this.etcList[i].isClickLink = false;
-        this.$set(this.etcList[i], "isClickMenu", false);
+        let etc = this.etcList[i];
+        etc.isClickMenu = false;
+        etc.isClickLink = false;
+        this.$set(this.etcList, i, etc);
       }
     },
     tabOnClick: function(type, event) {

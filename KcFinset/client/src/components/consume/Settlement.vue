@@ -16,9 +16,9 @@
           <button class="cal" @click="openDatepicker2"></button>
         </p>
       </div>
-      <div class="filter-wrap mt20">
+      <div v-if="shareList.length>1" class="filter-wrap mt20">
         <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
-          <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
+          <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.viewName}}</label>
         </div>
       </div>
     </div>
@@ -151,6 +151,10 @@ export default {
         } else {
           //(dt_basic >= today.getDate())
           mon = today.getMonth().toString();
+        }
+        if (dt_basic == null || dt_basic == "") {
+          //기준일이 null일 경우
+          dt_basic = "01";
         }
         this.dt_from = new Date(
           today.getFullYear().toString() + "/" + mon + "/" + dt_basic
@@ -350,6 +354,12 @@ export default {
 
           for (var idx in list) {
             list[idx].isShow = true;
+            list[idx]["viewName"] = "";
+            if (list[idx].no_person == _this.$store.state.user.noPerson) {
+              list[idx]["viewName"] = "나";
+            } else {
+              list[idx]["viewName"] = list[idx].nm_person.substring(1);
+            }
           }
           _this.shareList = list;
           _this.dataPeriod = "yr";

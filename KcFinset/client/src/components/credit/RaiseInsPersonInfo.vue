@@ -8,8 +8,9 @@
       <div class="grid">
         <div class="number"><input type="number" :value="personVO.ssn_person"></div>
         <div class="dash">-</div>
-        <div class="number last"><input type="password" name="ssn2" id="ssn2" @click="showSecureKeypad()" placeholder="주민번호뒷자리" maxlength="7" autocomplete="off" readonly="readonly"></div>
+        <div class="number last"><input type="password" name="ssn2" id="ssn2" @click="showSecureKeypad()" placeholder="주민번호뒷자리" maxlength="7" autocomplete="off" readonly="readonly" v-validate="'required|length:7|max:7'" data-vv-name='주민번호뒷자리'></div>
       </div>
+      <p class="warn" v-if="errors.has('주민번호뒷자리')">{{errors.first('주민번호뒷자리')}}</p>
     </div>
     <div class="cert-check-wrap" v-if="scrap_code=='nts'">
       <p class="title">가입형태</p>
@@ -176,17 +177,21 @@ export default {
     checkExistCert: function() {
       var scrapCode = this.scrap_code;
       var _this = this;
-      if (Constant.userAgent == "iOS") {
-        //공인인증서 유무 체크 결과 콜백 이벤트
-        Jockey.on("resultCheckCert", function(param) {
-          var iscert = "false";
-          if (param.isCert == 1) iscert = "true";
-          _this.resultCheckCert(iscert);
-        });
-        Jockey.send("checkExistCert");
-      } else if (Constant.userAgent == "Android") {
-        window.Android.checkExistCert();
-      }
+      this.$validator.validateAll().then(res => {
+        if (res) {
+          if (Constant.userAgent == "iOS") {
+            //공인인증서 유무 체크 결과 콜백 이벤트
+            Jockey.on("resultCheckCert", function(param) {
+              var iscert = "false";
+              if (param.isCert == 1) iscert = "true";
+              _this.resultCheckCert(iscert);
+            });
+            Jockey.send("checkExistCert");
+          } else if (Constant.userAgent == "Android") {
+            window.Android.checkExistCert();
+          }
+        }
+      });
     },
     showSecureKeypad: function() {
       var _this = this;

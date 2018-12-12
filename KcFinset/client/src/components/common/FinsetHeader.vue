@@ -1,6 +1,6 @@
 <template>
   <div v-if='this.$store.state.isLoggedIn'>
-    <header>
+    <header v-if="this.$store.state.header.type != 'noHeader'">
       <gnb />
     </header>
     <div v-if="this.$store.state.header.type == 'main'" id='header' class="top main">
@@ -17,6 +17,10 @@
       <a @click="clickBack" class="btn-back"></a>
       <p class="title">{{this.$store.state.title}}</p>
       <a v-if="isSetting" @click="$router.go('')" class="setting"></a>
+    </div>
+    <div v-if="this.$store.state.header.type == 'noHeader'" id='header' class="sub-top">
+      <p class="title">{{this.$store.state.title}}</p>
+      <a v-if="isSetting" @click="$router.go('/mypage/regAlarm')" class="setting"></a>
     </div>
   </div>
   <div v-else>
@@ -71,6 +75,7 @@ export default {
       if (this.$store.state.header.backPath == "") {
         this.$router.go(-1);
       } else {
+        this.$store.state.header.fromPath = "";
         this.$router.push(this.$store.state.header.backPath);
       }
     },
@@ -78,6 +83,7 @@ export default {
       if (this.$store.state.header.backPath == "") {
         this.$router.go(-1);
       } else {
+        this.$store.state.header.fromPath = "";
         this.$router.push(this.$store.state.header.backPath);
       }
     }

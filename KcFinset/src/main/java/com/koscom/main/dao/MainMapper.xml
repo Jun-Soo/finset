@@ -11,7 +11,7 @@
 			CASE WHEN PSI.DT_BASIC IS NULL
 				THEN(
 					SELECT
-						NVL( SUM( AMT_IN_OUT ), 0 )
+						SUM( AMT_IN_OUT )
 					FROM
 						CONSUME_INFO
 					WHERE
@@ -24,7 +24,7 @@
 				WHEN PSI.DT_BASIC < TO_CHAR( SYSDATE, 'DD' )
 				THEN(
 					SELECT
-						NVL( SUM( AMT_IN_OUT ), 0 )
+						SUM( AMT_IN_OUT )
 					FROM
 						CONSUME_INFO
 					WHERE
@@ -37,7 +37,7 @@
 				WHEN PSI.DT_BASIC = TO_CHAR( SYSDATE, 'DD' )
 				THEN(
 					SELECT
-						NVL( SUM( AMT_IN_OUT ), 0 )
+						SUM( AMT_IN_OUT )
 					FROM
 						CONSUME_INFO
 					WHERE
@@ -49,7 +49,7 @@
 				WHEN PSI.DT_BASIC > TO_CHAR( SYSDATE, 'DD' )
 				THEN(
 					SELECT
-						NVL( SUM( AMT_IN_OUT ), 0 )
+						SUM( AMT_IN_OUT )
 					FROM
 						CONSUME_INFO
 					WHERE
@@ -76,19 +76,13 @@
 	<select id="getMainAssetsSumAmt" parameterType="java.lang.String" resultType="java.lang.String">
 		/* com.koscom.main.dao.MainMapper.getMainAssetsSumAmt 자산총금액*/
 		SELECT
-			( TB.SUM_AMT_BALANCE + TB.SUM_AMT_EVALUATION ) AS SUM_AMT
+			SUM( NVL( AMT_BALANCE, 0 )+ NVL( AMT_EVALUATION, 0 )) AS SUM_AMT
 		FROM
-			(
-				SELECT
-					NVL( SUM( AMT_BALANCE ), 0 ) AS SUM_AMT_BALANCE,
-					NVL( SUM( AMT_EVALUATION ), 0 ) AS SUM_AMT_EVALUATION
-				FROM
-					ASSETS_INFO
-				WHERE
-					(DT_EXPIRE IS NULL OR DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
-					AND YN_DELETE = 'N'
-					AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
-			) TB
+			ASSETS_INFO
+		WHERE
+			(DT_EXPIRE IS NULL OR DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
+			AND YN_DELETE = 'N'
+			AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</select>
 
 	<select id="getMainDebtSumAmt" parameterType="java.lang.String" resultType="java.lang.String">

@@ -26,10 +26,11 @@
         <div class="item">
           <div class="left">
             <a @click="$router.push('/consume/main')">지출</a>
-            <p>{{ formatNumber(consumeSumAmt) }}<em>원</em></p>
+            <p @click="$router.push('/consume/main')">{{ formatNumber(consumeSumAmt) }}<em>원</em></p>
           </div>
           <div class="right">
             <a @click="goMenu('csDetail')"></a>
+            <p></p>
           </div>
         </div>
       </div>
@@ -44,14 +45,15 @@
         </div>
       </div>
       <!--자산-->
-      <div v-if="assetsSumAmt != '0'" class="list">
+      <div v-if="assetsSumAmt != null" class="list">
         <div class="item">
           <div class="left">
             <a @click="$router.push('/assets/main')">자산</a>
-            <p>{{ formatNumber(assetsSumAmt) }}<em>원</em></p>
+            <p @click="$router.push('/assets/main')">{{ formatNumber(assetsSumAmt) }}<em>원</em></p>
           </div>
           <div class="right">
             <a @click="$router.push('/assets/dirInput')"></a>
+            <p></p>
           </div>
         </div>
       </div>
@@ -66,14 +68,25 @@
         </div>
       </div>
       <!--부채-->
-      <div class="list">
+      <div v-if="debtSumAmt!=null" class="list">
         <div class="item">
           <div class="left">
             <a @click="$router.push('/debt/main')">부채</a>
-            <p>{{ (debtSumAmt==null)? '-' : formatNumber(debtSumAmt) }}<em>원</em></p>
+            <p @click="$router.push('/debt/main')">{{formatNumber(debtSumAmt)}}<em>원</em></p>
           </div>
           <div class="right">
             <a @click="$router.push('/debt/register')"></a>
+            <p></p>
+          </div>
+        </div>
+      </div>
+      <div v-else class="list no">
+        <div class="item">
+          <div class="left">
+            <a @click="$router.push('/debt/main')">부채</a>
+          </div>
+          <div class="right">
+            <a @click="$router.push('/debt/register')">-<em> 원</em></a>
           </div>
         </div>
       </div>
@@ -215,7 +228,6 @@ export default {
           this.$toast.center(ko.messages.error);
         });
     },
-    //공유관리 메인으로 이동
     goMenu: function(menu) {
       if ("csDetail" == menu) {
         this.$router.push({

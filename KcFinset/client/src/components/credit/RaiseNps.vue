@@ -26,7 +26,7 @@
         </div>
       </div>
     </div>
-    <div class="btn-wrap noMG" @click="clickSend()">
+    <div class="btn-wrap float" @click="clickSend()">
       <a class="solid box blue">전송하기</a>
     </div>
   </section>
@@ -95,7 +95,7 @@ export default {
         .post("/m/kcb/updateKcbReqNonfiInfo.json", formData)
         .then(function(response) {
           var result = response.data;
-          this.$router.push({
+          _this.$router.push({
             name: "creditRaiseResult",
             params: { result: "success" }
           });

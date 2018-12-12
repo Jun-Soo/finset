@@ -4,7 +4,7 @@
       <div class="wrap">
         <div class="item">
           <p class="key">자산<em>(원)</em></p>
-          <p class="value">{{('0'==assetsSumAmt)? '-' : formatNumber(assetsSumAmt)}}</p>
+          <p class="value">{{(assetsSumAmt==null)? '-' : formatNumber(assetsSumAmt)}}</p>
         </div>
         <div class="item">
           <p class="key">부채<em>(원)</em></p>

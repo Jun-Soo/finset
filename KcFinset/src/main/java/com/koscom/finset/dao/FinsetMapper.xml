@@ -348,7 +348,7 @@
             ,TFR.DT_FRT
             ,TFR.ID_LST
             ,TFR.DT_LST
-            ,FI.PATH_FILE1
+            ,FI.PATH_FILE AS PATH_FILE1
             ,GI.CD_RATIO_TYPE
             ,GI.DESC_REPAYMETHOD
           FROM TX_FC_RECEIVE TFR

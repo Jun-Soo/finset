@@ -59,11 +59,16 @@ export default {
         .post(_parent.urlPath + "listLoanNoAffiliates.json", formData)
         .then(function(response) {
           var list = response.data.pagedList.source;
+          // 초기화
+          if (_parent.page == 1) {
+            _this.goodsList = [];
+          }
           if ((list || "") == "" || list.length === 0) {
             _this.seen = true;
             callback();
             return;
           }
+
           for (var i = 0; i < list.length; i++) {
             list[i].icon =
               "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + list[i].cd_fc;

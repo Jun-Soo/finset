@@ -9,9 +9,12 @@
 
     <!-- 신용카드 -->
     <template v-if="this.listType=='credit'">
-      <div class="container">
-        <div v-if="creditList.length == 0" class="nodata">등록 내역이 없습니다</div>
-        <div v-else class="bar-top">
+      <div v-if="creditList.length == 0" class="container">
+        <div class="nodata">등록 내역이 없습니다</div>
+      </div>
+      <div v-else class="container">
+        <p class="total-cards">보유갯수<em>{{creditCnt}}</em></p>
+        <div class="bar-top">
           <p class="key">{{useMonth}}월 이용금액</p>
           <div class="wrap">
             <div class="left">{{formatNumber(creditAmtTotal)}}<em>원</em></div>
@@ -24,8 +27,8 @@
             <p :style="{width: creditTotLimitPc+'%'}"></p>
           </div>
           <div class="bar-text-wrap">
-            <p class="bar-text">{{useMonth}}월 한도 이용율<em>{{creditTotLimitPc}}%</em></p>
-            <p class="bar-card">보유갯수<em>{{creditCnt}}</em></p>
+            <p class="bar-text">{{useMonth}}월 한도 이용율</p>
+            <p class="bar-card"><em>{{creditTotLimitPc}}%</em></p>
           </div>
         </div>
       </div>
@@ -98,9 +101,12 @@
 
     <!-- 체크카드 -->
     <template v-else>
-      <div class="container">
-        <div v-if="checkList.length == 0" class="nodata">등록 내역이 없습니다</div>
-        <div v-else class="bar-top">
+      <div v-if="checkList.length == 0" class="container">
+        <div class="nodata">등록 내역이 없습니다</div>
+      </div>
+      <div v-else class="container">
+        <p class="total-cards">보유갯수<em>{{checkCnt}}</em></p>
+        <div class="bar-top">
           <p class="key">{{useMonth}}월 이용금액</p>
           <div class="wrap">
             <div class="left">{{formatNumber(checkAmtTotal)}}<em>원</em></div>
@@ -113,8 +119,8 @@
             <p :style="{width: checkTotUsePc+'%'}"></p>
           </div>
           <div class="bar-text-wrap">
-            <p class="bar-text">{{useMonth}}월 체크카드 이용율<em>{{checkTotUsePc}}%</em></p>
-            <p class="bar-card">보유갯수<em>{{checkCnt}}</em></p>
+            <p class="bar-text">{{useMonth}}월 한도 이용율</p>
+            <p class="bar-card"><em>{{checkTotUsePc}}%</em></p>
           </div>
         </div>
       </div>

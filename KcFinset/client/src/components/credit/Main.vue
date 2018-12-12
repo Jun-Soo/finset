@@ -75,7 +75,7 @@
       </div>
       <div v-else class="link">
         <a>
-          신용정보 변동 내역이 없습니다
+          등록된 내역이 없습니다
         </a>
       </div>
     </div>

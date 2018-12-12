@@ -232,7 +232,8 @@ export default {
     clickSearch: function() {
       this.isSearch = !this.isSearch;
     },
-    orderbyOnChange: function() {
+    orderbyOnChange: function(option) {
+      this.orderby = option;
       this.page = 1;
       this.loadGoodsTab(this.curTab);
     },
@@ -268,6 +269,7 @@ export default {
       formData.append("cd_ratio_type", this.cd_ratio_type);
       formData.append("cd_type_pay", this.cd_type_pay);
       formData.append("orderby", this.orderby.value);
+
       this.$http
         .post(_this.urlPath + "listLoanAffiliates.json", formData)
         .then(function(response) {

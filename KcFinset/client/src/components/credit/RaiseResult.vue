@@ -34,7 +34,9 @@ export default {
     this.result = this.$route.params.result;
   },
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    this.$store.state.header.backPath = "/credit/raiseMain";
+  },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},

@@ -869,7 +869,7 @@ public class ScrapManagerImpl implements ScrapManager {
 		return Constant.SUCCESS;
 	}
 	
-	public String startScrapFinance(String no_person, String uuid, String token)	{
+	public String startScrapFinance(String no_person, String uuid)	{
 		PersonVO personVO = personMapper.getPersonInfo(no_person);
 		String ci = personVO.getKcb_ci();
 		String hp = personVO.getHp();
@@ -880,6 +880,16 @@ public class ScrapManagerImpl implements ScrapManager {
 		fcLinkInfoVO.setNo_person(no_person);
 		fcLinkInfoVO.setCd_agency(cd_agency);
 		List<FcLinkInfoVO> fcLinkInfoList = scrapMapper.getFcLinkInfo(fcLinkInfoVO);
+		
+		if(fcLinkInfoList == null || fcLinkInfoList.size() == 0)	{
+			return Constant.SUCCESS;
+		}
+		
+		String token = getAccessToken();
+		if(token == null || token.length() <= 0)	{
+			logger.error("generate token failed");
+			return Constant.FAILED;
+		}
 		
 		for (int i = 0; i < fcLinkInfoList.size(); i++) {
 			FcLinkInfoVO fcLinkInfo = fcLinkInfoList.get(i);
@@ -1009,7 +1019,7 @@ public class ScrapManagerImpl implements ScrapManager {
 				}
 			}
 		}
-		return "";
+		return Constant.SUCCESS;
 	}
 	
 	public String createScrapFcList(String data)	{

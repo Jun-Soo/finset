@@ -18,7 +18,7 @@ public interface ScrapManager {
 	 * @param
 	 * @return 
 	 */
-	String startScrapFinance(String no_person, String uuid, String token);
+	String startScrapFinance(String no_person, String uuid);
 	
 	/**
 	 * 금융투자회사 기업 정보 조회 (오픈플랫폼)

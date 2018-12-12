@@ -51,7 +51,7 @@
 			(
 				SELECT
 					NO_PERSON,
-					AN,
+					XX1.DEC_VARCHAR2_SEL(AN, '10','FS_ARIA','SCR_TRANSACTION_DETAIL','AN') AS AN,
 					TO_DATE( DT_TRD ) AS DT_TRD,
 					TM_TRD,
 					AMT_WDRL,
@@ -140,7 +140,7 @@
 							AI.NO_PERSON,
 							( SELECT NM_PERSON FROM PERSON_INFO WHERE NO_PERSON = AI.NO_PERSON ) AS NM_PERSON,
 							0 AS RK,
-							AI.NO_ACCOUNT,
+							XX1.DEC_VARCHAR2_SEL(AI.NO_ACCOUNT, '10','FS_ARIA','ASSETS_INFO','NO_ACCOUNT') AS NO_ACCOUNT,
 							AI.NM_ACCOUNT,
 							AI.CD_FC,
 							AI.AMT_BALANCE,
@@ -161,7 +161,7 @@
 							SI.NO_PERSON,
 							SI.NM_PERSON,
 							SI.RK,
-							AI.NO_ACCOUNT,
+							XX1.DEC_VARCHAR2_SEL(AI.NO_ACCOUNT, '10','FS_ARIA','ASSETS_INFO','NO_ACCOUNT') AS NO_ACCOUNT,
 							AI.NM_ACCOUNT,
 							AI.CD_FC,
 							AI.AMT_BALANCE,
@@ -304,13 +304,13 @@
 			DT_LST = SYSDATE
 		WHERE
 			NO_PERSON = #{no_person, jdbcType=VARCHAR}
-			AND NO_ACCOUNT = #{no_account, jdbcType=VARCHAR}
+			AND NO_ACCOUNT = XX1.ENC_VARCHAR2_INS(#{no_account, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'ASSETS_INFO', 'NO_ACCOUNT')
     </update>
 
     <select id="getAssetsInfo" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
         /* com.koscom.assets.dao.AssetsMapper.getAssetsInfo - 자산관리(자산개별정보) */
         SELECT
-			AI.NO_ACCOUNT,
+			XX1.DEC_VARCHAR2_SEL(AI.NO_ACCOUNT, '10','FS_ARIA','ASSETS_INFO','NO_ACCOUNT') AS NO_ACCOUNT,
 			AI.NM_ACCOUNT,
 			AI.CD_FC,
 			( SELECT NM_FC FROM FC_INFO WHERE CD_FC = AI.CD_FC ) AS NM_FC,
@@ -320,7 +320,7 @@
 			AI.CD_DETAIL_CLASS
 		FROM ASSETS_INFO AI
 		WHERE AI.NO_PERSON =  #{no_person, jdbcType=VARCHAR}
-			AND AI.NO_ACCOUNT =  #{no_account, jdbcType=VARCHAR}
+			AND AI.NO_ACCOUNT = XX1.ENC_VARCHAR2_INS(#{no_account, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'ASSETS_INFO', 'AI.NO_ACCOUNT')
     </select>
 
     <select id="listAssetsSearchKeyword" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
@@ -340,7 +340,7 @@
 				WHERE
 					NO_PERSON = #{no_person, jdbcType=VARCHAR}
 					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_account)">
-			    		AND AN = #{no_account, jdbcType=VARCHAR}
+			    		AND AN = XX1.ENC_VARCHAR2_INS(#{no_account, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SCR_TRANSACTION_DETAIL', 'AN')
 					</if>
 				GROUP BY
 					DOC1
@@ -352,7 +352,7 @@
     <sql id="listAssetsBankActTrns_WHERE">
 		<where>
 			STD.NO_PERSON = #{no_person, jdbcType=VARCHAR}
-			AND STD.AN = #{no_account, jdbcType=VARCHAR}
+			AND STD.AN = XX1.ENC_VARCHAR2_INS(#{no_account, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SCR_TRANSACTION_DETAIL', 'STD.AN')
 			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(scKeyword)">
 			    AND STD.DOC1 = #{scKeyword, jdbcType=VARCHAR}
 			</if>
@@ -452,7 +452,7 @@
 					AI.NO_PERSON,
 					( SELECT NM_PERSON FROM PERSON_INFO WHERE NO_PERSON = AI.NO_PERSON ) AS NM_PERSON,
 					0 AS RK,
-					AI.NO_ACCOUNT,
+					XX1.DEC_VARCHAR2_SEL(AI.NO_ACCOUNT, '10','FS_ARIA','ASSETS_INFO','NO_ACCOUNT') AS NO_ACCOUNT,
 					AI.NM_ACCOUNT,
 					AI.CD_FC,
 					AI.AMT_BALANCE,
@@ -473,7 +473,7 @@
 					SI.NO_PERSON,
 					SI.NM_PERSON,
 					SI.RK,
-					AI.NO_ACCOUNT,
+					XX1.DEC_VARCHAR2_SEL(AI.NO_ACCOUNT, '10','FS_ARIA','ASSETS_INFO','NO_ACCOUNT') AS NO_ACCOUNT,
 					AI.NM_ACCOUNT,
 					AI.CD_FC,
 					AI.AMT_BALANCE,
@@ -690,7 +690,7 @@
 							AI.NO_PERSON,
 							( SELECT NM_PERSON FROM PERSON_INFO WHERE NO_PERSON = AI.NO_PERSON ) AS NM_PERSON,
 							0 AS RK,
-							AI.NO_ACCOUNT,
+							XX1.DEC_VARCHAR2_SEL(AI.NO_ACCOUNT, '10','FS_ARIA','ASSETS_INFO','NO_ACCOUNT') AS NO_ACCOUNT,
 							AI.NM_ACCOUNT,
 							AI.CD_FC,
 							AI.AMT_BALANCE,
@@ -711,7 +711,7 @@
 							SI.NO_PERSON,
 							SI.NM_PERSON,
 							SI.RK,
-							AI.NO_ACCOUNT,
+							XX1.DEC_VARCHAR2_SEL(AI.NO_ACCOUNT, '10','FS_ARIA','ASSETS_INFO','NO_ACCOUNT') AS NO_ACCOUNT,
 							AI.NM_ACCOUNT,
 							AI.CD_FC,
 							AI.AMT_BALANCE,
@@ -865,7 +865,7 @@
 		/* com.koscom.assets.dao.AssetsMapper.getAssetsBankDepWdrlDetail - 자산관리(입출금상세) */
 		SELECT
 			( SELECT NM_FC FROM FC_INFO WHERE CD_FC = AI.CD_FC ) AS NM_FC,
-			STD.AN,
+			XX1.DEC_VARCHAR2_SEL(STD.AN, '10','FS_ARIA','SCR_TRANSACTION_DETAIL','AN') AS AN,
 			STD.DT_TRD,
 			( SUBSTR( STD.TM_TRD, 0, 2 )|| ':' || SUBSTR( STD.TM_TRD, 3, 2 ) ) AS TM_TRD,
 			DECODE( STD.AMT_WDRL, '0', '01', '02' ) AS CD_TRNS,
@@ -885,7 +885,7 @@
 				AND STD.AN = AI.NO_ACCOUNT
 			)
 		WHERE STD.NO_PERSON = #{no_person, jdbcType=VARCHAR}
-			AND STD.AN = #{no_account, jdbcType=VARCHAR}
+			AND STD.AN = XX1.ENC_VARCHAR2_INS(#{no_account, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SCR_TRANSACTION_DETAIL', 'STD.AN')
 			AND STD.DT_TRD = #{dt_trd, jdbcType=VARCHAR}
 			AND STD.TM_TRD = #{tm_trd, jdbcType=VARCHAR}
     </select>
@@ -906,7 +906,7 @@
 				AND PCCI.CD_TYPE		= CI.CD_TYPE
 			)
 		WHERE CI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
-			AND CI.NO_CARD = #{no_account, jdbcType=VARCHAR}
+			AND CI.NO_CARD = XX1.ENC_VARCHAR2_INS(#{no_account, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'CONSUME_INFO', 'CI.NO_CARD')
 			AND CI.DT_TRD = #{dt_trd, jdbcType=VARCHAR}
 			AND CI.TM_TRD = #{tm_trd, jdbcType=VARCHAR}
     </select>
@@ -922,7 +922,7 @@
 			ID_LST = #{no_person, jdbcType=VARCHAR},
 			DT_LST = SYSDATE
 		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
-			AND NO_CARD = #{no_account, jdbcType=VARCHAR}
+			AND NO_CARD = XX1.ENC_VARCHAR2_INS(#{no_account, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'CONSUME_INFO', 'NO_CARD')
 			AND DT_TRD = #{dt_trd, jdbcType=VARCHAR}
 			AND TM_TRD = #{tm_trd, jdbcType=VARCHAR}
     </update>

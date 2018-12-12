@@ -1057,9 +1057,10 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 
 .goods-list { margin-top: 0; }
 .goods-list .select { display: flex; margin-bottom: 10px; }
-.goods-list .select div { width: 50%; }
-.goods-list .select div.right { text-align: right; }
-.goods-list .select div.right button { width: 35px; height: 35px; background: url("../images/common/btn-search.png") no-repeat center/contain; }
+.goods-list .select > div { width: 50%; }
+.goods-list .select > div.right { text-align: right; }
+.goods-list .select > div.right button { width: 35px; height: 35px; background: url("../images/common/btn-search.png") no-repeat center/contain; }
+.goods-list .select .multiselect-basic { width: 50%; }
 .goods-list .item { margin-bottom: 10px; }
 
 .goods-top { margin-top: 40px; padding: 0 21px; }

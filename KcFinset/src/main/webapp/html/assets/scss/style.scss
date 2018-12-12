@@ -3927,7 +3927,7 @@ button.cal{
     .select{
         display: flex;
         margin-bottom: 10px;
-        div{
+        >div{
             width: 50%;
             &.right{
                 text-align: right;
@@ -3937,6 +3937,9 @@ button.cal{
                     background: url("../images/common/btn-search.png") no-repeat center / contain;
                 }
             }
+        }
+        .multiselect-basic {
+          width: 50%;
         }
     }
     .item{

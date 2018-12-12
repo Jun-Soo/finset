@@ -289,7 +289,7 @@ aside.search-wrap .action a { text-align: center; line-height: 43px; border: 1px
 aside.search-wrap .action a.solid { background: #213e6a; color: #fff; }
 aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 
-.sub-top { line-height: 60px; text-align: center; position: relative; }
+.sub-top { line-height: 60px; text-align: center; position: relative; height: 60px; }
 .sub-top .title { font-size: 16px; color: #222; font-weight: 500; }
 .sub-top a { display: block; width: 60px; height: 60px; position: absolute; left: 0; top: 0; background: url(../images/common/btn_top_back.png) no-repeat center/contain; }
 .sub-top a.setting { width: 38px; left: calc(100% - 98px); background: url("../images/common/header_setting.png") no-repeat center/contain; }
@@ -830,7 +830,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 
 /*   POP   */
 .pop-top { text-align: center; position: relative; }
-.pop-top .title { font-size: 16px; line-height: 60px; color: #222; font-weight: 500; background: #efeeec; }
+.pop-top .title { font-size: 16px; line-height: 60px; color: #222; font-weight: 500; background: #efeeec; height: 60px; }
 .pop-top a { display: block; position: absolute; top: 0; right: 0; width: 60px; height: 60px; background: url(../images/common/btn_close_pop.png) no-repeat center/contain; }
 
 .container { padding: 30px 21px; }
@@ -1156,7 +1156,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .report-con .graph img { width: 100%; }
 
 .consume-detail { margin-top: 20px; border-top: 1px solid #e5e5e5; }
-.consume-detail div { border-bottom: 1px solid #e5e5e5; padding-bottom: 15px; }
+.consume-detail > div { border-bottom: 1px solid #e5e5e5; }
 .consume-detail li { display: flex; }
 .consume-detail li p { width: 70%; font-size: 13px; color: #9b9489; font-weight: 700; line-height: 49px; }
 .consume-detail li p:last-child { text-align: right; }

@@ -294,6 +294,7 @@ aside.search-wrap{
     line-height: 60px;
     text-align: center;
     position: relative;
+    height: 60px;
     .title{
         font-size: 16px;
         color: #222;
@@ -2830,6 +2831,7 @@ button.cal{
         color: #222;
         font-weight: 500;
         background: #efeeec;
+        height: 60px;
     }
     a{
         display: block;
@@ -4361,9 +4363,9 @@ button.cal{
 .consume-detail{
     margin-top: 20px;
     border-top: 1px solid $lineColor;
-	div{
+	>div{
 		border-bottom: 1px solid $lineColor;
-		padding-bottom: 15px;
+		//padding-bottom: 15px;
 	}
     li{
         display: flex;

@@ -75,15 +75,22 @@ export default {
         window.Android.initFingerPrint();
       }
     }
-    // localStorage.removeItem("tempPwd");
+
+    if (_this.$store.state.isLoggedIn) {
+      this.$store.state.header.backPath = "/mypage/info";
+    } else {
+      this.$store.state.header.backPath = "/member/certCodeLogin";
+    }
   },
   beforeMount() {},
   mounted() {
     if (!localStorage.getItem("_tempPwd")) {
       this.$store.state.title = "비밀번호 설정";
+      this.$store.state.header.type == "other";
       this.certMessage = "비밀번호를 입력해주세요.";
     } else {
       this.$store.state.title = "비밀번호 확인";
+      this.$store.state.header.type == "other";
       this.certMessage = "비밀번호를 다시 한번 입력해주세요.";
       this.tempPwd = localStorage.getItem("_tempPwd");
     }

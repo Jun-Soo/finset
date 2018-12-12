@@ -9,44 +9,56 @@
       </div>
       <div class="container pb90">
         <ul class="consume-detail">
-          <li>
-            <p class="key" v-text="curTab=='01'?'입금':'결제수단'"></p>
-            <p>
-              <multiselect v-validate="'required'" data-vv-name="수단" :disabled="!isNew" v-model="consumeVO.means_consume" label="text" :show-labels="false" :options="meansConsumeOption" :placeholder="meansConsumeText + ' 선택'" :searchable="false" :allow-empty="false" @select="selectMeans">
-              </multiselect>
-            </p>
+          <div>
+            <li>
+              <p class="key" v-text="curTab=='01'?'입금':'결제수단'"></p>
+              <p>
+                <multiselect v-validate="'required'" data-vv-name="수단" :disabled="!isNew" v-model="consumeVO.means_consume" label="text" :show-labels="false" :options="meansConsumeOption" :placeholder="meansConsumeText + ' 선택'" :searchable="false" :allow-empty="false" @select="selectMeans">
+                </multiselect>
+              </p>
+            </li>
             <p class="warn" v-if="errors.has('수단')" v-text="meansConsumeText + ' 항목은 필수 정보입니다'"></p>
-          </li>
-          <li>
-            <p class="key">금액</p>
-            <p>
-              <input type="tel" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액"><em>원</em>
-            </p>
+          </div>
+          <div>
+            <li>
+              <p class="key">금액</p>
+              <p>
+                <input type="tel" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액"><em>원</em>
+              </p>
+            </li>
             <p class="warn" v-if="errors.has('금액')">{{errors.first('금액')}}</p>
-          </li>
-          <li>
-            <p class="key">카테고리</p>
-            <p>
-              <!-- <button class="btn-cate btn-search" @click="showCategory" :disabled="!isMine" v-text="categoryText" v-validate="'required'" data-vv-name="카테고리"></button> -->
-              <button class="btn-cate btn-search" @click="showCategory" :disabled="!isMine" v-text="categoryText"></button>
-            </p>
-          </li>
-          <li>
-            <p class="key" v-text="curTab=='01'?'출처':'결제처'"></p>
-            <p><input type="text" v-model="consumeVO.contents" :readonly="chkReadonly" v-validate="'required'" data-vv-name="출처"></p>
+          </div>
+          <div>
+            <li>
+              <p class="key">카테고리</p>
+              <p>
+                <!-- <button class="btn-cate btn-search" @click="showCategory" :disabled="!isMine" v-text="categoryText" v-validate="'required'" data-vv-name="카테고리"></button> -->
+                <button class="btn-cate btn-search" @click="showCategory" :disabled="!isMine" v-text="categoryText"></button>
+              </p>
+            </li>
+          </div>
+          <div>
+            <li>
+              <p class="key" v-text="curTab=='01'?'출처':'결제처'"></p>
+              <p><input type="text" v-model="consumeVO.contents" :readonly="chkReadonly" v-validate="'required'" data-vv-name="출처"></p>
+            </li>
             <p class="warn" v-if="errors.has('출처')" v-text="contentsText + ' 항목은 필수 정보입니다'"></p>
-          </li>
-          <li>
-            <p class="key">날짜</p>
-            <p>
-              <datepicker v-model="consumeVO.dt_trd" ref="datepicker" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDateDot" class="div-date" :disabled="chkReadonly"></datepicker>
-              <button class="cal" @click="openDatepicker"></button>
-            </p>
-          </li>
-          <li class="memo">
-            <p class="key">메모</p>
-            <p><input type="text" v-model="consumeVO.memo" :readonly="!isMine"></p>
-          </li>
+          </div>
+          <div>
+            <li>
+              <p class="key">날짜</p>
+              <p>
+                <datepicker v-model="consumeVO.dt_trd" ref="datepicker" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDateDot" class="div-date" :disabled="chkReadonly"></datepicker>
+                <button class="cal" @click="openDatepicker"></button>
+              </p>
+            </li>
+          </div>
+          <div>
+            <li class="memo">
+              <p class="key">메모</p>
+              <p><input type="text" v-model="consumeVO.memo" :readonly="!isMine"></p>
+            </li>
+          </div>
         </ul>
 
         <div v-if="!isNew" class="consume-comment">

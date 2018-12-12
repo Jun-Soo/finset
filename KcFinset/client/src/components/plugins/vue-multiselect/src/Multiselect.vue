@@ -679,7 +679,7 @@ fieldset[disabled] .multiselect {
 }
 
 .multiselect--disabled {
-  background: #ededed;
+  /* background: #ededed; */
   pointer-events: none;
 }
 

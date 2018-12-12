@@ -1435,12 +1435,12 @@ aside.search-wrap{
                 width: 30%;
                 a{
                     display: inline-block;
-                    width: 16px;
-                    height: 16px;
+                    width: 20px;
+                    height: 20px;
                     border-radius: 100%;
                     text-indent: -9999px;
-                    background: url(../images/main/btn_more.png) no-repeat center $col2;
-                    background-size: 8px;
+                    background: url(../images/mypage/ico_nodata.png) no-repeat center;
+                    background-size: 20px;
                 }
                 p{
                     margin-top: 20px;
@@ -2782,6 +2782,9 @@ button.cal{
                                 border: 1px solid $lineColor;
                                 background: url("../images/common/btn_accodion_search.png") no-repeat center / contain;
                                 margin: 0;
+                                &.cal{
+                                    background: url("../images/common/btn_cal.png") no-repeat center / 18px;
+                                }
                             }
                             input[type="text"],input[type="number"]{
                                 line-height: 35px;
@@ -4384,6 +4387,8 @@ button.cal{
                 .btn-cate{
                     padding-right: 20px;
                     background: url("../images/consume/btn_cate.png") no-repeat right center / 10px;
+                    color: #454545;
+                    text-align: right;
                 }
             }
             select{

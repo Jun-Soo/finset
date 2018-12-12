@@ -42,6 +42,7 @@ import com.koscom.debt.model.CrawlingLoanVO;
 import com.koscom.debt.service.DebtManager;
 import com.koscom.domain.CreditInfo;
 import com.koscom.fccode.dao.FcCodeMapper;
+import com.koscom.fccode.model.FcCodeForm;
 import com.koscom.fincorp.dao.FincorpMapper;
 import com.koscom.fincorp.model.FincorpVO;
 import com.koscom.fincorp.model.FincorpfcNminfoForm;
@@ -1578,6 +1579,10 @@ public class KcbManagerImpl implements KcbManager {
 	}
 
 	public String checkFcInfo(List<String> cdFcList, List<String> nmFcList, String nmFc) {
+		return checkFcInfo(cdFcList, nmFcList, nmFc, null);
+	}
+	
+	public String checkFcInfo(List<String> cdFcList, List<String> nmFcList, String nmFc, String cdFin) {
 		int 	idx 	= 0;
 		String 	cdFc 	= "";
 		
@@ -1586,7 +1591,10 @@ public class KcbManagerImpl implements KcbManager {
 		if(idx > -1) {
 			cdFc = cdFcList.get(idx);
 		} else {
-			cdFc = fcCodeMapper.selectCdFc(nmFc);
+			FcCodeForm fcCodeForm = new FcCodeForm();
+			fcCodeForm.setCd_fin(cdFin);
+			fcCodeForm.setNm_fc(nmFc);
+			cdFc = fcCodeMapper.selectCdFcWithCdFin(fcCodeForm);
 			if(StringUtil.isEmpty(cdFc)) {
 				
 				FincorpVO Fincorp = new FincorpVO();

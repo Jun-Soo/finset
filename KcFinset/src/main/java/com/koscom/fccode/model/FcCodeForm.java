@@ -6,8 +6,10 @@ import com.koscom.comm.model.SearchForm;
 
 public class FcCodeForm extends SearchForm implements Serializable {
 	private static final long serialVersionUID = 4172735039536716671L;
-	private String cd_fc; // 금융사코드
+	private String cd_fc;	// 금융사코드
+	private String cd_fin;	// 업권코드
 	private String no_edoc; // 코드종류
+	private String nm_fc;	// 금융사명 
 	
 	private String code_group;
 	private String code_value;
@@ -23,17 +25,29 @@ public class FcCodeForm extends SearchForm implements Serializable {
 	private String item_repeat_tag; // 반복부모코드
 	private String item_repeat_tag_value; // 코드값
 	
-	public String getItem_tag() {
-		return item_tag;
+	public String getCd_fc() {
+		return cd_fc;
 	}
-	public void setItem_tag(String item_tag) {
-		this.item_tag = item_tag;
+	public void setCd_fc(String cd_fc) {
+		this.cd_fc = cd_fc;
 	}
-	public String getItem_tag_value() {
-		return item_tag_value;
+	public String getCd_fin() {
+		return cd_fin;
 	}
-	public void setItem_tag_value(String item_tag_value) {
-		this.item_tag_value = item_tag_value;
+	public void setCd_fin(String cd_fin) {
+		this.cd_fin = cd_fin;
+	}
+	public String getNo_edoc() {
+		return no_edoc;
+	}
+	public void setNo_edoc(String no_edoc) {
+		this.no_edoc = no_edoc;
+	}
+	public String getNm_fc() {
+		return nm_fc;
+	}
+	public void setNm_fc(String nm_fc) {
+		this.nm_fc = nm_fc;
 	}
 	public String getCode_group() {
 		return code_group;
@@ -59,41 +73,40 @@ public class FcCodeForm extends SearchForm implements Serializable {
 	public void setYn_code_group(String yn_code_group) {
 		this.yn_code_group = yn_code_group;
 	}
-	public String getId_frt() {
-		return id_frt;
-	}
-	public void setId_frt(String id_frt) {
-		this.id_frt = id_frt;
-	}
-	public String getNo_edoc() {
-		return no_edoc;
-	}
-	public void setNo_edoc(String no_edoc) {
-		this.no_edoc = no_edoc;
-	}
-	public String getCd_fc() {
-		return cd_fc;
-	}
-	public void setCd_fc(String cd_fc) {
-		this.cd_fc = cd_fc;
-	}
 	public String getType_txrx() {
 		return type_txrx;
 	}
 	public void setType_txrx(String type_txrx) {
 		this.type_txrx = type_txrx;
 	}
+	public String getId_frt() {
+		return id_frt;
+	}
+	public void setId_frt(String id_frt) {
+		this.id_frt = id_frt;
+	}
+	public String getItem_tag() {
+		return item_tag;
+	}
+	public void setItem_tag(String item_tag) {
+		this.item_tag = item_tag;
+	}
+	public String getItem_tag_value() {
+		return item_tag_value;
+	}
+	public void setItem_tag_value(String item_tag_value) {
+		this.item_tag_value = item_tag_value;
+	}
 	public String getItem_repeat_tag() {
 		return item_repeat_tag;
-	}
-	public String getItem_repeat_tag_value() {
-		return item_repeat_tag_value;
 	}
 	public void setItem_repeat_tag(String item_repeat_tag) {
 		this.item_repeat_tag = item_repeat_tag;
 	}
+	public String getItem_repeat_tag_value() {
+		return item_repeat_tag_value;
+	}
 	public void setItem_repeat_tag_value(String item_repeat_tag_value) {
 		this.item_repeat_tag_value = item_repeat_tag_value;
 	}
-	
 }

@@ -58,7 +58,9 @@ export default {
     this.getCreditRaiseNps();
   },
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    this.$store.state.header.backPath = "/credit/raiseMain";
+  },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},

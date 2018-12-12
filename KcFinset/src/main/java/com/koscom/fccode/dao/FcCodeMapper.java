@@ -12,6 +12,12 @@ public interface FcCodeMapper {
 	 * @param string
 	 */
 	String selectCdFc(String string);
+
+	/**
+	 * 금융사 코드 조회 업종코드 추가
+	 * @param string
+	 */
+	String selectCdFcWithCdFin(FcCodeForm fcCodeForm);
 	
 	/**
 	 * listFcEdocInfo

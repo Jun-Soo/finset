@@ -101,7 +101,7 @@ export default {
       this.$http
         .post("/m/consume/modifyDt_basic.json", formData)
         .then(function(response) {
-          this.$store.state.user.dt_basic = param.value;
+          _this.$store.state.user.dt_basic = param.value;
         });
     }
   }

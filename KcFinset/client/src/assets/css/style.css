@@ -45,6 +45,7 @@ input[type="number"] {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  -webkit-user-select: auto;
 }
 
 input[type="month"] {
@@ -100,6 +101,7 @@ textarea {
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  -webkit-user-select: auto;
 }
 
 .checks {

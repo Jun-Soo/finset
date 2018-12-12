@@ -948,7 +948,7 @@ public class ScrapManagerImpl implements ScrapManager {
 	        	fcLinkInfo.setCd_link_stat("99");
 	        	fcLinkInfo.setId_frt(no_person);
 	        	fcLinkInfo.setId_lst(no_person);
-	        	scrapMapper.createFcLinkInfo(fcLinkInfoVO);
+	        	scrapMapper.createFcLinkInfo(fcLinkInfo);
 			}
 			else if(returnClass.getCd_result()  == Constant.SUCCESS)	{
 				StockListVO stockListVO = new StockListVO();

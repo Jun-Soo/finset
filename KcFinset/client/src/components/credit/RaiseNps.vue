@@ -95,7 +95,7 @@ export default {
         .post("/m/kcb/updateKcbReqNonfiInfo.json", formData)
         .then(function(response) {
           var result = response.data;
-          this.$router.push({
+          _this.$router.push({
             name: "creditRaiseResult",
             params: { result: "success" }
           });

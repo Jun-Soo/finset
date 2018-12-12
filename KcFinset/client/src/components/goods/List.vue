@@ -1,26 +1,40 @@
 <template>
   <div>
     <section>
-      <div class="goods-wrap goods" v-if="goodsList.length && seen">
-        <carousel :perPage=1>
-          <slide class="item" v-for="goods in goodsList" :key="goods.index">
-            <a @click="loanGoodsDetail(goods.cd_fc, goods.cd_goods)">
-              <div class="top">
-                <p class="symbol"><img :src="goods.icon" alt="" />{{goods.nm_fc}}</p>
-                <p class="text blue">{{goods.nm_goods}} <button class="btn-star" :class="{'on':goods.isChecked}" @click="loanGoodsChoice(goods, $event)"></button></p>
+      <div v-if="curTab == 'loanStock'">
+        <div class="goods-wrap goods">
+          <div class="item">
+            <a>
+              <div class="stock">
+                <p>스탁론도<em>핀셋에서 비교해보세요</em></p>
+                <img src="../../assets/images/goods/ico1.png" alt="" />
               </div>
-              <div class="goods-benefit">
-                <div>{{goods.rto_interest_from}}~{{goods.rto_interest_to}}<em> %</em></div>
-                <div><em>최대 </em>{{Common.formatNumber(goods.amt_limit)}}<em> 만원</em></div>
-              </div>
-              <p class="goods-text1" v-html=goods.desc_feature></p>
-              <p class="goods-text2" v-html=goods.deliberate></p>
             </a>
-          </slide>
-        </carousel>
+          </div>
+        </div>
       </div>
-      <div class="nodata" v-else-if="seen">
-        신청 가능한 상품이 없습니다.
+      <div v-else>
+        <div class="goods-wrap goods" v-if="seen && goodsList.length">
+          <carousel :perPage=1>
+            <slide class="item" v-for="goods in goodsList" :key="goods.index">
+              <a @click="loanGoodsDetail(goods.cd_fc, goods.cd_goods)">
+                <div class="top">
+                  <p class="symbol"><img :src="goods.icon" alt="" />{{goods.nm_fc}}</p>
+                  <p class="text blue">{{goods.nm_goods}} <button class="btn-star" :class="{'on':goods.isChecked}" @click="loanGoodsChoice(goods, $event)"></button></p>
+                </div>
+                <div class="goods-benefit">
+                  <div>{{goods.rto_interest_from}}~{{goods.rto_interest_to}}<em> %</em></div>
+                  <div><em>최대 </em>{{Common.formatNumber(goods.amt_limit)}}<em> 만원</em></div>
+                </div>
+                <p class="goods-text1" v-html=goods.desc_feature></p>
+                <p class="goods-text2" v-html=goods.deliberate></p>
+              </a>
+            </slide>
+          </carousel>
+        </div>
+        <div class="nodata" v-else-if="seen">
+          신청 가능한 상품이 없습니다.
+        </div>
       </div>
       <div class="tab mt40">
         <div class="wrap">
@@ -29,22 +43,39 @@
           <a :class="{'on':curTab === 'loanStock'}" @click="tabOnClick('loanStock')">스탁론</a>
         </div>
       </div>
-      <div class="box-list goods goods-list">
-        <div class="select">
-          <div class="left">
-            <multiselect class="multiselect-basic" v-model="orderby" label="text" :show-labels="false" :options="options" :searchable="false" :allow-empty="false" @select="orderbyOnChange">
-            </multiselect>
-            <!-- <select v-model="orderby" @change="orderbyOnChange()">
-              <option v-for="option in options" :key="option.index" v-bind:value="option.value">
-                {{ option.text }}
-              </option>
-            </select> -->
-          </div>
-          <div class="right">
-            <button class="btn-search" @click="clickSearch()"></button>
-          </div>
+      <div class="banner-wrap" v-if="curTab == 'loanStock'">
+        <div class="item">
+          <a href="#">
+            <div class="banner">
+              <div class="left">
+                <p class="key">흠어진 증권계좌를 한곳에</p>
+                <p class="value">클릭만으로 흩어져 있는<br>증권 계좌를 확인해 보세요</p>
+              </div>
+              <div class="right">
+                <img src="../../assets/images/goods/banner1.png" alt="" />
+              </div>
+            </div>
+          </a>
         </div>
-        <listLoanNoAffiliates :item="item" ref="form" />
+      </div>
+      <div v-else>
+        <div class="box-list goods goods-list">
+          <div class="select">
+            <div class="left">
+              <multiselect class="multiselect-basic" v-model="orderby" label="text" :show-labels="false" :options="options" :searchable="false" :allow-empty="false" @select="orderbyOnChange">
+              </multiselect>
+              <!-- <select v-model="orderby" @change="orderbyOnChange()">
+                <option v-for="option in options" :key="option.index" v-bind:value="option.value">
+                  {{ option.text }}
+                </option>
+              </select> -->
+            </div>
+            <div class="right">
+              <button class="btn-search" @click="clickSearch()"></button>
+            </div>
+          </div>
+          <listLoanNoAffiliates :item="item" ref="form" />
+        </div>
       </div>
     </section>
     <aside class="search-wrap" :class="{'on':isSearch}" v-if="'loanWorker' === this.curTab">

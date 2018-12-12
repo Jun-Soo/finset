@@ -11,7 +11,8 @@ const store = new Vuex.Store({
     header: {
       type: '',
       active: '',
-      backPath: ''
+      backPath: '',
+      fromPath: ''
     },
     user: {
       noPerson: '',

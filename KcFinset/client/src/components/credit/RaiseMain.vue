@@ -65,6 +65,9 @@ export default {
   },
   created() {
     this.getCreditRaiseInfo();
+    if (this.$store.state.header.fromPath) {
+      this.$store.state.header.backPath = this.$store.state.header.fromPath;
+    }
   },
   beforeMount() {},
   mounted() {},

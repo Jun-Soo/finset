@@ -76,7 +76,7 @@ export default {
       }
     }
 
-    if (_this.$store.state.isLoggedIn) {
+    if (this.$store.state.isLoggedIn) {
       this.$store.state.header.backPath = "/mypage/info";
     } else {
       this.$store.state.header.backPath = "/member/certCodeLogin";
@@ -86,14 +86,15 @@ export default {
   mounted() {
     if (!localStorage.getItem("_tempPwd")) {
       this.$store.state.title = "비밀번호 설정";
-      this.$store.state.header.type == "other";
+      this.$store.state.header.type = "sub";
       this.certMessage = "비밀번호를 입력해주세요.";
     } else {
       this.$store.state.title = "비밀번호 확인";
-      this.$store.state.header.type == "other";
+      this.$store.state.header.type = "sub";
       this.certMessage = "비밀번호를 다시 한번 입력해주세요.";
       this.tempPwd = localStorage.getItem("_tempPwd");
     }
+    console.log(this.$store.state.header.type);
   },
   beforeUpdate() {},
   updated() {},

@@ -4,7 +4,7 @@
     <div class="container mt30">
       <div class="checks">
         <!--전체약관동의-->
-        <input type="checkbox" id="check-all" v-model="chkAll" v-on:click="allChecked()"><label for="check-all">전체 약관 동의</label>
+        <input type="checkbox" v-validate="'required'" id="check-all" ref="chkAll" data-vv-name='약관동의' v-model="chkAll" v-on:click="allChecked()"><label for="check-all">전체 약관 동의</label>
         <div class="box-agree" v-if="!chkAll">
           <p><input type="checkbox" name="checkbox1" id="checkbox1" v-model="chkBox1"><label for="checkbox1">[필수] 서비스 이용동의</label></p>
           <ul>
@@ -137,7 +137,12 @@ export default {
       }
     },
     sex: function() {
-      this.$refs.telCom.$el.focus();
+      if (
+        (this.telComNm == null || this.telComNm == "") &&
+        this.sex.length > 0
+      ) {
+        this.$refs.telCom.$el.focus();
+      }
     }
   },
   computed: {},
@@ -151,9 +156,14 @@ export default {
       window.Android.reqSMSPermission();
     }
     this.$store.state.title = "본인확인";
-    this.$store.state.header.type = "sub";
     this.time = this.minutes * 60;
-    console.log(this.$store.state.user.noPerson);
+    this.$store.state.header.type = "sub";
+
+    if (this.$store.state.isLoggedIn) {
+      this.$store.state.header.backPath = "/mypage/cert";
+    } else {
+      this.$store.state.header.backPath = "/member/certCodeLogin";
+    }
   },
   beforeMount() {},
   mounted() {},
@@ -226,6 +236,15 @@ export default {
     personCertify: function() {
       let _this = this;
       let frm = new FormData();
+      if (!_this.chkAll) {
+        _this.$dialogs.alert(
+          "약관동의는 필수 체크 항목입니다.",
+          Constant.options
+        );
+        $("#check-all").focus();
+        // _this.$refs.chkAll.$el.focus();
+        return false;
+      }
       this.$validator.validateAll().then(res => {
         if (res) {
           frm.append("hp", _this.hp);
@@ -243,8 +262,6 @@ export default {
                 this.$toast.center(response.data.message);
                 return false;
               }
-              // _this.$store.state.user.noPerson =
-              //   response.data.personVO.no_person;
               _this.kcmRequestCertNo();
             })
             .catch(e => {

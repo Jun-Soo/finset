@@ -8,7 +8,7 @@
           <p class="date" v-if="idx==0 || (idx!=0&&each.dt_trd!=detailList[idx-1].dt_trd)">{{formatDateDot(each.dt_trd)}}</p>
           <div class="item">
             <div class="flex">
-              <p><em :class="each.color">{{each.nm_person}}</em>{{each.contents}}</p>
+              <p><em :class="each.color">{{each.viewName}}</em>{{each.contents}}</p>
               <p><em class="number">{{numberWithCommas(each.amt_in_out)}}</em>원</p>
             </div>
             <div class="flex">
@@ -23,7 +23,7 @@
           <!-- <p class="date">{{formatDateDot(each.dt_trd)}}</p> -->
           <div class="item">
             <div class="flex">
-              <p><em :class="_item.color">{{_item.nm_person}}</em>{{_item.contents}}</p>
+              <p><em :class="_item.color">{{_item.viewName}}</em>{{_item.contents}}</p>
               <p><em class="number">{{numberWithCommas(_item.amt_in_out)}}</em>원</p>
             </div>
             <div class="flex">
@@ -50,11 +50,11 @@ export default {
         { text: "금액순", value: "amt" }
       ],
       settingList: [
-        { color: "circle red", id: "chk1", no_person: "", nm_person: "" },
-        { color: "circle orange", id: "chk2", no_person: "", nm_person: "" },
-        { color: "circle green", id: "chk3", no_person: "", nm_person: "" },
-        { color: "circle blue", id: "chk4", no_person: "", nm_person: "" },
-        { color: "circle purple", id: "chk5", no_person: "", nm_person: "" }
+        { color: "circle red", id: "chk1", no_person: "", viewName: "" },
+        { color: "circle orange", id: "chk2", no_person: "", viewName: "" },
+        { color: "circle green", id: "chk3", no_person: "", viewName: "" },
+        { color: "circle blue", id: "chk4", no_person: "", viewName: "" },
+        { color: "circle purple", id: "chk5", no_person: "", viewName: "" }
       ],
       orderType: { text: "날짜순", value: "date" },
       consumeForm: new FormData(),
@@ -98,6 +98,14 @@ export default {
         .then(function(response) {
           var list = response.data.listConsumeSharePersonInfo;
 
+          for (var idx in list) {
+            list[idx]["viewName"] = "";
+            if (list[idx].no_person == _this.$store.state.user.noPerson) {
+              list[idx]["viewName"] = "나";
+            } else {
+              list[idx]["viewName"] = list[idx].nm_person.substring(1);
+            }
+          }
           _this.shareList = list;
           _this.dataPeriod = "yr";
           _this.setPersonColor();
@@ -106,9 +114,7 @@ export default {
     setPersonColor: function() {
       for (var k in this.shareList) {
         this.settingList[k].no_person = this.shareList[k].no_person;
-        this.settingList[k].nm_person = this.shareList[k].nm_person.substring(
-          1
-        );
+        this.settingList[k].viewName = this.shareList[k].viewName;
       }
       this.getSettlementDetail();
     },
@@ -124,7 +130,7 @@ export default {
           for (var h in sList) {
             if (tList[i].no_person == sList[h].no_person) {
               tList[i].color = sList[h].color;
-              tList[i].nm_person = sList[h].nm_person;
+              tList[i]["viewName"] = sList[h].viewName;
               tList[i]["seq"] = i;
             }
           }

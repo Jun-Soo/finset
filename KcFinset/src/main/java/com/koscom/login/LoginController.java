@@ -599,9 +599,15 @@ public class LoginController {
 		
 		codeInfo = codeManager.getAgreeTerm(codeInfo);
 		
-		logger.info("getAgreeTerm.json || codeInfo : "+codeInfo.toString());
-		model.addAttribute("nm_code", codeInfo.getNm_code());
-		model.addAttribute("etc", codeInfo.getEtc());
+
+		if(codeInfo != null) {
+			model.addAttribute("nm_code", codeInfo.getNm_code());
+			model.addAttribute("etc", codeInfo.getEtc());
+			model.addAttribute("result","1");
+		} else {
+			logger.info("getAgreeTerm.json || codeInfo : "+codeInfo);
+			model.addAttribute("result","0");
+		}
 					
 		return "jsonView";
 	}

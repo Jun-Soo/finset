@@ -136,8 +136,12 @@ export default {
     frm.append("code_group", "OPENAPI_TERMS");
     _this.$http.post("/m/login/getAgreeTerm.json", frm).then(response => {
       //정상, 에러 처리 필요
-      _this.term_db = response.data.etc;
-      _this.nm_code = response.data.nm_code;
+      if(response.data.result =="1"){
+        _this.term_db = response.data.etc;
+        _this.nm_code = response.data.nm_code;
+      }else { //openAPI 못불러옴
+
+      }
     });
   },
   beforeMount() {},

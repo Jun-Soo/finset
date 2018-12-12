@@ -44,8 +44,8 @@
 	      ,ID_EMP_GOODS         /* 상품관리자아이디       */
 	      ,CL_SERVICE           /* 서비스 이용 약관       */
 	      ,CL_PRIVATE           /* 개인신용정보 약관      */
-	      ,NM_FILE1             /* 파일명                 */
-	      ,PATH_FILE1           /* 파일경로               */
+	      ,NM_FILE AS NM_FILE1             /* 파일명                 */
+	      ,PATH_FILE AS PATH_FILE1         /* 파일경로               */
 	      ,ID_FRT               /* 최초입력아이디         */
 	      ,DT_FRT               /* 최초입력시간           */
 	      ,ID_LST               /* 최종수정아이디         */

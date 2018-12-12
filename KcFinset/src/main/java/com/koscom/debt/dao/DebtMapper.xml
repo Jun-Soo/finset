@@ -324,8 +324,9 @@
 							<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
 								#{each_person}
 							</foreach>
-		                AND      A.YMD_CANCEL IS NULL
-		                AND     A.DISPLAY_YN = 'Y'   /*삭제처리를 위해 DISPLAY_YN이 추가되었기 때문에 조건이 추가됨 20180529 김휘경*/
+			                AND A.YMD_CANCEL IS NULL
+			                AND	TO_NUMBER(A.YMD_LOANEND) <![CDATA[>=]]> TO_NUMBER(TO_CHAR(SYSDATE, 'YYYYMMDD'))
+			                AND A.DISPLAY_YN = 'Y'
 		             ) A
 		             LEFT OUTER JOIN (
 		                SELECT    B.NO_PERSON
@@ -510,7 +511,8 @@
 					A.NO_PERSON = #{no_person, jdbcType = VARCHAR}
            		</otherwise>
            	</choose>
-	    AND      A.YMD_CANCEL   IS NULL
+		    AND		A.YMD_CANCEL   IS NULL
+		    AND		TO_NUMBER(A.YMD_LOANEND) <![CDATA[>=]]> TO_NUMBER(TO_CHAR(SYSDATE, 'YYYYMMDD'))
 	    <if test="@com.koscom.util.MybatisUtil@isNotEmpty(display_yn)">
 	    	<if test="@com.koscom.util.MybatisUtil@contains('Y',display_yn)">
 	      AND	  	 A.DISPLAY_YN = 'Y'

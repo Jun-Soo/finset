@@ -71,6 +71,7 @@ export default {
       if (this.$store.state.header.backPath == "") {
         this.$router.go(-1);
       } else {
+        this.$store.state.header.fromPath = "";
         this.$router.push(this.$store.state.header.backPath);
       }
     },
@@ -78,6 +79,7 @@ export default {
       if (this.$store.state.header.backPath == "") {
         this.$router.go(-1);
       } else {
+        this.$store.state.header.fromPath = "";
         this.$router.push(this.$store.state.header.backPath);
       }
     }

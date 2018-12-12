@@ -540,7 +540,8 @@ export const routes = [{
     component: CreditRaiseMain,
     meta: {
       allowPath: true,
-      requiresAuth: true
+      requiresAuth: true,
+      backCasePath: true
     }
   },
   {
@@ -1682,6 +1683,8 @@ router.beforeEach((to, from, next) => {
     const hp = localStorage.getItem('hp')
     if (to.meta.allowPath) {
       if (to.meta.requiresAuth) {
+        if (to.meta.backCasePath && !Store.state.header.fromPath) Store.state.header.fromPath = from.fullPath
+
         const accessToken = localStorage.getItem('accessToken')
         if (!accessToken) {
           alert('접근 권한이 없습니다. 시작페이지로 이동합니다.')

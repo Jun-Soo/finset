@@ -9,10 +9,10 @@
         <p class="textred" v-if="cntFailPwd > 0"> {{ errMsg }} </p>
 
         <div class="pass-wrap">
-          <input type="password" v-bind:style="classPass1" v-model="classPass1" id="pass_number1" maxlength="1" readonly />
-          <input type="password" v-bind:style="classPass2" v-model="classPass2" id="pass_number2" maxlength="1" readonly />
-          <input type="password" v-bind:style="classPass3" v-model="classPass3" id="pass_number3" maxlength="1" readonly />
-          <input type="password" v-bind:style="classPass4" v-model="classPass4" id="pass_number4" maxlength="1" readonly />
+          <input type="password" v-bind:style="classPass1" v-model="pw1" id="pass_number1" maxlength="1" readonly />
+          <input type="password" v-bind:style="classPass2" v-model="pw2" id="pass_number2" maxlength="1" readonly />
+          <input type="password" v-bind:style="classPass3" v-model="pw3" id="pass_number3" maxlength="1" readonly />
+          <input type="password" v-bind:style="classPass4" v-model="pw4" id="pass_number4" maxlength="1" readonly />
         </div>
         <div class="number">
           <a v-on:click="btnClick('1')">1</a>
@@ -52,7 +52,11 @@ export default {
       classPass1: "",
       classPass2: "",
       classPass3: "",
-      classPass4: ""
+      classPass4: "",
+      pw1: "",
+      pw2: "",
+      pw3: "",
+      pw4: ""
     };
   },
   component: {},
@@ -86,29 +90,53 @@ export default {
       _this.classPass2 = "";
       _this.classPass3 = "";
       _this.classPass4 = "";
+      _this.pw1 = "";
+      _this.pw2 = "";
+      _this.pw3 = "";
+      _this.pw4 = "";
     },
     btnClick: function(val) {
       var _this = this;
+
       if (_this.password.length < 4) {
         _this.password += val;
       }
-      if (_this.password.length > 0) _this.classPass1 = "border-color: #111";
-      if (_this.password.length > 1) _this.classPass2 = "border-color: #111";
-      if (_this.password.length > 2) _this.classPass3 = "border-color: #111";
+      if (_this.password.length > 0) {
+        _this.classPass1 = "border-color: #111";
+        _this.pw1 = val;
+      }
+
+      if (_this.password.length > 1) {
+        _this.classPass2 = "border-color: #111";
+        _this.pw2 = val;
+      }
+      if (_this.password.length > 2) {
+        _this.classPass3 = "border-color: #111";
+        _this.pw3 = val;
+      }
       if (_this.password.length > 3) {
         _this.classPass4 = "border-color: #111";
+        _this.pw4 = val;
 
         _this.successStep();
       }
     },
     backClick: function() {
       var _this = this;
-      this.initClassPass();
+      if (_this.password.length == 4) {
+        _this.pw4 = "";
+        _this.classPass4 = "";
+      } else if (_this.password.length == 3) {
+        _this.pw3 = "";
+        _this.classPass3 = "";
+      } else if (_this.password.length == 2) {
+        _this.pw2 = "";
+        _this.classPass2 = "";
+      } else if (_this.password.length == 1) {
+        _this.pw1 = "";
+        _this.classPass1 = "";
+      }
       _this.password = _this.password.substr(0, _this.password.length - 1);
-      if (_this.password.length > 0) _this.classPass1 = "border-color: #111";
-      if (_this.password.length > 1) _this.classPass2 = "border-color: #111";
-      if (_this.password.length > 2) _this.classPass3 = "border-color: #111";
-      if (_this.password.length > 3) _this.classPass4 = "border-color: #111";
     },
     successStep: function() {
       let url = "/m/person/fingerChkCode.json";

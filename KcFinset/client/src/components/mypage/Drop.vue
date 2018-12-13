@@ -1,23 +1,24 @@
 <template>
   <section>
-    <div class="container mt30 pb90">
+    <div class="container pb90">
+      <div class="drop-top">서비스 탈퇴를 위해<br>아래 안내를 읽고 동의해 주세요</div>
       <div class="checks">
+        <input type="checkbox" id="check-all" @click="chkall" v-model="chkall"><label for="check-all" class="mt30">동의합니다</label>
         <div class="box-agree drop">
-          <p><input type="checkbox" id="chk1" v-model="chk1"><label for="chk1">서비스를 탈퇴하시면 핀셋에서 제공하는 모든서비스를 사용할 수 없으며, 재가입하셔도 기존 서비스 이용내역을 조회하실 수 없습니다. </label></p>
+          <p><input type="checkbox" id="chk1" disabled="true" v-model="chk1"><label for="chk1">서비스를 탈퇴하시면 핀셋에서 제공하는 모든서비스를 사용할 수 없으며, 재가입하셔도 기존 서비스 이용내역을 조회하실 수 없습니다. </label></p>
         </div>
         <div class="box-agree drop">
-          <p><input type="checkbox" id="chk2" v-model="chk2"><label for="chk2">서비스 이용시 등록한 회원님의 각종 인증정보는 더 이상 사용하실 수 없으며 재가입시 모든정보를 재등록 하셔야 합니다.</label></p>
+          <p><input type="checkbox" id="chk2" disabled="true" v-model="chk2"><label for="chk2">서비스 이용시 등록한 회원님의 각종 인증정보는 더 이상 사용하실 수 없으며 재가입시 모든정보를 재등록 하셔야 합니다.</label></p>
         </div>
         <div class="box-agree drop">
-          <p><input type="checkbox" id="chk3" v-model="chk3"><label for="chk3">금융거래를 하지 않으신 회원님의 회원정보는 서비스 탈퇴 즉시 삭제됩니다.</label></p>
+          <p><input type="checkbox" id="chk3" disabled="true" v-model="chk3"><label for="chk3">금융거래를 하지 않으신 회원님의 회원정보는 서비스 탈퇴 즉시 삭제됩니다.</label></p>
         </div>
         <div class="box-agree drop">
-          <p><input type="checkbox" id="chk4" v-model="chk4"><label for="chk4">금융거래가 진행된 고객님의 개인신용정보는 금융거래 종료 후 5년 이내 다른정보와 분리하여 안전하게 보관됩니다.</label></p>
+          <p><input type="checkbox" id="chk4" disabled="true" v-model="chk4"><label for="chk4">금융거래가 진행된 고객님의 개인신용정보는 금융거래 종료 후 5년 이내 다른정보와 분리하여 안전하게 보관됩니다.</label></p>
         </div>
         <div class="box-agree drop">
-          <p><input type="checkbox" id="chk5" v-model="chk5"><label for="chk5">서비스 탈퇴후 일정기간 재가입이 불가능합니다.</label></p>
+          <p><input type="checkbox" id="chk5" disabled="true" v-model="chk5"><label for="chk5">서비스 탈퇴후 일정기간 재가입이 불가능합니다.</label></p>
         </div>
-        <input type="checkbox" id="check-all" @click="chkAll" v-model="chkall"><label for="check-all" class="mt30">약관 전체 동의</label>
       </div>
     </div>
 
@@ -44,6 +45,25 @@ export default {
   },
   components: {},
   computed: {},
+  watch: {
+    chkall: function() {
+      if (this.chkall) {
+        this.checked = "check";
+        this.chk1 = true;
+        this.chk2 = true;
+        this.chk3 = true;
+        this.chk4 = true;
+        this.chk5 = true;
+      } else {
+        this.checked = "";
+        this.chk1 = false;
+        this.chk2 = false;
+        this.chk3 = false;
+        this.chk4 = false;
+        this.chk5 = false;
+      }
+    }
+  },
   beforeCreate() {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "서비스 탈퇴";
@@ -51,15 +71,8 @@ export default {
   created() {},
   beforeMount() {},
   mounted() {
-    var _this = this;
-    $(":checkbox").change(function() {
-      if (_this.chk1 && _this.chk2 && _this.chk3 && _this.chk4 && _this.chk5) {
-        _this.chkall = true;
-        _this.checked = "check";
-      } else {
-        _this.chkall = false;
-        _this.checked = "";
-      }
+    $("#input").on("click", function(e) {
+      e.preventDefault();
     });
   },
   beforeUpdate() {},
@@ -69,17 +82,6 @@ export default {
   methods: {
     quitChkYn: function() {
       let _this = this;
-      if (
-        !_this.chk1 ||
-        !_this.chk2 ||
-        !_this.chk3 ||
-        !_this.chk4 ||
-        !_this.chk5
-      ) {
-        this.$toast.center("필수 약관을 모두 동의해주세요");
-        setTimeout(function() {}, 2000);
-        return false;
-      }
 
       this.$dialogs
         .confirm("정말로 탈퇴 하시겠습니까?", Constant.options)
@@ -109,30 +111,6 @@ export default {
         .catch(e => {
           _this.$toast.center(ko.messages.error);
         });
-    },
-    chkAll: function() {
-      var _this = this;
-      if (_this.chkall) {
-        _this.chkall = false;
-      } else {
-        _this.chkall = true;
-      }
-
-      if (_this.chkall) {
-        // _this.checked = "check";
-        _this.chk1 = true;
-        _this.chk2 = true;
-        _this.chk3 = true;
-        _this.chk4 = true;
-        _this.chk5 = true;
-      } else {
-        // _this.checked = "";
-        _this.chk1 = false;
-        _this.chk2 = false;
-        _this.chk3 = false;
-        _this.chk4 = false;
-        _this.chk5 = false;
-      }
     }
   }
 };

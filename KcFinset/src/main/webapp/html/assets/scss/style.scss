@@ -821,7 +821,7 @@ aside.search-wrap{
     .select{
         display: flex;
         margin-bottom: 10px;
-        div{
+        >div{
             width: 50%;
             &.right{
                 text-align: right;
@@ -2345,9 +2345,11 @@ aside.search-wrap{
         display: flex;
         border-bottom: 1px solid $lineColor;
         padding: 30px 0;
-        div{
+        >div{
             flex-grow: 1;
             text-align: center;
+            width: 50%;
+            @include box-sizing(border-box);
             .key{
                 font-size: 14px;
                 font-weight: 700;
@@ -2454,7 +2456,7 @@ aside.search-wrap{
             border: 1px solid $lineColor;
             background: #fff;
             input[type="text"]{
-                width: calc(100% - 33px);
+                width: 100%;
                 border: none;
                 vertical-align: middle;
                 line-height: 33px;
@@ -2790,7 +2792,7 @@ button.cal{
                             input[type="text"],input[type="number"]{
                                 line-height: 35px;
                                 height: 33px;
-                                width: 126px;
+                                width: 100px;
                                 font-size: 15px;
                                 text-align: right;
                                 padding: 0 15px;

@@ -10,7 +10,7 @@
           <p class="mt10"><input type="checkbox" id="chk4" :checked="isCheckNts" @click="clickCheck('nts')"><label for="chk4">국세청</label></p>
         </div>
 
-        <div class="cert-wrap" v-if="isCheckStock">
+        <div class="pb90" v-if="isCheckStock">
           <p class="mt40">증권사 연계를 위하여 이메일입력과 정보제공 동의가 필요합니다.</p>
           <h3 class="mt15">이메일</h3>
           <input type="text" class="mt15" v-model="emailtext" v-validate="'required'" autocomplete="off" placeholder="이메일을 입력하세요" data-vv-name='이메일'>
@@ -25,7 +25,7 @@
       </div>
 
       <div class="btn-wrap float" v-if="showButton">
-        <a href="#" class="btn-next" @click="clickNext()">다음</a>
+        <a class="btn-next" @click="clickNext()">다음</a>
       </div>
     </section>
     <vue-modal transitionName="zoom-in" name="my-modal" v-on:popclose="closePop()">

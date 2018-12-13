@@ -37,6 +37,11 @@ public class GoodsManagerImpl implements GoodsManager {
 	private FinsetManager finsetManager;
 	
 	@Override
+	public List<GoodsVO> listGoodsAllianceAll(GoodsForm goodsForm) {
+		return goodsMapper.listGoodsAllianceAll(goodsForm);
+	}
+		
+	@Override
 	public List<GoodsVO> listGoodsAllianceCredit(GoodsForm goodsForm) {
 		return goodsMapper.listGoodsAllianceCredit(goodsForm);
 	}

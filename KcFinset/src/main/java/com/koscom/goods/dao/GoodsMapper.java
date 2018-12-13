@@ -7,6 +7,12 @@ import com.koscom.goods.model.GoodsForm;
 import com.koscom.goods.model.GoodsVO;
 
 public interface GoodsMapper {
+	/**
+	 * 제휴사 상품목록 조회(전체)
+	 * @param goodsVO
+	 * @return
+	 */
+	List<GoodsVO> listGoodsAllianceAll(GoodsForm goodsForm);
 	
 	/**
 	 * 제휴사 상품목록 조회(개인신용)

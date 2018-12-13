@@ -65,14 +65,18 @@ public class KcbController {
 		if(creditInfoList != null && creditInfoList.size() > 0)	{
 			logger.info("creditInfoList.size() : "+creditInfoList.size());
 			for(CreditInfo creditInfoVO : creditInfoList) {
+				
+				logger.info("creditInfoVO.getCdCbResponse() : "+creditInfoVO.getCdCbResponse());
 				//KCB 등록 정상 처리 내역이 있을 경우 등록 절차 스킵
 				if("0000".equals(creditInfoVO.getCdCbResponse()))	{
+					logger.info("equals(creditInfoVO.getCdCbResponse()) true" );
 					kcbRegFlag = false;
 				}
 			}
 		}
 		String profile  = environment.getProperty("service.profile");
-		logger.info("profile === " + profile + " === " + kcbRegFlag);
+		logger.info("kcbRegFlag : " + kcbRegFlag + " profile : " + profile + " == " + kcbRegFlag);
+		
 		//KCB 미등록일 경우 등록 절차 수행(로컬에서는 미수행)
 		if(kcbRegFlag && !"LOCAL".equals(profile))	{
 			//KCB 회원 등록 처리
@@ -93,7 +97,7 @@ public class KcbController {
 			//등록 실패
 			if (returnClas.getCd_result() == Constant.FAILED)	{
 				logger.error("600 전문 처리 실패");
-				model.addAttribute("returnData", Constant.FAILED);
+				model.addAttribute("result", Constant.FAILED);
 				return "jsonView";
 			}
 			logger.info("600 전문 처리 완료");
@@ -114,12 +118,16 @@ public class KcbController {
 		}
 		kcbReqNonfiInfoVO.setStatus("02");  //01: 대기, 02: 요청, 03: 전송성공, 04: 전송실패
 		kcbReqNonfiInfoVO.setDt_req(DateUtil.getCurrentDate());
-		if(kcbManager.updateKcbReqNonfiInfo(kcbReqNonfiInfoVO) > 0)	{
-			model.addAttribute("returnData", Constant.SUCCESS);
+		if( kcbManager.updateKcbReqNonfiInfo(kcbReqNonfiInfoVO) > 0)	{
+			model.addAttribute("result", Constant.SUCCESS);
 		}
 		else	{
-			model.addAttribute("returnData", Constant.FAILED);
+			model.addAttribute("result", Constant.FAILED);
 		}
+				
+		
+		
+		
 		return "jsonView";
 	}
 }

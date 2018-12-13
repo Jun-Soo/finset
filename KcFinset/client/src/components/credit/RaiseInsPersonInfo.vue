@@ -207,7 +207,7 @@ export default {
           _this.resultKeypad(param.encPwd);
         });
       } else if (Constant.userAgent == "Android") {
-        window.Android.showSecureKeypad("numeric", 7, "주민등록번호 뒷자리");
+        window.Android.showSecureKeypad("numeric", 7, 7, "주민등록번호 뒷자리");
       }
     },
     resultKeypad: function(encPwd) {

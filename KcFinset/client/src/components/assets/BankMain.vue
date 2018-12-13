@@ -237,7 +237,7 @@ export default {
       if ("act" == menu) {
         this.$router.push({
           name: "assetsBankActDetail",
-          params: {
+          query: {
             no_person: no_person,
             nm_person: nm_person,
             no_account: no_account,

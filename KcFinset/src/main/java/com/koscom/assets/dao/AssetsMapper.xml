@@ -372,6 +372,7 @@
         /* com.koscom.assets.dao.AssetsMapper.listAssetsBankActTrns - 자산관리(은행 계좌상세 - 입출금내역) */
        	SELECT
     		DT_TRD,
+    		TM_TRD,
 			AMT_WDRL,
 			AMT_DEP,
 			BALANCE,
@@ -383,6 +384,7 @@
     	FROM (
     		SELECT
 				LST.DT_TRD,
+				LST.TM_TRD,
 				LST.AMT_WDRL,
 				LST.AMT_DEP,
 				LST.BALANCE,
@@ -394,6 +396,7 @@
     		FROM (
     			SELECT
 					STD.DT_TRD,
+					STD.TM_TRD,
 					STD.AMT_WDRL,
 					STD.AMT_DEP,
 					STD.BALANCE,
@@ -419,6 +422,7 @@
 			(
 			SELECT
 				STD.DT_TRD,
+				STD.TM_TRD,
 				STD.AMT_WDRL,
 				STD.AMT_DEP,
 				STD.BALANCE,

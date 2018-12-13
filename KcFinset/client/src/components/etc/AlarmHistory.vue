@@ -59,7 +59,7 @@ export default {
   beforeMount() {},
   mounted() {
     let _this = this;
-    if (_this.totalPage >= _this.page) {
+    if (_this.totalPage >= _this.page) { 
       Common.pagination(this.getListNotification);
     }
   },

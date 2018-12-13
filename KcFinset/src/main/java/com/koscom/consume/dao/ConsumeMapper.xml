@@ -386,7 +386,7 @@
 	</update>
 	<select id="listPersonTransDetail" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.PersonTransDetailVO">
 		SELECT
-			 XX1.DEC_VARCHAR2_SEL(AN, '10','FS_ARIA','SCR_TRANSACTION_DETAIL','AN') AS AN
+			 XX1.DEC_VARCHAR2_SEL(STD.AN, '10','FS_ARIA','SCR_TRANSACTION_DETAIL','AN') AS AN
 			,SBAAI.NM_AN
 			,STD.DT_TRD
 			,STD.TM_TRD

@@ -5,7 +5,7 @@
       <div v-if="idx==0 || (idx!=0&&item.dt_frt!=alarmList[idx-1].dt_frt)">
         <p class="date">{{formatDateDot(item.dt_frt)}}</p>
         <div>
-          <div class="alarm-list">
+          <div class="alarm-list"> 
             <div class="item" v-for="_item in alarmList" :key="_item.rnum" v-if="_item.dt_frt==item.dt_frt">
               <a v-if="_item.link_addr!=null||_item.link_addr!=undefined" @click="moveDetailPage(_item.link_addr)">
                 <p v-if="_item.push_divcd=='02'" class="ico alarm-credit">{{_item.title}}</p> 

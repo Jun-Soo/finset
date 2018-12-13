@@ -1706,7 +1706,6 @@
 					,#{cd_fc				, jdbcType = VARCHAR}
 					,#{nm_card				, jdbcType = VARCHAR}
 					,XX1.ENC_VARCHAR2_INS(#{no_card, jdbcType = VARCHAR}, '11', 'FS_ARIA', 'CONSUME_INFO', 'NO_CARD')
-					,#{no_card				, jdbcType = VARCHAR}
 					,#{type_card			, jdbcType = VARCHAR}
 					,#{dt_trd				, jdbcType = VARCHAR}
 					,#{tm_trd				, jdbcType = VARCHAR}
@@ -1779,7 +1778,6 @@
 					,#{means_consume		, jdbcType = VARCHAR}
 					,#{cd_fc				, jdbcType = VARCHAR}
 					,#{nm_card				, jdbcType = VARCHAR}
-					,#{no_card				, jdbcType = VARCHAR}
 					,#{no_card				, jdbcType = VARCHAR}
 					,#{type_card			, jdbcType = VARCHAR}
 					,#{dt_trd				, jdbcType = VARCHAR}

@@ -208,7 +208,7 @@ export default {
           }
 
           _this.currentDate = response.data.currentDate;
-          _this.scKeywordList = response.data.scKeywordList;
+          _this.getScKeywordList();
 
           //store값 셋팅
           //날짜유형
@@ -280,6 +280,7 @@ export default {
       var _this = this;
       _this.scTrnsType = option;
       console.log(option);
+      _this.getScKeywordList();
       _this.searchDepWdrlList();
     },
     //datePicker
@@ -304,7 +305,23 @@ export default {
       _this.closeScKeywordMd();
       _this.searchDepWdrlList();
     },
+    //키워드목록 조회
+    getScKeywordList: function() {
+      var _this = this;
 
+      console.log("scTrnsType" + _this.scTrnsType.value);
+
+      var formData = new FormData();
+      formData.append("scTrnsType", _this.scTrnsType.value);
+      this.$http
+        .post("/m/assets/getAssetsBankScKeywordList.json", formData)
+        .then(response => {
+          _this.scKeywordList = response.data.scKeywordList;
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+        });
+    },
     //검색
     searchDepWdrlList: function() {
       var _this = this;

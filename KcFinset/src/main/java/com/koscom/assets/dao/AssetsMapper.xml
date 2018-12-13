@@ -337,10 +337,22 @@
 					) AS RK
 				FROM
 					SCR_TRANSACTION_DETAIL
-				WHERE
-					NO_PERSON = #{no_person, jdbcType=VARCHAR}
+				WHERE 1=1
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_person)">
+						AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					</if>
 					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_account)">
 			    		AND AN = XX1.ENC_VARCHAR2_INS(#{no_account, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SCR_TRANSACTION_DETAIL', 'AN')
+					</if>
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(scTrnsType)">
+					<choose>
+			   			<when test="'01'.equals(scTrnsType)">	<!-- 입금 -->
+							AND AMT_DEP != '0'
+						</when>
+						<when test="'02'.equals(scTrnsType)">	<!-- 출금 -->
+							AND AMT_WDRL != '0'
+						</when>
+					</choose>
 					</if>
 				GROUP BY
 					DOC1

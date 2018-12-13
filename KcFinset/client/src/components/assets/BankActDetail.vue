@@ -155,8 +155,7 @@ export default {
             "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + assetsInfo.cd_fc;
           _this.assetsInfo = assetsInfo;
 
-          _this.scKeywordList = response.data.scKeywordList;
-
+          _this.getScKeywordList();
           _this.searchActTrnsList();
         })
         .catch(e => {
@@ -177,6 +176,7 @@ export default {
       var _this = this;
       _this.scTrnsType = option;
       console.log(option);
+      _this.getScKeywordList();
       _this.searchActTrnsList();
     },
     //검색키워드
@@ -193,6 +193,25 @@ export default {
       _this.scKeyword = doc1;
       _this.closeScKeywordMd();
       _this.searchActTrnsList();
+    },
+    //키워드목록 조회
+    getScKeywordList: function() {
+      var _this = this;
+
+      console.log("scTrnsType" + _this.scTrnsType.value);
+
+      var formData = new FormData();
+      formData.append("no_person", this.$route.query.no_person);
+      formData.append("no_account", this.$route.query.no_account);
+      formData.append("scTrnsType", _this.scTrnsType.value);
+      this.$http
+        .post("/m/assets/getAssetsBankScKeywordList.json", formData)
+        .then(response => {
+          _this.scKeywordList = response.data.scKeywordList;
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+        });
     },
     //입출금 내역 조회
     searchActTrnsList: function() {

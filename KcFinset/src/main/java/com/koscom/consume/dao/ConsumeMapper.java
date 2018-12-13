@@ -326,10 +326,16 @@ public interface ConsumeMapper {
 	void deleteConsumeInfo(ConsumeForm consumeForm);
 	
 	/**
-	 * 소비지출내역 생성
+	 * 소비지출내역 생성(계좌)
 	 * @param consumeVO
 	 */
-	void createConsumeInfo(ConsumeVO consumeVO);
+	void createConsumeInfoAcc(ConsumeVO consumeVO);
+
+	/**
+	 * 소비지출내역 생성(계좌 제외)
+	 * @param consumeVO
+	 */
+	void createConsumeInfoOthers(ConsumeVO consumeVO);
 	
 	/**
 	 * 배너 데이터 조회

@@ -18,11 +18,11 @@
           </div>
         </div>
       </div>
-      <a class="btn" v-if="!isScrap">카드를 등록하고 간편하게 조회하세요</a>
+      <a class="btn" v-if="!isScrap" @click="goCtrlFcLink">카드를 등록하고 간편하게 조회하세요</a>
     </div>
 
     <div class="box-list list01">
-      <div class="filter-wrap">
+      <div class="filter-wrap" v-if="shareList.length != 1">
         <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
           <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
         </div>
@@ -35,7 +35,9 @@
         <div class="top">
           <p class="symbol"><img :src="payment.imgSrc" alt="" />{{payment.nm_fc}}</p>
           <!-- <p class="text"><span class="circle" :class="settingList[shareList.findIndex(person => person.no_person === payment.no_person)].color">{{payment.nm_person.substring(payment.nm_person.length-2)}}</span></p> -->
-          <p class="text"><span class="circle" :class="settingList[shareList.findIndex(person => person.no_person === payment.no_person)].color">{{payment.nm_person}}</span></p>
+          <p class="text" v-if="shareList.length != 1">
+            <span class="circle" :class="settingList[shareList.findIndex(person => person.no_person === payment.no_person)].color">{{payment.nm_person}}</span>
+          </p>
         </div>
         <div class="number-wrap">
           <div class="left">
@@ -196,6 +198,9 @@ export default {
     },
     formatDateDot: function(date) {
       return Common.formatDateDot(date);
+    },
+    goCtrlFcLink: function() {
+      this.$router.push("/scrap/CtrlFcLink");
     }
   }
 };

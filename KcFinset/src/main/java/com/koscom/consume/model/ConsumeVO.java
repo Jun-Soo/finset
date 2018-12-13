@@ -13,7 +13,7 @@ public class ConsumeVO implements Serializable{
 	private String 	no_person;					// 회원관리번호
 	private int		seq_consume;				// 일련번호
 	private String 	type_in_out;				// 수입지출구분 - 01:수입, 02:지출
-	private String 	means_consume;				// 소비수단항목 - 01:카드, 02:현금, 03:입출금계좌
+	private String 	means_consume;				// 소비수단항목 - 01:카드, 02:현금, 03:현금영수증, 04:입출금계좌
 	private String 	cd_fc;						// 금융사코드
 	private String	nm_card;					// 카드(은행)명
 	private String	no_card;					// 카드(계좌)번호

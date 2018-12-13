@@ -920,7 +920,7 @@
 						 #{no_person, jdbcType = VARCHAR} AS NO_PERSON
 						,CD_FC
 						,NULL AS NO_CARD
-						,NULL AS NO_CARD
+						,NULL AS NM_CARD
 						,'03' AS CODE_VALUE
 					FROM
 						FC_INFO
@@ -1705,6 +1705,14 @@
 					,#{means_consume		, jdbcType = VARCHAR}
 					,#{cd_fc				, jdbcType = VARCHAR}
 					,#{nm_card				, jdbcType = VARCHAR}
+					<choose>
+						<when test="@com.koscom.util.MybatisUtil@contains('04', means_consume">
+							,XX1.ENC_VARCHAR2_INS(#{no_card, jdbcType = VARCHAR}, '11', 'FS_ARIA', 'CONSUME_INFO', 'NO_CARD')
+						</when>
+						<otherwise>
+							,#{no_card		, jdbcType = VARCHAR}
+						</otherwise>
+					</choose>
 					,#{no_card				, jdbcType = VARCHAR}
 					,#{type_card			, jdbcType = VARCHAR}
 					,#{dt_trd				, jdbcType = VARCHAR}

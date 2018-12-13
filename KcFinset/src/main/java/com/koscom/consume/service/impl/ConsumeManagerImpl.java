@@ -428,7 +428,11 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	@Override
 	public void createConsumeInfo(ConsumeVO consumeVO) {
 		logger.debug("createConsumeInfo");
-		consumeMapper.createConsumeInfo(consumeVO);
+		if("04".equals(consumeVO.getMeans_consume())) {
+			consumeMapper.createConsumeInfoAcc(consumeVO);
+		} else {
+			consumeMapper.createConsumeInfoOthers(consumeVO);
+		}
 	}
 
 	@Override

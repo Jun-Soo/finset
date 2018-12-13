@@ -1660,7 +1660,7 @@
 				</choose>
 	</update>
 	
-	<insert id="createConsumeInfo" parameterType="com.koscom.consume.model.ConsumeVO">
+	<insert id="createConsumeInfoAcc" parameterType="com.koscom.consume.model.ConsumeVO">
 		<selectKey keyProperty="seq_consume" resultType="java.lang.Integer" order="BEFORE">
 			(SELECT NVL(MAX(SEQ_CONSUME),0)+1 FROM CONSUME_INFO)
 		</selectKey>
@@ -1705,14 +1705,7 @@
 					,#{means_consume		, jdbcType = VARCHAR}
 					,#{cd_fc				, jdbcType = VARCHAR}
 					,#{nm_card				, jdbcType = VARCHAR}
-					<choose>
-						<when test="@com.koscom.util.MybatisUtil@contains('04', means_consume">
-							,XX1.ENC_VARCHAR2_INS(#{no_card, jdbcType = VARCHAR}, '11', 'FS_ARIA', 'CONSUME_INFO', 'NO_CARD')
-						</when>
-						<otherwise>
-							,#{no_card		, jdbcType = VARCHAR}
-						</otherwise>
-					</choose>
+					,XX1.ENC_VARCHAR2_INS(#{no_card, jdbcType = VARCHAR}, '11', 'FS_ARIA', 'CONSUME_INFO', 'NO_CARD')
 					,#{no_card				, jdbcType = VARCHAR}
 					,#{type_card			, jdbcType = VARCHAR}
 					,#{dt_trd				, jdbcType = VARCHAR}
@@ -1740,6 +1733,81 @@
 					,SYSDATE
 				)
 	</insert>
+	
+	<insert id="createConsumeInfoOthers" parameterType="com.koscom.consume.model.ConsumeVO">
+		<selectKey keyProperty="seq_consume" resultType="java.lang.Integer" order="BEFORE">
+			(SELECT NVL(MAX(SEQ_CONSUME),0)+1 FROM CONSUME_INFO)
+		</selectKey>
+			INSERT INTO
+				CONSUME_INFO(
+					 NO_PERSON
+					,SEQ_CONSUME
+					,TYPE_IN_OUT
+					,MEANS_CONSUME
+					,CD_FC
+					,NM_CARD
+					,NO_CARD
+					,TYPE_CARD
+					,DT_TRD
+					,TM_TRD
+					,NO_BIZ
+					,NM_BIZ
+					,CD_CLASS
+					,CD_TYPE
+					,CONTENTS
+					,MEMO
+					,GRADE
+					,AMT_IN_OUT
+					,NO_APPROVAL
+					,MON_INSTALLMENT
+					,MON_REMAINING
+					,YN_PAY_INSTALLMENT
+					,YN_CANCEL
+					,YN_DELETE
+					,YN_AUTO
+					,YN_BUDGET_EXCEPT
+					,YN_PERSON_REGIST
+					,ID_FRT
+					,DT_FRT
+					,ID_LST
+					,DT_LST
+				)
+				VALUES (
+					 #{no_person			, jdbcType = VARCHAR}
+					,#{seq_consume}
+					,#{type_in_out			, jdbcType = VARCHAR}
+					,#{means_consume		, jdbcType = VARCHAR}
+					,#{cd_fc				, jdbcType = VARCHAR}
+					,#{nm_card				, jdbcType = VARCHAR}
+					,#{no_card				, jdbcType = VARCHAR}
+					,#{no_card				, jdbcType = VARCHAR}
+					,#{type_card			, jdbcType = VARCHAR}
+					,#{dt_trd				, jdbcType = VARCHAR}
+					,#{tm_trd				, jdbcType = VARCHAR}
+					,#{no_biz				, jdbcType = VARCHAR}
+					,#{nm_biz				, jdbcType = VARCHAR}
+					,#{cd_class				, jdbcType = VARCHAR}
+					,#{cd_type				, jdbcType = VARCHAR}
+					,#{contents				, jdbcType = VARCHAR}
+					,#{memo					, jdbcType = VARCHAR}
+					,#{grade				, jdbcType = VARCHAR}
+					,#{amt_in_out			, jdbcType = VARCHAR}
+					,#{no_approval			, jdbcType = VARCHAR}
+					,#{mon_installment		, jdbcType = VARCHAR}
+					,#{mon_remaining		, jdbcType = VARCHAR}
+					,#{yn_pay_installment	, jdbcType = VARCHAR}
+					,#{yn_cancel			, jdbcType = VARCHAR}
+					,#{yn_delete			, jdbcType = VARCHAR}
+					,#{yn_auto				, jdbcType = VARCHAR}
+					,#{yn_budget_except		, jdbcType = VARCHAR}
+					,#{yn_person_regist		, jdbcType = VARCHAR}
+					,#{no_person			, jdbcType = VARCHAR}
+					,SYSDATE
+					,#{no_person			, jdbcType = VARCHAR}
+					,SYSDATE
+				)
+	</insert>
+	
 	<select id="getBannerData" parameterType="com.koscom.consume.model.ConsumeVO" resultType="java.lang.Integer">
 		SELECT
 			NVL( COUNT( 1 ), 0 )

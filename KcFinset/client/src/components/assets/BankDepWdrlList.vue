@@ -304,6 +304,34 @@ export default {
       _this.closeScKeywordMd();
       _this.searchDepWdrlList();
     },
+
+    //검색
+    searchDepWdrlList: function() {
+      var _this = this;
+      if (!_this.validBankDepWdrlList()) return false;
+      _this.page = 1;
+      _this.depWdrlList = [];
+      _this.getDepWdrlTotalAmt();
+      Common.pagination(_this.listDepWdrl);
+    },
+    validBankDepWdrlList: function() {
+      var _this = this;
+      var txt_dt_from = Common.formatDateDB(_this.txt_dt_from);
+      var txt_dt_to = Common.formatDateDB(_this.txt_dt_to);
+      if (txt_dt_from == "" && txt_dt_to != "") {
+        _this.$toast.center("조회 시작일을 입력해 주세요");
+        return false;
+      }
+      if (txt_dt_from != "" && txt_dt_to == "") {
+        _this.$toast.center("조회 종료일을 입력해 주세요");
+        return false;
+      }
+      if (Number(txt_dt_from) > Number(txt_dt_to)) {
+        _this.$toast.center("조회 시작일이 종료일보다 큽니다");
+        return false;
+      }
+      return true;
+    },
     //입금 / 출금 총액
     getDepWdrlTotalAmt: function() {
       var _this = this;
@@ -347,14 +375,6 @@ export default {
     },
     getCodeName: function(code_group, code_value) {
       return Common.getCodeName(code_group, code_value);
-    },
-    //검색
-    searchDepWdrlList: function() {
-      var _this = this;
-      _this.page = 1;
-      _this.depWdrlList = [];
-      _this.getDepWdrlTotalAmt();
-      Common.pagination(_this.listDepWdrl);
     },
     //입출금list
     listDepWdrl: function(callback) {

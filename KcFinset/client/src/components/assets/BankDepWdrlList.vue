@@ -63,7 +63,7 @@
         <div v-else class="nobox-list">
           <template v-for="depWdrlInfo in depWdrlList">
             <p :key="depWdrlInfo.index" v-if="depWdrlInfo.dateCol" class="date">{{formatDateDot(depWdrlInfo.dt_trd)}}</p>
-            <div :key="depWdrlInfo.index" @click="viewDetail(depWdrlInfo.no_person, depWdrlInfo.no_account, depWdrlInfo.dt_trd, depWdrlInfo.tm_trd, depWdrlInfo.rk);" class="item">
+            <div :key="depWdrlInfo.index" @click="viewDetail(depWdrlInfo.no_person, depWdrlInfo.an, depWdrlInfo.dt_trd, depWdrlInfo.tm_trd, depWdrlInfo.rk);" class="item">
               <div class="flex">
                 <p><em v-if="yn_share=='Y'" class="circle" :class="colorList[depWdrlInfo.rk]">{{depWdrlInfo.nm_person}}</em><em>{{depWdrlInfo.doc1}}</em></p>
                 <p v-if="'0'!=depWdrlInfo.amt_dep"><em class="number blue">{{formatNumber(depWdrlInfo.amt_dep)}}</em>원</p>
@@ -458,7 +458,7 @@ export default {
         });
     },
     //상세페이지로 이동
-    viewDetail: function(no_person, no_account, dt_trd, tm_trd, rk) {
+    viewDetail: function(no_person, an, dt_trd, tm_trd, rk) {
       var _this = this;
 
       //store 검색조건 유지
@@ -473,7 +473,7 @@ export default {
         name: "assetsBankDepWdrlDetail",
         query: {
           no_person: no_person,
-          no_account: no_account,
+          no_account: an,
           dt_trd: dt_trd,
           tm_trd: tm_trd,
           rk: rk

@@ -17,7 +17,7 @@
         </li>
         <li>
           <img v-if="boardImgInfo.img_files!=null" :src="getImgUrl(boardImgInfo)" v-bind:alt="boardImgInfo" width="80" />
-          {{boardInfo.content}}
+          <div v-html="boardInfo.content"></div>
         </li>
       </ul>
     </div>

@@ -4,11 +4,11 @@
       <ul>
         <li>
           <p><em>방해금지모드</em>소리/진동 없이 알림 받기</p>
-          <p><button v-bind:class="personVo.cd_push==='0'?btnOn:btnOff" name="notAlarm" @click="allChkPush"></button></p>
+          <p><button v-bind:class="personVo.cd_push=='0'?btnOn:btnOff" name="notAlarm" @click="allChkPush"></button></p>
         </li>
       </ul>
       <ul id="pushes" name="pushes">
-        <li v-for="cdPush in cdPushes" :key="cdPush.code_value">
+        <li v-if="cdPush.yn_use=='Y'" v-for="cdPush in cdPushes" :key="cdPush.code_value">
           <p><em>{{cdPush.nm_code}}</em>{{cdPush.etc}}</p>
           <p><button v-bind:id='cdPush.code_value' v-bind:name='"each_push"+cdPush.code_value' v-for="pushSetting in pushSettings" :key="pushSetting.item_push" v-if="pushSetting.item_push===cdPush.code_value" :class="pushSetting.yn_push==='Y' ? btnOn:btnOff" @click="eachChkPush"></button></p>
         </li>
@@ -37,7 +37,7 @@ export default {
       item_push: "", //each-푸시항목명
       stat_push: "", //each푸시 yn 체크
       yn_push: "", //all푸시 yn체크,
-      seen :false
+      seen: false
     };
   },
   components: {},
@@ -57,7 +57,7 @@ export default {
         for (var i = 0; i < _this.cdPushes.length; i++) {
           _this.cList.push(_this.cdPushes[i].code_value);
         }
-        _this.seen=true;
+        _this.seen = true;
       });
   },
   beforeMount() {},
@@ -151,7 +151,9 @@ export default {
             contentType: "application/x-www-form-urlencoded; charset=UTF-8"
           }
         })
-        .then(response => {})
+        .then(response => {
+          _this.personVo = response.data.personVO;
+        })
         .catch(e => {
           this.$toast.center(ko.messages.error);
         });

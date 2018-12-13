@@ -61,6 +61,8 @@ export default {
     //     "/m/customercenter/getCustomerCenterMain.json"
     //   );
     // }
+
+    this.$store.state.header.backPath = "/mypage/info";
   },
   beforeMount() {},
   mounted() {},

@@ -16,17 +16,17 @@
     <div v-else-if="this.$store.state.header.type == 'sub'" id='header' class="sub-top">
       <a @click="clickBack" class="btn-back"></a>
       <p class="title">{{this.$store.state.title}}</p>
-      <a v-if="isSetting" @click="$router.go('')" class="setting"></a>
+      <a v-if="isSetting" @click="$router.push('/mypage/regAlarm')" class="setting"></a>
     </div>
     <div v-if="this.$store.state.header.type == 'noHeader'" id='header' class="sub-top">
       <p class="title">{{this.$store.state.title}}</p>
-      <a v-if="isSetting" @click="$router.go('/mypage/regAlarm')" class="setting"></a>
+      <a v-if="isSetting" @click="$router.push('/mypage/regAlarm')" class="setting"></a>
     </div>
   </div>
   <div v-else>
     <div id='header' class="sub-top">
       <p class="title">{{this.$store.state.title}}</p>
-      <a v-if="isSetting" @click="$router.go('/mypage/regAlarm')" class="setting"></a>
+      <a v-if="isSetting" @click="$router.push('/mypage/regAlarm')" class="setting"></a>
     </div>
   </div>
 </template>

@@ -3,6 +3,63 @@
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.koscom.goods.dao.GoodsMapper">
+	<select id="listGoodsAllianceAll" parameterType="com.koscom.goods.model.GoodsForm" resultType="com.koscom.goods.model.GoodsVO">
+    /* com.koscom.goods.dao.GoodsMapper.listGoodsAllianceCredit  */
+		SELECT GI.CD_GOODS
+			,GI.CD_FC
+			,FI.NM_FC
+			,GI.DESC_FEATURE
+			,GI.KEYWORD_LIST
+			,GI.CD_GOODS_CLASS_L
+			,GI.CD_GOODS_CLASS_M
+			,GI.NM_GOODS
+			,GI.CD_TYPE_INTEREST
+			,GI.RTO_INTEREST_FROM
+			,GI.RTO_INTEREST_TO
+			,GI.AMT_LIMIT
+			,GI.CD_LOAN_TERM
+			,GI.DELIBERATE
+			,(CASE WHEN(	SELECT COUNT(*)
+							FROM COOCON_GOODS_FAVORITE_INFO CGFI
+							WHERE CGFI.CD_FC = GI.CD_FC
+								AND CGFI.CD_NON_GOODS = GI.CD_GOODS
+								AND CGFI.YN_ALLIANCE = 'Y'
+								AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			)> 0 THEN 'Y'
+			ELSE 'N' END) AS YN_FAVORITE
+		FROM (SELECT A.CD_GOODS
+				,A.CD_FC
+				,A.DESC_FEATURE
+				,A.KEYWORD_LIST
+				,A.CD_GOODS_CLASS_L
+				,A.CD_GOODS_CLASS_M
+				,A.NM_GOODS
+				,A.CD_TYPE_INTEREST
+				,A.RTO_INTEREST_FROM
+				,A.RTO_INTEREST_TO
+				,A.AMT_LIMIT
+				,A.CD_LOAN_TERM
+				,A.DELIBERATE
+			FROM GOODS_INFO A
+			WHERE A.YN_USE = 'Y'
+			) GI
+			LEFT OUTER JOIN FC_INFO FI ON
+				GI.CD_FC = FI.CD_FC
+		ORDER BY
+		<choose>
+		<when test="'01'.equals(orderby)">
+			TO_NUMBER(RTO_INTEREST_FROM) ASC/*금리낮은순*/,
+		</when>
+		<when test="'02'.equals(orderby)">
+			TO_NUMBER(AMT_LIMIT) DESC /*한도높은순*/,
+		</when>
+		<when test="'03'.equals(orderby)">
+			TO_NUMBER(NVL(CD_LOAN_TERM,'-1')) DESC/*기간높은순*/,
+		</when>
+		</choose>
+		YN_FAVORITE       DESC
+	</select>
+	
 	<select id="listGoodsAllianceCredit" parameterType="com.koscom.goods.model.GoodsForm" resultType="com.koscom.goods.model.GoodsVO">
     /* com.koscom.goods.dao.GoodsMapper.listGoodsAllianceCredit  */
     <![CDATA[

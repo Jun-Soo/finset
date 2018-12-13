@@ -581,6 +581,7 @@ public class ConsumeController {
     	logger.debug("createConsumeInfo");
     	String no_person = (String) session.getAttribute("no_person");
     	consumeVO.setNo_person(no_person);
+    	logger.debug(consumeVO.toString());
     	consumeManager.createConsumeInfo(consumeVO);
     	return "jsonView";
     }

@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import moment from "moment";
+import moment, { weekdays } from "moment";
 import { EventBus } from "../EventBus";
 import EventItem from "../EventItem";
 import IsView from "../mixins/IsView";
@@ -43,6 +43,8 @@ export default {
     };
   },
   mounted() {
+    moment.locale("ko");
+    this.weekdays = moment.weekdaysShort();
     this.buildCalendar();
   },
   methods: {

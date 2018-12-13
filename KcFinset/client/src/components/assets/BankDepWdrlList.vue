@@ -63,7 +63,7 @@
         <div v-else class="nobox-list">
           <template v-for="depWdrlInfo in depWdrlList">
             <p :key="depWdrlInfo.index" v-if="depWdrlInfo.dateCol" class="date">{{formatDateDot(depWdrlInfo.dt_trd)}}</p>
-            <div :key="depWdrlInfo.index" @click="viewDetail(depWdrlInfo.no_person, depWdrlInfo.no_account, depWdrlInfo.dt_trd, depWdrlInfo.tm_trd, depWdrlInfo.rk);" class="item">
+            <div :key="depWdrlInfo.index" @click="viewDetail(depWdrlInfo.no_person, depWdrlInfo.an, depWdrlInfo.dt_trd, depWdrlInfo.tm_trd, depWdrlInfo.rk);" class="item">
               <div class="flex">
                 <p><em v-if="yn_share=='Y'" class="circle" :class="colorList[depWdrlInfo.rk]">{{depWdrlInfo.nm_person}}</em><em>{{depWdrlInfo.doc1}}</em></p>
                 <p v-if="'0'!=depWdrlInfo.amt_dep"><em class="number blue">{{formatNumber(depWdrlInfo.amt_dep)}}</em>원</p>
@@ -208,7 +208,7 @@ export default {
           }
 
           _this.currentDate = response.data.currentDate;
-          _this.scKeywordList = response.data.scKeywordList;
+          _this.getScKeywordList();
 
           //store값 셋팅
           //날짜유형
@@ -280,6 +280,7 @@ export default {
       var _this = this;
       _this.scTrnsType = option;
       console.log(option);
+      _this.getScKeywordList();
       _this.searchDepWdrlList();
     },
     //datePicker
@@ -303,6 +304,50 @@ export default {
       _this.scKeyword = doc1;
       _this.closeScKeywordMd();
       _this.searchDepWdrlList();
+    },
+    //키워드목록 조회
+    getScKeywordList: function() {
+      var _this = this;
+
+      console.log("scTrnsType" + _this.scTrnsType.value);
+
+      var formData = new FormData();
+      formData.append("scTrnsType", _this.scTrnsType.value);
+      this.$http
+        .post("/m/assets/getAssetsBankScKeywordList.json", formData)
+        .then(response => {
+          _this.scKeywordList = response.data.scKeywordList;
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+        });
+    },
+    //검색
+    searchDepWdrlList: function() {
+      var _this = this;
+      if (!_this.validBankDepWdrlList()) return false;
+      _this.page = 1;
+      _this.depWdrlList = [];
+      _this.getDepWdrlTotalAmt();
+      Common.pagination(_this.listDepWdrl);
+    },
+    validBankDepWdrlList: function() {
+      var _this = this;
+      var txt_dt_from = Common.formatDateDB(_this.txt_dt_from);
+      var txt_dt_to = Common.formatDateDB(_this.txt_dt_to);
+      if (txt_dt_from == "" && txt_dt_to != "") {
+        _this.$toast.center("조회 시작일을 입력해 주세요");
+        return false;
+      }
+      if (txt_dt_from != "" && txt_dt_to == "") {
+        _this.$toast.center("조회 종료일을 입력해 주세요");
+        return false;
+      }
+      if (Number(txt_dt_from) > Number(txt_dt_to)) {
+        _this.$toast.center("조회 시작일이 종료일보다 큽니다");
+        return false;
+      }
+      return true;
     },
     //입금 / 출금 총액
     getDepWdrlTotalAmt: function() {
@@ -347,14 +392,6 @@ export default {
     },
     getCodeName: function(code_group, code_value) {
       return Common.getCodeName(code_group, code_value);
-    },
-    //검색
-    searchDepWdrlList: function() {
-      var _this = this;
-      _this.page = 1;
-      _this.depWdrlList = [];
-      _this.getDepWdrlTotalAmt();
-      Common.pagination(_this.listDepWdrl);
     },
     //입출금list
     listDepWdrl: function(callback) {
@@ -421,7 +458,7 @@ export default {
         });
     },
     //상세페이지로 이동
-    viewDetail: function(no_person, no_account, dt_trd, tm_trd, rk) {
+    viewDetail: function(no_person, an, dt_trd, tm_trd, rk) {
       var _this = this;
 
       //store 검색조건 유지
@@ -436,7 +473,7 @@ export default {
         name: "assetsBankDepWdrlDetail",
         query: {
           no_person: no_person,
-          no_account: no_account,
+          no_account: an,
           dt_trd: dt_trd,
           tm_trd: tm_trd,
           rk: rk

@@ -101,7 +101,7 @@
       </div>
 
     </section>
-    <vue-modal transitionName="fade" name="repModal">
+    <vue-modal transitionName="fade" name="repModal" :height="'auto'">
       <RepPop slot="body" :curRepay="curRepay" :close="closeRepPop" />
     </vue-modal>
 

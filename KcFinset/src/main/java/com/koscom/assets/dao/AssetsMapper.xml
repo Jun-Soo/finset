@@ -337,10 +337,22 @@
 					) AS RK
 				FROM
 					SCR_TRANSACTION_DETAIL
-				WHERE
-					NO_PERSON = #{no_person, jdbcType=VARCHAR}
+				WHERE 1=1
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_person)">
+						AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					</if>
 					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_account)">
 			    		AND AN = XX1.ENC_VARCHAR2_INS(#{no_account, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SCR_TRANSACTION_DETAIL', 'AN')
+					</if>
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(scTrnsType)">
+					<choose>
+			   			<when test="'01'.equals(scTrnsType)">	<!-- 입금 -->
+							AND AMT_DEP != '0'
+						</when>
+						<when test="'02'.equals(scTrnsType)">	<!-- 출금 -->
+							AND AMT_WDRL != '0'
+						</when>
+					</choose>
 					</if>
 				GROUP BY
 					DOC1
@@ -372,6 +384,7 @@
         /* com.koscom.assets.dao.AssetsMapper.listAssetsBankActTrns - 자산관리(은행 계좌상세 - 입출금내역) */
        	SELECT
     		DT_TRD,
+    		TM_TRD,
 			AMT_WDRL,
 			AMT_DEP,
 			BALANCE,
@@ -383,6 +396,7 @@
     	FROM (
     		SELECT
 				LST.DT_TRD,
+				LST.TM_TRD,
 				LST.AMT_WDRL,
 				LST.AMT_DEP,
 				LST.BALANCE,
@@ -394,6 +408,7 @@
     		FROM (
     			SELECT
 					STD.DT_TRD,
+					STD.TM_TRD,
 					STD.AMT_WDRL,
 					STD.AMT_DEP,
 					STD.BALANCE,
@@ -419,6 +434,7 @@
 			(
 			SELECT
 				STD.DT_TRD,
+				STD.TM_TRD,
 				STD.AMT_WDRL,
 				STD.AMT_DEP,
 				STD.BALANCE,
@@ -677,7 +693,7 @@
 					( SELECT NM_FC FROM FC_INFO WHERE CD_FC = SHAI.CD_FC ) AS NM_FC,
 					SHAI.CD_ASSETS_CLASS,
 					SHAI.CD_DETAIL_CLASS,
-					STD.AN,
+					XX1.DEC_VARCHAR2_SEL(STD.AN, '10','FS_ARIA','SCR_TRANSACTION_DETAIL','AN') AS AN,
 					STD.DT_TRD,
 					STD.TM_TRD,
 					STD.AMT_DEP,
@@ -690,7 +706,7 @@
 							AI.NO_PERSON,
 							( SELECT NM_PERSON FROM PERSON_INFO WHERE NO_PERSON = AI.NO_PERSON ) AS NM_PERSON,
 							0 AS RK,
-							XX1.DEC_VARCHAR2_SEL(AI.NO_ACCOUNT, '10','FS_ARIA','ASSETS_INFO','NO_ACCOUNT') AS NO_ACCOUNT,
+							AI.NO_ACCOUNT,
 							AI.NM_ACCOUNT,
 							AI.CD_FC,
 							AI.AMT_BALANCE,
@@ -711,7 +727,7 @@
 							SI.NO_PERSON,
 							SI.NM_PERSON,
 							SI.RK,
-							XX1.DEC_VARCHAR2_SEL(AI.NO_ACCOUNT, '10','FS_ARIA','ASSETS_INFO','NO_ACCOUNT') AS NO_ACCOUNT,
+							AI.NO_ACCOUNT,
 							AI.NM_ACCOUNT,
 							AI.CD_FC,
 							AI.AMT_BALANCE,

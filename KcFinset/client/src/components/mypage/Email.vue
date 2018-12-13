@@ -2,7 +2,7 @@
   <section v-if="seen">
     <div class="cert-wrap">
       <p class="title">이메일</p>
-      <input id="emailInput" type="text" v-model="email" v-validate="'required|max:11'" data-vv-name='이메일'>
+      <input id="emailInput" type="text" v-model="email" placeholder="이메일을 입력해주세요" v-validate="'required|max:11'" data-vv-name='이메일'>
       <p class="warn" v-if="errMsg">{{errMsg}}</p>
     </div>
 

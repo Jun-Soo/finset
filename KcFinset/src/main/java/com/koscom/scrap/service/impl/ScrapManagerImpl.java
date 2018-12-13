@@ -1331,7 +1331,7 @@ public class ScrapManagerImpl implements ScrapManager {
                         logger.debug("anAllVO.getEND_DATE      : "+ anAllVO.getEND_DATE());
                         if(anAllVO.getLIST() != null){
                             anAllVOLIST = anAllVO.getLIST();
-                        	String accountType = codeManager.getCodeName("cd_account_type","입출금계좌");
+                        	String accountType = codeManager.getCodeId("cd_account_type","입출금계좌");
                             for (AnAllListVO anAllListVO : anAllVOLIST) {
                                 logger.debug("anAllVO.ERROR_CODE    : "+ anAllListVO.getERROR_CODE());
                                 logger.debug("anAllVO.ERROR_MESSAGE : "+ anAllListVO.getERROR_MESSAGE());
@@ -1404,7 +1404,7 @@ public class ScrapManagerImpl implements ScrapManager {
                             ScrReqBankVO scrReqBankVO = new ScrReqBankVO();
                             scrReqBankVO.setNo_person(no_person);
                             scrReqBankVO.setCd_fc(cd_fc);
-                            scrReqBankVO.setCd_account(codeManager.getCodeName("cd_account_type","입출금계좌"));
+                            scrReqBankVO.setCd_account(codeManager.getCodeId("cd_account_type","입출금계좌"));
                             scrapMapper.insertScrReqBankHist(scrReqBankVO);
                          
                             //입출금 계좌 입출금 내역 Insert
@@ -1421,7 +1421,7 @@ public class ScrapManagerImpl implements ScrapManager {
                         logger.debug("depositAnVO.getERROR_MESSAGE :"+ depositAnVO.getERROR_MESSAGE());
                         if(depositAnVO.getLIST() != null){
                         	// 해당 고객의 예적금 계좌 중에 Insert된 계좌 상세내역의 날짜/시간 
-                        	String accountType = codeManager.getCodeName("cd_account_type","예적금계좌");
+                        	String accountType = codeManager.getCodeId("cd_account_type","예적금계좌");
                             depositAnVOLIST = depositAnVO.getLIST();
                             for (DepositAnListVO depositAnListVO : depositAnVOLIST) {
                                 logger.debug("depositAnListVO.getAN()       :" + depositAnListVO.getAN()       );
@@ -1492,7 +1492,7 @@ public class ScrapManagerImpl implements ScrapManager {
                             ScrReqBankVO scrReqBankVO = new ScrReqBankVO();
                             scrReqBankVO.setNo_person(no_person);
                             scrReqBankVO.setCd_fc(cd_fc);
-                            scrReqBankVO.setCd_account(codeManager.getCodeName("cd_account_type","예적금계좌"));
+                            scrReqBankVO.setCd_account(codeManager.getCodeId("cd_account_type","예적금계좌"));
                             scrapMapper.insertScrReqBankHist(scrReqBankVO);
                             
                              //예적금 계좌 입출금 내역 Insert
@@ -1504,7 +1504,7 @@ public class ScrapManagerImpl implements ScrapManager {
                     }
                     //펀드 계좌 내역
                     if(userBankOutputVO.getFUND_AN() != null){
-                    	String accountType = codeManager.getCodeName("cd_account_type","펀드계좌");
+                    	String accountType = codeManager.getCodeId("cd_account_type","펀드계좌");
                         FundAnVO fundAnVO = userBankOutputVO.getFUND_AN();
                         logger.debug("fundAnVO.getERROR_CODE()) :" +fundAnVO.getERROR_CODE());
                         logger.debug("fundAnVO.getERROR_MESSAGE(:"+ fundAnVO.getERROR_MESSAGE());
@@ -1537,7 +1537,7 @@ public class ScrapManagerImpl implements ScrapManager {
                     }
                     //대출 계좌 내역
                     if(userBankOutputVO.getLOAN_AN() != null){
-                    	String accountType = codeManager.getCodeName("cd_account_type","대출계좌");
+                    	String accountType = codeManager.getCodeId("cd_account_type","대출계좌");
                         LoanAnVO loanAnVO = userBankOutputVO.getLOAN_AN();
                         logger.debug("loanAnVO.getERROR_CODE    :" +loanAnVO.getERROR_CODE());
                         logger.debug("loanAnVO.getERROR_MESSAGE :"+ loanAnVO.getERROR_MESSAGE());
@@ -1798,7 +1798,7 @@ public class ScrapManagerImpl implements ScrapManager {
             		}
             	}
             	//카드조회 내역 History 저장 및 갱신  - 청구내역
-            	scrReqCardVO.setCd_type("03"); //01 보유카드현황, 02 승인내역, 03 청구내역, 	04 한도조회, 05 포인트조회
+            	scrReqCardVO.setCd_type("03"); //01 보유카드현황, 02 승인내역, 03 청구내역, 4 한도조회, 05 포인트조회
             	scrReqCardVO.setSeq_scraping_result(seq_scrap);
             	scrReqCardVO.setYmd_stt(userCardOutputVO.getDT_CHARGE_START());
             	scrReqCardVO.setYmd_end(userCardOutputVO.getDT_CHARGE_END());

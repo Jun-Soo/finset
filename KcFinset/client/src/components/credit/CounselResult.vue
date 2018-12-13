@@ -101,25 +101,27 @@ export default {
     deleteCounsel: function() {
       var _this = this;
 
-      Constant.options.title = "상담요청을 취소하시겠습니까?";
-      this.$dialogs.confirm("", Constant.options).then(res => {
-        if (res.ok) {
-          var formData = new FormData();
-          formData.append("counsel_seq", _this.counsel_seq);
+      Constant.options.title = "FINSET";
+      this.$dialogs
+        .confirm("상담요청을 취소하시겠습니까?", Constant.options)
+        .then(res => {
+          if (res.ok) {
+            var formData = new FormData();
+            formData.append("counsel_seq", _this.counsel_seq);
 
-          this.$http
-            .post("/m/credit/deleteCreditCounselInfo.json", formData)
-            .then(response => {
-              this.$toast.center(response.data.message);
-              if ("00" == response.data.result) {
-                _this.$router.push("/credit/counselMain");
-              }
-            })
-            .catch(e => {
-              this.$toast.center(ko.messages.error);
-            });
-        }
-      });
+            this.$http
+              .post("/m/credit/deleteCreditCounselInfo.json", formData)
+              .then(response => {
+                this.$toast.center(response.data.message);
+                if ("00" == response.data.result) {
+                  _this.$router.push("/credit/counselMain");
+                }
+              })
+              .catch(e => {
+                this.$toast.center(ko.messages.error);
+              });
+          }
+        });
     }
   }
 };

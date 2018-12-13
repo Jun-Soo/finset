@@ -2,7 +2,7 @@
   <div id="wrapper" v-if="seen">
     <VueScheduler v-if="isMonth" :events="events" event-display="name" @event-clicked="openDetail" :shareList="shareList" :clickShare="clickShare" :sumData="sumData" :type="type" :settingList="settingList" @curYM="curYM" ref="scheduler" />
 
-    <vue-modal name="my-modal" transitionName="fade" theme="width: 90%">
+    <vue-modal name="my-modal" transitionName="fade" theme="width: 90%" :height="'auto'">
       <EventPop slot="body" :modalDate="modalDate" :incomeList="incomeList" :consumeList="consumeList" :debtList="debtList" :incomeTotal="incomeTotal" :consumeTotal="consumeTotal" :debtTotal="debtTotal" :settingList="settingList" :shareList="shareList" />
     </vue-modal>
   </div>

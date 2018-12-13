@@ -36,7 +36,7 @@
         <div v-else class="nobox-list">
           <template v-for="trnsInfo in trnsList">
             <p :key="trnsInfo.index" v-if="trnsInfo.dateCol" class="date">{{formatDateDot(trnsInfo.dt_trd)}}</p>
-            <div :key="trnsInfo.index" class="item">
+            <div :key="trnsInfo.index" class="item" @click="viewDetail(trnsInfo.dt_trd, trnsInfo.tm_trd)">
               <div class="flex">
                 <p><em>{{trnsInfo.doc1}}</em></p>
                 <p v-if="'0'!=trnsInfo.amt_dep"><em class="number blue">{{formatNumber(trnsInfo.amt_dep)}}</em>원</p>
@@ -77,20 +77,20 @@ export default {
     return {
       seen: false,
       isShowScKeyword: false, //검색키워드 modal 보여주기
-      scKeywordList: [],
-      scKeyword: "",
-      scTrnsTypeOptions: [
-        { text: "전체", value: "" },
-        { text: "입금", value: "01" },
-        { text: "출금", value: "02" }
-      ],
-      scTrnsType: "",
       no_person: "", //회원번호
       nm_person: "", //회원명
       no_account: "", //계좌번호
       yn_share: "", //공유여부
       colorList: ["red", "orange", "green", "blue", "purple"],
       colorIndex: "",
+      scTrnsTypeOptions: [
+        { text: "전체", value: "" },
+        { text: "입금", value: "01" },
+        { text: "출금", value: "02" }
+      ],
+      scTrnsType: "",
+      scKeywordList: [],
+      scKeyword: "",
       assetsInfo: "",
       page: 1,
       trnsList: [] //입출금list
@@ -103,11 +103,32 @@ export default {
     this.$store.state.title = "계좌 상세";
   },
   created() {
-    this.no_person = this.$route.params.no_person;
-    this.nm_person = this.$route.params.nm_person;
-    this.no_account = this.$route.params.no_account;
-    this.yn_share = this.$route.params.yn_share;
-    this.colorIndex = this.$route.params.colorIndex;
+    this.no_person = this.$route.query.no_person;
+    this.nm_person = this.$route.query.nm_person;
+    this.no_account = this.$route.query.no_account;
+    this.yn_share = this.$route.query.yn_share;
+    this.colorIndex = this.$route.query.colorIndex;
+
+    //검색조건 셋팅
+    //계좌유형(multiselect)
+    if (typeof this.$store.state.scListParam.query1 != "undefined") {
+      for (var i = 0; i < this.scTrnsTypeOptions.length; i++) {
+        if (
+          this.scTrnsTypeOptions[i].value ==
+          this.$store.state.scListParam.query1
+        ) {
+          this.scTrnsType = this.scTrnsTypeOptions[i];
+        }
+      }
+    }
+    //검색키워드
+    if (typeof this.$store.state.scListParam.query2 != "undefined") {
+      this.scKeyword = this.$store.state.scListParam.query2;
+    }
+
+    //store 검색조건 초기화
+    this.$store.state.scListParam.query1 = undefined; //계좌유형
+    this.$store.state.scListParam.query2 = undefined; //검색키워드
 
     this.getAssetsBankActDetail();
   },
@@ -123,8 +144,8 @@ export default {
       var _this = this;
 
       var formData = new FormData();
-      formData.append("no_person", this.$route.params.no_person);
-      formData.append("no_account", this.$route.params.no_account);
+      formData.append("no_person", this.$route.query.no_person);
+      formData.append("no_account", this.$route.query.no_account);
 
       this.$http
         .post("/m/assets/getAssetsBankActDetail.json", formData)
@@ -134,8 +155,7 @@ export default {
             "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + assetsInfo.cd_fc;
           _this.assetsInfo = assetsInfo;
 
-          _this.scKeywordList = response.data.scKeywordList;
-
+          _this.getScKeywordList();
           _this.searchActTrnsList();
         })
         .catch(e => {
@@ -156,6 +176,7 @@ export default {
       var _this = this;
       _this.scTrnsType = option;
       console.log(option);
+      _this.getScKeywordList();
       _this.searchActTrnsList();
     },
     //검색키워드
@@ -172,6 +193,25 @@ export default {
       _this.scKeyword = doc1;
       _this.closeScKeywordMd();
       _this.searchActTrnsList();
+    },
+    //키워드목록 조회
+    getScKeywordList: function() {
+      var _this = this;
+
+      console.log("scTrnsType" + _this.scTrnsType.value);
+
+      var formData = new FormData();
+      formData.append("no_person", this.$route.query.no_person);
+      formData.append("no_account", this.$route.query.no_account);
+      formData.append("scTrnsType", _this.scTrnsType.value);
+      this.$http
+        .post("/m/assets/getAssetsBankScKeywordList.json", formData)
+        .then(response => {
+          _this.scKeywordList = response.data.scKeywordList;
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+        });
     },
     //입출금 내역 조회
     searchActTrnsList: function() {
@@ -235,6 +275,25 @@ export default {
         .catch(e => {
           _this.$toast.center(ko.messages.error);
         });
+    },
+    //상세페이지로 이동
+    viewDetail: function(dt_trd, tm_trd) {
+      var _this = this;
+
+      //store 검색조건 유지
+      this.$store.state.scListParam.query1 = _this.scTrnsType.value; //계좌유형
+      this.$store.state.scListParam.query2 = _this.scKeyword; //검색키워드
+
+      this.$router.push({
+        name: "assetsBankDepWdrlDetail",
+        query: {
+          no_person: _this.no_person,
+          no_account: _this.no_account,
+          dt_trd: dt_trd,
+          tm_trd: tm_trd,
+          rk: _this.colorIndex
+        }
+      });
     }
   }
 };

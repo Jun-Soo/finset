@@ -47,6 +47,7 @@ export default {
   beforeCreate() {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "MYPAGE";
+    this.$store.state.header.backPath = "/main";
   },
   created() {
     var _this = this;

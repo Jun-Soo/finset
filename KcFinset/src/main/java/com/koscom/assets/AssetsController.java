@@ -167,6 +167,25 @@ public class AssetsController {
 	Model model) throws FinsetException, IOException{
 
 		model.addAttribute("assetsInfo", assetsManager.getAssetsInfo(assetsForm));
+
+		return "jsonView";
+	}
+
+	/**
+	 * VUE
+     * 자산관리 - 은행 검색키워드list
+     * @param request
+     * @param AssetsForm
+     * @param model
+     * @return String
+     * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/getAssetsBankScKeywordList.json")
+	public String getAssetsBankScKeywordList(
+	HttpServletRequest request,
+	AssetsForm assetsForm,
+	Model model) throws FinsetException, IOException{
+
 		model.addAttribute("scKeywordList", assetsManager.listAssetsSearchKeyword(assetsForm));
 
 		return "jsonView";
@@ -220,7 +239,6 @@ public class AssetsController {
 
 		model.addAttribute("currentDate",DateUtil.getCurrentDate(DateUtil.DATE_PATTERN_DASH));
 		model.addAttribute("scAccountList", assetsManager.listAssetsAccount(assetsForm));
-		model.addAttribute("scKeywordList", assetsManager.listAssetsSearchKeyword(assetsForm));
 
 		return "jsonView";
 	}

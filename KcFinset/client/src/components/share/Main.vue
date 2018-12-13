@@ -2,11 +2,11 @@
   <section v-if="seen">
 
     <div v-if="cd_share=='01'" class="con-top share-top">
-      <p><em>몇번의 클릭으로</em><br>가족간의 흩어진 정보를<br><em>관리 하세요.</em></p>
+      <p>신용정보 공유로<br>신뢰를 나누세요.</p>
       <p class="text">신용정보는 당일에 한해서만 정보를 볼 수 있습니다.</p>
     </div>
     <div v-else-if="cd_share=='02'" class="con-top share-top">
-      <p><em>finset 정보 공유를 통해</em> <br>가족간의 흩어진 정보를<br>한눈에 볼수 있으며, <br><em>한번의 클릭으로 간편하게</em><br>정보를 통합 관리<em>할 수 있습니다.</em></p>
+      <p><em>몇번의 클릭으로</em><br>가족간의 흩어진 정보를<br><em>관리 하세요.</em></p>
     </div>
 
     <div class="tab">
@@ -20,7 +20,7 @@
       <div v-if="reqSbList.length == 0 && reqPmList.length == 0" class="nodata">등록 내역이 없습니다</div>
       <div v-else class="box-list noMG list02">
         <p class="header col">허용 대기</p>
-        <div v-if="reqSbList.length == 0">등록된 내역이 없습니다.</div>
+        <div v-if="reqSbList.length == 0" class="mb20">등록된 내역이 없습니다.</div>
         <div v-for="reqSbInfo in reqSbList" :key="reqSbInfo.index" class="item">
           <a @click="goSettingDetail('req', '01', reqSbInfo.seq_share, '')" class="share">
             <span class="name">{{reqSbInfo.offer_nm_person}}</span>
@@ -63,7 +63,7 @@
       <div v-if="offerSbList.length == 0 && offerPmList.length == 0" class="nodata">등록 내역이 없습니다</div>
       <div v-else class="box-list noMG list02">
         <p class="header col">허용 대기</p>
-        <div v-if="offerSbList.length == 0">등록된 내역이 없습니다.</div>
+        <div v-if="offerSbList.length == 0" class="mb20">등록된 내역이 없습니다.</div>
         <div v-for="offerSbInfo in offerSbList" :key="offerSbInfo.index" class="item">
           <a @click="goSettingDetail('offer','01', offerSbInfo.seq_share, '')" class="share">
             <span class="name">{{offerSbInfo.req_nm_person}}</span>

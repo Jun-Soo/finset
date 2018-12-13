@@ -289,7 +289,7 @@ aside.search-wrap .action a { text-align: center; line-height: 43px; border: 1px
 aside.search-wrap .action a.solid { background: #213e6a; color: #fff; }
 aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 
-.sub-top { line-height: 60px; text-align: center; position: relative; }
+.sub-top { line-height: 60px; text-align: center; position: relative; height: 60px; }
 .sub-top .title { font-size: 16px; color: #222; font-weight: 500; }
 .sub-top a { display: block; width: 60px; height: 60px; position: absolute; left: 0; top: 0; background: url(../images/common/btn_top_back.png) no-repeat center/contain; }
 .sub-top a.setting { width: 38px; left: calc(100% - 98px); background: url("../images/common/header_setting.png") no-repeat center/contain; }
@@ -830,7 +830,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 
 /*   POP   */
 .pop-top { text-align: center; position: relative; }
-.pop-top .title { font-size: 16px; line-height: 60px; color: #222; font-weight: 500; background: #efeeec; }
+.pop-top .title { font-size: 16px; line-height: 60px; color: #222; font-weight: 500; background: #efeeec; height: 60px; }
 .pop-top a { display: block; position: absolute; top: 0; right: 0; width: 60px; height: 60px; background: url(../images/common/btn_close_pop.png) no-repeat center/contain; }
 
 .container { padding: 30px 21px; }
@@ -1156,7 +1156,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .report-con .graph img { width: 100%; }
 
 .consume-detail { margin-top: 20px; border-top: 1px solid #e5e5e5; }
-.consume-detail div { border-bottom: 1px solid #e5e5e5; padding-bottom: 15px; }
+.consume-detail > div { border-bottom: 1px solid #e5e5e5; }
 .consume-detail li { display: flex; }
 .consume-detail li p { width: 70%; font-size: 13px; color: #9b9489; font-weight: 700; line-height: 49px; }
 .consume-detail li p:last-child { text-align: right; }
@@ -1239,7 +1239,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .cert-wrap .grid .last input[type="password"] { width: 30%; margin-right: 10px; }
 .cert-wrap .grid select { line-height: 38px; height: 38px; }
 .cert-wrap .grid.phone { grid-template-columns: 4fr 6fr; grid-gap: 10px; }
-.cert-wrap .grid.phone .multiselect__tags { border: 1px solid #e5e5e5; text-align: left; line-height: 1; padding: 5px 20px 0 8px; margin-top: 0px; }
+.cert-wrap .grid.phone .multiselect__tags { border: 1px solid #e5e5e5; text-align: left; line-height: 30px; padding: 5px 20px 0 8px; margin-top: 0px; }
 .cert-wrap .grid.phone .multiselect__single { margin-bottom: 0; margin-top: 3px; }
 .cert-wrap .grid.phone .multiselect__select { top: 1px; margin-right: 5px; }
 .cert-wrap button { line-height: 46px; border: 2px solid #62c1d0; text-align: center; font-size: 15px; font-weight: 700; width: 100%; background: #fff; color: #62c1d0; margin-top: 10px; }
@@ -1262,8 +1262,9 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .certcode-wrap .number a.finger { background: url("../images/member/btn_fingerprint.png") no-repeat center top/75px; }
 .certcode-wrap .number a.finger:active { background: url("../images/member/btn_fingerprint.png") no-repeat center bottom #62c1d0; background-size: 75px; }
 
-.cert-finger { padding-top: 305px; background: url("../images/member/fingerprint.png") no-repeat 50% 150px; background-size: 117px; }
-.cert-finger p { text-align: center; font-size: 15px; }
+.cert-finger { display: flex; align-items: center; justify-content: center; height: 70vh; }
+.cert-finger div { background: url("../images/member/fingerprint.svg") no-repeat 50% 0; background-size: 120px; }
+.cert-finger div p { text-align: center; font-size: 15px; margin-top: 20px; }
 
 /*   스크랩   */
 .debt-regist .title { color: #222; font-size: 20px; line-height: 27px; }
@@ -1418,6 +1419,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .cs-top .links a.kakao { background: url("../images/etc/kakao.png") no-repeat center top/60px; }
 .cs-top .links a.email { background: url("../images/etc/email.png") no-repeat center top/60px; }
 .cs-top .links a.copy { background: url("../images/assets/copy.png") no-repeat center top/60px; }
+.cs-top .links a.share { background: url("../images/assets/share.png") no-repeat center top/60px; }
 .cs-top .cs-search { line-height: 38px; border: 1px solid #e5e5e5; padding-left: 36px; background: url("../images/etc/cs_search.png") no-repeat left top/36px; text-align: left; }
 .cs-top .cs-search input { width: 95%; line-height: 38px; }
 

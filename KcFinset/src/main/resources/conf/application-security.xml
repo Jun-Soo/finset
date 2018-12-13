@@ -59,7 +59,7 @@
 					/>
 		<!-- 중복로그인 -->
 		<session-management>
-			<concurrency-control max-sessions="1" />
+			<concurrency-control max-sessions="20" />
 		</session-management>
 		<logout invalidate-session="true" />
 		

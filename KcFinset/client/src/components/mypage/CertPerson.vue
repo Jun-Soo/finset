@@ -33,7 +33,7 @@
       <p class="warn" v-if="errors.has('생년월일')">{{errors.first('생년월일')}}</p>
       <p class="warn" v-if="errors.has('성별')">{{errors.first('성별')}}</p>
     </div>
-    <div class="cert-wrap">
+    <div class="cert-wrap pb90">
       <p class="title">휴대폰인증</p>
       <div class="grid phone">
         <multiselect ref="telCom" class="multiselect-basic" v-model="telComNm" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @select="onSelect">

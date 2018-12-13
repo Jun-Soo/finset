@@ -327,16 +327,20 @@ export default {
       ) {
         _this.modifyConsume();
       } else {
-        Constant.options.title =
-          "동일 항목에 대해서 이후에도 적용하시겠습니까?";
-        this.$dialogs.confirm("", Constant.options).then(res => {
-          if (res.ok) {
-            _this.csYnAuto = "Y";
-          } else {
-            _this.csYnAuto = "N";
-          }
-          _this.modifyConsume();
-        });
+        Constant.options.title = "FINSET";
+        this.$dialogs
+          .confirm(
+            "동일 항목에 대해서 이후에도 적용하시겠습니까?",
+            Constant.options
+          )
+          .then(res => {
+            if (res.ok) {
+              _this.csYnAuto = "Y";
+            } else {
+              _this.csYnAuto = "N";
+            }
+            _this.modifyConsume();
+          });
       }
       _this.setCsCategoryText();
       _this.isShowCategory = false;
@@ -399,18 +403,20 @@ export default {
     fnCopy: function() {
       var _this = this;
       var contents = _this.getCopyContents();
-      Constant.options.title = "내역을 복사하시겠습니까?";
-      this.$dialogs.confirm(contents, Constant.options).then(res => {
-        if (res.ok) {
-          if (Constant.userAgent == "iOS") {
-            Jockey.send("copyToClipBoard", {
-              text: contents
-            });
-          } else if (Constant.userAgent == "Android") {
-            window.Android.copyToClipBoard(contents);
+      Constant.options.title = "FINSET";
+      this.$dialogs
+        .confirm("내역을 복사하시겠습니까?\n\n" + contents, Constant.options)
+        .then(res => {
+          if (res.ok) {
+            if (Constant.userAgent == "iOS") {
+              Jockey.send("copyToClipBoard", {
+                text: contents
+              });
+            } else if (Constant.userAgent == "Android") {
+              window.Android.copyToClipBoard(contents);
+            }
           }
-        }
-      });
+        });
     }
   }
 };

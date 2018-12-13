@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import okhttp3.OkHttpClient;
@@ -87,6 +88,25 @@ public class LoanController implements Constant {
 		
 	@Resource
 	Environment environment;
+	
+	/** VUE
+	 * 상품리스트 (제휴)
+	 * @param goodsForm
+	 * @param model
+	 * @param request
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/listLoanAffiliatesAll.json")
+	public String listLoanAffiliatesAll(Model model, HttpServletRequest request, HttpServletResponse response, GoodsForm goodsForm, HttpSession session) {
+        logger.debug("listLoanAffiliatesAll.json == start");
+		logger.debug(goodsForm.toString());
+		String no_person = (String) session.getAttribute("no_person");
+		goodsForm.setNo_person(no_person);
+		
+		model.addAttribute("goodsList", goodsManager.listGoodsAllianceAll(goodsForm));
+		return "jsonView";
+	}
 	
 	/** VUE
 	 * 즐겨찾기 추가

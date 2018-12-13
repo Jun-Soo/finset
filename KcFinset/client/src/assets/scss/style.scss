@@ -294,6 +294,7 @@ aside.search-wrap{
     line-height: 60px;
     text-align: center;
     position: relative;
+    height: 60px;
     .title{
         font-size: 16px;
         color: #222;
@@ -2830,6 +2831,7 @@ button.cal{
         color: #222;
         font-weight: 500;
         background: #efeeec;
+        height: 60px;
     }
     a{
         display: block;
@@ -4361,9 +4363,9 @@ button.cal{
 .consume-detail{
     margin-top: 20px;
     border-top: 1px solid $lineColor;
-	div{
+	>div{
 		border-bottom: 1px solid $lineColor;
-		padding-bottom: 15px;
+		//padding-bottom: 15px;
 	}
     li{
         display: flex;
@@ -4745,7 +4747,7 @@ button.cal{
             .multiselect__tags{
                 border: 1px solid $lineColor;
                 text-align: left;
-                line-height: 1;
+                line-height: 30px;
                 padding: 5px 20px 0 8px;
                 margin-top: 0px;
             }
@@ -4871,12 +4873,18 @@ button.cal{
 //   지문인증 설정   //
 
 .cert-finger{
-    padding-top: 305px;
-    background: url("../images/member/fingerprint.png") no-repeat 50% 150px;
-    background-size: 117px;
-    p{
-        text-align: center;
-        font-size: 15px;   
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 70vh;
+    div{
+        background: url("../images/member/fingerprint.svg") no-repeat 50% 0;
+        background-size: 120px;
+        p{
+            text-align: center;
+            font-size: 15px;   
+            margin-top: 20px;
+        }
     }
 }
 
@@ -5594,6 +5602,9 @@ button.cal{
             }
             &.copy{
                 background: url("../images/assets/copy.png") no-repeat center top / 60px;
+            }
+            &.share{
+                background: url("../images/assets/share.png") no-repeat center top / 60px;
             }
         }
     }

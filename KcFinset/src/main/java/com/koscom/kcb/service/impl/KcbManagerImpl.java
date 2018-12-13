@@ -771,7 +771,7 @@ public class KcbManagerImpl implements KcbManager {
 					String nmFc = "", item = "";
 					for(Object obj : divDtl.get(i).select("span").get(0).childNodes()) {
 						if(obj instanceof TextNode) {
-							nmFc = ((TextNode)obj).text();
+							nmFc = ((TextNode)obj).text().trim();
 						} else {
 							for(Object o : ((Node)obj).childNodes()) {
 								if(o instanceof TextNode) {

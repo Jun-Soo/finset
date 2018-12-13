@@ -77,7 +77,7 @@ import CreditCounselResult from '@/components/credit/CounselResult'
 import DebtHome from '@/components/debt/Home'
 import DebtMain from '@/components/debt/Main'
 import DebtDetail from '@/components/debt/Detail'
-import DebtDetail2 from '@/components/debt/Detail_2'
+// import DebtDetail2 from '@/components/debt/Detail_2'
 import DebtRepayment from '@/components/debt/Repayment'
 import DebtModify from '@/components/debt/Modify'
 import DebtCalc from '@/components/debt/Calc'
@@ -91,7 +91,7 @@ import DebtRegDetail from '@/components/debt/RegDetail'
 // import DebtMortgageLoan from '@/components/debt/MortgageLoan'
 import DebtReqIntrCut from '@/components/debt/ReqIntrCut'
 import DebtCalendar from '@/components/debt/Calendar'
-import DebtUpdate from '@/components/debt/Update'
+// import DebtUpdate from '@/components/debt/Update'
 
 import GoodsHome from '@/components/goods/Home'
 import GoodsList from '@/components/goods/List'
@@ -709,15 +709,15 @@ export const routes = [{
       allowPath: true
     }
   },
-  {
-    path: 'detail_2',
-    alias: '/detail_2',
-    name: 'debtDetail_2',
-    component: DebtDetail2,
-    meta: {
-      allowPath: true
-    }
-  },
+    // {
+    //   path: 'detail_2',
+    //   alias: '/detail_2',
+    //   name: 'debtDetail_2',
+    //   component: DebtDetail2,
+    //   meta: {
+    //     allowPath: true
+    //   }
+    // },
   {
     path: 'repayment',
     alias: '/repayment',
@@ -772,15 +772,15 @@ export const routes = [{
       allowPath: true
     }
   },
-  {
-    path: 'update',
-    alias: '/update',
-    name: 'debtUpdate',
-    component: DebtUpdate,
-    meta: {
-      allowPath: true
-    }
-  },
+    // {
+    //   path: 'update',
+    //   alias: '/update',
+    //   name: 'debtUpdate',
+    //   component: DebtUpdate,
+    //   meta: {
+    //     allowPath: true
+    //   }
+    // },
   {
     path: 'reqIntrCut',
     alias: '/reqIntrCut',
@@ -1684,7 +1684,7 @@ router.beforeEach((to, from, next) => {
     if (to.meta.allowPath) {
       if (to.meta.requiresAuth) {
         if (to.meta.backCasePath && !Store.state.header.fromPath) Store.state.header.fromPath = from.fullPath
-        if (to.fullPath == Store.state.header.fromPath) Store.state.header.fromPath = ''
+        if (to.fullPath === Store.state.header.fromPath) Store.state.header.fromPath = ''
 
         const accessToken = localStorage.getItem('accessToken')
         if (!accessToken) {

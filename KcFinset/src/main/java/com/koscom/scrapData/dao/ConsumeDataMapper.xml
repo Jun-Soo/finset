@@ -87,8 +87,8 @@
 		SELECT CD_CONSUME_CLASS
 			FROM BUSINESS_TYPE_INFO
 		WHERE 
-				CD_FC 			= #{cd_fc			, jdbcType=VARCHAR}
-			AND NM_BUSINESS 	= #{nm_business		, jdbcType=VARCHAR}
+				CD_FC							= #{cd_fc, jdbcType=VARCHAR}
+			AND REPLACE(NM_BUSINESS, ' ', '')	= REPLACE(#{nm_business, jdbcType=VARCHAR}, ' ', '')
 	</select>
 <!-- 	소비항목코드로 cd_class와 cd_type을 조회 -->
 	<select id="getCodeByCdConsumeClass" parameterType="java.lang.String" resultType="com.koscom.contents.model.ContentsVO">

@@ -199,7 +199,11 @@ export default {
     }
 
     if (this.height) {
-      this.style = this.style + "height: " + this.height + "px;";
+      if (this.height == "auto") {
+        this.style = this.style + "height: auto;";
+      } else {
+        this.style = this.style + "height: " + this.height + "px;";
+      }
     }
   }
 };

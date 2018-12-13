@@ -23,7 +23,7 @@
             <li>
               <p class="key">금액</p>
               <p>
-                <input type="tel" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액"><em>원</em>
+                <input type="tel" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required|numeric'" data-vv-name="금액"><em>원</em>
               </p>
             </li>
             <p class="warn" v-if="errors.has('금액')">{{errors.first('금액')}}</p>
@@ -33,10 +33,12 @@
               <p class="key">카테고리</p>
               <p>
                 <!-- <button class="btn-cate btn-search" @click="showCategory" :disabled="!isMine" v-text="categoryText" v-validate="'required'" data-vv-name="카테고리"></button> -->
-                <button class="btn-cate btn-search" @click="showCategory" :disabled="!isMine" v-text="categoryText"></button>
+                <!-- <button class="btn-cate btn-search" @click="showCategory" :disabled="!isMine" v-text="categoryText"></button> -->
+                <input @click="showCategory" v-validate="'required'" data-vv-name="카테고리" :disabled="!isMine" type="button" :value="categoryText" class="btn-cate btn-search">
               </p>
             </li>
           </div>
+          <p class="warn" v-if="errors.has('카테고리')">{{errors.first('카테고리')}}</p>
           <div>
             <li>
               <p class="key" v-text="curTab=='01'?'출처':'결제처'"></p>
@@ -458,7 +460,12 @@ export default {
     },
     clickSetting: function(event) {
       event.stopPropagation();
-      this.$router.push("/consume/setting");
+      // this.$router.push("/consume/setting");
+      if (this.curTab == "01") {
+        this.$router.push("/consume/incomeClass");
+      } else {
+        this.$router.push("/consume/consumeClass");
+      }
     },
     //데이터 이동부분
     getConsumeInfo: function() {
@@ -552,6 +559,7 @@ export default {
             listCdClass[eachClass.cd_class] = eachClass;
           }
           _this.consumeCategory = listCdClass;
+          console.log(_this.consumeCategory);
           if (!_this.isNew) {
             _this.getConsumeInfo();
           } else {

@@ -1793,16 +1793,6 @@
 				WHERE
 						NO_PERSON	= #{no_person, jdbcType = VARCHAR}
 					AND TYPE_AN		= '01'
-			UNION SELECT
-					 '01' AS MEANS_CONSUME
-					,CD_FC
-					,NO_CARD
-					,NM_CARD
-					,3 AS SORT_ORDER
-				FROM
-					SCR_CARD_INFO
-				WHERE
-					NO_PERSON = #{no_person, jdbcType = VARCHAR}
 			)
 		ORDER BY
 			 SORT_ORDER ASC

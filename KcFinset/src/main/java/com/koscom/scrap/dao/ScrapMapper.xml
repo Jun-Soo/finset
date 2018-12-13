@@ -932,7 +932,7 @@
 			(SELECT * FROM FC_LINK_INFO WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}) LK  
 			ON LK.CD_FC = FC.CD_FC
 		WHERE FC.YN_SCRAP = 'Y'
-		ORDER BY CD_FIN, YN_LINK DESC, NM_FC, FC.DT_FRT
+		ORDER BY CD_FIN, YN_LINK DESC, FC.DT_FRT
 	</select>
 	
 	<insert id="createFcLinkInfoHist" parameterType="com.koscom.scrap.model.FcLinkInfoVO">
@@ -1017,7 +1017,7 @@
 			,DT_FRT
 		) VALUES (
 			 #{no_person , jdbcType=VARCHAR}
-			,XX1.ENC_VARCHAR2_INS(#{an, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SCR_BANK_API_AN_INFOZ ', 'AN')
+			,XX1.ENC_VARCHAR2_INS(#{an, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SCR_BANK_API_AN_INFO ', 'AN')
 			,#{cd_fc		  ,jdbcType=VARCHAR}
 			,#{type_an		  ,jdbcType=VARCHAR}
 			,#{nm_an		  ,jdbcType=VARCHAR}
@@ -1449,7 +1449,7 @@
 	<select id="getMaxDateSrcTransactionDetail" parameterType="com.koscom.scrap.model.ScrBankApiAnInfoVO" resultType="java.lang.String">
 		SELECT MAX(DT_TRD||TM_TRD) MAX_DT_TRD FROM SCR_TRANSACTION_DETAIL
 		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
-			AND AN = #{an, jdbcType=VARCHAR}
+			AND AN = XX1.ENC_VARCHAR2_INS(#{an, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SCR_BANK_API_AN_INFO', 'AN')
 		GROUP BY NO_PERSON, AN
 	</select >
 	
@@ -1471,7 +1471,7 @@
 			, DT_FRT
 		) VALUES (
 			#{NO_PERSON, jdbcType=VARCHAR}
-			, XX1.ENC_VARCHAR2_INS(#{AN, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'BANK_API_DEPWDRL_DTL', 'AN')
+			, XX1.ENC_VARCHAR2_INS(#{AN, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SCR_BANK_API_AN_INFO', 'AN')
 			, #{DATE, jdbcType=VARCHAR}
 			, #{TIME, jdbcType=VARCHAR}
 			, #{CODE, jdbcType=VARCHAR}
@@ -1489,7 +1489,7 @@
 	<select id="getMaxDateScrSvngSvninDetail" parameterType="com.koscom.scrap.model.ScrBankApiAnInfoVO" resultType="java.lang.String">
 		SELECT MAX(DT_TRD||TM_TRD) MAX_DT_TRD FROM SCR_SVNG_SVNIN_DETAIL
 		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
-			AND AN = #{an, jdbcType=VARCHAR}
+			AND AN = XX1.ENC_VARCHAR2_INS(#{an, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SCR_BANK_API_AN_INFO', 'AN')
 		GROUP BY NO_PERSON, AN
 	</select >
 		
@@ -1510,7 +1510,7 @@
 			, DT_FRT
 		) VALUES (
 			#{NO_PERSON		, jdbcType=VARCHAR}
-			, XX1.ENC_VARCHAR2_INS(#{AN, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'BANK_API_DEPWDRL_DTL', 'AN')
+			, XX1.ENC_VARCHAR2_INS(#{AN, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SCR_BANK_API_AN_INFO', 'AN')
 			, #{DATE		, jdbcType=VARCHAR}
 			, #{TIME		, jdbcType=VARCHAR}
 			, #{BATCH		, jdbcType=VARCHAR}

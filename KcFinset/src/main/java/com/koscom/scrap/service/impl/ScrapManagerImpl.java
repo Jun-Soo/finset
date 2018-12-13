@@ -1798,7 +1798,7 @@ public class ScrapManagerImpl implements ScrapManager {
             		}
             	}
             	//카드조회 내역 History 저장 및 갱신  - 청구내역
-            	scrReqCardVO.setCd_type("03"); //01 보유카드현황, 02 승인내역, 03 청구내역, 	04 한도조회, 05 포인트조회
+            	scrReqCardVO.setCd_type("03"); //01 보유카드현황, 02 승인내역, 03 청구내역, 4 한도조회, 05 포인트조회
             	scrReqCardVO.setSeq_scraping_result(seq_scrap);
             	scrReqCardVO.setYmd_stt(userCardOutputVO.getDT_CHARGE_START());
             	scrReqCardVO.setYmd_end(userCardOutputVO.getDT_CHARGE_END());

@@ -7,7 +7,7 @@
       <p class="text">해당정보를 신용평가사로 전송하시겠습니까?</p>
     </div>
 
-    <div class="box-list list01">
+    <div class="box-list list01 pb90">
       <div class="header">납부내역</div>
       <div class="item" v-for="payment in paymentList" :key="payment.index">
         <div class="top">
@@ -97,10 +97,15 @@ export default {
         .post("/m/kcb/updateKcbReqNonfiInfo.json", formData)
         .then(function(response) {
           var result = response.data;
-          _this.$router.push({
-            name: "creditRaiseResult",
-            params: { result: "success" }
-          });
+          if (result.result == "00") {
+            _this.$router.push({
+              name: "creditRaiseResult",
+              params: { result: "success" }
+            });
+          } else {
+            _this.$toast.center("전송을 실패했습니다.");
+            _this.$router.push("/credit/raiseMain");
+          }
         });
     },
     formatNumber: function(data) {

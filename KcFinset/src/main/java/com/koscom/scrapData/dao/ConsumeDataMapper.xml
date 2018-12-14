@@ -304,6 +304,13 @@
 				WHERE
 						NO_PERSON	= #{no_person, jdbcType = VARCHAR}
 					AND YN_AUTO		= 'Y'
+					AND 1 = (
+						CASE
+							WHEN YN_PAY_INSTALLMENT = 'N' THEN 1
+							WHEN YN_PAY_INSTALLMENT = 'Y' AND MON_REMAINING = '0' THEN 1
+							ELSE 0
+						END
+					)
 				GROUP BY
 					 NO_PERSON
 					,NO_CARD
@@ -332,4 +339,25 @@
 			AND TO_NUMBER( STI.DT_TRD )<![CDATA[>=]]>TO_NUMBER( TO_CHAR( CI.DT_FRT, 'YYYYMMDD' ))
 			AND TO_NUMBER( STI.TM_TRD )<![CDATA[>]]> TO_NUMBER( TO_CHAR( CI.DT_FRT, 'HH24MISS' ))
 	</select>
+	<insert id="createNewBusinessTypeInfo" parameterType="com.koscom.scrapData.model.BusinessTypeInfoVO">
+		INSERT INTO
+			BUSINESS_TYPE_INFO(
+				 CD_FC
+				,NM_BUSINESS
+				,CD_CONSUME_CLASS
+				,ID_FRT
+				,DT_FRT
+				,ID_LST
+				,DT_LST
+			)
+			VALUES(
+				 #{cd_fc			, jdbcType = VARCHAR}
+				,#{nm_business		, jdbcType = VARCHAR}
+				,#{cd_consume_class	, jdbcType = VARCHAR}
+				,#{id_frt			, jdbcType = VARCHAR}
+				,SYSDATE
+				,#{id_lst			, jdbcType = VARCHAR}
+				,SYSDATE
+			)
+	</insert>
 </mapper>

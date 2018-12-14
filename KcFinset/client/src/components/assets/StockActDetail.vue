@@ -208,7 +208,6 @@ export default {
     searchAccountList: function() {
       var _this = this;
       _this.page = 1;
-      _this.accountList = [];
       Common.pagination(_this.listAccount);
     },
     listAccount: function(callback) {
@@ -246,6 +245,9 @@ export default {
 
           //pagination
           if (list.length === 0) {
+            if (_this.page == 1) {
+              _this.accountList = [];
+            }
             callback();
             _this.seen = true;
             return;

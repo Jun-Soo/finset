@@ -90,8 +90,9 @@ export default {
       colorList: ["red", "orange", "green", "blue", "purple"],
       personShareList: [], //공유자list
       person_share_list: [], //공유자list(조회용)
-      accountMyList: [], //계좌list
-      accountShareList: [], //계좌list
+      accountMyList: [], //계좌list(my)
+      accountShareList: [], //계좌list(share)
+      accountList: [], //계좌list(통합)
       totalPage: "",
       page: 1
     };
@@ -139,8 +140,6 @@ export default {
     searchAccountList: function() {
       var _this = this;
       _this.page = 1;
-      _this.accountMyList = [];
-      _this.accountShareList = [];
       Common.pagination(_this.listAccount);
     },
     listAccount: function(callback) {
@@ -171,6 +170,11 @@ export default {
 
           //pagination
           if (list.length === 0) {
+            if (_this.page == 1) {
+              _this.accountMyList = [];
+              _this.accountShareList = [];
+              _this.accountList = [];
+            }
             callback();
             _this.seen = true;
             return;

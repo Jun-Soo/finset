@@ -217,7 +217,6 @@ export default {
     searchActTrnsList: function() {
       var _this = this;
       _this.page = 1;
-      _this.trnsList = [];
       Common.pagination(_this.listActTrns);
     },
     listActTrns: function(callback) {
@@ -254,6 +253,9 @@ export default {
 
           //pagination
           if (list.length === 0) {
+            if (_this.page == 1) {
+              _this.trnsList = [];
+            }
             callback();
             _this.seen = true;
             return;

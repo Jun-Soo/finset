@@ -833,6 +833,12 @@ aside.search-wrap{
             }
         }
     }
+    .align-item{
+        text-align: right;
+        em{
+            vertical-align: middle;
+        }
+    }
 } 
 
 .list02{
@@ -2435,6 +2441,7 @@ aside.search-wrap{
             }
             &:last-child{
                 flex-grow: 4;
+                text-align: right;
                 select{
                     width: 100%;
                 }
@@ -2456,7 +2463,7 @@ aside.search-wrap{
             border: 1px solid $lineColor;
             background: #fff;
             input[type="text"]{
-                width: 100%;
+                width: calc(100% - 50px);
                 border: none;
                 vertical-align: middle;
                 line-height: 33px;
@@ -2658,6 +2665,7 @@ aside.search-wrap{
     width: 32px;
     height: 19px;
     background: url("../images/common/btn_onoff.png") no-repeat top center / 32px;
+    vertical-align: middle;
     &.on{
         background-position: bottom center;
     }
@@ -2768,12 +2776,13 @@ button.cal{
                     display: flex;
                     margin-bottom: 10px;
                     p{
-                        width: 50%;
+                        width: 70%;
                         line-height: 35px;
                         &:first-child{
                             font-size: 14px;
                             font-weight: 700;
                             color: #222;
+                            width: 30%;
                         }
                         &:last-child{
                             text-align: right;
@@ -2792,10 +2801,11 @@ button.cal{
                             input[type="text"],input[type="number"]{
                                 line-height: 35px;
                                 height: 33px;
-                                width: 100px;
+                                width: 110px;
                                 font-size: 15px;
-                                text-align: right;
-                                padding: 0 15px;
+                                text-align: left;
+                                //padding: 0 15px;
+                                text-indent: 0;
                             }
                         }
                     }
@@ -3375,6 +3385,10 @@ button.cal{
 .cert-check-wrap{
     margin-top: 30px;
     padding: 0 21px;
+    display: flex;
+    >p{
+        width: 50%;
+    }
     .text{
         margin-bottom: 20px;
         line-height: 17px;
@@ -4875,13 +4889,26 @@ button.cal{
 //   지문인증 설정   //
 
 .cert-finger{
-    display: flex;
-    align-items: center;
-    justify-content: center;
     height: 70vh;
-    div{
+    position: relative;
+    .wrap{
+        position:absolute;
+        left:0;
+        top: 50%;
+        margin-top: -140px;
+        text-align: center;
+        width: 100%;
+        .warn{
+            background: none;
+        }
+    }
+    .svg{
         background: url("../images/member/fingerprint.svg") no-repeat 50% 0;
         background-size: 120px;
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        margin-top: -81px;
         p{
             text-align: center;
             font-size: 15px;   

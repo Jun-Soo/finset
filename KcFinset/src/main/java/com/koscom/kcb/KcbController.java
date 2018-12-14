@@ -3,6 +3,7 @@ package com.koscom.kcb;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -57,23 +58,17 @@ public class KcbController {
 		Boolean kcbRegFlag = true;
 		
 		//요청상태 변경 이전에 KCB에 등록 되어있는지 체크 후 등록
-		CreditInfo creditInfo = new CreditInfo();
-		creditInfo.setNoPerson(no_person);
-		creditInfo.setNmIf("600");
 		
-		List<CreditInfo> creditInfoList = creditManager.getCreditInfoByNmIf(creditInfo);
-		if(creditInfoList != null && creditInfoList.size() > 0)	{
-			logger.error("creditInfoList.size() : "+creditInfoList.size());
-			for(CreditInfo creditInfoVO : creditInfoList) {
-				
-				logger.error("creditInfoVO.getCdCbResponse() : "+creditInfoVO.getCdCbResponse());
-				//KCB 등록 정상 처리 내역이 있을 경우 등록 절차 스킵
-				if("0000".equals(creditInfoVO.getCdCbResponse()))	{
-					logger.error("equals(creditInfoVO.getCdCbResponse()) true" );
-					kcbRegFlag = false;
-				}
-			}
+		HashMap<String, String> schMap = new HashMap<String, String>();
+		schMap.put("sch_no_person", no_person);
+		schMap.put("nm_if", 		"600");
+		HashMap<String, String> clobMap = creditManager.getKcbInfoCLOB(schMap);
+		
+		//KCB 등록 정상 처리 내역이 있을 경우 등록 절차 스킵
+		if(clobMap != null){
+			kcbRegFlag = false;
 		}
+
 		String profile  = environment.getProperty("service.profile");
 		logger.error("kcbRegFlag : " + kcbRegFlag + " profile : " + profile + " == " + kcbRegFlag);
 		

@@ -364,9 +364,9 @@ public class URLConnection {
 	 */
 	public ReturnClass sendReqPOST_Direct(String targetUrl, HashMap<String, String> headerMap, String body) {
 		if (StringUtil.isEmpty(targetUrl)) {
-			logger.info("==== 요청 된 URL 이 없습니다. ====");
+			logger.error("==== 요청 된 URL 이 없습니다. ====");
 			return new ReturnClass(Constant.FAILED, "요청 URL 이 없습니다.");
-		}		
+		}
 		
 		HttpURLConnection connection = null;
 		int returnCd = 0;
@@ -445,6 +445,7 @@ public class URLConnection {
 			if (connection !=null) {
 				try {
 					returnMsg = "[" + connection.getURL().toString() + "] 연결 실패("+connection.getResponseCode()+")";
+					logger.error("******" + returnMsg + "*******");
 				} catch (IOException e) {
 
 				}

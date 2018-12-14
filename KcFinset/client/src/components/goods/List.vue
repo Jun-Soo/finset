@@ -31,19 +31,23 @@
         </div>
       </div>
       <!-- <div class="banner-wrap" :style="{'display-none':curTab == 'loanStock'}" v-if="curTab == 'loanStock'"> -->
-      <div class="banner-wrap" v-show="curTab == 'loanStock'">
-        <div class="item">
-          <a>
-            <div class="banner">
-              <div class="left">
-                <p class="key">흠어진 증권계좌를 한곳에</p>
-                <p class="value">클릭만으로 흩어져 있는<br>증권 계좌를 확인해 보세요</p>
-              </div>
-              <div class="right">
-                <img src="../../assets/images/goods/banner1.png" alt="" />
-              </div>
+      <div v-show="curTab == 'loanStock'">
+        <div class="box-list  goods goods-list">
+          <div class="banner-wrap ">
+            <div class="item">
+              <a>
+                <div class="banner">
+                  <div class="left">
+                    <p class="key">흠어진 증권계좌를 한곳에</p>
+                    <p class="value">클릭만으로 흩어져 있는<br>증권 계좌를 확인해 보세요</p>
+                  </div>
+                  <div class="right">
+                    <img src="../../assets/images/goods/banner1.png" alt="" />
+                  </div>
+                </div>
+              </a>
             </div>
-          </a>
+          </div>
         </div>
       </div>
       <div v-show="curTab != 'loanStock'">

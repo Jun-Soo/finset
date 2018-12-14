@@ -63,8 +63,8 @@ aside.search-wrap{
         transform: translateY(0);
     }
     .top{
-        border-top-left-radius: 21px;
-        border-top-right-radius: 21px;
+        border-top-left-radius: 0;
+        border-top-right-radius: 0;
         background: #fff;
         position: relative;
         button{
@@ -235,7 +235,7 @@ aside.search-wrap{
         padding: 0 20px;
         .cate-wrap{
             border: 1px solid $lineColor;
-            height: 200px;
+            height: 400px;
             overflow-y: auto;
             ul{
                 li{
@@ -1843,12 +1843,13 @@ aside.search-wrap{
         .date{
             font-size: 12px;
             color: $col2;
+            line-height: 1;
         }
         .item{
             display: flex;
             background: #fff;
             border-radius: 10px;
-            padding: 20px;
+            padding: 10px 20px;
             margin-top: 10px;
             .left{
                 width: 50%;
@@ -2019,16 +2020,11 @@ aside.search-wrap{
             border-radius: 50px;
             position: absolute;
             top: -5px;
+            right: 0;
             &.on{
                 background: $col4;
                 color: #fff;
             }
-        }
-        .year{
-            right: 45px;
-        }
-        .month{
-            right: 0;
         }
         .today{
             height: auto;
@@ -2414,7 +2410,7 @@ aside.search-wrap{
 }
 
 .gray-search-box{
-    padding: 25px 21px;
+    padding: 15px 21px;
     background: #efeeec;
     .search{
         display: flex;
@@ -4408,7 +4404,7 @@ button.cal{
 	}
     li{
         display: flex;
-        
+        align-items: center;
         p{
             width: 70%;
             font-size: 13px;
@@ -4417,13 +4413,14 @@ button.cal{
             line-height: 49px;
             &:last-child{
                 text-align: right;
-                input[type="text"]{
+                input[type="text"],input[type="tel"]{
                     line-height: 49px;
                     text-align: right;
                     padding: 0 10px;
                     font-size: 14px;
                     width: 80%;
                     border: none;
+                    padding-right: 2px;
                 }
                 .btn-cate{
                     padding-right: 20px;

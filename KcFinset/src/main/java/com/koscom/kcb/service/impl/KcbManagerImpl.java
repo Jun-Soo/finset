@@ -216,12 +216,14 @@ public class KcbManagerImpl implements KcbManager {
 			if (infoVO != null && clobMap == null) {
 
 				if(StringUtil.isEmpty(infoVO.getNoPerson()) || StringUtil.isEmpty(infoVO.getNmIf())) {
+					logger.error("[조회키 요청 실패]개인식별번호 OR 전문구분코드 없습니다.");
 	                return new ReturnClass(Constant.FAILED, "[조회키 요청 실패]개인식별번호 OR 전문구분코드 없습니다.");
 	            }
 
 				//2.조회하는 전문타입에 맞는 모델 객체 생성
 				kcbInfo = getKcbObjByCbType(infoVO.getNmIf());
 				if(kcbInfo == null) {
+					logger.error("확인되지 않은 전문입니다.");
 					return new ReturnClass(Constant.FAILED, "확인되지 않은 전문입니다.");
 				}
 				this.setDefaultCbInfo(infoVO); //신용조회 필요한 기본정보 셋팅(USERID, IP, PORT등)
@@ -265,15 +267,18 @@ public class KcbManagerImpl implements KcbManager {
 					CodeUtil codeUtil = CodeUtil.getInstance();
 					ReturnClass rc = null;
 					if(codeUtil !=null) {
+						logger.error("Error : "+infoVO.getCdCbResponse() + "[ "+codeUtil.getCodeName("cd_kcb_cb_response", infoVO.getCdCbResponse())+" ]");
 						rc = new ReturnClass(Constant.FAILED, codeUtil.getCodeName("cd_kcb_cb_response", infoVO.getCdCbResponse()));;
 					}
 					return rc;
 				}
 
 			} else {
+				logger.error("[조회키 요청 실패]개인식별번호 OR 전문구분코드 없습니다.");
 				return new ReturnClass(Constant.FAILED, "[조회키 요청 실패]개인식별번호 OR 전문구분코드 없습니다.");
 			}
 		} catch (FinsetException e) {
+			logger.error("전문 송수신 오류");
 			return new ReturnClass(Constant.FAILED, "전문 송수신 오류", e.getMessage());
 		}
 

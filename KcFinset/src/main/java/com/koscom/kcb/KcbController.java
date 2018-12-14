@@ -63,19 +63,19 @@ public class KcbController {
 		
 		List<CreditInfo> creditInfoList = creditManager.getCreditInfoByNmIf(creditInfo);
 		if(creditInfoList != null && creditInfoList.size() > 0)	{
-			logger.info("creditInfoList.size() : "+creditInfoList.size());
+			logger.error("creditInfoList.size() : "+creditInfoList.size());
 			for(CreditInfo creditInfoVO : creditInfoList) {
 				
-				logger.info("creditInfoVO.getCdCbResponse() : "+creditInfoVO.getCdCbResponse());
+				logger.error("creditInfoVO.getCdCbResponse() : "+creditInfoVO.getCdCbResponse());
 				//KCB 등록 정상 처리 내역이 있을 경우 등록 절차 스킵
 				if("0000".equals(creditInfoVO.getCdCbResponse()))	{
-					logger.info("equals(creditInfoVO.getCdCbResponse()) true" );
+					logger.error("equals(creditInfoVO.getCdCbResponse()) true" );
 					kcbRegFlag = false;
 				}
 			}
 		}
 		String profile  = environment.getProperty("service.profile");
-		logger.info("kcbRegFlag : " + kcbRegFlag + " profile : " + profile + " == " + kcbRegFlag);
+		logger.error("kcbRegFlag : " + kcbRegFlag + " profile : " + profile + " == " + kcbRegFlag);
 		
 		//KCB 미등록일 경우 등록 절차 수행(로컬에서는 미수행)
 		if(kcbRegFlag && !"LOCAL".equals(profile))	{
@@ -84,7 +84,7 @@ public class KcbController {
 			
 			KcbCreditInfoVO info = new KcbCreditInfoVO();
 			info.setNmIf("600");
-			info.setCd_regist("01");						// 01 신규, 09 URL
+			info.setCd_regist("01");						// 01 신규, 09 URL 
 			info.setBgn(personVO.getBgn());					// 생년월일, 성별
 			info.setNoPerson(personVO.getNo_person());		// 회원번호
 			info.setNmCust(personVO.getNm_person());		// 회원명

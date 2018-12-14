@@ -199,17 +199,19 @@ public class ScrapController {
 		logger.info("service.profile :" +environment.getProperty("service.profile"));
 		
 		String token = scrapManager.getAccessToken();
+		if(token == null || token.length()==0)	{
+			model.addAttribute("cd_err", Constant.FAILED);
+			model.addAttribute("msg_err", "금융투자회사 Access Token 조회를 실패하였습니다.");
+		}
+				
 		logger.debug("================= token : " + token);
 		
 		ReturnClass returnClass = scrapManager.checkFinance(no_person, cd_fc, uuid, dn, token);
 		
-		if(returnClass != null)	{
-			model.addAttribute("cd_err", returnClass.getCd_result());
-			model.addAttribute("msg_err", returnClass.getCd_result());
-		}
-			
+		model.addAttribute("cd_err", returnClass.getCd_result());
+		model.addAttribute("msg_err", returnClass.getMessage());
+		
 		//model.addAttribute("token", token);
-		model.addAttribute("token", token);
 		return "jsonView";
 	}
 	

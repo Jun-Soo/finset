@@ -416,6 +416,8 @@ public class ScrapManagerImpl implements ScrapManager {
 			for (int i= 0; i< stockList.size(); i++){
 				createFinanceAccount(no_person, uuid, dn, token, stockList.get(i));
 			}
+			// 여러 증권사일 경우 성공 / 실패 둘다 가능하기 때문에 성공으로 리턴
+			returnClass.setCd_result(Constant.SUCCESS);
 		}
 		return returnClass;
 	}
@@ -519,7 +521,11 @@ public class ScrapManagerImpl implements ScrapManager {
 		}
 		else	{
 			logger.error("금융투자회사 가상 계좌 개설이 실패하였습니다.");
+			returnClass.setCd_result(Constant.FAILED);
+			returnClass.setMessage("금융투자회사 가상 계좌 개설이 실패하였습니다.");
+			return returnClass;
 		}
+		returnClass.setCd_result(Constant.SUCCESS);
 		return returnClass;
 	}
 	
@@ -946,6 +952,7 @@ public class ScrapManagerImpl implements ScrapManager {
 	        	fcLinkInfo.setYn_link("Y");
 	        	fcLinkInfo.setCd_fc(cd_fc);
 	        	fcLinkInfo.setCd_link_stat("99");
+	        	fcLinkInfo.setRsn_link_message("금융투자회사 가상 계좌 개설이 실패하였습니다.");
 	        	fcLinkInfo.setId_frt(no_person);
 	        	fcLinkInfo.setId_lst(no_person);
 	        	scrapMapper.createFcLinkInfo(fcLinkInfo);

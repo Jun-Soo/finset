@@ -1269,7 +1269,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 
 .cert-finger { height: 70vh; position: relative; }
 .cert-finger .wrap { position: absolute; left: 0; top: 50%; margin-top: -140px; text-align: center; width: 100%; }
-.cert-finger .wrap .warn { background: none; }
+.cert-finger .wrap .warn { background: none; padding-left: 0; }
 .cert-finger .svg { background: url("../images/member/fingerprint.svg") no-repeat 50% 0; background-size: 120px; position: absolute; width: 100%; top: 50%; margin-top: -81px; }
 .cert-finger .svg p { text-align: center; font-size: 15px; margin-top: 20px; }
 

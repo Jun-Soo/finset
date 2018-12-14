@@ -32,7 +32,7 @@
             <button class="btn-search" @click="openScKeywordMd();"></button>
           </div>
         </div>
-        <div v-if="trnsList.length == 0" class="nodata">등록 내역이 없습니다</div>
+        <div v-if="trnsList.length == 0" class="nodata">조회 내역이 없습니다</div>
         <div v-else class="nobox-list">
           <template v-for="trnsInfo in trnsList">
             <p :key="trnsInfo.index" v-if="trnsInfo.dateCol" class="date">{{formatDateDot(trnsInfo.dt_trd)}}</p>

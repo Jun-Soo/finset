@@ -128,7 +128,6 @@ export default {
     searchList: function() {
       var _this = this;
       _this.page = 1;
-      _this.newsList = [];
       Common.pagination(_this.listNews);
     },
     listNews: function(callback) {
@@ -161,6 +160,9 @@ export default {
 
           //pagination
           if (list.length === 0) {
+            if (_this.page == 1) {
+              _this.newsList = [];
+            }
             callback();
             _this.seen = true;
             return;

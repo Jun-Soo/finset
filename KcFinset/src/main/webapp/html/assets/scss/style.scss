@@ -835,6 +835,9 @@ aside.search-wrap{
     }
     .align-item{
         text-align: right;
+        em{
+            vertical-align: middle;
+        }
     }
 } 
 
@@ -2662,6 +2665,7 @@ aside.search-wrap{
     width: 32px;
     height: 19px;
     background: url("../images/common/btn_onoff.png") no-repeat top center / 32px;
+    vertical-align: middle;
     &.on{
         background-position: bottom center;
     }

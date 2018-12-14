@@ -7,6 +7,7 @@ package com.koscom.scrapData.dao;
 import java.util.List;
 import java.util.Map;
 
+import com.koscom.scrapData.model.BusinessTypeInfoVO;
 import com.koscom.scrapData.model.ConsumeDataForm;
 import com.koscom.scrapData.model.ConsumeDataVO;
 import com.koscom.contents.model.ContentsVO;
@@ -74,4 +75,11 @@ public interface ConsumeDataMapper {
 	 * @return
 	 */
 	String getNtsCode();
+	
+	/**
+	 * BUSINESS_TYPE_INFO에 해당하는 업종 명이 없을 경우 신규로 등록
+	 * @param businessTypeInfoVO
+	 * @return
+	 */
+	int createNewBusinessTypeInfo(BusinessTypeInfoVO businessTypeInfoVO);
 }

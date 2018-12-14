@@ -2435,6 +2435,7 @@ aside.search-wrap{
             }
             &:last-child{
                 flex-grow: 4;
+                text-align: right;
                 select{
                     width: 100%;
                 }
@@ -2456,7 +2457,7 @@ aside.search-wrap{
             border: 1px solid $lineColor;
             background: #fff;
             input[type="text"]{
-                width: 100%;
+                width: calc(100% - 50px);
                 border: none;
                 vertical-align: middle;
                 line-height: 33px;
@@ -2795,7 +2796,8 @@ button.cal{
                                 width: 100px;
                                 font-size: 15px;
                                 text-align: right;
-                                padding: 0 15px;
+                                //padding: 0 15px;
+                                text-indent: 0;
                             }
                         }
                     }
@@ -3375,6 +3377,10 @@ button.cal{
 .cert-check-wrap{
     margin-top: 30px;
     padding: 0 21px;
+    display: flex;
+    >p{
+        width: 50%;
+    }
     .text{
         margin-bottom: 20px;
         line-height: 17px;
@@ -4875,13 +4881,26 @@ button.cal{
 //   지문인증 설정   //
 
 .cert-finger{
-    display: flex;
-    align-items: center;
-    justify-content: center;
     height: 70vh;
-    div{
+    position: relative;
+    .wrap{
+        position:absolute;
+        left:0;
+        top: 50%;
+        margin-top: -140px;
+        text-align: center;
+        width: 100%;
+        .warn{
+            background: none;
+        }
+    }
+    .svg{
         background: url("../images/member/fingerprint.svg") no-repeat 50% 0;
         background-size: 120px;
+        position: absolute;
+        width: 100%;
+        top: 50%;
+        margin-top: -81px;
         p{
             text-align: center;
             font-size: 15px;   

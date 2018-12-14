@@ -9,20 +9,33 @@
 		    ANR.SEQ_SEARCH = AN.SEQ_SEARCH
 			AND ANR.YN_USE = 'Y'
 			AND ANR.NEWS_STATUS='02'
-			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(scKeyword)">
-			AND(
-				SELECT
-					CODE_VALUE
-				FROM
-					COMM_CD
-				WHERE
-					CODE_GROUP = 'news_search_query'
-					AND NM_CODE = AN.SEARCH_QUERY
-			) IN
-			<foreach item="item" collection="scKeyword" index="index" open="(" separator="," close=")">
-				#{item, jdbcType=VARCHAR}
-			</foreach>
-			</if>
+			<choose>
+			<when test="@com.koscom.util.MybatisUtil@isNotEmpty(scKeyword)">
+				AND(
+					SELECT
+						CODE_VALUE
+					FROM
+						COMM_CD
+					WHERE
+						CODE_GROUP = 'news_search_query'
+						AND NM_CODE = AN.SEARCH_QUERY
+				) IN
+				<foreach item="item" collection="scKeyword" index="index" open="(" separator="," close=")">
+					#{item, jdbcType=VARCHAR}
+				</foreach>
+			</when>
+			<otherwise>
+				AND(
+					SELECT
+						CODE_VALUE
+					FROM
+						COMM_CD
+					WHERE
+						CODE_GROUP = 'news_search_query'
+						AND NM_CODE = AN.SEARCH_QUERY
+				) = ''
+			</otherwise>
+			</choose>
 		</where>
 	</sql>
 

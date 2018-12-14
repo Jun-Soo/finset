@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import com.koscom.contents.model.ContentsVO;
 import com.koscom.scrapData.dao.ConsumeDataMapper;
+import com.koscom.scrapData.model.BusinessTypeInfoVO;
 import com.koscom.scrapData.model.ConsumeDataForm;
 import com.koscom.scrapData.model.ConsumeDataVO;
 import com.koscom.scrapData.service.ConsumeDataManager;
@@ -138,6 +139,18 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 						if(contentsVO==null){
 							cd_class = "99";			//기타
 							cd_type = "999";			//기타
+							
+							BusinessTypeInfoVO businessTypeInfoVO =
+									new BusinessTypeInfoVO(
+											cd_fc,
+											nm_biz,
+											"99999",
+											"NEW",
+											null,
+											"NEW",
+											null
+									);
+							consumeDataMapper.createNewBusinessTypeInfo(businessTypeInfoVO);
 						} else {
 							cd_class = contentsVO.getCd_class();
 							cd_type = contentsVO.getCd_type();

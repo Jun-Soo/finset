@@ -205,6 +205,11 @@ public class KcbManagerImpl implements KcbManager {
 			schMap.put("nm_if_sub", StringUtil.NVL(infoVO.getNmIfSub(), ""));
 
 			HashMap<String, String> clobMap = creditMapper.getKcbInfoCLOB(schMap);
+			// DB에 기존 요청 내역이 있을 경우 정상 처리
+			if( clobMap == null)	{
+				logger.error("기존 요청 한 내역이 있습니다.");
+				return new ReturnClass(Constant.SUCCESS, "기존 요청 한 내역이 있습니다.");
+			}
 			
 			//신용리포트 조회 및 데이터 확인용 조회
 			if("220".equals(infoVO.getNmIfSub()) || "Y".equals(infoVO.getYn_craw_test())) clobMap = null; 
@@ -213,10 +218,9 @@ public class KcbManagerImpl implements KcbManager {
 			if("600".equals(infoVO.getNmIf()) && "05".equals(infoVO.getCd_regist())) clobMap = null;
 			if("600420".equals(infoVO.getNmIf()) && "03".equals(infoVO.getCd_regist())) clobMap = null;
 			
-			if (infoVO != null && clobMap == null) {
-
+			if (infoVO != null) {
 				if(StringUtil.isEmpty(infoVO.getNoPerson()) || StringUtil.isEmpty(infoVO.getNmIf())) {
-					logger.error("[조회키 요청 실패]개인식별번호 OR 전문구분코드 없습니다.");
+					logger.error("[조회키 요청 실패]개인식별번호  OR 전문구분코드 없습니다.");
 	                return new ReturnClass(Constant.FAILED, "[조회키 요청 실패]개인식별번호 OR 전문구분코드 없습니다.");
 	            }
 

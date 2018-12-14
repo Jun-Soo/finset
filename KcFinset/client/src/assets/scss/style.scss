@@ -4956,9 +4956,14 @@ button.cal{
     .list{
         margin-top: 25px;
         border-top: 1px solid $lineColor;
+        >div{
+            border-bottom: 1px solid $lineColor;
+        }
+        .warn{
+            margin-bottom: 10px;
+        }
         .flex{
             display: flex;
-            border-bottom: 1px solid $lineColor;
             justify-content: space-between;
             align-items: center;
             .key{

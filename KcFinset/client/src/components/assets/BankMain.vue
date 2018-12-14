@@ -3,6 +3,18 @@
     <div class="assets-bank">
       <p class="key">나의 은행 예금은</p>
       <p class="value"><em>{{(sumAmt.sum_amt_balance==null)? '-' : formatNumber(Math.round(sumAmt.sum_amt_balance/10000))}}</em>만원</p>
+    </div>
+
+    <div v-if="depWdrlInfo != null" @click="viewDetail('dwl')" class="assets-bank-recent">
+      <p>{{depWdrlInfo.dt_trd}}<em>{{depWdrlInfo.doc1}}</em></p>
+      <p v-if="'0'!=depWdrlInfo.amt_dep"><em class="number blue">{{formatNumber(depWdrlInfo.amt_dep)}}</em>원</p>
+      <p v-else><em class="number red">{{('-'+formatNumber(depWdrlInfo.amt_wdrl))}}</em>원</p>
+    </div>
+
+    <div class="box-list list01 noMG pb90">
+      <div class="align-item mb20">
+        <em class="mr10">정렬하기</em><button @click="setOrder()" class="btn-onoff" :class="{on: isSetOrder}" :disabled="accountList.length==0"></button>
+      </div>
 
       <div v-if="personShareList.length!=0" class="filter-wrap">
         <div class="filter red">
@@ -13,18 +25,9 @@
           <label :for="'chk'+personShareInfo.rk">{{personShareInfo.nm_person}}</label>
         </div>
       </div>
-    </div>
 
-    <div v-if="depWdrlInfo != null" @click="viewDetail('dwl')" class="assets-bank-recent">
-      <p>{{depWdrlInfo.dt_trd}}<em>{{depWdrlInfo.doc1}}</em></p>
-      <p v-if="'0'!=depWdrlInfo.amt_dep"><em class="number blue">{{formatNumber(depWdrlInfo.amt_dep)}}</em>원</p>
-      <p v-else><em class="number red">{{('-'+formatNumber(depWdrlInfo.amt_wdrl))}}</em>원</p>
-    </div>
-
-    <template v-if="isSetOrder">
-      <div v-if="accountMyList.length == 0 && accountShareList.length == 0" class="nodata">계좌 내역이 없습니다</div>
-      <div v-else class="box-list list01 noMG">
-
+      <template v-if="isSetOrder">
+        <div v-if="accountMyList.length == 0 && accountShareList.length == 0" class="nodata">계좌 내역이 없습니다</div>
         <draggable v-model="accountMyList" @start="drag=true" :options="draggableOptions" @update="changeSort()">
           <div v-for="accountMyInfo in accountMyList" :key="accountMyInfo.index" class="item sortClass">
             <a @click="viewDetail('act', accountMyInfo.no_person, accountMyInfo.nm_person, accountMyInfo.no_account, accountMyInfo.rk)" class="block handle">
@@ -66,11 +69,9 @@
             </div>
           </a>
         </div>
-      </div>
-    </template>
-    <template v-else>
-      <div v-if="accountList.length == 0" class="nodata">계좌 내역이 없습니다</div>
-      <div v-else class="box-list list01 noMG">
+      </template>
+      <template v-else>
+        <div v-if="accountList.length == 0" class="nodata">계좌 내역이 없습니다</div>
         <div v-for="accountInfo in accountList" :key="accountInfo.index" class="item">
           <a @click="viewDetail('act', accountInfo.no_person, accountInfo.nm_person, accountInfo.no_account, accountInfo.rk)" class="block">
             <div class="top">
@@ -90,8 +91,8 @@
             </div>
           </a>
         </div>
-      </div>
-    </template>
+      </template>
+    </div>
   </section>
 </template>
 
@@ -192,12 +193,13 @@ export default {
           }
 
           //pagination
+          if (_this.page == 1) {
+            _this.accountMyList = [];
+            _this.accountShareList = [];
+            _this.accountList = [];
+          }
+
           if (list.length === 0) {
-            if (_this.page == 1) {
-              _this.accountMyList = [];
-              _this.accountShareList = [];
-              _this.accountList = [];
-            }
             callback();
             _this.seen = true;
             return;
@@ -240,6 +242,12 @@ export default {
     },
     getCodeName: function(code_group, code_value) {
       return Common.getCodeName(code_group, code_value);
+    },
+    //정렬하기 설정
+    setOrder: function() {
+      var _this = this;
+      _this.isSetOrder = !_this.isSetOrder;
+      _this.searchAccountList();
     },
     //정렬순서 변경
     changeSort: function() {

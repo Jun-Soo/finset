@@ -403,9 +403,9 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .list01 .item .detail .wrap p.rate { font-size: 14px; }
 .list01 .item .detail .wrap p.rate em { display: inline-block; line-height: 16px; color: #62c1d0; border: 1px solid #62c1d0; border-radius: 20px; margin-right: 5px; padding: 0 10px; vertical-align: middle; font-weight: 700; }
 .list01 .select { display: flex; margin-bottom: 10px; }
-.list01 .select div { width: 50%; }
-.list01 .select div.right { text-align: right; }
-.list01 .select div.right button { width: 35px; height: 35px; background: url("../images/common/btn-search.png") no-repeat center/contain; }
+.list01 .select > div { width: 50%; }
+.list01 .select > div.right { text-align: right; }
+.list01 .select > div.right button { width: 35px; height: 35px; background: url("../images/common/btn-search.png") no-repeat center/contain; }
 
 .list02 .header { font-size: 13px; color: #666; margin-bottom: 15px; font-weight: 700; }
 .list02 .header.col { color: #9b9489; margin-bottom: 10px; }
@@ -731,15 +731,15 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .bank-detail .select div.right { text-align: right; width: 50%; }
 .bank-detail .select div.right button { width: 35px; height: 35px; background: url("../images/common/btn-search.png") no-repeat center/contain; vertical-align: middle; }
 .bank-detail .inout { display: flex; border-bottom: 1px solid #e5e5e5; padding: 30px 0; }
-.bank-detail .inout div { flex-grow: 1; text-align: center; }
-.bank-detail .inout div .key { font-size: 14px; font-weight: 700; }
-.bank-detail .inout div .key.red { color: #e52638; }
-.bank-detail .inout div .key.red em { color: #e52638; font-size: 14px; }
-.bank-detail .inout div .key.blue { color: #62c1d0; }
-.bank-detail .inout div .key.blue em { color: #62c1d0; font-size: 14px; }
-.bank-detail .inout div .key em { font-weight: 400; }
-.bank-detail .inout div .number { font-size: 24px; color: #222; font-weight: 700; margin-top: 10px; }
-.bank-detail .inout div:last-child { border-left: 1px solid #e5e5e5; }
+.bank-detail .inout > div { flex-grow: 1; text-align: center; width: 50%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+.bank-detail .inout > div .key { font-size: 14px; font-weight: 700; }
+.bank-detail .inout > div .key.red { color: #e52638; }
+.bank-detail .inout > div .key.red em { color: #e52638; font-size: 14px; }
+.bank-detail .inout > div .key.blue { color: #62c1d0; }
+.bank-detail .inout > div .key.blue em { color: #62c1d0; font-size: 14px; }
+.bank-detail .inout > div .key em { font-weight: 400; }
+.bank-detail .inout > div .number { font-size: 24px; color: #222; font-weight: 700; margin-top: 10px; }
+.bank-detail .inout > div:last-child { border-left: 1px solid #e5e5e5; }
 
 .gray-search-box { padding: 25px 21px; background: #efeeec; }
 .gray-search-box .search { display: flex; }
@@ -754,7 +754,7 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .gray-search-box .wrap { margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e5e5; display: none; }
 .gray-search-box .date-pick { display: grid; grid-template-columns: 1fr 1fr; grid-gap: 5px; align-items: center; }
 .gray-search-box .date-pick p { border: 1px solid #e5e5e5; background: #fff; }
-.gray-search-box .date-pick p input[type="text"] { width: calc(100% - 33px); border: none; vertical-align: middle; line-height: 33px; }
+.gray-search-box .date-pick p input[type="text"] { width: 100%; border: none; vertical-align: middle; line-height: 33px; }
 .gray-search-box .date-pick p button { width: 33px; height: 33px; background: url("../images/assets/ico_cal.png") no-repeat center/contain; vertical-align: middle; }
 
 .inout-list { margin-top: 30px; border-bottom: 1px solid #e5e5e5; padding: 0 21px; padding-bottom: 30px; }
@@ -822,7 +822,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .accodion ul li .con .flex p:last-child { text-align: right; line-height: 0; }
 .accodion ul li .con .flex p:last-child button { display: inline-block; width: 33px; height: 33px; border: 1px solid #e5e5e5; background: url("../images/common/btn_accodion_search.png") no-repeat center/contain; margin: 0; }
 .accodion ul li .con .flex p:last-child button.cal { background: url("../images/common/btn_cal.png") no-repeat center/18px; }
-.accodion ul li .con .flex p:last-child input[type="text"], .accodion ul li .con .flex p:last-child input[type="number"] { line-height: 35px; height: 33px; width: 126px; font-size: 15px; text-align: right; padding: 0 15px; }
+.accodion ul li .con .flex p:last-child input[type="text"], .accodion ul li .con .flex p:last-child input[type="number"] { line-height: 35px; height: 33px; width: 100px; font-size: 15px; text-align: right; padding: 0 15px; }
 .accodion ul li .con .text { font-size: 12px; line-height: 16px; color: #888; }
 .accodion ul li.on .top { border-bottom: 1px solid #e5e5e5; }
 .accodion ul li.on .top em { background-position: left bottom; }

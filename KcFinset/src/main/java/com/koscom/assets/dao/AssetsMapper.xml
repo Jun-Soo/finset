@@ -880,10 +880,13 @@
     <select id="getAssetsBankDepWdrlDetail" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
 		/* com.koscom.assets.dao.AssetsMapper.getAssetsBankDepWdrlDetail - 자산관리(입출금상세) */
 		SELECT
+			AI.CD_FC,
 			( SELECT NM_FC FROM FC_INFO WHERE CD_FC = AI.CD_FC ) AS NM_FC,
+			AI.NO_ACCOUNT,
+			AI.NM_ACCOUNT,
 			XX1.DEC_VARCHAR2_SEL(STD.AN, '10','FS_ARIA','SCR_TRANSACTION_DETAIL','AN') AS AN,
 			STD.DT_TRD,
-			( SUBSTR( STD.TM_TRD, 0, 2 )|| ':' || SUBSTR( STD.TM_TRD, 3, 2 ) ) AS TM_TRD,
+			STD.TM_TRD,
 			DECODE( STD.AMT_WDRL, '0', '01', '02' ) AS CD_TRNS,
 			DECODE( STD.AMT_WDRL, '0', '입금', '출금' ) AS NM_TRNS,
 			STD.DEALWAY1,
@@ -934,7 +937,6 @@
 		SET
 			CD_CLASS = #{cd_class, jdbcType=VARCHAR},
 			CD_TYPE = #{cd_type, jdbcType=VARCHAR},
-			YN_AUTO = #{yn_auto, jdbcType=VARCHAR},
 			ID_LST = #{no_person, jdbcType=VARCHAR},
 			DT_LST = SYSDATE
 		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}

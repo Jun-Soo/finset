@@ -218,6 +218,7 @@ public class CustomerCenterController implements Constant {
 		PersonVO offerPersonVO = personManager.getPersonInfoHp(personShareInfo.getOffer_hp());
 		if(offerPersonVO != null) {
 			personShareInfo.setOffer_no_person(offerPersonVO.getNo_person());
+			personShareInfo.setOffer_nm_person(offerPersonVO.getNm_person());
 			model.addAttribute("typeMessage", "push");
 		}else {
 			model.addAttribute("typeMessage", "sms");
@@ -373,6 +374,7 @@ public class CustomerCenterController implements Constant {
 			PersonVO offerPersonVO = personManager.getPersonInfoHp(personShareInfo.getOffer_hp());
 			if(offerPersonVO != null) {
 				personShareInfo.setOffer_no_person(offerPersonVO.getNo_person());
+				personShareInfo.setOffer_nm_person(offerPersonVO.getNm_person());
 				model.addAttribute("typeMessage", "push");
 			}else {
 				model.addAttribute("typeMessage", "sms");

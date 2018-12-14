@@ -39,7 +39,7 @@
       <div class="bank-detail noMG">
         <div class="select">
           <div class="left">
-            <multiselect v-model="scTrnsType" ref="scTrnsType" placeholder="유형선택" track-by="text" label="text" :options="scTrnsTypeOptions" :searchable="false" :allow-empty="false" @select="onSelectTrns">
+            <multiselect v-model="scTrnsType" ref="scTrnsType" placeholder="유형선택" track-by="text" label="text" :options="scTrnsTypeOptions" :searchable="false" :allow-empty="false" @select="onSelectTrns" :alignLeft="true">
             </multiselect>
           </div>
           <div class="right">

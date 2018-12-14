@@ -327,7 +327,7 @@ export default {
       var _this = this;
       if (!_this.validBankDepWdrlList()) return false;
       _this.page = 1;
-      _this.depWdrlList = [];
+      // _this.depWdrlList = [];
       _this.getDepWdrlTotalAmt();
       Common.pagination(_this.listDepWdrl);
     },
@@ -421,6 +421,7 @@ export default {
         .post("/m/assets/listAssetsBankDepWdrl.json", formData)
         .then(function(response) {
           var list = response.data.pagedList.source;
+
           //날짜 칼럼 셋팅
           var dtTrd = "";
           for (var i = 0; i < list.length; i++) {
@@ -435,6 +436,9 @@ export default {
 
           //pagination
           if (list.length === 0) {
+            if (_this.page == 1) {
+              _this.depWdrlList = [];
+            }
             callback();
             _this.seen = true;
             return;

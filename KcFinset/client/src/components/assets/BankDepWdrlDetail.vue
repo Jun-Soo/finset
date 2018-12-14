@@ -23,7 +23,7 @@
       </ul>
       <ul class="flex">
         <li>거래금액</li>
-        <li>{{(depWdrlInfo.amt_dep!='0')? formatNumber(depWdrlInfo.amt_dep) : formatNumber(depWdrlInfo.amt_wdrl)}}</li>
+        <li>{{(depWdrlInfo.cd_trns=='01')? formatNumber(depWdrlInfo.amt_dep) : formatNumber(depWdrlInfo.amt_wdrl)}}</li>
       </ul>
       <ul class="flex">
         <li>거래후 금액</li>
@@ -161,6 +161,12 @@ export default {
           var depWdrlInfo = response.data.depWdrlInfo;
           depWdrlInfo.fcImg =
             "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + depWdrlInfo.cd_fc;
+          console.log(depWdrlInfo.tm_trd);
+          depWdrlInfo.tm_trd =
+            depWdrlInfo.tm_trd.substr(0, 2) +
+            ":" +
+            depWdrlInfo.tm_trd.substr(2, 2);
+          console.log(depWdrlInfo.tm_trd);
           _this.depWdrlInfo = depWdrlInfo;
 
           _this.setCsCategory();
@@ -339,13 +345,14 @@ export default {
             } else {
               _this.csYnAuto = "N";
             }
-            _this.modifyConsume();
+            _this.createConsume();
           });
       }
       _this.setCsCategoryText();
       _this.isShowCategory = false;
     },
-    modifyConsume: function() {
+    //소비지출 등록
+    createConsume: function() {
       var _this = this;
 
       console.log("cd_class" + _this.csCurClass);
@@ -353,19 +360,54 @@ export default {
       console.log("yn_auto" + _this.csYnAuto);
 
       var formData = new FormData();
-      formData.append("no_account", _this.no_account);
-      formData.append("dt_trd", _this.dt_trd);
-      formData.append("tm_trd", _this.tm_trd);
-
+      //todo seq추가
       formData.append("cd_class", _this.csCurClass);
       formData.append("cd_type", _this.csCurType);
       formData.append("yn_auto", _this.csYnAuto);
 
+      formData.append("type_in_out", _this.depWdrlInfo.cd_trns);
+      formData.append("means_consume", "04");
+      formData.append("cd_fc", _this.depWdrlInfo.cd_fc);
+      formData.append("nm_card", _this.depWdrlInfo.nm_account);
+      formData.append("no_card", _this.depWdrlInfo.no_account);
+      formData.append("dt_trd", _this.depWdrlInfo.dt_trd);
+      formData.append("tm_trd", _this.depWdrlInfo.tm_trd); //todo
+      formData.append("contents", _this.depWdrlInfo.doc1);
+      formData.append(
+        "amt_in_out",
+        _this.depWdrlInfo.cd_trns == "01"
+          ? _this.depWdrlInfo.amt_dep
+          : _this.depWdrlInfo.amt_wdrl
+      );
+      formData.append("mon_installment", "0");
+      formData.append("mon_remaining", "0");
+      formData.append("yn_pay_installment", "N");
+      formData.append("yn_cancel", "N");
+      formData.append("yn_delete", "N");
+      formData.append("yn_budget_except", "N");
+      formData.append("yn_person_regist", "N");
+
       this.$http
-        .post("/m/assets/updateAssetsDetailCsInfo.json", formData)
+        .post("/m/consume/createConsumeInfo.json", formData)
         .then(function(response) {});
 
       _this.isNew = false;
+    },
+    //소비지출 수정
+    modifyConsume: function() {
+      var _this = this;
+
+      console.log("cd_class" + _this.csCurClass);
+      console.log("cd_type" + _this.csCurType);
+
+      var formData = new FormData();
+      //todo seq추가
+      formData.append("cd_class", _this.csCurClass);
+      formData.append("cd_type", _this.csCurType);
+
+      this.$http
+        .post("/m/assets/updateAssetsDetailCsInfo.json", formData)
+        .then(function(response) {});
     },
     getCopyContents: function() {
       var _this = this;

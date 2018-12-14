@@ -23,7 +23,7 @@
             <li>
               <p class="key">금액</p>
               <p>
-                <input type="tel" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required|numeric'" data-vv-name="금액"><em>원</em>
+                <input type="tel" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액"><em>원</em>
               </p>
             </li>
             <p class="warn" v-if="errors.has('금액')">{{errors.first('금액')}}</p>

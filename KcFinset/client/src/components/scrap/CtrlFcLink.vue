@@ -1,5 +1,5 @@
 <template>
-  <section @click="clickClear">
+  <section @click="clickClear" v-if="seen">
     <div class="con-top cert-top">
       <p>공인인증서로<em> 한번에 등록하세요</em></p>
       <a @click="checkExistCert(false, $event)">바로가기</a>
@@ -123,6 +123,7 @@ export default {
   name: "ScrapCtrlFcLink",
   data() {
     return {
+      seen: false,
       curTab: "bank",
       bankList: [],
       cardList: [],
@@ -424,6 +425,7 @@ export default {
               _this.etcList[i].isClickLink = false;
             }
           }
+          _this.seen = true;
         });
     },
     // 공인인증서 유무 체크

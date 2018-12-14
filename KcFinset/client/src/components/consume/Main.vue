@@ -73,7 +73,7 @@
         </div>
       </div>
 
-      <div class="spend-list box-list noMG">
+      <div class="spend-list box-list noMG" :class="{'pt0':shareList.length == 1}">
         <div class="list-wrap" v-if="shareList.length != 1">
           <div class="filter-wrap">
             <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">

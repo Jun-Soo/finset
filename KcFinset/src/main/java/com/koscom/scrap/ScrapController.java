@@ -194,8 +194,8 @@ public class ScrapController {
 			String cd_fc,
 			String uuid,
 			String dn) {
-		logger.debug("================= no_person : " + no_person);
-		logger.debug("================= dn : " + dn);
+		logger.info("no_person : " + no_person);
+		logger.info("dn : " + dn);
 		logger.info("service.profile :" +environment.getProperty("service.profile"));
 		
 		String token = scrapManager.getAccessToken();
@@ -204,7 +204,7 @@ public class ScrapController {
 			model.addAttribute("msg_err", "금융투자회사 Access Token 조회를 실패하였습니다.");
 		}
 				
-		logger.debug("================= token : " + token);
+		logger.info("token : " + token);
 		
 		ReturnClass returnClass = scrapManager.checkFinance(no_person, cd_fc, uuid, dn, token);
 		

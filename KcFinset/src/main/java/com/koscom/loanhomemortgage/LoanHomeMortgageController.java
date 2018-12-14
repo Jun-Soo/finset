@@ -117,15 +117,7 @@ public class LoanHomeMortgageController implements Constant {
 	 */
 	@RequestMapping("/getLoanAffiliatesDetail.json")
 	public String getLoanAffiliatesDetail(Model model, HttpServletRequest request, GoodsForm goodsForm, HttpSession session) {
-        /**
-         * 접근제어 : start
-         */
-        boolean isAuth = AuthUtil.isHaveAuth(request,"/frameLoanHomeMortgageStep1.crz", environment);
-        if(isAuth == false) {return NOT_AUTH_PAGE;}
-        /**
-         * 접근제어 : end
-         */
-		String no_person = (String) session.getAttribute("no_person");
+  		String no_person = (String) session.getAttribute("no_person");
 		goodsForm.setNo_person(no_person);
 		GoodsVO goodsInfo = new GoodsVO();
 		GoodsVO goodsVO = new GoodsVO();
@@ -151,15 +143,7 @@ public class LoanHomeMortgageController implements Constant {
 	 */
 	@RequestMapping("/getLoanNoAffiliatesDetail.json")
 	public String getLoanNoAffiliatesDetail(Model model, HttpServletRequest request, GoodsbankForm goodsbankForm, HttpSession session) {
-        /**
-         * 접근제어 : start
-         */
-        boolean isAuth = AuthUtil.isHaveAuth(request,"/frameLoanHomeMortgageStep1.crz", environment);
-        if(isAuth == false) {return NOT_AUTH_PAGE;}
-        /**
-         * 접근제어 : end
-         */
-		String no_person = (String) session.getAttribute("no_person");
+ 		String no_person = (String) session.getAttribute("no_person");
 		goodsbankForm.setNo_person(no_person);
 		GoodsbankVO goodsInfo = new GoodsbankVO();
 		GoodsbankVO goodsVO = new GoodsbankVO();

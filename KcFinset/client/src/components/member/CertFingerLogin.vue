@@ -72,12 +72,7 @@ export default {
       password: "",
       cntFailFinger: this.$store.state.user.cntFailFinger,
       hp: this.$store.state.user.hp,
-      fingerSVG: new Vivus("my-svg", {
-        type: "delayed",
-        duration: 100,
-        start: "manual",
-        animTimingFunction: Vivus.EASE
-      })
+      fingerSVG: {}
     };
   },
   component: {},

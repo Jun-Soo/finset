@@ -238,7 +238,7 @@
 			, DT_LST  		 = SYSDATE
         WHERE NO_PERSON  = #{no_person, jdbcType=VARCHAR}
     </update>
-    
+
     <select id="getPersonEmail" parameterType="java.lang.String" resultType="java.lang.String" >
         /* com.koscom.person.dao.PersonMapper.getPersonConnectTime */
 		SELECT
@@ -884,6 +884,7 @@
 			<if test='"05".equals(share_status)'>
 				<if test="@com.koscom.util.MybatisUtil@isNotEmpty(offer_no_person)">
 					OFFER_NO_PERSON = #{offer_no_person, jdbcType=VARCHAR},
+				    OFFER_NM_PERSON = #{offer_nm_person, jdbcType=VARCHAR},
 				</if>
 			</if>
 			<if test='"04".equals(share_status)'>
@@ -957,6 +958,7 @@
 		SET
 			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(offer_no_person)">
 				OFFER_NO_PERSON = #{offer_no_person, jdbcType=VARCHAR},
+				OFFER_NM_PERSON = #{offer_nm_person, jdbcType=VARCHAR},
 			</if>
 			YN_CREDIT_OFFER = #{yn_credit_offer, jdbcType=VARCHAR},
 			YN_DEBT_OFFER = #{yn_debt_offer, jdbcType=VARCHAR},

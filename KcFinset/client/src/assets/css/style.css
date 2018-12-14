@@ -406,6 +406,8 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .list01 .select > div { width: 50%; }
 .list01 .select > div.right { text-align: right; }
 .list01 .select > div.right button { width: 35px; height: 35px; background: url("../images/common/btn-search.png") no-repeat center/contain; }
+.list01 .align-item { text-align: right; }
+.list01 .align-item em { vertical-align: middle; }
 
 .list02 .header { font-size: 13px; color: #666; margin-bottom: 15px; font-weight: 700; }
 .list02 .header.col { color: #9b9489; margin-bottom: 10px; }
@@ -794,7 +796,7 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .btn-menu-wrap .menu a:focus { background: #e8e8e8; }
 .btn-menu-wrap.on .menu { display: block; }
 
-.btn-onoff { display: inline-block; width: 32px; height: 19px; background: url("../images/common/btn_onoff.png") no-repeat top center/32px; }
+.btn-onoff { display: inline-block; width: 32px; height: 19px; background: url("../images/common/btn_onoff.png") no-repeat top center/32px; vertical-align: middle; }
 .btn-onoff.on { background-position: bottom center; }
 
 .btn-star { display: inline-block; width: 16px; height: 15px; background: url("../images/common/btn-star.png") no-repeat top center/16px; }
@@ -817,12 +819,12 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .accodion ul li .top span.on:before { background-position: left bottom; }
 .accodion ul li .con { padding: 20px; display: none; }
 .accodion ul li .con .flex { display: flex; margin-bottom: 10px; }
-.accodion ul li .con .flex p { width: 50%; line-height: 35px; }
-.accodion ul li .con .flex p:first-child { font-size: 14px; font-weight: 700; color: #222; }
+.accodion ul li .con .flex p { width: 70%; line-height: 35px; }
+.accodion ul li .con .flex p:first-child { font-size: 14px; font-weight: 700; color: #222; width: 30%; }
 .accodion ul li .con .flex p:last-child { text-align: right; line-height: 0; }
 .accodion ul li .con .flex p:last-child button { display: inline-block; width: 33px; height: 33px; border: 1px solid #e5e5e5; background: url("../images/common/btn_accodion_search.png") no-repeat center/contain; margin: 0; }
 .accodion ul li .con .flex p:last-child button.cal { background: url("../images/common/btn_cal.png") no-repeat center/18px; }
-.accodion ul li .con .flex p:last-child input[type="text"], .accodion ul li .con .flex p:last-child input[type="number"] { line-height: 35px; height: 33px; width: 100px; font-size: 15px; text-align: right; text-indent: 0; }
+.accodion ul li .con .flex p:last-child input[type="text"], .accodion ul li .con .flex p:last-child input[type="number"] { line-height: 35px; height: 33px; width: 110px; font-size: 15px; text-align: left; text-indent: 0; }
 .accodion ul li .con .text { font-size: 12px; line-height: 16px; color: #888; }
 .accodion ul li.on .top { border-bottom: 1px solid #e5e5e5; }
 .accodion ul li.on .top em { background-position: left bottom; }

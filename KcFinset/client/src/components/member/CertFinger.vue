@@ -53,12 +53,6 @@
 </template>
 
 <script>
-// var finger = new Vivus("my-svg", {
-//   type: "delayed",
-//   duration: 100,
-//   start: "manual",
-//   animTimingFunction: Vivus.EASE
-// });
 import Common from "./../../assets/js/common.js";
 import Constant from "./../../assets/js/constant.js";
 import ko from "vee-validate/dist/locale/ko.js";
@@ -86,8 +80,6 @@ export default {
     };
   },
   component: {},
-  // computed () {
-  // },
   beforeCreate() {},
   created() {
     this.$store.state.title = "지문인증 설정";

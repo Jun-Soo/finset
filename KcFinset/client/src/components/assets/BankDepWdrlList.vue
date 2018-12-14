@@ -15,7 +15,7 @@
         <div class="form">
           <p>은행계좌선택</p>
           <p>
-            <multiselect v-model="scAccount" ref="scAccount" placeholder="계좌선택" track-by="text" label="text" :options="scAccountOptions" :searchable="false" :allow-empty="false" @select="onSelectAcc">
+            <multiselect v-model="scAccount" class="multiselect-basic" ref="scAccount" placeholder="계좌선택" track-by="text" label="text" :options="scAccountOptions" :searchable="false" :allow-empty="false" @select="onSelectAcc">
             </multiselect>
           </p>
         </div>
@@ -327,7 +327,6 @@ export default {
       var _this = this;
       if (!_this.validBankDepWdrlList()) return false;
       _this.page = 1;
-      // _this.depWdrlList = [];
       _this.getDepWdrlTotalAmt();
       Common.pagination(_this.listDepWdrl);
     },

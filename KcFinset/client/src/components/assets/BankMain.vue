@@ -21,51 +21,77 @@
       <p v-else><em class="number red">{{('-'+formatNumber(depWdrlInfo.amt_wdrl))}}</em>원</p>
     </div>
 
-    <div v-if="accountMyList.length == 0 && accountShareList.length == 0" class="nodata">계좌 내역이 없습니다</div>
-    <div v-else class="box-list list01 noMG">
+    <template v-if="isSetOrder">
+      <div v-if="accountMyList.length == 0 && accountShareList.length == 0" class="nodata">계좌 내역이 없습니다</div>
+      <div v-else class="box-list list01 noMG">
 
-      <draggable v-model="accountMyList" @start="drag=true" :options="draggableOptions" @update="changeSort()">
-        <div v-for="accountMyInfo in accountMyList" :key="accountMyInfo.index" class="item sortClass">
-          <a @click="viewDetail('act', accountMyInfo.no_person, accountMyInfo.nm_person, accountMyInfo.no_account, accountMyInfo.rk)" class="block handle">
+        <draggable v-model="accountMyList" @start="drag=true" :options="draggableOptions" @update="changeSort()">
+          <div v-for="accountMyInfo in accountMyList" :key="accountMyInfo.index" class="item sortClass">
+            <a @click="viewDetail('act', accountMyInfo.no_person, accountMyInfo.nm_person, accountMyInfo.no_account, accountMyInfo.rk)" class="block handle">
+              <div class="top">
+                <p class="symbol"><img :src="accountMyInfo.fcImg" alt="" />{{accountMyInfo.nm_fc}}</p>
+                <p class="text">
+                  <em class="blue bold">{{getCodeName('cd_assets_bank',accountMyInfo.cd_detail_class)}}</em>
+                  <span v-if="personShareList.length!=0" class="circle" :class="colorList[accountMyInfo.rk]">{{accountMyInfo.nm_person}}</span>
+                </p>
+              </div>
+              <div class="text-wrap">
+                <div class="left">
+                  <p class="key">{{accountMyInfo.no_account}}</p>
+                </div>
+                <div class="right">
+                  <p class="value noMG"><em class="number">{{formatNumber(accountMyInfo.amt_balance)}}</em>원</p>
+                </div>
+              </div>
+            </a>
+          </div>
+        </draggable>
+
+        <div v-for="accountShareInfo in accountShareList" :key="accountShareInfo.index" class="item">
+          <a @click="viewDetail('act', accountShareInfo.no_person, accountShareInfo.nm_person, accountShareInfo.no_account, accountShareInfo.rk)" class="block">
             <div class="top">
-              <p class="symbol"><img :src="accountMyInfo.fcImg" alt="" />{{accountMyInfo.nm_fc}}</p>
+              <p class="symbol"><img :src="accountShareInfo.fcImg" alt="" />{{accountShareInfo.nm_fc}}</p>
               <p class="text">
-                <em class="blue bold">{{getCodeName('cd_assets_bank',accountMyInfo.cd_detail_class)}}</em>
-                <span v-if="personShareList.length!=0" class="circle" :class="colorList[accountMyInfo.rk]">{{accountMyInfo.nm_person}}</span>
+                <em class="blue bold">{{getCodeName('cd_assets_bank',accountShareInfo.cd_detail_class)}}</em>
+                <span class="circle" :class="colorList[accountShareInfo.rk]">{{accountShareInfo.nm_person}}</span>
               </p>
             </div>
             <div class="text-wrap">
               <div class="left">
-                <p class="key">{{accountMyInfo.no_account}}</p>
+                <p class="key">{{accountShareInfo.no_account}}</p>
               </div>
               <div class="right">
-                <p class="value noMG"><em class="number">{{formatNumber(accountMyInfo.amt_balance)}}</em>원</p>
+                <p class="value noMG"><em class="number">{{formatNumber(accountShareInfo.amt_balance)}}</em>원</p>
               </div>
             </div>
           </a>
         </div>
-      </draggable>
-
-      <div v-for="accountShareInfo in accountShareList" :key="accountShareInfo.index" class="item">
-        <a @click="viewDetail('act', accountShareInfo.no_person, accountShareInfo.nm_person, accountShareInfo.no_account, accountShareInfo.rk)" class="block">
-          <div class="top">
-            <p class="symbol"><img :src="accountShareInfo.fcImg" alt="" />{{accountShareInfo.nm_fc}}</p>
-            <p class="text">
-              <em class="blue bold">{{getCodeName('cd_assets_bank',accountShareInfo.cd_detail_class)}}</em>
-              <span class="circle" :class="colorList[accountShareInfo.rk]">{{accountShareInfo.nm_person}}</span>
-            </p>
-          </div>
-          <div class="text-wrap">
-            <div class="left">
-              <p class="key">{{accountShareInfo.no_account}}</p>
-            </div>
-            <div class="right">
-              <p class="value noMG"><em class="number">{{formatNumber(accountShareInfo.amt_balance)}}</em>원</p>
-            </div>
-          </div>
-        </a>
       </div>
-    </div>
+    </template>
+    <template v-else>
+      <div v-if="accountList.length == 0" class="nodata">계좌 내역이 없습니다</div>
+      <div v-else class="box-list list01 noMG">
+        <div v-for="accountInfo in accountList" :key="accountInfo.index" class="item">
+          <a @click="viewDetail('act', accountInfo.no_person, accountInfo.nm_person, accountInfo.no_account, accountInfo.rk)" class="block">
+            <div class="top">
+              <p class="symbol"><img :src="accountInfo.fcImg" alt="" />{{accountInfo.nm_fc}}</p>
+              <p class="text">
+                <em class="blue bold">{{getCodeName('cd_assets_bank',accountInfo.cd_detail_class)}}</em>
+                <span v-if="personShareList.length!=0" class="circle" :class="colorList[accountInfo.rk]">{{accountInfo.nm_person}}</span>
+              </p>
+            </div>
+            <div class="text-wrap">
+              <div class="left">
+                <p class="key">{{accountInfo.no_account}}</p>
+              </div>
+              <div class="right">
+                <p class="value noMG"><em class="number">{{formatNumber(accountInfo.amt_balance)}}</em>원</p>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </template>
   </section>
 </template>
 
@@ -88,11 +114,13 @@ export default {
       },
       sumAmt: "", //총금액
       depWdrlInfo: "", //최근 입출금내역
+      isSetOrder: false, //정렬셋팅OnOff
       colorList: ["red", "orange", "green", "blue", "purple"],
       personShareList: [], //공유자list
       person_share_list: [], //공유자list(조회용)
-      accountMyList: [], //계좌list
-      accountShareList: [], //계좌list
+      accountMyList: [], //계좌list(My)
+      accountShareList: [], //계좌list(share)
+      accountList: [], //계좌list(통합)
       totalPage: "",
       page: 1
     };
@@ -141,8 +169,6 @@ export default {
     searchAccountList: function() {
       var _this = this;
       _this.page = 1;
-      _this.accountMyList = [];
-      _this.accountShareList = [];
       Common.pagination(_this.listAccount);
     },
     listAccount: function(callback) {
@@ -167,6 +193,11 @@ export default {
 
           //pagination
           if (list.length === 0) {
+            if (_this.page == 1) {
+              _this.accountMyList = [];
+              _this.accountShareList = [];
+              _this.accountList = [];
+            }
             callback();
             _this.seen = true;
             return;
@@ -181,6 +212,7 @@ export default {
                 _this.accountShareList.push(list[key]);
               }
             }
+            _this.accountList = list;
           } else {
             for (var key in list) {
               if ("0" == list[key].rk) {
@@ -188,6 +220,8 @@ export default {
               } else {
                 _this.accountShareList.push(list[key]);
               }
+
+              _this.accountList.push(list[key]);
             }
           }
 

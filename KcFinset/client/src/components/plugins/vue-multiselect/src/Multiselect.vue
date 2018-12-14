@@ -1,10 +1,11 @@
 <template>
   <div :tabindex="searchable ? -1 : tabindex" :class="{ 'multiselect--active': isOpen, 'multiselect--disabled': disabled, 'multiselect--above': isAbove }" @focus="activate()" @blur="searchable ? false : deactivate()" @keydown.self.down.prevent="pointerForward()" @keydown.self.up.prevent="pointerBackward()" @keydown.enter.tab.stop.self="addPointerElement($event)" @keyup.esc="deactivate()" class="multiselect">
     <slot name="caret" :toggle="toggle">
-      <div @mousedown.prevent.stop="toggle()" class="multiselect__select" :class="{'multiLeft': alignLeft}"></div>
+      <!-- <div @mousedown.prevent.stop="toggle()" class="multiselect__select" :class="{'multiLeft': alignLeft}"></div> -->
+      <div @mousedown.prevent.stop="toggle()" class="multiselect__select" :class="{'multiLeft': alignLeftAll}"></div>
     </slot>
     <slot name="clear" :search="search"></slot>
-    <div ref="tags" class="multiselect__tags" :class="{'multiLeft': alignLeft}">
+    <div ref="tags" class="multiselect__tags" :class="{'multiLeft': alignLeft||alignLeftAll}">
       <slot name="selection" :search="search" :remove="removeElement" :values="visibleValues" :is-open="isOpen">
         <div class="multiselect__tags-wrap" v-show="visibleValues.length > 0">
           <template v-for="(option, index) of visibleValues" @mousedown.prevent>
@@ -225,7 +226,17 @@ export default {
       type: Number,
       default: 0
     },
+    /**
+     * Set text align left only text
+     */
     alignLeft: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * Set text align left both arrow and text
+     */
+    alignLeftAll: {
       type: Boolean,
       default: false
     }

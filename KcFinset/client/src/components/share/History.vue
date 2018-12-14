@@ -2,7 +2,7 @@
   <section v-if="seen">
     <div class="container">
       <div class="history">
-        <div v-if="histList.length == 0" class="nodata">등록 내역이 없습니다</div>
+        <div v-if="histList.length == 0" class="nodata">조회 내역이 없습니다</div>
         <template v-if="this.type_list == 'req'">
           <div v-for="histInfo in histList" :key="histInfo.index" class="item pb10">
             <p class="name">{{histInfo.offer_nm_person}}</p>

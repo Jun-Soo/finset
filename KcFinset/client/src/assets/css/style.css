@@ -254,7 +254,7 @@ h3 { color: #333; font-size: 12px; font-weight: 700; }
 
 aside.search-wrap { position: fixed; left: 0; bottom: 0; width: 100%; box-shadow: 0 0 20px rgba(0, 0, 0, 0.1); border-top-left-radius: 21px; border-top-right-radius: 21px; transition: .5s ease; transform: translateY(100%); }
 aside.search-wrap.on { transform: translateY(0); }
-aside.search-wrap .top { border-top-left-radius: 21px; border-top-right-radius: 21px; background: #fff; position: relative; }
+aside.search-wrap .top { border-top-left-radius: 0; border-top-right-radius: 0; background: #fff; position: relative; }
 aside.search-wrap .top button { color: #222; font-size: 15px; font-weight: 700; line-height: 50px; text-indent: 21px; background: none; width: 100%; text-align: left; }
 aside.search-wrap .top .btn-setting { width: 15px; height: 15px; position: absolute; left: 85px; top: 16px; background: url(../images/main/ico_setting.png) no-repeat center/contain; }
 aside.search-wrap .top:after { display: block; position: absolute; top: 19px; right: 23px; width: 13px; height: 13px; content: ""; background: url("../images/common/btn_search_close.png") no-repeat center/contain; }
@@ -278,7 +278,7 @@ aside.search-wrap .wrap .btns button { border: 2px solid #62c1d0; line-height: 3
 aside.search-wrap .wrap .btns button:active { background: #62c1d0; color: #fff; }
 aside.search-wrap .wrap input[type="text"] { width: 100%; line-height: 38px; }
 aside.search-wrap .select-cate { display: grid; grid-template-columns: 1fr 1fr; background: #fff; padding: 0 20px; }
-aside.search-wrap .select-cate .cate-wrap { border: 1px solid #e5e5e5; height: 200px; overflow-y: auto; }
+aside.search-wrap .select-cate .cate-wrap { border: 1px solid #e5e5e5; height: 400px; overflow-y: auto; }
 aside.search-wrap .select-cate .cate-wrap ul li { line-height: 40px; font-size: 13px; color: #333; text-indent: 15px; font-weight: 700; background: url("../images/consume/cate_arrow.png") no-repeat right top/22px; }
 aside.search-wrap .select-cate .cate-wrap ul li.on { background-position: right bottom; background-color: #62c1d0; color: #fff; }
 aside.search-wrap .select-cate .cate-wrap:last-of-type { border-left: none; }
@@ -623,8 +623,8 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 
 .spend-list { padding-bottom: 95px; }
 .spend-list .list-wrap { padding-top: 21px; }
-.spend-list .list-wrap .date { font-size: 12px; color: #9b9489; }
-.spend-list .list-wrap .item { display: flex; background: #fff; border-radius: 10px; padding: 20px; margin-top: 10px; }
+.spend-list .list-wrap .date { font-size: 12px; color: #9b9489; line-height: 1; }
+.spend-list .list-wrap .item { display: flex; background: #fff; border-radius: 10px; padding: 10px 20px; margin-top: 10px; }
 .spend-list .list-wrap .item .left { width: 50%; }
 .spend-list .list-wrap .item .left .name { font-size: 14px; color: #333; }
 .spend-list .list-wrap .item .left .cate { margin-top: 10px; }
@@ -657,6 +657,8 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .spend-top .date-wrap button.prev { background: url(../images/main/btn_date_prev.png) no-repeat center right/contain; }
 .spend-top .date-wrap button.next { background: url(../images/main/btn_date_next.png) no-repeat center left/contain; }
 .spend-top .date-wrap .setting { width: 17px; height: 17px; position: absolute; right: 21px; top: 0; background: url(../images/main/ico_setting.png) no-repeat center/contain; }
+.spend-top .date-wrap .year, .spend-top .date-wrap .month { height: auto; width: auto; line-height: 28px; border: 1px solid #62c1d0; padding: 0 13px; color: #62c1d0; font-weight: 700; background: #fff; border-radius: 50px; position: absolute; top: -5px; right: 0; }
+.spend-top .date-wrap .year.on, .spend-top .date-wrap .month.on { background: #62c1d0; color: #fff; }
 .spend-top .date-wrap .today { height: auto; width: auto; line-height: 28px; border: 1px solid #9b9489; padding: 0 13px; color: #9b9489; font-weight: 700; background: #fff; border-radius: 50px; position: absolute; left: 0; top: -5px; }
 .spend-top .wrap { display: flex; }
 .spend-top .wrap .item { width: 50%; margin-top: 40px; border-left: 1px solid #e5e5e5; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
@@ -743,7 +745,7 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .bank-detail .inout > div .number { font-size: 24px; color: #222; font-weight: 700; margin-top: 10px; }
 .bank-detail .inout > div:last-child { border-left: 1px solid #e5e5e5; }
 
-.gray-search-box { padding: 25px 21px; background: #efeeec; }
+.gray-search-box { padding: 15px 21px; background: #efeeec; }
 .gray-search-box .search { display: flex; }
 .gray-search-box .search .left button { line-height: 28px; border: 1px solid #62c1d0; text-align: center; font-size: 14px; color: #62c1d0; font-weight: 700; margin-right: 5px; background: #fff; border-radius: 30px; width: 70px; }
 .gray-search-box .search .left button.on { background: #62c1d0; color: #fff; }
@@ -1160,10 +1162,10 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 
 .consume-detail { margin-top: 20px; border-top: 1px solid #e5e5e5; }
 .consume-detail > div { border-bottom: 1px solid #e5e5e5; }
-.consume-detail li { display: flex; }
+.consume-detail li { display: flex; align-items: center; }
 .consume-detail li p { width: 70%; font-size: 13px; color: #9b9489; font-weight: 700; line-height: 49px; }
 .consume-detail li p:last-child { text-align: right; }
-.consume-detail li p:last-child input[type="text"] { line-height: 49px; text-align: right; padding: 0 10px; font-size: 14px; width: 80%; border: none; }
+.consume-detail li p:last-child input[type="text"], .consume-detail li p:last-child input[type="tel"] { line-height: 49px; text-align: right; padding: 0 10px; font-size: 14px; width: 80%; border: none; padding-right: 2px; }
 .consume-detail li p:last-child .btn-cate { padding-right: 20px; background: url("../images/consume/btn_cate.png") no-repeat right center/10px; color: #454545; text-align: right; }
 .consume-detail li p select { border: none; }
 .consume-detail li.memo { display: block; }

@@ -657,6 +657,10 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .spend-top .date-wrap button.prev { background: url(../images/main/btn_date_prev.png) no-repeat center right/contain; }
 .spend-top .date-wrap button.next { background: url(../images/main/btn_date_next.png) no-repeat center left/contain; }
 .spend-top .date-wrap .setting { width: 17px; height: 17px; position: absolute; right: 21px; top: 0; background: url(../images/main/ico_setting.png) no-repeat center/contain; }
+.spend-top .date-wrap .year, .spend-top .date-wrap .month { height: auto; width: auto; line-height: 28px; border: 1px solid #62c1d0; padding: 0 13px; color: #62c1d0; font-weight: 700; background: #fff; border-radius: 50px; position: absolute; top: -5px; }
+.spend-top .date-wrap .year.on, .spend-top .date-wrap .month.on { background: #62c1d0; color: #fff; }
+.spend-top .date-wrap .year { right: 45px; }
+.spend-top .date-wrap .month { right: 0; }
 .spend-top .date-wrap .today { height: auto; width: auto; line-height: 28px; border: 1px solid #9b9489; padding: 0 13px; color: #9b9489; font-weight: 700; background: #fff; border-radius: 50px; position: absolute; left: 0; top: -5px; }
 .spend-top .wrap { display: flex; }
 .spend-top .wrap .item { width: 50%; margin-top: 40px; border-left: 1px solid #e5e5e5; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }

@@ -2007,6 +2007,29 @@ aside.search-wrap{
             top: 0;
             background: url(../images/main/ico_setting.png) no-repeat center / contain;
         }
+        .year, .month{
+            height: auto;
+            width: auto;
+            line-height: 28px;
+            border: 1px solid $col4;
+            padding: 0 13px;
+            color: $col4;
+            font-weight: 700;
+            background: #fff;
+            border-radius: 50px;
+            position: absolute;
+            top: -5px;
+            &.on{
+                background: $col4;
+                color: #fff;
+            }
+        }
+        .year{
+            right: 45px;
+        }
+        .month{
+            right: 0;
+        }
         .today{
             height: auto;
             width: auto;

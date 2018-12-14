@@ -226,9 +226,14 @@ $mobileSize: "600px";
     overflow-y: scroll;
   }
 
+  &__title {
+    margin: 0 auto;
+    font-size: 16px;
+  }
+
   &__wrapper {
     width: 100%;
-    // height: 100%;
+    height: 100%;
   }
 
   &__content {
@@ -262,8 +267,8 @@ $mobileSize: "600px";
   }
 
   &__heading {
-    padding: 0px; //20px
-    //display:         flex;
+    padding: 20px 20px;
+    display: flex;
     align-items: center;
 
     .#{$pkgName}__title {
@@ -278,7 +283,7 @@ $mobileSize: "600px";
     }
 
     .#{$pkgName}__close-btn {
-      margin-left: auto;
+      // margin-left: auto;
       font-size: 20px;
       line-height: 22px;
       cursor: pointer;

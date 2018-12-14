@@ -84,6 +84,10 @@
     </div>
     <vue-modal transitionName="zoom-in" name="postcode-modal">
       <div slot="body">
+        <div class="v-modal__heading">
+          <div class="v-modal__title">주소검색</div>
+          <span class="v-modal__close-btn">&times;</span>
+        </div>
         <DaumPostcode :on-complete="selectPostcode" />
       </div>
     </vue-modal>

@@ -241,7 +241,8 @@ $mobileSize: "600px";
     // margin-bottom: 5%;
     // margin-top: 5%;
     width: 50%;
-    height: 100%;
+    // height: 100%;
+    min-height: 100vh;
     background-color: #fff;
     transition: all 0.5s ease;
 

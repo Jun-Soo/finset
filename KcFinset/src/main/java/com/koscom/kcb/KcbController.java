@@ -70,7 +70,7 @@ public class KcbController {
 		}
 
 		String profile  = environment.getProperty("service.profile");
-		logger.error("kcbRegFlag : " + kcbRegFlag + " profile : " + profile + " == " + kcbRegFlag);
+		logger.info("kcbRegFlag : " + kcbRegFlag + " profile : " + profile + " == " + kcbRegFlag);
 		
 		//KCB 미등록일 경우 등록 절차 수행(로컬에서는 미수행)
 		if(kcbRegFlag && !"LOCAL".equals(profile))	{

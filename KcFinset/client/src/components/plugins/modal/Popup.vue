@@ -233,7 +233,7 @@ $mobileSize: "600px";
 
   &__wrapper {
     width: 100%;
-    height: 100%;
+    // height: 100%;
   }
 
   &__content {

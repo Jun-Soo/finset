@@ -251,7 +251,7 @@ export default {
     setOrder: function() {
       var _this = this;
       _this.isSetOrder = !_this.isSetOrder;
-      _this.searchAccountList();
+      if (!_this.isSetOrder) _this.searchAccountList();
     },
     //정렬순서 변경
     changeSort: function() {

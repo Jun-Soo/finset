@@ -4,89 +4,105 @@
       <div class="debt-regist">
         <p class="title"><em>자산을 직접 입력하여</em><br>관리하세요</p>
         <div class="list">
-          <ul class="flex">
-            <li class="key">분류</li>
-            <li class="value">
-              <multiselect v-model="cd_assets_class" ref="cd_assets_class" placeholder="분류선택" track-by="text" label="text" :options="assetsClassOptions" :searchable="false" :allow-empty="false" @select="selectAssetsClass" v-validate="'required'" data-vv-name='분류'>
-              </multiselect>
-              <p class="warn" v-if="errors.has('분류')">{{errors.first('분류')}}</p>
-            </li>
-          </ul>
-
-          <ul v-if="showKey=='30'||showKey=='50'||showKey=='60'" class="flex">
-            <li class="key">{{title_detail_class}}</li>
-            <li class="value">
-              <multiselect v-model="cd_detail_class" ref="cd_detail_class" :placeholder="title_detail_class+'선택'" track-by="text" label="text" :options="options_detail_class" :searchable="false" :allow-empty="false" v-validate="'required'" :data-vv-name='title_detail_class'>
-              </multiselect>
-              <p class="warn" v-if="errors.has(title_detail_class)">{{errors.first(title_detail_class)}}</p>
-            </li>
-          </ul>
+          <div>
+            <ul class="flex">
+              <li class="key">분류</li>
+              <li class="value">
+                <multiselect v-model="cd_assets_class" ref="cd_assets_class" placeholder="분류선택" track-by="text" label="text" :options="assetsClassOptions" :searchable="false" :allow-empty="false" @select="selectAssetsClass" v-validate="'required'" data-vv-name='분류'>
+                </multiselect>
+              </li>
+            </ul>
+            <p class="warn" v-if="errors.has('분류')">{{errors.first('분류')}}</p>
+          </div>
+          <div v-if="showKey=='30'||showKey=='50'||showKey=='60'">
+            <ul class="flex">
+              <li class="key">{{title_detail_class}}</li>
+              <li class="value">
+                <multiselect v-model="cd_detail_class" ref="cd_detail_class" :placeholder="title_detail_class+'선택'" track-by="text" label="text" :options="options_detail_class" :searchable="false" :allow-empty="false" v-validate="'required'" :data-vv-name='title_detail_class'>
+                </multiselect>
+              </li>
+            </ul>
+            <p class="warn" v-if="errors.has(title_detail_class)">{{errors.first(title_detail_class)}}</p>
+          </div>
 
           <!--부동산-->
-          <ul v-if="showKey=='30'" class="flex">
-            <li class="key">주소</li>
-            <li class="value">
-              <input type="text" v-model="view_addr" readonly="readonly">
-              <input type="hidden" v-model="real_estate_addr" v-validate="'required'" data-vv-name='주소'>
-              <button class="search" @click="scAddress()"></button>
-              <p class="warn" v-if="errors.has('주소')">{{errors.first('주소')}}</p>
-            </li>
-          </ul>
+          <div v-if="showKey=='30'">
+            <ul class="flex">
+              <li class="key">주소</li>
+              <li class="value">
+                <input type="text" v-model="view_addr" readonly="readonly">
+                <input type="hidden" v-model="real_estate_addr" v-validate="'required'" data-vv-name='주소'>
+                <button class="search" @click="scAddress()"></button>
+              </li>
+            </ul>
+            <p class="warn" v-if="errors.has('주소')">{{errors.first('주소')}}</p>
+          </div>
 
           <!--자동차-->
-          <ul v-if="showKey=='40'" class="flex">
-            <li class="key">모델명</li>
-            <li class="value">
-              <input type="text" v-model="nm_model" v-validate="'required|max:15'" data-vv-name='모델명'>
-              <p class="warn" v-if="errors.has('모델명')">{{errors.first('모델명')}}</p>
-            </li>
-          </ul>
+          <div v-if="showKey=='40'">
+            <ul class="flex">
+              <li class="key">모델명</li>
+              <li class="value">
+                <input type="text" v-model="nm_model" v-validate="'required|max:15'" data-vv-name='모델명'>
+              </li>
+            </ul>
+            <p class="warn" v-if="errors.has('모델명')">{{errors.first('모델명')}}</p>
+          </div>
 
           <!--귀금속-->
-          <ul v-if="showKey=='50'" class="flex">
-            <li class="key">보유량</li>
-            <li class="value">
-              <input type="number" v-model="amount_jewelry" v-validate="'required|numeric|max:12'" data-vv-name='보유량'>g
-              <p class="warn" v-if="errors.has('보유량')">{{errors.first('보유량')}}</p>
-            </li>
-          </ul>
+          <div v-if="showKey=='50'">
+            <ul class="flex">
+              <li class="key">보유량</li>
+              <li class="value">
+                <input type="number" v-model="amount_jewelry" v-validate="'required|numeric|max:12'" data-vv-name='보유량'>g
+              </li>
+            </ul>
+            <p class="warn" v-if="errors.has('보유량')">{{errors.first('보유량')}}</p>
+          </div>
 
           <!--외화-->
-          <ul v-if="showKey=='60'" class="flex">
-            <li class="key">보유금액</li>
-            <li class="value">
-              <input type="number" v-model="amt_balance" v-validate="'required|numeric|max:12'" data-vv-name='보유금액'>원
-              <p class="warn" v-if="errors.has('보유금액')">{{errors.first('보유금액')}}</p>
-            </li>
-          </ul>
+          <div v-if="showKey=='60'">
+            <ul class="flex">
+              <li class="key">보유금액</li>
+              <li class="value">
+                <input type="number" v-model="amt_balance" v-validate="'required|numeric|max:12'" data-vv-name='보유금액'>원
+              </li>
+            </ul>
+            <p class="warn" v-if="errors.has('보유금액')">{{errors.first('보유금액')}}</p>
+          </div>
 
           <!--기타-->
-          <ul v-if="showKey=='90'" class="flex">
-            <li class="key">종류</li>
-            <li class="value">
-              <input type="text" v-model="etc_assets" v-validate="'required|max:15'" data-vv-name='종류'>
-              <p class="warn" v-if="errors.has('종류')">{{errors.first('종류')}}</p>
-            </li>
-
-          </ul>
+          <div v-if="showKey=='90'">
+            <ul class="flex">
+              <li class="key">종류</li>
+              <li class="value">
+                <input type="text" v-model="etc_assets" v-validate="'required|max:15'" data-vv-name='종류'>
+              </li>
+            </ul>
+            <p class="warn" v-if="errors.has('종류')">{{errors.first('종류')}}</p>
+          </div>
 
           <!--공통-->
           <template v-if="showKey!=''">
-            <ul class="flex">
-              <!--가격/환산금액-->
-              <li class="key">{{title_amt_evaluation}}</li>
-              <li class="value">
-                <input type="number" v-model="amt_evaluation" v-validate="'required|numeric|max:12'" :data-vv-name='title_amt_evaluation'>원
-                <p class="warn" v-if="errors.has(title_amt_evaluation)">{{errors.first(title_amt_evaluation)}}</p>
-              </li>
-            </ul>
-            <ul class="block">
-              <li class="key">메모</li>
-              <li class="value">
-                <input type="text" v-model="memo" v-validate="'max:15'" data-vv-name='메모'>
-                <p class="warn" v-if="errors.has('메모')">{{errors.first('메모')}}</p>
-              </li>
-            </ul>
+            <div>
+              <ul class="flex">
+                <!--가격/환산금액-->
+                <li class="key">{{title_amt_evaluation}}</li>
+                <li class="value">
+                  <input type="number" v-model="amt_evaluation" v-validate="'required|numeric|max:12'" :data-vv-name='title_amt_evaluation'>원
+                </li>
+              </ul>
+              <p class="warn" v-if="errors.has(title_amt_evaluation)">{{errors.first(title_amt_evaluation)}}</p>
+            </div>
+            <div>
+              <ul class="block">
+                <li class="key">메모</li>
+                <li class="value">
+                  <input type="text" v-model="memo" v-validate="'max:15'" data-vv-name='메모'>
+                </li>
+              </ul>
+              <p class="warn" v-if="errors.has('메모')">{{errors.first('메모')}}</p>
+            </div>
           </template>
         </div>
 
@@ -222,6 +238,9 @@ export default {
       _this.view_addr = param.address;
       _this.real_estate_addr = param.address;
       this.isShowModal = false;
+    },
+    formatNumber: function(data) {
+      return Common.formatNumber(data);
     },
     createAssets: function() {
       var _this = this;

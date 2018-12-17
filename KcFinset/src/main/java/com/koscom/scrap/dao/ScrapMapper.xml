@@ -1454,7 +1454,7 @@
 	</select >
 	
 	<insert id="createScrTransactionDetail" parameterType="com.koscom.scrap.model.sub.AnAllListHistoryVO">
-		<selectKey keyProperty="seq_tran" resultType="long" order="BEFORE">
+		<selectKey keyProperty="SEQ_TRAN" resultType="long" order="BEFORE">
 		    SELECT SEQ_TRAN.NEXTVAL FROM DUAL
 		</selectKey>
 		INSERT INTO SCR_TRANSACTION_DETAIL

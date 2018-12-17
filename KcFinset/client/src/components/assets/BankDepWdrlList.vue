@@ -215,6 +215,9 @@ export default {
           if (typeof this.$store.state.scListParam.query1 != "undefined") {
             _this.scTermType = this.$store.state.scListParam.query1;
             _this.setTermType(_this.scTermType);
+          } else {
+            //1주일 default 셋팅
+            _this.setTermType("01");
           }
           //계좌(multiselect)
           if (typeof this.$store.state.scListParam.query2 != "undefined") {
@@ -230,8 +233,6 @@ export default {
           //날짜시작일
           if (typeof this.$store.state.scListParam.query3 != "undefined") {
             _this.txt_dt_from = this.$store.state.scListParam.query3;
-          } else {
-            _this.txt_dt_from = _this.currentDate;
           }
           //날짜종료일
           if (typeof this.$store.state.scListParam.query4 != "undefined") {

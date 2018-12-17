@@ -65,6 +65,13 @@ public interface AssetsMapper {
 	 */
 	public List<AssetsInfoVO> listAssetsBankActTrns(AssetsForm assetsForm);
 	public int listAssetsBankActTrnsCount(AssetsForm assetsForm);
+	/**
+	 * 자산 - 은행 계좌상세 예적금내역
+	 * @param AssetsForm
+	 * @return List<AssetsInfoVO>
+	 */
+	public List<AssetsInfoVO> listAssetsBankActSvng(AssetsForm assetsForm);
+	public int listAssetsBankActSvngCount(AssetsForm assetsForm);
 
 	/**
 	 * 자산 - 은행 계좌list

@@ -77,6 +77,14 @@ public class AssetsManagerImpl implements AssetsManager {
 	public int listAssetsBankActTrnsCount(AssetsForm assetsForm){
 		return assetsMapper.listAssetsBankActTrnsCount(assetsForm);
 	}
+	@Override
+	public List<AssetsInfoVO> listAssetsBankActSvng(AssetsForm assetsForm){
+		return assetsMapper.listAssetsBankActSvng(assetsForm);
+	}
+	@Override
+	public int listAssetsBankActSvngCount(AssetsForm assetsForm){
+		return assetsMapper.listAssetsBankActSvngCount(assetsForm);
+	}
 
 	@Override
 	public List<AssetsInfoVO> listAssetsAccount(AssetsForm assetsForm){

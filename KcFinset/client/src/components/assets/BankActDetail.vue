@@ -27,7 +27,7 @@
             <multiselect v-model="scTrnsType" ref="scTrnsType" placeholder="유형선택" track-by="text" label="text" :options="scTrnsTypeOptions" :searchable="false" :allow-empty="false" @select="onSelectTrns" :alignLeft="true">
             </multiselect>
           </div>
-          <div class="right">
+          <div v-if="cd_detail_class=='01'" class="right">
             <span>{{scKeyword}}</span>
             <button class="btn-search" @click="openScKeywordMd();"></button>
           </div>
@@ -38,7 +38,8 @@
             <p :key="trnsInfo.index" v-if="trnsInfo.dateCol" class="date">{{formatDateDot(trnsInfo.dt_trd)}}</p>
             <div :key="trnsInfo.index" class="item" @click="viewDetail(trnsInfo.dt_trd, trnsInfo.tm_trd)">
               <div class="flex">
-                <p><em>{{trnsInfo.doc1}}</em></p>
+                <p v-if="cd_detail_class=='01'"><em>{{trnsInfo.doc1}}</em></p>
+                <p v-else-if="cd_detail_class=='02'||cd_detail_class=='03'"><em>{{trnsInfo.abstracts}}</em></p>
                 <p v-if="'0'!=trnsInfo.amt_dep"><em class="number blue">{{formatNumber(trnsInfo.amt_dep)}}</em>원</p>
                 <p v-else><em class="number red">{{('-'+formatNumber(trnsInfo.amt_wdrl))}}</em>원</p>
               </div>
@@ -52,7 +53,7 @@
 
     </section>
 
-    <aside class="search-wrap" :class="{on: isShowScKeyword}">
+    <aside v-if="cd_detail_class=='01'" class="search-wrap" :class="{on: isShowScKeyword}">
       <div class="top">
         <button @click="closeScKeywordMd();">검색</button>
       </div>
@@ -92,8 +93,9 @@ export default {
       scKeywordList: [],
       scKeyword: "",
       assetsInfo: "",
+      cd_detail_class: "",
       page: 1,
-      trnsList: [] //입출금list
+      trnsList: [] //계좌상세list
     };
   },
   components: {},
@@ -154,8 +156,12 @@ export default {
           assetsInfo.fcImg =
             "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + assetsInfo.cd_fc;
           _this.assetsInfo = assetsInfo;
+          _this.cd_detail_class = assetsInfo.cd_detail_class;
 
-          _this.getScKeywordList();
+          //입출금인 경우에만 검색키워드 목록 조회
+          if (_this.cd_detail_class == "01") {
+            _this.getScKeywordList();
+          }
           _this.searchActTrnsList();
         })
         .catch(e => {
@@ -176,7 +182,10 @@ export default {
       var _this = this;
       _this.scTrnsType = option;
       console.log(option);
-      _this.getScKeywordList();
+      //입출금인 경우에만 검색키워드 목록 조회
+      if (_this.cd_detail_class == "01") {
+        _this.getScKeywordList();
+      }
       _this.searchActTrnsList();
     },
     //검색키워드
@@ -213,7 +222,7 @@ export default {
           this.$toast.center(ko.messages.error);
         });
     },
-    //입출금 내역 조회
+    //계좌상세 내역 조회
     searchActTrnsList: function() {
       var _this = this;
       _this.page = 1;
@@ -229,6 +238,7 @@ export default {
       formData.append("page", _this.page);
       formData.append("no_person", _this.no_person);
       formData.append("no_account", _this.no_account);
+      formData.append("cd_detail_class", _this.cd_detail_class);
       formData.append(
         "scTrnsType ",
         _this.scTrnsType != "" ? _this.scTrnsType.value : ""
@@ -281,21 +291,25 @@ export default {
     //상세페이지로 이동
     viewDetail: function(dt_trd, tm_trd) {
       var _this = this;
+      var cd_detail_class = _this.cd_detail_class;
 
       //store 검색조건 유지
       this.$store.state.scListParam.query1 = _this.scTrnsType.value; //계좌유형
       this.$store.state.scListParam.query2 = _this.scKeyword; //검색키워드
 
-      this.$router.push({
-        name: "assetsBankDepWdrlDetail",
-        query: {
-          no_person: _this.no_person,
-          no_account: _this.no_account,
-          dt_trd: dt_trd,
-          tm_trd: tm_trd,
-          rk: _this.colorIndex
-        }
-      });
+      //입출금
+      if (cd_detail_class == "01") {
+        this.$router.push({
+          name: "assetsBankDepWdrlDetail",
+          query: {
+            no_person: _this.no_person,
+            no_account: _this.no_account,
+            dt_trd: dt_trd,
+            tm_trd: tm_trd,
+            rk: _this.colorIndex
+          }
+        });
+      }
     }
   }
 };

@@ -17,6 +17,7 @@ public class AssetsForm extends SearchForm implements Serializable{
 	//계좌상세
 	private String scKeyword;
 	private String scTrnsType;
+	private String cd_detail_class;
 	//입출금내역
 	private String scAccount;
 	private String yn_share;
@@ -65,6 +66,12 @@ public class AssetsForm extends SearchForm implements Serializable{
 	}
 	public void setScTrnsType(String scTrnsType) {
 		this.scTrnsType = scTrnsType;
+	}
+	public String getCd_detail_class() {
+		return cd_detail_class;
+	}
+	public void setCd_detail_class(String cd_detail_class) {
+		this.cd_detail_class = cd_detail_class;
 	}
 	public String getScAccount() {
 		return scAccount;

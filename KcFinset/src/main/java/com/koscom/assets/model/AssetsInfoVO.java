@@ -64,6 +64,12 @@ public class AssetsInfoVO implements Serializable{
     private String rk; //공유순서
     private String nm_fc; //금융기관명
 
+    //예적금내역
+    private String rnd_trd; //거래회차
+    private String amt_trd_mth; //거래월분
+    private String abstracts; //적요
+    private String brn_deal; //취급점
+
     //수입/지출설정
     private String cd_class; //소비 - 카테고리
     private String nm_class; //소비 - 카테고리명
@@ -579,6 +585,46 @@ public class AssetsInfoVO implements Serializable{
 
 	public void setNm_fc(String nm_fc) {
 		this.nm_fc = nm_fc;
+	}
+
+
+	public String getRnd_trd() {
+		return rnd_trd;
+	}
+
+
+	public void setRnd_trd(String rnd_trd) {
+		this.rnd_trd = rnd_trd;
+	}
+
+
+	public String getAmt_trd_mth() {
+		return amt_trd_mth;
+	}
+
+
+	public void setAmt_trd_mth(String amt_trd_mth) {
+		this.amt_trd_mth = amt_trd_mth;
+	}
+
+
+	public String getAbstracts() {
+		return abstracts;
+	}
+
+
+	public void setAbstracts(String abstracts) {
+		this.abstracts = abstracts;
+	}
+
+
+	public String getBrn_deal() {
+		return brn_deal;
+	}
+
+
+	public void setBrn_deal(String brn_deal) {
+		this.brn_deal = brn_deal;
 	}
 
 

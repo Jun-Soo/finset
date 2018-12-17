@@ -173,7 +173,7 @@ public class AssetsController {
 
 	/**
 	 * VUE
-     * 자산관리 - 은행 검색키워드list
+     * 자산관리 - 은행 계좌상세 검색키워드list(입출금)
      * @param request
      * @param AssetsForm
      * @param model
@@ -211,7 +211,13 @@ public class AssetsController {
 
 		assetsForm.setNo_person(no_person);
 
-		Pagination pagedList = assetsForm.setPagedList(assetsManager.listAssetsBankActTrns(assetsForm),assetsManager.listAssetsBankActTrnsCount(assetsForm));
+		Pagination pagedList = new Pagination();
+		String cdDetailClass = assetsForm.getCd_detail_class();
+		if("01".equals(cdDetailClass)){
+			pagedList = assetsForm.setPagedList(assetsManager.listAssetsBankActTrns(assetsForm),assetsManager.listAssetsBankActTrnsCount(assetsForm));
+		}else if("02".equals(cdDetailClass) || "03".equals(cdDetailClass)){
+			pagedList = assetsForm.setPagedList(assetsManager.listAssetsBankActSvng(assetsForm),assetsManager.listAssetsBankActSvngCount(assetsForm));
+		}
 		model.addAttribute("pagedList", pagedList);
 
 		return "jsonView";

@@ -448,6 +448,90 @@
 			) TB
 	</select>
 
+    <sql id="listAssetsBankActSvng_WHERE">
+		<where>
+			SSSD.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND SSSD.AN = XX1.ENC_VARCHAR2_INS(#{no_account, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SCR_TRANSACTION_DETAIL', 'STD.AN')
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(scTrnsType)">
+			<choose>
+			   	<when test="'01'.equals(scTrnsType)">	<!-- 입금 -->
+					AND SSSD.AMT_DEP != '0'
+				</when>
+				<when test="'02'.equals(scTrnsType)">	<!-- 출금 -->
+					AND SSSD.AMT_WDRL != '0'
+				</when>
+			</choose>
+			</if>
+		</where>
+	</sql>
+    <select id="listAssetsBankActSvng" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
+        /* com.koscom.assets.dao.AssetsMapper.listAssetsBankActSvng - 자산관리(은행 계좌상세 - 예적금내역) */
+       	SELECT
+    		DT_TRD,
+    		TM_TRD,
+    		RND_TRD,
+    		AMT_TRD_MTH,
+			AMT_DEP,
+			AMT_WDRL,
+			BALANCE,
+			ABSTRACT AS ABSTRACTS,
+			BRN_DEAL,
+			RNUM
+    	FROM (
+    		SELECT
+				LST.DT_TRD,
+				LST.TM_TRD,
+				LST.RND_TRD,
+				LST.AMT_TRD_MTH,
+				LST.AMT_DEP,
+				LST.AMT_WDRL,
+				LST.BALANCE,
+				LST.ABSTRACT,
+				LST.BRN_DEAL,
+				ROWNUM RNUM
+    		FROM (
+    			SELECT
+					SSSD.DT_TRD,
+					SSSD.TM_TRD,
+					SSSD.RND_TRD,
+					SSSD.AMT_TRD_MTH,
+					SSSD.AMT_DEP,
+					SSSD.AMT_WDRL,
+					SSSD.BALANCE,
+					SSSD.ABSTRACT,
+					SSSD.BRN_DEAL
+				FROM
+					SCR_SVNG_SVNIN_DETAIL SSSD
+				<include refid="listAssetsBankActSvng_WHERE"/>
+				ORDER BY
+					( DT_TRD || TM_TRD ) DESC
+			) LST
+	    	WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	    )
+	    WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+	</select>
+    <select id="listAssetsBankActSvngCount" parameterType="com.koscom.assets.model.AssetsForm" resultType="int">
+        /* com.koscom.assets.dao.AssetsMapper.listAssetsBankActSvngCount - 자산관리(은행 계좌상세 - 예적금내역Count) */
+       	SELECT
+			COUNT(*) AS recordCount
+		FROM
+			(
+			SELECT
+				SSSD.DT_TRD,
+				SSSD.TM_TRD,
+				SSSD.RND_TRD,
+				SSSD.AMT_TRD_MTH,
+				SSSD.AMT_DEP,
+				SSSD.AMT_WDRL,
+				SSSD.BALANCE,
+				SSSD.ABSTRACT,
+				SSSD.BRN_DEAL
+			FROM
+				SCR_SVNG_SVNIN_DETAIL SSSD
+			<include refid="listAssetsBankActSvng_WHERE"/>
+			) TB
+	</select>
+
     <select id="listAssetsAccount" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
         /* com.koscom.assets.dao.AssetsMapper.listAssetsAccount - 자산관리(계좌list) */
        SELECT

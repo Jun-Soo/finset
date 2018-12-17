@@ -30,7 +30,7 @@
         <div v-if="accountMyList.length == 0 && accountShareList.length == 0" class="nodata">계좌 내역이 없습니다</div>
         <draggable v-model="accountMyList" @start="drag=true" :options="draggableOptions" @update="changeSort()">
           <div v-for="accountMyInfo in accountMyList" :key="accountMyInfo.index" class="item sortClass">
-            <a @click="viewDetail('act', accountMyInfo.no_person, accountMyInfo.nm_person, accountMyInfo.no_account, accountMyInfo.rk)" class="block handle">
+            <a @click="viewDetail('act', accountMyInfo.no_person, accountMyInfo.nm_person, accountMyInfo.no_account, accountMyInfo.cd_detail_class, accountMyInfo.rk)" class="block handle">
               <div class="top">
                 <p class="symbol"><img :src="accountMyInfo.fcImg" alt="" />{{accountMyInfo.nm_fc}}</p>
                 <p class="text">
@@ -51,7 +51,7 @@
         </draggable>
 
         <div v-for="accountShareInfo in accountShareList" :key="accountShareInfo.index" class="item">
-          <a @click="viewDetail('act', accountShareInfo.no_person, accountShareInfo.nm_person, accountShareInfo.no_account, accountShareInfo.rk)" class="block">
+          <a @click="viewDetail('act', accountShareInfo.no_person, accountShareInfo.nm_person, accountShareInfo.no_account, accountShareInfo.cd_detail_class, accountShareInfo.rk)" class="block">
             <div class="top">
               <p class="symbol"><img :src="accountShareInfo.fcImg" alt="" />{{accountShareInfo.nm_fc}}</p>
               <p class="text">
@@ -73,7 +73,7 @@
       <template v-else>
         <div v-if="accountList.length == 0" class="nodata">계좌 내역이 없습니다</div>
         <div v-for="accountInfo in accountList" :key="accountInfo.index" class="item">
-          <a @click="viewDetail('act', accountInfo.no_person, accountInfo.nm_person, accountInfo.no_account, accountInfo.rk)" class="block">
+          <a @click="viewDetail('act', accountInfo.no_person, accountInfo.nm_person, accountInfo.no_account, accountInfo.cd_detail_class, accountInfo.rk)" class="block">
             <div class="top">
               <p class="symbol"><img :src="accountInfo.fcImg" alt="" />{{accountInfo.nm_fc}}</p>
               <p class="text">
@@ -266,7 +266,14 @@ export default {
         .then(function(response) {});
     },
     //상세페이지로 이동
-    viewDetail: function(menu, no_person, nm_person, no_account, colorIndex) {
+    viewDetail: function(
+      menu,
+      no_person,
+      nm_person,
+      no_account,
+      cd_detail_class,
+      colorIndex
+    ) {
       var _this = this;
 
       var yn_share = "";
@@ -277,16 +284,23 @@ export default {
       }
 
       if ("act" == menu) {
-        this.$router.push({
-          name: "assetsBankActDetail",
-          query: {
-            no_person: no_person,
-            nm_person: nm_person,
-            no_account: no_account,
-            yn_share: yn_share,
-            colorIndex: colorIndex
-          }
-        });
+        //입출금, 예금/적금인 경우
+        if (
+          cd_detail_class == "01" ||
+          cd_detail_class == "02" ||
+          cd_detail_class == "03"
+        ) {
+          this.$router.push({
+            name: "assetsBankActDetail",
+            query: {
+              no_person: no_person,
+              nm_person: nm_person,
+              no_account: no_account,
+              yn_share: yn_share,
+              colorIndex: colorIndex
+            }
+          });
+        }
       } else if ("dwl" == menu) {
         this.$router.push({
           name: "assetsBankDepWdrlList",

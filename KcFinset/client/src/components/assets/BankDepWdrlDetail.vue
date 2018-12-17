@@ -38,7 +38,7 @@
           {{csCategoryText}}
         </li>
         <li v-else>
-          <a v-if="consumeInfo != null" @click="goConsumeDetail();">{{csCategoryText}}</a>
+          <a v-if="consumeInfo != null" @click="goConsumeDetail();" style="text-decoration: underline; font-weight: bold;">{{csCategoryText}}</a>
           <button v-else @click="goConsumeDetail();">등록하기</button>
         </li>
       </ul>

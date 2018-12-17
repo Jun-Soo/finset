@@ -1500,7 +1500,7 @@
 		
 	<insert id="createScrSvngSvninDetail" parameterType="com.koscom.scrap.model.sub.DepositAnListHistoryVO">
 		<selectKey keyProperty="SEQ_SVNG" resultType="long" order="BEFORE">
-		    SELECT SEQ_TRAN.NEXTVAL FROM DUAL
+		    SELECT SEQ_SVNG.NEXTVAL FROM DUAL
 		</selectKey>
 		INSERT INTO SCR_SVNG_SVNIN_DETAIL
 		(

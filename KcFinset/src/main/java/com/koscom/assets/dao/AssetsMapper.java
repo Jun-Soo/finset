@@ -95,20 +95,12 @@ public interface AssetsMapper {
 	 * @return AssetsInfoVO
 	 */
 	public AssetsInfoVO getAssetsBankDepWdrlDetail(AssetsForm assetsForm);
-
 	/**
 	 * 자산 - 은행 입출금상세(소비정보)
 	 * @param AssetsForm
 	 * @return AssetsInfoVO
 	 */
 	public AssetsInfoVO getAssetsDetailCsInfo(AssetsForm assetsForm);
-
-	/**
-	 * 자산 - 은행 입출금상세(소비정보 업데이트)
-	 * @param AssetsInfoVO
-	 * @return int
-	 */
-	public int updateAssetsDetailCsInfo(AssetsInfoVO assetsInfoVO);
 
 	/**
 	 * 자산 - 증권 메인 계좌내역

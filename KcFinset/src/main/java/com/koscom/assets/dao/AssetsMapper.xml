@@ -383,6 +383,7 @@
     <select id="listAssetsBankActTrns" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
         /* com.koscom.assets.dao.AssetsMapper.listAssetsBankActTrns - 자산관리(은행 계좌상세 - 입출금내역) */
        	SELECT
+       		SEQ_TRAN,
     		DT_TRD,
     		TM_TRD,
 			AMT_WDRL,
@@ -395,6 +396,7 @@
 			RNUM
     	FROM (
     		SELECT
+    			LST.SEQ_TRAN,
 				LST.DT_TRD,
 				LST.TM_TRD,
 				LST.AMT_WDRL,
@@ -407,6 +409,7 @@
 				ROWNUM RNUM
     		FROM (
     			SELECT
+    				STD.SEQ_TRAN,
 					STD.DT_TRD,
 					STD.TM_TRD,
 					STD.AMT_WDRL,
@@ -433,6 +436,7 @@
 		FROM
 			(
 			SELECT
+				STD.SEQ_TRAN,
 				STD.DT_TRD,
 				STD.TM_TRD,
 				STD.AMT_WDRL,
@@ -622,7 +626,7 @@
     <sql id="listDepWdrl_WHERE">
 		<where>
 		    <if test="@com.koscom.util.MybatisUtil@isNotEmpty(scAccount)">
-				AND STD.AN = #{scAccount, jdbcType=VARCHAR}
+				AND STD.AN = XX1.ENC_VARCHAR2_INS(#{scAccount, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SCR_TRANSACTION_DETAIL', 'STD.AN')
 			</if>
 			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
 				AND TO_DATE(STD.DT_TRD,'YYYYMMDD')       <![CDATA[>=]]> #{txt_dt_from}
@@ -739,6 +743,7 @@
 			NM_FC,
 			CD_ASSETS_CLASS,
 			CD_DETAIL_CLASS,
+			SEQ_TRAN,
 			AN,
 			DT_TRD,
 			TM_TRD,
@@ -758,6 +763,7 @@
 				LST.NM_FC,
 				LST.CD_ASSETS_CLASS,
 				LST.CD_DETAIL_CLASS,
+				LST.SEQ_TRAN,
 				LST.AN,
 				LST.DT_TRD,
 				LST.TM_TRD,
@@ -777,6 +783,7 @@
 					( SELECT NM_FC FROM FC_INFO WHERE CD_FC = SHAI.CD_FC ) AS NM_FC,
 					SHAI.CD_ASSETS_CLASS,
 					SHAI.CD_DETAIL_CLASS,
+					STD.SEQ_TRAN,
 					XX1.DEC_VARCHAR2_SEL(STD.AN, '10','FS_ARIA','SCR_TRANSACTION_DETAIL','AN') AS AN,
 					STD.DT_TRD,
 					STD.TM_TRD,
@@ -881,6 +888,7 @@
 				( SELECT NM_FC FROM FC_INFO WHERE CD_FC = SHAI.CD_FC ) AS NM_FC,
 				SHAI.CD_ASSETS_CLASS,
 				SHAI.CD_DETAIL_CLASS,
+				STD.SEQ_TRAN,
 				STD.AN,
 				STD.DT_TRD,
 				STD.TM_TRD,
@@ -987,10 +995,7 @@
 				STD.NO_PERSON = AI.NO_PERSON
 				AND STD.AN = AI.NO_ACCOUNT
 			)
-		WHERE STD.NO_PERSON = #{no_person, jdbcType=VARCHAR}
-			AND STD.AN = XX1.ENC_VARCHAR2_INS(#{no_account, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SCR_TRANSACTION_DETAIL', 'STD.AN')
-			AND STD.DT_TRD = #{dt_trd, jdbcType=VARCHAR}
-			AND STD.TM_TRD = #{tm_trd, jdbcType=VARCHAR}
+		WHERE STD.SEQ_TRAN = #{seq_tran, jdbcType=NUMERIC}
     </select>
 
     <select id="getAssetsDetailCsInfo" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
@@ -1008,26 +1013,8 @@
 				AND PCCI.CD_CLASS		= CI.CD_CLASS
 				AND PCCI.CD_TYPE		= CI.CD_TYPE
 			)
-		WHERE CI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
-			AND CI.NO_CARD = XX1.ENC_VARCHAR2_INS(#{no_account, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'CONSUME_INFO', 'CI.NO_CARD')
-			AND CI.DT_TRD = #{dt_trd, jdbcType=VARCHAR}
-			AND CI.TM_TRD = #{tm_trd, jdbcType=VARCHAR}
+		WHERE CI.SEQ_TRAN = #{seq_tran, jdbcType=NUMERIC}
     </select>
-
-    <update id="updateAssetsDetailCsInfo" parameterType="com.koscom.assets.model.AssetsInfoVO">
-		/* com.koscom.assets.dao.AssetsMapper.updateAssetsDetailCsInfo - 자산관리(입출금상세 소비정보 업데이트) */
-		UPDATE
-			CONSUME_INFO
-		SET
-			CD_CLASS = #{cd_class, jdbcType=VARCHAR},
-			CD_TYPE = #{cd_type, jdbcType=VARCHAR},
-			ID_LST = #{no_person, jdbcType=VARCHAR},
-			DT_LST = SYSDATE
-		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
-			AND NO_CARD = XX1.ENC_VARCHAR2_INS(#{no_account, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'CONSUME_INFO', 'NO_CARD')
-			AND DT_TRD = #{dt_trd, jdbcType=VARCHAR}
-			AND TM_TRD = #{tm_trd, jdbcType=VARCHAR}
-    </update>
 
     <select id="listAssetsStockMainAccount" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
         /* com.koscom.assets.dao.AssetsMapper.listAssetsStockMainAccount - 자산관리(증권메인 - 계좌내역) */

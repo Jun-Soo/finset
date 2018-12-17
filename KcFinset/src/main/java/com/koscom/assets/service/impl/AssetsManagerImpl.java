@@ -108,17 +108,10 @@ public class AssetsManagerImpl implements AssetsManager {
 	public AssetsInfoVO getAssetsBankDepWdrlDetail(AssetsForm assetsForm){
 		return assetsMapper.getAssetsBankDepWdrlDetail(assetsForm);
 	}
-
 	@Override
 	public AssetsInfoVO getAssetsDetailCsInfo(AssetsForm assetsForm){
 		return assetsMapper.getAssetsDetailCsInfo(assetsForm);
 	}
-
-	@Override
-	public int updateAssetsDetailCsInfo(AssetsInfoVO assetsInfoVO){
-		return assetsMapper.updateAssetsDetailCsInfo(assetsInfoVO);
-	}
-
 
 	@Override
 	public List<AssetsInfoVO> listAssetsStockMainAccount(AssetsForm assetsForm){

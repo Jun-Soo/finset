@@ -42,6 +42,7 @@ public class AssetsInfoVO implements Serializable{
     //입출금내역
     private String total_amt_dep; //입금 총액
     private String total_amt_wdrl; //출금 총액
+    private String seq_tran; //seq
     private String dt_trd; //거래일자
     private String tm_trd; //거래시간
     private String an; //계좌번호
@@ -385,6 +386,16 @@ public class AssetsInfoVO implements Serializable{
 
 	public void setTotal_amt_wdrl(String total_amt_wdrl) {
 		this.total_amt_wdrl = total_amt_wdrl;
+	}
+
+
+	public String getSeq_tran() {
+		return seq_tran;
+	}
+
+
+	public void setSeq_tran(String seq_tran) {
+		this.seq_tran = seq_tran;
 	}
 
 

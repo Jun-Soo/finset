@@ -22,8 +22,7 @@ public class AssetsForm extends SearchForm implements Serializable{
 	private String scAccount;
 	private String yn_share;
 	//입출금상세
-	private String dt_trd;
-	private String tm_trd;
+	private String seq_tran;
 
 	//증권
 	private String scAccType; //분류
@@ -85,17 +84,11 @@ public class AssetsForm extends SearchForm implements Serializable{
 	public void setYn_share(String yn_share) {
 		this.yn_share = yn_share;
 	}
-	public String getDt_trd() {
-		return dt_trd;
+	public String getSeq_tran() {
+		return seq_tran;
 	}
-	public void setDt_trd(String dt_trd) {
-		this.dt_trd = dt_trd;
-	}
-	public String getTm_trd() {
-		return tm_trd;
-	}
-	public void setTm_trd(String tm_trd) {
-		this.tm_trd = tm_trd;
+	public void setSeq_tran(String seq_tran) {
+		this.seq_tran = seq_tran;
 	}
 	public String getScAccType() {
 		return scAccType;

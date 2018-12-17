@@ -313,59 +313,11 @@ public class AssetsController {
 	@RequestMapping("/getAssetsBankDepWdrlDetail.json")
 	public String getAssetsBankDepWdrlDetail(
 	HttpServletRequest request,
-	HttpSession session,
 	AssetsForm assetsForm,
 	Model model) throws FinsetException, IOException{
-		String no_person = (String)session.getAttribute("no_person");
-
-		assetsForm.setNo_person(no_person);
 
 		model.addAttribute("depWdrlInfo", assetsManager.getAssetsBankDepWdrlDetail(assetsForm));
-
-		return "jsonView";
-	}
-
-	/**
-	 * VUE
-     * 자산관리 - 은행 입출금상세(소비정보)
-     * @param request
-     * @param AssetsForm
-     * @param model
-     * @return String
-     * @throws FinsetException, IOException
-	 */
-	@RequestMapping("/getAssetsDetailCsInfo.json")
-	public String getAssetsDetailCsInfo(
-	HttpServletRequest request,
-	AssetsForm assetsForm,
-	Model model) throws FinsetException, IOException{
-
 		model.addAttribute("consumeInfo", assetsManager.getAssetsDetailCsInfo(assetsForm));
-
-		return "jsonView";
-	}
-
-	/**
-	 * VUE
-     * 자산관리 - 은행 입출금상세(소비정보 업데이트)
-     * @param request
-     * @param session
-     * @param AssetsInfoVO
-     * @param model
-     * @return String
-     * @throws FinsetException, IOException
-	 */
-	@RequestMapping("/updateAssetsDetailCsInfo.json")
-	public String updateAssetsDetailCsInfo(
-	HttpServletRequest request,
-	HttpSession session,
-	AssetsInfoVO assetsInfoVO,
-	Model model) throws FinsetException, IOException{
-		String no_person = (String)session.getAttribute("no_person");
-
-		assetsInfoVO.setNo_person(no_person);
-
-		assetsManager.updateAssetsDetailCsInfo(assetsInfoVO);
 
 		return "jsonView";
 	}

@@ -36,7 +36,7 @@
         <div v-else class="nobox-list">
           <template v-for="trnsInfo in trnsList">
             <p :key="trnsInfo.index" v-if="trnsInfo.dateCol" class="date">{{formatDateDot(trnsInfo.dt_trd)}}</p>
-            <div :key="trnsInfo.index" class="item" @click="viewDetail(trnsInfo.dt_trd, trnsInfo.tm_trd)">
+            <div :key="trnsInfo.index" class="item" @click="viewDetail(trnsInfo.seq_tran)">
               <div class="flex">
                 <p v-if="cd_detail_class=='01'"><em>{{trnsInfo.doc1}}</em></p>
                 <p v-else-if="cd_detail_class=='02'||cd_detail_class=='03'"><em>{{trnsInfo.abstracts}}</em></p>
@@ -289,7 +289,7 @@ export default {
         });
     },
     //상세페이지로 이동
-    viewDetail: function(dt_trd, tm_trd) {
+    viewDetail: function(seq_tran) {
       var _this = this;
       var cd_detail_class = _this.cd_detail_class;
 
@@ -302,10 +302,7 @@ export default {
         this.$router.push({
           name: "assetsBankDepWdrlDetail",
           query: {
-            no_person: _this.no_person,
-            no_account: _this.no_account,
-            dt_trd: dt_trd,
-            tm_trd: tm_trd,
+            seq_tran: seq_tran,
             rk: _this.colorIndex
           }
         });

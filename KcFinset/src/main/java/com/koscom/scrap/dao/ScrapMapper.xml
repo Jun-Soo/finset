@@ -1474,7 +1474,7 @@
 			, DEALWAY2
 			, DT_FRT
 		) VALUES (
-			#{seq_tran, jdbcType=NUMERIC}
+			#{SEQ_TRAN, jdbcType=NUMERIC}
 			, #{NO_PERSON, jdbcType=VARCHAR}
 			, XX1.ENC_VARCHAR2_INS(#{AN, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SCR_BANK_API_AN_INFO', 'AN')
 			, #{DATE, jdbcType=VARCHAR}

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class AnAllListHistoryVO implements Serializable{
 	private static final long serialVersionUID = 1517231956288388324L;
+	long   SEQ_TRAN = 0;		//시퀀스
 	String NO_PERSON = "";		//회원고유번호
 	String AN = "";				//계좌번호
 	String BALANCE = "";		//거래후잔액
@@ -18,6 +19,12 @@ public class AnAllListHistoryVO implements Serializable{
 	String OUT_PAYMENT = "";	//출금액
 	String ID_FRT = "";			//admin
 
+	public long getSEQ_TRAN() {
+		return SEQ_TRAN;
+	}
+	public void setSEQ_TRAN(long sEQ_TRAN) {
+		SEQ_TRAN = sEQ_TRAN;
+	}
 	public String getNO_PERSON() {
 		return NO_PERSON;
 	}

@@ -38,7 +38,7 @@
         <multiselect v-model="orderBy" ref="orderBy" placeholder="정렬선택" track-by="text" label="text" :options="orderByOptions" :searchable="false" :allow-empty="false" @select="onSelectOrder">
         </multiselect>
       </div>
-      <template v-if="accountList.length == 0" class="nodata">등록 내역이 없습니다</template>
+      <template v-if="accountList.length == 0" class="nodata">조회 내역이 없습니다</template>
       <template v-for="accountInfo in accountList">
         <div :key="accountInfo.index" class="item">
           <a class="block">

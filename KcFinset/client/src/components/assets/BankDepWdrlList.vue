@@ -59,7 +59,7 @@
           </div>
         </div>
 
-        <div v-if="depWdrlList.length == 0" class="nodata">등록 내역이 없습니다</div>
+        <div v-if="depWdrlList.length == 0" class="nodata">조회 내역이 없습니다</div>
         <div v-else class="nobox-list">
           <template v-for="depWdrlInfo in depWdrlList">
             <p :key="depWdrlInfo.index" v-if="depWdrlInfo.dateCol" class="date">{{formatDateDot(depWdrlInfo.dt_trd)}}</p>

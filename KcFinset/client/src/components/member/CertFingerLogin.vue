@@ -72,12 +72,7 @@ export default {
       password: "",
       cntFailFinger: this.$store.state.user.cntFailFinger,
       hp: this.$store.state.user.hp,
-      fingerSVG: new Vivus("my-svg", {
-        type: "delayed",
-        duration: 100,
-        start: "manual",
-        animTimingFunction: Vivus.EASE
-      })
+      fingerSVG: {}
     };
   },
   component: {},
@@ -159,7 +154,7 @@ export default {
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);
-          this.$toast.center(e);
+          // this.$toast.center(e);
         });
     },
     //비밀번호 틀린횟수 변경
@@ -200,7 +195,7 @@ export default {
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);
-          _this.$toast.center(e);
+          // _this.$toast.center(e);
         });
     },
     /***
@@ -208,7 +203,7 @@ export default {
      **/
     resultFingerPrint: function(result) {
       var _this = this;
-      this.$toast.center("fffff : " + result);
+      // this.$toast.center("fffff : " + result);
       if (result == true || result == 1) {
         //지문인식 성공
         if (Constant.userAgent == "Android") {
@@ -241,7 +236,7 @@ export default {
           _this.login();
         }
       } else {
-        this.$toast.center(result);
+        // this.$toast.center(result);
         //지문 틀린 누적횟수 증가
         _this.cntFailFinger += 1;
         _this.modifyPwdFailCnt("finger", _this.cntFailFinger);
@@ -252,7 +247,7 @@ export default {
         } else if (_this.cntFailFinger == 5) {
           //지문인식 5번 모두 틀린 경우
           _this.errMsg = "지문이 비활성화 됩니다.";
-          this.$toast.center(_this.errMsg);
+          // this.$toast.center(_this.errMsg);
           if (Constant.userAgent == "Android") {
             window.Android.closeFingerPrint();
           }

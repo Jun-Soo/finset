@@ -14,7 +14,7 @@
           </multiselect>
         </div>
       </div>
-      <div v-if="newsList.length == 0" class="nodata">등록 내역이 없습니다</div>
+      <div v-if="newsList.length == 0" class="nodata">조회 내역이 없습니다</div>
       <div v-else class="board-list">
         <div v-for="newsInfo in newsList" :key="newsInfo.index" class="list">
           <div class="left">

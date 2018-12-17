@@ -17,7 +17,7 @@
       <div class="cert-wrap">
         <p class="title">휴대폰인증</p>
         <div class="grid phone">
-          <multiselect class="multiselect-basic" v-model="telComCd" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @select="onSelect" v-validate="'required'" data-vv-name='통신사'>
+          <multiselect class="multiselect-basic" ref="telCom" v-model="telComCd" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @select="onSelect" v-validate="'required'" data-vv-name='통신사'>
             <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
           </multiselect>
           <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
@@ -97,6 +97,22 @@ export default {
       yn_use: ""
     };
   },
+  watch: {
+    chkAll: function() {
+      if (this.chkAll) {
+        $("#nm_person").focus();
+      }
+    },
+    sex: function() {
+      console.log(this.telComCd);
+      if (
+        (this.telComCd == null || this.telComCd == "") &&
+        this.sex.length > 0
+      ) {
+        this.$refs.telCom.$el.focus();
+      }
+    }
+  },
   components: {},
   computed: {},
   beforeCreate() {},
@@ -112,7 +128,7 @@ export default {
   },
   beforeMount() {},
   mounted() {
-    $("#nm_person").focus();
+    // $("#nm_person").focus();
   },
   beforeUpdate() {},
   updated() {
@@ -133,7 +149,7 @@ export default {
       this.hp = phoneNumber;
     },
     onSelect: function(option) {
-      this.telComCd = option;
+      this.telComCd = option.value;
       console.log(this.telComCd);
     },
     nextFocus: function(val) {

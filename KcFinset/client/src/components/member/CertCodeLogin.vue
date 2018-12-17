@@ -213,6 +213,7 @@ export default {
             }
             _this.$store.state.user.authToken = null;
             _this.$store.state.user.cntFailPwd = 0;
+            _this.$store.state.user.cntFailFinger = 0;
             // _this.$store.state.user.cntFailFinger = 0;
             _this.$store.commit("LOGIN", response.data);
 
@@ -224,8 +225,8 @@ export default {
               _this.$router.push("/main");
             }
           } else {
-            this.$store.state.isLoading = false;
-            this.initClassPass();
+            _this.$store.state.isLoading = false;
+            _this.initClassPass();
             _this.password = "";
             //비밀번호 틀린 누적횟수 증가
             console.log("login failed : ");

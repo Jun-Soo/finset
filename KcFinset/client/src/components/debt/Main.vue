@@ -135,14 +135,6 @@
               <p :style="vo.eachStyle"></p>
             </div>
             <div class="text-wrap">
-              <!-- <div class="left">
-                <p class="key"><span>상환금액</span><span>이자율</span></p>
-                <p class="value"><span>{{formatNumber((vo.amt_contract-vo.amt_remain) * 10000)}}<em>원</em></span><span>{{vo.ever_interest}}<em>%</em></span></p>
-              </div>
-              <div class="right">
-                <p class="key"><span>원금</span></p>
-                <p class="value"><span>{{formatNumber(vo.amt_contract * 10000)}}<em>원</em></span></p>
-              </div> -->
               <div class="left">
                 <p class="key"><span>월 상환금액</span></p>
                 <p class="value"><span>{{formatNumber((vo.amt_repay) * 10000)}}<em>원</em></span></p>

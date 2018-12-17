@@ -367,7 +367,7 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .list01 .item .text-wrap .right { width: 50%; }
 .list01 .item .text-wrap .right .key { text-align: right; font-size: 12px; color: #9b9489; }
 .list01 .item .text-wrap .right .key span { font-size: inherit; color: #9b9489; }
-.list01 .item .text-wrap .right .value { margin-top: 10px; text-align: right; color: #222; font-weight: 700; }
+.list01 .item .text-wrap .right .value { text-align: right; color: #222; font-weight: 700; }
 .list01 .item .text-wrap .right .value span { font-size: 14px; color: #666; margin-left: 5px; padding-left: 5px; border-left: 1px solid #e5e5e5; }
 .list01 .item .text-wrap .right .value span:first-child { margin-left: 0; padding-left: 0; border-left: none; }
 .list01 .item .text-wrap .right .value span em { margin-left: 2px; font-size: 14px; }

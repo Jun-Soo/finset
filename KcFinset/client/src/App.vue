@@ -142,7 +142,6 @@ export default {
     // 임시로 css파일을 하단으로 내리는 로직
     orderCssFile: function() {
       var head = document.head.childNodes;
-      console.log(head);
       for (var i in head) {
         if (head[i].nodeName == "LINK") {
           var link = document.head.removeChild(head[i]);

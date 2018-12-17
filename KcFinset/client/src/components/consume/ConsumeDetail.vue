@@ -23,7 +23,9 @@
             <li>
               <p class="key">금액</p>
               <p>
-                <input type="tel" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액"><em>원</em>
+                <!-- <input type="tel" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액"><em>원</em> -->
+                <input type="text" class="money" inputmode="numeric" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액" @keypress="chkAmt">
+                <em>원</em>
               </p>
             </li>
             <p class="warn" v-if="errors.has('금액')">{{errors.first('금액')}}</p>
@@ -32,8 +34,6 @@
             <li>
               <p class="key">카테고리</p>
               <p>
-                <!-- <button class="btn-cate btn-search" @click="showCategory" :disabled="!isMine" v-text="categoryText" v-validate="'required'" data-vv-name="카테고리"></button> -->
-                <!-- <button class="btn-cate btn-search" @click="showCategory" :disabled="!isMine" v-text="categoryText"></button> -->
                 <input @click="showCategory" v-validate="'required'" data-vv-name="카테고리" :disabled="!isMine" type="button" :value="categoryText" class="btn-cate btn-search">
               </p>
             </li>
@@ -174,7 +174,10 @@ export default {
       listTrans: {},
       ko: ko,
       dt_trans: "",
-      meansConsumeOption: [],
+      meansConsumeOption: [
+        { text: "현금", value: "02", means_consume: "02" },
+        { text: "입출금계좌", value: "04", means_consume: "04" }
+      ],
       isAuto: false,
       nmBanner: ""
     };
@@ -408,6 +411,20 @@ export default {
 
       var transVO = this.listTrans[index][subIndex];
 
+      // console.log(transVO);
+      this.meansConsumeOption = [
+        {
+          text: "(" + transVO.nm_fc + ") " + transVO.an,
+          value: transVO.an,
+          means_consume: "04"
+        }
+      ];
+
+      this.consumeVO.means_consume = {
+        text: "(" + transVO.nm_fc + ") " + transVO.an,
+        value: transVO.an,
+        means_consume: "04"
+      };
       this.consumeVO.cd_fc = transVO.cd_fc;
       this.consumeVO.nm_fc = transVO.nm_trd;
       this.consumeVO.no_card = transVO.an;
@@ -442,7 +459,7 @@ export default {
     selectMeans: function(meansOption) {
       this.setDefault();
       if (meansOption.means_consume != "02") {
-        this.listPersonTransDetail(meansOption.value);
+        this.listPersonTransDetail();
       } else {
         this.isShowTrans = false;
         this.isPersonRegist = true;
@@ -559,7 +576,6 @@ export default {
             listCdClass[eachClass.cd_class] = eachClass;
           }
           _this.consumeCategory = listCdClass;
-          console.log(_this.consumeCategory);
           if (!_this.isNew) {
             _this.getConsumeInfo();
           } else {
@@ -662,12 +678,11 @@ export default {
           _this.$router.go(-1);
         });
     },
-    listPersonTransDetail: function(no_card) {
+    listPersonTransDetail: function() {
       var _this = this;
       this.$http
         .get("/m/consume/listPersonTransDetail.json", {
           params: {
-            no_card: no_card,
             type_in_out: _this.curTab
           }
         })
@@ -737,25 +752,6 @@ export default {
           _this.seen = true;
         });
     },
-    listMeansConsume: function() {
-      var _this = this;
-
-      this.$http
-        .get("/m/consume/listMeansConsume.json")
-        .then(function(response) {
-          var list = response.data.listMeansConsume;
-          _this.meansConsumeOption = [];
-          for (var idx in list) {
-            _this.meansConsumeOption.push({
-              means_consume: list[idx].means_consume,
-              text:
-                list[idx].means_consume == "02" ? "현금" : list[idx].nm_card,
-              value: list[idx].no_card,
-              cd_fc: list[idx].cd_fc
-            });
-          }
-        });
-    },
     //기타 편의를 위해 함수로 구현한 부분
     setDefault: function() {
       this.consumeVO = {
@@ -769,9 +765,6 @@ export default {
         this.listPersonIncomeClassInfo();
       } else {
         this.listPersonConsumeClassInfo();
-      }
-      if (this.isNew) {
-        this.listMeansConsume();
       }
     },
     getTransText: function(vo) {
@@ -794,6 +787,15 @@ export default {
           contents: this.consumeVO.contents
         }
       });
+    },
+    chkAmt: function(event) {
+      if (event.which >= 37 && event.which <= 40) {
+        console.log("return");
+        return;
+      }
+      event.target.value = event.target.value
+        .replace(/\D/g, "")
+        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
   }
 };

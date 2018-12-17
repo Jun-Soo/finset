@@ -1499,9 +1499,13 @@
 	</select >
 		
 	<insert id="createScrSvngSvninDetail" parameterType="com.koscom.scrap.model.sub.DepositAnListHistoryVO">
+		<selectKey keyProperty="SEQ_SVNG" resultType="long" order="BEFORE">
+		    SELECT SEQ_TRAN.NEXTVAL FROM DUAL
+		</selectKey>
 		INSERT INTO SCR_SVNG_SVNIN_DETAIL
 		(
-			  NO_PERSON
+			  SEQ_SVNG
+			, NO_PERSON
 			, AN
 			, DT_TRD
 			, TM_TRD
@@ -1514,7 +1518,8 @@
 			, BRN_DEAL
 			, DT_FRT
 		) VALUES (
-			#{NO_PERSON		, jdbcType=VARCHAR}
+			#{SEQ_SVNG, jdbcType=NUMERIC}
+			, #{NO_PERSON		, jdbcType=VARCHAR}
 			, XX1.ENC_VARCHAR2_INS(#{AN, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SCR_BANK_API_AN_INFO', 'AN')
 			, #{DATE		, jdbcType=VARCHAR}
 			, #{TIME		, jdbcType=VARCHAR}

@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 public class DepositAnListHistoryVO implements Serializable{
 	private static final long serialVersionUID = 2217068015059146116L;
+	long   SEQ_SVNG = 0;		//시퀀스
 	String NO_PERSON = "";		//회원고유번호
 	String AN = "";				//계좌번호
 	String DATE = "";			//거래일자
@@ -17,6 +18,12 @@ public class DepositAnListHistoryVO implements Serializable{
 	String DISTRIBUTOR = "";	//취급점
 	String ID_FRT = "";			//admin
 	
+	public long getSEQ_SVNG() {
+		return SEQ_SVNG;
+	}
+	public void setSEQ_SVNG(long sEQ_SVNG) {
+		SEQ_SVNG = sEQ_SVNG;
+	}
 	public String getNO_PERSON() {
 		return NO_PERSON;
 	}

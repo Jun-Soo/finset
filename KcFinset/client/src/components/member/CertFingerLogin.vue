@@ -72,7 +72,8 @@ export default {
       password: "",
       cntFailFinger: this.$store.state.user.cntFailFinger,
       hp: this.$store.state.user.hp,
-      fingerSVG: {}
+      fingerSVG: {},
+      firstLoad: true
     };
   },
   component: {},
@@ -80,33 +81,47 @@ export default {
   beforeCreate() {},
   created() {
     this.$store.state.title = "지문인증";
-
     window.resultFingerPrint = this.resultFingerPrint;
+    console.log(this.$store.state.user.cntFailFinger);
+
     if (Constant.userAgent == "Android") {
       window.Android.initFingerPrint();
     } else if (Constant.userAgent == "iOS") {
       //지문인식 결과 콜백 이벤트
-      Jockey.on("resultFingerPrint", function(param) {
-        var result = false;
-        if (param.result == 1) result = true;
-        resultFingerPrint(result);
-      });
+      if (!this.firstLoad) {
+        Jockey.on("resultFingerPrint", function(param) {
+          var result = false;
+          if (param.result == 1) result = true;
+          // this.resultFingerPrint(result);
+        });
+      }
       Jockey.send("initFingerPrint");
     }
+
     this.errMsg =
       "지문인증을 " + this.cntFailFinger + "회 실패한 이력이 있습니다.";
   },
-  beforeMount() {},
+  beforeMount() {
+    console.log("bf mounted");
+  },
   mounted() {
+    this.firstLoad = true;
     this.fingerSVG = new Vivus("my-svg", {
       type: "delayed",
-      duration: 100,
+      duration: 50,
       start: "manual",
       animTimingFunction: Vivus.EASE
     });
+
+    console.log("mounted");
   },
-  beforeUpdate() {},
-  updated() {},
+  beforeUpdate() {
+    console.log("bfupdated");
+  },
+  updated() {
+    this.firstLoad = false;
+    console.log("updated");
+  },
   beforeDestroy() {},
   destroyed() {},
   methods: {
@@ -118,6 +133,7 @@ export default {
         j_password: _this.password
       });
       this.$store.state.isLoading = true;
+      // this.$store.state.isLoading = true;
       this.$http
         .post(_this.$store.state.loginPath, data, {
           headers: {
@@ -135,15 +151,24 @@ export default {
             } else if (Constant.userAgent == "Android") {
               window.Android.setNoPerson(_this.username, _this.hp);
             }
-            _this.fingerSVG.reset().play();
+            // _this.fingerSVG = new Vivus("my-svg", {
+            //   type: "delayed",
+            //   duration: 100,
+            //   start: "manual",
+            //   animTimingFunction: Vivus.EASE
+            // });
+            // _this.fingerSVG.reset().play();
             _this.$store.state.user.cntFailFinger = 0;
+            _this.$store.state.user.cntFailPwd = 0;
             _this.$store.state.user.authToken = null;
+            _this.$store.state.isLoading = false;
             _this.$store.commit("LOGIN", response.data);
             _this.changeLoginDB();
             _this.$router.push("/main");
           } else {
-            this.$store.state.isLoading = false;
+            _this.$store.state.isLoading = false;
             this.$toast.center(ko.messages.loginErr);
+            // this.$toast.center("login시류패");
 
             if (response.data.result == "21") {
               //ID오류
@@ -153,7 +178,8 @@ export default {
           }
         })
         .catch(e => {
-          this.$toast.center(ko.messages.error);
+          this.$toast.center("login catch");
+          // this.$toast.center(ko.messages.error);
           // this.$toast.center(e);
         });
     },
@@ -173,8 +199,8 @@ export default {
           console.log(result);
         })
         .catch(e => {
-          this.$toast.center(ko.messages.error);
-          this.$toast.center(e);
+          // this.$toast.center(ko.messages.error);
+          this.$toast.center("틀린횟수변경Catch");
         });
     },
     //로그인값 db 변경
@@ -194,7 +220,9 @@ export default {
           }
         })
         .catch(e => {
-          this.$toast.center(ko.messages.error);
+          // this.$toast.center(ko.messages.error);
+          this.$toast.center("changeLoginDBCatch");
+
           // _this.$toast.center(e);
         });
     },
@@ -203,18 +231,26 @@ export default {
      **/
     resultFingerPrint: function(result) {
       var _this = this;
+      // this.$store.state.isLoading = true;
+
       // this.$toast.center("fffff : " + result);
+      _this.fingerSVG.reset().play();
       if (result == true || result == 1) {
         //지문인식 성공
         if (Constant.userAgent == "Android") {
           window.Android.closeFingerPrint();
         }
-        _this.fingerSVG = new Vivus("my-svg", {
-          type: "delayed",
-          duration: 100,
-          start: "manual",
-          animTimingFunction: Vivus.EASE
-        });
+        // setTimeout(function() {
+        // _this.fingerSVG = new Vivus("my-svg", {
+        //   type: "delayed",
+        //   duration: 1000,
+        //   start: "manual",
+        //   animTimingFunction: Vivus.EASE
+        // });
+        // setTimeout(function() {
+        // }, 3000);
+
+        // }, 1000);
 
         if (_this.$store.state.ynReload == "Y") {
           if (Constant.userAgent == "Android") {
@@ -233,14 +269,18 @@ export default {
           }
 
           _this.password = _this.$store.state.user.authToken;
-          _this.login();
+          setTimeout(function() {
+            _this.login();
+          }, 500);
         }
       } else {
-        // this.$toast.center(result);
+        // this.$toast.center(loginTrue);
         //지문 틀린 누적횟수 증가
         _this.cntFailFinger += 1;
-        _this.modifyPwdFailCnt("finger", _this.cntFailFinger);
-
+        // _this.$dialogs.alert(_this.cntFailFinger, Constant.options);
+        // _this.modifyPwdFailCnt("finger", _this.cntFailFinger);
+        // _this.$store.state.isLoading = false;
+        _this.fingerSVG.reset();
         if (_this.cntFailFinger < 5) {
           _this.errMsg = "다시 시도해 주세요. (" + _this.cntFailFinger + "/5)";
           return false;
@@ -262,8 +302,8 @@ export default {
               _this.$router.push("/member/certCodeLogin");
             })
             .catch(e => {
-              _this.$toast.center(ko.messages.error);
-              _this.$toast.center(e);
+              // _this.$toast.center(ko.messages.error);
+              // _this.$toast.center(e);
             });
         }
         return false;

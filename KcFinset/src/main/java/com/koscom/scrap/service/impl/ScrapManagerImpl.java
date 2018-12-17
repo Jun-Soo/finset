@@ -417,6 +417,7 @@ public class ScrapManagerImpl implements ScrapManager {
 				createFinanceAccount(no_person, uuid, dn, token, stockList.get(i));
 			}
 			// 여러 증권사일 경우 성공 / 실패 둘다 가능하기 때문에 성공으로 리턴
+			returnClass = new ReturnClass();
 			returnClass.setCd_result(Constant.SUCCESS);
 		}
 		return returnClass;

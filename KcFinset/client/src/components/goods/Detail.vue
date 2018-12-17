@@ -154,14 +154,16 @@ export default {
       formData.append("no_person", this.$store.state.user.noPerson);
       formData.append("cd_fc", this.cd_fc);
       formData.append("cd_goods", this.cd_goods);
+      console.log("cd_fc : " + this.cd_fc + ",cd_goods : " + this.cd_goods);
       this.$http.post(url, formData).then(function(response) {
         _this.goodsInfo = response.data.goodsInfo;
+        console.log(_this.goodsInfo);
         if (_this.goodsInfo) {
           _this.goodsInfo.icon =
             "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + _this.goodsInfo.cd_fc;
           _this.keyword_list = _this.goodsInfo.keyword_list.split(",");
+          _this.seen = true;
         }
-        _this.seen = true;
       });
     },
     tabOnClick: function(type) {

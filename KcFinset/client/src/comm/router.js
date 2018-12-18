@@ -710,15 +710,15 @@ export const routes = [{
       allowPath: true
     }
   },
-  // {
-  //   path: 'detail_2',
-  //   alias: '/detail_2',
-  //   name: 'debtDetail_2',
-  //   component: DebtDetail2,
-  //   meta: {
-  //     allowPath: true
-  //   }
-  // },
+    // {
+    //   path: 'detail_2',
+    //   alias: '/detail_2',
+    //   name: 'debtDetail_2',
+    //   component: DebtDetail2,
+    //   meta: {
+    //     allowPath: true
+    //   }
+    // },
   {
     path: 'repayment',
     alias: '/repayment',
@@ -773,15 +773,15 @@ export const routes = [{
       allowPath: true
     }
   },
-  // {
-  //   path: 'update',
-  //   alias: '/update',
-  //   name: 'debtUpdate',
-  //   component: DebtUpdate,
-  //   meta: {
-  //     allowPath: true
-  //   }
-  // },
+    // {
+    //   path: 'update',
+    //   alias: '/update',
+    //   name: 'debtUpdate',
+    //   component: DebtUpdate,
+    //   meta: {
+    //     allowPath: true
+    //   }
+    // },
   {
     path: 'reqIntrCut',
     alias: '/reqIntrCut',
@@ -844,6 +844,7 @@ export const routes = [{
   children: [{
     path: 'main',
     alias: '/main',
+    name: 'consumeMain',
     component: ConsumeMain,
     meta: {
       allowPath: true
@@ -852,6 +853,7 @@ export const routes = [{
   {
     path: 'regGoal',
     alias: '/regGoal',
+    name: 'consumeRegGoal',
     component: ConsumeRegGoal,
     meta: {
       allowPath: true
@@ -860,6 +862,7 @@ export const routes = [{
   {
     path: 'consumeDetail',
     alias: '/consumeDetail',
+    name: 'consumeConsumeDetail',
     component: ConsumeConsumeDetail,
     meta: {
       allowPath: true
@@ -868,6 +871,7 @@ export const routes = [{
   {
     path: 'incomeAnalyze',
     alias: '/incomeAnalyze',
+    name: 'consumeIncomeAnalyze',
     component: ConsumeIncomeAnalyze,
     meta: {
       allowPath: true
@@ -876,6 +880,7 @@ export const routes = [{
   {
     path: 'setting',
     alias: '/setting',
+    name: 'consumeSetting',
     component: ConsumeSetting,
     meta: {
       allowPath: true
@@ -884,6 +889,7 @@ export const routes = [{
   {
     path: 'consumeClass',
     alias: '/consumeClass',
+    name: 'consumeConsumeClass',
     component: ConsumeConsumeClass,
     meta: {
       allowPath: true
@@ -892,6 +898,7 @@ export const routes = [{
   {
     path: 'incomeClass',
     alias: '/incomeClass',
+    name: 'consumeIncomeClass',
     component: ConsumeIncomeClass,
     meta: {
       allowPath: true
@@ -900,6 +907,7 @@ export const routes = [{
   {
     path: 'payment',
     alias: '/payment',
+    name: 'consumePayment',
     component: ConsumePayment,
     meta: {
       allowPath: true
@@ -908,6 +916,7 @@ export const routes = [{
   {
     path: 'paymentDetail',
     alias: '/paymentDetail',
+    name: 'consumePaymentDetail',
     component: ConsumePaymentDetail,
     meta: {
       allowPath: true
@@ -916,6 +925,7 @@ export const routes = [{
   {
     path: 'settlement',
     alias: '/settlement',
+    name: 'consumeSettlement',
     component: ConsumeSettlement,
     meta: {
       allowPath: true
@@ -924,6 +934,7 @@ export const routes = [{
   {
     path: 'consumeIncomeStats',
     alias: '/consumeIncomeStats',
+    name: 'consumeIncomeStats',
     component: ConsumeIncomeStats,
     meta: {
       allowPath: true

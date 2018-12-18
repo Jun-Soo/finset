@@ -58,6 +58,7 @@ export default {
         this.style = this.style + "height: " + this.height + "px;";
       }
     }
+    this.chkSelectValue();
   },
   beforeUpdate() {},
   updated() {},

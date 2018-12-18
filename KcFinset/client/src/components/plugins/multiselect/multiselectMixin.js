@@ -239,6 +239,9 @@ export default {
       this.close()
     },
     chkSelectValue: function () {
+      if ((this.value || '') === '') {
+        return
+      }
       var selOpt = this.options.filter(option => option.value === this.value.value)
 
       if ((selOpt || '') !== '' && selOpt.length === 1) {

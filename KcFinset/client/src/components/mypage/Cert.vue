@@ -118,9 +118,11 @@ export default {
         this.fingerSettingSeen = true;
       } else {
         this.fingerSettingSeen = false;
+        this.$store.state.user.ynFingerprint = "N";
       }
-      if (!isFingerPrintRegistered) {
+      if (isFingerPrintRegistered != true || isFingerPrintRegistered != 1) {
         this.fingerDataNone = true;
+        this.$store.state.user.ynFingerprint = "N";
       }
     }
   }

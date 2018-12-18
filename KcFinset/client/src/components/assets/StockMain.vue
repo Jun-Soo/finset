@@ -54,7 +54,7 @@
             </div>
             <div class="number-wrap bi">
               <div class="left">
-                <p class="number">{{accountShareInfo.amt_stock}}<em>원</em></p>
+                <p class="number">{{formatNumber(accountShareInfo.amt_stock)}}<em>원</em></p>
               </div>
               <div class="right">
                 <p class="value blue">{{accountShareInfo.proloss}} ({{accountShareInfo.rate_return}}%)</p>
@@ -77,7 +77,7 @@
             </div>
             <div class="number-wrap bi">
               <div class="left">
-                <p class="number">{{accountInfo.amt_stock}}<em>원</em></p>
+                <p class="number">{{formatNumber(accountInfo.amt_stock)}}<em>원</em></p>
               </div>
               <div class="right">
                 <p class="value blue">{{accountInfo.proloss}} ({{accountInfo.rate_return}}%)</p>

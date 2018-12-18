@@ -6,23 +6,23 @@
         <div class="body">
           <div class="flex">
             <p>출금가능액</p>
-            <p>{{formatNumber(stockSumInfo.cashavwithdraw)}}</p>
+            <p>{{formatNumber(stockSumInfo.cashavwithdraw)}}원</p>
           </div>
           <div class="flex">
             <p>대용금</p>
-            <p>{{formatNumber(stockSumInfo.subsmargin)}}</p>
+            <p>{{formatNumber(stockSumInfo.subsmargin)}}원</p>
           </div>
           <div class="flex">
             <p>매수/미납금</p>
-            <p>{{formatNumber(stockSumInfo.receivable)}}</p>
+            <p>{{formatNumber(stockSumInfo.receivable)}}원</p>
           </div>
           <div class="flex">
             <p>대출/신용금</p>
-            <p>{{formatNumber(stockSumInfo.loancredit)}}</p>
+            <p>{{formatNumber(stockSumInfo.loancredit)}}원</p>
           </div>
           <div class="flex">
             <p>유가증권평가금액</p>
-            <p>{{formatNumber(stockSumInfo.valueatcur)}} {{(stockSumInfo.proloss!='0')?'('+stockSumInfo.proloss+')':''}}</p>
+            <p>{{formatNumber(stockSumInfo.valueatcur)}}{{(stockSumInfo.proloss!='0')?'('+stockSumInfo.proloss+')':''}}원</p>
           </div>
         </div>
       </div>

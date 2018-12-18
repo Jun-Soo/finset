@@ -64,7 +64,7 @@ import "@/assets/images/member/fingerprint_red.svg";
 import "@/assets/js/vivus.min.js";
 
 export default {
-  name: "certFinger",
+  name: "certFingerLogin",
   data() {
     return {
       errMsg: "",
@@ -89,13 +89,13 @@ export default {
       window.Android.initFingerPrint();
     } else if (Constant.userAgent == "iOS") {
       //지문인식 결과 콜백 이벤트
-      if (!this.firstLoad) {
-        Jockey.on("resultFingerPrint", function(param) {
-          var result = false;
-          if (param.result == 1) result = true;
-          // this.resultFingerPrint(result);
-        });
-      }
+      // if (!this.firstLoad) {
+      Jockey.on("resultFingerPrint", function(param) {
+        var result = false;
+        if (param.result == 1) result = true;
+        // this.resultFingerPrint(result);
+      });
+      // }
       Jockey.send("initFingerPrint");
     }
 
@@ -183,7 +183,7 @@ export default {
             _this.$router.push("/main");
           } else {
             _this.$store.state.isLoading = false;
-            this.$toast.center(ko.messages.loginErr);
+            // this.$toast.center(ko.messages.loginErr);
             // this.$toast.center("login시류패");
 
             if (response.data.result == "21") {

@@ -330,7 +330,7 @@ export default {
 
       this.$router.push({
         name: "GoodsDetail",
-        params: {
+        query: {
           type: type,
           cd_fc: cd_fc,
           cd_goods: cd_non_goods,

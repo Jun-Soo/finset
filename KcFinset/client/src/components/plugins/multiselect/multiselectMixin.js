@@ -152,13 +152,13 @@ export default {
      * Useful for identifying events origin.
      * @default null
      * @type {String|Integer}
-    */
+     */
     id: {
       type: String,
       default: null
     }
   },
-  mounted () { },
+  mounted () {},
   computed: {
     internalValue () {
       return this.value || this.value === 0
@@ -166,7 +166,11 @@ export default {
         : []
     }
   },
-  watch: {},
+  watch: {
+    options: function (options) {
+      console.log(options)
+    }
+  },
   methods: {
     /**
      * Returns the internalValue in a way it can be emited to the parent
@@ -176,8 +180,8 @@ export default {
       return this.multiple
         ? this.internalValue
         : this.internalValue.length === 0
-          ? null
-          : this.internalValue[0]
+        ? null
+        : this.internalValue[0]
     },
     /**
      * Finds out if the given element is already present
@@ -223,10 +227,24 @@ export default {
     clickConfirm: function () {
       this.selected = this.selectext1 + '-' + this.selectext2
       var obj = []
-      obj.push({ 'value': this.selected1, 'text': this.selectext1 })
-      obj.push({ 'value': this.selected2, 'text': this.selectext2 })
+      obj.push({
+        'value': this.selected1,
+        'text': this.selectext1
+      })
+      obj.push({
+        'value': this.selected2,
+        'text': this.selectext2
+      })
       this.$emit('input', obj)
       this.close()
+    },
+    chkSelectValue: function () {
+      var selOpt = this.options.filter(option => option.value === this.value.value)
+
+      if ((selOpt || '') !== '' && selOpt.length === 1) {
+        this.selected = selOpt[0].text
+        this.selected1 = selOpt[0].value
+      }
     }
   }
 }

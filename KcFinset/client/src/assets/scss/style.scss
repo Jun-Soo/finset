@@ -451,9 +451,15 @@ aside.search-wrap{
                     text-align: right;
                     &.blue{
                         color: $col4;
+                        font-weight: 700;
                     }
                     &.red{
                         color: $col1;
+                        font-weight: 700;
+                    }
+                    &.dark{
+                        color: #111;
+                        font-weight: 700;
                     }
                     span.circle{
                         display: inline-block;
@@ -649,8 +655,8 @@ aside.search-wrap{
                 .value{
                     //margin-top: 10px;
                     text-align: right;
-                    color: #222;
-                    font-weight: 700;
+                    color: #666;
+                    //font-weight: 700;
                     span{
                         font-size: 14px;
                         color: #666;
@@ -2361,6 +2367,10 @@ aside.search-wrap{
             &.right{
                 text-align: right;
 				width: 50%;
+                span{
+                    padding:0 10px 0 20px;
+                    background: url("../images/etc/search-delete.png") no-repeat left center / 14px;
+                }
                 button{
                     width: 35px;
                     height: 35px;
@@ -4003,7 +4013,7 @@ button.cal{
             }
         }
         .multiselect-basic {
-          width: 50%;
+          width: 100%;
         }
     }
     .item{
@@ -5974,6 +5984,8 @@ span.cell.day.selected.today {
 	box-sizing: border-box;
 
 	height: 35px;
+    
+    width: 100%;
 
 }
 

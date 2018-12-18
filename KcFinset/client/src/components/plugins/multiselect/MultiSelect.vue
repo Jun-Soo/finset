@@ -58,6 +58,7 @@ export default {
         this.style = this.style + "height: " + this.height + "px;";
       }
     }
+    this.chkSelectValue();
   },
   beforeUpdate() {},
   updated() {},
@@ -71,9 +72,11 @@ export default {
 <style lang="scss">
 .btn-cate.btn-search {
   padding-right: 20px;
-  background: url("../../../assets/images/consume/btn_cate.png") no-repeat right
+  background: url("../../../assets/images/consume/btn_cate.png") no-repeat 95%
     center/10px;
   color: #454545;
-  text-align: right;
+  text-align: left;
+  width: 100%;
+  padding-left: 10px;
 }
 </style>

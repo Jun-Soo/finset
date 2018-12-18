@@ -69,4 +69,11 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
+.btn-cate.btn-search {
+  padding-right: 20px;
+  background: url("../../../assets/images/consume/btn_cate.png") no-repeat right
+    center/10px;
+  color: #454545;
+  text-align: right;
+}
 </style>

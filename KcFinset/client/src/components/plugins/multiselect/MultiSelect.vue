@@ -1,7 +1,7 @@
 <template>
   <div style="width=100%; height=100%">
-    <input :id="id" @click="open" type="button" :value="selected" class="btn-cate btn-search">
-    <aside :class="{'on' : isShow}" class="search-wrap" v-show="isShow">
+    <input @click="open" type="button" :value="selected" class="btn-cate btn-search" v-bind:class="{'on' : isShow}">
+    <aside :id="id" :class="{'on' : isShow}" class="search-wrap">
       <div class="top" @click="close">
         <button>{{title}}</button>
         <!-- <a v-if="setIsShow" class="btn-setting" @click="clickSetting"></a> -->
@@ -69,4 +69,11 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
+.btn-cate.btn-search {
+  padding-right: 20px;
+  background: url("../../../assets/images/consume/btn_cate.png") no-repeat right
+    center/10px;
+  color: #454545;
+  text-align: right;
+}
 </style>

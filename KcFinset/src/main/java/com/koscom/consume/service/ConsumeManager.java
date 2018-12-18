@@ -52,11 +52,18 @@ public interface ConsumeManager {
 	List<List<ConsumeVO>> listConsumeInfo(ConsumeForm consumeForm);
 	
 	/**
-	 * 개인 계좌 입출금내역 조회
+	 * 개인 계좌 입출금내역 리스트 조회
 	 * @param person
 	 * @return
 	 */
 	List<List<PersonTransDetailVO>> listPersonTransDetail(ConsumeForm consumeForm);
+	
+	/**
+	 * 개인 계좌 입출금내역 조회
+	 * @param person
+	 * @return
+	 */
+	PersonTransDetailVO getPersonTransDetail(ConsumeForm consumeForm);
 	
 	/**
 	 * 소비분류 코드 존재 여부 확인
@@ -180,6 +187,13 @@ public interface ConsumeManager {
 	 * @return
 	 */
 	ConsumeVO getConsumeInfo(ConsumeForm consumeForm);
+	
+	/**
+	 * 입출금일련번호를 통한 소비지출 상세내역 조회
+	 * @param consumeForm
+	 * @return
+	 */
+	ConsumeVO getConsumeInfoWithSeqTran(ConsumeForm consumeForm);
 	
 	/**
 	 * 예산 사용을 위해 3개월 평균 지출내역 조회

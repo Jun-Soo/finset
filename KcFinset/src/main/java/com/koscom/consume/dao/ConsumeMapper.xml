@@ -438,6 +438,29 @@
        ORDER BY
 			STD.DT_TRD DESC, STD.TM_TRD DESC
 	</select>
+	<select id="getPersonTransDetail" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.PersonTransDetailVO">
+		SELECT
+			 XX1.DEC_VARCHAR2_SEL(STD.AN, '10', 'FS_ARIA', 'SCR_TRANSACTION_DETAIL', 'AN') AS AN
+			,SBAAI.NM_AN
+			,STD.DT_TRD
+			,STD.TM_TRD
+			,STD.AMT_WDRL
+			,STD.AMT_DEP
+			,STD.DOC1
+			,STD.DOC2
+			,SBAAI.CD_FC
+			,FI.NM_FC
+		FROM
+			 SCR_TRANSACTION_DETAIL STD
+			,SCR_BANK_API_AN_INFO SBAAI
+			,FC_INFO FI
+		WHERE
+				STD.SEQ_TRAN	= #{seq_tran	, jdbcType = VARCHAR}
+			AND STD.NO_PERSON	= #{no_person	, jdbcType = VARCHAR}
+			AND STD.NO_PERSON	= SBAAI.NO_PERSON
+			AND SBAAI.CD_FC		= FI.CD_FC
+			AND STD.AN			= SBAAI.AN
+	</select>
 	<select id="chkPersonConsumeClassInfoExist" parameterType="java.lang.String" resultType="java.lang.Integer">
 		SELECT
 			COUNT( 1 )
@@ -1326,7 +1349,37 @@
 			AND YN_CANCEL		= 'N'
 			AND YN_DELETE		= 'N'
 	</select>
-	
+	<select id="getConsumeInfoWithSeqTran" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.ConsumeVO">
+		SELECT
+			 CI.SEQ_CONSUME
+			,CI.TYPE_IN_OUT
+			,CI.MEANS_CONSUME
+			,CI.NM_CARD
+			,CI.NO_CARD
+			,CI.DT_TRD
+			,CI.CD_CLASS
+			,PCCI.NM_CLASS
+			,CI.CD_TYPE
+			,PCCI.NM_TYPE
+			,CI.CONTENTS
+			,CI.MEMO
+			,CI.AMT_IN_OUT
+			,CI.NO_APPROVAL
+			,CI.YN_PAY_INSTALLMENT
+			,CI.YN_AUTO
+			,CI.YN_PERSON_REGIST
+		FROM
+			 CONSUME_INFO CI
+			,PERSON_CONSUME_CLASS_INFO PCCI
+		WHERE
+				CI.SEQ_TRAN		= #{seq_tran	, jdbcType = VARCHAR}
+			AND CI.NO_PERSON	= PCCI.NO_PERSON
+			AND CI.NO_PERSON	= #{no_person	, jdbcType = VARCHAR}
+			AND CI.CD_CLASS		= PCCI.CD_CLASS
+			AND CI.CD_TYPE		= PCCI.CD_TYPE
+			AND YN_CANCEL		= 'N'
+			AND YN_DELETE		= 'N'
+	</select>
 	<update id="modifyPersonSortClass" parameterType="com.koscom.consume.model.PersonConsumeClassVO">
 		UPDATE
 			PERSON_CONSUME_CLASS_INFO
@@ -1698,6 +1751,7 @@
 					,YN_AUTO
 					,YN_BUDGET_EXCEPT
 					,YN_PERSON_REGIST
+					,SEQ_TRAN
 					,ID_FRT
 					,DT_FRT
 					,ID_LST
@@ -1731,6 +1785,7 @@
 					,#{yn_auto				, jdbcType = VARCHAR}
 					,#{yn_budget_except		, jdbcType = VARCHAR}
 					,#{yn_person_regist		, jdbcType = VARCHAR}
+					,#{seq_tran				, jdbcType = VARCHAR}
 					,#{no_person			, jdbcType = VARCHAR}
 					,SYSDATE
 					,#{no_person			, jdbcType = VARCHAR}

@@ -196,13 +196,14 @@ export default {
     },
     close: function () {
       this.isShow = false
-      if (this.onClose) this.onClose()
     },
     click: function (option) {
       this.selected1 = option.value
       this.selected = option.text
       this.$emit('input', option)
-      this.close()
+
+      this.isShow = false
+      if (this.onClose) this.onClose(option)
     },
     multiclick: function (option, key) {
       switch (key) {

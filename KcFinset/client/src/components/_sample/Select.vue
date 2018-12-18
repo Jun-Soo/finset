@@ -111,7 +111,7 @@ export default {
           _this.consumeCategory = listCdClass;
         });
     },
-    nextOpen: function() {
+    nextOpen: function(option) {
       this.$refs.category.open();
     },
     selectClose: function(option) {

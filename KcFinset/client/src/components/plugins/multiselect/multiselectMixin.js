@@ -169,6 +169,17 @@ export default {
   watch: {
     options: function (options) {
       console.log(options)
+    },
+    value: function (obj) {
+      if ((obj.value || '') === '') {
+        return
+      }
+      var selOpt = this.options.filter(option => option.value === obj.value)
+
+      if ((selOpt || '') !== '' && selOpt.length === 1) {
+        this.selected = selOpt[0].text
+        this.selected1 = selOpt[0].value
+      }
     }
   },
   methods: {

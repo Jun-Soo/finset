@@ -118,7 +118,7 @@ public class ConsumeController {
     
     /**
      * VUE
-     * 계좌 입출금내역 조회
+     * 계좌 입출금내역리스트 조회
      * @param model
      * @param ym
      * @param session
@@ -127,13 +127,30 @@ public class ConsumeController {
      * @throws FinsetException
      */
     @RequestMapping("/listPersonTransDetail.json")
-    public String listTransDetail(HttpSession session, Model model, String ym, ConsumeForm consumeForm) throws FinsetException {
+    public String listTransDetail(HttpSession session, Model model, ConsumeForm consumeForm) throws FinsetException {
     	logger.debug("listTransDetail");
     	String no_person = (String) session.getAttribute("no_person");
-    	
     	consumeForm.setNo_person(no_person);
-    	
     	model.addAttribute("listPersonTransDetail",consumeManager.listPersonTransDetail(consumeForm));
+    	return "jsonView";
+    }
+    
+    /**
+     * VUE
+     * 계좌 입출금내역 조회
+     * @param model
+     * @param ym
+     * @param session
+     * @param consumeForm
+     * @return
+     * @throws FinsetException
+     */
+    @RequestMapping("/getPersonTransDetail.json")
+    public String getPersonTransDetail(HttpSession session, Model model, ConsumeForm consumeForm) throws FinsetException {
+    	logger.debug("getPersonTransDetail");
+    	String no_person = (String) session.getAttribute("no_person");
+    	consumeForm.setNo_person(no_person);
+    	model.addAttribute("transVO",consumeManager.getPersonTransDetail(consumeForm));
     	return "jsonView";
     }
     
@@ -321,10 +338,41 @@ public class ConsumeController {
     @RequestMapping("/getConsumeInfo.json")
     public String getConsumeInfo(HttpSession session, Model model, ConsumeForm consumeForm) {
     	logger.debug("getConsumeInfo");
+    	String no_person = consumeForm.getNo_person();
+    	if(no_person == null) {
+    		no_person = (String) session.getAttribute("no_person");
+    		consumeForm.setNo_person(no_person);
+    	} else if (no_person.equals("")) {
+    		no_person = (String) session.getAttribute("no_person");
+    		consumeForm.setNo_person(no_person);
+    	}
     	model.addAttribute("consumeVO", consumeManager.getConsumeInfo(consumeForm));
     	return "jsonView";
     }
-
+    
+    /**
+     * VUE
+     * 입출금일련번호를 통한 소비지출 상세내역 조회
+     * @param session
+     * @param model
+     * @param consumeForm
+     * @return
+     */
+    @RequestMapping("/getConsumeInfoWithSeqTran.json")
+    public String getConsumeInfoWithSeqTran(HttpSession session, Model model, ConsumeForm consumeForm) {
+    	logger.debug("getConsumeInfoWithSeqTran");
+    	String no_person = consumeForm.getNo_person();
+    	if(no_person == null) {
+    		no_person = (String) session.getAttribute("no_person");
+    		consumeForm.setNo_person(no_person);
+    	} else if (no_person.equals("")) {
+    		no_person = (String) session.getAttribute("no_person");
+    		consumeForm.setNo_person(no_person);
+    	}
+    	model.addAttribute("consumeVO", consumeManager.getConsumeInfoWithSeqTran(consumeForm));
+    	return "jsonView";
+    }
+    
     /**
      * VUE
      * 현금 + 스크래핑 된 사용자의 카드, 계좌 내역 조회

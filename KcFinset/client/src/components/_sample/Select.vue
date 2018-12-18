@@ -5,17 +5,19 @@
         <li>
           <p class="key">결제수단</p>
           <p>
-            <multiselect :id="'payType'" :title="'결제수단'" v-model="payValue" :options="meansConsumeOption" :onClose="nextOpen" />
+            <multiselect :id="'payType'" :title="'결제수단'" v-model="payValue" :options="meansConsumeOption" :onClose="nextOpen" v-validate="'required'" data-vv-name="결제수단" />
           </p>
         </li>
+        <p class="warn" v-if="errors.has('결제수단')" v-text="'결제수단 항목은 필수 정보입니다'"></p>
       </div>
       <div>
         <li>
           <p class="key">카테고리</p>
           <p>
-            <multiselect :id="'category'" ref="category" :title="'카테고리'" v-model="categoryValue" :multiple="true" :options="consumeCategory" />
+            <multiselect :id="'category'" ref="category" :title="'카테고리'" v-model="categoryValue" :multiple="true" :options="consumeCategory" :onClose="selectClose" v-validate="'required'" data-vv-name="카테고리" />
           </p>
         </li>
+        <p class="warn" v-if="errors.has('카테고리')" v-text="'카테고리 항목은 필수 정보입니다'"></p>
       </div>
     </ul>
   </div>
@@ -56,9 +58,6 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    selectClose: function(option) {
-      console.log(option);
-    },
     listMeansConsume: function() {
       var _this = this;
 
@@ -114,6 +113,16 @@ export default {
     },
     nextOpen: function() {
       this.$refs.category.open();
+    },
+    selectClose: function(option) {
+      console.log(option);
+      this.$validator.validateAll().then(res => {
+        if (res) {
+          console.log(res);
+        } else {
+          this.$toast.center("입력값을 확인해주세요.");
+        }
+      });
     }
   }
 };

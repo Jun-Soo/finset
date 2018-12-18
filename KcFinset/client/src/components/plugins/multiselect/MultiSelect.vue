@@ -51,7 +51,6 @@ export default {
   created() {},
   beforeMount() {},
   mounted() {
-    console.log(this.options);
     if (this.height) {
       if (this.height == "auto") {
         this.style = this.style + "height: auto;";
@@ -61,9 +60,7 @@ export default {
     }
   },
   beforeUpdate() {},
-  updated() {
-    console.log(this.isShow);
-  },
+  updated() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {}

@@ -80,7 +80,7 @@ export default {
   computed: {},
   beforeCreate() {},
   created() {
-    debugger;
+    // debugger;
     this.$store.state.title = "지문인증";
     window.resultFingerPrint = this.resultFingerPrint;
     console.log(this.$store.state.user.cntFailFinger);
@@ -247,7 +247,6 @@ export default {
      **/
     resultFingerPrint: function(result) {
       var _this = this;
-      debugger;
       // this.$store.state.isLoading = true;
 
       // this.$toast.center("fffff : " + result);
@@ -334,4 +333,11 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
+.st0 {
+  fill: none;
+  stroke: #e52638;
+  stroke-width: 8;
+  stroke-linecap: round;
+  stroke-miterlimit: 10;
+}
 </style>

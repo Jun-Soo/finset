@@ -69,6 +69,7 @@ export default {
   // },
   beforeCreate() {},
   created() {
+    // debugger;
     this.$store.state.title = "비밀번호 확인";
     if (Constant.userAgent == "Android") {
       if (this.$store.state.user.ynFingerprint == "Y") {
@@ -137,6 +138,9 @@ export default {
     },
     gotoFingerPrint: function() {
       var _this = this;
+      if (Constant.userAgent == "Android") {
+        window.Android.closeFingerPrint();
+      }
       _this.$router.push("/member/certFingerLogin");
     },
     backClick: function() {

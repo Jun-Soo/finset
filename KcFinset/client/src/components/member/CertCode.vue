@@ -244,9 +244,11 @@ export default {
     /***
      * Native Call function
      ***/
-    resultCheckFingerPrint: function(result) {
-      console.log(result);
-      if (result == true || result == 1) {
+    resultCheckFingerPrint: function(res) {
+      // console.log(result);
+      let isFingerPrintRegistered = res.isFingerPrintRegistered; //지문이 등록되어있지만, 지문data가 없는 경우
+      let result = res.result;
+      if ((result == true || result == 1) && isFingerPrintRegistered == true) {
         this.chkFingerPrint = "Y";
       } else {
         //지문인식 기능이 없거나, 등록된 지문이 없으면

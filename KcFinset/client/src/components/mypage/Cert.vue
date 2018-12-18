@@ -14,7 +14,7 @@
         </li>
         <li v-if="fingerSettingSeen">
           <p><em>지문인증 설정</em>비밀번호없이 지문으로 인증</p>
-          <p><button v-bind:class="yn_fingerprint=='Y'?btnOn:btnOff" @click="modifyFingerPrint"></button></p>
+          <p><button :disabled="fingerDataNone" v-bind:class="yn_fingerprint=='Y'?btnOn:btnOff" @click="modifyFingerPrint"></button></p>
         </li>
       </ul>
     </div>
@@ -34,7 +34,8 @@ export default {
       btnOn: "btn-onoff on",
       btnOff: "btn-onoff",
       yn_fingerprint: this.$store.state.user.ynFingerprint,
-      fingerSettingSeen: "true"
+      fingerSettingSeen: true,
+      fingerDataNone: false
     };
   },
   components: {},
@@ -101,7 +102,7 @@ export default {
       } else if (Constant.userAgent == "iOS") {
         Jockey.send("getCertVCEasy");
       } else {
-        //
+        //s
       }
     },
     goChangePwd: function() {
@@ -110,11 +111,16 @@ export default {
     /**
      * NATIVE CALL BACK
      */
-    resultCheckFingerPrint: function(result) {
+    resultCheckFingerPrint: function(res) {
+      let isFingerPrintRegistered = res.isFingerPrintRegistered; //지문이 등록되어있지만, 지문data가 없는 경우
+      let result = res.result;
       if (result == true || result == 1) {
-        fingerSettingSeen = true;
+        this.fingerSettingSeen = true;
       } else {
-        fingerSettingSeen = false;
+        this.fingerSettingSeen = false;
+      }
+      if (!isFingerPrintRegistered) {
+        this.fingerDataNone = true;
       }
     }
   }

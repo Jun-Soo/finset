@@ -25,7 +25,6 @@
 <script>
 import Common from "@/assets/js/common.js";
 import Constant from "@/assets/js/constant.js";
-import multiselect from "@/components/plugins/multiselect/MultiSelect.vue";
 
 export default {
   name: "",
@@ -40,9 +39,7 @@ export default {
       }
     };
   },
-  components: {
-    multiselect
-  },
+  components: {},
   computed: {},
   beforeCreate() {
     this.$store.state.header.type = "sub";

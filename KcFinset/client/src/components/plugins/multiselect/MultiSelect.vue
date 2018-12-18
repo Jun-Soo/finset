@@ -22,9 +22,6 @@
           </ul>
         </div>
       </div>
-      <div v-if="multiple" class="action btn1">
-        <a @click="clickConfirm" class="solid">확인</a>
-      </div>
       <div v-if="!multiple" class="select-cate one">
         <div class="cate-wrap">
           <ul>
@@ -33,6 +30,9 @@
             </li>
           </ul>
         </div>
+      </div>
+      <div class="action btn1">
+        <a @click="clickConfirm" class="solid" v-if="multiple">확인</a>
       </div>
     </aside>
   </div>

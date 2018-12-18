@@ -249,6 +249,7 @@ export default {
       if (result == true || result == 1) {
         this.chkFingerPrint = "Y";
       } else {
+        //지문인식 기능이 없거나, 등록된 지문이 없으면
         this.chkFingerPrint = "N";
       }
     }

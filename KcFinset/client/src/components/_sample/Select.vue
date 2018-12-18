@@ -5,7 +5,7 @@
         <li>
           <p class="key">결제수단</p>
           <p>
-            <multiselect :id="'payType'" :title="'결제수단'" v-model="payValue" :options="meansConsumeOption" :onClose="" />
+            <multiselect :id="'payType'" :title="'결제수단'" v-model="payValue" :options="meansConsumeOption" />
           </p>
         </li>
       </div>

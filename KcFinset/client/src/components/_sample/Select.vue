@@ -5,7 +5,7 @@
         <li>
           <p class="key">결제수단</p>
           <p>
-            <multiselect :id="'payType'" :title="'결제수단'" v-model="payValue" :options="meansConsumeOption" />
+            <multiselect :id="'payType'" :title="'결제수단'" v-model="payValue" :options="meansConsumeOption" :onClose="nextOpen" />
           </p>
         </li>
       </div>
@@ -13,7 +13,7 @@
         <li>
           <p class="key">카테고리</p>
           <p>
-            <multiselect :id="'category'" :title="'카테고리'" v-model="categoryValue" :multiple="true" :options="consumeCategory" />
+            <multiselect :id="'category'" ref="category" :title="'카테고리'" v-model="categoryValue" :multiple="true" :options="consumeCategory" />
           </p>
         </li>
       </div>
@@ -114,6 +114,9 @@ export default {
           }
           _this.consumeCategory = listCdClass;
         });
+    },
+    nextOpen: function() {
+      this.$refs.category.open();
     }
   }
 };

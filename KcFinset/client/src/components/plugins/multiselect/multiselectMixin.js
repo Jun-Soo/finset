@@ -154,11 +154,18 @@ export default {
      * @type {String|Integer}
     */
     id: {
+      type: String,
       default: null
     }
   },
   mounted () { },
-  computed: {},
+  computed: {
+    internalValue () {
+      return this.value || this.value === 0
+        ? Array.isArray(this.value) ? this.value : [this.value]
+        : []
+    }
+  },
   watch: {},
   methods: {
     /**
@@ -189,22 +196,13 @@ export default {
     },
     close: function () {
       this.isShow = false
+      if (this.onClose) this.onClose()
     },
     click: function (option) {
-      switch (this.multiple) {
-        case true:
-          this.selected1 = option.value
-          this.selected = option.text
-          break
-        case false:
-          this.selected1 = option.value
-          this.selected = option.text
-          this.isShow = false
-          // this.onClose(option)
-          break
-        default:
-          break
-      }
+      this.selected1 = option.value
+      this.selected = option.text
+      this.$emit('input', option)
+      this.close()
     },
     multiclick: function (option, key) {
       switch (key) {
@@ -222,8 +220,12 @@ export default {
       }
     },
     clickConfirm: function () {
-      this.isShow = false
       this.selected = this.selectext1 + '-' + this.selectext2
+      var obj = []
+      obj.push({ 'value': this.selected1, 'text': this.selectext1 })
+      obj.push({ 'value': this.selected2, 'text': this.selectext2 })
+      this.$emit('input', obj)
+      this.close()
     }
   }
 }

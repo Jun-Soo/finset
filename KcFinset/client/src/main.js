@@ -12,7 +12,8 @@ import store from './comm/store'
 import toast from 'vue2-toast'
 import VueCarousel from 'vue-carousel'
 import VueModal from './components/plugins/modal/index'
-import Multiselect from './components/plugins/vue-multiselect/src/index'
+// import MultiSelect from './components/plugins/vue-multiselect/src/index'
+import multiselect from '@/components/plugins/multiselect/MultiSelect.vue'
 import SlimDialog from 'v-slim-dialog'
 import datepicker from 'vuejs-datepicker'
 import VueAnalytics from 'vue-analytics'
@@ -54,11 +55,11 @@ Vue.use(VueCarousel)
 Vue.use(VueModal)
 Vue.use(window.VueCharts)
 Vue.use(SlimDialog)
-Vue.component('multiselect', Multiselect)
+Vue.component('multiselect', multiselect)
 Vue.component('datepicker', datepicker)
 
 Vue.config.debug = true
-Vue.config.devtools = false
+Vue.config.devtools = true
 Vue.config.productionTip = false
 
 axios.interceptors.request.use(function (config) {

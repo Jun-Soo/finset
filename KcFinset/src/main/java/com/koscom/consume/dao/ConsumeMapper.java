@@ -66,11 +66,18 @@ public interface ConsumeMapper {
 	List<ConsumeVO> listShareInfoDetail(String no_person);
 	
 	/**
-	 * 개인 계좌 입출금내역 조회
+	 * 개인 계좌 입출금내역 리스트 조회
 	 * @param person
 	 * @return
 	 */
 	List<PersonTransDetailVO> listPersonTransDetail(ConsumeForm consumeForm);
+	
+	/**
+	 * 개인 계좌 입출금내역 조회
+	 * @param person
+	 * @return
+	 */
+	PersonTransDetailVO getPersonTransDetail(ConsumeForm consumeForm);
 	
 	/**
 	 * 소비분류 코드 존재 여부 확인
@@ -228,6 +235,13 @@ public interface ConsumeMapper {
 	 * @return
 	 */
 	ConsumeVO getConsumeInfo(ConsumeForm consumeForm);
+	
+	/**
+	 * 입출금일련번호를 통한 소비지출 상세내역 조회
+	 * @param consumeForm
+	 * @return
+	 */
+	ConsumeVO getConsumeInfoWithSeqTran(ConsumeForm consumeForm);
 	
 	/**
 	 * 소비 분류 정렬순서 업데이트

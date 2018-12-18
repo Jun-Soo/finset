@@ -21,7 +21,7 @@ public class ConsumeForm implements Serializable{
 	private String			ymd_trd;				//거래 년월일
 	private String			y_trd;					//거래년
 	private String			contents;				//내용
-	
+	private int				seq_tran;				//입출금일련번호
 	
 	private String dt_from; 		//소비 통계 날짜 조회 범위 
 	private String dt_to;
@@ -29,13 +29,14 @@ public class ConsumeForm implements Serializable{
 	private String listType;		//소비 통계 정렬 타입
 	private String chartType; 		//chart 타입
 	
-	
 	public ConsumeForm() {
 	}
 	public ConsumeForm(String no_person, List<String> no_person_list,
 			String no_card, int seq_consume, String yn_pay_installment,
 			String no_approval, String ym_trd, String type_in_out,
-			String ymd_trd, String y_trd, String contents) {
+			String ymd_trd, String y_trd, String contents, int seq_tran,
+			String dt_from, String dt_to, String orderType, String listType,
+			String chartType) {
 		this.no_person = no_person;
 		this.no_person_list = no_person_list;
 		this.no_card = no_card;
@@ -47,6 +48,12 @@ public class ConsumeForm implements Serializable{
 		this.ymd_trd = ymd_trd;
 		this.y_trd = y_trd;
 		this.contents = contents;
+		this.seq_tran = seq_tran;
+		this.dt_from = dt_from;
+		this.dt_to = dt_to;
+		this.orderType = orderType;
+		this.listType = listType;
+		this.chartType = chartType;
 	}
 	
 	public String getNo_person() {
@@ -115,7 +122,12 @@ public class ConsumeForm implements Serializable{
 	public void setContents(String contents) {
 		this.contents = contents;
 	}
-	
+	public int getSeq_tran() {
+		return seq_tran;
+	}
+	public void setSeq_tran(int seq_tran) {
+		this.seq_tran = seq_tran;
+	}
 	public String getDt_from() {
 		return dt_from;
 	}
@@ -128,27 +140,25 @@ public class ConsumeForm implements Serializable{
 	public void setDt_to(String dt_to) {
 		this.dt_to = dt_to;
 	}
-	
 	public String getOrderType() {
 		return orderType;
 	}
 	public void setOrderType(String orderType) {
 		this.orderType = orderType;
 	}
-	
 	public String getListType() {
 		return listType;
 	}
 	public void setListType(String listType) {
 		this.listType = listType;
 	}
-	
 	public String getChartType() {
 		return chartType;
 	}
 	public void setChartType(String chartType) {
 		this.chartType = chartType;
 	}
+	
 	public String toString() {
 		return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
 	}	

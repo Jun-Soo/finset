@@ -112,7 +112,7 @@ export default {
     loanGoodsBankDetail: function(cd_fc, cd_non_goods) {
       this.$router.push({
         name: "GoodsDetail",
-        params: {
+        query: {
           cd_fc: cd_fc,
           cd_goods: cd_non_goods,
           urlPath: this.$parent.urlPath,

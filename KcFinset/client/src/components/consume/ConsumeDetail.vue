@@ -13,7 +13,7 @@
             <li>
               <p class="key" v-text="curTab=='01'?'입금':'결제수단'"></p>
               <p>
-                <multiselect v-validate="'required'" data-vv-name="수단" :disabled="!isNew" v-model="consumeVO.means_consume" label="text" :show-labels="false" :options="meansConsumeOption" :placeholder="meansConsumeText + ' 선택'" :searchable="false" :allow-empty="false" @select="selectMeans">
+                <multiselect v-validate="'required'" data-vv-name="수단" :disabled="!isNew" v-model="consumeVO.means_consume" :options="meansConsumeOption" :placeholder="meansConsumeText + ' 선택'" :title="'타이틀'" @select="selectMeans">
                 </multiselect>
               </p>
             </li>
@@ -168,6 +168,7 @@ export default {
       isNew: true,
       isMine: true,
       isPersonRegist: true,
+      isTran: false,
       isShowBanner: false,
       isShowCategory: false,
       isShowTrans: false,
@@ -252,7 +253,12 @@ export default {
     this.consumeVO.dt_trd = new Date();
     this.ko.ymd = true;
     this.isNew = (this.$route.query.seq_consume || "") == "";
-    if (this.isNew) {
+    this.isTran = (this.$route.query.seq_tran || "") != "";
+    if (this.isTran) {
+      this.curTab = this.$route.query.type_in_out;
+      this.isMine = true;
+      this.isPersonRegist = false;
+    } else if (this.isNew) {
       this.isPersonRegist = true;
       this.curTab = "02";
       this.isMine = true;
@@ -395,51 +401,20 @@ export default {
     },
     selectTrans: function(index, subIndex) {
       var _this = this;
-      this.$dialogs
-        .confirm(
-          "이후에도 해당 출금에 대해서 지출로 등록할까요?",
-          Constant.options
-        )
-        .then(res => {
-          // console.log(res); // {ok: true|false|undefined}
-          if (res.ok) {
-            _this.isAuto = true;
-          } else {
-            // this.$dialogs.alert("취소를 선택했습니다.", Constant.options);
-          }
-        });
-
-      var transVO = this.listTrans[index][subIndex];
-
-      // console.log(transVO);
-      this.meansConsumeOption = [
-        {
-          text: "(" + transVO.nm_fc + ") " + transVO.an,
-          value: transVO.an,
-          means_consume: "04"
+      var transText =
+        this.curTab == "01"
+          ? "이후에도 해당 입금에 대해서 수입으로 등록할까요?"
+          : "이후에도 해당 출금에 대해서 지출로 등록할까요?";
+      this.$dialogs.confirm(transText, Constant.options).then(res => {
+        // console.log(res); // {ok: true|false|undefined}
+        if (res.ok) {
+          _this.isAuto = true;
+        } else {
+          // this.$dialogs.alert("취소를 선택했습니다.", Constant.options);
         }
-      ];
-
-      this.consumeVO.means_consume = {
-        text: "(" + transVO.nm_fc + ") " + transVO.an,
-        value: transVO.an,
-        means_consume: "04"
-      };
-      this.consumeVO.cd_fc = transVO.cd_fc;
-      this.consumeVO.nm_fc = transVO.nm_trd;
-      this.consumeVO.no_card = transVO.an;
-      this.consumeVO.nm_card = transVO.nm_an;
-      this.consumeVO.type_in_out = this.curTab;
-      this.consumeVO.amt_in_out = Common.formatNumber(
-        parseInt(transVO.amt_dep) + parseInt(transVO.amt_wdrl) + ""
-      );
-      var regexp = /^[0-9]*$/;
-      this.consumeVO.contents = this.getTransText(transVO);
-      this.consumeVO.dt_trd = new Date(Common.formatDateDot(transVO.dt_trd));
-      this.consumeVO.tm_trd = transVO.tm_trd;
-
-      this.isPersonRegist = false;
-      this.isShowTrans = false;
+      });
+      var transVO = this.listTrans[index][subIndex];
+      this.makeConsumeVOByTran(transVO);
     },
     clickDelete: function() {
       var _this = this;
@@ -495,31 +470,32 @@ export default {
           }
         })
         .then(function(response) {
-          var vo = response.data.consumeVO;
-          vo.dt_trd = new Date(Common.formatDateDot(vo.dt_trd));
-          // vo.nm_card = _this.formatNmCard(vo.nm_card);
-          vo.amt_in_out = _this.chkReadonly
-            ? _this.formatNumber(vo.amt_in_out)
-            : vo.amt_in_out;
-          _this.meansConsumeOption = [];
-          _this.meansConsumeOption.push({
-            text: vo.nm_card,
-            value: vo.no_card
-          });
-          vo.means_consume = { text: vo.nm_card, value: vo.no_card };
-          _this.consumeVO = vo;
+          var consumeVO = response.data.consumeVO;
+          _this.allocateConsume(consumeVO);
+          // vo.dt_trd = new Date(Common.formatDateDot(vo.dt_trd));
+          // // vo.nm_card = _this.formatNmCard(vo.nm_card);
+          // vo.amt_in_out = _this.chkReadonly
+          //   ? _this.formatNumber(vo.amt_in_out)
+          //   : vo.amt_in_out;
+          // _this.meansConsumeOption = [];
+          // _this.meansConsumeOption.push({
+          //   text: vo.nm_card,
+          //   value: vo.no_card
+          // });
+          // vo.means_consume = { text: vo.nm_card, value: vo.no_card };
+          // _this.consumeVO = vo;
 
-          if (_this.curTab == "02") {
-            _this.curClass = vo.cd_class;
-            _this.curType = vo.cd_type;
-            _this.orgClass = vo.cd_class;
-            _this.orgType = vo.cd_type;
-          } else {
-            _this.curClass = vo.cd_class;
-            _this.orgClass = vo.cd_class;
-          }
-          _this.nmBanner = vo.contents;
-          _this.getBannerData();
+          // if (_this.curTab == "02") {
+          //   _this.curClass = vo.cd_class;
+          //   _this.curType = vo.cd_type;
+          //   _this.orgClass = vo.cd_class;
+          //   _this.orgType = vo.cd_type;
+          // } else {
+          //   _this.curClass = vo.cd_class;
+          //   _this.orgClass = vo.cd_class;
+          // }
+          // _this.nmBanner = vo.contents;
+          // _this.getBannerData();
         });
     },
     listPersonConsumeClassInfo: function() {
@@ -554,7 +530,9 @@ export default {
             };
           }
           _this.consumeCategory = listCdClass;
-          if (!_this.isNew) {
+          if (_this.isTran) {
+            _this.chkTrans();
+          } else if (!_this.isNew) {
             _this.getConsumeInfo();
           } else {
             _this.seen = true;
@@ -576,7 +554,9 @@ export default {
             listCdClass[eachClass.cd_class] = eachClass;
           }
           _this.consumeCategory = listCdClass;
-          if (!_this.isNew) {
+          if (_this.isTran) {
+            _this.chkTrans();
+          } else if (!_this.isNew) {
             _this.getConsumeInfo();
           } else {
             _this.seen = true;
@@ -638,6 +618,9 @@ export default {
       this.isPersonRegist
         ? formData.append("yn_person_regist", "Y")
         : formData.append("yn_person_regist", "N");
+      if (this.isTran) {
+        formData.append("seq_tran", this.$route.query.seq_tran);
+      }
 
       this.$http
         .post("/m/consume/createConsumeInfo.json", formData)
@@ -752,6 +735,43 @@ export default {
           _this.seen = true;
         });
     },
+    chkTrans: function() {
+      var seq_tran = this.$route.query.seq_tran;
+      var _this = this;
+      this.$http
+        .get("/m/consume/getConsumeInfoWithSeqTran.json", {
+          params: {
+            seq_tran: seq_tran
+          }
+        })
+        .then(function(response) {
+          var consumeVO = response.data.consumeVO;
+          console.log(consumeVO);
+          if (consumeVO == null) {
+            _this.getPersonTransDetail();
+          } else {
+            // _this.consumeVO = consumeVO;
+            // _this.seen = true;
+            _this.isNew = false;
+            _this.isAuto = true;
+            _this.allocateConsume(consumeVO);
+          }
+        });
+    },
+    getPersonTransDetail: function() {
+      var _this = this;
+      this.$http
+        .get("/m/consume/getPersonTransDetail.json", {
+          params: {
+            seq_tran: _this.$route.query.seq_tran
+          }
+        })
+        .then(function(response) {
+          var transVO = response.data.transVO;
+          _this.makeConsumeVOByTran(transVO);
+          _this.seen = true;
+        });
+    },
     //기타 편의를 위해 함수로 구현한 부분
     setDefault: function() {
       this.consumeVO = {
@@ -787,6 +807,63 @@ export default {
           contents: this.consumeVO.contents
         }
       });
+    },
+    allocateConsume: function(consumeVO) {
+      consumeVO.dt_trd = new Date(Common.formatDateDot(consumeVO.dt_trd));
+      consumeVO.amt_in_out = this.chkReadonly
+        ? this.formatNumber(consumeVO.amt_in_out)
+        : consumeVO.amt_in_out;
+      this.meansConsumeOption = [];
+      this.meansConsumeOption.push({
+        text: consumeVO.nm_card,
+        value: consumeVO.no_card
+      });
+      consumeVO.means_consume = {
+        text: consumeVO.nm_card,
+        value: consumeVO.no_card
+      };
+      this.consumeVO = consumeVO;
+
+      if (this.curTab == "02") {
+        this.curClass = consumeVO.cd_class;
+        this.curType = consumeVO.cd_type;
+        this.orgClass = consumeVO.cd_class;
+        this.orgType = consumeVO.cd_type;
+      } else {
+        this.curClass = consumeVO.cd_class;
+        this.orgClass = consumeVO.cd_class;
+      }
+      this.nmBanner = consumeVO.contents;
+      this.getBannerData();
+    },
+    makeConsumeVOByTran: function(transVO) {
+      this.meansConsumeOption = [
+        {
+          text: "(" + transVO.nm_fc + ") " + transVO.an,
+          value: transVO.an,
+          means_consume: "04"
+        }
+      ];
+
+      this.consumeVO.means_consume = {
+        text: "(" + transVO.nm_fc + ") " + transVO.an,
+        value: transVO.an,
+        means_consume: "04"
+      };
+      this.consumeVO.cd_fc = transVO.cd_fc;
+      this.consumeVO.nm_fc = transVO.nm_trd;
+      this.consumeVO.no_card = transVO.an;
+      this.consumeVO.nm_card = transVO.nm_an;
+      this.consumeVO.type_in_out = this.curTab;
+      this.consumeVO.amt_in_out = Common.formatNumber(
+        parseInt(transVO.amt_dep) + parseInt(transVO.amt_wdrl) + ""
+      );
+      this.consumeVO.contents = this.getTransText(transVO);
+      this.consumeVO.dt_trd = new Date(Common.formatDateDot(transVO.dt_trd));
+      this.consumeVO.tm_trd = transVO.tm_trd;
+
+      this.isPersonRegist = false;
+      this.isShowTrans = false;
     },
     chkAmt: function(event) {
       if (event.which >= 37 && event.which <= 40) {

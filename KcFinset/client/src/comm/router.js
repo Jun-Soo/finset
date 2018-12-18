@@ -204,6 +204,7 @@ import Swiper from '@/components/_sample/Swiper'
 import Gauge from '@/components/_sample/Gauge'
 import Progress from '@/components/_sample/Progress'
 import Calendar from '@/components/_sample/Calendar'
+import Select from '@/components/_sample/Select'
 
 import TemplateHome from '@/components/template/Home'
 import TemplateMain from '@/components/template/Main'
@@ -843,6 +844,7 @@ export const routes = [{
   children: [{
     path: 'main',
     alias: '/main',
+    name: 'consumeMain',
     component: ConsumeMain,
     meta: {
       allowPath: true
@@ -851,6 +853,7 @@ export const routes = [{
   {
     path: 'regGoal',
     alias: '/regGoal',
+    name: 'consumeRegGoal',
     component: ConsumeRegGoal,
     meta: {
       allowPath: true
@@ -859,6 +862,7 @@ export const routes = [{
   {
     path: 'consumeDetail',
     alias: '/consumeDetail',
+    name: 'consumeConsumeDetail',
     component: ConsumeConsumeDetail,
     meta: {
       allowPath: true
@@ -867,6 +871,7 @@ export const routes = [{
   {
     path: 'incomeAnalyze',
     alias: '/incomeAnalyze',
+    name: 'consumeIncomeAnalyze',
     component: ConsumeIncomeAnalyze,
     meta: {
       allowPath: true
@@ -875,6 +880,7 @@ export const routes = [{
   {
     path: 'setting',
     alias: '/setting',
+    name: 'consumeSetting',
     component: ConsumeSetting,
     meta: {
       allowPath: true
@@ -883,6 +889,7 @@ export const routes = [{
   {
     path: 'consumeClass',
     alias: '/consumeClass',
+    name: 'consumeConsumeClass',
     component: ConsumeConsumeClass,
     meta: {
       allowPath: true
@@ -891,6 +898,7 @@ export const routes = [{
   {
     path: 'incomeClass',
     alias: '/incomeClass',
+    name: 'consumeIncomeClass',
     component: ConsumeIncomeClass,
     meta: {
       allowPath: true
@@ -899,6 +907,7 @@ export const routes = [{
   {
     path: 'payment',
     alias: '/payment',
+    name: 'consumePayment',
     component: ConsumePayment,
     meta: {
       allowPath: true
@@ -907,6 +916,7 @@ export const routes = [{
   {
     path: 'paymentDetail',
     alias: '/paymentDetail',
+    name: 'consumePaymentDetail',
     component: ConsumePaymentDetail,
     meta: {
       allowPath: true
@@ -915,6 +925,7 @@ export const routes = [{
   {
     path: 'settlement',
     alias: '/settlement',
+    name: 'consumeSettlement',
     component: ConsumeSettlement,
     meta: {
       allowPath: true
@@ -923,6 +934,7 @@ export const routes = [{
   {
     path: 'consumeIncomeStats',
     alias: '/consumeIncomeStats',
+    name: 'consumeIncomeStats',
     component: ConsumeIncomeStats,
     meta: {
       allowPath: true
@@ -1601,6 +1613,14 @@ export const routes = [{
   path: '/sample/calendar',
   name: 'calendar',
   component: Calendar,
+  meta: {
+    allowPath: true
+  }
+},
+{
+  path: '/sample/select',
+  name: 'select',
+  component: Select,
   meta: {
     allowPath: true
   }

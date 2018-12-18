@@ -116,10 +116,10 @@ export default {
   data() {
     return {
       seen: false,
-      isAffiliates: this.$route.params.isAffiliates,
-      type: this.$route.params.type,
-      cd_fc: this.$route.params.cd_fc,
-      cd_goods: this.$route.params.cd_goods,
+      isAffiliates: this.$route.query.isAffiliates,
+      type: this.$route.query.type,
+      cd_fc: this.$route.query.cd_fc,
+      cd_goods: this.$route.query.cd_goods,
       curTab: "interest",
       goodsInfo: "",
       keyword_list: ""
@@ -146,9 +146,9 @@ export default {
       var _this = this;
       var url;
       if (this.isAffiliates) {
-        url = this.$route.params.urlPath + "getLoanAffiliatesDetail.json";
+        url = this.$route.query.urlPath + "getLoanAffiliatesDetail.json";
       } else {
-        url = this.$route.params.urlPath + "getLoanNoAffiliatesDetail.json";
+        url = this.$route.query.urlPath + "getLoanNoAffiliatesDetail.json";
       }
       var formData = new FormData();
       formData.append("no_person", this.$store.state.user.noPerson);
@@ -170,6 +170,10 @@ export default {
       this.curTab = type;
     },
     clickSerchInterest: function() {
+      console.log(this.$router.currentRoute);
+      //this.$router.go(this.$router.currentRoute);
+
+      return;
       this.$router.push({
         name: "GoodsCertStep1",
         params: {

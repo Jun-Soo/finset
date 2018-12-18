@@ -38,8 +38,7 @@
           {{csCategoryText}}
         </li>
         <li v-else>
-          <a v-if="consumeInfo != null" @click="goConsumeDetail();" style="text-decoration: underline; font-weight: bold;">{{csCategoryText}}</a>
-          <button v-else @click="goConsumeDetail();">등록하기</button>
+          <a @click="goConsumeDetail();">{{csCategoryText}}</a>
         </li>
       </ul>
       <!--
@@ -130,6 +129,10 @@ export default {
             } else {
               _this.csCategoryText = consumeInfo.nm_class;
             }
+          } else {
+            if (_this.rk == "0") {
+              _this.csCategoryText = "등록하기";
+            }
           }
           _this.consumeInfo = consumeInfo;
 
@@ -145,12 +148,12 @@ export default {
     formatDateDot: function(data) {
       return Common.formatDateDot(data);
     },
-    //소비form이동
+    //소비상세로이동
     goConsumeDetail: function() {
       var _this = this;
 
       this.$router.push({
-        name: "consumeDetail",
+        name: "consumeConsumeDetail",
         query: {
           seq_tran: _this.consumeInfo != null ? _this.seq_tran : "",
           type_in_out: _this.depWdrlInfo.cd_trns

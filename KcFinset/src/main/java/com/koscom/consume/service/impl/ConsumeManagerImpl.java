@@ -167,6 +167,13 @@ public class ConsumeManagerImpl implements ConsumeManager {
 		
 		return returnList;
 	}
+	
+	@Override
+	public PersonTransDetailVO getPersonTransDetail(ConsumeForm consumeForm) {
+		logger.debug("getPersonTransDetail");
+		return consumeMapper.getPersonTransDetail(consumeForm);
+	}
+	
 	@Override
 	public boolean chkPersonConsumeClassInfoExist(String no_person) {
 		logger.debug("chkPersonConsumeClassInfoExist");
@@ -330,6 +337,12 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	public ConsumeVO getConsumeInfo(ConsumeForm consumeForm) {
 		logger.debug("getConsumeInfo");
 		return consumeMapper.getConsumeInfo(consumeForm);
+	}
+	
+	@Override
+	public ConsumeVO getConsumeInfoWithSeqTran(ConsumeForm consumeForm) {
+		logger.debug("getConsumeInfoWithSeqTran");
+		return consumeMapper.getConsumeInfoWithSeqTran(consumeForm);
 	}
 	
 	@Override

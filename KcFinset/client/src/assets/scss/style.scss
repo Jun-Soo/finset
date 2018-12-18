@@ -263,6 +263,9 @@ aside.search-wrap{
         }
         &.one{
             grid-template-columns: 1fr;
+            .cate-wrap{
+                border-left: 1px solid $lineColor;
+            }
         }
     }
     .action{
@@ -2187,7 +2190,7 @@ aside.search-wrap{
         .top{
             display: flex;
             p{
-                width: 50%;
+                width: 70%;
                 line-height: 24px;
                 font-size: 12px;
                 &.symbol{
@@ -2197,6 +2200,7 @@ aside.search-wrap{
                     font-size: 12px;
                     font-weight: 700;
                     text-align: left !important;
+                    width: 30%;
                     img{
                         height: 100%;
                         vertical-align: middle;
@@ -2554,7 +2558,15 @@ aside.search-wrap{
                 font-size: 14px;
                 color: #222;
                 font-weight: 700;
-            } 
+            }
+            a{
+                display: inline-block;
+                border: 1px solid $col2;
+                line-height: 20px;
+                padding: 5px 10px;
+                border-radius: 20px;
+                color: $col2;
+            }
         }
     }
 }
@@ -3404,7 +3416,7 @@ button.cal{
 .cert-check-wrap{
     margin-top: 30px;
     padding: 0 21px;
-    display: flex;
+    //display: flex;
     >p{
         width: 50%;
     }
@@ -3412,6 +3424,7 @@ button.cal{
         margin-bottom: 20px;
         line-height: 17px;
         color: #666;
+        width: 100%;
     }
     .title{
         font-size: 12px;
@@ -5936,7 +5949,13 @@ span.cell.day.selected.today {
 
 .bank-detail .select div.left {
 
-	width: 50%;
+	width: 30%;
+
+}
+
+.bank-detail .select div.right {
+
+	width: 70%;
 
 }
 

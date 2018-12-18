@@ -2,9 +2,9 @@
 import $ from 'jquery'
 
 $(function () {
-  $(document).on('click', 'aside button', function () {
-    $('aside').toggleClass('on')
-  })
+  // $(document).on('click', 'aside button', function () {
+  //   $('aside').toggleClass('on')
+  // })
 
   $(document).on('click', 'header .open-menu', function () {
     $('.gnb-wrap').addClass('on')
@@ -25,13 +25,13 @@ $(function () {
     $(this).toggleClass('on')
   })
 
-  $(document).on('click', '.btn-search,.add-cate', function () {
-    $('aside.search-wrap').addClass('on')
-  })
+  // $(document).on('click', '.btn-search,.add-cate', function () {
+  //   $('aside.search-wrap').addClass('on')
+  // })
 
-  $(document).on('click', '.search-wrap .top button', function () {
-    $('aside.search-wrap').removeClass('on')
-  })
+  // $(document).on('click', '.search-wrap .top button', function () {
+  //   $('aside.search-wrap').removeClass('on')
+  // })
 
   // $(document).on('click', '.list02 .btn button', function () {
   //   $(this).closest('.btn').toggleClass('on')

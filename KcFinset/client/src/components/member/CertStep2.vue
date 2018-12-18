@@ -180,6 +180,7 @@ export default {
           formData.append("sex", _this.sex);
           formData.append("telComCd", _this.telComCd.value);
           formData.append("hp", _this.hp);
+          formData.append("svcTxSeqno", _this.svcTxSeqno);
           formData.append("smsReSndYn", _this.smsReSndYn);
           formData.append("nation", _this.nation);
           this.$http

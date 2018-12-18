@@ -204,6 +204,7 @@ import Swiper from '@/components/_sample/Swiper'
 import Gauge from '@/components/_sample/Gauge'
 import Progress from '@/components/_sample/Progress'
 import Calendar from '@/components/_sample/Calendar'
+import Select from '@/components/_sample/Select'
 
 import TemplateHome from '@/components/template/Home'
 import TemplateMain from '@/components/template/Main'
@@ -709,15 +710,15 @@ export const routes = [{
       allowPath: true
     }
   },
-    // {
-    //   path: 'detail_2',
-    //   alias: '/detail_2',
-    //   name: 'debtDetail_2',
-    //   component: DebtDetail2,
-    //   meta: {
-    //     allowPath: true
-    //   }
-    // },
+  // {
+  //   path: 'detail_2',
+  //   alias: '/detail_2',
+  //   name: 'debtDetail_2',
+  //   component: DebtDetail2,
+  //   meta: {
+  //     allowPath: true
+  //   }
+  // },
   {
     path: 'repayment',
     alias: '/repayment',
@@ -772,15 +773,15 @@ export const routes = [{
       allowPath: true
     }
   },
-    // {
-    //   path: 'update',
-    //   alias: '/update',
-    //   name: 'debtUpdate',
-    //   component: DebtUpdate,
-    //   meta: {
-    //     allowPath: true
-    //   }
-    // },
+  // {
+  //   path: 'update',
+  //   alias: '/update',
+  //   name: 'debtUpdate',
+  //   component: DebtUpdate,
+  //   meta: {
+  //     allowPath: true
+  //   }
+  // },
   {
     path: 'reqIntrCut',
     alias: '/reqIntrCut',
@@ -1601,6 +1602,14 @@ export const routes = [{
   path: '/sample/calendar',
   name: 'calendar',
   component: Calendar,
+  meta: {
+    allowPath: true
+  }
+},
+{
+  path: '/sample/select',
+  name: 'select',
+  component: Select,
   meta: {
     allowPath: true
   }

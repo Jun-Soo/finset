@@ -45,10 +45,10 @@
           <path class="st0" d="M155.7,24c-12.6-1.7-25.7-1.4-38.8,1.3C53.4,38,12.4,99.8,25.2,163.2l0,0c2.2,11-1.2,21.8-8.3,29.5" />
           <path class="st0" d="M258.1,202.9c3.5-27.9,2.6-56.9-3.3-86h0c-8.7-43.1-40-75.9-79.1-88.4" />
         </svg>
-        <p class="text">
-          <router-link to="/member/certCodeLogin"><u>
-              비밀번호를 입력 하시겠습니까?
-            </u></router-link>
+        <p class="text" @click="goCertCodeLogin">
+          <u>
+            비밀번호를 입력 하시겠습니까?
+          </u>
         </p>
       </div>
     </div>
@@ -80,6 +80,7 @@ export default {
   computed: {},
   beforeCreate() {},
   created() {
+    debugger;
     this.$store.state.title = "지문인증";
     window.resultFingerPrint = this.resultFingerPrint;
     console.log(this.$store.state.user.cntFailFinger);
@@ -112,19 +113,34 @@ export default {
       start: "manual",
       animTimingFunction: Vivus.EASE
     });
-
+    if (this.$store.state.ynReload == "Y") {
+      if (Constant.userAgent == "Android") {
+        window.Android.closeWebView();
+      } else if (Constant.userAgent == "iOS") {
+        Jockey.send("closeWebView");
+      }
+      return false;
+    }
+    console.log(this.$store.state.user.cntFailFinger);
     console.log("mounted");
   },
   beforeUpdate() {
     console.log("bfupdated");
   },
   updated() {
-    this.firstLoad = false;
+    // this.firstLoad = false;
     console.log("updated");
   },
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    goCertCodeLogin: function() {
+      var _this = this;
+      if (Constant.userAgent == "Android") {
+        window.Android.closeFingerPrint();
+      }
+      _this.$router.push("/member/certCodeLogin");
+    },
     login: function() {
       var _this = this;
       var querystring = require("querystring");
@@ -231,10 +247,11 @@ export default {
      **/
     resultFingerPrint: function(result) {
       var _this = this;
+      debugger;
       // this.$store.state.isLoading = true;
 
       // this.$toast.center("fffff : " + result);
-      _this.fingerSVG.reset().play();
+
       if (result == true || result == 1) {
         //지문인식 성공
         if (Constant.userAgent == "Android") {
@@ -251,7 +268,7 @@ export default {
         // }, 3000);
 
         // }, 1000);
-
+        _this.fingerSVG.reset().play();
         if (_this.$store.state.ynReload == "Y") {
           if (Constant.userAgent == "Android") {
             window.Android.closeWebView();
@@ -274,20 +291,22 @@ export default {
           }, 500);
         }
       } else {
+        // _this.fingerSVG.reset().play();
         // this.$toast.center(loginTrue);
         //지문 틀린 누적횟수 증가
         _this.cntFailFinger += 1;
+        _this.$store.state.user.cntFailFinger = _this.cntFailFinger;
         // _this.$dialogs.alert(_this.cntFailFinger, Constant.options);
         // _this.modifyPwdFailCnt("finger", _this.cntFailFinger);
         // _this.$store.state.isLoading = false;
-        _this.fingerSVG.reset();
         if (_this.cntFailFinger < 5) {
           _this.errMsg = "다시 시도해 주세요. (" + _this.cntFailFinger + "/5)";
           return false;
-        } else if (_this.cntFailFinger == 5) {
+          _this.fingerSVG.reset();
+        } else if (_this.cntFailFinger >= 5) {
           //지문인식 5번 모두 틀린 경우
           _this.errMsg = "지문이 비활성화 됩니다.";
-          // this.$toast.center(_this.errMsg);
+          this.$toast.center(_this.errMsg);
           if (Constant.userAgent == "Android") {
             window.Android.closeFingerPrint();
           }
@@ -315,18 +334,4 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
-.red {
-  color: #e52638;
-  font-size: 12px;
-  margin-top: 10px;
-  text-align: center;
-}
-
-.st0 {
-  fill: none;
-  stroke: #e52638;
-  stroke-width: 8;
-  stroke-linecap: round;
-  stroke-miterlimit: 10;
-}
 </style>

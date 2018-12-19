@@ -78,7 +78,10 @@ export default {
         this.$modals.shownModals != undefined &&
         this.$modals.shownModals.length > 0
       ) {
-        this.$modals.shownModals = [];
+        var shownModals = this.$modals.shownModals;
+        for (var idx in shownModals) {
+          this.$modals.hide(shownModals[idx]);
+        }
         return;
       }
       if (this.$store.state.header.backPath == "") {

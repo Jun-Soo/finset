@@ -114,6 +114,10 @@
 
     <vue-modal transitionName="zoom-in" name="postcode-modal">
       <div slot="body">
+        <div class="v-modal__heading">
+          <div class="v-modal__title">주소검색</div>
+          <span @click="closePostcodeMd()" class="v-modal__close-btn">&times;</span>
+        </div>
         <DaumPostcode :on-complete="selectPostcode" />
       </div>
     </vue-modal>
@@ -230,6 +234,10 @@ export default {
     //주소검색
     scAddress: function() {
       this.isShowModal = true;
+    },
+    //주소팝업close
+    closePostcodeMd: function() {
+      this.isShowModal = false;
     },
     //다음 주소를 선택했을 때
     selectPostcode: function(param) {

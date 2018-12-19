@@ -36,8 +36,7 @@
     <div class="cert-wrap">
       <p class="title">휴대폰인증</p>
       <div class="grid phone">
-        <multiselect v-model="telComNm" track-by="text" label="text" placeholder="통신사" :options="options" v-bind:disabled="isDisabled" :searchable="false" :allow-empty="false" @select="onSelect">
-          <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
+        <multiselect :id="'telComCd'" ref="telComCd" v-model="telComCd" placeholder="통신사" :title="'통신사'" :options="options" v-bind:disabled="isDisabled" :onClose="onSelect">
         </multiselect>
         <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
       </div>
@@ -86,7 +85,6 @@ export default {
       birthday: "",
       sex: "",
       telComCd: "",
-      telComNm: "",
       hp: "",
       kcb_ci: "",
       kcb_di: "",
@@ -200,18 +198,20 @@ export default {
       this.hp = phoneNumber;
     },
     onSelect: function(option) {
-      this.telComCd = option.value;
+      this.telComCd = option;
+      $("#hp").focus();
       console.log(this.telComCd);
     },
     nextFocus: function(val) {
       var _this = this;
       if (val == "birth" && _this.ssn_birth.length == 6) $("#sex").focus();
       if (val == "sex" && _this.sex.length == 1) {
-        $("#telComCd").focus();
+        console.log("test");
+        this.$refs.telComCd.open();
         this.$children[0].isOpen = true;
       }
-      if (val == "telComCd" && _this.telComCd) $("#hp").focus();
-      if (val == "hp" && _this.hp) $("").focus();
+      // if (val == "telComCd" && _this.telComCd) $("#hp").focus();
+      // if (val == "hp" && _this.hp) $("").focus();
     },
     //
     personCertify: function() {
@@ -261,7 +261,10 @@ export default {
           formData.append("nm_person", _this.nm_person);
           formData.append("birthday", _this.birthday);
           formData.append("sex", _this.sex);
-          formData.append("telComCd", _this.telComCd);
+          formData.append(
+            "telComCd",
+            _this.telComCd != "" ? _this.telComCd.value : ""
+          );
           formData.append("hp", _this.hp);
           formData.append("smsReSndYn", _this.smsReSndYn);
           formData.append("nation", _this.nation);

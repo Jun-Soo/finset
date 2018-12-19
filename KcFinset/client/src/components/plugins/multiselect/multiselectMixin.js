@@ -7,7 +7,8 @@ export default {
       selectext1: '',
       selectext2: '',
       selected1: '',
-      selected2: ''
+      selected2: '',
+      cateHeight: ''
     }
   },
   props: {
@@ -167,7 +168,8 @@ export default {
       default: false
     }
   },
-  mounted () {},
+  mounted () {
+  },
   computed: {
     internalValue () {
       return this.value || this.value === 0
@@ -208,8 +210,8 @@ export default {
       return this.multiple
         ? this.internalValue
         : this.internalValue.length === 0
-        ? null
-        : this.internalValue[0]
+          ? null
+          : this.internalValue[0]
     },
     /**
      * Finds out if the given element is already present

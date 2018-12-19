@@ -133,7 +133,8 @@ export default {
       isSingle: true,
       dn: "",
       agency: "",
-      cd_coocon: ""
+      cd_coocon: "",
+      isScrap: this.$route.query.isScrap
     };
   },
   components: {},
@@ -155,8 +156,14 @@ export default {
     }
     this.tabOnClick(this.curTab, null);
     this.listFcLinkInfo();
-
     this.$store.state.header.backPath = "/main";
+
+    console.log("isScrap : " + this.isScrap);
+    if (this.isScrap) {
+      this.$parent.$parent.isFcScrapDone = false;
+      this.$parent.$parent.isStScrapDone = false;
+      this.$parent.$parent.startAutoScrap();
+    }
   },
   beforeUpdate() {},
   updated() {},
@@ -302,7 +309,7 @@ export default {
             _this.$toast.center("연결해제가 완료되었습니다.");
             setTimeout(function() {
               _this.listFcLinkInfo();
-            }, 2000);
+            }, 1000);
           }
         });
     },
@@ -540,8 +547,9 @@ export default {
       if (cd_err == "00000000") {
         this.$toast.center("금융사 연동이 완료되었습니다.");
         setTimeout(function() {
+          _this.$parent.startAutoScrap();
           _this.listFcLinkInfo();
-        }, 2000);
+        }, 1000);
       } else {
         this.$toast.center(
           "금융사 연동이 실패하였습니다. </br>(" + msg_err + ")"

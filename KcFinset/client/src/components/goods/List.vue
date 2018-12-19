@@ -52,7 +52,7 @@
         <div class="box-list goods goods-list">
           <div class="select">
             <div class="left">
-              <multiselect class="multiselect-basic" v-model="orderby" label="text" :show-labels="false" :options="options" :searchable="false" :allow-empty="false" @select="orderbyOnChange">
+              <multiselect class="multiselect-basic" v-model="orderby" :title="'정렬'" label="text" :options="options" :onClose="orderbyOnChange">
               </multiselect>
               <!-- <select v-model="orderby" @change="orderbyOnChange()">
                 <option v-for="option in options" :key="option.index" v-bind:value="option.value">
@@ -130,8 +130,8 @@
 
 <script>
 import listLoanNoAffiliates from "./sub/listLoanNoAffiliates";
-import Common from "./../../assets/js/common.js";
 
+import Common from "./../../assets/js/common.js";
 import Constant from "./../../assets/js/constant.js";
 
 export default {

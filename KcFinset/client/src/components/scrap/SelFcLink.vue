@@ -18,7 +18,7 @@
 
           <div class="checks">
             <div class="box-agree solo">
-              <p @click="clickShowCert()"><input type="checkbox" id="chk5" :checked="isCheckCert"><label for="chk5" @click="clickCheckCert($event)">[필수] 금융정보 제공동의서</label></p>
+              <p @click="clickShowCert()"><input type="checkbox" id="chk5" :checked="isCheckCert"><label @click="clickCheckCert($event)">[필수] 금융정보 제공동의서</label></p>
             </div>
           </div>
         </div>
@@ -142,10 +142,10 @@ export default {
       var _this = this;
       this.$validator.validateAll().then(res => {
         if (res) {
-          this.isCheckCert = !this.isCheckCert;
-          if (_this.isCheckCert && !_this.isGetCertContent) {
+          if (!_this.isGetCertContent) {
             _this.getTermsContent(false);
           }
+          this.isCheckCert = !this.isCheckCert;
         } else {
           this.$toast.center(ko.messages.require);
         }
@@ -155,7 +155,7 @@ export default {
       var _this = this;
       this.$validator.validateAll().then(res => {
         if (res) {
-          if (_this.isCheckCert && !_this.isGetCertContent) {
+          if (!_this.isGetCertContent) {
             _this.getTermsContent(true);
           } else {
             _this.openPop();

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import net.sf.json.JSONObject;
+import net.sf.json.JSONSerializer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,13 +24,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.google.gson.Gson;
 import com.koscom.env.service.CodeManager;
 import com.koscom.fincorp.service.FincorpManager;
 import com.koscom.kcb.service.KcbManager;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
+import com.koscom.scrap.model.AppBankInfo;
+import com.koscom.scrap.model.AppCardInfo;
 import com.koscom.scrap.model.FcLinkInfoVO;
 import com.koscom.scrap.model.LinkedFcInfoVO;
+import com.koscom.scrap.model.ScrRsltScrapVO;
+import com.koscom.scrap.model.UserBankOutputVO;
+import com.koscom.scrap.model.UserCardOutputVO;
+import com.koscom.scrap.model.sub.AnAllListVO;
+import com.koscom.scrap.model.sub.DepositAnListVO;
+import com.koscom.scrap.model.sub.FundAnListVO;
+import com.koscom.scrap.model.sub.LoanAnListVO;
 import com.koscom.scrap.service.ScrapManager;
 import com.koscom.util.Constant;
 import com.koscom.util.DateUtil;
@@ -263,6 +274,32 @@ public class ScrapController {
 	}
 	
 	/** VUE
+	 * 스크래핑 연동 전체 금융사 수정 
+	 * @param request
+	 * @param model
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/updateFcLinkInfoAll.json")
+	public String updateFcLinkInfoAll(
+		HttpServletResponse response,
+		HttpServletRequest request, 
+		HttpSession session, 
+		Model model,
+		FcLinkInfoVO linkedFcInfoList)	{ 
+		logger.debug("updateFcLinkInfoAll.json");
+				
+		int result = scrapManager.updateFcLinkInfoAll(linkedFcInfoList);
+		if(result > 0)	{
+			model.addAttribute("result", Constant.SUCCESS);
+		}
+		else	{
+			model.addAttribute("result", Constant.FAILED);
+		}
+		return "jsonView";
+	}
+	
+	/** VUE
 	 * 스크래핑 연동 금융사 관리 화면 
 	 * @param request
 	 * @param model
@@ -336,6 +373,27 @@ public class ScrapController {
 	}
 	
 	/** VUE
+	 * 스크래핑 연동 금융사 건수 조회 
+	 * @param request
+	 * @param model
+	 * @param session
+	 * @return
+	 */
+	@RequestMapping("/getLinkedFcCount.json")
+	public String getLinkedFcCount(
+			HttpServletResponse response,
+			HttpServletRequest request, 
+			HttpSession session, 
+			Model model,
+			String no_person)	{
+		int linkedFcCount = scrapManager.getLinkedFcCount(no_person);
+    	logger.debug("linkedFcCount : " + linkedFcCount);
+    	model.addAttribute("linkedFcCount", linkedFcCount);
+    	
+    	return "jsonView"; 
+	}
+	
+	/** VUE
 	 * 스크래핑 연동 금융사 관리 화면 
 	 * @param request
 	 * @param model
@@ -373,14 +431,16 @@ public class ScrapController {
     	model.addAttribute("smsExclude", smsExclude);
     	logger.debug("SMS Exclude : " + smsExclude);
 
+    	String cd_agency = null;
     	String autoScrapInfo = null;
-    	String cd_agency = codeManager.getCodeId("cd_agency","은행");
+   	
+    	cd_agency = codeManager.getCodeId("cd_agency", "은행");
     	autoScrapInfo = scrapManager.getAutoScrapInfo(cd_agency, no_person);
     	logger.debug("Bank autoScrapInfo : " + autoScrapInfo);
     	if(autoScrapInfo != null && autoScrapInfo.length() > 0)	{
     		model.addAttribute("autoScrapBankInfo", autoScrapInfo);
     	}
-    	cd_agency = codeManager.getCodeId("cd_agency","카드");
+    	cd_agency = codeManager.getCodeId("cd_agency", "카드");
     	autoScrapInfo = scrapManager.getAutoScrapInfo(cd_agency, no_person);
     	logger.debug("Card autoScrapInfo : " + autoScrapInfo);
     	if(autoScrapInfo != null && autoScrapInfo.length() > 0)	{
@@ -599,14 +659,48 @@ public class ScrapController {
 	public String createAutoBankScrap(HttpServletRequest request, HttpServletResponse response, Model model, @RequestBody String data) {
 		JSONObject jsonObject = new JSONObject();
 		logger.debug("createAutoBankScrap.crz");
+		logger.debug("DATA ::: " + data);
 		
-        ReturnClass returnClass = scrapManager.createAutoBankScrap(data);
+		Gson gson = new Gson();
+		AppBankInfo appBankInfo = new AppBankInfo();
+		
+		String no_person = "";
+		long seq_scrap = 0;
+		String result = Constant.SUCCESS;
+		String error_code = "";
+		
+		appBankInfo = gson.fromJson(net.sf.json.JSONObject.fromObject(JSONSerializer.toJSON(data)).toString(), AppBankInfo.class);
+        no_person 	= appBankInfo.getNO_PERSON();
+        seq_scrap 	= appBankInfo.getSEQ_SCRAP();
+        error_code	= appBankInfo.getERROR_CODE();
+        
+        
+        logger.debug("no_person  :" + no_person);
+        logger.debug("seq_scrap  :" + seq_scrap);
 
-        logger.debug("은행 스크래핑 결과 returnClass  : " + returnClass.toString());
-        logger.debug("returnClass.getCd_result():" + returnClass.getCd_result());
+        if(appBankInfo.getUSER_BANK_OUTPUT() != null){
+            
+        	List<UserBankOutputVO> USER_BANK_OUTPUT = appBankInfo.getUSER_BANK_OUTPUT();
+            for (UserBankOutputVO userBankOutputVO : USER_BANK_OUTPUT) {
+            	try	{
+            		scrapManager.createAutoBankScrap(no_person, seq_scrap, userBankOutputVO);
+            	}
+            	catch(Exception e)	{
+            		logger.error("은행 스크래핑 DB 처리 에러 : " + e.getMessage());
+            		e.printStackTrace();
+               		result = Constant.FAILED;
+            	}
+            }
+        }
 
-        jsonObject.put("result", returnClass.getCd_result());
-        model.addAttribute("result", returnClass.getCd_result());
+        //스크래핑 내역에 결과 수정
+        ScrRsltScrapVO scrRsltScrapVO = new ScrRsltScrapVO();
+        scrRsltScrapVO.setNo_person(no_person);
+        scrRsltScrapVO.setSeq_scraping_result(seq_scrap);
+        scrRsltScrapVO.setRslt_scraping(error_code);
+        scrapManager.updateScrRsltScrap(scrRsltScrapVO);
+
+        model.addAttribute("result", result);
         
         return jsonObject.toString();
 	}
@@ -622,20 +716,53 @@ public class ScrapController {
 	@ResponseBody
 	@RequestMapping("/createAutoCardScrap.crz")
 	@Transactional
-	public String createAutoCardScrap(HttpServletRequest request, HttpServletResponse response, Model model, @RequestBody String data) {
+	public String createAutoCardScrap(HttpServletRequest request, HttpServletResponse response, Model model, @RequestBody String data){
 		JSONObject jsonObject = new JSONObject();
 		logger.debug("createAutoCardScrap.crz");
-		        
-        ReturnClass returnClass = scrapManager.createAutoCardScrap(data);
+		logger.debug("DATA ::: " + data);
+		
+		Gson gson = new Gson();
+		AppCardInfo appCardInfo = new AppCardInfo();
 
-        logger.debug("카드 스크래핑 결과 returnClass  : " + returnClass.toString());
-        logger.debug("returnClass.getCd_result():" + returnClass.getCd_result());
-
-        jsonObject.put("result", returnClass.getCd_result());
-        model.addAttribute("result", returnClass.getCd_result());
+		String no_person = "";
+		long seq_scrap = 0;
+		String max_date = "";
+		String error_code = "";
+		String result = Constant.SUCCESS;
+		
+		appCardInfo = gson.fromJson(net.sf.json.JSONObject.fromObject(JSONSerializer.toJSON(data)).toString(), AppCardInfo.class);
+        no_person 	= appCardInfo.getNO_PERSON();
+        seq_scrap 	= appCardInfo.getSEQ_SCRAP();
+        error_code	= appCardInfo.getERROR_CODE();
         
+        logger.debug("no_person  :" + no_person);
+        logger.debug("seq_scrap  :" + seq_scrap);
+      
+        if(appCardInfo.getUSER_CARD_OUTPUT() != null){
+        	List<UserCardOutputVO> USER_CARD_OUTPUT = appCardInfo.getUSER_CARD_OUTPUT();
+            for (UserCardOutputVO userCardOutputVO : USER_CARD_OUTPUT) {
+            	try	{
+            		scrapManager.createAutoCardScrap(no_person, seq_scrap, userCardOutputVO);
+            	}
+            	catch(Exception e)	{
+            		logger.error("카드 스크래핑 DB 처리 에러 : " + e.getMessage());
+            		e.printStackTrace();
+               		result = Constant.FAILED;
+            	}
+            	
+            }
+        }
+        //스크래핑 내역에 결과 수정
+        ScrRsltScrapVO scrRsltScrapVO = new ScrRsltScrapVO();
+        scrRsltScrapVO.setNo_person(no_person);
+        scrRsltScrapVO.setSeq_scraping_result(seq_scrap);
+        scrRsltScrapVO.setRslt_scraping(error_code);
+        scrapManager.updateScrRsltScrap(scrRsltScrapVO);
+		        
+        logger.debug("returnClass.getCd_result():" + result);
+        model.addAttribute("result", result);
+ 
         return jsonObject.toString();
-
 	}
 
 	/**

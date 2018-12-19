@@ -37,7 +37,6 @@ export default {
     transfer(str) {
       let _this = this;
       let tmplist = str.split("\n");
-      debugger;
       for (var i = 0; i < tmplist.length; i++) {
         if (tmplist[i] == "\n") continue;
         var tJson = {};

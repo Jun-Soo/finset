@@ -7,7 +7,6 @@
 <script>
 import Common from "./../../assets/js/common.js";
 import Constant from "./../../assets/js/constant.js";
-
 import ko from "vee-validate/dist/locale/ko.js";
 
 export default {
@@ -156,6 +155,7 @@ export default {
     },
     checkStUpdate: function() {
       var _this = this;
+      var isScrap = true;
       var formData = new FormData();
       formData.append("no_person", this.noPerson);
       formData.append("uuid", this.uuid);
@@ -167,15 +167,23 @@ export default {
           var returnData = response.data;
           if (returnData.cd_err == "00") {
             _this.$toast.center("금융사 연동이 완료되었습니다.");
+            isScrap = true;
           } else {
             _this.$toast.center(
               "금융사 연동이 실패하였습니다. </br>(" + returnData.msg_err + ")"
             );
+            isScrap = false;
           }
           //금융사 연동 관리화면으로 이동
           setTimeout(function() {
-            _this.$router.push("/scrap/ctrlFcLink");
-          }, 2000);
+            //_this.$router.push("/scrap/ctrlFcLink");
+            _this.$router.push({
+              name: "scrapCtrlFcLink",
+              query: {
+                isScrap: isScrap
+              }
+            });
+          }, 1000);
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);
@@ -195,17 +203,26 @@ export default {
       // 금융정보제공동의서 확인여부 체크 필요
       console.log("resultUpdateScrapInfo called");
       var _this = this;
+      var isScrap = true;
       if (cd_err == "00000000") {
         this.$toast.center("금융사 연동이 완료되었습니다.");
+        isScrap = true;
       } else {
         this.$toast.center(
           "금융사 연동이 실패하였습니다. </br>(" + msg_err + ")"
         );
+        isScrap = false;
       }
       //금융사 연동 관리화면으로 이동
       setTimeout(function() {
-        _this.$router.push("/scrap/ctrlFcLink");
-      }, 2000);
+        //_this.$router.push("/scrap/ctrlFcLink");
+        _this.$router.push({
+          name: "scrapCtrlFcLink",
+          query: {
+            isScrap: isScrap
+          }
+        });
+      }, 1000);
     }
   }
 };

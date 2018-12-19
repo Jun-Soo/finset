@@ -1271,558 +1271,512 @@ public class ScrapManagerImpl implements ScrapManager {
 	}
 	
 	@Override
-	public ReturnClass createAutoBankScrap(String data)	{
-		logger.debug("DATA ::: " + data);
-		
-		Gson gson = new Gson();
-		AppBankInfo appBankInfo = new AppBankInfo();
-		
+	public int updateFcLinkInfoAll(FcLinkInfoVO linkedFcInfo)	{
+		return scrapMapper.updateFcLinkInfoAll(linkedFcInfo);  
+	}
+	
+	@Override
+	public ReturnClass createAutoBankScrap(String no_person, long seq_scrap, UserBankOutputVO userBankOutputVO)	{
 		List<LoanAnListVO> loanAnVOLIST = null;
 		List<AnAllListVO> anAllVOLIST = null;
 		List<DepositAnListVO> depositAnVOLIST = null;
 		List<FundAnListVO> fundAnVOLIST = null;
 
-		String no_person = "";
-		long seq_scrap = 0;
 		String cd_fc = "";
 		String max_date = "";
-		String error_code = "";
-		
-		appBankInfo = gson.fromJson(net.sf.json.JSONObject.fromObject(JSONSerializer.toJSON(data)).toString(), AppBankInfo.class);
-        no_person 	= appBankInfo.getNO_PERSON();
-        seq_scrap 	= appBankInfo.getSEQ_SCRAP();
-        error_code	= appBankInfo.getERROR_CODE();
-        
         
         logger.debug("no_person  :" + no_person);
         logger.debug("seq_scrap  :" + seq_scrap);
 
-        if(appBankInfo.getUSER_BANK_OUTPUT() != null){
+        
+    	if(userBankOutputVO != null){
+    		//cd_fc = codeManager.getCodeId("cd_coocon_fc", userBankOutputVO.getBANK_CODE());
+    		cd_fc = fincorpMapper.getCdFcByCooconFcCd(userBankOutputVO.getBANK_CODE());
+    		
+            logger.debug("getBankCode    : " + cd_fc);
+            logger.debug("getERROR_CODE   : " + userBankOutputVO.getERROR_CODE());
+            logger.debug("getERROR_MESSAGE: " + userBankOutputVO.getERROR_MESSAGE());
             
-        	List<UserBankOutputVO> USER_BANK_OUTPUT = appBankInfo.getUSER_BANK_OUTPUT();
-            for (UserBankOutputVO userBankOutputVO : USER_BANK_OUTPUT) {
-                
-            	if(userBankOutputVO != null){
-            		//cd_fc = codeManager.getCodeId("cd_coocon_fc", userBankOutputVO.getBANK_CODE());
-            		cd_fc = fincorpMapper.getCdFcByCooconFcCd(userBankOutputVO.getBANK_CODE());
-            		
-                    logger.debug("getBankCode    : " + cd_fc);
-                    logger.debug("getERROR_CODE   : " + userBankOutputVO.getERROR_CODE());
-                    logger.debug("getERROR_MESSAGE: " + userBankOutputVO.getERROR_MESSAGE());
-                    
-                    FcLinkInfoVO fcLinkInfoVO  = new FcLinkInfoVO();
-                    fcLinkInfoVO.setNo_person(no_person);
-                    fcLinkInfoVO.setCd_fc(cd_fc);
-                    fcLinkInfoVO.setRsn_link_message(userBankOutputVO.getERROR_MESSAGE());
-                    if(userBankOutputVO.getERROR_CODE().equals("00000000"))	{
-                    	fcLinkInfoVO.setCd_link_stat("00");
-                    }
-                    else	{
-                    	fcLinkInfoVO.setCd_link_stat("99");
-                    }
-                    scrapMapper.updateFcLinkInfo(fcLinkInfoVO);
-                    
-                    //계좌 내역 저장 전 전체 계좌 삭제상태로 변경
-                    ScrBankApiAnInfoVO scrBankApiAnInfoVO = new ScrBankApiAnInfoVO();
-                    scrBankApiAnInfoVO.setNo_person(no_person);
-                    scrBankApiAnInfoVO.setCd_fc(cd_fc);
-                    scrapMapper.updateScrBankApiAnInfo(scrBankApiAnInfoVO);
-                    
-                    List<AnAllListHistoryVO> anAllhistList = new ArrayList<AnAllListHistoryVO>();
-                    List<DepositAnListHistoryVO> depositAnhistList = new ArrayList<DepositAnListHistoryVO>();
-                    //입출금 계좌 내역
-                    if(userBankOutputVO.getAN_ALL() != null){
-                        AnAllVO anAllVO = userBankOutputVO.getAN_ALL();
-                        logger.debug("anAllVO.getERROR_CODE    : "+ anAllVO.getERROR_CODE());
-                        logger.debug("anAllVO.getERROR_MESSAGE : "+ anAllVO.getERROR_MESSAGE());
-                        logger.debug("anAllVO.getSTART_DATE	   : "+ anAllVO.getSTART_DATE());
-                        logger.debug("anAllVO.getEND_DATE      : "+ anAllVO.getEND_DATE());
-                        if(anAllVO.getLIST() != null){
-                            anAllVOLIST = anAllVO.getLIST();
-                        	String accountType = codeManager.getCodeId("cd_account_type","입출금계좌");
-                            for (AnAllListVO anAllListVO : anAllVOLIST) {
-                                logger.debug("anAllVO.ERROR_CODE    : "+ anAllListVO.getERROR_CODE());
-                                logger.debug("anAllVO.ERROR_MESSAGE : "+ anAllListVO.getERROR_MESSAGE());
-                                logger.debug("anAllVO.AN            : "+ anAllListVO.getAN());
-                                logger.debug("anAllVO.BALANCE       : "+ anAllListVO.getBALANCE());
-                                logger.debug("anAllVO.CODE          : "+ anAllListVO.getCODE());
-                                logger.debug("anAllVO.DATE          : "+ anAllListVO.getDATE());
-                                logger.debug("anAllVO.NAME          : "+ anAllListVO.getNAME());
-                                
-                                ScrBankApiAnInfoVO scrBankApiAnInfo = new ScrBankApiAnInfoVO();
-                                scrBankApiAnInfo.setCd_fc(cd_fc);;
-                                scrBankApiAnInfo.setNo_person(no_person);
-                                scrBankApiAnInfo.setAn(anAllListVO.getAN());
-                                scrBankApiAnInfo.setType_an(accountType);
-                                scrBankApiAnInfo.setCd_currency(anAllListVO.getCODE());
-                                scrBankApiAnInfo.setCurrent_balance(anAllListVO.getBALANCE());
-                                scrBankApiAnInfo.setDt_new(anAllListVO.getDATE());
-                                scrBankApiAnInfo.setNm_an(anAllListVO.getNAME());
-                                scrBankApiAnInfo.setYn_delete("N");
-                                scrapMapper.createScrBankApiAnInfo(scrBankApiAnInfo);
-                                
-                                ScrReqBankVO scrReqBankVO = new ScrReqBankVO();
-                                scrReqBankVO.setSeq_scraping_result(seq_scrap);
-                                scrReqBankVO.setCd_fc(cd_fc);
-                                scrReqBankVO.setCd_account(accountType);
-                                scrReqBankVO.setNo_account(anAllListVO.getAN());
-                                scrReqBankVO.setYmd_stt(anAllListVO.getDT_START());
-                                scrReqBankVO.setYmd_end(anAllListVO.getDT_END());
-                                scrReqBankVO.setError_cd(anAllListVO.getERROR_CODE());
-                                scrReqBankVO.setError_msg(anAllListVO.getERROR_MESSAGE());
-                                scrReqBankVO.setNo_person(no_person);
-                                scrapMapper.createScrReqBank(scrReqBankVO);
-                                                         
-                                //해당 고객의 입출금 계좌 중에 Insert된 계좌 상세내역의 날짜/시간 
-                                max_date = scrapMapper.getMaxDateSrcTransactionDetail(scrBankApiAnInfo);
-                                
-                                logger.debug(scrBankApiAnInfo.getAn() + " : max_date   :" + max_date);
-                                
-                                List<AnAllListHistoryVO> anAllListVOHISTORY = anAllListVO.getHISTORY();
-                                for (AnAllListHistoryVO anAllListHistoryVO : anAllListVOHISTORY) {
-                                	// 시간에 대한 데이터가 없을 경우 "000000"으로 설정
-                                	String time = anAllListHistoryVO.getTIME();
-                                	if(time == null || time.length() == 0)	{
-                                		anAllListHistoryVO.setTIME("000000");
-                                	}
-                                	String date_time = anAllListHistoryVO.getDATE()+anAllListHistoryVO.getTIME();
-                                    logger.debug("anAllVO.AN          : "+ anAllListHistoryVO.getAN());
-                                    logger.debug("anAllVO.BALANCE     : "+ anAllListHistoryVO.getBALANCE());
-                                    logger.debug("anAllVO.CODE        : "+ anAllListHistoryVO.getCODE());
-                                    logger.debug("anAllVO.DATE        : "+ anAllListHistoryVO.getDATE());
-                                    logger.debug("anAllVO.TIME        : "+ anAllListHistoryVO.getTIME());
-                                    logger.debug("anAllVO.DEALWAY1    : "+ anAllListHistoryVO.getDEALWAY1());
-                                    logger.debug("anAllVO.DEALWAY2    : "+ anAllListHistoryVO.getDEALWAY2());
-                                    logger.debug("anAllVO.DOC1        : "+ anAllListHistoryVO.getDOC1());
-                                    logger.debug("anAllVO.DOC2        : "+ anAllListHistoryVO.getDOC2());
-                                    logger.debug("anAllVO.IN_PAYMENT  : "+ anAllListHistoryVO.getIN_PAYMENT());
-                                    logger.debug("anAllVO.OUT_PAYMENT : "+ anAllListHistoryVO.getOUT_PAYMENT());
-                                    anAllListHistoryVO.setNO_PERSON(no_person);
-                                    anAllListHistoryVO.setID_FRT(no_person);
-                                    
-                                    // 계좌 상세 내역의 마지막 날짜/시간 이후의 데이터만 List에 추가
-                                    if(max_date != null && max_date != "" && date_time != null && date_time != ""
-                                    	&& Long.parseLong(max_date) >= Long.parseLong(date_time))	{
-                                    	continue;
-                                    }
-                                    anAllhistList.add(anAllListHistoryVO);
-                                }
-                            }
-                            //은행스크래핑 조회 내역 Insert(기존 내역 history 테이블에 저장)
-                            ScrReqBankVO scrReqBankVO = new ScrReqBankVO();
-                            scrReqBankVO.setNo_person(no_person);
-                            scrReqBankVO.setCd_fc(cd_fc);
-                            scrReqBankVO.setCd_account(codeManager.getCodeId("cd_account_type","입출금계좌"));
-                            scrapMapper.insertScrReqBankHist(scrReqBankVO);
-                         
-                            //입출금 계좌 입출금 내역 Insert
-                            logger.debug("anAllhistList.size() : "+ anAllhistList.size());
-                            for (AnAllListHistoryVO anAllListHistory : anAllhistList) {
-                            	scrapMapper.createScrTransactionDetail(anAllListHistory);
-                            }
-                        }
-                    }
-                    //예적금 계좌 내역
-                    if(userBankOutputVO.getDEPOSIT_AN() != null){
-                        DepositAnVO depositAnVO = userBankOutputVO.getDEPOSIT_AN();
-                        logger.debug("depositAnVO.getERROR_CODE    :"+ depositAnVO.getERROR_CODE());
-                        logger.debug("depositAnVO.getERROR_MESSAGE :"+ depositAnVO.getERROR_MESSAGE());
-                        if(depositAnVO.getLIST() != null){
-                        	// 해당 고객의 예적금 계좌 중에 Insert된 계좌 상세내역의 날짜/시간 
-                        	String accountType = codeManager.getCodeId("cd_account_type","예적금계좌");
-                            depositAnVOLIST = depositAnVO.getLIST();
-                            for (DepositAnListVO depositAnListVO : depositAnVOLIST) {
-                                logger.debug("depositAnListVO.getAN()       :" + depositAnListVO.getAN()       );
-                                logger.debug("depositAnListVO.getTYPE()     :" + depositAnListVO.getTYPE()     );
-                                logger.debug("depositAnListVO.getNEW_DATE() :" + depositAnListVO.getNEW_DATE() );
-                                logger.debug("depositAnListVO.getLAST_DATE():" + depositAnListVO.getLAST_DATE());
-                                logger.debug("depositAnListVO.getBALANCE()  :" + depositAnListVO.getBALANCE()  );
-                                logger.debug("depositAnListVO.getINTEREST() :" + depositAnListVO.getINTEREST());
-                                
-                                ScrBankApiAnInfoVO scrBankApiAnInfo = new ScrBankApiAnInfoVO();
-                            	scrBankApiAnInfo.setCd_fc(cd_fc);;
-                            	scrBankApiAnInfo.setNo_person(no_person);
-                            	scrBankApiAnInfo.setAn(depositAnListVO.getAN());
-                            	scrBankApiAnInfo.setType_an(accountType);
-                            	scrBankApiAnInfo.setCurrent_balance(depositAnListVO.getBALANCE());
-                            	scrBankApiAnInfo.setDt_new(depositAnListVO.getNEW_DATE());
-                            	scrBankApiAnInfo.setDt_end(depositAnListVO.getLAST_DATE());
-                            	scrBankApiAnInfo.setNm_an(depositAnListVO.getTYPE());
-                            	scrBankApiAnInfo.setInterest_rate(depositAnListVO.getINTEREST());
-                            	scrBankApiAnInfo.setYn_delete("N");
-                            	scrapMapper.createScrBankApiAnInfo(scrBankApiAnInfo);
-                                
-                                ScrReqBankVO scrReqBankVO = new ScrReqBankVO();
-                                scrReqBankVO.setSeq_scraping_result(seq_scrap);
-                                scrReqBankVO.setCd_fc(cd_fc);
-                                scrReqBankVO.setCd_account(accountType);
-                                scrReqBankVO.setNo_account(depositAnListVO.getAN());
-                                scrReqBankVO.setYmd_stt(depositAnListVO.getDT_START());
-                                scrReqBankVO.setYmd_end(depositAnListVO.getDT_END());
-                                scrReqBankVO.setError_cd(depositAnListVO.getERROR_CODE());
-                                scrReqBankVO.setError_msg(depositAnListVO.getERROR_MESSAGE());
-                                scrReqBankVO.setNo_person(no_person);
-                                scrapMapper.createScrReqBank(scrReqBankVO);
-
-                                max_date = scrapMapper.getMaxDateScrSvngSvninDetail(scrBankApiAnInfo);
-                                logger.debug(scrBankApiAnInfo.getAn() + "   : max_date   :" + max_date);
-                                List<DepositAnListHistoryVO> depositAnListVOHISTORY = depositAnListVO.getHISTORY();
-                                for (DepositAnListHistoryVO depositAnListHistoryVO : depositAnListVOHISTORY) {
-                                	// 시간에 대한 데이터가 없을 경우 "000000"으로 설정
-                                	String time = depositAnListHistoryVO.getTIME();
-                                	if(time == null || time.length() == 0)	{
-                                		depositAnListHistoryVO.setTIME("000000");
-                                	}
-                                	String date_time = depositAnListHistoryVO.getDATE()+depositAnListHistoryVO.getTIME();
-                                    logger.debug("depositAnVO.AN          : "+ depositAnListHistoryVO.getAN());
-                                    logger.debug("depositAnVO.DATE        : "+ depositAnListHistoryVO.getDATE());
-                                    logger.debug("depositAnVO.TIME        : "+ depositAnListHistoryVO.getTIME());
-                                    logger.debug("depositAnVO.BATCH       : "+ depositAnListHistoryVO.getBATCH());
-                                    logger.debug("depositAnVO.MONTH       : "+ depositAnListHistoryVO.getMONTH());
-                                    logger.debug("depositAnVO.OUT_PAYMENT : "+ depositAnListHistoryVO.getOUT_PAYMENT());
-                                    logger.debug("depositAnVO.IN_PAYMENT  : "+ depositAnListHistoryVO.getIN_PAYMENT());
-                                    logger.debug("depositAnVO.BALANCE     : "+ depositAnListHistoryVO.getBALANCE());
-                                    logger.debug("depositAnVO.DESCRIPTION : "+ depositAnListHistoryVO.getDESCRIPTION());
-                                    logger.debug("depositAnVO.DISTRIBUTOR : "+ depositAnListHistoryVO.getDISTRIBUTOR());
-                                    
-                                    depositAnListHistoryVO.setNO_PERSON(no_person);
-                                    depositAnListHistoryVO.setID_FRT(no_person);
-                                    
-                                    // 계좌 상세 내역의 마지막 날짜/시간 이후의 데이터만 List에 추가
-                                    if(max_date != null && max_date != "" && date_time != null && date_time != ""
-                                    	&& Long.parseLong(max_date) >= Long.parseLong(date_time))	{
-                                    	continue;
-                                    }
-                                    depositAnhistList.add(depositAnListHistoryVO);
-                                }
-                            }
-                            //은행스크래핑 조회 내역 Insert(기존 내역 history 테이블에 저장)
-                            ScrReqBankVO scrReqBankVO = new ScrReqBankVO();
-                            scrReqBankVO.setNo_person(no_person);
-                            scrReqBankVO.setCd_fc(cd_fc);
-                            scrReqBankVO.setCd_account(codeManager.getCodeId("cd_account_type","예적금계좌"));
-                            scrapMapper.insertScrReqBankHist(scrReqBankVO);
+            FcLinkInfoVO fcLinkInfoVO  = new FcLinkInfoVO();
+            fcLinkInfoVO.setNo_person(no_person);
+            fcLinkInfoVO.setCd_fc(cd_fc);
+            fcLinkInfoVO.setRsn_link_message(userBankOutputVO.getERROR_MESSAGE());
+            if(userBankOutputVO.getERROR_CODE().equals("00000000"))	{
+            	fcLinkInfoVO.setCd_link_stat("00");
+            }
+            else	{
+            	fcLinkInfoVO.setCd_link_stat("99");
+            }
+            scrapMapper.updateFcLinkInfo(fcLinkInfoVO);
+            
+            //계좌 내역 저장 전 전체 계좌 삭제상태로 변경
+            ScrBankApiAnInfoVO scrBankApiAnInfoVO = new ScrBankApiAnInfoVO();
+            scrBankApiAnInfoVO.setNo_person(no_person);
+            scrBankApiAnInfoVO.setCd_fc(cd_fc);
+            scrapMapper.updateScrBankApiAnInfo(scrBankApiAnInfoVO);
+            
+            List<AnAllListHistoryVO> anAllhistList = new ArrayList<AnAllListHistoryVO>();
+            List<DepositAnListHistoryVO> depositAnhistList = new ArrayList<DepositAnListHistoryVO>();
+            //입출금 계좌 내역
+            if(userBankOutputVO.getAN_ALL() != null){
+                AnAllVO anAllVO = userBankOutputVO.getAN_ALL();
+                logger.debug("anAllVO.getERROR_CODE    : "+ anAllVO.getERROR_CODE());
+                logger.debug("anAllVO.getERROR_MESSAGE : "+ anAllVO.getERROR_MESSAGE());
+                logger.debug("anAllVO.getSTART_DATE	   : "+ anAllVO.getSTART_DATE());
+                logger.debug("anAllVO.getEND_DATE      : "+ anAllVO.getEND_DATE());
+                if(anAllVO.getLIST() != null){
+                    anAllVOLIST = anAllVO.getLIST();
+                	String accountType = codeManager.getCodeId("cd_account_type","입출금계좌");
+                    for (AnAllListVO anAllListVO : anAllVOLIST) {
+                        logger.debug("anAllVO.ERROR_CODE    : "+ anAllListVO.getERROR_CODE());
+                        logger.debug("anAllVO.ERROR_MESSAGE : "+ anAllListVO.getERROR_MESSAGE());
+                        logger.debug("anAllVO.AN            : "+ anAllListVO.getAN());
+                        logger.debug("anAllVO.BALANCE       : "+ anAllListVO.getBALANCE());
+                        logger.debug("anAllVO.CODE          : "+ anAllListVO.getCODE());
+                        logger.debug("anAllVO.DATE          : "+ anAllListVO.getDATE());
+                        logger.debug("anAllVO.NAME          : "+ anAllListVO.getNAME());
+                        
+                        ScrBankApiAnInfoVO scrBankApiAnInfo = new ScrBankApiAnInfoVO();
+                        scrBankApiAnInfo.setCd_fc(cd_fc);;
+                        scrBankApiAnInfo.setNo_person(no_person);
+                        scrBankApiAnInfo.setAn(anAllListVO.getAN());
+                        scrBankApiAnInfo.setType_an(accountType);
+                        scrBankApiAnInfo.setCd_currency(anAllListVO.getCODE());
+                        scrBankApiAnInfo.setCurrent_balance(anAllListVO.getBALANCE());
+                        scrBankApiAnInfo.setDt_new(anAllListVO.getDATE());
+                        scrBankApiAnInfo.setNm_an(anAllListVO.getNAME());
+                        scrBankApiAnInfo.setYn_delete("N");
+                        scrapMapper.createScrBankApiAnInfo(scrBankApiAnInfo);
+                        
+                        ScrReqBankVO scrReqBankVO = new ScrReqBankVO();
+                        scrReqBankVO.setSeq_scraping_result(seq_scrap);
+                        scrReqBankVO.setCd_fc(cd_fc);
+                        scrReqBankVO.setCd_account(accountType);
+                        scrReqBankVO.setNo_account(anAllListVO.getAN());
+                        scrReqBankVO.setYmd_stt(anAllListVO.getDT_START());
+                        scrReqBankVO.setYmd_end(anAllListVO.getDT_END());
+                        scrReqBankVO.setError_cd(anAllListVO.getERROR_CODE());
+                        scrReqBankVO.setError_msg(anAllListVO.getERROR_MESSAGE());
+                        scrReqBankVO.setNo_person(no_person);
+                        scrapMapper.createScrReqBank(scrReqBankVO);
+                                                 
+                        //해당 고객의 입출금 계좌 중에 Insert된 계좌 상세내역의 날짜/시간 
+                        max_date = scrapMapper.getMaxDateSrcTransactionDetail(scrBankApiAnInfo);
+                        
+                        logger.debug(scrBankApiAnInfo.getAn() + " : max_date   :" + max_date);
+                        
+                        List<AnAllListHistoryVO> anAllListVOHISTORY = anAllListVO.getHISTORY();
+                        for (AnAllListHistoryVO anAllListHistoryVO : anAllListVOHISTORY) {
+                        	// 시간에 대한 데이터가 없을 경우 "000000"으로 설정
+                        	String time = anAllListHistoryVO.getTIME();
+                        	if(time == null || time.length() == 0)	{
+                        		anAllListHistoryVO.setTIME("000000");
+                        	}
+                        	String date_time = anAllListHistoryVO.getDATE()+anAllListHistoryVO.getTIME();
+                            logger.debug("anAllVO.AN          : "+ anAllListHistoryVO.getAN());
+                            logger.debug("anAllVO.BALANCE     : "+ anAllListHistoryVO.getBALANCE());
+                            logger.debug("anAllVO.CODE        : "+ anAllListHistoryVO.getCODE());
+                            logger.debug("anAllVO.DATE        : "+ anAllListHistoryVO.getDATE());
+                            logger.debug("anAllVO.TIME        : "+ anAllListHistoryVO.getTIME());
+                            logger.debug("anAllVO.DEALWAY1    : "+ anAllListHistoryVO.getDEALWAY1());
+                            logger.debug("anAllVO.DEALWAY2    : "+ anAllListHistoryVO.getDEALWAY2());
+                            logger.debug("anAllVO.DOC1        : "+ anAllListHistoryVO.getDOC1());
+                            logger.debug("anAllVO.DOC2        : "+ anAllListHistoryVO.getDOC2());
+                            logger.debug("anAllVO.IN_PAYMENT  : "+ anAllListHistoryVO.getIN_PAYMENT());
+                            logger.debug("anAllVO.OUT_PAYMENT : "+ anAllListHistoryVO.getOUT_PAYMENT());
+                            anAllListHistoryVO.setNO_PERSON(no_person);
+                            anAllListHistoryVO.setID_FRT(no_person);
                             
-                             //예적금 계좌 입출금 내역 Insert
-                            logger.debug("depositAnhistList.size() : "+ depositAnhistList.size());
-                            for (DepositAnListHistoryVO depositAnListHistory : depositAnhistList) {
-                            	scrapMapper.createScrSvngSvninDetail(depositAnListHistory);
+                            // 계좌 상세 내역의 마지막 날짜/시간 이후의 데이터만 List에 추가
+                            if(max_date != null && max_date != "" && date_time != null && date_time != ""
+                            	&& Long.parseLong(max_date) >= Long.parseLong(date_time))	{
+                            	continue;
                             }
+                            anAllhistList.add(anAllListHistoryVO);
                         }
                     }
-                    //펀드 계좌 내역
-                    if(userBankOutputVO.getFUND_AN() != null){
-                    	String accountType = codeManager.getCodeId("cd_account_type","펀드계좌");
-                        FundAnVO fundAnVO = userBankOutputVO.getFUND_AN();
-                        logger.debug("fundAnVO.getERROR_CODE()) :" +fundAnVO.getERROR_CODE());
-                        logger.debug("fundAnVO.getERROR_MESSAGE(:"+ fundAnVO.getERROR_MESSAGE());
-                        if(fundAnVO.getLIST() != null){
-                            fundAnVOLIST = fundAnVO.getLIST();
-                            for (FundAnListVO fundAnListVO : fundAnVOLIST) {
-                                logger.debug("fundAnListVO.AN               :" + fundAnListVO.getAN()               );
-                                logger.debug("fundAnListVO.TYPE             :" + fundAnListVO.getTYPE()             );
-                                logger.debug("fundAnListVO.PRINCIPAL        :" + fundAnListVO.getPRINCIPAL()        );
-                                logger.debug("fundAnListVO.EVALUATION_AMOUNT:" + fundAnListVO.getEVALUATION_AMOUNT());
-                                logger.debug("fundAnListVO.NEW_DATE         :" + fundAnListVO.getNEW_DATE()         );
-                                logger.debug("fundAnListVO.LAST_DATE        :" + fundAnListVO.getLAST_DATE()        );
-                                logger.debug("fundAnListVO.YIELD            :" + fundAnListVO.getYIELD()            );
-                                
-                                ScrBankApiAnInfoVO scrBankApiAnInfo = new ScrBankApiAnInfoVO();
-                            	scrBankApiAnInfo.setCd_fc(cd_fc);;
-                            	scrBankApiAnInfo.setNo_person(no_person);
-                            	scrBankApiAnInfo.setAn(fundAnListVO.getAN());
-                            	scrBankApiAnInfo.setType_an(accountType);
-                            	scrBankApiAnInfo.setPrincipal(fundAnListVO.getPRINCIPAL());
-                            	scrBankApiAnInfo.setCurrent_balance(fundAnListVO.getEVALUATION_AMOUNT());
-                            	scrBankApiAnInfo.setDt_new(fundAnListVO.getNEW_DATE());
-                            	scrBankApiAnInfo.setDt_end(fundAnListVO.getLAST_DATE());
-                            	scrBankApiAnInfo.setNm_an(fundAnListVO.getTYPE());
-                            	scrBankApiAnInfo.setProfit_rate(fundAnListVO.getYIELD());
-                            	scrBankApiAnInfo.setYn_delete("N");
-                            	scrapMapper.createScrBankApiAnInfo(scrBankApiAnInfo);
+                    //은행스크래핑 조회 내역 Insert(기존 내역 history 테이블에 저장)
+                    ScrReqBankVO scrReqBankVO = new ScrReqBankVO();
+                    scrReqBankVO.setNo_person(no_person);
+                    scrReqBankVO.setCd_fc(cd_fc);
+                    scrReqBankVO.setCd_account(codeManager.getCodeId("cd_account_type","입출금계좌"));
+                    scrapMapper.insertScrReqBankHist(scrReqBankVO);
+                 
+                    //입출금 계좌 입출금 내역 Insert
+                    logger.debug("anAllhistList.size() : "+ anAllhistList.size());
+                    for (AnAllListHistoryVO anAllListHistory : anAllhistList) {
+                    	scrapMapper.createScrTransactionDetail(anAllListHistory);
+                    }
+                }
+            }
+            //예적금 계좌 내역
+            if(userBankOutputVO.getDEPOSIT_AN() != null){
+                DepositAnVO depositAnVO = userBankOutputVO.getDEPOSIT_AN();
+                logger.debug("depositAnVO.getERROR_CODE    :"+ depositAnVO.getERROR_CODE());
+                logger.debug("depositAnVO.getERROR_MESSAGE :"+ depositAnVO.getERROR_MESSAGE());
+                if(depositAnVO.getLIST() != null){
+                	// 해당 고객의 예적금 계좌 중에 Insert된 계좌 상세내역의 날짜/시간 
+                	String accountType = codeManager.getCodeId("cd_account_type","예적금계좌");
+                    depositAnVOLIST = depositAnVO.getLIST();
+                    for (DepositAnListVO depositAnListVO : depositAnVOLIST) {
+                        logger.debug("depositAnListVO.getAN()       :" + depositAnListVO.getAN()       );
+                        logger.debug("depositAnListVO.getTYPE()     :" + depositAnListVO.getTYPE()     );
+                        logger.debug("depositAnListVO.getNEW_DATE() :" + depositAnListVO.getNEW_DATE() );
+                        logger.debug("depositAnListVO.getLAST_DATE():" + depositAnListVO.getLAST_DATE());
+                        logger.debug("depositAnListVO.getBALANCE()  :" + depositAnListVO.getBALANCE()  );
+                        logger.debug("depositAnListVO.getINTEREST() :" + depositAnListVO.getINTEREST());
+                        
+                        ScrBankApiAnInfoVO scrBankApiAnInfo = new ScrBankApiAnInfoVO();
+                    	scrBankApiAnInfo.setCd_fc(cd_fc);;
+                    	scrBankApiAnInfo.setNo_person(no_person);
+                    	scrBankApiAnInfo.setAn(depositAnListVO.getAN());
+                    	scrBankApiAnInfo.setType_an(accountType);
+                    	scrBankApiAnInfo.setCurrent_balance(depositAnListVO.getBALANCE());
+                    	scrBankApiAnInfo.setDt_new(depositAnListVO.getNEW_DATE());
+                    	scrBankApiAnInfo.setDt_end(depositAnListVO.getLAST_DATE());
+                    	scrBankApiAnInfo.setNm_an(depositAnListVO.getTYPE());
+                    	scrBankApiAnInfo.setInterest_rate(depositAnListVO.getINTEREST());
+                    	scrBankApiAnInfo.setYn_delete("N");
+                    	scrapMapper.createScrBankApiAnInfo(scrBankApiAnInfo);
+                        
+                        ScrReqBankVO scrReqBankVO = new ScrReqBankVO();
+                        scrReqBankVO.setSeq_scraping_result(seq_scrap);
+                        scrReqBankVO.setCd_fc(cd_fc);
+                        scrReqBankVO.setCd_account(accountType);
+                        scrReqBankVO.setNo_account(depositAnListVO.getAN());
+                        scrReqBankVO.setYmd_stt(depositAnListVO.getDT_START());
+                        scrReqBankVO.setYmd_end(depositAnListVO.getDT_END());
+                        scrReqBankVO.setError_cd(depositAnListVO.getERROR_CODE());
+                        scrReqBankVO.setError_msg(depositAnListVO.getERROR_MESSAGE());
+                        scrReqBankVO.setNo_person(no_person);
+                        scrapMapper.createScrReqBank(scrReqBankVO);
+
+                        max_date = scrapMapper.getMaxDateScrSvngSvninDetail(scrBankApiAnInfo);
+                        logger.debug(scrBankApiAnInfo.getAn() + "   : max_date   :" + max_date);
+                        List<DepositAnListHistoryVO> depositAnListVOHISTORY = depositAnListVO.getHISTORY();
+                        for (DepositAnListHistoryVO depositAnListHistoryVO : depositAnListVOHISTORY) {
+                        	// 시간에 대한 데이터가 없을 경우 "000000"으로 설정
+                        	String time = depositAnListHistoryVO.getTIME();
+                        	if(time == null || time.length() == 0)	{
+                        		depositAnListHistoryVO.setTIME("000000");
+                        	}
+                        	String date_time = depositAnListHistoryVO.getDATE()+depositAnListHistoryVO.getTIME();
+                            logger.debug("depositAnVO.AN          : "+ depositAnListHistoryVO.getAN());
+                            logger.debug("depositAnVO.DATE        : "+ depositAnListHistoryVO.getDATE());
+                            logger.debug("depositAnVO.TIME        : "+ depositAnListHistoryVO.getTIME());
+                            logger.debug("depositAnVO.BATCH       : "+ depositAnListHistoryVO.getBATCH());
+                            logger.debug("depositAnVO.MONTH       : "+ depositAnListHistoryVO.getMONTH());
+                            logger.debug("depositAnVO.OUT_PAYMENT : "+ depositAnListHistoryVO.getOUT_PAYMENT());
+                            logger.debug("depositAnVO.IN_PAYMENT  : "+ depositAnListHistoryVO.getIN_PAYMENT());
+                            logger.debug("depositAnVO.BALANCE     : "+ depositAnListHistoryVO.getBALANCE());
+                            logger.debug("depositAnVO.DESCRIPTION : "+ depositAnListHistoryVO.getDESCRIPTION());
+                            logger.debug("depositAnVO.DISTRIBUTOR : "+ depositAnListHistoryVO.getDISTRIBUTOR());
+                            
+                            depositAnListHistoryVO.setNO_PERSON(no_person);
+                            depositAnListHistoryVO.setID_FRT(no_person);
+                            
+                            // 계좌 상세 내역의 마지막 날짜/시간 이후의 데이터만 List에 추가
+                            if(max_date != null && max_date != "" && date_time != null && date_time != ""
+                            	&& Long.parseLong(max_date) >= Long.parseLong(date_time))	{
+                            	continue;
                             }
+                            depositAnhistList.add(depositAnListHistoryVO);
                         }
                     }
-                    //대출 계좌 내역
-                    if(userBankOutputVO.getLOAN_AN() != null){
-                    	String accountType = codeManager.getCodeId("cd_account_type","대출계좌");
-                        LoanAnVO loanAnVO = userBankOutputVO.getLOAN_AN();
-                        logger.debug("loanAnVO.getERROR_CODE    :" +loanAnVO.getERROR_CODE());
-                        logger.debug("loanAnVO.getERROR_MESSAGE :"+ loanAnVO.getERROR_MESSAGE());
-                        if(loanAnVO.getLIST() != null){
-                            loanAnVOLIST = loanAnVO.getLIST();
-                            for (LoanAnListVO loanAnListVO : loanAnVOLIST) {
-                                logger.debug("loanAnListVO.getAN           :" + loanAnListVO.getAN()           );
-                                logger.debug("loanAnListVO.getTYPE         :" + loanAnListVO.getTYPE()         );
-                                logger.debug("loanAnListVO.getLOAN_BALANCE :" + loanAnListVO.getLOAN_BALANCE() );
-                                logger.debug("loanAnListVO.getLOAN_CEILING :" + loanAnListVO.getLOAN_CEILING() );
-                                logger.debug("loanAnListVO.getNEW_DATE     :" + loanAnListVO.getNEW_DATE()     );
-                                logger.debug("loanAnListVO.getLAST_DATE    :" + loanAnListVO.getLAST_DATE()    );
-                                logger.debug("loanAnListVO.getLENDING_RATE :" + loanAnListVO.getLENDING_RATE() );
-                                logger.debug("loanAnListVO.getFEW_DAYS     :" + loanAnListVO.getFEW_DAYS()     );
-                                logger.debug("loanAnListVO.getINTEREST_DATE:" + loanAnListVO.getINTEREST_DATE());
-                                
-                                ScrBankApiAnInfoVO scrBankApiAnInfo = new ScrBankApiAnInfoVO();
-                            	scrBankApiAnInfo.setCd_fc(cd_fc);;
-                            	scrBankApiAnInfo.setNo_person(no_person);
-                            	scrBankApiAnInfo.setAn(loanAnListVO.getAN());
-                            	scrBankApiAnInfo.setType_an(accountType);
-                            	scrBankApiAnInfo.setNm_an(loanAnListVO.getTYPE());
-                            	scrBankApiAnInfo.setLoan_balance(loanAnListVO.getLOAN_BALANCE());
-                            	scrBankApiAnInfo.setLoan_ceiling(loanAnListVO.getLOAN_CEILING());
-                            	scrBankApiAnInfo.setDt_new(loanAnListVO.getNEW_DATE());
-                            	scrBankApiAnInfo.setDt_end(loanAnListVO.getLAST_DATE());
-                            	scrBankApiAnInfo.setInterest_rate(loanAnListVO.getLENDING_RATE());
-                            	scrBankApiAnInfo.setFew_days(loanAnListVO.getFEW_DAYS());
-                            	scrBankApiAnInfo.setInterest_date(loanAnListVO.getINTEREST_DATE());
-                            	scrBankApiAnInfo.setYn_delete("N");
-                            	scrapMapper.createScrBankApiAnInfo(scrBankApiAnInfo);
-                            }
-                        }
+                    //은행스크래핑 조회 내역 Insert(기존 내역 history 테이블에 저장)
+                    ScrReqBankVO scrReqBankVO = new ScrReqBankVO();
+                    scrReqBankVO.setNo_person(no_person);
+                    scrReqBankVO.setCd_fc(cd_fc);
+                    scrReqBankVO.setCd_account(codeManager.getCodeId("cd_account_type","예적금계좌"));
+                    scrapMapper.insertScrReqBankHist(scrReqBankVO);
+                    
+                     //예적금 계좌 입출금 내역 Insert
+                    logger.debug("depositAnhistList.size() : "+ depositAnhistList.size());
+                    for (DepositAnListHistoryVO depositAnListHistory : depositAnhistList) {
+                    	scrapMapper.createScrSvngSvninDetail(depositAnListHistory);
+                    }
+                }
+            }
+            //펀드 계좌 내역
+            if(userBankOutputVO.getFUND_AN() != null){
+            	String accountType = codeManager.getCodeId("cd_account_type","펀드계좌");
+                FundAnVO fundAnVO = userBankOutputVO.getFUND_AN();
+                logger.debug("fundAnVO.getERROR_CODE()) :" +fundAnVO.getERROR_CODE());
+                logger.debug("fundAnVO.getERROR_MESSAGE(:"+ fundAnVO.getERROR_MESSAGE());
+                if(fundAnVO.getLIST() != null){
+                    fundAnVOLIST = fundAnVO.getLIST();
+                    for (FundAnListVO fundAnListVO : fundAnVOLIST) {
+                        logger.debug("fundAnListVO.AN               :" + fundAnListVO.getAN()               );
+                        logger.debug("fundAnListVO.TYPE             :" + fundAnListVO.getTYPE()             );
+                        logger.debug("fundAnListVO.PRINCIPAL        :" + fundAnListVO.getPRINCIPAL()        );
+                        logger.debug("fundAnListVO.EVALUATION_AMOUNT:" + fundAnListVO.getEVALUATION_AMOUNT());
+                        logger.debug("fundAnListVO.NEW_DATE         :" + fundAnListVO.getNEW_DATE()         );
+                        logger.debug("fundAnListVO.LAST_DATE        :" + fundAnListVO.getLAST_DATE()        );
+                        logger.debug("fundAnListVO.YIELD            :" + fundAnListVO.getYIELD()            );
+                        
+                        ScrBankApiAnInfoVO scrBankApiAnInfo = new ScrBankApiAnInfoVO();
+                    	scrBankApiAnInfo.setCd_fc(cd_fc);;
+                    	scrBankApiAnInfo.setNo_person(no_person);
+                    	scrBankApiAnInfo.setAn(fundAnListVO.getAN());
+                    	scrBankApiAnInfo.setType_an(accountType);
+                    	scrBankApiAnInfo.setPrincipal(fundAnListVO.getPRINCIPAL());
+                    	scrBankApiAnInfo.setCurrent_balance(fundAnListVO.getEVALUATION_AMOUNT());
+                    	scrBankApiAnInfo.setDt_new(fundAnListVO.getNEW_DATE());
+                    	scrBankApiAnInfo.setDt_end(fundAnListVO.getLAST_DATE());
+                    	scrBankApiAnInfo.setNm_an(fundAnListVO.getTYPE());
+                    	scrBankApiAnInfo.setProfit_rate(fundAnListVO.getYIELD());
+                    	scrBankApiAnInfo.setYn_delete("N");
+                    	scrapMapper.createScrBankApiAnInfo(scrBankApiAnInfo);
+                    }
+                }
+            }
+            //대출 계좌 내역
+            if(userBankOutputVO.getLOAN_AN() != null){
+            	String accountType = codeManager.getCodeId("cd_account_type","대출계좌");
+                LoanAnVO loanAnVO = userBankOutputVO.getLOAN_AN();
+                logger.debug("loanAnVO.getERROR_CODE    :" +loanAnVO.getERROR_CODE());
+                logger.debug("loanAnVO.getERROR_MESSAGE :"+ loanAnVO.getERROR_MESSAGE());
+                if(loanAnVO.getLIST() != null){
+                    loanAnVOLIST = loanAnVO.getLIST();
+                    for (LoanAnListVO loanAnListVO : loanAnVOLIST) {
+                        logger.debug("loanAnListVO.getAN           :" + loanAnListVO.getAN()           );
+                        logger.debug("loanAnListVO.getTYPE         :" + loanAnListVO.getTYPE()         );
+                        logger.debug("loanAnListVO.getLOAN_BALANCE :" + loanAnListVO.getLOAN_BALANCE() );
+                        logger.debug("loanAnListVO.getLOAN_CEILING :" + loanAnListVO.getLOAN_CEILING() );
+                        logger.debug("loanAnListVO.getNEW_DATE     :" + loanAnListVO.getNEW_DATE()     );
+                        logger.debug("loanAnListVO.getLAST_DATE    :" + loanAnListVO.getLAST_DATE()    );
+                        logger.debug("loanAnListVO.getLENDING_RATE :" + loanAnListVO.getLENDING_RATE() );
+                        logger.debug("loanAnListVO.getFEW_DAYS     :" + loanAnListVO.getFEW_DAYS()     );
+                        logger.debug("loanAnListVO.getINTEREST_DATE:" + loanAnListVO.getINTEREST_DATE());
+                        
+                        ScrBankApiAnInfoVO scrBankApiAnInfo = new ScrBankApiAnInfoVO();
+                    	scrBankApiAnInfo.setCd_fc(cd_fc);;
+                    	scrBankApiAnInfo.setNo_person(no_person);
+                    	scrBankApiAnInfo.setAn(loanAnListVO.getAN());
+                    	scrBankApiAnInfo.setType_an(accountType);
+                    	scrBankApiAnInfo.setNm_an(loanAnListVO.getTYPE());
+                    	scrBankApiAnInfo.setLoan_balance(loanAnListVO.getLOAN_BALANCE());
+                    	scrBankApiAnInfo.setLoan_ceiling(loanAnListVO.getLOAN_CEILING());
+                    	scrBankApiAnInfo.setDt_new(loanAnListVO.getNEW_DATE());
+                    	scrBankApiAnInfo.setDt_end(loanAnListVO.getLAST_DATE());
+                    	scrBankApiAnInfo.setInterest_rate(loanAnListVO.getLENDING_RATE());
+                    	scrBankApiAnInfo.setFew_days(loanAnListVO.getFEW_DAYS());
+                    	scrBankApiAnInfo.setInterest_date(loanAnListVO.getINTEREST_DATE());
+                    	scrBankApiAnInfo.setYn_delete("N");
+                    	scrapMapper.createScrBankApiAnInfo(scrBankApiAnInfo);
                     }
                 }
             }
         }
-        ScrRsltScrapVO scrRsltScrapVO = new ScrRsltScrapVO();
-        scrRsltScrapVO.setNo_person(no_person);
-        scrRsltScrapVO.setSeq_scraping_result(seq_scrap);
-        scrRsltScrapVO.setRslt_scraping(error_code);
-        scrapMapper.updateScrRsltScrap(scrRsltScrapVO);
+ 
         return new ReturnClass(Constant.SUCCESS);
 	}
 	
 	@Override
-	public ReturnClass createAutoCardScrap(String data)	{
-		logger.debug("DATA ::: " + data);
+	public ReturnClass createAutoCardScrap(String no_person, long seq_scrap, UserCardOutputVO userCardOutputVO)	{
 		
-		Gson gson = new Gson();
-		AppCardInfo appCardInfo = new AppCardInfo();
-
-		String no_person = "";
-		long seq_scrap = 0;
 		String max_date = "";
-		String error_code = "";
-		
-		appCardInfo = gson.fromJson(net.sf.json.JSONObject.fromObject(JSONSerializer.toJSON(data)).toString(), AppCardInfo.class);
-        no_person 	= appCardInfo.getNO_PERSON();
-        seq_scrap 	= appCardInfo.getSEQ_SCRAP();
-        error_code	= appCardInfo.getERROR_CODE();
-        
-        
-        logger.debug("no_person  :" + no_person);
-        logger.debug("seq_scrap  :" + seq_scrap);
-       
-        if(appCardInfo.getUSER_CARD_OUTPUT() != null){
-        	List<UserCardOutputVO> USER_CARD_OUTPUT = appCardInfo.getUSER_CARD_OUTPUT();
-            for (UserCardOutputVO userCardOutputVO : USER_CARD_OUTPUT) {
-            	//String cd_fc = codeManager.getCodeId("cd_coocon_fc", userCardOutputVO.getCARD_CODE());
-            	String cd_fc = fincorpMapper.getCdFcByCooconFcCd(userCardOutputVO.getCARD_CODE());
-            	            	
-            	FcLinkInfoVO fcLinkInfoVO  = new FcLinkInfoVO();
-                fcLinkInfoVO.setNo_person(no_person);
-                fcLinkInfoVO.setCd_fc(cd_fc);
-                fcLinkInfoVO.setRsn_link_message(userCardOutputVO.getERROR_MESSAGE());
-                if(userCardOutputVO.getERROR_CODE().equals("00000000"))	{
-                	fcLinkInfoVO.setCd_link_stat("00");
-                }
-                else	{
-                	fcLinkInfoVO.setCd_link_stat("99");
-                }
-                scrapMapper.updateFcLinkInfo(fcLinkInfoVO);
-                
-                //카드내역 저장 전 삭제상태로 변경
-                ScrCardInfoVO scrCardInfoVO = new ScrCardInfoVO();
-                scrCardInfoVO.setNo_person(no_person);
-                scrCardInfoVO.setCd_fc(cd_fc);
-                scrapMapper.updateScrCardInfo(scrCardInfoVO);
-                
-            	//카드내역 저장
-            	List<ScrCardInfoVO> ScrCardInfoList = userCardOutputVO.getCARD_INFO();
-            	if(ScrCardInfoList != null && ScrCardInfoList.size() > 0){
-            		for (ScrCardInfoVO scrCardInfo : ScrCardInfoList) {		
-            			logger.debug("scrCardInfo.getNo_card     : "+ scrCardInfo.getNo_card());
-                        logger.debug("scrCardInfo.getNm_card     : "+ scrCardInfo.getNm_card());
-                        logger.debug("scrCardInfo.getDt_payment  : "+ scrCardInfo.getDt_payment());
-                        logger.debug("scrCardInfo.getAmt_payment : "+ scrCardInfo.getAmt_payment());
-                        
-                        scrCardInfo.setNo_person(no_person);
-                        scrCardInfo.setCd_fc(cd_fc);
-                        scrCardInfo.setYn_delete("N");
-                        scrapMapper.createScrCardInfo(scrCardInfo);
-            		}
-            	}
-            	//카드 내역 History 저장 및 갱신
-            	ScrReqCardVO scrReqCardVO = new ScrReqCardVO();
-            	scrReqCardVO.setNo_person(no_person);
-            	scrReqCardVO.setCd_fc(cd_fc);
-            	scrReqCardVO.setCd_type("01"); //01 보유카드현황, 02 승인내역, 03 청구내역, 04 한도조회, 05 포인트조회
-            	scrReqCardVO.setSeq_scraping_result(seq_scrap);
-            	scrReqCardVO.setError_cd(userCardOutputVO.getCARD_ERROR_CODE());
-            	scrReqCardVO.setError_msg(userCardOutputVO.getCARD_ERROR_MESSAGE());
-                scrapMapper.insertScrReqCardHist(scrReqCardVO);
-                scrapMapper.createScrReqCard(scrReqCardVO);
-                
-                //카드 한도내역 저장 전 삭제상태로 변경
-                ScrCardLimitInfoVO scrCardLimitInfoVO = new ScrCardLimitInfoVO();
-                scrCardLimitInfoVO.setNo_person(no_person);
-                scrCardLimitInfoVO.setCd_fc(cd_fc);
-                scrapMapper.updateScrCardLimitInfo(scrCardLimitInfoVO);
-                //카드 한도내역 저장
-            	List<ScrCardLimitInfoVO> ScrCardLimitInfoList = userCardOutputVO.getCARD_LIMIT();
-            	if(ScrCardLimitInfoList != null && ScrCardLimitInfoList.size() > 0){
-            		for (ScrCardLimitInfoVO scrCardLimitInfo : ScrCardLimitInfoList) {		
-            			logger.debug("scrCardLimitInfo.getType_card      : "+ scrCardLimitInfo.getType_card());
-                        logger.debug("scrCardLimitInfo.getAmt_cash_limit : "+ scrCardLimitInfo.getAmt_cash_limit());
-                        logger.debug("scrCardLimitInfo.getAmt_card_limit : "+ scrCardLimitInfo.getAmt_card_limit());
-                        
-                        scrCardLimitInfo.setNo_person(no_person);
-                        scrCardLimitInfo.setCd_fc(cd_fc);
-                        scrCardLimitInfo.setYn_delete("N");
-//                        if(scrCardLimitInfo.getType_card() == null || scrCardLimitInfo.getType_card().length() == 0){
-//                        	scrCardLimitInfo.setType_card("defalut");
-//                        }
-                        scrapMapper.createScrCardLimitInfo(scrCardLimitInfo);
-            		}
-            	}
-            	//카드 내역 History 저장 및 갱신
-            	scrReqCardVO.setNo_person(no_person);
-            	scrReqCardVO.setCd_fc(cd_fc);
-            	scrReqCardVO.setCd_type("04"); //01 보유카드현황, 02 승인내역, 03 청구내역, 04 한도조회, 05 포인트조회
-            	scrReqCardVO.setSeq_scraping_result(seq_scrap);
-            	scrReqCardVO.setError_cd(userCardOutputVO.getLIMIT_ERROR_CODE());
-            	scrReqCardVO.setError_msg(userCardOutputVO.getLIMIT_ERROR_MESSAGE());
-                scrapMapper.insertScrReqCardHist(scrReqCardVO);
-                scrapMapper.createScrReqCard(scrReqCardVO);
-            	
-              //카드 한도내역 저장
-            	List<ScrCardPointInfoVO> ScrCardPointInfoList = userCardOutputVO.getCARD_POINT();
-            	if(ScrCardPointInfoList != null && ScrCardPointInfoList.size() > 0){
-            		for (ScrCardPointInfoVO ScrCardPointInfo : ScrCardPointInfoList) {		
-            			logger.debug("ScrCardPointInfo.getType_card      : "+ ScrCardPointInfo.getType_point());
-                        logger.debug("ScrCardPointInfo.getAmt_cash_limit : "+ ScrCardPointInfo.getHold_point());
-                        
-                        ScrCardPointInfo.setNo_person(no_person);
-                        ScrCardPointInfo.setCd_fc(cd_fc);
-                        scrapMapper.createScrCardPointInfo(ScrCardPointInfo);
-            		}
-            	}
-            	//카드 내역 History 저장 및 갱신
-            	scrReqCardVO.setNo_person(no_person);
-            	scrReqCardVO.setCd_fc(cd_fc);
-            	scrReqCardVO.setCd_type("05"); //01 보유카드현황, 02 승인내역, 03 청구내역, 04 한도조회, 05 포인트조회
-            	scrReqCardVO.setSeq_scraping_result(seq_scrap);
-            	scrReqCardVO.setError_cd(userCardOutputVO.getPOINT_ERROR_CODE());
-            	scrReqCardVO.setError_msg(userCardOutputVO.getPOINT_ERROR_MESSAGE());
-                scrapMapper.insertScrReqCardHist(scrReqCardVO);
-                scrapMapper.createScrReqCard(scrReqCardVO);
-                
-            	//카드 승인내역 마지막 조회 내역 조회
-            	Map<String, Object> paramMap = new HashMap<String, Object>();
-            	paramMap.put("no_person", no_person);
-            	paramMap.put("cd_fc", cd_fc);
-            	max_date = scrapMapper.getMaxDateScrCardApprovalInfo(paramMap);
-            	//카드 승인내역 저장
-            	List<ScrCardApprovalInfoVO> scrCardApprovalInfoList = userCardOutputVO.getCARD_APPROVAL();
-            	if(scrCardApprovalInfoList != null){
-            		List<ScrCardApprovalInfoVO> list = new ArrayList<ScrCardApprovalInfoVO>();
-            		for (ScrCardApprovalInfoVO scrCardApprovalInfo : scrCardApprovalInfoList) {
-                         logger.debug("scrCardApprovalInfo.getNo_card      : "+ scrCardApprovalInfo.getNo_card());
-                         logger.debug("scrCardApprovalInfo.getDt_approval  : "+ scrCardApprovalInfo.getDt_approval());
-                         logger.debug("scrCardApprovalInfo.getTm_approval  : "+ scrCardApprovalInfo.getTm_approval());
-                         logger.debug("scrCardApprovalInfo.getNo_approval  : "+ scrCardApprovalInfo.getNo_approval());
-                         logger.debug("scrCardApprovalInfo.getAmt_approval : "+ scrCardApprovalInfo.getAmt_approval());
-                         scrCardApprovalInfo.setNo_person(no_person);
-                         scrCardApprovalInfo.setCd_fc(cd_fc);;
-                         // 시간에 대한 데이터가 없을 경우 "000000"으로 설정
-                         String time = scrCardApprovalInfo.getTm_approval();
-                         if(time == null || time.length() == 0)	{
-                        	 scrCardApprovalInfo.setTm_approval("000000");
-                         }
-                         String date_time = scrCardApprovalInfo.getDt_approval()+scrCardApprovalInfo.getTm_approval();
-                         
-                         // 카드 승인내역 조회 마지막 날짜 이후 마지막 날짜/시간 이후의 데이터만 List에 추가
-                         if(max_date != null && max_date != "" && date_time != null && date_time != ""
-                         	&& Long.parseLong(max_date) >= Long.parseLong(date_time))	{
-                         	continue;
-                         }
-                         list.add(scrCardApprovalInfo);
-            		}
-            		//카드승인 내역 Insert
-                    logger.debug("list.size() : "+ list.size());
-                    for (ScrCardApprovalInfoVO scrCardApprovalInfo : list) {
-                    	scrapMapper.createScrCardApprovalInfo(scrCardApprovalInfo);
-                    }
-            	}
-
-            	//카드조회 내역 History 저장 및 갱신  - 승인내역
-            	scrReqCardVO.setCd_type("02"); //01 보유카드현황, 02 승인내역, 03 청구내역, 04 한도조회, 05 포인트조회
-            	scrReqCardVO.setSeq_scraping_result(seq_scrap);
-            	scrReqCardVO.setYmd_stt(userCardOutputVO.getDT_APPROVAL_START());
-            	scrReqCardVO.setYmd_end(userCardOutputVO.getDT_APPROVAL_END());
-            	scrReqCardVO.setError_cd(userCardOutputVO.getAPPROVAL_ERROR_CODE());
-            	scrReqCardVO.setError_msg(userCardOutputVO.getAPPROVAL_ERROR_MESSAGE());
-                scrapMapper.insertScrReqCardHist(scrReqCardVO);
-                scrapMapper.createScrReqCard(scrReqCardVO);
-                
-              //카드 청구내역 마지막 조회 내역 조회
-            	max_date = scrapMapper.getMaxDateScrCardChargeDetail(paramMap);
-                //카드 청구내역 저장
-            	List<ScrCardChargeInfoVO> scrCardChargeInfoList = userCardOutputVO.getCARD_CHARGE();
-            	if(scrCardChargeInfoList != null){
-            		for (ScrCardChargeInfoVO scrCardChargeInfoVO : scrCardChargeInfoList) {
-                        logger.debug("scrCardChargeInfoVO.getCharge_yyyymm  : "+ scrCardChargeInfoVO.getCharge_yyyymm());
-                        logger.debug("scrCardChargeInfoVO.getMonthly_charge : "+ scrCardChargeInfoVO.getMonthly_charge());
-                        scrCardChargeInfoVO.setNo_person(no_person);
-                        scrCardChargeInfoVO.setCd_fc(cd_fc);
-
-                        //카드 청구내역 Insert
-                		scrapMapper.createScrCardChargeInfo(scrCardChargeInfoVO);
-                        
-                        List<ScrCardChargeDetailVO> scrCardChargeDetailList = scrCardChargeInfoVO.getCARD_CHARGE_DTL();
-                        if(scrCardChargeDetailList != null){
-                        	List<ScrCardChargeDetailVO> list = new ArrayList<ScrCardChargeDetailVO>();
-                        	for (ScrCardChargeDetailVO scrCardChargeDetail : scrCardChargeDetailList) {
-                        		logger.debug("scrCardChargeDetail.getDt_use : "+ scrCardChargeDetail.getDt_use());
-                                logger.debug("scrCardChargeDetail.getFees   : "+ scrCardChargeDetail.getFees());
-                                scrCardChargeDetail.setNo_person(no_person);
-                        		scrCardChargeDetail.setCd_fc(cd_fc);
-                        		scrCardChargeDetail.setCharge_yyyymm(scrCardChargeInfoVO.getCharge_yyyymm());
-                        		
-		                        String date = scrCardChargeDetail.getDt_use();
-		                        // 카드 청구내역 조회 마지막 날짜 이후 마지막 날짜/시간 이후의 데이터만 List에 추가
-		                        if(max_date != null && max_date != "" && date != null && date != ""
-		                        	&& Long.parseLong(max_date) >= Long.parseLong(date))	{
-		                        	continue;
-		                        }
-		                        list.add(scrCardChargeDetail);
-                        	}
-                        	//카드 청구내역 상세 Insert
-                            logger.debug("list.size() : "+ list.size());
-                            logger.debug("list.size() : "+ list.size());
-                            for (ScrCardChargeDetailVO scrCardChargeDetailVO : list) {
-                            	scrapMapper.createScrCardChargeDetail(scrCardChargeDetailVO);
-                            }
-                        }
-            		}
-            	}
-            	//카드조회 내역 History 저장 및 갱신  - 청구내역
-            	scrReqCardVO.setCd_type("03"); //01 보유카드현황, 02 승인내역, 03 청구내역, 4 한도조회, 05 포인트조회
-            	scrReqCardVO.setSeq_scraping_result(seq_scrap);
-            	scrReqCardVO.setYmd_stt(userCardOutputVO.getDT_CHARGE_START());
-            	scrReqCardVO.setYmd_end(userCardOutputVO.getDT_CHARGE_END());
-            	scrReqCardVO.setError_cd(userCardOutputVO.getCHARGE_ERROR_CODE());
-            	scrReqCardVO.setError_msg(userCardOutputVO.getCHARGE_ERROR_MESSAGE());
-                scrapMapper.insertScrReqCardHist(scrReqCardVO);
-                scrapMapper.createScrReqCard(scrReqCardVO);
-            }
+				
+    	//String cd_fc = codeManager.getCodeId("cd_coocon_fc", userCardOutputVO.getCARD_CODE());
+    	String cd_fc = fincorpMapper.getCdFcByCooconFcCd(userCardOutputVO.getCARD_CODE());
+    	            	
+    	FcLinkInfoVO fcLinkInfoVO  = new FcLinkInfoVO();
+        fcLinkInfoVO.setNo_person(no_person);
+        fcLinkInfoVO.setCd_fc(cd_fc);
+        fcLinkInfoVO.setRsn_link_message(userCardOutputVO.getERROR_MESSAGE());
+        if(userCardOutputVO.getERROR_CODE().equals("00000000"))	{
+        	fcLinkInfoVO.setCd_link_stat("00");
         }
-        //스크래핑 내역에 결과 수정
-        ScrRsltScrapVO scrRsltScrapVO = new ScrRsltScrapVO();
-        scrRsltScrapVO.setNo_person(no_person);
-        scrRsltScrapVO.setSeq_scraping_result(seq_scrap);
-        scrRsltScrapVO.setRslt_scraping(error_code);
-        scrapMapper.updateScrRsltScrap(scrRsltScrapVO);
+        else	{
+        	fcLinkInfoVO.setCd_link_stat("99");
+        }
+        scrapMapper.updateFcLinkInfo(fcLinkInfoVO);
         
+        //카드내역 저장 전 삭제상태로 변경
+        ScrCardInfoVO scrCardInfoVO = new ScrCardInfoVO();
+        scrCardInfoVO.setNo_person(no_person);
+        scrCardInfoVO.setCd_fc(cd_fc);
+        scrapMapper.updateScrCardInfo(scrCardInfoVO);
+        
+    	//카드내역 저장
+    	List<ScrCardInfoVO> ScrCardInfoList = userCardOutputVO.getCARD_INFO();
+    	if(ScrCardInfoList != null && ScrCardInfoList.size() > 0){
+    		for (ScrCardInfoVO scrCardInfo : ScrCardInfoList) {		
+    			logger.debug("scrCardInfo.getNo_card     : "+ scrCardInfo.getNo_card());
+                logger.debug("scrCardInfo.getNm_card     : "+ scrCardInfo.getNm_card());
+                logger.debug("scrCardInfo.getDt_payment  : "+ scrCardInfo.getDt_payment());
+                logger.debug("scrCardInfo.getAmt_payment : "+ scrCardInfo.getAmt_payment());
+                
+                scrCardInfo.setNo_person(no_person);
+                scrCardInfo.setCd_fc(cd_fc);
+                scrCardInfo.setYn_delete("N");
+                scrapMapper.createScrCardInfo(scrCardInfo);
+    		}
+    	}
+    	//카드 내역 History 저장 및 갱신
+    	ScrReqCardVO scrReqCardVO = new ScrReqCardVO();
+    	scrReqCardVO.setNo_person(no_person);
+    	scrReqCardVO.setCd_fc(cd_fc);
+    	scrReqCardVO.setCd_type("01"); //01 보유카드현황, 02 승인내역, 03 청구내역, 04 한도조회, 05 포인트조회
+    	scrReqCardVO.setSeq_scraping_result(seq_scrap);
+    	scrReqCardVO.setError_cd(userCardOutputVO.getCARD_ERROR_CODE());
+    	scrReqCardVO.setError_msg(userCardOutputVO.getCARD_ERROR_MESSAGE());
+        scrapMapper.insertScrReqCardHist(scrReqCardVO);
+        scrapMapper.createScrReqCard(scrReqCardVO);
+        
+        //카드 한도내역 저장 전 삭제상태로 변경
+        ScrCardLimitInfoVO scrCardLimitInfoVO = new ScrCardLimitInfoVO();
+        scrCardLimitInfoVO.setNo_person(no_person);
+        scrCardLimitInfoVO.setCd_fc(cd_fc);
+        scrapMapper.updateScrCardLimitInfo(scrCardLimitInfoVO);
+        //카드 한도내역 저장
+    	List<ScrCardLimitInfoVO> ScrCardLimitInfoList = userCardOutputVO.getCARD_LIMIT();
+    	if(ScrCardLimitInfoList != null && ScrCardLimitInfoList.size() > 0){
+    		for (ScrCardLimitInfoVO scrCardLimitInfo : ScrCardLimitInfoList) {		
+    			logger.debug("scrCardLimitInfo.getType_card      : "+ scrCardLimitInfo.getType_card());
+                logger.debug("scrCardLimitInfo.getAmt_cash_limit : "+ scrCardLimitInfo.getAmt_cash_limit());
+                logger.debug("scrCardLimitInfo.getAmt_card_limit : "+ scrCardLimitInfo.getAmt_card_limit());
+                
+                scrCardLimitInfo.setNo_person(no_person);
+                scrCardLimitInfo.setCd_fc(cd_fc);
+                scrCardLimitInfo.setYn_delete("N");
+//              if(scrCardLimitInfo.getType_card() == null || scrCardLimitInfo.getType_card().length() == 0){
+//                	scrCardLimitInfo.setType_card("defalut");
+//              }
+                scrapMapper.createScrCardLimitInfo(scrCardLimitInfo);
+    		}
+    	}
+    	//카드 내역 History 저장 및 갱신
+    	scrReqCardVO.setNo_person(no_person);
+    	scrReqCardVO.setCd_fc(cd_fc);
+    	scrReqCardVO.setCd_type("04"); //01 보유카드현황, 02 승인내역, 03 청구내역, 04 한도조회, 05 포인트조회
+    	scrReqCardVO.setSeq_scraping_result(seq_scrap);
+    	scrReqCardVO.setError_cd(userCardOutputVO.getLIMIT_ERROR_CODE());
+    	scrReqCardVO.setError_msg(userCardOutputVO.getLIMIT_ERROR_MESSAGE());
+        scrapMapper.insertScrReqCardHist(scrReqCardVO);
+        scrapMapper.createScrReqCard(scrReqCardVO);
+    	
+      //카드 한도내역 저장
+    	List<ScrCardPointInfoVO> ScrCardPointInfoList = userCardOutputVO.getCARD_POINT();
+    	if(ScrCardPointInfoList != null && ScrCardPointInfoList.size() > 0){
+    		for (ScrCardPointInfoVO ScrCardPointInfo : ScrCardPointInfoList) {		
+    			logger.debug("ScrCardPointInfo.getType_card      : "+ ScrCardPointInfo.getType_point());
+                logger.debug("ScrCardPointInfo.getAmt_cash_limit : "+ ScrCardPointInfo.getHold_point());
+                
+                ScrCardPointInfo.setNo_person(no_person);
+                ScrCardPointInfo.setCd_fc(cd_fc);
+                scrapMapper.createScrCardPointInfo(ScrCardPointInfo);
+    		}
+    	}
+    	//카드 내역 History 저장 및 갱신
+    	scrReqCardVO.setNo_person(no_person);
+    	scrReqCardVO.setCd_fc(cd_fc);
+    	scrReqCardVO.setCd_type("05"); //01 보유카드현황, 02 승인내역, 03 청구내역, 04 한도조회, 05 포인트조회
+    	scrReqCardVO.setSeq_scraping_result(seq_scrap);
+    	scrReqCardVO.setError_cd(userCardOutputVO.getPOINT_ERROR_CODE());
+    	scrReqCardVO.setError_msg(userCardOutputVO.getPOINT_ERROR_MESSAGE());
+        scrapMapper.insertScrReqCardHist(scrReqCardVO);
+        scrapMapper.createScrReqCard(scrReqCardVO);
+        
+    	//카드 승인내역 마지막 조회 내역 조회
+    	Map<String, Object> paramMap = new HashMap<String, Object>();
+    	paramMap.put("no_person", no_person);
+    	paramMap.put("cd_fc", cd_fc);
+    	max_date = scrapMapper.getMaxDateScrCardApprovalInfo(paramMap);
+    	//카드 승인내역 저장
+    	List<ScrCardApprovalInfoVO> scrCardApprovalInfoList = userCardOutputVO.getCARD_APPROVAL();
+    	if(scrCardApprovalInfoList != null){
+    		List<ScrCardApprovalInfoVO> list = new ArrayList<ScrCardApprovalInfoVO>();
+    		for (ScrCardApprovalInfoVO scrCardApprovalInfo : scrCardApprovalInfoList) {
+                 logger.debug("scrCardApprovalInfo.getNo_card      : "+ scrCardApprovalInfo.getNo_card());
+                 logger.debug("scrCardApprovalInfo.getDt_approval  : "+ scrCardApprovalInfo.getDt_approval());
+                 logger.debug("scrCardApprovalInfo.getTm_approval  : "+ scrCardApprovalInfo.getTm_approval());
+                 logger.debug("scrCardApprovalInfo.getNo_approval  : "+ scrCardApprovalInfo.getNo_approval());
+                 logger.debug("scrCardApprovalInfo.getAmt_approval : "+ scrCardApprovalInfo.getAmt_approval());
+                 scrCardApprovalInfo.setNo_person(no_person);
+                 scrCardApprovalInfo.setCd_fc(cd_fc);;
+                 // 시간에 대한 데이터가 없을 경우 "000000"으로 설정
+                 String time = scrCardApprovalInfo.getTm_approval();
+                 if(time == null || time.length() == 0)	{
+                	 scrCardApprovalInfo.setTm_approval("000000");
+                 }
+                 String date_time = scrCardApprovalInfo.getDt_approval()+scrCardApprovalInfo.getTm_approval();
+                 
+                 // 카드 승인내역 조회 마지막 날짜 이후 마지막 날짜/시간 이후의 데이터만 List에 추가
+                 if(max_date != null && max_date != "" && date_time != null && date_time != ""
+                 	&& Long.parseLong(max_date) >= Long.parseLong(date_time))	{
+                 	continue;
+                 }
+                 list.add(scrCardApprovalInfo);
+    		}
+    		//카드승인 내역 Insert
+            logger.debug("list.size() : "+ list.size());
+            for (ScrCardApprovalInfoVO scrCardApprovalInfo : list) {
+            	scrapMapper.createScrCardApprovalInfo(scrCardApprovalInfo);
+            }
+    	}
+
+    	//카드조회 내역 History 저장 및 갱신  - 승인내역
+    	scrReqCardVO.setCd_type("02"); //01 보유카드현황, 02 승인내역, 03 청구내역, 04 한도조회, 05 포인트조회
+    	scrReqCardVO.setSeq_scraping_result(seq_scrap);
+    	scrReqCardVO.setYmd_stt(userCardOutputVO.getDT_APPROVAL_START());
+    	scrReqCardVO.setYmd_end(userCardOutputVO.getDT_APPROVAL_END());
+    	scrReqCardVO.setError_cd(userCardOutputVO.getAPPROVAL_ERROR_CODE());
+    	scrReqCardVO.setError_msg(userCardOutputVO.getAPPROVAL_ERROR_MESSAGE());
+        scrapMapper.insertScrReqCardHist(scrReqCardVO);
+        scrapMapper.createScrReqCard(scrReqCardVO);
+        
+      //카드 청구내역 마지막 조회 내역 조회
+    	max_date = scrapMapper.getMaxDateScrCardChargeDetail(paramMap);
+        //카드 청구내역 저장
+    	List<ScrCardChargeInfoVO> scrCardChargeInfoList = userCardOutputVO.getCARD_CHARGE();
+    	if(scrCardChargeInfoList != null){
+    		for (ScrCardChargeInfoVO scrCardChargeInfoVO : scrCardChargeInfoList) {
+                logger.debug("scrCardChargeInfoVO.getCharge_yyyymm  : "+ scrCardChargeInfoVO.getCharge_yyyymm());
+                logger.debug("scrCardChargeInfoVO.getMonthly_charge : "+ scrCardChargeInfoVO.getMonthly_charge());
+                scrCardChargeInfoVO.setNo_person(no_person);
+                scrCardChargeInfoVO.setCd_fc(cd_fc);
+
+                //카드 청구내역 Insert
+        		scrapMapper.createScrCardChargeInfo(scrCardChargeInfoVO);
+                
+                List<ScrCardChargeDetailVO> scrCardChargeDetailList = scrCardChargeInfoVO.getCARD_CHARGE_DTL();
+                if(scrCardChargeDetailList != null){
+                	List<ScrCardChargeDetailVO> list = new ArrayList<ScrCardChargeDetailVO>();
+                	for (ScrCardChargeDetailVO scrCardChargeDetail : scrCardChargeDetailList) {
+                		logger.debug("scrCardChargeDetail.getDt_use : "+ scrCardChargeDetail.getDt_use());
+                        logger.debug("scrCardChargeDetail.getFees   : "+ scrCardChargeDetail.getFees());
+                        scrCardChargeDetail.setNo_person(no_person);
+                		scrCardChargeDetail.setCd_fc(cd_fc);
+                		scrCardChargeDetail.setCharge_yyyymm(scrCardChargeInfoVO.getCharge_yyyymm());
+                		
+                        String date = scrCardChargeDetail.getDt_use();
+                        // 카드 청구내역 조회 마지막 날짜 이후 마지막 날짜/시간 이후의 데이터만 List에 추가
+                        if(max_date != null && max_date != "" && date != null && date != ""
+                        	&& Long.parseLong(max_date) >= Long.parseLong(date))	{
+                        	continue;
+                        }
+                        list.add(scrCardChargeDetail);
+                	}
+                	//카드 청구내역 상세 Insert
+                    logger.debug("list.size() : "+ list.size());
+                    logger.debug("list.size() : "+ list.size());
+                    for (ScrCardChargeDetailVO scrCardChargeDetailVO : list) {
+                    	scrapMapper.createScrCardChargeDetail(scrCardChargeDetailVO);
+                    }
+                }
+    		}
+    	}
+    	//카드조회 내역 History 저장 및 갱신  - 청구내역
+    	scrReqCardVO.setCd_type("03"); //01 보유카드현황, 02 승인내역, 03 청구내역, 4 한도조회, 05 포인트조회
+    	scrReqCardVO.setSeq_scraping_result(seq_scrap);
+    	scrReqCardVO.setYmd_stt(userCardOutputVO.getDT_CHARGE_START());
+    	scrReqCardVO.setYmd_end(userCardOutputVO.getDT_CHARGE_END());
+    	scrReqCardVO.setError_cd(userCardOutputVO.getCHARGE_ERROR_CODE());
+    	scrReqCardVO.setError_msg(userCardOutputVO.getCHARGE_ERROR_MESSAGE());
+        scrapMapper.insertScrReqCardHist(scrReqCardVO);
+        scrapMapper.createScrReqCard(scrReqCardVO);
+          
         return new ReturnClass(Constant.SUCCESS);
 	}
 	
@@ -2377,5 +2331,11 @@ public class ScrapManagerImpl implements ScrapManager {
 		LogUtil.debugLn(logger,"LCA getScrRespIncomeDtl");
 		
 		return  scrapMapper.getScrRespIncomeDtl(scrRespIncomeDtlVO);
+	}
+	
+	@Override
+	public  int updateScrRsltScrap(ScrRsltScrapVO scrRsltScrapVO) {
+		LogUtil.debugLn(logger,"LCA updateScrRsltScrap");
+		return  scrapMapper.updateScrRsltScrap(scrRsltScrapVO);
 	}
 }

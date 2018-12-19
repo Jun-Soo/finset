@@ -338,9 +338,14 @@
 				FROM
 					SCR_TRANSACTION_DETAIL
 				WHERE 1=1
-					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_person)">
-						AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					AND (NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(person_share_list)">
+						OR NO_PERSON IN
+						<foreach item="share_person" collection="person_share_list" open="(" separator="," close=")">
+							#{share_person}
+						</foreach>
 					</if>
+					)
 					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_account)">
 			    		AND AN = XX1.ENC_VARCHAR2_INS(#{no_account, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SCR_TRANSACTION_DETAIL', 'AN')
 					</if>

@@ -302,10 +302,17 @@ export default {
           });
         }
       } else if ("dwl" == menu) {
+        //전체입출금내역
+        var person_share_list = [];
+        for (var idx in _this.personShareList) {
+          person_share_list.push(_this.personShareList[idx].no_person);
+        }
+
         this.$router.push({
           name: "assetsBankDepWdrlList",
           query: {
-            yn_share: yn_share
+            yn_share: yn_share,
+            person_share_list: person_share_list
           }
         });
       }

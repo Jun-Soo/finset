@@ -15,7 +15,7 @@
         <div class="form">
           <p>은행계좌선택</p>
           <p>
-            <multiselect v-model="scAccount" class="multiselect-basic" ref="scAccount" placeholder="계좌선택" track-by="text" label="text" :options="scAccountOptions" :searchable="false" :allow-empty="false" @select="onSelectAcc">
+            <multiselect :id="'scAccount'" v-model="scAccount" class="multiselect-basic" :title="'계좌'" :options="scAccountOptions" :onClose="onSelectAcc">
             </multiselect>
           </p>
         </div>
@@ -39,22 +39,22 @@
       <div class="bank-detail noMG">
         <div class="select">
           <div class="left">
-            <multiselect v-model="scTrnsType" ref="scTrnsType" placeholder="유형선택" track-by="text" label="text" :options="scTrnsTypeOptions" :searchable="false" :allow-empty="false" @select="onSelectTrns" :alignLeft="true">
+            <multiselect :id="'scTrnsType'" v-model="scTrnsType" :title="'유형'" :options="scTrnsTypeOptions" :onClose="onSelectTrns" :alignLeft="true">
             </multiselect>
           </div>
           <div class="right">
-            <span class="pr10">{{scKeyword}}</span>
+            <span v-if="scKeyword!=''" class="pr10">{{scKeyword}}</span>
             <button class="btn-search" @click="openScKeywordMd();"></button>
           </div>
         </div>
 
         <div class="inout">
           <div>
-            <p class="key red">입금<em>(원)</em></p>
+            <p class="key blue">입금<em>(원)</em></p>
             <p class="number">{{(totalAmt.cnt_account=="0")? '-' : formatNumber(totalAmt.total_amt_dep)}}</p>
           </div>
           <div>
-            <p class="key blue">출금<em>(원)</em></p>
+            <p class="key red">출금<em>(원)</em></p>
             <p class="number">{{(totalAmt.cnt_account=="0")? '-' : formatNumber(totalAmt.total_amt_wdrl)}}</p>
           </div>
         </div>
@@ -127,6 +127,7 @@ export default {
       page: 1,
       depWdrlList: [], //입출금list
       yn_share: "", //공유여부
+      person_share_list: "", //공유자list
       colorList: ["red", "orange", "green", "blue", "purple"]
     };
   },
@@ -140,6 +141,7 @@ export default {
   },
   created() {
     this.yn_share = this.$route.query.yn_share;
+    this.person_share_list = this.$route.query.person_share_list;
 
     this.getSearchCondition();
   },
@@ -314,6 +316,9 @@ export default {
 
       var formData = new FormData();
       formData.append("scTrnsType", _this.scTrnsType.value);
+      formData.append("no_person", this.$store.state.user.noPerson);
+      formData.append("person_share_list", _this.person_share_list);
+
       this.$http
         .post("/m/assets/getAssetsBankScKeywordList.json", formData)
         .then(response => {

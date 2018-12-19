@@ -36,8 +36,7 @@
     <div class="cert-wrap pb90">
       <p class="title">휴대폰인증</p>
       <div class="grid phone">
-        <multiselect ref="telCom" class="multiselect-basic" v-model="telComNm" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @select="onSelect">
-          <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
+        <multiselect ref="telCom" :onClose="nextFocus('telCom')" v-model="telCom" label="text" placeholder="통신사" :options="options" :title="'통신사'">
         </multiselect>
         <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
       </div>
@@ -86,8 +85,7 @@ export default {
       ssn_birth: "",
       birthday: "",
       sex: "",
-      telComCd: "",
-      telComNm: "",
+      telCom: "",
       hp: "",
       kcb_ci: "",
       kcb_di: "",
@@ -137,11 +135,8 @@ export default {
       }
     },
     sex: function() {
-      if (
-        (this.telComNm == null || this.telComNm == "") &&
-        this.sex.length > 0
-      ) {
-        this.$refs.telCom.$el.focus();
+      if ((this.telCom == null || this.telCom == "") && this.sex.length > 0) {
+        this.$refs.telCom.open();
       }
     }
   },
@@ -218,18 +213,10 @@ export default {
     setRequestPhoneNumber: function(phoneNumber) {
       this.hp = phoneNumber;
     },
-    onSelect: function(option) {
-      this.telComCd = option.value;
-    },
     nextFocus: function(val) {
       var _this = this;
       if (val == "birth" && _this.ssn_birth.length == 6) $("#sex").focus();
-      if (val == "sex" && _this.sex.length == 1) {
-        _this.telComCd.focus();
-        // $("#telComCd").focus();
-        this.$children[0].isOpen = true;
-      }
-      if (val == "telComCd" && _this.telComCd) $("#hp").focus();
+      if (val == "telCom" && _this.telCom) $("#hp").focus();
       if (val == "hp" && _this.hp) $("").focus();
     },
     //
@@ -242,7 +229,6 @@ export default {
           Constant.options
         );
         $("#check-all").focus();
-        // _this.$refs.chkAll.$el.focus();
         return false;
       }
       this.$validator.validateAll().then(res => {
@@ -289,9 +275,10 @@ export default {
           formData.append("nm_person", _this.nm_person);
           formData.append("birthday", _this.birthday);
           formData.append("sex", _this.sex);
-          formData.append("telComCd", _this.telComCd);
+          formData.append("telComCd", _this.telCom.value);
           formData.append("hp", _this.hp);
           formData.append("smsReSndYn", _this.smsReSndYn);
+          formData.append("svcTxSeqno", _this.svcTxSeqno);
           formData.append("nation", _this.nation);
           this.$http
             .post("/m/login/kcmRequestCertNo.json", formData, {
@@ -324,9 +311,20 @@ export default {
                 _this.clicked = true;
               } else if (result.result == "11") {
                 this.$toast.center(result.message);
+                if (!this.timerObj) this.stop();
+                _this.svcTxSeqno = "";
+                $("#req_certification").html("인증번호 재전송");
+                _this.isReadOnly = true;
+                _this.clicked = false;
                 return false;
               } else if (result.result == "01") {
                 this.$toast.center(result.message);
+                if (!this.timerObj) this.stop();
+                _this.svcTxSeqno = "";
+                $("#req_certification").html("인증번호 재전송");
+                _this.isReadOnly = true;
+                _this.clicked = false;
+                return false;
               }
             })
             .catch(e => {

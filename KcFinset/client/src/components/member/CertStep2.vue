@@ -17,8 +17,7 @@
       <div class="cert-wrap">
         <p class="title">휴대폰인증</p>
         <div class="grid phone">
-          <multiselect class="multiselect-basic" ref="telCom" v-model="telComCd" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @select="onSelect" v-validate="'required'" data-vv-name='통신사'>
-            <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
+          <multiselect :onClose="nextFocus('telCom')" ref="telCom" v-model="telCom" label="text" :title="'통신사'" placeholder="통신사" :options="options" v-validate="'required'" data-vv-name='통신사'>
           </multiselect>
           <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
         </div>
@@ -55,8 +54,7 @@ export default {
       ssn_birth: "",
       birthday: "",
       sex: "",
-      telComCd: null,
-      telComNm: "",
+      telCom: null,
       hp: "",
       kcb_ci: "",
       kcb_di: "",
@@ -75,15 +73,6 @@ export default {
         { text: "KT알뜰폰", value: "05" },
         { text: "LG알뜰폰", value: "06" }
       ],
-      // location: [
-      //   { label: "SKT", key: "01" },
-      //   { label: "KT", key: "02" },
-      //   { label: "LG", key: "03" },
-      //   { label: "SK알뜰폰", key: "04" },
-      //   { label: "KT알뜰폰", key: "05" },
-      //   { label: "LG알뜰폰", key: "06" }
-      // ],
-      // locationModal: false,
       timeId: "",
       timerObj: null,
       timer: null,
@@ -104,12 +93,8 @@ export default {
       }
     },
     sex: function() {
-      console.log(this.telComCd);
-      if (
-        (this.telComCd == null || this.telComCd == "") &&
-        this.sex.length > 0
-      ) {
-        this.$refs.telCom.$el.focus();
+      if ((this.telCom == null || this.telCom == "") && this.sex.length > 0) {
+        this.$refs.telCom.open();
       }
     }
   },
@@ -127,9 +112,7 @@ export default {
     this.time = this.minutes * 60;
   },
   beforeMount() {},
-  mounted() {
-    // $("#nm_person").focus();
-  },
+  mounted() {},
   beforeUpdate() {},
   updated() {
     if (this.smsCertNo) window.scrollTo(0, window.innerHeight);
@@ -148,17 +131,10 @@ export default {
     setRequestPhoneNumber: function(phoneNumber) {
       this.hp = phoneNumber;
     },
-    onSelect: function(option) {
-      this.telComCd = option.value;
-      console.log(this.telComCd);
-    },
     nextFocus: function(val) {
       var _this = this;
       if (val == "birth" && _this.ssn_birth.length == 6) $("#sex").focus();
-      if (val == "sex" && _this.sex.length == 1) {
-        this.$children[0].isOpen = true;
-      }
-      if (val == "telComCd" && _this.telComCd.value) $("#hp").focus();
+      if (val == "telCom" && _this.telCom) $("#hp").focus();
       if (val == "hp" && _this.hp) $("").focus();
     },
     /**
@@ -178,7 +154,7 @@ export default {
           formData.append("nm_person", _this.nm_person);
           formData.append("birthday", _this.birthday);
           formData.append("sex", _this.sex);
-          formData.append("telComCd", _this.telComCd.value);
+          formData.append("telComCd", _this.telCom.value);
           formData.append("hp", _this.hp);
           formData.append("svcTxSeqno", _this.svcTxSeqno);
           formData.append("smsReSndYn", _this.smsReSndYn);
@@ -288,7 +264,7 @@ export default {
       formData.append("nm_person", _this.nm_person);
       formData.append("bgn", _this.bgn);
       formData.append("birthday", _this.birthday);
-      formData.append("telComCd", _this.telComCd.value);
+      formData.append("telComCd", _this.telCom.value);
       formData.append("hp", _this.hp);
       formData.append("kcb_ci", _this.kcb_ci);
       formData.append("kcb_di", _this.kcb_di);

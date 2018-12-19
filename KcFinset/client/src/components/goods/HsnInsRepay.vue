@@ -7,7 +7,7 @@
           <div>
             <p class="key">거치여부</p>
             <p>
-              <multiselect v-model="yn_loan_mount" ref="yn_loan_mount" label="text" :show-labels="false" :options="options_yn_loan_mount" placeholder="거치여부 선택" :searchable="false" :allow-empty="false" @select="selectYnLoanMount" v-validate="'required'" data-vv-name='거치여부'>
+              <multiselect v-model="yn_loan_mount" ref="yn_loan_mount" :title="'거치여부'" :options="options_yn_loan_mount" placeholder="거치여부 선택" :onClose="selectYnLoanMount" v-validate="'required'" data-vv-name='거치여부'>
               </multiselect>
             </p>
           </div>
@@ -17,8 +17,7 @@
           <div>
             <p class="key">거치기간</p>
             <p>
-              <multiselect v-model="cd_loan_mount" ref="cd_loan_mount" label="text" :show-labels="false" :options="options_cd_loan_mount" placeholder="거치기간 선택" :searchable="false" :allow-empty="false" @select="selectCdLoanMount" v-validate="'required'" data-vv-name='거치기간'>
-              </multiselect>
+              <multiselect v-model="cd_loan_mount" ref="cd_loan_mount" :title="'거치기간'" :options="options_cd_loan_mount" placeholder="거치기간 선택" :onClose="selectCdLoanMount" v-validate="'required'" data-vv-name='거치기간' />
             </p>
           </div>
           <p class="warn" v-if="errors.has('거치기간')">{{errors.first('거치기간')}}</p>
@@ -27,8 +26,7 @@
           <div>
             <p class="key">상환방식</p>
             <p>
-              <multiselect v-model="cd_type_pay" ref="cd_type_pay" label="text" :show-labels="false" :options="options_cd_type_pay" placeholder="상환방식 선택" :searchable="false" :allow-empty="false" @select="selectCdTypePay" v-validate="'required'" data-vv-name='상환방식'>
-              </multiselect>
+              <multiselect v-model="cd_type_pay" ref="cd_type_pay" :title="'상환방식'" :options="options_cd_type_pay" placeholder="상환방식 선택" :onClose="selectCdTypePay" v-validate="'required'" data-vv-name='상환방식' />
             </p>
           </div>
           <p class="warn" v-if="errors.has('상환방식')">{{errors.first('상환방식')}}</p>
@@ -37,11 +35,10 @@
           <div>
             <p class="key">상환기간</p>
             <p>
-              <multiselect v-model="cd_loan_term" ref="cd_loan_term" label="text" :show-labels="false" :options="options_cd_loan_term" placeholder="상환기간 선택" :searchable="false" :allow-empty="false" @select="selectCdLoanTerm" v-validate="'required'" data-vv-name='상환기간'>
-              </multiselect>
+              <multiselect v-model="cd_loan_term" ref="cd_loan_term" :title="'상환기간'" :options="options_cd_loan_term" placeholder="상환기간 선택" :onClose="selectCdLoanTerm" v-validate="'required'" data-vv-name='상환기간' />
             </p>
           </div>
-          <p class="warn" v-if="errors.has('상환기간')">{{errors.first('상환기간')}}</p>Z
+          <p class="warn" v-if="errors.has('상환기간')">{{errors.first('상환기간')}}</p>
         </li>
       </ul>
       <div class="btn-wrap float">
@@ -111,19 +108,19 @@ export default {
     selectYnLoanMount: function() {
       var _this = this;
       setTimeout(function() {
-        _this.$refs.cd_loan_mount.$el.focus();
+        _this.$refs.cd_loan_mount.open();
       }, 100);
     },
     selectCdLoanMount: function() {
       var _this = this;
       setTimeout(function() {
-        _this.$refs.cd_type_pay.$el.focus();
+        _this.$refs.cd_type_pay.open();
       }, 100);
     },
     selectCdTypePay: function() {
       var _this = this;
       setTimeout(function() {
-        _this.$refs.cd_loan_term.$el.focus();
+        _this.$refs.cd_loan_term.open();
       }, 100);
     },
     selectCdLoanTerm: function() {},

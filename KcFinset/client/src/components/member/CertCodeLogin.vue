@@ -69,11 +69,20 @@ export default {
   // },
   beforeCreate() {},
   created() {
-    // debugger;
+    var _this = this;
+    window.resultFingerPrint = this.resultFingerPrint;
+
     this.$store.state.title = "비밀번호 확인";
-    if (Constant.userAgent == "Android") {
-      if (this.$store.state.user.ynFingerprint == "Y") {
+    if (this.$store.state.user.ynFingerprint == "Y") {
+      if (Constant.userAgent == "Android") {
         window.Android.initFingerPrint();
+      } else if (Constant.userAgent == "iOS") {
+        Jockey.on("resultFingerPrint", function(param) {
+          var result = false;
+          if (param.result == 1) result = true;
+          resultFingerPrint(param.result);
+        });
+        Jockey.send("initFingerPrint");
       }
     }
   },
@@ -323,6 +332,78 @@ export default {
         .catch(e => {
           this.$toast.center(ko.messages.error);
         });
+    },
+    /***
+     * Native Call function
+     **/
+    resultFingerPrint: function(result) {
+      var _this = this;
+
+      if (result == true || result == 1) {
+        //지문인식 성공
+
+        if (ConstAant.userAgent == "Android") {
+          window.Android.closeFingerPrint();
+        }
+
+        if (_this.$store.state.ynReload == "Y") {
+          if (Constant.userAgent == "Android") {
+            window.Android.closeWebView();
+          } else if (Constant.userAgent == "iOS") {
+            Jockey.send("closeWebView");
+          }
+          return false;
+        } else {
+          if (Constant.userAgent == "iOS") {
+            Jockey.send("loginFlag", {
+              flag: "Y"
+            });
+          } else if (Constant.userAgent == "Android") {
+            window.Android.loginFlag("Y");
+          }
+
+          _this.password = _this.$store.state.user.authToken;
+          setTimeout(function() {
+            _this.login();
+          }, 500);
+        }
+      } else {
+        // this.$toast.center(loginTrue);
+        //지문 틀린 누적횟수 증가
+
+        _this.cntFailFinger += 1;
+        _this.$store.state.user.cntFailFinger = _this.cntFailFinger;
+        _this.$dialogs.alert(_this.cntFailFinger, Constant.options);
+        // _this.modifyPwdFailCnt("finger", _this.cntFailFinger);
+        // _this.$store.state.isLoading = false;
+        if (_this.cntFailFinger < 5) {
+          _this.errMsg = "다시 시도해 주세요. (" + _this.cntFailFinger + "/5)";
+          return false;
+          _this.fingerSVG.reset();
+        } else if (_this.cntFailFinger >= 5) {
+          //지문인식 5번 모두 틀린 경우
+          _this.errMsg = "지문이 비활성화 됩니다.";
+          this.$toast.center(_this.errMsg);
+          if (Constant.userAgent == "Android") {
+            window.Android.closeFingerPrint();
+          }
+
+          var data = { no_person: _this.username, yn_fingerprint: "N" };
+          _this.$http
+            .get("/m/person/modifyFingerPrint.json", {
+              params: data
+            })
+            .then(response => {
+              _this.$store.state.user.ynFingerprint = "N";
+              _this.$router.push("/member/certCodeLogin");
+            })
+            .catch(e => {
+              // _this.$toast.center(ko.messages.error);
+              // _this.$toast.center(e);
+            });
+        }
+        return false;
+      }
     }
   }
 };

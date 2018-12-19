@@ -8,8 +8,7 @@
             <div>
               <p class="key">직군</p>
               <p>
-                <multiselect placeholder="직군선택" v-model="occupational" label="text" :options="option_occupational" :searchable="false" :allow-empty="false" @select="selectOccupational" v-validate="'required'" data-vv-name='직군'>
-                </multiselect>
+                <multiselect placeholder="직군선택" v-model="occupational" :title="'직군'" :options="option_occupational" :onClose="selectOccupational" v-validate="'required'" data-vv-name='직군' />
               </p>
             </div>
             <p class=" warn" v-if="errors.has('직군')">{{errors.first('직군')}}</p>
@@ -28,8 +27,7 @@
             <div>
               <p class="key">상세직군</p>
               <p>
-                <multiselect ref="occupational_detail" placeholder="상세직군선택" v-model="occupational_detail" label="text" :options="option_occupational_detail" :searchable="false" :allow-empty="false" @select="selectOccupationalDetail" v-validate="'required'" data-vv-name='상세직군'>
-                </multiselect>
+                <multiselect ref="occupational_detail" placeholder="상세직군선택" :title="'상세직군'" v-model="occupational_detail" :options="option_occupational_detail" :onClose="selectOccupationalDetail" v-validate="'required'" data-vv-name='상세직군' />
               </p>
             </div>
             <p class=" warn" v-if="errors.has('상세직군')">{{errors.first('상세직군')}}</p>
@@ -38,8 +36,7 @@
             <div>
               <p class="key">직위</p>
               <p>
-                <multiselect ref="worker_position" placeholder="직위선택" v-model="worker_position" label="text" :options="option_worker_position" :searchable="false" :allow-empty="false" @select="selectWorkerPosition" v-validate="'required'" data-vv-name='직위'>
-                </multiselect>
+                <multiselect ref="worker_position" placeholder="직위선택" :title="'직위'" v-model="worker_position" :options="option_worker_position" :onClose="selectWorkerPosition" v-validate="'required'" data-vv-name='직위' />
               </p>
             </div>
             <p class=" warn" v-if="errors.has('직위')">{{errors.first('직위')}}</p>
@@ -48,8 +45,7 @@
             <div>
               <p class="key">고용형태</p>
               <p>
-                <multiselect ref="employee_type" placeholder="고용형태선택" v-model="employee_type" label="text" :options="option_employee_type" :searchable="false" :allow-empty="false" @select="selectEmployeeType" v-validate="'required'" data-vv-name='고용형태'>
-                </multiselect>
+                <multiselect ref="employee_type" placeholder="고용형태선택" :title="'고용형태'" v-model="employee_type" :options="option_employee_type" :onClose="selectEmployeeType" v-validate="'required'" data-vv-name='고용형태' />
               </p>
             </div>
             <p class=" warn" v-if="errors.has('고용형태')">{{errors.first('고용형태')}}</p>
@@ -64,7 +60,7 @@
           <li>
             <div>
               <p class="key">연소득</p>
-              <p><input id="amt_year_income" type="text" v-model="amt_year_income" @change="changeAmtYearIncome" :disabled="disable_amt_year_income" v-validate="'required'" data-vv-name='연소득'> 만원</p>
+              <p><input id="amt_year_income" type="text" inputmode="numeric" v-model="amt_year_income" @change="changeAmtYearIncome" :disabled="disable_amt_year_income" v-validate="'required'" data-vv-name='연소득'> 만원</p>
             </div>
             <p class=" warn" v-if="errors.has('연소득')">{{errors.first('연소득')}}</p>
           </li>
@@ -169,19 +165,19 @@ export default {
       this.cateChgLow(option);
       this.show2ndDepth();
       setTimeout(function() {
-        _this.$refs.worker_position.$el.focus();
+        _this.$refs.worker_position.open();
       }, 100);
     },
     selectWorkerPosition: function(option) {
       var _this = this;
       setTimeout(function() {
-        _this.$refs.employee_type.$el.focus();
+        _this.$refs.employee_type.open();
       }, 100);
     },
     selectEmployeeType: function(option) {
       var _this = this;
       setTimeout(function() {
-        $("#dt_join_view").focus();
+        $("#dt_join_view").click();
       }, 100);
     },
     changeDtJoinView: function(option) {
@@ -327,7 +323,7 @@ export default {
         this.show_jobSearch = false;
         this.show_occupational_detail = true;
         setTimeout(function() {
-          _this.$refs.occupational_detail.$el.focus();
+          _this.$refs.occupational_detail.open();
         }, 100);
       }
 
@@ -700,7 +696,7 @@ export default {
       this.option_worker_position = eval("cate_low_" + value);
     },
     closePop: function(name) {
-      // var _this = this;
+      var _this = this;
       // console.log(this.$refs.form.index);
       // var index = this.$refs.form.index;
       // console.log(this.$refs.form.jobList[index]);
@@ -708,6 +704,9 @@ export default {
       if (this.korentrnm != "") {
         this.cateChgLow(this.occupational_detail);
         this.show2ndDepth();
+        setTimeout(function() {
+          _this.$refs.worker_position.open();
+        }, 100);
       }
     },
     openPop: function(name) {

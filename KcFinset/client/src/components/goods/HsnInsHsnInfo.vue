@@ -7,8 +7,7 @@
           <div>
             <p class="key">종류</p>
             <p>
-              <multiselect v-model="selectObj.building_type" ref="sel_building_type" label="text" :show-labels="false" :options="options_building_type" placeholder="종류 선택" :searchable="false" :allow-empty="false" @select="listAddrRegionFirst" v-validate="'required'" data-vv-name='종류'>
-              </multiselect>
+              <multiselect v-model="selectObj.building_type" ref="sel_building_type" :title="'종류'" :options="options_building_type" placeholder="종류 선택" :onClose="listAddrRegionFirst" v-validate="'required'" data-vv-name='종류' />
             </p>
           </div>
           <p class="warn" v-if="errors.has('종류')">{{errors.first('종류')}}</p>
@@ -17,8 +16,7 @@
           <div>
             <p class="key">시/도</p>
             <p>
-              <multiselect v-model="selectObj.region1" ref="sel_region1" label="text" :show-labels="false" :options="options_sel_region1" placeholder="시/도 선택" :searchable="false" :allow-empty="false" @select="listAddrRegionSecond" v-validate="'required'" data-vv-name='시/도'>
-              </multiselect>
+              <multiselect v-model="selectObj.region1" ref="sel_region1" :title="'시/도'" :options="options_sel_region1" placeholder="시/도 선택" :onClose="listAddrRegionSecond" v-validate="'required'" data-vv-name='시/도' />
             </p>
           </div>
           <p class="warn" v-if="errors.has('시/도')">{{errors.first('시/도')}}</p>
@@ -27,8 +25,7 @@
           <div>
             <p class="key">시/군/구</p>
             <p>
-              <multiselect v-model="selectObj.region2" ref="sel_region2" label="text" :show-labels="false" :options="options_sel_region2" placeholder="시/군/구 선택" :searchable="false" :allow-empty="false" @select="listAddrRegionThird" v-validate="'required'" data-vv-name='시/군/구'>
-              </multiselect>
+              <multiselect v-model="selectObj.region2" ref="sel_region2" :title="'시/군/구'" :options="options_sel_region2" placeholder="시/군/구 선택" :onClose="listAddrRegionThird" v-validate="'required'" data-vv-name='시/군/구' />
             </p>
           </div>
           <p class="warn" v-if="errors.has('시/군/구')">{{errors.first('시/군/구')}}</p>
@@ -37,8 +34,7 @@
           <div>
             <p class="key">읍/면/동</p>
             <p>
-              <multiselect v-model="selectObj.region3" ref="sel_region3" label="text" :show-labels="false" :options="options_sel_region3" placeholder="읍/면/동 선택" :searchable="false" :allow-empty="false" @select="listSrchApartment" v-validate="'required'" data-vv-name='읍/면/동'>
-              </multiselect>
+              <multiselect v-model="selectObj.region3" ref="sel_region3" :title="'읍/면/동'" :options="options_sel_region3" placeholder="읍/면/동 선택" :onClose="listSrchApartment" v-validate="'required'" data-vv-name='읍/면/동' />
             </p>
           </div>
           <p class="warn" v-if="errors.has('읍/면/동')">{{errors.first('읍/면/동')}}</p>
@@ -47,8 +43,7 @@
           <div>
             <p class="key">아파트명</p>
             <p>
-              <multiselect v-model="selectObj.apartment" ref="sel_apartment" label="text" :show-labels="false" :options="options_sel_apartment" placeholder="아파트명 선택" :searchable="false" :allow-empty="false" @select="scrapKbMarketPrice" v-validate="'required'" data-vv-name='아파트명'>
-              </multiselect>
+              <multiselect v-model="selectObj.apartment" ref="sel_apartment" :title="'아파트명'" :options="options_sel_apartment" placeholder="아파트명 선택" :onClose="scrapKbMarketPrice" v-validate="'required'" data-vv-name='아파트명' />
             </p>
           </div>
           <p class="warn" v-if="errors.has('아파트명')">{{errors.first('아파트명')}}</p>
@@ -57,8 +52,7 @@
           <div>
             <p class="key">공급면적/전용면적</p>
             <p>
-              <multiselect v-model="selectObj.pricePyeong" ref="sel_pricePyeong" label="text" :show-labels="false" :options="options_sel_pricePyeong" placeholder="면적 선택" :searchable="false" :allow-empty="false" @select="selectPricePyeong" v-validate="'required'" data-vv-name='면적'>
-              </multiselect>
+              <multiselect v-model="selectObj.pricePyeong" ref="sel_pricePyeong" :title="'면적'" :options="options_sel_pricePyeong" placeholder="면적 선택" :onClose="selectPricePyeong" v-validate="'required'" data-vv-name='면적' />
             </p>
           </div>
           <p class="warn" v-if="errors.has('면적')">{{errors.first('면적')}}</p>
@@ -67,8 +61,7 @@
           <div>
             <p class="key">층수</p>
             <p>
-              <multiselect v-model="selectObj.floor" ref="sel_floor" label="text" :show-labels="false" :options="options_sel_floor" placeholder="층수 선택" :searchable="false" :allow-empty="false" v-validate="'required'" data-vv-name='층수'>
-              </multiselect>
+              <multiselect v-model="selectObj.floor" ref="sel_floor" :title="'층수'" :options="options_sel_floor" placeholder="층수 선택" v-validate="'required'" data-vv-name='층수' />
             </p>
           </div>
           <p class="warn" v-if="errors.has('층수')">{{errors.first('층수')}}</p>
@@ -148,7 +141,7 @@ export default {
             });
           }
           _this.listAddrRegion1 = list;
-          _this.$refs.sel_region1.$el.focus();
+          _this.$refs.sel_region1.open();
         });
     },
     //시/도 에 따른 시/군/구 데이터 조회
@@ -169,7 +162,7 @@ export default {
             });
           }
           _this.listAddrRegion2 = list;
-          _this.$refs.sel_region2.$el.focus();
+          _this.$refs.sel_region2.open();
         });
     },
     //시/군/구 에 따른 읍/면/동 데이터 조회
@@ -190,7 +183,7 @@ export default {
             });
           }
           _this.listAddrRegion3 = list;
-          _this.$refs.sel_region3.$el.focus();
+          _this.$refs.sel_region3.open();
         });
     },
     //상위 데이터들에 따른 아파트명 조회
@@ -219,7 +212,7 @@ export default {
             });
           }
           _this.listSrchApartmentInfo = list;
-          _this.$refs.sel_apartment.$el.focus();
+          _this.$refs.sel_apartment.open();
         });
     },
     //상위 데이터들과 아파트명에 따른 공급면적/ 전용면적 조회
@@ -260,7 +253,7 @@ export default {
           _this.kbMarketPricePyeongList = list;
           _this.$store.state.isLoading = false;
 
-          _this.$refs.sel_pricePyeong.$el.focus();
+          _this.$refs.sel_pricePyeong.open();
           _this.returnObj.address = param.text;
           //층수
           if (response.data.kbMarketPriceComplexList) {
@@ -283,7 +276,7 @@ export default {
       // this.returnObj.price = this.kbMarketPricePriceList[
       //   param.value
       // ].sale_general_average;
-      this.$refs.sel_floor.$el.focus();
+      this.$refs.sel_floor.open();
     },
     clickNext: function() {
       var _this = this;

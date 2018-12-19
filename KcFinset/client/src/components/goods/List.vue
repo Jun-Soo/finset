@@ -4,7 +4,7 @@
       <div class="goods-wrap goods" v-if="seen && goodsList.length">
         <carousel :perPage=1>
           <slide class="item" v-for="goods in goodsList" :key="goods.index">
-            <a @click="loanGoodsDetail(goods.cd_fc, goods.cd_goods)">
+            <a @click="loanGoodsDetail(goods)">
               <div class="top">
                 <p class="symbol"><img :src="goods.icon" alt="" />{{goods.nm_fc}}</p>
                 <p class="text blue">{{goods.nm_goods}} <button class="btn-star" :class="{'on':goods.isChecked}" @click="loanGoodsChoice(goods, $event)"></button></p>
@@ -320,11 +320,11 @@ export default {
       }
       this.loadGoodsTab(type);
     },
-    loanGoodsDetail: function(cd_fc, cd_non_goods) {
-      var type = "";
-      if ((this.curTab = "loanWorker")) {
+    loanGoodsDetail: function(goods) {
+      var type;
+      if (goods.cd_goods_class_l == "01") {
         type = "01";
-      } else if ((this.curTab = "loanHome")) {
+      } else if ((goods.cd_goods_class_l = "02")) {
         type = "03";
       }
 
@@ -332,8 +332,8 @@ export default {
         name: "GoodsDetail",
         query: {
           type: type,
-          cd_fc: cd_fc,
-          cd_goods: cd_non_goods,
+          cd_fc: goods.cd_fc,
+          cd_goods: goods.cd_goods,
           urlPath: this.urlPath,
           isAffiliates: true
         }

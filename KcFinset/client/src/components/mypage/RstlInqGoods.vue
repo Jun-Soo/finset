@@ -15,8 +15,7 @@
       </div>
       <div class="select">
         <div class="left">
-          <multiselect class="multiselect-basic" v-model="orderby" label="text" :show-labels="false" :options="options" :searchable="false" :allow-empty="false" @select="orderbyOnChange">
-          </multiselect>
+          <multiselect class="multiselect-basic" v-model="orderby" :title="'정렬'" :options="options" :onClose="orderbyOnChange" />
         </div>
         <!-- <div class="right">
             <button class="btn-search" @click="clickSearch()"></button>

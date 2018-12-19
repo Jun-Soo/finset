@@ -6,7 +6,7 @@
     </div>
     <div class="cs-top">
       <div class="cs-search">
-        <input type="search" v-model="nm_comp" @change="changeInput">
+        <input id="search" type="search" v-model="nm_comp" @change="changeInput">
       </div>
     </div>
 
@@ -63,7 +63,9 @@ export default {
   beforeCreate() {},
   created() {},
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    $("#search").focus();
+  },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},

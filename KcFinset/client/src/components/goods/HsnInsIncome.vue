@@ -7,25 +7,21 @@
           <div>
             <p class="key">구분</p>
             <p>
-              <multiselect v-model="job_class" ref="job_class" label="text" :show-labels="false" :options="options_job_class" placeholder="직업 구분" :searchable="false" :allow-empty="false" @select="selectJobClass" v-validate="'required'" data-vv-name='직업'>
-              </multiselect>
+              <multiselect v-model="job_class" ref="job_class" :title="'구분'" :options="options_job_class" placeholder="직업 구분" :onClose="selectJobClass" v-validate="'required'" data-vv-name='직업' />
             </p>
           </div>
           <p class="warn" v-if="errors.has('직업')">{{errors.first('직업')}}</p>
         </li>
-        <li v-if="job_class.value == '1'">
-          <div>
+        <li v-if="job_class">
+          <div v-if="job_class.value == '1'">
             <p class="key">연소득</p>
-            <p><input type="text" v-model="amt_year_income" v-validate="'required'" data-vv-name='연소득'>만원</p>
+            <p><input type="text" inputmode="numeric" v-model="amt_year_income" v-validate="'required'" data-vv-name='금액'>만원</p>
           </div>
-          <p class="warn" v-if="errors.has('연소득')">{{errors.first('연소득')}}</p>
-        </li>
-        <li v-else-if="job_class.value == '2'">
-          <div>
+          <div v-if="job_class.value == '2'">
             <p class="key">연매출</p>
-            <p><input type="text" v-model="amt_year_sale" v-validate="'required'" data-vv-name='연매출'>만원</p>
+            <p><input type="text" inputmode="numeric" v-model="amt_year_sale" v-validate="'required'" data-vv-name='금액'>만원</p>
           </div>
-          <p class="warn" v-if="errors.has('연매출')">{{errors.first('연매출')}}</p>
+          <p class="warn" v-if="errors.has('금액')">{{errorText}}</p>
         </li>
       </ul>
       <div class="btn-wrap float">
@@ -50,6 +46,7 @@ export default {
         { text: "직장인", value: "1" },
         { text: "개인사업자", value: "2" }
       ],
+      errorText: "",
       job_class: "",
       amt_year_income: "",
       amt_year_sale: ""
@@ -69,7 +66,15 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    selectJobClass: function() {},
+    selectJobClass: function(option) {
+      this.job_class = option;
+      this.errors.clear();
+      if (option.value == "1") {
+        this.errorText = "연소득 항목은 필수 정보입니다.";
+      } else if (option.value == "2") {
+        this.errorText = "연매출 항목은 필수 정보입니다.";
+      }
+    },
     clickNext: function() {
       var _this = this;
       this.$validator.validateAll().then(res => {

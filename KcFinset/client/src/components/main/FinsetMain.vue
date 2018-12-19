@@ -137,6 +137,7 @@ export default {
   // },
   beforeCreate() {},
   created() {
+    console.log("create start");
     this.$store.state.header.type = "main";
     this.$store.state.header.active = "main";
 

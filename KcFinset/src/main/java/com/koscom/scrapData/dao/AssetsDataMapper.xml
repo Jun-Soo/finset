@@ -5,7 +5,8 @@
 
     <!-- 금융사 계좌정보 스크래핑 조회 -->
 	<select id="listScrBankApiAnInfo" parameterType="com.koscom.scrapData.model.AssetsDataForm" resultType="com.koscom.scrapData.model.AssetsInfoDataVO">
-		SELECT
+		/* com.koscom.scrapData.dao.AssetsDataMapper.listScrBankApiAnInfo 금융사 계좌정보 스크래핑 조회 */
+	    SELECT
 			NO_PERSON,
 			AN,
 			CD_FC,
@@ -33,7 +34,8 @@
 
 	<!-- 증권사 API 조회 -->
 	<select id="listStockApiInfo" parameterType="com.koscom.scrapData.model.AssetsDataForm" resultType="com.koscom.scrapData.model.AssetsInfoDataVO">
-		SELECT
+		/* com.koscom.scrapData.dao.AssetsDataMapper.listStockApiInfo 증권사 API 조회 */
+	    SELECT
 			C.CODE_VALUE AS CD_DETAIL_CLASS,
 			SS.CD_FC,
 			SS.ACCNO,
@@ -64,7 +66,8 @@
 	</select>
 
 	<insert id="mergeAssetsInfo" parameterType="com.koscom.scrapData.model.AssetsInfoDataVO">
-		MERGE INTO ASSETS_INFO
+		/* com.koscom.scrapData.dao.AssetsDataMapper.mergeAssetsInfo */
+	    MERGE INTO ASSETS_INFO
 		USING DUAL
         ON (
         	NO_PERSON = #{no_person, jdbcType=VARCHAR}
@@ -128,4 +131,5 @@
 				SYSDATE
 		)
 	</insert>
+
 </mapper>

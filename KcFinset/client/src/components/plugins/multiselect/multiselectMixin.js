@@ -117,7 +117,7 @@ export default {
      */
     placeholder: {
       type: String,
-      default: 'Select option'
+      default: ''
     },
     /**
      * Allow to remove all selected values
@@ -171,14 +171,13 @@ export default {
   computed: {
     internalValue () {
       return this.value || this.value === 0
-        ? Array.isArray(this.value) ? this.value : [this.value]
-        : []
+        ? Array.isArray(this.value) ? this.value : [this.value] : []
     }
   },
   watch: {
     value: function (obj) {
       if (obj === null) {
-        if (this.placeholder) {
+        if ((this.placeholder || '') != '') {
           this.selected = this.placeholder
         } else {
           this.selected = ''
@@ -225,7 +224,9 @@ export default {
       return this.valueKeys.indexOf(opt) > -1
     },
     open: function () {
+      console.log('startOpen')
       this.isShow = true
+      console.log('endOpen')
     },
     close: function () {
       this.isShow = false

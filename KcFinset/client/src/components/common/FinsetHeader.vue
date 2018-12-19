@@ -72,6 +72,10 @@ export default {
   destroyed() {},
   methods: {
     androidBackFn: function() {
+      if (this.$modals.shownModal.length > 0) {
+        this.$modals.shownModal = [];
+        return;
+      }
       if (this.$store.state.header.backPath == "") {
         this.$router.go(-1);
       } else {

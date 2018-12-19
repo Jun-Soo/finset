@@ -179,7 +179,7 @@ export default {
   watch: {
     value: function (obj) {
       if (obj === null) {
-        if ((this.placeholder || '') != '') {
+        if ((this.placeholder || '') !== '') {
           this.selected = this.placeholder
         } else {
           this.selected = ''

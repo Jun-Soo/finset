@@ -1,11 +1,12 @@
 <template>
-  <div class="data-none">
-    <em>죄송합니다.</em>
-    <p>일시적으로 서비스를 이용하실 수 없습니다.<br>잠시 후 다시 접속해주세요.</p>
-    <div class="btn-area">
-      <a class="btn btn-outline" v-on:click="goBack()">뒤로가기</a>
+  <section>
+    <div class="loading fail">
+      일시적으로 서비스를 이용하실 수 없습니다.<br>잠시 후 다시 시도해주세요.
     </div>
-  </div>
+    <div class="btn-wrap float">
+      <a @click="goBack()" class="solid box blue">뒤로가기</a>
+    </div>
+  </section>
 </template>
 
 <script>

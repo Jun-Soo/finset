@@ -62,7 +62,8 @@ public class BaseController {
 			HttpServletRequest request, 
 			HttpSession session, 
 			Model model,
-			PersonForm personForm) {
+			PersonForm personForm,
+			Boolean chkFingerPrint) {
 
 		logger.debug("접속 IP			: " + request.getRemoteAddr());
 		logger.debug("받은 핸드폰 번호 	: " + personForm.getHp());
@@ -88,7 +89,17 @@ public class BaseController {
 					rtnUrl = "/mypage/certPerson";
 				} else if("Y".equals(personVO.getYn_fingerprint()) && Integer.parseInt(StringUtil.NVL(personVO.getCnt_fail_finger(), "0")) < 5) {
 					model.addAttribute("authToken", personVO.getPass_person());
-					rtnUrl = "/member/certFingerLogin";
+					
+					if(chkFingerPrint) {
+						rtnUrl = "/member/certFingerLogin";
+					} else {
+						//update
+						personVO.setId_frt(personVO.getNo_person());
+						personVO.setYn_fingerprint("N");
+						personManager.modifyFingerPrint(personVO);
+						
+						rtnUrl = "/member/certCodeLogin";
+					}
 				}else {
 					rtnUrl = "/member/certCodeLogin";
 				}

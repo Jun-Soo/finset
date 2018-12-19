@@ -46,7 +46,8 @@ const store = new Vuex.Store({
     isScrap: true, // 스크래핑 여부
     loginPath: '/check/j_spring_security_check',
     linkUrl: '',
-    ynReload: 'N'
+    ynReload: 'N',
+    ajaxState: true
   },
   mutations: {
     INIT (state, data) {
@@ -84,6 +85,17 @@ const store = new Vuex.Store({
     },
     SET_NO_MANAGE_INFO (state, noManageInfo) {
       state.user.noManageInfo = noManageInfo
+    },
+    AJAX_INIT (state) {
+      state.ajaxState = true
+    },
+    AJAX_ERROR (state) {
+      state.ajaxState = false
+    }
+  },
+  getters: {
+    getError: state => {
+      return state.ajaxState
     }
   }
 })

@@ -168,7 +168,12 @@ export default {
             _this.$store.state.isLoading = false;
             _this.$store.commit("LOGIN", response.data);
             _this.changeLoginDB();
-            _this.$router.push("/main");
+
+            if (_this.$store.state.linkUrl) {
+              _this.$router.push(_this.$store.state.linkUrl);
+            } else {
+              _this.$router.push("/main");
+            }
           } else {
             _this.$store.state.isLoading = false;
             // this.$toast.center(ko.messages.loginErr);

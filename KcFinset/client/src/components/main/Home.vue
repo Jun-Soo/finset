@@ -11,9 +11,23 @@ import Constant from "./../../assets/js/constant.js";
 export default {
   name: "MainHome",
   data() {
-    return {};
+    return {
+      chkFingerPrint: false
+    };
   },
   created() {
+    window.resultCheckFingerPrint = this.resultCheckFingerPrint;
+
+    if (Constant.userAgent == "Android") {
+      window.Android.checkFingerPrint();
+    } else if (Constant.userAgent == "iOS") {
+      //지문인식 가능여부 체크 결과 콜백 이벤트
+      Jockey.on("resultCheckFingerPrint", function(param) {
+        _this.resultCheckFingerPrint(param.result);
+      });
+      Jockey.send("checkFingerPrint");
+    }
+
     // mobile 초기화
     Common.init();
 
@@ -28,19 +42,18 @@ export default {
     localStorage.setItem("hp", Constant.params.hp);
 
     // url
+    console.log("url === " + Constant.params.url);
     this.$store.state.linkUrl = Constant.params.url;
 
     // 비밀번호, 지문인증 재확인
     this.$store.state.ynReload = Constant.params.yn_reload;
-
-    // page call
-    this.getUserPage();
   },
   methods: {
     getUserPage: function() {
       var _this = this;
       var data = {
-        hp: Constant.params.hp
+        hp: Constant.params.hp,
+        chkFingerPrint: this.chkFingerPrint
       };
 
       this.$http
@@ -54,9 +67,9 @@ export default {
             window.Android.setBackKeyUse("Y");
             window.Android.settingPush(response.data.yn_push);
             window.Android.settingPushType(response.data.cd_push);
-            if (response.data.yn_fingerprint == "Y") {
-              window.Android.initFingerPrint();
-            }
+            // if (response.data.yn_fingerprint == "Y") {
+            //   window.Android.initFingerPrint();
+            // }
           } else if (Constant.userAgent == "iOS") {
             //앱 푸쉬 설정
             Jockey.send("settingPush", {
@@ -67,19 +80,35 @@ export default {
             //   cd_push : "${cd_push}"
             // });
             //지문인식 결과 콜백 이벤트
-            Jockey.on("resultFingerPrint", function(param) {
-              resultFingerPrint(param.result);
-            });
+            // Jockey.on("resultFingerPrint", function(param) {
+            //   resultFingerPrint(param.result);
+            // });
 
-            if (response.data.yn_fingerprint == "Y") {
-              Jockey.send("initFingerPrint");
-            }
+            // if (response.data.yn_fingerprint == "Y") {
+            //   Jockey.send("initFingerPrint");
+            // }
           }
           _this.$router.push(response.data.rtnPath);
         })
         .catch(e => {
           _this.$router.push("/error");
         });
+    },
+    /***
+     * Native Call function
+     ***/
+    resultCheckFingerPrint: function(res) {
+      // console.log(result);
+      let isFingerPrintRegistered = res.isFingerPrintRegistered; //지문이 등록되어있지만, 지문data가 없는 경우
+      let result = res.result;
+      if ((result == true || result == 1) && isFingerPrintRegistered == true) {
+        this.chkFingerPrint = "Y";
+      } else {
+        //지문인식 기능이 없거나, 등록된 지문이 없으면
+        this.chkFingerPrint = "N";
+      }
+      // page call
+      this.getUserPage();
     }
   }
 };

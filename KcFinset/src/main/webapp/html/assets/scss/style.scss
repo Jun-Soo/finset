@@ -423,6 +423,7 @@ aside.search-wrap{
         }
         .top{
             display: flex;
+            align-items: center;
             p{
                 width: 50%;
                 line-height: 24px;
@@ -502,6 +503,17 @@ aside.search-wrap{
                 &.corp{
                     font-weight: 700;
                     color: #222;
+                }
+                &.number{
+                    font-size: 24px;
+                    font-weight: 700;
+                    color: #222;
+                    margin-top: 5px;
+                    em{
+                        margin-left: 2px;
+                        font-size: 12px;
+                        color: #222;
+                    }
                 }
                 &:last-child{
                     text-align: right;
@@ -824,6 +836,15 @@ aside.search-wrap{
                         }
                     }
                 }
+            }
+        }
+        .form{
+            .key{
+                margin-top: 15px;
+                color: $col2;
+            }
+            input{
+                margin-top: 10px;
             }
         }
     }
@@ -2539,7 +2560,15 @@ aside.search-wrap{
             &.num{
                 color: $col2 !important;
             }
-           &:first-child{
+            &.blue{
+                color: $col4 !important;
+                font-weight: 700;
+            }
+            &.red{
+                color: $col1 !important;
+                font-weight: 700;
+            }
+            &:first-child{
                 color: #888;
             }
             &:last-child{
@@ -2547,7 +2576,23 @@ aside.search-wrap{
                 color: #333;
                 text-align: right;
             } 
+            .title{
+                color: #111;
+                font-weight: 700;
+            }
         }
+        &.noBD li{
+            border: none;
+        }
+    }
+    .name{
+        font-size: 14px;
+        color: #222;
+        font-weight: 700;
+        margin-top: 10px;
+        padding-left: 20px;
+        border-bottom: 1px solid $lineColor;
+        padding-bottom: 15px;
     }
 }
 

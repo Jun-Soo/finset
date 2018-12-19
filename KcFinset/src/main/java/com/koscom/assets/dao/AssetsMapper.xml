@@ -337,7 +337,7 @@
 					) AS RK
 				FROM
 					SCR_TRANSACTION_DETAIL
-				WHERE 1=1
+				WHERE DOC1 IS NOT NULL AND DOC1 != ' '
 					AND (NO_PERSON = #{no_person, jdbcType=VARCHAR}
 					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(person_share_list)">
 						OR NO_PERSON IN

@@ -28,7 +28,7 @@
             </multiselect>
           </div>
           <div v-if="cd_detail_class=='01'" class="right">
-            <span>{{scKeyword}}</span>
+            <span v-if="scKeyword!=''" @click="initScKeyword();" class="pr10">{{scKeyword}}</span>
             <button class="btn-search" @click="openScKeywordMd();"></button>
           </div>
         </div>
@@ -201,6 +201,11 @@ export default {
       var _this = this;
       _this.scKeyword = doc1;
       _this.closeScKeywordMd();
+      _this.searchActTrnsList();
+    },
+    initScKeyword: function() {
+      var _this = this;
+      _this.scKeyword = "";
       _this.searchActTrnsList();
     },
     //키워드목록 조회

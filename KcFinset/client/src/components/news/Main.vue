@@ -9,9 +9,7 @@
           </template>
         </div>
         <div class="right">
-          <multiselect v-model="orderBy" track-by="text" label="text" placeholder="정렬기준선택" :options="orderByOptions" :searchable="false" :allow-empty="false" @select="onSelect">
-            <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
-          </multiselect>
+          <multiselect :id="'orderBy'" v-model="orderBy" :title="'정렬기준'" placeholder="정렬기준선택" :options="orderByOptions" :onClose="onSelect" />
         </div>
       </div>
       <div v-if="newsList.length == 0" class="nodata">조회 내역이 없습니다</div>

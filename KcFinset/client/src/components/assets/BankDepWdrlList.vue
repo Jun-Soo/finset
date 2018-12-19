@@ -15,7 +15,7 @@
         <div class="form">
           <p>은행계좌선택</p>
           <p>
-            <multiselect :id="'scAccount'" v-model="scAccount" class="multiselect-basic" :title="'계좌'" :options="scAccountOptions" :onClose="onSelectAcc">
+            <multiselect :id="'scAccount'" v-model="scAccount" class="multiselect-basic" :title="'계좌'" placeholder="계좌선택" :options="scAccountOptions" :onClose="onSelectAcc">
             </multiselect>
           </p>
         </div>
@@ -39,11 +39,11 @@
       <div class="bank-detail noMG">
         <div class="select">
           <div class="left">
-            <multiselect :id="'scTrnsType'" v-model="scTrnsType" :title="'유형'" :options="scTrnsTypeOptions" :onClose="onSelectTrns" :alignLeft="true">
+            <multiselect :id="'scTrnsType'" v-model="scTrnsType" :title="'유형'" placeholder="유형선택" :options="scTrnsTypeOptions" :onClose="onSelectTrns" :alignLeft="true">
             </multiselect>
           </div>
           <div class="right">
-            <span v-if="scKeyword!=''" class="pr10">{{scKeyword}}</span>
+            <span v-if="scKeyword!=''" @click="initScKeyword();" class="pr10">{{scKeyword}}</span>
             <button class="btn-search" @click="openScKeywordMd();"></button>
           </div>
         </div>
@@ -306,6 +306,11 @@ export default {
       var _this = this;
       _this.scKeyword = doc1;
       _this.closeScKeywordMd();
+      _this.searchDepWdrlList();
+    },
+    initScKeyword: function() {
+      var _this = this;
+      _this.scKeyword = "";
       _this.searchDepWdrlList();
     },
     //키워드목록 조회

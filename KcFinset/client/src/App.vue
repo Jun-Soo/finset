@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <router-view />
-    <Spinner v-bind:is-visible="spinnerIsVisible" />
+    <Spinner v-bind:is-visible="spinnerIsVisible" :key="refreshKey" />
   </div>
 </template>
 
@@ -15,6 +15,7 @@ export default {
   name: "App",
   data() {
     return {
+      refreshKey: 0,
       isFcScrapDone: false, //금융사 Scraping 완료 여부(은행, 카드, 국세청) - Native
       isStScrapDone: false, //증권사 Scraping 완료 여부 - Back
       isScrapSuccess: true, //전체 Scraping 성공 여부
@@ -103,7 +104,7 @@ export default {
           success: _this.isScrapSuccess
         });
       } else if (Constant.userAgent == "Android") {
-        //window.Android.hideProgressBanner(_this.isScrapSuccess);
+        window.Android.hideProgressBanner(_this.isScrapSuccess);
       }
       //스크래핑 성공 일 경우 화면 갱신
       if (this.isScrapSuccess) {
@@ -118,7 +119,8 @@ export default {
             setTimeout(function() {
               //_this.$router.push(_this.$router.currentRoute.path);
               //_this.$router.go(_this.$router.currentRoute);
-              console.log(_this);
+              // _this.refreshKey++;
+              // _this.$router.go();
               //alert(this.$store.state.user.noPerson);
               //location.reload();
             }, 2000);

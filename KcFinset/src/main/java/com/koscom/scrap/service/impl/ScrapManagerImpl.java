@@ -1751,6 +1751,16 @@ public class ScrapManagerImpl implements ScrapManager {
                 		scrCardChargeDetail.setCharge_yyyymm(scrCardChargeInfoVO.getCharge_yyyymm());
                 		
                         String date = scrCardChargeDetail.getDt_use();
+                        
+                        //사용 날짜가 오지 않을 경우 DB 저장하지 않고 넘기기
+                        if(date == null || date.length() == 0)	{
+                        	logger.error("============= dt_use is empty ================");
+                        	logger.error("scrCardChargeDetail.getNo_card			: "+ scrCardChargeDetail.getNo_card());
+                        	logger.error("scrCardChargeDetail.getCharge_yyyymm		: "+ scrCardChargeDetail.getCharge_yyyymm());
+                        	logger.error("scrCardChargeDetail.getUsage_fee			: "+ scrCardChargeDetail.getUsage_fee());
+                        	logger.error("scrCardChargeDetail.getMonth_installment	: "+ scrCardChargeDetail.getMonth_installment());
+                        	continue;
+                        }
                         // 카드 청구내역 조회 마지막 날짜 이후 마지막 날짜/시간 이후의 데이터만 List에 추가
                         if(max_date != null && max_date != "" && date != null && date != ""
                         	&& Long.parseLong(max_date) >= Long.parseLong(date))	{

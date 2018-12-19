@@ -13,7 +13,7 @@
             <li>
               <p class="key" v-text="curTab=='01'?'입금':'결제수단'"></p>
               <p>
-                <multiselect v-validate="'required'" data-vv-name="수단" :disabled="!isNew" v-model="consumeVO.means_consume" :options="meansConsumeOption" :placeholder="meansConsumeText + ' 선택'" :title="'타이틀'" @select="selectMeans">
+                <multiselect v-validate="'required'" data-vv-name="수단" :disabled="!isNew||isTran" v-model="consumeVO.means_consume" :options="meansConsumeOption" :placeholder="meansConsumeText + ' 선택'" :title="'결제 수단 선택'" :onClose="selectMeans">
                 </multiselect>
               </p>
             </li>
@@ -69,6 +69,7 @@
         </div>
 
         <div v-if="isNew&&isMine&&chkNecessary" class="btn-wrap float">
+          <!-- <div class="btn-wrap float"> -->
           <a @click="clickSave" class="solid blue box">저장</a>
         </div>
         <div v-if="!isNew&&isMine&&chkNecessary" class="btn-wrap col2">
@@ -746,7 +747,6 @@ export default {
         })
         .then(function(response) {
           var consumeVO = response.data.consumeVO;
-          console.log(consumeVO);
           if (consumeVO == null) {
             _this.getPersonTransDetail();
           } else {
@@ -801,7 +801,7 @@ export default {
     },
     goAnalyze: function() {
       this.$router.push({
-        path: "/consume/incomeAnalyze",
+        path: "/consume/analyze",
         query: {
           type_in_out: this.curTab,
           contents: this.consumeVO.contents
@@ -839,14 +839,14 @@ export default {
     makeConsumeVOByTran: function(transVO) {
       this.meansConsumeOption = [
         {
-          text: "(" + transVO.nm_fc + ") " + transVO.an,
+          text: transVO.nm_an,
           value: transVO.an,
           means_consume: "04"
         }
       ];
 
       this.consumeVO.means_consume = {
-        text: "(" + transVO.nm_fc + ") " + transVO.an,
+        text: transVO.nm_an,
         value: transVO.an,
         means_consume: "04"
       };
@@ -862,6 +862,8 @@ export default {
       this.consumeVO.dt_trd = new Date(Common.formatDateDot(transVO.dt_trd));
       this.consumeVO.tm_trd = transVO.tm_trd;
 
+      this.isNew = true;
+      this.isTran = true;
       this.isPersonRegist = false;
       this.isShowTrans = false;
     },

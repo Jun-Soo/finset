@@ -34,7 +34,7 @@
 import Common from "@/assets/js/common.js";
 
 export default {
-  name: "ConsumeIncomeAnalyze",
+  name: "ConsumeAnalyze",
   data() {
     return {
       isNone: true,

@@ -187,6 +187,7 @@ export default {
         this.selectext1 = ''
         this.selected2 = ''
         this.selectext2 = ''
+        return
       }
       if ((obj.value || '') === '') {
         return

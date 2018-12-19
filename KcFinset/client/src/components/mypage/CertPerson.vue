@@ -36,7 +36,7 @@
     <div class="cert-wrap pb90">
       <p class="title">휴대폰인증</p>
       <div class="grid phone">
-        <multiselect ref="telCom" :onClose="nextFocus('telCom')" v-model="telCom" label="text" placeholder="통신사" :options="options" :title="'통신사'">
+        <multiselect ref="telCom" v-bind:disabled="isDisabled" :onClose="nextFocus('telCom')" v-model="telCom" label="text" placeholder="통신사" :options="options" :title="'통신사'">
         </multiselect>
         <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
       </div>
@@ -119,7 +119,8 @@ export default {
       nm_code: "",
       chkAll: false,
       chkBox1: false,
-      chkBox2: false
+      chkBox2: false,
+      telDisabled: false
     };
   },
   components: {
@@ -219,7 +220,6 @@ export default {
       if (val == "telCom" && _this.telCom) $("#hp").focus();
       if (val == "hp" && _this.hp) $("").focus();
     },
-    //
     personCertify: function() {
       let _this = this;
       let frm = new FormData();

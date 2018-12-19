@@ -119,7 +119,8 @@ import ConsumeHome from '@/components/consume/Home'
 import ConsumeMain from '@/components/consume/Main'
 import ConsumeRegGoal from '@/components/consume/RegGoal'
 import ConsumeConsumeDetail from '@/components/consume/ConsumeDetail'
-import ConsumeIncomeAnalyze from '@/components/consume/IncomeAnalyze'
+import ConsumeAnalyze from '@/components/consume/Analyze'
+// import ConsumeIncomeAnalyze from '@/components/consume/IncomeAnalyze'
 // import ConsumeConsumeAnalyze from '@/components/consume/ConsumeAnalyze'
 import ConsumeSetting from '@/components/consume/Setting'
 import ConsumeConsumeClass from '@/components/consume/ConsumeClass'
@@ -869,10 +870,10 @@ export const routes = [{
     }
   },
   {
-    path: 'incomeAnalyze',
-    alias: '/incomeAnalyze',
-    name: 'consumeIncomeAnalyze',
-    component: ConsumeIncomeAnalyze,
+    path: 'analyze',
+    alias: '/analyze',
+    name: 'consumeAnalyze',
+    component: ConsumeAnalyze,
     meta: {
       allowPath: true
     }

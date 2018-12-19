@@ -28,11 +28,12 @@
               {{ option.text }}
             </option>
           </select> -->
-          <multiselect v-model="telComCd" track-by="text" label="text" placeholder="통신사" :options="options" :searchable="false" :allow-empty="false" @select="onSelect" data-vv-name='통신사'>
+          <multiselect v-model="telComCd" :title="'통신사'" placeholder="통신사" :options="options" :onClose="onClose" v-validate="'required'" data-vv-name='통신사'>
             <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
           </multiselect>
-          <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
-          <p class="warn" v-if="errors.has('생년월일')">{{errors.first('통신사')}}</p>
+          <input type="tel" name="hp" id="hp" v-model="hp" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" v-validate="'required|max:11'" data-vv-name='휴대폰 번호'>
+          <p class="warn" v-if="errors.has('통신사')">{{errors.first('통신사')}}</p>
+          <p class="warn" v-if="errors.has('휴대폰 번호')">{{errors.first('휴대폰 번호')}}</p>
           <!-- <p class="warn" v-if="errors.has('성별')">{{errors.first('성별')}}</p> -->
         </div>
         <button id="req_certification" v-on:click="kcmRequestCertNo()">인증번호 전송</button>
@@ -151,9 +152,8 @@ export default {
           this.$toast.center(ko.messages.error);
         });
     },
-    onSelect: function(option) {
+    onClose: function(option) {
       this.telComCd = option;
-      console.log(this.telComCd);
     },
     nextFocus: function(val) {
       var _this = this;
@@ -225,8 +225,6 @@ export default {
             .catch(e => {
               this.$toast.center(ko.messages.error);
             });
-        } else {
-          this.$toast.center(ko.messages.require);
         }
       });
     },

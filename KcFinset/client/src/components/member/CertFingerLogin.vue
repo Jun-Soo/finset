@@ -64,7 +64,7 @@ import "@/assets/images/member/fingerprint_red.svg";
 import "@/assets/js/vivus.min.js";
 
 export default {
-  name: "certFinger",
+  name: "certFingerLogin",
   data() {
     return {
       errMsg: "",
@@ -80,7 +80,6 @@ export default {
   computed: {},
   beforeCreate() {},
   created() {
-    // debugger;
     this.$store.state.title = "지문인증";
     window.resultFingerPrint = this.resultFingerPrint;
     console.log(this.$store.state.user.cntFailFinger);
@@ -89,22 +88,17 @@ export default {
       window.Android.initFingerPrint();
     } else if (Constant.userAgent == "iOS") {
       //지문인식 결과 콜백 이벤트
-      if (!this.firstLoad) {
-        Jockey.on("resultFingerPrint", function(param) {
-          var result = false;
-          if (param.result == 1) result = true;
-          // this.resultFingerPrint(result);
-        });
-      }
+      Jockey.on("resultFingerPrint", function(param) {
+        var result = false;
+        if (param.result == 1) result = true;
+      });
       Jockey.send("initFingerPrint");
     }
 
     this.errMsg =
       "지문인증을 " + this.cntFailFinger + "회 실패한 이력이 있습니다.";
   },
-  beforeMount() {
-    console.log("bf mounted");
-  },
+  beforeMount() {},
   mounted() {
     this.firstLoad = true;
     this.fingerSVG = new Vivus("my-svg", {
@@ -113,24 +107,18 @@ export default {
       start: "manual",
       animTimingFunction: Vivus.EASE
     });
-    if (this.$store.state.ynReload == "Y") {
-      if (Constant.userAgent == "Android") {
-        window.Android.closeWebView();
-      } else if (Constant.userAgent == "iOS") {
-        Jockey.send("closeWebView");
-      }
-      return false;
-    }
+    // if (this.$store.state.ynReload == "Y") {
+    //   if (Constant.userAgent == "Android") {
+    //     window.Android.closeWebView();
+    //   } else if (Constant.userAgent == "iOS") {
+    //     Jockey.send("closeWebView");
+    //   }
+    //   return false;
+    // }
     console.log(this.$store.state.user.cntFailFinger);
-    console.log("mounted");
   },
-  beforeUpdate() {
-    console.log("bfupdated");
-  },
-  updated() {
-    // this.firstLoad = false;
-    console.log("updated");
-  },
+  beforeUpdate() {},
+  updated() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {
@@ -180,10 +168,15 @@ export default {
             _this.$store.state.isLoading = false;
             _this.$store.commit("LOGIN", response.data);
             _this.changeLoginDB();
-            _this.$router.push("/main");
+
+            if (_this.$store.state.linkUrl) {
+              _this.$router.push(_this.$store.state.linkUrl);
+            } else {
+              _this.$router.push("/main");
+            }
           } else {
             _this.$store.state.isLoading = false;
-            this.$toast.center(ko.messages.loginErr);
+            // this.$toast.center(ko.messages.loginErr);
             // this.$toast.center("login시류패");
 
             if (response.data.result == "21") {
@@ -212,7 +205,6 @@ export default {
         })
         .then(response => {
           var result = response.data;
-          console.log(result);
         })
         .catch(e => {
           // this.$toast.center(ko.messages.error);
@@ -256,17 +248,6 @@ export default {
         if (Constant.userAgent == "Android") {
           window.Android.closeFingerPrint();
         }
-        // setTimeout(function() {
-        // _this.fingerSVG = new Vivus("my-svg", {
-        //   type: "delayed",
-        //   duration: 1000,
-        //   start: "manual",
-        //   animTimingFunction: Vivus.EASE
-        // });
-        // setTimeout(function() {
-        // }, 3000);
-
-        // }, 1000);
         _this.fingerSVG.reset().play();
         if (_this.$store.state.ynReload == "Y") {
           if (Constant.userAgent == "Android") {
@@ -290,7 +271,6 @@ export default {
           }, 500);
         }
       } else {
-        // _this.fingerSVG.reset().play();
         // this.$toast.center(loginTrue);
         //지문 틀린 누적횟수 증가
         _this.cntFailFinger += 1;

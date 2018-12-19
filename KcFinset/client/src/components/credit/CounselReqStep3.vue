@@ -6,7 +6,7 @@
           <div>
             <p class="key">결혼여부</p>
             <p>
-              <multiselect v-model="yn_wedding" ref="yn_wedding" placeholder="결혼여부선택" track-by="text" label="text" :options="ynWeddingOptions" :searchable="false" :allow-empty="false" @select="selectYnWedding()" v-validate="'required'" data-vv-name='결혼여부'>
+              <multiselect :id="'yn_wedding'" v-model="yn_wedding" ref="yn_wedding" placeholder="결혼여부선택" :title="'결혼여부'" :options="ynWeddingOptions" :onClose="selectYnWedding" v-validate="'required'" data-vv-name='결혼여부'>
               </multiselect>
             </p>
           </div>
@@ -16,7 +16,7 @@
           <div>
             <p class="key">부양가족</p>
             <p>
-              <multiselect v-model="cd_family_cnt" ref="cd_family_cnt" placeholder="부양가족선택" track-by="text" label="text" :options="options_family_cnt" :searchable="false" :allow-empty="false" @select="selectFamilyCnt()" v-validate="'required'" data-vv-name='부양가족'>
+              <multiselect :id="'cd_family_cnt'" v-model="cd_family_cnt" ref="cd_family_cnt" placeholder="부양가족선택" :title="'부양가족'" :options="options_family_cnt" :onClose="selectFamilyCnt" v-validate="'required'" data-vv-name='부양가족'>
               </multiselect>
             </p>
           </div>
@@ -26,7 +26,7 @@
           <div>
             <p class="key">주거형태</p>
             <p>
-              <multiselect v-model="cd_living" ref="cd_living" placeholder="주거형태선택" track-by="text" label="text" :options="options_living" :searchable="false" :allow-empty="false" @select="selectLiving()" v-validate="'required'" data-vv-name='주거형태'>
+              <multiselect :id="'cd_living'" v-model="cd_living" ref="cd_living" placeholder="주거형태선택" :title="'주거형태'" :options="options_living" :onClose="selectLiving" v-validate="'required'" data-vv-name='주거형태'>
               </multiselect>
             </p>
           </div>
@@ -36,7 +36,7 @@
           <div>
             <p class="key">직업</p>
             <p>
-              <multiselect v-model="cd_job" ref="cd_job" placeholder="직군선택" track-by="text" label="text" :options="options_job" :searchable="false" :allow-empty="false" @select="selectJob()" v-validate="'required'" data-vv-name='직업'>
+              <multiselect :id="'cd_job'" v-model="cd_job" ref="cd_job" placeholder="직군선택" :title="'직군'" :options="options_job" :onClose="selectJob" v-validate="'required'" data-vv-name='직업'>
               </multiselect>
             </p>
           </div>
@@ -133,21 +133,24 @@ export default {
     //자동선택
     selectYnWedding: function() {
       var _this = this;
-      setTimeout(function() {
-        _this.$refs.cd_family_cnt.$el.focus();
-      }, 100);
+      // setTimeout(function() {
+      //   _this.$refs.cd_family_cnt.$el.focus();
+      // }, 100);
+      this.$refs.cd_family_cnt.open();
     },
     selectFamilyCnt: function() {
       var _this = this;
-      setTimeout(function() {
-        _this.$refs.cd_living.$el.focus();
-      }, 100);
+      // setTimeout(function() {
+      //   _this.$refs.cd_living.$el.focus();
+      // }, 100);
+      this.$refs.cd_living.open();
     },
     selectLiving: function() {
       var _this = this;
-      setTimeout(function() {
-        _this.$refs.cd_job.$el.focus();
-      }, 100);
+      // setTimeout(function() {
+      //   _this.$refs.cd_job.$el.focus();
+      // }, 100);
+      this.$refs.cd_job.open();
     },
     selectJob: function() {
       var _this = this;

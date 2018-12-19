@@ -4,7 +4,7 @@
     <div class="container mt30">
       <div class="checks">
         <!--전체약관동의-->
-        <input type="checkbox" id="check-all" v-model="chkAll" v-on:click="allChecked()"><label for="check-all">전체 약관 동의</label>
+        <input type="checkbox" id="check-all" v-model="chkAll" v-on:click="allChecked()" v-validate="'required'" data-vv-name='약관동의'><label for="check-all">전체 약관 동의</label>
         <div class="box-agree" v-if="!chkAll">
           <p><input type="checkbox" name="checkbox1" id="checkbox1" v-model="chkBox1"><label for="checkbox1">[필수] 서비스 이용동의</label></p>
           <ul>
@@ -28,16 +28,15 @@
       <div class="grid">
         <div class="number"><input type="number" placeholder="생년월일6자리" name="ssn_birth" id="ssn_birth" v-model="ssn_birth" v-validate="'required|length:6|max:6'" v-on:keyup="nextFocus('birth')" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='생년월일'></div>
         <div class="dash">-</div>
-        <div class="number last"><input type="password" pattern="[0-9]*" name="sex" id="sex" v-model="sex" inputmode="numeric" maxlength="1" style="-webkit-text-security:disc" v-on:change="nextFocus('sex')" v-bind:disabled="isDisabled" autocomplete="off" v-validate="'required|between:0,9|length:1|max:1'" data-vv-name='성별'>******</div>
+        <div class="number last"><input type="password" pattern="[0-9]*" name="sex" id="sex" v-model="sex" inputmode="numeric" maxlength="1" style="-webkit-text-security:disc" v-bind:disabled="isDisabled" autocomplete="off" v-validate="'required|between:0,9|length:1|max:1'" data-vv-name='성별'>******</div>
       </div>
       <p class="warn" v-if="errors.has('생년월일')">{{errors.first('생년월일')}}</p>
       <p class="warn" v-if="errors.has('성별')">{{errors.first('성별')}}</p>
     </div>
-    <div class="cert-wrap">
+    <div class="cert-wrap pb90">
       <p class="title">휴대폰인증</p>
       <div class="grid phone">
-        <multiselect v-model="telComNm" track-by="text" label="text" placeholder="통신사" :options="options" v-bind:disabled="isDisabled" :searchable="false" :allow-empty="false" @select="onSelect">
-          <template slot="singleLabel" slot-scope="{ option }">{{ option.text }}</template>
+        <multiselect ref="telCom" v-bind:disabled="isDisabled" :onClose="nextFocus('telCom')" v-model="telCom" label="text" placeholder="통신사" :options="options" :title="'통신사'">
         </multiselect>
         <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
       </div>
@@ -85,8 +84,7 @@ export default {
       ssn_birth: "",
       birthday: "",
       sex: "",
-      telComCd: "",
-      telComNm: "",
+      telCom: "",
       hp: "",
       kcb_ci: "",
       kcb_di: "",
@@ -120,7 +118,8 @@ export default {
       nm_code: "",
       chkAll: false,
       chkBox1: false,
-      chkBox2: false
+      chkBox2: false,
+      telDisabled: false
     };
   },
   components: {
@@ -129,9 +128,24 @@ export default {
     Terms9: Terms9,
     Terms10: Terms10
   },
+  watch: {
+    chkAll: function() {
+      if (this.chkAll) {
+        $("#nm_person").focus();
+      }
+    },
+    sex: function() {
+      if ((this.telCom == null || this.telCom == "") && this.sex.length > 0) {
+        this.$refs.telCom.open();
+      }
+    }
+  },
   computed: {},
   beforeCreate() {},
   created() {
+    window.setCertNumber = this.setCertNumber;
+    window.setRequestPhoneNumber = this.setRequestPhoneNumber;
+
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
       window.Android.reqSMSPermission();
@@ -160,12 +174,6 @@ export default {
     });
 
     if (this.smsCertNo) window.scrollTo(0, window.innerHeight);
-    // var tmp = $("#smsCertNo").readOnly;
-    // // debugger;
-    // if (this.clicked && tmp) {
-    //   $("#smsCertNo").removeAttr("readonly");
-    // }
-    //if (this.smsCertNo) window.scrollTo(0, window.innerHeight);
   },
   beforeDestroy() {},
   destroyed() {},
@@ -199,24 +207,23 @@ export default {
     setRequestPhoneNumber: function(phoneNumber) {
       this.hp = phoneNumber;
     },
-    onSelect: function(option) {
-      this.telComCd = option.value;
-      console.log(this.telComCd);
-    },
     nextFocus: function(val) {
       var _this = this;
       if (val == "birth" && _this.ssn_birth.length == 6) $("#sex").focus();
-      if (val == "sex" && _this.sex.length == 1) {
-        $("#telComCd").focus();
-        this.$children[0].isOpen = true;
-      }
-      if (val == "telComCd" && _this.telComCd) $("#hp").focus();
+      if (val == "telCom" && _this.telCom) $("#hp").focus();
       if (val == "hp" && _this.hp) $("").focus();
     },
-    //
     personCertify: function() {
       let _this = this;
       let frm = new FormData();
+      if (!_this.chkAll) {
+        _this.$dialogs.alert(
+          "약관동의는 필수 체크 항목입니다.",
+          Constant.options
+        );
+        $("#check-all").focus();
+        return false;
+      }
       this.$validator.validateAll().then(res => {
         if (res) {
           frm.append("hp", _this.hp);
@@ -261,9 +268,13 @@ export default {
           formData.append("nm_person", _this.nm_person);
           formData.append("birthday", _this.birthday);
           formData.append("sex", _this.sex);
-          formData.append("telComCd", _this.telComCd);
+          formData.append(
+            "telComCd",
+            _this.telComCd != "" ? _this.telCom.value : ""
+          );
           formData.append("hp", _this.hp);
           formData.append("smsReSndYn", _this.smsReSndYn);
+          formData.append("svcTxSeqno", _this.svcTxSeqno);
           formData.append("nation", _this.nation);
           this.$http
             .post("/m/login/kcmRequestCertNo.json", formData, {
@@ -296,9 +307,20 @@ export default {
                 _this.clicked = true;
               } else if (result.result == "11") {
                 this.$toast.center(result.message);
+                if (!this.timerObj) this.stop();
+                _this.svcTxSeqno = "";
+                $("#req_certification").html("인증번호 재전송");
+                _this.isReadOnly = true;
+                _this.clicked = false;
                 return false;
               } else if (result.result == "01") {
                 this.$toast.center(result.message);
+                if (!this.timerObj) this.stop();
+                _this.svcTxSeqno = "";
+                $("#req_certification").html("인증번호 재전송");
+                _this.isReadOnly = true;
+                _this.clicked = false;
+                return false;
               }
             })
             .catch(e => {

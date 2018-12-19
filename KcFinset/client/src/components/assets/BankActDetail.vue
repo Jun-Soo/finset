@@ -24,11 +24,11 @@
       <div class="bank-detail">
         <div class="select">
           <div class="left">
-            <multiselect v-model="scTrnsType" ref="scTrnsType" placeholder="유형선택" track-by="text" label="text" :options="scTrnsTypeOptions" :searchable="false" :allow-empty="false" @select="onSelectTrns" :alignLeft="true">
+            <multiselect :id="'scTrnsType'" v-model="scTrnsType" ref="scTrnsType" placeholder="유형선택" :title="'유형'" :options="scTrnsTypeOptions" :onClose="onSelectTrns" :alignLeft="true">
             </multiselect>
           </div>
           <div v-if="cd_detail_class=='01'" class="right">
-            <span>{{scKeyword}}</span>
+            <span v-if="scKeyword!=''" @click="initScKeyword();" class="pr10">{{scKeyword}}</span>
             <button class="btn-search" @click="openScKeywordMd();"></button>
           </div>
         </div>
@@ -201,6 +201,11 @@ export default {
       var _this = this;
       _this.scKeyword = doc1;
       _this.closeScKeywordMd();
+      _this.searchActTrnsList();
+    },
+    initScKeyword: function() {
+      var _this = this;
+      _this.scKeyword = "";
       _this.searchActTrnsList();
     },
     //키워드목록 조회

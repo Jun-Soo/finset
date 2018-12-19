@@ -170,10 +170,7 @@ export default {
       this.curTab = type;
     },
     clickSerchInterest: function() {
-      console.log(this.$router.currentRoute);
-      //this.$router.go(this.$router.currentRoute);
-
-      return;
+      //console.log(this.$router.currentRoute);
       this.$router.push({
         name: "GoodsCertStep1",
         params: {

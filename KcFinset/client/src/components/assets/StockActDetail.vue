@@ -10,23 +10,23 @@
         <div class="body">
           <div class="flex">
             <p>출금가능액</p>
-            <p>{{formatNumber(stockInfo.cashavwithdraw)}}</p>
+            <p>{{formatNumber(stockInfo.cashavwithdraw)}} <em>원</em></p>
           </div>
           <div class="flex">
             <p>대용금</p>
-            <p>{{formatNumber(stockInfo.subsmargin)}}</p>
+            <p>{{formatNumber(stockInfo.subsmargin)}} <em>원</em></p>
           </div>
           <div class="flex">
             <p>매수/미납금</p>
-            <p>{{formatNumber(stockInfo.receivable)}}</p>
+            <p>{{formatNumber(stockInfo.receivable)}} <em>원</em></p>
           </div>
           <div class="flex">
             <p>대출/신용금</p>
-            <p>{{formatNumber(stockInfo.loancredit)}}</p>
+            <p>{{formatNumber(stockInfo.loancredit)}} <em>원</em></p>
           </div>
           <div class="flex">
             <p>유가증권평가금액</p>
-            <p>{{formatNumber(stockInfo.valueatcur)}} {{(stockInfo.proloss!='0')?'('+stockInfo.proloss+')':''}}</p>
+            <p>{{formatNumber(stockInfo.valueatcur)}} {{(stockInfo.proloss!='0')?'('+stockInfo.proloss+')':''}}<em>원</em></p>
           </div>
         </div>
       </div>
@@ -35,10 +35,10 @@
     <div class="box-list list02">
 
       <div class="select pb20">
-        <multiselect v-model="scAccType" ref="scAccType" placeholder="분류선택" track-by="text" label="text" :options="scAccTypeOptions" :searchable="false" :allow-empty="false" @select="onSelectAcc">
+        <multiselect :id="'scAccType'" v-model="scAccType" ref="scAccType" class="multiselect-basic" placeholder="분류선택" :title="'분류'" :options="scAccTypeOptions" :onClose="onSelectAcc">
         </multiselect>
         <p></p>
-        <multiselect v-model="orderBy" ref="orderBy" placeholder="정렬선택" track-by="text" label="text" :options="orderByOptions" :searchable="false" :allow-empty="false" @select="onSelectOrder">
+        <multiselect :id="'orderBy'" v-model="orderBy" ref="orderBy" class="multiselect-basic" placeholder="정렬선택" :title="'정렬'" :options="orderByOptions" :onClose="onSelectOrder">
         </multiselect>
       </div>
 
@@ -89,7 +89,6 @@ export default {
       ],
       scAccType: "",
       orderByOptions: [
-        { text: "선택", value: "" },
         { text: "평가금액순", value: "01" },
         { text: "상승률순", value: "02" },
         { text: "비중순", value: "03" }
@@ -147,6 +146,8 @@ export default {
           this.orderBy = this.orderByOptions[i];
         }
       }
+    } else {
+      this.orderBy = this.orderByOptions[0]; //기본정렬 - 평가금액순 셋팅
     }
 
     //store 검색조건 초기화

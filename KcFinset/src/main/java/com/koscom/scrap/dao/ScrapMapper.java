@@ -285,6 +285,13 @@ public interface ScrapMapper { // com.koscom.scrap.dao.ScrapMapper
 	int updateFcLinkInfo(FcLinkInfoVO fcLinkInfoVO);
 	
 	/**
+	 * 전체 금융사 스크랩핑 연동 상태 update
+	 * @param FcLinkInfoVO
+	 * @return
+	 */
+	int updateFcLinkInfoAll(FcLinkInfoVO fcLinkInfoVO);
+	
+	/**
 	 * 금융사 스크랩핑 연동 건수
 	 * @param String
 	 * @return int

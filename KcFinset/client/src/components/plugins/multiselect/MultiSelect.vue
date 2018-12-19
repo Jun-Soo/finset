@@ -1,6 +1,6 @@
 <template>
   <div style="width=100%; height=100%">
-    <input @click="open" type="button" :value="selected" class="btn-cate btn-search" v-bind:class="{'on' : isShow}">
+    <input @click="open" type="button" :disabled="disabled" :value="selected" class="btn-cate btn-search" v-bind:class="{'on' : isShow}">
     <aside :id="id" :class="{'on' : isShow}" class="search-wrap">
       <div class="top" @click="close">
         <button>{{title}}</button>
@@ -23,7 +23,7 @@
         </div>
       </div>
       <div v-if="!multiple" class="select-cate one">
-        <div class="cate-wrap">
+        <div class="cate-wrap" :style="cateHeight">
           <ul>
             <li v-for="option in options" :key="option.value" :class="{'on':option.value==selected1}" @click="click(option)">
               {{option.text}}
@@ -58,9 +58,15 @@ export default {
         this.style = this.style + "height: " + this.height + "px;";
       }
     }
+    if (this.placeholder) {
+      this.selected = this.placeholder;
+    }
+    this.chkSelectValue();
   },
   beforeUpdate() {},
-  updated() {},
+  updated() {
+    this.cateHeight = "height: " + this.options.length * 40 + "px;";
+  },
   beforeDestroy() {},
   destroyed() {},
   methods: {}

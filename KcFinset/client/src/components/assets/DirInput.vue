@@ -8,7 +8,7 @@
             <ul class="flex">
               <li class="key">분류</li>
               <li class="value">
-                <multiselect v-model="cd_assets_class" ref="cd_assets_class" placeholder="분류선택" track-by="text" label="text" :options="assetsClassOptions" :searchable="false" :allow-empty="false" @select="selectAssetsClass" v-validate="'required'" data-vv-name='분류'>
+                <multiselect :id="'cd_assets_class'" v-model="cd_assets_class" ref="cd_assets_class" placeholder="분류선택" :title="'분류'" :options="assetsClassOptions" :onClose="selectAssetsClass" v-validate="'required'" data-vv-name='분류'>
                 </multiselect>
               </li>
             </ul>
@@ -18,7 +18,7 @@
             <ul class="flex">
               <li class="key">{{title_detail_class}}</li>
               <li class="value">
-                <multiselect v-model="cd_detail_class" ref="cd_detail_class" :placeholder="title_detail_class+'선택'" track-by="text" label="text" :options="options_detail_class" :searchable="false" :allow-empty="false" v-validate="'required'" :data-vv-name='title_detail_class'>
+                <multiselect :id="'cd_detail_class'" v-model="cd_detail_class" ref="cd_detail_class" :placeholder="title_detail_class+'선택'" :title="title_detail_class+''" :options="options_detail_class" v-validate="'required'" :data-vv-name='title_detail_class'>
                 </multiselect>
               </li>
             </ul>
@@ -114,6 +114,10 @@
 
     <vue-modal transitionName="zoom-in" name="postcode-modal">
       <div slot="body">
+        <div class="v-modal__heading">
+          <div class="v-modal__title">주소검색</div>
+          <span @click="closePostcodeMd()" class="v-modal__close-btn">&times;</span>
+        </div>
         <DaumPostcode :on-complete="selectPostcode" />
       </div>
     </vue-modal>
@@ -230,6 +234,10 @@ export default {
     //주소검색
     scAddress: function() {
       this.isShowModal = true;
+    },
+    //주소팝업close
+    closePostcodeMd: function() {
+      this.isShowModal = false;
     },
     //다음 주소를 선택했을 때
     selectPostcode: function(param) {

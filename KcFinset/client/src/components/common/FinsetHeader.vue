@@ -38,7 +38,8 @@ export default {
   name: "FinsetHeader",
   data() {
     return {
-      isSetting: false
+      isSetting: false,
+      isBackKey: false
     };
   },
   components: {
@@ -72,6 +73,36 @@ export default {
   destroyed() {},
   methods: {
     androidBackFn: function() {
+      console.log("androidBackFn called");
+      //모달 해제
+      if (
+        this.$modals != undefined &&
+        this.$modals.shownModals != undefined &&
+        this.$modals.shownModals.length > 0
+      ) {
+        var shownModals = this.$modals.shownModals;
+        for (var idx in shownModals) {
+          this.$modals.hide(shownModals[idx]);
+        }
+        this.isBackKey = true;
+      }
+      //alert, confirm 창 해제
+      if (
+        this.$dialogs != undefined &&
+        this.$dialogs.items != undefined &&
+        this.$dialogs.items.length > 0
+      ) {
+        var items = this.$dialogs.items;
+        for (var idx in items) {
+          this.$dialogs.remove(items[idx]);
+        }
+        this.isBackKey = true;
+      }
+      if (this.isBackKey) {
+        this.isBackKey = false;
+        return;
+      }
+
       if (this.$store.state.header.backPath == "") {
         this.$router.go(-1);
       } else {

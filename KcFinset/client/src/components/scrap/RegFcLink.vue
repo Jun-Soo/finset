@@ -200,7 +200,13 @@ export default {
       }
       if (cnt == 0) {
         if (this.$store.state.isLoggedIn) {
-          this.$router.push("/scrap/ctrlFcLink");
+          //this.$router.push("/scrap/ctrlFcLink");
+          this.$router.push({
+            name: "scrapCtrlFcLink",
+            query: {
+              isScrap: true
+            }
+          });
         } else {
           this.login();
         }
@@ -212,7 +218,13 @@ export default {
         .then(function(response) {
           var result = response.data.code;
           if (_this.$store.state.isLoggedIn) {
-            _this.$router.push("/scrap/ctrlFcLink");
+            //_this.$router.push("/scrap/ctrlFcLink");
+            _this.$router.push({
+              name: "scrapCtrlFcLink",
+              query: {
+                isScrap: true
+              }
+            });
           } else {
             _this.login();
           }

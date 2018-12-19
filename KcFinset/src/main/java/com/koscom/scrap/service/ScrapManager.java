@@ -10,6 +10,9 @@ import com.koscom.scrap.model.ScrRespHealthPaymentdtlVO;
 import com.koscom.scrap.model.ScrRespIncomeDtlVO;
 import com.koscom.scrap.model.ScrRespPensionPaymentVO;
 import com.koscom.scrap.model.ScrRespPensionPaymentdtlVO;
+import com.koscom.scrap.model.ScrRsltScrapVO;
+import com.koscom.scrap.model.UserBankOutputVO;
+import com.koscom.scrap.model.UserCardOutputVO;
 import com.koscom.util.ReturnClass;
 
 public interface ScrapManager {
@@ -99,18 +102,25 @@ public interface ScrapManager {
 	ReturnClass updateFcLinkInfoList(FcLinkInfoVO linkedFcInfoList);
 	
 	/**
+	 * 스크래핑 연동 전체 금융사 수정
+	 * @param FcLinkInfoVO
+	 * @return ReturnClass
+	 */
+	int updateFcLinkInfoAll(FcLinkInfoVO linkedFcInfoList);
+	
+	/**
 	 * 은행 자동 스크래핑 내역 저장 
 	 * @param String
 	 * @return ReturnClass
 	 */
-	ReturnClass createAutoBankScrap(String data);
+	ReturnClass createAutoBankScrap(String no_person, long seq_scrap, UserBankOutputVO userBankOutputVO);
 	
 	/**
 	 * 카드 자동 스크래핑 내역 저장 
 	 * @param String
 	 * @return ReturnClass
 	 */
-	ReturnClass createAutoCardScrap(String data);
+	ReturnClass createAutoCardScrap(String no_person, long seq_scrap, UserCardOutputVO userCardOutputVO);
 	
 	/**
 	 * 국세청 자동 스크래핑 내역 저장 
@@ -200,4 +210,12 @@ public interface ScrapManager {
 	 * @return 
 	 */
 	List<ScrRespIncomeDtlVO> getScrRespIncomeDtl(ScrRespIncomeDtlVO scrRespIncomeDtlVO);
+	
+	/**
+	 * 스크래핑 결과내역 저장
+	 * @param ScrRespIncomeDtlVO
+	 * @return 
+	 */
+	int updateScrRsltScrap(ScrRsltScrapVO scrRsltScrapVO);
+	
 }

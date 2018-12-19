@@ -14,16 +14,14 @@
     </div>
     <div class="cert-check-wrap" v-if="scrap_code=='nts'">
       <p class="title">가입형태</p>
-      <multiselect class="multiselect-basic mt10" :title="'가입형태'" v-model="cert_division" label="text" :show-labels="false" :options="options_division" :searchable="false" :allow-empty="false">
-      </multiselect>
+      <multiselect class="multiselect-basic mt10" :title="'가입형태'" v-model="cert_division" label="text" :show-labels="false" :options="options_division" :searchable="false" :allow-empty="false" />
       <!-- <select v-model="cert_division">
         <option v-for="option in options" v-bind:key="option.value" v-bind:value="option.value">
           {{ option.text }}
         </option>
       </select> -->
       <p class="title">대상기간</p>
-      <multiselect class="multiselect-basic mt10" :title="'대상기간'" v-model="inquiry_year" label="text" :show-labels="false" :options="options_year" :searchable="false" :allow-empty="false">
-      </multiselect>
+      <multiselect class="multiselect-basic mt10" :title="'대상기간'" v-model="inquiry_year" label="text" :show-labels="false" :options="options_year" :searchable="false" :allow-empty="false" />
       <!-- <select v-model="inquiry_year">
         <option v-for="year in inquiry_years" :key="year.index" :value=year>{{year}}년 </option>
       </select> -->

@@ -3,11 +3,12 @@ export default {
     return {
       isShow: false,
       setIsShow: false,
-      selected: '선택하세요',
+      selected: '',
       selectext1: '',
       selectext2: '',
       selected1: '',
-      selected2: ''
+      selected2: '',
+      cateHeight: ''
     }
   },
   props: {
@@ -117,7 +118,7 @@ export default {
      */
     placeholder: {
       type: String,
-      default: 'Select option'
+      default: ''
     },
     /**
      * Allow to remove all selected values
@@ -152,21 +153,54 @@ export default {
      * Useful for identifying events origin.
      * @default null
      * @type {String|Integer}
-    */
+     */
     id: {
       type: String,
       default: null
+    },
+    /**
+     * Disables the multiselect if true.
+     * @default false
+     * @type {Boolean}
+     */
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
-  mounted () { },
+  mounted () {
+  },
   computed: {
     internalValue () {
       return this.value || this.value === 0
-        ? Array.isArray(this.value) ? this.value : [this.value]
-        : []
+        ? Array.isArray(this.value) ? this.value : [this.value] : []
     }
   },
-  watch: {},
+  watch: {
+    value: function (obj) {
+      if (obj === null) {
+        if ((this.placeholder || '') !== '') {
+          this.selected = this.placeholder
+        } else {
+          this.selected = ''
+        }
+        this.selected1 = ''
+        this.selectext1 = ''
+        this.selected2 = ''
+        this.selectext2 = ''
+        return
+      }
+      if ((obj.value || '') === '') {
+        return
+      }
+      var selOpt = this.options.filter(option => option.value === obj.value)
+
+      if ((selOpt || '') !== '' && selOpt.length === 1) {
+        this.selected = selOpt[0].text
+        this.selected1 = selOpt[0].value
+      }
+    }
+  },
   methods: {
     /**
      * Returns the internalValue in a way it can be emited to the parent
@@ -192,7 +226,9 @@ export default {
       return this.valueKeys.indexOf(opt) > -1
     },
     open: function () {
+      console.log('startOpen')
       this.isShow = true
+      console.log('endOpen')
     },
     close: function () {
       this.isShow = false
@@ -200,10 +236,9 @@ export default {
     click: function (option) {
       this.selected1 = option.value
       this.selected = option.text
-      this.$emit('input', option)
-
       this.isShow = false
       if (this.onClose) this.onClose(option)
+      this.$emit('input', option)
     },
     multiclick: function (option, key) {
       switch (key) {
@@ -223,10 +258,27 @@ export default {
     clickConfirm: function () {
       this.selected = this.selectext1 + '-' + this.selectext2
       var obj = []
-      obj.push({ 'value': this.selected1, 'text': this.selectext1 })
-      obj.push({ 'value': this.selected2, 'text': this.selectext2 })
+      obj.push({
+        'value': this.selected1,
+        'text': this.selectext1
+      })
+      obj.push({
+        'value': this.selected2,
+        'text': this.selectext2
+      })
       this.$emit('input', obj)
       this.close()
+    },
+    chkSelectValue: function () {
+      if ((this.value || '') === '') {
+        return
+      }
+      var selOpt = this.options.filter(option => option.value === this.value.value)
+
+      if ((selOpt || '') !== '' && selOpt.length === 1) {
+        this.selected = selOpt[0].text
+        this.selected1 = selOpt[0].value
+      }
     }
   }
 }

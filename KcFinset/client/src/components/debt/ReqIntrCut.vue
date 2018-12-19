@@ -141,10 +141,9 @@
             <div class="flex">
               <p>자격증</p>
               <p>
-                <multiselect v-model="certification" ref="certification" placeholder="자격증선택" track-by="text" label="text" :options="certList" :searchable="false" :allow-empty="false" @select="onSelectCert">
+                <multiselect :id="'certification'" v-model="certification" :title="'자격증'" placeholder="자격증선택" :options="certList" :onClose="onSelectCert">
                 </multiselect>
               </p>
-              <p class="warn" v-if="errors.has('자격증')">{{errors.first('자격증')}}</p>
             </div>
             <p class="text">은행에서 정하는 직업평가기준표에 의한 전문자격증을 취득한 경우 요구가 가능합니다.</p>
           </div>
@@ -430,6 +429,12 @@ export default {
         //부채
         if (Number(_this.debtBfAmt) * 0.85 < Number(_this.debtAtAmt)) {
           _this.$toast.center("부채 감소 기준에 부합하지 않습니다");
+          return false;
+        }
+      }
+      if (_this.ynCert) {
+        if ("" == _this.certification) {
+          _this.$toast.center("자격증을 선택해 주세요");
           return false;
         }
       }

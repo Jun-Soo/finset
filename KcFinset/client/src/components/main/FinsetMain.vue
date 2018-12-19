@@ -137,17 +137,18 @@ export default {
   // },
   beforeCreate() {},
   created() {
+    console.log("create start");
     this.$store.state.header.type = "main";
     this.$store.state.header.active = "main";
-    this.getMainInfo();
+
     //로그인 처리 할때만 자동스트래핑 요청
     if (this.$store.state.isScrap) {
-      this.startAutoScrap();
+      console.log("startScrapSt call");
+      this.$parent.startAutoScrap();
       this.$store.state.isScrap = false;
-      this.$parent.startScrapSt();
     }
 
-    this.$store.state.isLoading = false;
+    this.getMainInfo();
   },
   beforeMount() {},
   mounted() {},
@@ -177,6 +178,7 @@ export default {
             _this.gaugeValue = _this.creditInfo.rating_credit / 1000;
             _this.gaugeText = _this.creditInfo.grade_credit + "등급";
           }
+          this.$store.state.isLoading = false;
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);
@@ -184,49 +186,6 @@ export default {
     },
     formatNumber: function(data) {
       return Common.formatNumber(data);
-    },
-    startAutoScrap: function() {
-      var formData = new FormData();
-      formData.append("no_person", this.$store.state.user.noPerson);
-      this.$http
-        .post("/m/scrap/getAutoScrapInfo.json", formData)
-        .then(function(response) {
-          var result = response.data;
-          if (Constant.userAgent == "Android") {
-            var smsStartDate = result.smsStartDate;
-            var smsInclude = result.smsInclude;
-            var smsExclude = result.smsExclude;
-            window.Android.getSmsList(smsStartDate, smsInclude, smsExclude);
-          }
-          var bankInfo = "";
-          var cardInfo = "";
-          var ntsInfo = "";
-          //은행 스크래핑 내역
-          if (result.autoScrapBankInfo) {
-            bankInfo = result.autoScrapBankInfo;
-          }
-          //카드 스크래핑 내역
-          if (result.autoScrapCardInfo) {
-            cardInfo = result.autoScrapCardInfo;
-          }
-          //국세청 스크래핑 내역
-          if (result.autoScrapNTSInfo) {
-            ntsInfo = result.autoScrapNTSInfo;
-          }
-
-          if (Constant.userAgent == "iOS") {
-            Jockey.send("startAutoScrap", JSON.parse(bankInfo));
-            Jockey.send("startAutoScrap", JSON.parse(cardInfo));
-            Jockey.send("startAutoScrap", JSON.parse(ntsInfo));
-          } else if (Constant.userAgent == "Android") {
-            window.Android.startAutoScrap("bank", bankInfo);
-            window.Android.startAutoScrap("card", cardInfo);
-            window.Android.startAutoScrap("nts", ntsInfo);
-          }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
-        });
     },
     goMenu: function(menu) {
       if ("csDetail" == menu) {

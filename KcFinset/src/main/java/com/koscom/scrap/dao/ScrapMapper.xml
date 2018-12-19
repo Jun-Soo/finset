@@ -886,8 +886,21 @@
 		SET
 			CD_LINK_STAT = #{cd_link_stat, jdbcType=VARCHAR}
 			, RSN_LINK_MESSAGE = #{rsn_link_message, jdbcType=VARCHAR}
+			, ID_LST = #{no_person, jdbcType=VARCHAR}
+			, DT_LST = SYSDATE
 		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
 			AND CD_FC = #{cd_fc, jdbcType=NUMERIC}
+	</update>
+	
+	<update id="updateFcLinkInfoAll" parameterType="com.koscom.scrap.model.FcLinkInfoVO">
+		UPDATE FC_LINK_INFO
+		SET
+			YN_LINK = #{yn_link, jdbcType=VARCHAR}
+			, CD_LINK_STAT = #{cd_link_stat, jdbcType=VARCHAR}
+			, RSN_LINK_MESSAGE = #{rsn_link_message, jdbcType=VARCHAR}
+			, ID_LST = #{no_person, jdbcType=VARCHAR}
+			, DT_LST = SYSDATE
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</update>
 	
 	<select id="getLinkedFcCount" parameterType="java.lang.String" resultType="int">

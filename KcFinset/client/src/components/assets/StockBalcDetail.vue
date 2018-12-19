@@ -6,23 +6,23 @@
         <div class="body">
           <div class="flex">
             <p>출금가능액</p>
-            <p>{{formatNumber(stockSumInfo.cashavwithdraw)}}</p>
+            <p>{{formatNumber(stockSumInfo.cashavwithdraw)}} <em>원</em></p>
           </div>
           <div class="flex">
             <p>대용금</p>
-            <p>{{formatNumber(stockSumInfo.subsmargin)}}</p>
+            <p>{{formatNumber(stockSumInfo.subsmargin)}} <em>원</em></p>
           </div>
           <div class="flex">
             <p>매수/미납금</p>
-            <p>{{formatNumber(stockSumInfo.receivable)}}</p>
+            <p>{{formatNumber(stockSumInfo.receivable)}} <em>원</em></p>
           </div>
           <div class="flex">
             <p>대출/신용금</p>
-            <p>{{formatNumber(stockSumInfo.loancredit)}}</p>
+            <p>{{formatNumber(stockSumInfo.loancredit)}} <em>원</em></p>
           </div>
           <div class="flex">
             <p>유가증권평가금액</p>
-            <p>{{formatNumber(stockSumInfo.valueatcur)}} {{(stockSumInfo.proloss!='0')?'('+stockSumInfo.proloss+')':''}}</p>
+            <p>{{formatNumber(stockSumInfo.valueatcur)}}{{(stockSumInfo.proloss!='0')?'('+stockSumInfo.proloss+')':''}}<em>원</em></p>
           </div>
         </div>
       </div>
@@ -31,11 +31,11 @@
     <div class="box-list list02">
 
       <div class="select pb20">
-        <multiselect v-model="scAccType" ref="scAccType" placeholder="분류선택" track-by="text" label="text" :options="scAccTypeOptions" :searchable="false" :allow-empty="false" @select="onSelectAcc">
+        <multiselect :id="'scAccType'" v-model="scAccType" ref="scAccType" class="multiselect-basic" placeholder="분류선택" :title="'분류'" :options="scAccTypeOptions" :onClose="onSelectAcc">
         </multiselect>
-        <multiselect v-model="scCompany" ref="scCompany" placeholder="증권사선택" track-by="text" label="text" :options="scCompanyOptions" :searchable="false" :allow-empty="false" @select="onSelectComp">
+        <multiselect :id="'scCompany'" v-model="scCompany" ref="scCompany" class="multiselect-basic" placeholder="증권사선택" :title="'증권사'" :options="scCompanyOptions" :onClose="onSelectComp">
         </multiselect>
-        <multiselect v-model="orderBy" ref="orderBy" placeholder="정렬선택" track-by="text" label="text" :options="orderByOptions" :searchable="false" :allow-empty="false" @select="onSelectOrder">
+        <multiselect :id="'orderBy'" v-model="orderBy" ref="orderBy" class="multiselect-basic" placeholder="정렬선택" :title="'정렬'" :options="orderByOptions" :onClose="onSelectOrder">
         </multiselect>
       </div>
       <template v-if="accountList.length == 0" class="nodata">조회 내역이 없습니다</template>
@@ -85,7 +85,6 @@ export default {
       scCompanyOptions: [],
       scCompany: "",
       orderByOptions: [
-        { text: "선택", value: "" },
         { text: "평가금액순", value: "01" },
         { text: "상승률순", value: "02" },
         { text: "비중순", value: "03" }
@@ -102,6 +101,8 @@ export default {
   },
   created() {
     this.person_share_list = this.$route.params.person_share_list;
+
+    this.orderBy = this.orderByOptions[0]; //기본정렬 - 평가금액순 셋팅
 
     this.getAssetsStockSumInfo();
   },

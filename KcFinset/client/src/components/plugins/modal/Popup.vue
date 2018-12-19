@@ -200,7 +200,7 @@ export default {
 
     if (this.height) {
       if (this.height == "auto") {
-        this.style = this.style + "height: auto;";
+        this.style = this.style + "min-height:0;height:auto;";
       } else {
         this.style = this.style + "height: " + this.height + "px;";
       }

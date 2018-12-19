@@ -7,8 +7,7 @@
           <div>
             <p class="key">대출용도</p>
             <p>
-              <multiselect v-model="cd_loan_use" ref="cd_loan_use" placeholder="대출용도선택" track-by="text" label="text" :options="options_loan" :searchable="false" :allow-empty="false" @select="selectLoan()" v-validate="'required'" data-vv-name='대출용도'>
-              </multiselect>
+              <multiselect v-model="cd_loan_use" ref="cd_loan_use" :title="'대출용도'" placeholder="대출용도선택" :options="options_loan" :onClose="selectLoan" v-validate="'required'" data-vv-name='대출용도' />
             </p>
           </div>
           <p class=" warn" v-if="errors.has('대출용도')">{{errors.first('대출용도')}}</p>
@@ -17,8 +16,7 @@
           <div>
             <p class="key">주거형태</p>
             <p>
-              <multiselect v-model="cd_house_type" ref="cd_house_type" placeholder="주거형태선택" track-by="text" label="text" :options="options_house" :searchable="false" :allow-empty="false" @select="selectHouse()" v-validate="'required'" data-vv-name='주거형태'>
-              </multiselect>
+              <multiselect v-model="cd_house_type" ref="cd_house_type" :title="'주거형태'" placeholder="주거형태선택" :options="options_house" :onClose="selectHouse" v-validate="'required'" data-vv-name='주거형태' />
             </p>
           </div>
           <p class=" warn" v-if="errors.has('주거형태')">{{errors.first('주거형태')}}</p>
@@ -27,8 +25,7 @@
           <div>
             <p class="key">소유형태</p>
             <p>
-              <multiselect v-model="cd_live_type_home" ref="cd_live_type_home" placeholder="소유형태선택" track-by="text" label="text" :options="options_live" :searchable="false" :allow-empty="false" @select="selectLive()" v-validate="'required'" data-vv-name='소유형태'>
-              </multiselect>
+              <multiselect v-model="cd_live_type_home" ref="cd_live_type_home" :title="'소유형태'" placeholder="소유형태선택" :options="options_live" :onClose="selectLive" v-validate="'required'" data-vv-name='소유형태' />
             </p>
           </div>
           <p class=" warn" v-if="errors.has('소유형태')">{{errors.first('소유형태')}}</p>
@@ -85,13 +82,13 @@ export default {
     selectLoan: function() {
       var _this = this;
       setTimeout(function() {
-        _this.$refs.cd_house_type.$el.focus();
+        _this.$refs.cd_house_type.open();
       }, 100);
     },
     selectHouse: function() {
       var _this = this;
       setTimeout(function() {
-        _this.$refs.cd_live_type_home.$el.focus();
+        _this.$refs.cd_live_type_home.open();
       }, 100);
     },
     selectLive: function() {

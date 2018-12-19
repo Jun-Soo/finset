@@ -67,18 +67,25 @@ axios.interceptors.request.use(function (config) {
   return config
 })
 axios.interceptors.response.use((response) => {
+  store.commit('AJAX_INIT')
   return response
 }, function (error) {
-  if (error.response.status === 401) {
-    console.log('unauthorized, logging out ...')
-    router.push('/mypage/logout')
-    return false
-  } else if (error.response.status === 403) {
-    console.log('unauthorized, logging out ...')
-    router.push('/mypage/logout')
-    return false
+  debugger
+  if (store.getters.getError) {
+    store.commit('AJAX_ERROR')
+    if (error.response.status === 401) {
+      console.log('unauthorized, logging out ...')
+      router.push('/mypage/logout')
+      return false
+    } else if (error.response.status === 403) {
+      console.log('unauthorized, logging out ...')
+      router.push('/mypage/logout')
+      return false
+    } else {
+      router.push('/Error')
+      return false
+    }
   }
-  return Promise.reject(error.response)
 })
 Vue.prototype.$http = axios
 

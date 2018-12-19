@@ -18,16 +18,6 @@ export default {
   created() {
     window.resultCheckFingerPrint = this.resultCheckFingerPrint;
 
-    if (Constant.userAgent == "Android") {
-      window.Android.checkFingerPrint();
-    } else if (Constant.userAgent == "iOS") {
-      //지문인식 가능여부 체크 결과 콜백 이벤트
-      Jockey.on("resultCheckFingerPrint", function(param) {
-        _this.resultCheckFingerPrint(param.result);
-      });
-      Jockey.send("checkFingerPrint");
-    }
-
     // mobile 초기화
     Common.init();
 
@@ -47,6 +37,18 @@ export default {
 
     // 비밀번호, 지문인증 재확인
     this.$store.state.ynReload = Constant.params.yn_reload;
+
+    if (Constant.userAgent == "Android") {
+      window.Android.checkFingerPrint();
+    } else if (Constant.userAgent == "iOS") {
+      //지문인식 가능여부 체크 결과 콜백 이벤트
+      Jockey.on("resultCheckFingerPrint", function(param) {
+        resultCheckFingerPrint(param.result);
+      });
+      Jockey.send("checkFingerPrint");
+    } else {
+      this.getUserPage();
+    }
   },
   methods: {
     getUserPage: function() {
@@ -97,16 +99,28 @@ export default {
     /***
      * Native Call function
      ***/
-    resultCheckFingerPrint: function(res) {
-      // console.log(result);
-      let isFingerPrintRegistered = res.isFingerPrintRegistered; //지문이 등록되어있지만, 지문data가 없는 경우
-      let result = res.result;
-      if ((result == true || result == 1) && isFingerPrintRegistered == true) {
-        this.chkFingerPrint = "Y";
+    resultCheckFingerPrint: function(res, result) {
+      let isFingerPrintRegistered = "";
+      let _result = "";
+      // this.$toast.center("init : " + res + "===" + result);
+      if (Constant.userAgent == "Android") {
+        isFingerPrintRegistered = res; //지문이 등록되어있지만, 지문data가 없는 경우
+        _result = result;
+      } else if (Constant.userAgent == "iOS") {
+        isFingerPrintRegistered = res.isFingerPrintRegistered; //지문이 등록되어있지만, 지문data가 없는 경우
+        _result = res.result;
+      }
+
+      if (
+        (_result == true || _result == 1) &&
+        isFingerPrintRegistered == true
+      ) {
+        this.chkFingerPrint = true;
       } else {
         //지문인식 기능이 없거나, 등록된 지문이 없으면
-        this.chkFingerPrint = "N";
+        this.chkFingerPrint = false;
       }
+
       // page call
       this.getUserPage();
     }

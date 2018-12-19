@@ -339,6 +339,8 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .list01 .item .top p.corp { font-weight: 700; color: #222; }
 .list01 .item .top p.number { font-size: 24px; font-weight: 700; color: #222; margin-top: 5px; }
 .list01 .item .top p.number em { margin-left: 2px; font-size: 12px; color: #222; }
+.list01 .item .top p.goal em { padding-left: 5px; margin-left: 5px; border-left: 1px solid #e5e5e5; }
+.list01 .item .top p.goal em:first-child { border: none; }
 .list01 .item .top p:last-child { text-align: right; }
 .list01 .item .number-wrap { display: flex; align-items: center; margin-top: 15px; }
 .list01 .item .number-wrap .left { width: 70%; }
@@ -408,6 +410,12 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .list01 .item .detail .wrap p.rate em { display: inline-block; line-height: 16px; color: #62c1d0; border: 1px solid #62c1d0; border-radius: 20px; margin-right: 5px; padding: 0 10px; vertical-align: middle; font-weight: 700; }
 .list01 .item .form .key { margin-top: 15px; color: #9b9489; }
 .list01 .item .form input { margin-top: 10px; }
+.list01 .item .gage { position: relative; padding: 10px 0; }
+.list01 .item .gage p { width: 100%; height: 2px; border-radius: 2px; position: absolute; background: #e1dfdb; left: 0; }
+.list01 .item .gage p .active { height: 2px; border-radius: 2px; position: absolute; background: #62c1d0; top: 0; left: 0; }
+.list01 .item .gage p .circle { width: 15px; height: 15px; position: absolute; border: 4px solid #fff; background: #62c1d0; box-shadow: 0 0 15px rgba(0, 0, 0, 0.1); border-radius: 100%; top: -6px; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+.list01 .item .number-single { text-align: right; font-size: 24px; font-weight: 700; color: #222; margin-top: 5px; padding-bottom: 10px; }
+.list01 .item .number-single em { margin-left: 2px; font-size: 12px; color: #222; }
 .list01 .select { display: flex; margin-bottom: 10px; }
 .list01 .select > div { width: 50%; }
 .list01 .select > div.right { text-align: right; }
@@ -437,6 +445,7 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .list02 .item .flex p.key em { font-weight: 400; }
 .list02 .item .flex p.number { font-size: 24px; font-weight: 700; color: #222; }
 .list02 .item .flex p.number em { color: #222; font-weight: 400; }
+.list02 .item .flex.bb { border-bottom: 1px solid #e5e5e5; padding-bottom: 20px; }
 .list02 .item .share { display: block; background: url("../images/common/btn_contop_arrow.png") no-repeat right center/7px; }
 .list02 .item .share span { font-size: 13px; display: inline-block; padding-right: 15px; }
 .list02 .item .share span.name { font-size: 14px; color: #222; font-weight: 700; }
@@ -448,6 +457,12 @@ aside.search-wrap .action.btn1 { grid-template-columns: 1fr; }
 .list02 .item .bar p { position: absolute; height: 3px; background: #62c1d0; border-radius: 5px; }
 .list02 .item .warn { color: #e52638; padding-left: 20px; background: url("../images/common/ico_arlam.png") no-repeat left 15px/13px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #e5e5e5; }
 .list02 .item .warn a { color: inherit; display: block; background: url("../images/common/btn_red_arrow.png") no-repeat right center/6px; }
+.list02 .item .star-list { padding-top: 13px; padding-bottom: 13px; border-bottom: 1px solid #e5e5e5; }
+.list02 .item .star-list .list { padding: 7px 0; display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; }
+.list02 .item .star-list .list p { color: #9b9489; }
+.list02 .item .star-list .list p.total { font-weight: 700; }
+.list02 .item .star-list .list p.total img { opacity: 1; }
+.list02 .item .star-list .list p img { opacity: .6; }
 .list02 .select { display: grid; justify-content: space-between; grid-template-columns: 1fr 1fr 1fr; grid-gap: 5px; }
 
 .nobox-list .date { color: #9b9489; margin-top: 20px; padding-bottom: 10px; border-bottom: 1px solid #e5e5e5; }
@@ -1517,3 +1532,11 @@ span.cell.day.selected.today { color: #fff; }
 .portfolio-list .title { font-size: 14px; color: #333; font-weight: 700; }
 .portfolio-list .text { font-size: 13px; color: #666; line-height: 18px; margin-top: 10px; }
 .portfolio-list .graph { margin-top: 10px; margin-bottom: 20px; }
+
+.gray-box { background: #efeeec; padding: 20px; }
+.gray-box .title { font-size: 14px; font-weight: 700; color: #333; line-height: 18px; }
+.gray-box .text { color: #666; font-size: 13px; line-height: 18px; margin-top: 5px; }
+
+.basic-list { padding: 5px 21px 95px; }
+.basic-list dt { margin-top: 20px; color: #333; font-weight: 700; font-size: 14px; }
+.basic-list dd select { width: 100%; margin-top: 10px; }

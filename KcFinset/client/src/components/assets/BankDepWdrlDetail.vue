@@ -155,7 +155,7 @@ export default {
       this.$router.push({
         name: "consumeConsumeDetail",
         query: {
-          seq_tran: _this.consumeInfo != null ? _this.seq_tran : "",
+          seq_tran: _this.seq_tran,
           type_in_out: _this.depWdrlInfo.cd_trns
         }
       });

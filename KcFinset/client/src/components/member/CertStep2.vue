@@ -36,7 +36,6 @@
     </section>
   </div>
 </template>
-
 <script>
 import Common from "./../../assets/js/common.js";
 import Constant from "./../../assets/js/constant.js";

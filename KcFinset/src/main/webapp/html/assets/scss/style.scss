@@ -6055,5 +6055,87 @@ span.cell.day.selected.today {
 }
 
 
+.portfolio{
+    display: flex;
+    height: calc(100vh - 160px);
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    .title{
+        font-size: 20px;
+        color: #333;
+        margin-top: 40px;
+        line-height: 25px;
+    }
+    .text{
+        font-size: 15px;
+        color: #888;
+        margin-top: 15px;
+    }
+}
+
+.portfolio-top{
+    padding-top: 30px;
+    text-align: center;
+    .key{
+        font-size: 14px;
+        font-weight: 700;
+        color: $col2;
+    }
+    .value{
+        font-size: 20px;
+        color: #222;
+        font-weight: 700;
+        margin-top: 10px;
+    }
+    .star{
+        margin-top: 15px;
+        img{
+            margin: 0 4px;
+        }
+    }
+    a{
+        display: inline-block;
+        padding-right: 13px;
+        background: url("../images/common/portfolio_arrow.png") no-repeat center right / 7px;
+        font-size: 14px;
+        font-weight: 700;
+        color: $col2;
+        margin-top: 20px;
+    }
+}
+
+.portfolio-list{
+    .title{
+        font-size: 14px;
+        color: #333;
+        font-weight: 700;
+    }
+    .text{
+        font-size: 13px;
+        color: #666;
+        line-height: 18px;
+        margin-top: 10px;
+    }
+    .graph{
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

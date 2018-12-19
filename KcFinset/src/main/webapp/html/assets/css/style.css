@@ -1502,3 +1502,18 @@ span.cell.day.selected.today { color: #fff; }
 .multiselect-basic .multiselect__select { right: 12px; }
 
 .multiselect-basic .multiselect__tags { text-align: left; line-height: 35px; height: 35px; }
+
+.portfolio { display: flex; height: calc(100vh - 160px); align-items: center; text-align: center; justify-content: center; }
+.portfolio .title { font-size: 20px; color: #333; margin-top: 40px; line-height: 25px; }
+.portfolio .text { font-size: 15px; color: #888; margin-top: 15px; }
+
+.portfolio-top { padding-top: 30px; text-align: center; }
+.portfolio-top .key { font-size: 14px; font-weight: 700; color: #9b9489; }
+.portfolio-top .value { font-size: 20px; color: #222; font-weight: 700; margin-top: 10px; }
+.portfolio-top .star { margin-top: 15px; }
+.portfolio-top .star img { margin: 0 4px; }
+.portfolio-top a { display: inline-block; padding-right: 13px; background: url("../images/common/portfolio_arrow.png") no-repeat center right/7px; font-size: 14px; font-weight: 700; color: #9b9489; margin-top: 20px; }
+
+.portfolio-list .title { font-size: 14px; color: #333; font-weight: 700; }
+.portfolio-list .text { font-size: 13px; color: #666; line-height: 18px; margin-top: 10px; }
+.portfolio-list .graph { margin-top: 10px; margin-bottom: 20px; }

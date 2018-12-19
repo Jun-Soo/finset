@@ -1,6 +1,6 @@
 <template>
   <div style="width=100%; height=100%">
-    <input @click="open" type="button" :value="selected" class="btn-cate btn-search" v-bind:class="{'on' : isShow}">
+    <input @click="open" type="button" :disabled="disabled" :value="selected" class="btn-cate btn-search" v-bind:class="{'on' : isShow}">
     <aside :id="id" :class="{'on' : isShow}" class="search-wrap">
       <div class="top" @click="close">
         <button>{{title}}</button>
@@ -57,6 +57,9 @@ export default {
       } else {
         this.style = this.style + "height: " + this.height + "px;";
       }
+    }
+    if (this.placeholder) {
+      this.selected = this.placeholder;
     }
     this.chkSelectValue();
   },

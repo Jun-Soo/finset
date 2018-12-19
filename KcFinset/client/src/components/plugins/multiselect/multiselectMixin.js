@@ -3,7 +3,7 @@ export default {
     return {
       isShow: false,
       setIsShow: false,
-      selected: '선택하세요',
+      selected: '',
       selectext1: '',
       selectext2: '',
       selected1: '',
@@ -156,6 +156,15 @@ export default {
     id: {
       type: String,
       default: null
+    },
+    /**
+     * Disables the multiselect if true.
+     * @default false
+     * @type {Boolean}
+     */
+    disabled: {
+      type: Boolean,
+      default: false
     }
   },
   mounted () {},
@@ -167,10 +176,18 @@ export default {
     }
   },
   watch: {
-    options: function (options) {
-      console.log(options)
-    },
     value: function (obj) {
+      if (obj === null) {
+        if (this.placeholder) {
+          this.selected = this.placeholder
+        } else {
+          this.selected = ''
+        }
+        this.selected1 = ''
+        this.selectext1 = ''
+        this.selected2 = ''
+        this.selectext2 = ''
+      }
       if ((obj.value || '') === '') {
         return
       }
@@ -215,10 +232,9 @@ export default {
     click: function (option) {
       this.selected1 = option.value
       this.selected = option.text
-      this.$emit('input', option)
-
       this.isShow = false
       if (this.onClose) this.onClose(option)
+      this.$emit('input', option)
     },
     multiclick: function (option, key) {
       switch (key) {

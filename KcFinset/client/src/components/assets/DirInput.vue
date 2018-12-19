@@ -8,7 +8,7 @@
             <ul class="flex">
               <li class="key">분류</li>
               <li class="value">
-                <multiselect v-model="cd_assets_class" ref="cd_assets_class" placeholder="분류선택" track-by="text" label="text" :options="assetsClassOptions" :searchable="false" :allow-empty="false" @select="selectAssetsClass" v-validate="'required'" data-vv-name='분류'>
+                <multiselect :id="'cd_assets_class'" v-model="cd_assets_class" ref="cd_assets_class" placeholder="분류선택" :title="'분류'" :options="assetsClassOptions" :onClose="selectAssetsClass" v-validate="'required'" data-vv-name='분류'>
                 </multiselect>
               </li>
             </ul>
@@ -18,7 +18,7 @@
             <ul class="flex">
               <li class="key">{{title_detail_class}}</li>
               <li class="value">
-                <multiselect v-model="cd_detail_class" ref="cd_detail_class" :placeholder="title_detail_class+'선택'" track-by="text" label="text" :options="options_detail_class" :searchable="false" :allow-empty="false" v-validate="'required'" :data-vv-name='title_detail_class'>
+                <multiselect :id="'cd_detail_class'" v-model="cd_detail_class" ref="cd_detail_class" :placeholder="title_detail_class+'선택'" :title="title_detail_class+''" :options="options_detail_class" v-validate="'required'" :data-vv-name='title_detail_class'>
                 </multiselect>
               </li>
             </ul>

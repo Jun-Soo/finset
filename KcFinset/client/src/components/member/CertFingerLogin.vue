@@ -107,14 +107,14 @@ export default {
       start: "manual",
       animTimingFunction: Vivus.EASE
     });
-    if (this.$store.state.ynReload == "Y") {
-      if (Constant.userAgent == "Android") {
-        window.Android.closeWebView();
-      } else if (Constant.userAgent == "iOS") {
-        Jockey.send("closeWebView");
-      }
-      return false;
-    }
+    // if (this.$store.state.ynReload == "Y") {
+    //   if (Constant.userAgent == "Android") {
+    //     window.Android.closeWebView();
+    //   } else if (Constant.userAgent == "iOS") {
+    //     Jockey.send("closeWebView");
+    //   }
+    //   return false;
+    // }
     console.log(this.$store.state.user.cntFailFinger);
   },
   beforeUpdate() {},

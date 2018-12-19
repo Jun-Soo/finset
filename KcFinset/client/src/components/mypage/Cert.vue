@@ -54,8 +54,6 @@ export default {
         resultCheckFingerPrint(param);
       });
 
-      this.$toast.center("created ");
-
       Jockey.send("checkFingerPrint");
     }
 
@@ -132,9 +130,13 @@ export default {
         this.fingerSettingSeen = false;
         this.$store.state.user.ynFingerprint = "N";
       }
-      if (isFingerPrintRegistered != true || isFingerPrintRegistered != 1) {
+      // this.$toast.center(isFingerPrintRegistered + "====");
+
+      if (isFingerPrintRegistered != true && isFingerPrintRegistered != 0) {
         this.fingerDataNone = true;
         this.$store.state.user.ynFingerprint = "N";
+      } else {
+        this.fingerDataNone = false;
       }
     }
   }

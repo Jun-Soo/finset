@@ -76,7 +76,7 @@ export default {
     } else if (Constant.userAgent == "iOS") {
       //지문인식 가능여부 체크 결과 콜백 이벤트
       Jockey.on("resultCheckFingerPrint", function(param) {
-        _this.resultCheckFingerPrint(param.result);
+        resultCheckFingerPrint(param);
       });
       Jockey.send("checkFingerPrint");
     }
@@ -244,14 +244,24 @@ export default {
     /***
      * Native Call function
      ***/
-    resultCheckFingerPrint: function(res) {
-      // console.log(result);
-      let isFingerPrintRegistered = res.isFingerPrintRegistered; //지문이 등록되어있지만, 지문data가 없는 경우
-      let result = res.result;
-      if ((result == true || result == 1) && isFingerPrintRegistered == true) {
+    resultCheckFingerPrint: function(res, result) {
+      let isFingerPrintRegistered = "";
+      let _result = "";
+
+      if (Constant.userAgent == "Android") {
+        isFingerPrintRegistered = res; //지문이 등록되어있지만, 지문data가 없는 경우
+        _result = result;
+      } else if (Constant.userAgent == "iOS") {
+        isFingerPrintRegistered = res.isFingerPrintRegistered; //지문이 등록되어있지만, 지문data가 없는 경우
+        _result = res.result;
+      }
+
+      if (
+        (_result == true || _result == 1) &&
+        isFingerPrintRegistered == true
+      ) {
         this.chkFingerPrint = "Y";
       } else {
-        //지문인식 기능이 없거나, 등록된 지문이 없으면
         this.chkFingerPrint = "N";
       }
     }

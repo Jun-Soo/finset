@@ -45,13 +45,16 @@ export default {
     this.$store.state.title = "인증/보안";
   },
   created() {
+    window.resultCheckFingerPrint = this.resultCheckFingerPrint;
     if (Constant.userAgent == "Android") {
       window.Android.checkFingerPrint();
     } else if (Constant.userAgent == "iOS") {
       //지문인식 가능여부 체크 결과 콜백 이벤트
       Jockey.on("resultCheckFingerPrint", function(param) {
-        resultCheckFingerPrint(param.result);
+        resultCheckFingerPrint(param);
       });
+
+      this.$toast.center("created ");
 
       Jockey.send("checkFingerPrint");
     }
@@ -111,10 +114,19 @@ export default {
     /**
      * NATIVE CALL BACK
      */
-    resultCheckFingerPrint: function(res) {
-      let isFingerPrintRegistered = res.isFingerPrintRegistered; //지문이 등록되어있지만, 지문data가 없는 경우
-      let result = res.result;
-      if (result == true || result == 1) {
+    resultCheckFingerPrint: function(res, result) {
+      let isFingerPrintRegistered = "";
+      let _result = "";
+
+      if (Constant.userAgent == "Android") {
+        isFingerPrintRegistered = res; //지문이 등록되어있지만, 지문data가 없는 경우
+        _result = result;
+      } else if (Constant.userAgent == "iOS") {
+        isFingerPrintRegistered = res.isFingerPrintRegistered; //지문이 등록되어있지만, 지문data가 없는 경우
+        _result = res.result;
+      }
+
+      if (_result == true || _result == 1) {
         this.fingerSettingSeen = true;
       } else {
         this.fingerSettingSeen = false;

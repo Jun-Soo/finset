@@ -72,8 +72,13 @@ export default {
   destroyed() {},
   methods: {
     androidBackFn: function() {
-      if (this.$modals.shownModal.length > 0) {
-        this.$modals.shownModal = [];
+      console.log("androidBackFn called");
+      if (
+        this.$modals != undefined &&
+        this.$modals.shownModals != undefined &&
+        this.$modals.shownModals.length > 0
+      ) {
+        this.$modals.shownModals = [];
         return;
       }
       if (this.$store.state.header.backPath == "") {

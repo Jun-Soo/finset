@@ -23,7 +23,7 @@
         </div>
       </div>
       <div v-if="!multiple" class="select-cate one">
-        <div class="cate-wrap">
+        <div class="cate-wrap" :style="cateHeight">
           <ul>
             <li v-for="option in options" :key="option.value" :class="{'on':option.value==selected1}" @click="click(option)">
               {{option.text}}
@@ -64,7 +64,9 @@ export default {
     this.chkSelectValue();
   },
   beforeUpdate() {},
-  updated() {},
+  updated() {
+    this.cateHeight = "height: " + this.options.length * 40 + "px;";
+  },
   beforeDestroy() {},
   destroyed() {},
   methods: {}

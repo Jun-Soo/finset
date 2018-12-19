@@ -14,7 +14,7 @@ export default {
     Constant.params = this.getParams()
 
     // ios a, button 태그 이벤트
-    $('body *').on('touchstart', function () {})
+    $('body *').on('touchstart', function () { })
 
     // Tab
     $('.tabs a').click(function (e) {
@@ -475,7 +475,7 @@ export default {
       Constant._el = document.getElementById(el)
     }
     Constant._this.addScroll()
-    Constant._callback(function () {})
+    Constant._callback(function () { })
   },
   handleScroll: function () {
     var html = document.documentElement
@@ -493,7 +493,7 @@ export default {
     }
     var scrollBottom = docHeight - viewHeight - scrollY
 
-    if (scrollBottom === 0) {
+    if (scrollBottom <= 0) {
       Constant._callback(Constant._this.removeScroll)
     }
   },

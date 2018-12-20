@@ -856,8 +856,8 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .accodion > ul > li .con .flex p:last-child > button.cal { background: url("../images/common/btn_cal.png") no-repeat center/18px; }
 .accodion > ul > li .con .flex p:last-child input[type="text"], .accodion > ul > li .con .flex p:last-child input[type="number"] { line-height: 35px; height: 33px; width: 110px; font-size: 15px; text-align: left; text-indent: 0; }
 .accodion > ul > li .con .text { font-size: 12px; line-height: 16px; color: #888; }
-.accodion > ul > li.on .top { border-bottom: 1px solid #e5e5e5; }
-.accodion > ul > li.on .top em { background-position: left bottom; }
+.accodion > ul > li.on > .top { border-bottom: 1px solid #e5e5e5; }
+.accodion > ul > li.on > .top em { background-position: left bottom; }
 .accodion > ul > li.on .con { display: block; }
 
 /*   POP   */

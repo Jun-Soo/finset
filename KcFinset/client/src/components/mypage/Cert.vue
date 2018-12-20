@@ -46,6 +46,7 @@ export default {
   },
   created() {
     window.resultCheckFingerPrint = this.resultCheckFingerPrint;
+    // if (yn_fingerprint == "Y") {
     if (Constant.userAgent == "Android") {
       window.Android.checkFingerPrint();
     } else if (Constant.userAgent == "iOS") {
@@ -56,6 +57,7 @@ export default {
 
       Jockey.send("checkFingerPrint");
     }
+    // }
 
     // if (Constant.userAgent == "Android") {
     //   //물어보깅
@@ -75,15 +77,19 @@ export default {
   methods: {
     modifyFingerPrint: function(obj) {
       let _this = this;
+      this.$toast.center(obj.target.className);
       if (obj.target.className == _this.btnOff) {
         //킬때
         this.$router.push("/mypage/regCertLogin");
+        // _this.yn_fingerprint = "Y";
+        // _this.$store.state.user.ynFingerprint = "Y";
       } else {
         //끌때
         _this.yn_fingerprint = "N";
         _this.$store.state.user.ynFingerprint = "N";
         let form = new FormData();
         form.append("yn_fingerprint", _this.yn_fingerprint);
+        form.append("no_person", _this.$store.state.user.noPerson);
         _this.$http
           .post("/m/person/modifyFingerPrint.json", form, {
             header: {
@@ -91,7 +97,9 @@ export default {
               async: false
             }
           })
-          .then(response => {})
+          .then(response => {
+            _this.$store.state.user.ynFingerprint = "N";
+          })
           .catch(e => {
             this.$toast.center(ko.messages.error);
           });

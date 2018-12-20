@@ -83,18 +83,7 @@ export default {
     this.$store.state.title = "지문인증";
     window.resultFingerPrint = this.resultFingerPrint;
     console.log(this.$store.state.user.cntFailFinger);
-
-    if (Constant.userAgent == "Android") {
-      window.Android.initFingerPrint();
-    } else if (Constant.userAgent == "iOS") {
-      //지문인식 결과 콜백 이벤트
-      Jockey.on("resultFingerPrint", function(param) {
-        var result = false;
-        if (param.result == 1) result = true;
-      });
-      Jockey.send("initFingerPrint");
-    }
-
+    // this.$toast.center("created");
     this.errMsg =
       "지문인증을 " + this.cntFailFinger + "회 실패한 이력이 있습니다.";
   },
@@ -107,6 +96,22 @@ export default {
       start: "manual",
       animTimingFunction: Vivus.EASE
     });
+    if (this.$store.state.user.ynFingerprint == "Y") {
+      if (Constant.userAgent == "Android") {
+        window.Android.initFingerPrint();
+      } else if (Constant.userAgent == "iOS") {
+        //지문인식 결과 콜백 이벤트
+        Jockey.on("resultFingerPrint", function(param) {
+          var result = false;
+          if (param.result == 1) result = true;
+          resultFingerPrint(param.result);
+        });
+
+        Jockey.send("initFingerPrint");
+      }
+    } else {
+      this.$router.push("/member/certCodeLogin");
+    }
     // if (this.$store.state.ynReload == "Y") {
     //   if (Constant.userAgent == "Android") {
     //     window.Android.closeWebView();
@@ -208,7 +213,7 @@ export default {
         })
         .catch(e => {
           // this.$toast.center(ko.messages.error);
-          this.$toast.center("틀린횟수변경Catch");
+          // this.$toast.center("틀린횟수변경Catch");
         });
     },
     //로그인값 db 변경
@@ -239,9 +244,6 @@ export default {
      **/
     resultFingerPrint: function(result) {
       var _this = this;
-      // this.$store.state.isLoading = true;
-
-      // this.$toast.center("fffff : " + result);
 
       if (result == true || result == 1) {
         //지문인식 성공
@@ -271,13 +273,9 @@ export default {
           }, 500);
         }
       } else {
-        // this.$toast.center(loginTrue);
         //지문 틀린 누적횟수 증가
         _this.cntFailFinger += 1;
         _this.$store.state.user.cntFailFinger = _this.cntFailFinger;
-        // _this.$dialogs.alert(_this.cntFailFinger, Constant.options);
-        // _this.modifyPwdFailCnt("finger", _this.cntFailFinger);
-        // _this.$store.state.isLoading = false;
         if (_this.cntFailFinger < 5) {
           _this.errMsg = "다시 시도해 주세요. (" + _this.cntFailFinger + "/5)";
           return false;

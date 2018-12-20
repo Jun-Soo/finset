@@ -48,7 +48,7 @@ export default {
     return {
       errMsg: "",
       cntFailPwd: this.$store.state.user.cntFailPwd,
-      // cntFailFinger: this.$store.state.user.cntFailFinger,
+      cntFailFinger: this.$store.state.user.cntFailFinger,
       ynFingerprint: this.$store.state.user.ynFingerprint,
       username: this.$store.state.user.noPerson,
       password: "",

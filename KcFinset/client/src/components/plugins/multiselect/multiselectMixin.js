@@ -285,10 +285,12 @@ export default {
         let objWidth2 = Number(obj.$el.children[1].children[1].children[0].clientWidth.toString())
         let fullWidth = Number(obj.$el.clientWidth.toString())
         let parentWidth = Number(obj.$el.parentElement.parentElement.clientWidth.toString())
-
-        if (objWidth2 !== parentWidth && objWidth2 !== fullWidth && objWidth1 !== parentWidth) {
-          obj.$el.children[1].children[1].children[0].style.width = (objWidth1 - 80) + 'px'
-          obj.$el.children[1].children[1].style.width = (objWidth1 - 40) + 'px'
+        console.log(objWidth1 + '===' + objWidth2 + '===' + fullWidth + '===' + parentWidth)
+        if (!(objWidth1 !== parentWidth && objWidth2 !== parentWidth && fullWidth !== parentWidth)) {
+          if (objWidth2 !== parentWidth && objWidth2 !== fullWidth && objWidth1 !== parentWidth) {
+            obj.$el.children[1].children[1].children[0].style.width = (objWidth1 - 80) + 'px'
+            obj.$el.children[1].children[1].style.width = (objWidth1 - 40) + 'px'
+          }
         }
 
         let ht = this.options.length * 40

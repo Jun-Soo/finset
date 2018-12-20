@@ -3,7 +3,7 @@
     <input @click="open" type="button" :disabled="disabled" :value="selected" class="btn-cate btn-multiselect" v-bind:class="{'on' : isShow}">
     <aside :id="id" :class="{'on' : isShow}" class="search-wrap">
       <div class="top" @click="close">
-        <button class="multiBtn">{{title}}</button>
+        <button>{{title}}</button>
         <!-- <a v-if="setIsShow" class="btn-setting" @click="clickSetting"></a> -->
       </div>
       <div v-if="multiple" class="select-cate">

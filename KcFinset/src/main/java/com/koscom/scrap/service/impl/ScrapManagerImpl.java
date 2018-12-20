@@ -1640,9 +1640,10 @@ public class ScrapManagerImpl implements ScrapManager {
                 scrCardLimitInfo.setNo_person(no_person);
                 scrCardLimitInfo.setCd_fc(cd_fc);
                 scrCardLimitInfo.setYn_delete("N");
-//              if(scrCardLimitInfo.getType_card() == null || scrCardLimitInfo.getType_card().length() == 0){
-//                	scrCardLimitInfo.setType_card("defalut");
-//              }
+                //카드 타입이 없을 경우 DB 저장에 문제가 있어서 defalut로 저장 
+                if(scrCardLimitInfo.getType_card() == null || scrCardLimitInfo.getType_card().length() == 0){
+                	scrCardLimitInfo.setType_card("defalut");
+                }
                 scrapMapper.createScrCardLimitInfo(scrCardLimitInfo);
     		}
     	}

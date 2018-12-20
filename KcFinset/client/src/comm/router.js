@@ -720,15 +720,15 @@ export const routes = [{
       allowPath: true
     }
   },
-    // {
-    //   path: 'detail_2',
-    //   alias: '/detail_2',
-    //   name: 'debtDetail_2',
-    //   component: DebtDetail2,
-    //   meta: {
-    //     allowPath: true
-    //   }
-    // },
+  // {
+  //   path: 'detail_2',
+  //   alias: '/detail_2',
+  //   name: 'debtDetail_2',
+  //   component: DebtDetail2,
+  //   meta: {
+  //     allowPath: true
+  //   }
+  // },
   {
     path: 'repayment',
     alias: '/repayment',
@@ -783,15 +783,15 @@ export const routes = [{
       allowPath: true
     }
   },
-    // {
-    //   path: 'update',
-    //   alias: '/update',
-    //   name: 'debtUpdate',
-    //   component: DebtUpdate,
-    //   meta: {
-    //     allowPath: true
-    //   }
-    // },
+  // {
+  //   path: 'update',
+  //   alias: '/update',
+  //   name: 'debtUpdate',
+  //   component: DebtUpdate,
+  //   meta: {
+  //     allowPath: true
+  //   }
+  // },
   {
     path: 'reqIntrCut',
     alias: '/reqIntrCut',
@@ -1778,7 +1778,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  Store.state.header.backPath = ''
+  if (to.path !== '/proxy') Store.state.header.backPath = ''
   if (to.path === '/index.html') {
     next('/home?hp=' + to.query.hp)
   } else {

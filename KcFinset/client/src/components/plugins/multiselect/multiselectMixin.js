@@ -283,15 +283,17 @@ export default {
       if (obj.$el) {
         let objWidth1 = Number(obj.$el.children[1].children[1].clientWidth.toString())
         let objWidth2 = Number(obj.$el.children[1].children[1].children[0].clientWidth.toString())
-        let fullWidth = Number(obj.$el.clientWidth.toString())
-        let parentWidth = Number(obj.$el.parentElement.parentElement.clientWidth.toString())
-        console.log(objWidth1 + '===' + objWidth2 + '===' + fullWidth + '===' + parentWidth)
-        if (!(objWidth1 !== parentWidth && objWidth2 !== parentWidth && fullWidth !== parentWidth)) {
-          if (objWidth2 !== parentWidth && objWidth2 !== fullWidth && objWidth1 !== parentWidth) {
-            obj.$el.children[1].children[1].children[0].style.width = (objWidth1 - 80) + 'px'
-            obj.$el.children[1].children[1].style.width = (objWidth1 - 40) + 'px'
-          }
+        // let fullWidth = Number(obj.$el.clientWidth.toString())
+        // let parentWidth = Number(obj.$el.parentElement.parentElement.clientWidth.toString())
+        // console.log(objWidth1 + '===' + objWidth2 + '===' + fullWidth + '===' + parentWidth + '===' + document.body.clientWidth)
+        // console.log(objWidth2 + '===' + document.body.clientWidth)
+        // if (!(objWidth1 !== parentWidth && objWidth2 !== parentWidth && fullWidth !== parentWidth)) {
+        // if (objWidth2 !== parentWidth && objWidth2 !== fullWidth && objWidth1 !== parentWidth && objWidth2 === document.body.clientWidth) {
+        if (objWidth2 === document.body.clientWidth) {
+          obj.$el.children[1].children[1].children[0].style.width = (objWidth1 - 80) + 'px'
+          obj.$el.children[1].children[1].style.width = (objWidth1 - 40) + 'px'
         }
+        // }
 
         let ht = this.options.length * 40
         return 'height: ' + (ht > 300 ? 300 : ht) + 'px;'

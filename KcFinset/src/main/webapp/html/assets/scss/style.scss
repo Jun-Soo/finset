@@ -2889,12 +2889,12 @@ button.cal{
 .accodion{
     padding: 0 21px;
     border-top: 1px solid $lineColor;
-    ul{
+    >ul{
         margin-top: 20px;
-        li{
+        >li{
             border: 1px solid $lineColor;
             margin-bottom: 10px;
-            .top{
+            >.top{
                 padding: 20px;
                 position: relative;
                 em{
@@ -2954,7 +2954,7 @@ button.cal{
                         &:last-child{
                             text-align: right;
                             line-height: 0;
-                            button{
+                            >button{
                                 display: inline-block;
                                 width: 33px;
                                 height: 33px;
@@ -4946,7 +4946,7 @@ button.cal{
             }
         }
     }
-    button{
+    >button{
         line-height: 46px;
         border: 2px solid $col4;
         text-align: center;
@@ -5251,7 +5251,7 @@ button.cal{
         //width: auto;
         &.right{
             text-align: right;
-            button{
+            >button{
                 width: 35px;
                 height: 35px;
                 background: url("../images/common/btn-search.png") no-repeat center / contain;
@@ -6233,6 +6233,7 @@ span.cell.day.selected.today {
         select{
             width: 100%;
             margin-top: 10px;
+			//width: 100%;
         }
     }
 }

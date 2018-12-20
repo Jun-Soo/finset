@@ -13,7 +13,7 @@ select{
 	vertical-align:middle;
 	height: 33px;
 	border-radius: 0px; 
-	@include appearance(none); 
+	@include appearance(none); b
 	@include box-sizing(border-box);
 
 }
@@ -65,7 +65,7 @@ input[type="button"]{
 	background: $col1;
 	color: $white;
 	text-align: center;
-	min-width: 130px;
+	//min-width: 130px;
 	border: none;
 	font-size: 12px;
 	cursor: pointer;

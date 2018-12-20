@@ -1764,7 +1764,7 @@
 				A.NO_PERSON		= #{no_person	, jdbcType = VARCHAR}
 			AND A.NO_PERSON		= B.NO_PERSON
 			AND A.AN			= B.AN
-			AND A.AN			= #{no_card		, jdbcType = VARCHAR}
+			AND A.AN			= XX1.ENC_VARCHAR2_INS(#{no_card, jdbcType = VARCHAR}, '11', 'FS_ARIA', 'SCR_TRANSACTION_DETAIL', 'AN')
 			AND B.CD_FC			= #{cd_fc		, jdbcType = VARCHAR}
 			AND #{type_in_out, jdbcType = VARCHAR} =(
 				CASE

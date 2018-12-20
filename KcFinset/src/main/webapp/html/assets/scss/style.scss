@@ -2984,7 +2984,7 @@ button.cal{
                 }
             }
             &.on{
-                .top{
+                >.top{ 
                     border-bottom: 1px solid $lineColor;
                     em{
                         background-position: left bottom;

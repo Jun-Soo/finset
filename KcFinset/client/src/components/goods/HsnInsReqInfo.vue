@@ -90,10 +90,10 @@ export default {
               }
             });
           }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
         });
+      // .catch(e => {
+      //   this.$toast.center(ko.messages.error);
+      // });
     }
   }
 };

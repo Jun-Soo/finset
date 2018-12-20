@@ -188,14 +188,6 @@ public class LoanWorkerController implements Constant{
 	 */
 	@RequestMapping("/updateTxFc.json")
 	public String updateTxFc(HttpServletRequest request, HttpSession session, Model model, TxFcTransmitVO txFcTransmitVO) {
-        /**
-         * 접근제어 : start
-         */
-        boolean isAuth = AuthUtil.isHaveAuth(request,"/frameLoanWorkerStep9.crz",environment);
-        if(isAuth == false) {return JSON_VIEW;}
-        /**
-         * 접근제어 : end
-         */
         String no_person = (String) session.getAttribute("no_person");
         txFcTransmitVO.setId_frt(no_person);
         txFcTransmitVO.setId_lst(no_person);

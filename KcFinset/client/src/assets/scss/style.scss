@@ -2984,7 +2984,7 @@ button.cal{
                 }
             }
             &.on{
-                >.top{ 
+                >.top{
                     border-bottom: 1px solid $lineColor;
                     em{
                         background-position: left bottom;
@@ -4457,6 +4457,8 @@ button.cal{
         background: #fff;
         input[type="text"]{
             line-height: 33px;
+			width: 90%;
+			text-align: right;
         }
         p{
             padding: 5px 0;
@@ -6005,6 +6007,10 @@ span.cell.day.selected.today {
 
   background: transparent;
 
+}
+
+.vdp-datepicker__calendar .cell.selected{
+	color: #fff;
 }
 
 

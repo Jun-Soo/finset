@@ -90,11 +90,15 @@
           </a>
         </div>
       </template>
+
+      <div class="btn-wrap">
+        <a @click="viewBalc();" class="blue solid">계좌 통합 보기</a>
+      </div>
     </div>
 
-    <div class="btn-wrap float">
+    <!-- <div class="btn-wrap float">
       <a @click="viewBalc();" class="blue box solid">계좌 통합 보기</a>
-    </div>
+    </div> -->
   </section>
 </template>
 

@@ -840,25 +840,25 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .owl-theme .owl-dots .owl-dot.active a { background: #e52638; width: 6px; height: 6px; }
 
 .accodion { padding: 0 21px; border-top: 1px solid #e5e5e5; }
-.accodion ul { margin-top: 20px; }
-.accodion ul li { border: 1px solid #e5e5e5; margin-bottom: 10px; }
-.accodion ul li .top { padding: 20px; position: relative; }
-.accodion ul li .top em { position: absolute; right: 0; top: 50%; margin-top: -30px; display: inline-block; width: 60px; height: 60px; background: url("../images/common/accodion_arrow.png") no-repeat left top/60px; cursor: pointer; }
-.accodion ul li .top span { display: inline-block; position: relative; padding-left: 40px; color: #333; font-weight: 700; font-size: 15px; line-height: 19px; padding-top: 5px; }
-.accodion ul li .top span:before { position: absolute; left: 0; top: 0; display: inline-block; content: ""; width: 30px; height: 30px; vertical-align: top; margin-right: 10px; background: url(../images/_form/checkbox.png) no-repeat left top/30px; }
-.accodion ul li .top span.on:before { background-position: left bottom; }
-.accodion ul li .con { padding: 20px; display: none; }
-.accodion ul li .con .flex { display: flex; margin-bottom: 10px; }
-.accodion ul li .con .flex p { width: 70%; line-height: 35px; }
-.accodion ul li .con .flex p:first-child { font-size: 14px; font-weight: 700; color: #222; width: 30%; }
-.accodion ul li .con .flex p:last-child { text-align: right; line-height: 0; }
-.accodion ul li .con .flex p:last-child button { display: inline-block; width: 33px; height: 33px; border: 1px solid #e5e5e5; background: url("../images/common/btn_accodion_search.png") no-repeat center/contain; margin: 0; }
-.accodion ul li .con .flex p:last-child button.cal { background: url("../images/common/btn_cal.png") no-repeat center/18px; }
-.accodion ul li .con .flex p:last-child input[type="text"], .accodion ul li .con .flex p:last-child input[type="number"] { line-height: 35px; height: 33px; width: 110px; font-size: 15px; text-align: left; text-indent: 0; }
-.accodion ul li .con .text { font-size: 12px; line-height: 16px; color: #888; }
-.accodion ul li.on .top { border-bottom: 1px solid #e5e5e5; }
-.accodion ul li.on .top em { background-position: left bottom; }
-.accodion ul li.on .con { display: block; }
+.accodion > ul { margin-top: 20px; }
+.accodion > ul > li { border: 1px solid #e5e5e5; margin-bottom: 10px; }
+.accodion > ul > li > .top { padding: 20px; position: relative; }
+.accodion > ul > li > .top em { position: absolute; right: 0; top: 50%; margin-top: -30px; display: inline-block; width: 60px; height: 60px; background: url("../images/common/accodion_arrow.png") no-repeat left top/60px; cursor: pointer; }
+.accodion > ul > li > .top span { display: inline-block; position: relative; padding-left: 40px; color: #333; font-weight: 700; font-size: 15px; line-height: 19px; padding-top: 5px; }
+.accodion > ul > li > .top span:before { position: absolute; left: 0; top: 0; display: inline-block; content: ""; width: 30px; height: 30px; vertical-align: top; margin-right: 10px; background: url(../images/_form/checkbox.png) no-repeat left top/30px; }
+.accodion > ul > li > .top span.on:before { background-position: left bottom; }
+.accodion > ul > li .con { padding: 20px; display: none; }
+.accodion > ul > li .con .flex { display: flex; margin-bottom: 10px; }
+.accodion > ul > li .con .flex p { width: 70%; line-height: 35px; }
+.accodion > ul > li .con .flex p:first-child { font-size: 14px; font-weight: 700; color: #222; width: 30%; }
+.accodion > ul > li .con .flex p:last-child { text-align: right; line-height: 0; }
+.accodion > ul > li .con .flex p:last-child > button { display: inline-block; width: 33px; height: 33px; border: 1px solid #e5e5e5; background: url("../images/common/btn_accodion_search.png") no-repeat center/contain; margin: 0; }
+.accodion > ul > li .con .flex p:last-child > button.cal { background: url("../images/common/btn_cal.png") no-repeat center/18px; }
+.accodion > ul > li .con .flex p:last-child input[type="text"], .accodion > ul > li .con .flex p:last-child input[type="number"] { line-height: 35px; height: 33px; width: 110px; font-size: 15px; text-align: left; text-indent: 0; }
+.accodion > ul > li .con .text { font-size: 12px; line-height: 16px; color: #888; }
+.accodion > ul > li.on .top { border-bottom: 1px solid #e5e5e5; }
+.accodion > ul > li.on .top em { background-position: left bottom; }
+.accodion > ul > li.on .con { display: block; }
 
 /*   POP   */
 .pop-top { text-align: center; position: relative; }
@@ -1275,7 +1275,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .cert-wrap .grid.phone .multiselect__tags { border: 1px solid #e5e5e5; text-align: left; line-height: 30px; padding: 5px 20px 0 8px; margin-top: 0px; }
 .cert-wrap .grid.phone .multiselect__single { margin-bottom: 0; margin-top: 3px; }
 .cert-wrap .grid.phone .multiselect__select { top: 1px; margin-right: 5px; }
-.cert-wrap button { line-height: 46px; border: 2px solid #62c1d0; text-align: center; font-size: 15px; font-weight: 700; width: 100%; background: #fff; color: #62c1d0; margin-top: 10px; }
+.cert-wrap > button { line-height: 46px; border: 2px solid #62c1d0; text-align: center; font-size: 15px; font-weight: 700; width: 100%; background: #fff; color: #62c1d0; margin-top: 10px; }
 .cert-wrap .cert-num { display: grid; grid-template-columns: 7fr 3fr; align-items: center; margin-top: 15px; border: 1px solid #e5e5e5; }
 .cert-wrap .cert-num .time { text-align: center; color: #e52638; text-align: right; padding-right: 15px; }
 .cert-wrap .cert-num input { border: none; margin-top: 0; }
@@ -1333,7 +1333,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 /*   뉴스   */
 .search { display: flex; margin-bottom: 15px; justify-content: space-between; }
 .search div.right { text-align: right; }
-.search div.right button { width: 35px; height: 35px; background: url("../images/common/btn-search.png") no-repeat center/contain; }
+.search div.right > button { width: 35px; height: 35px; background: url("../images/common/btn-search.png") no-repeat center/contain; }
 .search div .total { display: inline-block; padding-left: 5px; margin-left: 5px; border-left: 1px solid #e5e5e5; margin-top: 10px; }
 .search div .total:first-child { adding-left: 0; margin-left: 0; border-left: none; }
 .search div .total em { color: #e52638; }

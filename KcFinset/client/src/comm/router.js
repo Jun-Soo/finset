@@ -114,6 +114,15 @@ import GoodsHsnInsIncome from '@/components/goods/HsnInsIncome'
 import GoodsHsnInsRepay from '@/components/goods/HsnInsRepay'
 // import GoodsHsnResult from '@/components/goods/HsnResult'
 import GoodsWorkerGoods from '@/components/goods/WorkerGoods'
+import GoodsStock1 from '@/components/goods/Stock1'
+import GoodsStock2 from '@/components/goods/Stock2'
+import GoodsStock3 from '@/components/goods/Stock3'
+import GoodsStock4 from '@/components/goods/Stock4'
+import GoodsStock5 from '@/components/goods/Stock5'
+import GoodsStock6 from '@/components/goods/Stock6'
+import GoodsStock7 from '@/components/goods/Stock7'
+import GoodsStock8 from '@/components/goods/Stock8'
+import GoodsStock9 from '@/components/goods/Stock9'
 
 import ConsumeHome from '@/components/consume/Home'
 import ConsumeMain from '@/components/consume/Main'
@@ -1212,6 +1221,78 @@ export const routes = [{
     path: 'workergoods',
     alias: '/workergoods',
     component: GoodsWorkerGoods,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'stock1',
+    alias: '/stock1',
+    component: GoodsStock1,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'stock2',
+    alias: '/stock2',
+    component: GoodsStock2,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'stock3',
+    alias: '/stock3',
+    component: GoodsStock3,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'stock4',
+    alias: '/stock4',
+    component: GoodsStock4,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'stock5',
+    alias: '/stock5',
+    component: GoodsStock5,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'stock6',
+    alias: '/stock6',
+    component: GoodsStock6,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'stock7',
+    alias: '/stock7',
+    component: GoodsStock7,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'stock8',
+    alias: '/stock8',
+    component: GoodsStock8,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'stock9',
+    alias: '/stock9',
+    component: GoodsStock9,
     meta: {
       allowPath: true
     }

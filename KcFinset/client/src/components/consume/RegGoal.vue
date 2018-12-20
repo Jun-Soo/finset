@@ -29,7 +29,7 @@
           <dl>
             <dt class="sum">
               <p class="title">합계</p>
-              <p><input readonly type="tel" :value="sumGoal1"> 원</p>
+              <p><input readonly type="text" :value="sumGoal1"> 원</p>
             </dt>
             <div v-for="(vo, index) in listDetailGoal1" :key="vo.cd_class">
               <dd>
@@ -48,11 +48,10 @@
           <dl>
             <dt class="sum">
               <p class="title">합계</p>
-              <p><input readonly type="tel" :value="sumGoal2"> 원</p>
+              <p><input readonly type="text" :value="sumGoal2"> 원</p>
             </dt>
             <div v-for="(vo, index) in listDetailGoal2" :key="index">
               <dd>
-                <!-- <p>{{vo.nm_card}}</p> -->
                 <p>{{formatNmCard(vo.nm_card)}}</p>
                 <input v-if="vo.cd_type != '02'" type="hidden" :name="'list['+index+'].cd_fc'" :value="vo.cd_fc" />
                 <input type="hidden" :name="'list['+index+'].cd_type'" :value="vo.cd_type" />

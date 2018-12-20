@@ -386,7 +386,8 @@
 	</update>
 	<select id="listPersonTransDetail" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.PersonTransDetailVO">
 		SELECT
-			 XX1.DEC_VARCHAR2_SEL(STD.AN, '10','FS_ARIA','SCR_TRANSACTION_DETAIL','AN') AS AN
+			 STD.SEQ_TRAN
+			,XX1.DEC_VARCHAR2_SEL(STD.AN, '10','FS_ARIA','SCR_TRANSACTION_DETAIL','AN') AS AN
 			,SBAAI.NM_AN
 			,STD.DT_TRD
 			,STD.TM_TRD
@@ -440,7 +441,8 @@
 	</select>
 	<select id="getPersonTransDetail" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.PersonTransDetailVO">
 		SELECT
-			 XX1.DEC_VARCHAR2_SEL(STD.AN, '10', 'FS_ARIA', 'SCR_TRANSACTION_DETAIL', 'AN') AS AN
+			 STD.SEQ_TRAN
+			,XX1.DEC_VARCHAR2_SEL(STD.AN, '10', 'FS_ARIA', 'SCR_TRANSACTION_DETAIL', 'AN') AS AN
 			,SBAAI.NM_AN
 			,STD.DT_TRD
 			,STD.TM_TRD
@@ -1337,6 +1339,7 @@
 			,CI.YN_PAY_INSTALLMENT
 			,CI.YN_AUTO
 			,CI.YN_PERSON_REGIST
+			,CI.SEQ_TRAN
 		FROM
 			 CONSUME_INFO CI
 			,PERSON_CONSUME_CLASS_INFO PCCI
@@ -1368,6 +1371,7 @@
 			,CI.YN_PAY_INSTALLMENT
 			,CI.YN_AUTO
 			,CI.YN_PERSON_REGIST
+			,CI.SEQ_TRAN
 		FROM
 			 CONSUME_INFO CI
 			,PERSON_CONSUME_CLASS_INFO PCCI
@@ -1717,10 +1721,68 @@
 					</otherwise>
 				</choose>
 	</update>
-	
+	<select id="listPrevTransactionDetail" parameterType="com.koscom.consume.model.ConsumeVO" resultType="com.koscom.consume.model.ConsumeVO">
+		SELECT
+			 A.NO_PERSON
+			,NULL AS SEQ_CONSUME
+			,CASE
+				WHEN A.AMT_WDRL = '0' THEN '01'
+				WHEN A.AMT_DEP = '0' THEN '02'
+			 END AS TYPE_IN_OUT
+			,'04' AS MEANS_CONSUME
+			,B.CD_FC
+			,B.NM_AN AS NM_CARD
+			,A.AN AS NO_CARD
+			,NULL AS TYPE_CARD
+			,A.DT_TRD
+			,A.TM_TRD
+			,NULL AS NO_BIZ
+			,NULL AS NM_BIZ
+			,#{cd_class, jdbcType = VARCHAR} AS CD_CLASS
+			,#{cd_type, jdbcType = VARCHAR} AS CD_TYPE
+			,CASE
+				WHEN DOC1 IS NOT NULL THEN DOC1
+				ELSE DOC2
+			 END AS CONTENTS
+			,NULL AS MEMO
+			,NULL AS GRADE
+			,TO_CHAR( TO_NUMBER( AMT_WDRL )+ TO_NUMBER( AMT_DEP )) AS AMT_IN_OUT
+			,NULL AS NO_APPROVAL
+			,'0' AS MON_INSTALLMENT
+			,'0' AS MON_REMAINING
+			,'N' AS YN_PAY_INSTALLMENT
+			,'N' AS YN_CANCEL
+			,'N' AS YN_DELETE
+			,'Y' AS YN_AUTO
+			,'N' AS YN_BUDGET_EXCEPT
+			,'N' AS YN_PERSON_REGIST
+			,A.SEQ_TRAN
+		FROM
+			 SCR_TRANSACTION_DETAIL A
+			,SCR_BANK_API_AN_INFO B
+		WHERE
+				A.NO_PERSON		= #{no_person	, jdbcType = VARCHAR}
+			AND A.NO_PERSON		= B.NO_PERSON
+			AND A.AN			= B.AN
+			AND A.AN			= #{no_card		, jdbcType = VARCHAR}
+			AND B.CD_FC			= #{cd_fc		, jdbcType = VARCHAR}
+			AND #{type_in_out, jdbcType = VARCHAR} =(
+				CASE
+					WHEN A.AMT_WDRL = '0' THEN '01'
+					WHEN A.AMT_DEP = '0' THEN '02'
+				END
+			)
+			AND 1 = (
+				CASE
+					WHEN A.DOC1	= #{contents, jdbcType = VARCHAR} THEN 1
+					WHEN A.DOC1 IS NULL AND A.DOC2 = #{contents, jdbcType = VARCHAR} THEN 1
+					ELSE 0
+				END
+			)
+	</select>
 	<insert id="createConsumeInfoAcc" parameterType="com.koscom.consume.model.ConsumeVO">
 		<selectKey keyProperty="seq_consume" resultType="java.lang.Integer" order="BEFORE">
-			(SELECT NVL(MAX(SEQ_CONSUME),0)+1 FROM CONSUME_INFO)
+			(SELECT NVL(MAX(SEQ_CONSUME),0)+1 FROM CONSUME_INFO WHERE NO_PERSON = #{no_person, jdbcType = VARCHAR})
 		</selectKey>
 			INSERT INTO
 				CONSUME_INFO(
@@ -1795,7 +1857,7 @@
 	
 	<insert id="createConsumeInfoOthers" parameterType="com.koscom.consume.model.ConsumeVO">
 		<selectKey keyProperty="seq_consume" resultType="java.lang.Integer" order="BEFORE">
-			(SELECT NVL(MAX(SEQ_CONSUME),0)+1 FROM CONSUME_INFO)
+			(SELECT NVL(MAX(SEQ_CONSUME),0)+1 FROM CONSUME_INFO WHERE NO_PERSON = #{no_person, jdbcType = VARCHAR})
 		</selectKey>
 			INSERT INTO
 				CONSUME_INFO(
@@ -1826,6 +1888,9 @@
 					,YN_AUTO
 					,YN_BUDGET_EXCEPT
 					,YN_PERSON_REGIST
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(seq_tran)">
+						,SEQ_TRAN
+					</if>
 					,ID_FRT
 					,DT_FRT
 					,ID_LST
@@ -1859,6 +1924,9 @@
 					,#{yn_auto				, jdbcType = VARCHAR}
 					,#{yn_budget_except		, jdbcType = VARCHAR}
 					,#{yn_person_regist		, jdbcType = VARCHAR}
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(seq_tran)">
+						,#{seq_tran			, jdbcType = VARCHAR}
+					</if>
 					,#{no_person			, jdbcType = VARCHAR}
 					,SYSDATE
 					,#{no_person			, jdbcType = VARCHAR}

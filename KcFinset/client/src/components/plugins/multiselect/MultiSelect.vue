@@ -1,9 +1,9 @@
 <template>
   <div style="width=100%; height=100%">
-    <input @click="open" type="button" :disabled="disabled" :value="selected" class="btn-cate btn-search" v-bind:class="{'on' : isShow}">
+    <input @click="open" type="button" :disabled="disabled" :value="selected" class="btn-cate btn-multiselect" v-bind:class="{'on' : isShow}">
     <aside :id="id" :class="{'on' : isShow}" class="search-wrap">
       <div class="top" @click="close">
-        <button>{{title}}</button>
+        <button class="multiBtn">{{title}}</button>
         <!-- <a v-if="setIsShow" class="btn-setting" @click="clickSetting"></a> -->
       </div>
       <div v-if="multiple" class="select-cate">
@@ -23,7 +23,7 @@
         </div>
       </div>
       <div v-if="!multiple" class="select-cate one">
-        <div class="cate-wrap" :style="cateHeight">
+        <div class="cate-wrap" :style="cateSize(this)">
           <ul>
             <li v-for="option in options" :key="option.value" :class="{'on':option.value==selected1}" @click="click(option)">
               {{option.text}}
@@ -64,9 +64,7 @@ export default {
     this.chkSelectValue();
   },
   beforeUpdate() {},
-  updated() {
-    this.cateHeight = "height: " + this.options.length * 40 + "px;";
-  },
+  updated() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {}
@@ -75,7 +73,7 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
-.btn-cate.btn-search {
+.btn-cate.btn-multiselect {
   padding-right: 20px;
   background: url("../../../assets/images/consume/btn_cate.png") no-repeat 95%
     center/10px;
@@ -83,5 +81,13 @@ export default {
   text-align: left;
   width: 100%;
   padding-left: 10px;
+}
+
+aside.search-wrap .select-cate .cate-wrap:last-of-type ul li {
+  text-align: left;
+}
+
+aside.search-wrap .select-cate.one .cate-wrap {
+  display: block;
 }
 </style>

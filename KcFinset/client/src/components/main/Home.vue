@@ -12,7 +12,7 @@ export default {
   name: "MainHome",
   data() {
     return {
-      chkFingerPrint: false
+      chkFingerPrint: true
     };
   },
   created() {
@@ -37,8 +37,9 @@ export default {
 
     // 비밀번호, 지문인증 재확인
     this.$store.state.ynReload = Constant.params.yn_reload;
-
-    if (Constant.userAgent == "Android") {
+    if (this.$store.state.ynReload == "Y") {
+      this.getUserPage();
+    } else if (Constant.userAgent == "Android") {
       window.Android.checkFingerPrint();
     } else if (Constant.userAgent == "iOS") {
       //지문인식 가능여부 체크 결과 콜백 이벤트

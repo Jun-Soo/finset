@@ -8,26 +8,26 @@ export default {
     Vue.prototype.$modals = {
 
       /**
-             * Modals that are currently shown.
-             *
-             * @var array
-             */
+       * Modals that are currently shown.
+       *
+       * @var array
+       */
       shownModals: [],
 
       /**
-             * All modals loaded to the view app.
-             *
-             * @var array
-             */
+       * All modals loaded to the view app.
+       *
+       * @var array
+       */
       allModals: [],
 
       /**
-             * Shows a named modal.
-             *
-             * @param string modalName
-             *
-             * @return void
-             */
+       * Shows a named modal.
+       *
+       * @param string modalName
+       *
+       * @return void
+       */
       show (modalName) {
         // eslint-disable-next-line no-unused-expressions
         this.shownModals.indexOf(modalName) === -1 ? this.shownModals.push(modalName) : null
@@ -38,12 +38,12 @@ export default {
       },
 
       /**
-             * Hides a named modal.
-             *
-             * @param string| array modalNames
-             *
-             * @return void
-             */
+       * Hides a named modal.
+       *
+       * @param string| array modalNames
+       *
+       * @return void
+       */
       hide (modalNames) {
         /* Removes the scroll lock */
         document.body.classList.remove('v-modal__no-scroll')
@@ -64,39 +64,39 @@ export default {
       },
 
       /**
-             * Determines if a modal should be shown or not.
-             *
-             * @param string modalName
-             *
-             * @return boolean
-             */
+       * Determines if a modal should be shown or not.
+       *
+       * @param string modalName
+       *
+       * @return boolean
+       */
       isActive (modalName) {
         return this.shownModals.indexOf(modalName) > -1
       },
 
       /**
-             * Return all modals that are currently shown.
-             *
-             * @return array
-             */
+       * Return all modals that are currently shown.
+       *
+       * @return array
+       */
       shown () {
         return this.shownModals
       },
 
       /**
-             * Return all modals bound to the current Vue context.
-             *
-             * @return array
-             */
+       * Return all modals bound to the current Vue context.
+       *
+       * @return array
+       */
       all () {
         return this.allModals
       },
 
       /**
-             * Mount a new modal to the state.
-             *
-             * @return null
-             */
+       * Mount a new modal to the state.
+       *
+       * @return null
+       */
       mount (name) {
         if (this.allModals.indexOf(name) === -1) {
           this.allModals.push(name)

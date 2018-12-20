@@ -13,7 +13,7 @@
           <div>
             <p class="key">종류</p>
             <p>
-              <multiselect v-model="selectObj.building_type" ref="sel_building_type" label="text" :show-labels="false" :options="options_building_type" placeholder="종류 선택" :searchable="false" :allow-empty="false" @select="listAddrRegionFirst">
+              <multiselect v-model="selectObj.building_type" ref="sel_building_type" label="text" :show-labels="false" :options="options_building_type" placeholder="종류 선택" :searchable="false" :allow-empty="false" :onClose="listAddrRegionFirst">
               </multiselect>
             </p>
           </div>

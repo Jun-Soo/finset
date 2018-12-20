@@ -15,11 +15,11 @@
         <li v-if="job_class">
           <div v-if="job_class.value == '1'">
             <p class="key">연소득</p>
-            <p><input type="text" inputmode="numeric" v-model="amt_year_income" v-validate="'required'" data-vv-name='금액'>만원</p>
+            <p><input type="text" v-model="amt_year_income" v-validate="'required'" data-vv-name='금액'>만원</p>
           </div>
           <div v-if="job_class.value == '2'">
             <p class="key">연매출</p>
-            <p><input type="text" inputmode="numeric" v-model="amt_year_sale" v-validate="'required'" data-vv-name='금액'>만원</p>
+            <p><input type="text" v-model="amt_year_sale" v-validate="'required'" data-vv-name='금액'>만원</p>
           </div>
           <p class="warn" v-if="errors.has('금액')">{{errorText}}</p>
         </li>
@@ -109,10 +109,10 @@ export default {
               } else {
                 this.$toast.center(result.message);
               }
-            })
-            .catch(e => {
-              this.$toast.center(ko.messages.error);
             });
+          // .catch(e => {
+          //   this.$toast.center(ko.messages.error);
+          // });
         }
       });
     }

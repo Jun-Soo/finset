@@ -70,9 +70,9 @@ axios.interceptors.response.use((response) => {
   store.commit('AJAX_INIT')
   return response
 }, function (error) {
-  debugger
   if (store.getters.getError) {
     store.commit('AJAX_ERROR')
+    store.state.isLoading = false
     if (error.response.status === 401) {
       console.log('unauthorized, logging out ...')
       router.push('/mypage/logout')
@@ -83,7 +83,7 @@ axios.interceptors.response.use((response) => {
       return false
     } else {
       router.push('/Error')
-      return false
+      return Promise.reject(error.response)
     }
   }
 })

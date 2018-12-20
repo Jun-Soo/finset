@@ -235,7 +235,9 @@ export default {
               });
               Jockey.send("hasCertPassword");
             } else if (Constant.userAgent == "Android") {
+              console.log("hasCertPassword start");
               window.Android.hasCertPassword();
+              console.log("hasCertPassword end");
             }
           } else {
             _this.autoScrapCallback(false);

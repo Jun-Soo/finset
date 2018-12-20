@@ -10,6 +10,7 @@ public class PersonTransDetailVO implements Serializable{
 
 	private static final long serialVersionUID = 5967402064922491315L;
 
+	private int		seq_tran;	//입출금일련번호
 	private String 	an;			//게좌번호
 	private String	nm_an;		//계좌명
 	private String 	dt_trd;		//날짜
@@ -28,10 +29,11 @@ public class PersonTransDetailVO implements Serializable{
 	
 	public PersonTransDetailVO() {
 	}
-	public PersonTransDetailVO(String an, String nm_an, String dt_trd,
-			String tm_trd, String amt_wdrl, String amt_dep, String doc1,
-			String doc2, String cd_fc, String nm_fc, String id_frt,
-			Date dt_frt, String id_lst, Date dt_lst) {
+	public PersonTransDetailVO(int seq_tran, String an, String nm_an,
+			String dt_trd, String tm_trd, String amt_wdrl, String amt_dep,
+			String doc1, String doc2, String cd_fc, String nm_fc,
+			String id_frt, Date dt_frt, String id_lst, Date dt_lst) {
+		this.seq_tran = seq_tran;
 		this.an = an;
 		this.nm_an = nm_an;
 		this.dt_trd = dt_trd;
@@ -48,6 +50,12 @@ public class PersonTransDetailVO implements Serializable{
 		this.dt_lst = dt_lst;
 	}
 	
+	public int getSeq_tran() {
+		return seq_tran;
+	}
+	public void setSeq_tran(int seq_tran) {
+		this.seq_tran = seq_tran;
+	}
 	public String getAn() {
 		return an;
 	}

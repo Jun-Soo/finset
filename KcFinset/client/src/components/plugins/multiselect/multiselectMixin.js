@@ -7,8 +7,7 @@ export default {
       selectext1: '',
       selectext2: '',
       selected1: '',
-      selected2: '',
-      cateHeight: ''
+      selected2: ''
     }
   },
   props: {
@@ -278,6 +277,22 @@ export default {
       if ((selOpt || '') !== '' && selOpt.length === 1) {
         this.selected = selOpt[0].text
         this.selected1 = selOpt[0].value
+      }
+    },
+    cateSize: function (obj) {
+      if (obj.$el) {
+        let objWidth1 = Number(obj.$el.children[1].children[1].clientWidth.toString())
+        let objWidth2 = Number(obj.$el.children[1].children[1].children[0].clientWidth.toString())
+        let fullWidth = Number(obj.$el.clientWidth.toString())
+        let parentWidth = Number(obj.$el.parentElement.parentElement.clientWidth.toString())
+
+        if (objWidth2 !== parentWidth && objWidth2 !== fullWidth && objWidth1 !== parentWidth) {
+          obj.$el.children[1].children[1].children[0].style.width = (objWidth1 - 80) + 'px'
+          obj.$el.children[1].children[1].style.width = (objWidth1 - 40) + 'px'
+        }
+
+        let ht = this.options.length * 40
+        return 'height: ' + (ht > 300 ? 300 : ht) + 'px;'
       }
     }
   }

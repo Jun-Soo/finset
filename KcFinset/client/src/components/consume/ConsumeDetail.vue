@@ -24,7 +24,7 @@
               <p class="key">금액</p>
               <p>
                 <!-- <input type="tel" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액"><em>원</em> -->
-                <input type="text" class="money" inputmode="numeric" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액" @keypress="chkAmt">
+                <input type="text" class="money" inputmode="numeric" pattern="[0-9]*" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액">
                 <em>원</em>
               </p>
             </li>
@@ -50,6 +50,7 @@
             <li>
               <p class="key">날짜</p>
               <p>
+                <!-- <datepicker v-model="consumeVO.dt_trd" ref="datepicker" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDateDot" class="div-date" :disabled="chkReadonly"></datepicker> -->
                 <datepicker v-model="consumeVO.dt_trd" ref="datepicker" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDateDot" class="div-date" :disabled="chkReadonly"></datepicker>
                 <button class="cal" @click="openDatepicker"></button>
               </p>
@@ -274,7 +275,9 @@ export default {
     this.setDefault();
   },
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    Common.datepickerInit("div-date", this);
+  },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
@@ -404,8 +407,8 @@ export default {
       var _this = this;
       var transText =
         this.curTab == "01"
-          ? "이후에도 해당 입금에 대해서 수입으로 등록할까요?"
-          : "이후에도 해당 출금에 대해서 지출로 등록할까요?";
+          ? "해당 항목과 동일한 입금을 수입으로 등록할까요?"
+          : "해당 항목과 동일한 출금을 지출로 등록할까요?";
       this.$dialogs.confirm(transText, Constant.options).then(res => {
         // console.log(res); // {ok: true|false|undefined}
         if (res.ok) {
@@ -473,30 +476,6 @@ export default {
         .then(function(response) {
           var consumeVO = response.data.consumeVO;
           _this.allocateConsume(consumeVO);
-          // vo.dt_trd = new Date(Common.formatDateDot(vo.dt_trd));
-          // // vo.nm_card = _this.formatNmCard(vo.nm_card);
-          // vo.amt_in_out = _this.chkReadonly
-          //   ? _this.formatNumber(vo.amt_in_out)
-          //   : vo.amt_in_out;
-          // _this.meansConsumeOption = [];
-          // _this.meansConsumeOption.push({
-          //   text: vo.nm_card,
-          //   value: vo.no_card
-          // });
-          // vo.means_consume = { text: vo.nm_card, value: vo.no_card };
-          // _this.consumeVO = vo;
-
-          // if (_this.curTab == "02") {
-          //   _this.curClass = vo.cd_class;
-          //   _this.curType = vo.cd_type;
-          //   _this.orgClass = vo.cd_class;
-          //   _this.orgType = vo.cd_type;
-          // } else {
-          //   _this.curClass = vo.cd_class;
-          //   _this.orgClass = vo.cd_class;
-          // }
-          // _this.nmBanner = vo.contents;
-          // _this.getBannerData();
         });
     },
     listPersonConsumeClassInfo: function() {
@@ -620,9 +599,8 @@ export default {
         ? formData.append("yn_person_regist", "Y")
         : formData.append("yn_person_regist", "N");
       if (this.isTran) {
-        formData.append("seq_tran", this.$route.query.seq_tran);
+        formData.append("seq_tran", this.consumeVO.seq_tran);
       }
-
       this.$http
         .post("/m/consume/createConsumeInfo.json", formData)
         .then(function(response) {
@@ -750,8 +728,6 @@ export default {
           if (consumeVO == null) {
             _this.getPersonTransDetail();
           } else {
-            // _this.consumeVO = consumeVO;
-            // _this.seen = true;
             _this.isNew = false;
             _this.isAuto = true;
             _this.allocateConsume(consumeVO);
@@ -861,20 +837,12 @@ export default {
       this.consumeVO.contents = this.getTransText(transVO);
       this.consumeVO.dt_trd = new Date(Common.formatDateDot(transVO.dt_trd));
       this.consumeVO.tm_trd = transVO.tm_trd;
+      this.consumeVO.seq_tran = transVO.seq_tran;
 
       this.isNew = true;
       this.isTran = true;
       this.isPersonRegist = false;
       this.isShowTrans = false;
-    },
-    chkAmt: function(event) {
-      if (event.which >= 37 && event.which <= 40) {
-        console.log("return");
-        return;
-      }
-      event.target.value = event.target.value
-        .replace(/\D/g, "")
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
   }
 };

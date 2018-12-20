@@ -442,7 +442,14 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	public void createConsumeInfo(ConsumeVO consumeVO) {
 		logger.debug("createConsumeInfo");
 		if("04".equals(consumeVO.getMeans_consume())) {
-			consumeMapper.createConsumeInfoAcc(consumeVO);
+			if(consumeVO.getYn_auto().equals("Y")) {
+				List<ConsumeVO> list = consumeMapper.listPrevTransactionDetail(consumeVO);
+				for(ConsumeVO vo: list) {
+					consumeMapper.createConsumeInfoOthers(vo);
+				}
+			} else {
+				consumeMapper.createConsumeInfoAcc(consumeVO);	
+			}
 		} else {
 			consumeMapper.createConsumeInfoOthers(consumeVO);
 		}

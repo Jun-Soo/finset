@@ -117,6 +117,13 @@ public interface PersonManager {
 	 * @return	ReturnClass
 	 */
 	ReturnClass modifyPersonEmail(PersonVO personVO);
+	
+	/**
+	 * 통신사 코드 업데이트
+	 * @param 	PersonVO personVO
+	 * @return	ReturnClass
+	 */
+	ReturnClass modifyPersonCdTel(PersonVO personVO);
 
 	/**
 	 * 로그아웃 업데이트

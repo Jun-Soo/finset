@@ -36,6 +36,7 @@ const store = new Vuex.Store({
     },
     returnUrl: '',
     proxyUrl: '',
+    proxyBackUrl: '',
     accessToken: null,
     isLoggedIn: false,
     site: null,

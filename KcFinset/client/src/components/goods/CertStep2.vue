@@ -252,6 +252,9 @@ export default {
             _this.kcb_cp = result.kcb_cp;
 
             _this.insertTxFc();
+
+            //기사용자 통신사 코드가 없어서 추가
+            _this.modifyPersonCdTel();
           } else {
             this.$toast.center(result.message);
             _this.smsCertNo = "";
@@ -305,10 +308,29 @@ export default {
               });
             }
           }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
         });
+      // .catch(e => {
+      //   this.$toast.center(ko.messages.error);
+      // });
+    },
+    modifyPersonCdTel: function() {
+      var _this = this;
+      var formData = new FormData();
+      formData.append("telComCd", _this.telComCd.value);
+      console.log("modifyPersonCdTel start");
+      this.$http
+        .post("/m/person/modifyPersonCdTel.json", formData)
+        .then(response => {
+          var result = response.data;
+          if (result.result == "00") {
+            console.log("modifyPersonCdTel success");
+          } else {
+            console.log("modifyPersonCdTel failed");
+          }
+        });
+      // .catch(e => {
+      //   this.$toast.center(ko.messages.error);
+      // });
     },
     showSecureKeypad: function() {
       var _this = this;

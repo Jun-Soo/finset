@@ -364,10 +364,10 @@ public class LoanController implements Constant {
         /**
          * 로그추가
          */
-		logger.debug("reqFinanceInfo.crz:선택한 대출상품리스트 : " + _cd_goods);
-		logger.debug("reqFinanceInfo.crz:선택한 대출업체리스트 : " + _cd_fc   );
-		logger.debug("reqFinanceInfo.crz:선택한 loan_code      : " + loan_code);
-		logger.debug("no_person : " + no_person   );
+		logger.info("reqFinanceInfo.crz:선택한 대출상품리스트 : " + _cd_goods);
+		logger.info("reqFinanceInfo.crz:선택한 대출업체리스트 : " + _cd_fc   );
+		logger.info("reqFinanceInfo.crz:선택한 loan_code      : " + loan_code);
+		logger.info("no_person : " + no_person   );
 		String site = (environment != null)?environment.getProperty("service.profile"):"";
 		LogUtil.debugLn(logger,"site="+site);
 		boolean isSuccess = true;
@@ -381,7 +381,7 @@ public class LoanController implements Constant {
 			cd_fc    = goodsForm.getCd_fc().split(",");
 			cd_goods = goodsForm.getCd_goods().split(",");
 		}
-		logger.debug("reqFinanceInfo.crz: cd_goods : " + cd_goods);
+		logger.info("reqFinanceInfo.crz: cd_goods : " + cd_goods);
 		List<GoodsVO> listFcGoods = new ArrayList<GoodsVO>();
 		if(cd_fc != null && cd_fc.length > 0 && cd_goods != null && cd_goods.length > 0) {
 			for(int i = 0; i < cd_fc.length; i++) {
@@ -391,14 +391,14 @@ public class LoanController implements Constant {
 				goodsVO.setId_frt  (no_person  );
 				listFcGoods.add(goodsVO);
 			}
-			logger.debug("대출상품리스트 건수 : " + listFcGoods.size());
+			logger.info("대출상품리스트 건수 : " + listFcGoods.size());
             txFcTransmitVO = loanManager.getTxFcTransmitInfoForMsg(goodsForm.getNo_bunch());
             txFcTransmitVO.setListGoods(listFcGoods);
 			txFcTransmitVO.setLoan_code(loan_code);
 			txFcTransmitVO.setNo_person(no_person);
 			txFcTransmitVO.setId_frt   (no_person);
 
-			logger.debug("============> 1차한도조회 시작: "  + txFcTransmitVO + " > KCB DI : " +txFcTransmitVO.getKcb_di() );
+			logger.info("============> 1차한도조회 시작: "  + txFcTransmitVO + " > KCB DI : " +txFcTransmitVO.getKcb_di() );
 			ReturnClass rc = null;
 			ArrayList<Throwable> listErr = null;
 			try {
@@ -412,13 +412,13 @@ public class LoanController implements Constant {
 				rc = financeManager.reqFinanceInfo(txFcTransmitVO);
 				if (rc != null) {
 					if( Constant.FAILED.equals(rc.getCd_result())) {
-						logger.debug("EDOC ERROR " + rc.getDes_message());
+						logger.info("EDOC ERROR " + rc.getDes_message());
 						model.addAttribute("result", Constant.FAILED);
 						model.addAttribute("errorMsg", rc.getDes_message());
 					} else if(Constant.SUCCESS.equals(rc.getCd_result())) {
 						txFcReceiveVO = (TxFcReceiveVO)rc.getReturnObj();
 						listErr = txFcReceiveVO.getListErr();
-						logger.debug("============> 1차한도조회 결과 응답: "  + txFcReceiveVO);
+						logger.info("============> 1차한도조회 결과 응답: "  + txFcReceiveVO);
 						model.addAttribute("result", Constant.SUCCESS);
 					}
 				}

@@ -458,6 +458,31 @@ public class PersonController {
 		return "jsonView";
 	}
 
+	/**
+	 * 이메일 업데이트
+	 * @param model
+	 * @param request
+	 * @param fcmVO
+	 * @return
+	 */
+	@RequestMapping("/modifyPersonCdTel.json")
+	public String modifyPersonCdTel(
+			HttpServletRequest request,
+			HttpSession session,
+			PersonVO personVO,
+			Model model) {
+		String no_person = (String) session.getAttribute("no_person");
+
+		logger.info("no_person : "+no_person);
+		personVO.setNo_person(no_person);
+		ReturnClass returnClass = personManager.modifyPersonCdTel(personVO);
+
+		logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
+
+		model.addAttribute("result" , returnClass.getCd_result());
+		model.addAttribute("message" , returnClass.getMessage());
+		return "jsonView";
+	}
 
 
 	/**

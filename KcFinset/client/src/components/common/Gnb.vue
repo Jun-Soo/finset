@@ -39,7 +39,7 @@
           <dd><a @click="clickButton('/debt/main')">부채현황</a></dd>
           <dd><a @click="clickButton('/debt/calc')">계산기</a></dd>
           <dd><a @click="clickButton('/debt/reqIntrCut')">금리인하요구</a></dd>
-          <dd><a href="#">추천상품</a></dd>
+          <dd><a @click="clickButton('/goods/list')">추천상품</a></dd>
 
           <dt>소비지출</dt>
           <dd><a @click="clickButton('/consume/main')">소비/지출 현황</a></dd>

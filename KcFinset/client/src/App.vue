@@ -117,6 +117,10 @@ export default {
             );
             // 화면 갱신 처리
             setTimeout(function() {
+              // proxy화면 이동 후 현재화면으로 이동 (화면 갱신하면 Store가 갱신되는 현상으로 인한 임시 방편)
+              console.log("reload Page :", _this.$router.currentRoute.path);
+              _this.$store.state.proxyUrl = _this.$router.currentRoute.path;
+              _this.$router.push("/proxy");
               //_this.$router.push(_this.$router.currentRoute.path);
               //_this.$router.go(_this.$router.currentRoute);
               // _this.refreshKey++;

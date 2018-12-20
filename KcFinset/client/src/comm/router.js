@@ -720,15 +720,15 @@ export const routes = [{
       allowPath: true
     }
   },
-  // {
-  //   path: 'detail_2',
-  //   alias: '/detail_2',
-  //   name: 'debtDetail_2',
-  //   component: DebtDetail2,
-  //   meta: {
-  //     allowPath: true
-  //   }
-  // },
+    // {
+    //   path: 'detail_2',
+    //   alias: '/detail_2',
+    //   name: 'debtDetail_2',
+    //   component: DebtDetail2,
+    //   meta: {
+    //     allowPath: true
+    //   }
+    // },
   {
     path: 'repayment',
     alias: '/repayment',
@@ -783,15 +783,15 @@ export const routes = [{
       allowPath: true
     }
   },
-  // {
-  //   path: 'update',
-  //   alias: '/update',
-  //   name: 'debtUpdate',
-  //   component: DebtUpdate,
-  //   meta: {
-  //     allowPath: true
-  //   }
-  // },
+    // {
+    //   path: 'update',
+    //   alias: '/update',
+    //   name: 'debtUpdate',
+    //   component: DebtUpdate,
+    //   meta: {
+    //     allowPath: true
+    //   }
+    // },
   {
     path: 'reqIntrCut',
     alias: '/reqIntrCut',
@@ -1079,7 +1079,8 @@ export const routes = [{
     alias: '/list',
     component: GoodsList,
     meta: {
-      allowPath: true
+      allowPath: true,
+      backCasePath: true
     }
   },
   {
@@ -1778,7 +1779,9 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  if (to.path !== '/proxy') Store.state.header.backPath = ''
+  if (from.path !== '/proxy' && to.path !== '/proxy') Store.state.proxyBackUrl = from.path
+  if (from.path === '/proxy') Store.state.header.backPath = Store.state.proxyBackUrl
+  else Store.state.header.backPath = ''
   if (to.path === '/index.html') {
     next('/home?hp=' + to.query.hp)
   } else {

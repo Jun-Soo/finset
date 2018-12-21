@@ -75,7 +75,9 @@ export default {
   beforeCreate() {},
   created() {},
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    this.formatedValue = this.value;
+  },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},

@@ -135,15 +135,27 @@ export default {
     },
     //증권사 스크래핑 요청 - back
     startScrapSt: function() {
-      this.checkUUID();
+      console.log("startScrapSt uuid : ", this.$store.state.uuid);
+      //기존에 Device UUID 없을 경우만 chekck
+      if (this.$store.state.uuid != "") {
+        this.checkUUID();
+      } else {
+        this.resultCheckDevicesUUID(this.$store.state.uuid);
+      }
     },
     //스크래핑 완료 (모바일에서 호출)
     resultAutoScrap: function(isSucccess) {
+      console.log("resultAutoScrap called : ", isSucccess);
       if (isSucccess == "false") {
         this.isScrapSuccess = false;
       }
       this.isFcScrapDone = true;
-
+      console.log(
+        "isStScrapDone : ",
+        this.isStScrapDone,
+        " - isFcScrapDone : ",
+        this.isFcScrapDone
+      );
       if (this.isStScrapDone && this.isFcScrapDone) {
         this.hideProgressBanner();
         if (!this.isScrapSuccess) {
@@ -192,7 +204,12 @@ export default {
             _this.isScrapSuccess = false;
           }
           _this.isStScrapDone = true;
-
+          console.log(
+            "isStScrapDone : ",
+            this.isStScrapDone,
+            " - isFcScrapDone : ",
+            this.isFcScrapDone
+          );
           if (_this.isStScrapDone && _this.isFcScrapDone) {
             _this.hideProgressBanner();
             if (!_this.isScrapSuccess) {

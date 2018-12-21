@@ -889,12 +889,13 @@ public class ScrapManagerImpl implements ScrapManager {
 		List<FcLinkInfoVO> fcLinkInfoList = scrapMapper.getFcLinkInfo(fcLinkInfoVO);
 		
 		if(fcLinkInfoList == null || fcLinkInfoList.size() == 0)	{
+			logger.info("스크래핑 연동된 증권사가 없습니다.");
 			return Constant.SUCCESS;
 		}
 		
 		String token = getAccessToken();
 		if(token == null || token.length() <= 0)	{
-			logger.error("generate token failed");
+			logger.error("Open API Token 생성 실패~!");
 			return Constant.FAILED;
 		}
 		

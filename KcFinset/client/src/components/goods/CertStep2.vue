@@ -109,6 +109,7 @@ export default {
   created() {
     window.resultKeypad = this.resultKeypad;
     window.setRequestPhoneNumber = this.setRequestPhoneNumber;
+    window.setCertNumber = this.setCertNumber;
 
     if (Constant.userAgent == "Android") {
       window.Android.reqSMSPermission();
@@ -362,6 +363,13 @@ export default {
     //native call
     setRequestPhoneNumber: function(phoneNumber) {
       this.hp = phoneNumber;
+    },
+    //native call back
+    setCertNumber: function(number) {
+      number = number + "";
+      if (this.smsCertNo.length == 0) {
+        this.smsCertNo = number;
+      }
     },
     start: function() {
       var _this = this;

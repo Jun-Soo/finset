@@ -1,11 +1,16 @@
 <template>
-  <input type="text" inputmode="numeric" pattern="[0-9]*" v-model="formatedValue" :placeholder="placeholder" :class="theme" :readonly="readonly" :disabled="disabled" />
+  <input type="text" inputmode="numeric" pattern="[0-9]*" v-model="formatedValue" :id="id" :placeholder="placeholder" :class="theme" :readonly="readonly" :disabled="disabled" @change="change" />
 </template>
 
 <script>
 export default {
   name: "Money",
   props: {
+    // input 태그의 id
+    id: {
+      type: String,
+      required: false
+    },
     // 표현되는 숫자 값
     value: {
       type: String
@@ -32,6 +37,12 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    },
+    // change 이벤트
+    change: {
+      type: Function,
+      required: false,
+      default: function() {}
     }
   },
   watch: {},

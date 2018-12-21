@@ -51,17 +51,37 @@ export default {
         legend: {
           display: false
         },
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0
+          }
+        },
         scales: {
           yAxes: [
             {
-              display: false
+              gridLines: {
+                //offsetGridLines: true,
+                lineWidth: 1,
+                display: false,
+                drawBorder: true,
+                color: "#ccc"
+              },
+              ticks: {
+                display: false
+              }
             }
           ],
           xAxes: [
             {
               gridLines: {
+                lineWidth: 1,
+                display: false,
                 drawBorder: true,
                 borderDash: [8, 4],
+                zeroLineColor: "#000",
                 color: "#ccc"
               }
             }

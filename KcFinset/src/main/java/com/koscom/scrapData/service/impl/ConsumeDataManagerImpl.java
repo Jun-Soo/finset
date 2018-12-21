@@ -595,6 +595,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 					consumeDataVO.getDt_lst()
 					);
 			returnList.add(tempVO);
+			logger.debug("hwi---->"+tempVO.toString());
 		}
 		return returnList;
 	}

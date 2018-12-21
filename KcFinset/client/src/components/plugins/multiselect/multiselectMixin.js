@@ -236,7 +236,11 @@ export default {
       this.selected = option.text
       this.isShow = false
       if (this.onClose) this.onClose(option)
-      this.$emit('input', option)
+      if (this.selected1 === '') {
+        this.$emit('input', null)
+      } else {
+        this.$emit('input', option)
+      }
     },
     multiclick: function (option, key) {
       switch (key) {
@@ -269,6 +273,7 @@ export default {
     },
     chkSelectValue: function () {
       if (this.value === null || this.value === undefined) {
+        this.$emit('input', null)
         return
       }
       var selOpt = this.options.filter(option => option.value === this.value.value)
@@ -276,6 +281,8 @@ export default {
       if ((selOpt || '') !== '' && selOpt.length === 1) {
         this.selected = selOpt[0].text
         this.selected1 = selOpt[0].value
+      } else {
+        this.$emit('input', null)
       }
     },
     cateSize: function (obj) {

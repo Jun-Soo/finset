@@ -268,7 +268,7 @@ export default {
       this.close()
     },
     chkSelectValue: function () {
-      if (this.value === null || this.value === undefined || isNaN(this.value)) {
+      if (this.value === null || this.value === undefined) {
         return
       }
       var selOpt = this.options.filter(option => option.value === this.value.value)

@@ -312,11 +312,13 @@ public class ConsumeManagerImpl implements ConsumeManager {
 		if(cd_set.equals("01")) {
 			for(ConsumeDetailGoalInfoVO vo: consumeDetailGoalList) {
 				vo.setNo_person(consumeDetailGoalInfoVO.getNo_person());
+				vo.setAmt_budget(vo.getAmt_budget().replaceAll(",", ""));
 				consumeMapper.createDetailGoalClass(vo);
 			}
 		} else {
 			for(ConsumeDetailGoalInfoVO vo: consumeDetailGoalList) {
 				vo.setNo_person(consumeDetailGoalInfoVO.getNo_person());
+				vo.setAmt_budget(vo.getAmt_budget().replaceAll(",", ""));
 				consumeMapper.createDetailGoalMeans(vo);
 			}
 		}

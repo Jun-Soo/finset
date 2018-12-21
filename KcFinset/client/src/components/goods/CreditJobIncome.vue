@@ -209,9 +209,6 @@ export default {
     },
     clickNext: function() {
       var _this = this;
-
-      alert(this.amt_year_income);
-      return;
       this.$validator.validateAll().then(res => {
         if (res) {
           var formData = new FormData();

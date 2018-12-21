@@ -1,7 +1,7 @@
 <template>
   <div id="wrapper">
     <!-- Content -->
-    <section>
+    <section v-if="seen">
       <div class="certcode-wrap">
         <p class="text">
           비밀번호를 입력해주세요.
@@ -59,7 +59,8 @@ export default {
       pw1: "",
       pw2: "",
       pw3: "",
-      pw4: ""
+      pw4: "",
+      seen: false
     };
   },
   component: {},
@@ -93,6 +94,7 @@ export default {
       this.certMessage = "비밀번호를 다시 한번 입력해주세요.";
       this.tempPwd = localStorage.getItem("_tempPwd");
     }
+    this.seen = true;
   },
   beforeUpdate() {},
   updated() {},

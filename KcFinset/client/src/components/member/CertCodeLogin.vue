@@ -1,7 +1,7 @@
 <template>
   <div id="wrapper">
     <!-- Content -->
-    <section>
+    <section v-if="seen">
       <div class="certcode-wrap">
         <p class="text">
           비밀번호를 입력해주세요.
@@ -61,7 +61,8 @@ export default {
       pw1: "",
       pw2: "",
       pw3: "",
-      pw4: ""
+      pw4: "",
+      seen: false
     };
   },
   component: {},
@@ -90,6 +91,7 @@ export default {
         Jockey.send("initFingerPrint");
       }
     }
+    this.seen = true;
   },
   beforeUpdate() {},
   updated() {},
@@ -195,7 +197,6 @@ export default {
       var formData = new FormData();
       formData.append("j_username", _this.username);
       formData.append("j_password", _this.password);
-      this.$toast.center("u:" + _this.username + "p: " + _this.password);
 
       var querystring = require("querystring");
       var data = querystring.stringify({
@@ -297,7 +298,7 @@ export default {
             if (_this.cntFailPwd < 5) {
               _this.errMsg =
                 "비밀번호가 일치하지 않습니다. (" + _this.cntFailPwd + "/5)";
-            } else if (_this.cntFailPwd == 5) {
+            } else if (_this.cntFailPwd >= 5) {
               //지문인식 5번 모두 틀린 경우
               // _this.errMsg = "비밀번호 재설정 화면으로 이동합니다.";
               // this.$toast.center(_this.errMsg);
@@ -340,9 +341,9 @@ export default {
     resultFingerPrint: function(result) {
       var _this = this;
 
-      if (result == true || result == 1) {
+      if (result === true || result === 1) {
         //지문인식 성공
-        if (ConstAant.userAgent == "Android") {
+        if (Constant.userAgent == "Android") {
           window.Android.closeFingerPrint();
         }
 
@@ -352,7 +353,7 @@ export default {
           } else if (Constant.userAgent == "iOS") {
             Jockey.send("closeWebView");
           }
-          _this.$toast.center("???");
+
           return false;
         } else {
           if (Constant.userAgent == "iOS") {
@@ -362,15 +363,12 @@ export default {
           } else if (Constant.userAgent == "Android") {
             window.Android.loginFlag("Y");
           }
-
           _this.password = _this.$store.state.user.authToken;
-          _this.$toast.center(_this.password);
           // setTimeout(function() {
           _this.login();
           // }, 500);
         }
       } else {
-        // this.$toast.center(loginTrue);
         //지문 틀린 누적횟수 증가
 
         _this.cntFailFinger += 1;

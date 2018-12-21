@@ -1,11 +1,17 @@
 <template>
-  <input type="text" inputmode="numeric" pattern="[0-9]*" v-model="formatedValue" :placeholder="placeholder" :class="theme" :readonly="readonly" :disabled="disabled" />
+  <!-- <input type="text" inputmode="numeric" pattern="[0-9]*" v-model="formatedValue" :id="id" :placeholder="placeholder" :class="theme" :readonly="readonly" :disabled="disabled" @change="change" /> -->
+  <input type="text" autocomplete="off" inputmode="numeric" pattern="[0-9]*" v-model="formatedVal" :id="id" :placeholder="placeholder" :class="theme" :readonly="readonly" :disabled="disabled" @focus="deformatValue" @blur="formatValue" @change="change" />
 </template>
 
 <script>
 export default {
   name: "Money",
   props: {
+    // input 태그의 id
+    id: {
+      type: String,
+      required: false
+    },
     // 표현되는 숫자 값
     value: {
       type: String
@@ -32,44 +38,60 @@ export default {
       type: Boolean,
       required: false,
       default: false
+    },
+    // change 이벤트
+    change: {
+      type: Function,
+      required: false,
+      default: function() {}
     }
   },
-  watch: {},
+  watch: {
+    value: function(val) {
+      this.formatValue(val);
+    }
+  },
   data() {
     return {
-      orgVal: ""
+      orgVal: "",
+      formatedVal: ""
     };
   },
   components: {},
-  computed: {
-    formatedValue: {
-      get: function() {
-        if ((this.value || "") != "") {
-          var numVal = parseInt(this.orgVal);
-          if (!isNaN(numVal)) {
-            return numVal.toLocaleString();
-          } else {
-            return "";
-          }
-        } else {
-          return "";
-        }
-      },
-      set: function(val) {
-        this.orgVal = val.replace(/,/g, "");
-        this.$emit("input", this.orgVal);
-      }
-    }
-  },
+  computed: {},
   beforeCreate() {},
   created() {},
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    this.formatValue(this.value);
+  },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    formatValue: function(val) {
+      if ((val || "") == "") {
+        val = "";
+      }
+      this.orgVal =
+        typeof val == "string" || typeof val == "number"
+          ? val.replace(/[^0-9]/g, "")
+          : this.formatedVal.replace(/[^0-9]/g, "");
+      var numVal = parseInt(this.orgVal);
+      if (isNaN(numVal)) {
+        this.formatedVal = "";
+      } else {
+        this.formatedVal = numVal.toLocaleString();
+      }
+      this.$emit("input", this.orgVal);
+    },
+    deformatValue: function() {
+      if (!this.readonly && !this.disabled) {
+        this.formatedVal = this.orgVal;
+      }
+    }
+  }
 };
 </script>
 

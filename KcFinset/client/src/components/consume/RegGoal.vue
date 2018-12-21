@@ -35,7 +35,9 @@
               <dd>
                 <p>{{vo.nm_class}}</p>
                 <input type="hidden" :name="'list['+index+'].cd_class'" :value="vo.cd_class" />
-                <p><input :name="'list['+index+'].amt_budget'" class="each_amt money" type="text" inputmode="numeric" pattern="[0-9]*" v-model="vo.amt_budget" v-validate="'required|numeric'" :data-vv-name="vo.nm_class"> 원</p>
+                <!-- <p><input :name="'list['+index+'].amt_budget'" class="each_amt money" type="text" inputmode="numeric" pattern="[0-9]*" v-model="vo.amt_budget" v-validate="'required|numeric'" :data-vv-name="vo.nm_class"> 원</p> -->
+                <p>
+                  <money :name="'list['+index+'].amt_budget'" :theme="'each_amt money'" v-model="vo.amt_budget" v-validate="'required|numeric'" :data-vv-name="vo.nm_class" /> 원</p>
               </dd>
               <p class="warn" v-if="errors.has(vo.nm_class)">{{errors.first(vo.nm_class)}}</p>
             </div>
@@ -57,7 +59,10 @@
                 <input type="hidden" :name="'list['+index+'].cd_type'" :value="vo.cd_type" />
                 <input v-if="vo.cd_type == '01' || vo.cd_type == '04'" type="hidden" :name="'list['+index+'].no_card'" :value="vo.no_card" />
                 <input v-if="vo.cd_type == '01' || vo.cd_type == '04'" type="hidden" :name="'list['+index+'].nm_card'" :value="vo.nm_card" />
-                <p><input :name="'list['+index+'].amt_budget'" class="each_amt money" type="text" inputmode="numeric" pattern="[0-9]*" v-model="vo.amt_budget" v-validate="'required|numeric'" :data-vv-name="vo.nm_card"> 원</p>
+                <!-- <p><input :name="'list['+index+'].amt_budget'" class="each_amt money" type="text" inputmode="numeric" pattern="[0-9]*" v-model="vo.amt_budget" v-validate="'required|numeric'" :data-vv-name="vo.nm_card"> 원</p> -->
+                <p>
+                  <money :name="'list['+index+'].amt_budget'" :theme="'each_amt money'" v-model="vo.amt_budget" v-validate="'required|numeric'" :data-vv-name="vo.nm_card" /> 원
+                </p>
               </dd>
               <p class="warn" v-if="errors.has(vo.nm_card)">{{errors.first(vo.nm_card)}}</p>
             </div>

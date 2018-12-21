@@ -7,7 +7,7 @@
             <li>
               <p class="key">금액1</p>
               <p>
-                <money :theme="'auto'" :readonly="true" v-model="money.first" />
+                <money :theme="'auto'" v-model="money.first" :change="test" />
                 <em>원</em>
               </p>
             </li>
@@ -65,8 +65,6 @@ export default {
   created() {},
   beforeMount() {},
   mounted() {
-    console.log(this.$router);
-    console.log(window.history);
     Common.datepickerInit("div-date", this);
   },
   beforeUpdate() {},

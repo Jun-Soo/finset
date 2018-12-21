@@ -1,6 +1,6 @@
 <template>
   <!-- <input type="text" inputmode="numeric" pattern="[0-9]*" v-model="formatedValue" :id="id" :placeholder="placeholder" :class="theme" :readonly="readonly" :disabled="disabled" @change="change" /> -->
-  <input type="text" autocomplete="off" inputmode="numeric" pattern="[0-9]*" v-model="formatedVal" :id="id" :placeholder="placeholder" :class="theme" :readonly="readonly" :disabled="disabled" @focus="deformatValue" @blur="formatValue" @change="change" />
+  <input type="text" autocomplete="off" inputmode="numeric" pattern="[0-9]*" v-model="formatedVal" :id="id" :placeholder="placeholder" :class="theme" :name="name" :readonly="readonly" :disabled="disabled" @focus="deformatValue" @blur="formatValue" @change="change" />
 </template>
 
 <script>
@@ -24,8 +24,12 @@ export default {
     // 클래스 명
     theme: {
       type: String,
-      required: false,
-      default: ""
+      required: false
+    },
+    // input 태그의 name
+    name: {
+      type: String,
+      required: false
     },
     // readonly 설정 여부
     readonly: {

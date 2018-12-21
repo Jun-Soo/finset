@@ -22,11 +22,11 @@
         <div class="wrap">
           <div class="date-pick">
             <p>
-              <datepicker v-model="txt_dt_from" ref="txtDtFromOpen" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDate" class="div-date"></datepicker>
+              <datepicker v-model="txt_dt_from" ref="txtDtFromOpen" :language="ko" :format="formatDate" class="div-date"></datepicker>
               <button @click="openDtFromPicker"></button>
             </p>
             <p>
-              <datepicker v-model="txt_dt_to" ref="txtDtToOpen" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDate" class="div-date"></datepicker>
+              <datepicker v-model="txt_dt_to" ref="txtDtToOpen" :language="ko" :format="formatDate" class="div-date"></datepicker>
               <button @click="openDtToPicker"></button>
             </p>
           </div>
@@ -146,7 +146,9 @@ export default {
     this.getSearchCondition();
   },
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    Common.datepickerInit("div-date", this);
+  },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},

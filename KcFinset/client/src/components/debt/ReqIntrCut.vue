@@ -34,7 +34,7 @@
             <div class="flex">
               <p>기준일</p>
               <p>
-                <datepicker v-model="creditFixDate" ref="creditFixOpen" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDate" class="div-date"></datepicker>
+                <datepicker v-model="creditFixDate" ref="creditFixOpen" :language="ko" :format="formatDate" class="div-date"></datepicker>
                 <button @click="openCreditFixPicker" class="cal"></button>
               </p>
             </div>
@@ -47,7 +47,7 @@
             <div class="flex">
               <p>이직일</p>
               <p>
-                <datepicker v-model="turnoverDate" ref="turnoverOpen" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDate" class="div-date"></datepicker>
+                <datepicker v-model="turnoverDate" ref="turnoverOpen" :language="ko" :format="formatDate" class="div-date"></datepicker>
                 <button @click="openTurnoverPicker" class="cal"></button>
               </p>
             </div>
@@ -85,7 +85,9 @@
               <p>연소득</p>
               <!-- <p><input type="number" v-model="income" v-validate="'required'" data-vv-name='연소득'><em class="pl5">원</em></p>
               <p class="warn" v-if="errors.has('연소득')">{{errors.first('연소득')}}</p> -->
-              <p><input type="number" v-model="income" autocomplete="off"><em class="pl5">원</em></p>
+              <!-- <p><input type="number" v-model="income" autocomplete="off"><em class="pl5">원</em></p> -->
+              <p>
+                <money v-model="income" /><em class="pl5">원</em></p>
             </div>
             <p class="text">신규 및 연장 시점 대비 연소득이 15% 이상 상승된 경우 요구가 가능합니다.</p>
           </div>
@@ -96,7 +98,7 @@
             <div class="flex">
               <p>기준일</p>
               <p>
-                <datepicker v-model="debtFixDate" ref="debtFixOpen" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDate" class="div-date"></datepicker>
+                <datepicker v-model="debtFixDate" ref="debtFixOpen" :language="ko" :format="formatDate" class="div-date"></datepicker>
                 <button @click="openDebtFixPicker" class="cal"></button>
               </p>
             </div>
@@ -104,13 +106,17 @@
               <p>변경전</p>
               <!-- <p><input type="number" v-model="debtBfAmt" v-validate="'required'" data-vv-name='변경전 금액'><em class="pl5">원</em></p>
               <p class="warn" v-if="errors.has('변경전 금액')">{{errors.first('변경전 금액')}}</p> -->
-              <p><input type="number" v-model="debtBfAmt" autocomplete="off"><em class="pl5">원</em></p>
+              <!-- <p><input type="number" v-model="debtBfAmt" autocomplete="off"><em class="pl5">원</em></p> -->
+              <p>
+                <money v-model="debtBfAmt" /><em class="pl5">원</em></p>
             </div>
             <div class="flex">
               <p>변경후</p>
               <!-- <p><input type="number" v-model="debtAtAmt" v-validate="'required'" data-vv-name='변경후 금액'><em class="pl5">원</em></p>
               <p class="warn" v-if="errors.has('변경후 금액')">{{errors.first('변경후 금액')}}</p> -->
-              <p><input type="number" v-model="debtAtAmt" autocomplete="off"><em class="pl5">원</em></p>
+              <!-- <p><input type="number" v-model="debtAtAmt" autocomplete="off"><em class="pl5">원</em></p> -->
+              <p>
+                <money v-model="debtAtAmt" /><em class="pl5">원</em></p>
             </div>
             <p class="text">신규 및 연장 시점 대비 부채가 현저히 낮아진 경우(15%) 요구가 가능합니다.</p>
           </div>
@@ -121,7 +127,7 @@
             <div class="flex">
               <p>기준일</p>
               <p>
-                <datepicker v-model="posFixDate" ref="posFixOpen" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDate" class="div-date"></datepicker>
+                <datepicker v-model="posFixDate" ref="posFixOpen" :language="ko" :format="formatDate" class="div-date"></datepicker>
                 <button @click="openPosFixPicker" class="cal"></button>
               </p>
             </div>
@@ -134,7 +140,7 @@
             <div class="flex">
               <p>기준일</p>
               <p>
-                <datepicker v-model="certFixDate" ref="certFixOpen" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDate" class="div-date"></datepicker>
+                <datepicker v-model="certFixDate" ref="certFixOpen" :language="ko" :format="formatDate" class="div-date"></datepicker>
                 <button @click="openCertFixPicker" class="cal"></button>
               </p>
             </div>
@@ -289,14 +295,20 @@ export default {
     },
     //자격증
     certFixDate: function() {
-      if ("" != this.certFixDate && "" != this.certification.value) {
+      if (
+        "" != this.certFixDate &&
+        ("" != this.certification && "" != this.certification.value)
+      ) {
         this.ynCert = true;
       } else {
         this.ynCert = false;
       }
     },
     certification: function() {
-      if ("" != this.certFixDate && "" != this.certification.value) {
+      if (
+        "" != this.certFixDate &&
+        ("" != this.certification && "" != this.certification.value)
+      ) {
         this.ynCert = true;
       } else {
         this.ynCert = false;
@@ -312,7 +324,9 @@ export default {
     this.setCurrentDate();
   },
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    Common.datepickerInit("div-date", this);
+  },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},

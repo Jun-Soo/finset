@@ -167,8 +167,7 @@ export default {
       default: false
     }
   },
-  mounted () {
-  },
+  mounted () {},
   computed: {
     internalValue () {
       return this.value || this.value === 0
@@ -208,9 +207,9 @@ export default {
     getValue () {
       return this.multiple
         ? this.internalValue
-        : this.internalValue.length === 0
+        : (this.internalValue.length === 0
           ? null
-          : this.internalValue[0]
+          : this.internalValue[0])
     },
     /**
      * Finds out if the given element is already present
@@ -269,7 +268,7 @@ export default {
       this.close()
     },
     chkSelectValue: function () {
-      if ((this.value || '') === '') {
+      if (this.value === null || this.value === undefined) {
         return
       }
       var selOpt = this.options.filter(option => option.value === this.value.value)

@@ -1,6 +1,6 @@
 <template>
   <!-- <input type="text" inputmode="numeric" pattern="[0-9]*" v-model="formatedValue" :id="id" :placeholder="placeholder" :class="theme" :readonly="readonly" :disabled="disabled" @change="change" /> -->
-  <input type="text" autocomplete="off" inputmode="numeric" pattern="[0-9]*" v-model="formatedVal" :id="id" :placeholder="placeholder" :class="theme" :name="name" :readonly="readonly" :disabled="disabled" @focus="deformatValue" @blur="formatValue" @change="change" />
+  <input type="text" autocomplete="off" inputmode="numeric" pattern="[0-9]*" v-model="formatedVal" :id="id" :placeholder="placeholder" :class="theme" :name="name" :readonly="readonly" :disabled="disabled" @focus="deformatValue" @blur="formatValue" @change="onChange" />
 </template>
 
 <script>
@@ -94,6 +94,10 @@ export default {
       if (!this.readonly && !this.disabled) {
         this.formatedVal = this.orgVal;
       }
+    },
+    onChange: function() {
+      this.$emit("input", this.orgVal);
+      this.change();
     }
   }
 };

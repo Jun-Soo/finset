@@ -1310,7 +1310,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .debt-regist .list .flex { display: flex; justify-content: space-between; align-items: center; }
 .debt-regist .list .flex .key { flex-grow: 2; font-size: 13px; color: #9b9489; padding-left: 15px; line-height: 49px; }
 .debt-regist .list .flex .value { flex-grow: 3; text-align: right; padding-right: 15px; }
-.debt-regist .list .flex .value input[type="text"] { line-height: 49px; width: 200px; border: none; text-align: right; }
+.debt-regist .list .flex .value input[type="text"], .debt-regist .list .flex .value input[type="number"] { line-height: 49px; width: 200px; border: none; text-align: right; }
 .debt-regist .list .flex .value em { margin-left: 10px; color: #333; }
 .debt-regist .list .flex .value button { vertical-align: middle; }
 .debt-regist .list .flex .value button.human { width: 29px; height: 49px; background: url("../images/debt/btn-human.png") no-repeat center/contain; }

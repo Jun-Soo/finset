@@ -5130,7 +5130,7 @@ button.cal{
                 flex-grow: 3;
                 text-align: right;
                 padding-right: 15px;
-                input[type="text"]{
+                input[type="text"],input[type="number"]{
                     line-height: 49px;
                     width: 200px;
                     border: none;

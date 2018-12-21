@@ -193,9 +193,6 @@ export default {
               } else if (result.result == "01") {
                 this.$toast.center(result.message);
               }
-            })
-            .catch(e => {
-              this.$toast.center(ko.messages.error);
             });
         } else {
           this.$toast.center(ko.messages.require);
@@ -214,47 +211,42 @@ export default {
       formData.append("svcTxSeqno", _this.svcTxSeqno);
       formData.append("hp", _this.hp);
       formData.append("smsCertNo", _this.smsCertNo);
-      this.$http
-        .post("/m/login/kcmCertify.json", formData)
-        .then(response => {
-          var result = response.data;
-          console.log(result);
-          if (result.result == "00") {
-            _this.kcb_ci = result.kcb_ci;
-            _this.kcb_di = result.kcb_di;
-            _this.kcb_cp = result.kcb_cp;
+      this.$http.post("/m/login/kcmCertify.json", formData).then(response => {
+        var result = response.data;
+        console.log(result);
+        if (result.result == "00") {
+          _this.kcb_ci = result.kcb_ci;
+          _this.kcb_di = result.kcb_di;
+          _this.kcb_cp = result.kcb_cp;
 
-            //기존 회원 여부 체크
-            if (result.no_person) {
-              Constant.params.hp = _this.hp;
+          //기존 회원 여부 체크
+          if (result.no_person) {
+            Constant.params.hp = _this.hp;
 
-              if (Constant.userAgent == "iOS") {
-                Jockey.send("setNoPerson", {
-                  noPerson: result.no_person,
-                  phNum: _this.hp
-                });
-              } else if (Constant.userAgent == "Android") {
-                window.Android.setNoPerson(result.no_person, _this.hp);
-              }
-
-              _this.$toast.center(
-                "고객님은 기존 회원이므로 로그인 페이지로 이동합니다."
-              );
-              setTimeout(function() {
-                _this.$router.push("/home?hp=" + _this.hp);
-              }, 700);
-            } else {
-              this.insertPerson();
+            if (Constant.userAgent == "iOS") {
+              Jockey.send("setNoPerson", {
+                noPerson: result.no_person,
+                phNum: _this.hp
+              });
+            } else if (Constant.userAgent == "Android") {
+              window.Android.setNoPerson(result.no_person, _this.hp);
             }
+
+            _this.$toast.center(
+              "고객님은 기존 회원이므로 로그인 페이지로 이동합니다."
+            );
+            setTimeout(function() {
+              _this.$router.push("/home?hp=" + _this.hp);
+            }, 700);
           } else {
-            this.$toast.center(result.message);
-            _this.smsCertNo = "";
-            return false;
+            this.insertPerson();
           }
-        })
-        .catch(e => {
-          this.$toast.center(e);
-        });
+        } else {
+          this.$toast.center(result.message);
+          _this.smsCertNo = "";
+          return false;
+        }
+      });
     },
     insertPerson: function() {
       var _this = this;
@@ -306,9 +298,6 @@ export default {
             }
             _this.$router.push("/home?hp=" + _this.hp);
           }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
         });
     },
     start: function() {

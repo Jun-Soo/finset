@@ -1,5 +1,5 @@
 <template>
-  <div id="wrapper">
+  <div v-if="seen" id="wrapper">
     <!-- Content -->
     <section>
       <div class="certcode-wrap">
@@ -56,7 +56,8 @@ export default {
       pw1: "",
       pw2: "",
       pw3: "",
-      pw4: ""
+      pw4: "",
+      seen: false
     };
   },
   component: {},
@@ -66,17 +67,14 @@ export default {
   created() {
     this.$store.state.title = "비밀번호 확인";
     this.$store.state.header.type = "sub";
-    if (Constant.userAgent == "Android") {
-      window.Android.setEndApp("Y");
-
-      if (this.$store.state.user.ynFingerprint == "Y") {
-        window.Android.initFingerPrint();
-      }
-    }
+    // if (Constant.userAgent == "Android") {
+    //   window.Android.setEndApp("Y");
+    // }
   },
   beforeMount() {},
   mounted() {
     this.errMsg = "입력값이 올바르지 않습니다.";
+    this.seen = true;
   },
   beforeUpdate() {},
   updated() {},
@@ -143,23 +141,18 @@ export default {
       let _this = this;
       let frm = new FormData();
       frm.append("currentPwd", _this.password);
-      this.$http
-        .post(url, frm)
-        .then(response => {
-          var result = response.data.result;
-          if (result == "00") {
-            this.$toast.center("지문인증이 설정되었습니다.");
-            _this.$store.state.user.ynFingerprint = "Y";
-            _this.$router.go(-1);
-            _this.cntFailPwd = 0;
-          } else {
-            _this.cntFailPwd++;
-            _this.initClassPass();
-          }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
-        });
+      this.$http.post(url, frm).then(response => {
+        var result = response.data.result;
+        if (result == "00") {
+          this.$toast.center("지문인증이 설정되었습니다.");
+          _this.$store.state.user.ynFingerprint = "Y";
+          _this.$router.go(-1);
+          _this.cntFailPwd = 0;
+        } else {
+          _this.cntFailPwd++;
+          _this.initClassPass();
+        }
+      });
     }
   }
 };

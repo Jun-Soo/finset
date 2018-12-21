@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <div class="btn-wrap float">
+    <div class="btn-wrap float" v-if="chkall">
       <a @click="quitChkYn" class="solid box blue">탈퇴하기</a>
     </div>
   </section>
@@ -54,6 +54,7 @@ export default {
         this.chk3 = true;
         this.chk4 = true;
         this.chk5 = true;
+        window.scrollTo(0, window.innerHeight);
       } else {
         this.checked = "";
         this.chk1 = false;
@@ -98,19 +99,14 @@ export default {
       let _this = this;
 
       var frm = new FormData();
-      _this.$http
-        .post(url, frm)
-        .then(response => {
-          if (response.data.result == "00") {
-            //정상
-            _this.$router.push("/mypage/dropDone");
-          } else {
-            _this.$toast.center(response.data.message);
-          }
-        })
-        .catch(e => {
-          _this.$toast.center(ko.messages.error);
-        });
+      _this.$http.post(url, frm).then(response => {
+        if (response.data.result == "00") {
+          //정상
+          _this.$router.push("/mypage/dropDone");
+        } else {
+          _this.$toast.center(response.data.message);
+        }
+      });
     }
   }
 };

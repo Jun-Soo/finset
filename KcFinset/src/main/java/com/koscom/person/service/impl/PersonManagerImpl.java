@@ -179,6 +179,15 @@ public class PersonManagerImpl implements PersonManager {
 
 		return new ReturnClass(Constant.SUCCESS, "정상 처리 하였습니다.");
 	}
+	
+	@Override
+	public ReturnClass modifyPersonCdTel(PersonVO personVO) {
+		if(1 != personMapper.modifyPersonCdTel(personVO)) {
+			return new ReturnClass(Constant.FAILED, "처리에 실패하였습니다.");
+		}
+
+		return new ReturnClass(Constant.SUCCESS, "정상 처리 하였습니다.");
+	}
 
 	@Override
 	public ReturnClass modifyPersonLogout(PersonVO personVO) {

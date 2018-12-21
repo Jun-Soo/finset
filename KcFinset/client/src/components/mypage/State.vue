@@ -1,6 +1,6 @@
 <template>
-  <section>
-    <div class="goods-state pb90">
+  <section v-if="seen">
+    <div class="goods-state pb90" v-if="goodsList.length">
       <!-- <p class="number">신청번호 : 2017101500023</p> -->
 
       <div class="item" v-for="goods in goodsList" :key="goods.index">
@@ -57,6 +57,9 @@
           <p class="value">{{goods.typePay}}</p>
         </div>
       </div>
+    </div>
+    <div class="nodata" v-else-if="seen">
+      <p>신청한 상품이 없습니다.</p>
     </div>
 
   </section>

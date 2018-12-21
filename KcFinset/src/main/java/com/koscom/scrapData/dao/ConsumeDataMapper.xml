@@ -53,6 +53,7 @@
 						WHERE
 							B.NO_PERSON = #{no_person, jdbcType = VARCHAR}
 							AND B.MEANS_CONSUME = '01'
+							AND B.MON_REMAINING = '0'
 						GROUP BY
 							B.CD_FC
 					) B ON

@@ -137,6 +137,13 @@ public interface PersonMapper {
 	 * @return	int
 	 */
 	int modifyPersonEmail(PersonVO personVO);
+	
+	/**
+	 * 통신사 코드 업데이트
+	 * @param 	personVO
+	 * @return	int
+	 */
+	int modifyPersonCdTel(PersonVO personVO);
 
 	/**
 	 * 로그아웃 업데이트

@@ -60,7 +60,8 @@
           <li>
             <div>
               <p class="key">연소득</p>
-              <p><input id="amt_year_income" type="text" v-model="amt_year_income" @change="changeAmtYearIncome" :disabled="disable_amt_year_income" v-validate="'required'" data-vv-name='연소득'> 만원</p>
+              <p>
+                <money id="amt_year_income" v-model="amt_year_income" :change="changeAmtYearIncome" :disabled="disable_amt_year_income" v-validate="'required'" data-vv-name='연소득' /> 만원</p>
             </div>
             <p class=" warn" v-if="errors.has('연소득')">{{errors.first('연소득')}}</p>
           </li>
@@ -208,6 +209,9 @@ export default {
     },
     clickNext: function() {
       var _this = this;
+
+      alert(this.amt_year_income);
+      return;
       this.$validator.validateAll().then(res => {
         if (res) {
           var formData = new FormData();

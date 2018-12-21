@@ -1,7 +1,7 @@
 <template>
   <div id="wrapper">
     <!-- Content -->
-    <section>
+    <section v-if="seen">
       <div class="certcode-wrap">
         <p class="text">
           비밀번호를 입력해주세요.
@@ -59,7 +59,8 @@ export default {
       pw1: "",
       pw2: "",
       pw3: "",
-      pw4: ""
+      pw4: "",
+      seen: false
     };
   },
   component: {},
@@ -78,7 +79,7 @@ export default {
     }
 
     if (this.$store.state.isLoggedIn) {
-      this.$store.state.header.backPath = "/mypage/info";
+      this.$store.state.header.backPath = "/mypage/cert";
     } else {
       this.$store.state.header.backPath = "/member/certCodeLogin";
     }
@@ -93,6 +94,7 @@ export default {
       this.certMessage = "비밀번호를 다시 한번 입력해주세요.";
       this.tempPwd = localStorage.getItem("_tempPwd");
     }
+    this.seen = true;
   },
   beforeUpdate() {},
   updated() {},
@@ -208,7 +210,6 @@ export default {
           })
           .catch(e => {
             this.$toast.center(ko.messages.error);
-            this.$toast.center(e);
             _this.password = "";
             _this.initClassPass();
           });

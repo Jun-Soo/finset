@@ -88,7 +88,16 @@ public class KbRealEstateManagerImpl implements KbRealEstateManager{
 		URLConnection url = new URLConnection();
 		String postString = "REQ_DATA="+ URLEncoder.encode(URLEncoder.encode(jsonObject.toString(), "UTF-8"), "UTF-8");
 		Gson gson = new Gson();
-		String apiUrl = environment.getProperty("coocon.napiUrl") + "gateway.jsp";
+		String site = environment.getProperty("service.profile");
+		String apiUrl;
+		logger.info("site :"+site);
+		
+		if("LOCAL".equals(site)){
+			apiUrl = environment.getProperty("coocon.napiUrl") + "gateway.jsp";
+		}
+		else	{
+			apiUrl = environment.getProperty("coocon.apiUrl") + "gateway.jsp";	
+		}
         logger.info("coocon.apiUrl:"+apiUrl);
         ReturnClass rc = null;
         String des_message = null;

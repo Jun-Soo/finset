@@ -1,7 +1,7 @@
 <template>
   <div id="wrapper">
     <!-- Content -->
-    <section>
+    <section v-if="seen">
       <div class="certcode-wrap">
         <p class="text">
           비밀번호를 입력해주세요.
@@ -48,7 +48,7 @@ export default {
     return {
       errMsg: "",
       cntFailPwd: this.$store.state.user.cntFailPwd,
-      // cntFailFinger: this.$store.state.user.cntFailFinger,
+      cntFailFinger: this.$store.state.user.cntFailFinger,
       ynFingerprint: this.$store.state.user.ynFingerprint,
       username: this.$store.state.user.noPerson,
       password: "",
@@ -61,7 +61,8 @@ export default {
       pw1: "",
       pw2: "",
       pw3: "",
-      pw4: ""
+      pw4: "",
+      seen: false
     };
   },
   component: {},
@@ -73,6 +74,11 @@ export default {
     window.resultFingerPrint = this.resultFingerPrint;
 
     this.$store.state.title = "비밀번호 확인";
+  },
+  beforeMount() {},
+  mounted() {
+    this.errMsg =
+      "비밀번호를 " + this.cntFailPwd + "회 실패한 이력이 있습니다.";
     if (this.$store.state.user.ynFingerprint == "Y") {
       if (Constant.userAgent == "Android") {
         window.Android.initFingerPrint();
@@ -85,11 +91,7 @@ export default {
         Jockey.send("initFingerPrint");
       }
     }
-  },
-  beforeMount() {},
-  mounted() {
-    this.errMsg =
-      "비밀번호를 " + this.cntFailPwd + "회 실패한 이력이 있습니다.";
+    this.seen = true;
   },
   beforeUpdate() {},
   updated() {},
@@ -98,6 +100,9 @@ export default {
   methods: {
     goCertPerson: function() {
       let _this = this;
+      if (Constant.userAgent == "Android") {
+        window.Android.closeFingerPrint();
+      }
       this.errMsg = "비밀번호 재설정 화면으로 이동합니다.";
       this.$toast.center(this.errMsg);
       setTimeout(function() {
@@ -184,9 +189,6 @@ export default {
         .then(response => {
           var result = response.data;
           console.log("modifyPwdFailCnt :" + result);
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
         });
     },
     login: function() {
@@ -274,44 +276,39 @@ export default {
       formData.append("no_person", _this.username);
       formData.append("pass_person", _this.password);
 
-      this.$http
-        .post("/m/login/loginChkCode.json", formData)
-        .then(response => {
-          console.log("passCheck :" + response.data.result);
-          if (response.data.result == "00") {
-            //정상
-            if (Constant.userAgent == "iOS") {
-              Jockey.send("closeWebView");
-            } else if (Constant.userAgent == "Android") {
-              window.Android.closeWebView();
-              return false;
-            }
-          } else {
-            _this.$store.state.isLoading = false;
-            _this.initClassPass();
-            _this.password = "";
-            //비밀번호 틀린 누적횟수 증가
-            console.log("login failed : ");
-            _this.cntFailPwd += 1;
-            if (_this.cntFailPwd < 5) {
-              _this.errMsg =
-                "비밀번호가 일치하지 않습니다. (" + _this.cntFailPwd + "/5)";
-            } else if (_this.cntFailPwd == 5) {
-              //지문인식 5번 모두 틀린 경우
-              // _this.errMsg = "비밀번호 재설정 화면으로 이동합니다.";
-              // this.$toast.center(_this.errMsg);
-              // setTimeout(function() {
-              //   _this.$router.push("/mypage/certPerson");
-              // }, 1000);
-            }
-            if (response.data.result == "21" || response.data.result == "22") {
-              _this.modifyPwdFailCnt("pwd"); //cnt값 db에 저장
-            }
+      this.$http.post("/m/login/loginChkCode.json", formData).then(response => {
+        console.log("passCheck :" + response.data.result);
+        if (response.data.result == "00") {
+          //정상
+          if (Constant.userAgent == "iOS") {
+            Jockey.send("closeWebView");
+          } else if (Constant.userAgent == "Android") {
+            window.Android.closeWebView();
+            return false;
           }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
-        });
+        } else {
+          _this.$store.state.isLoading = false;
+          _this.initClassPass();
+          _this.password = "";
+          //비밀번호 틀린 누적횟수 증가
+          console.log("login failed : ");
+          _this.cntFailPwd += 1;
+          if (_this.cntFailPwd < 5) {
+            _this.errMsg =
+              "비밀번호가 일치하지 않습니다. (" + _this.cntFailPwd + "/5)";
+          } else if (_this.cntFailPwd >= 5) {
+            //지문인식 5번 모두 틀린 경우
+            // _this.errMsg = "비밀번호 재설정 화면으로 이동합니다.";
+            // this.$toast.center(_this.errMsg);
+            // setTimeout(function() {
+            //   _this.$router.push("/mypage/certPerson");
+            // }, 1000);
+          }
+          if (response.data.result == "21" || response.data.result == "22") {
+            _this.modifyPwdFailCnt("pwd"); //cnt값 db에 저장
+          }
+        }
+      });
     },
     //로그인값 dB 변경
     changeLoginDB: function() {
@@ -328,9 +325,6 @@ export default {
           if (result.result != "00") {
             this.$toast.center(result.messages);
           }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
         });
     },
     /***
@@ -339,10 +333,9 @@ export default {
     resultFingerPrint: function(result) {
       var _this = this;
 
-      if (result == true || result == 1) {
+      if (result === true || result === 1) {
         //지문인식 성공
-
-        if (ConstAant.userAgent == "Android") {
+        if (Constant.userAgent == "Android") {
           window.Android.closeFingerPrint();
         }
 
@@ -352,6 +345,7 @@ export default {
           } else if (Constant.userAgent == "iOS") {
             Jockey.send("closeWebView");
           }
+
           return false;
         } else {
           if (Constant.userAgent == "iOS") {
@@ -361,19 +355,16 @@ export default {
           } else if (Constant.userAgent == "Android") {
             window.Android.loginFlag("Y");
           }
-
           _this.password = _this.$store.state.user.authToken;
-          setTimeout(function() {
-            _this.login();
-          }, 500);
+          // setTimeout(function() {
+          _this.login();
+          // }, 500);
         }
       } else {
-        // this.$toast.center(loginTrue);
         //지문 틀린 누적횟수 증가
 
         _this.cntFailFinger += 1;
         _this.$store.state.user.cntFailFinger = _this.cntFailFinger;
-        _this.$dialogs.alert(_this.cntFailFinger, Constant.options);
         // _this.modifyPwdFailCnt("finger", _this.cntFailFinger);
         // _this.$store.state.isLoading = false;
         if (_this.cntFailFinger < 5) {
@@ -396,10 +387,6 @@ export default {
             .then(response => {
               _this.$store.state.user.ynFingerprint = "N";
               _this.$router.push("/member/certCodeLogin");
-            })
-            .catch(e => {
-              // _this.$toast.center(ko.messages.error);
-              // _this.$toast.center(e);
             });
         }
         return false;

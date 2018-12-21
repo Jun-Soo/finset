@@ -889,12 +889,13 @@ public class ScrapManagerImpl implements ScrapManager {
 		List<FcLinkInfoVO> fcLinkInfoList = scrapMapper.getFcLinkInfo(fcLinkInfoVO);
 		
 		if(fcLinkInfoList == null || fcLinkInfoList.size() == 0)	{
+			logger.info("스크래핑 연동된 증권사가 없습니다.");
 			return Constant.SUCCESS;
 		}
 		
 		String token = getAccessToken();
 		if(token == null || token.length() <= 0)	{
-			logger.error("generate token failed");
+			logger.error("Open API Token 생성 실패~!");
 			return Constant.FAILED;
 		}
 		
@@ -1640,9 +1641,9 @@ public class ScrapManagerImpl implements ScrapManager {
                 scrCardLimitInfo.setNo_person(no_person);
                 scrCardLimitInfo.setCd_fc(cd_fc);
                 scrCardLimitInfo.setYn_delete("N");
-                //카드 타입이 없을 경우 DB 저장에 문제가 있어서 defalut로 저장 
+                //카드 타입이 없을 경우 DB 저장에 문제가 있어서 default로 저장 
                 if(scrCardLimitInfo.getType_card() == null || scrCardLimitInfo.getType_card().length() == 0){
-                	scrCardLimitInfo.setType_card("defalut");
+                	scrCardLimitInfo.setType_card("default");
                 }
                 scrapMapper.createScrCardLimitInfo(scrCardLimitInfo);
     		}

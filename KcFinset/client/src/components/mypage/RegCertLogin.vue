@@ -141,23 +141,18 @@ export default {
       let _this = this;
       let frm = new FormData();
       frm.append("currentPwd", _this.password);
-      this.$http
-        .post(url, frm)
-        .then(response => {
-          var result = response.data.result;
-          if (result == "00") {
-            this.$toast.center("지문인증이 설정되었습니다.");
-            _this.$store.state.user.ynFingerprint = "Y";
-            _this.$router.go(-1);
-            _this.cntFailPwd = 0;
-          } else {
-            _this.cntFailPwd++;
-            _this.initClassPass();
-          }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
-        });
+      this.$http.post(url, frm).then(response => {
+        var result = response.data.result;
+        if (result == "00") {
+          this.$toast.center("지문인증이 설정되었습니다.");
+          _this.$store.state.user.ynFingerprint = "Y";
+          _this.$router.go(-1);
+          _this.cntFailPwd = 0;
+        } else {
+          _this.cntFailPwd++;
+          _this.initClassPass();
+        }
+      });
     }
   }
 };

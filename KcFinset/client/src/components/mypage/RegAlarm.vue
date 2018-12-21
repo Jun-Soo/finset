@@ -113,10 +113,7 @@ export default {
             contentType: "application/x-www-form-urlencoded; charset=UTF-8"
           }
         })
-        .then(response => {})
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
-        });
+        .then(response => {});
     },
     //방해금지모드 설정
     allChkPush: function(obj) {
@@ -153,9 +150,6 @@ export default {
         })
         .then(response => {
           _this.personVo = response.data.personVO;
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
         });
     }
   }

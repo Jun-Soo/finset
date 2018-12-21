@@ -62,9 +62,6 @@ export default {
             this.$toast.center(result.message);
             return false;
           }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
         });
     },
 

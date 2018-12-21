@@ -98,19 +98,14 @@ export default {
       let _this = this;
 
       var frm = new FormData();
-      _this.$http
-        .post(url, frm)
-        .then(response => {
-          if (response.data.result == "00") {
-            //정상
-            _this.$router.push("/mypage/dropDone");
-          } else {
-            _this.$toast.center(response.data.message);
-          }
-        })
-        .catch(e => {
-          _this.$toast.center(ko.messages.error);
-        });
+      _this.$http.post(url, frm).then(response => {
+        if (response.data.result == "00") {
+          //정상
+          _this.$router.push("/mypage/dropDone");
+        } else {
+          _this.$toast.center(response.data.message);
+        }
+      });
     }
   }
 };

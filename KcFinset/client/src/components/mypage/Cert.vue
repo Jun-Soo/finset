@@ -98,9 +98,6 @@ export default {
           })
           .then(response => {
             _this.$store.state.user.ynFingerprint = "N";
-          })
-          .catch(e => {
-            this.$toast.center(ko.messages.error);
           });
       }
     },

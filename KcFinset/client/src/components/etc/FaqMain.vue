@@ -56,6 +56,7 @@ export default {
       //앱버전 조회 네이티브 호출
       Jockey.send("checkAppVersion");
     }
+    this.$store.state.header.backPath == "/main";
   },
   beforeMount() {},
   mounted() {},

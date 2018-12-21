@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="loading success">
       안전하게 로그아웃 되었습니다
     </div>
@@ -17,7 +17,9 @@ import Common from "./../../assets/js/common.js";
 export default {
   name: "MypageLogout",
   data() {
-    return {};
+    return {
+      seen: false
+    };
   },
   components: {},
   computed: {},
@@ -38,6 +40,7 @@ export default {
       } else if (Constant.userAgent == "Android") {
         window.Android.loginFlag("N");
       }
+      _this.seen = true;
     });
   },
   beforeMount() {},

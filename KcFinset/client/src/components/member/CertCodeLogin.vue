@@ -73,6 +73,11 @@ export default {
     window.resultFingerPrint = this.resultFingerPrint;
 
     this.$store.state.title = "비밀번호 확인";
+  },
+  beforeMount() {},
+  mounted() {
+    this.errMsg =
+      "비밀번호를 " + this.cntFailPwd + "회 실패한 이력이 있습니다.";
     if (this.$store.state.user.ynFingerprint == "Y") {
       if (Constant.userAgent == "Android") {
         window.Android.initFingerPrint();
@@ -85,11 +90,6 @@ export default {
         Jockey.send("initFingerPrint");
       }
     }
-  },
-  beforeMount() {},
-  mounted() {
-    this.errMsg =
-      "비밀번호를 " + this.cntFailPwd + "회 실패한 이력이 있습니다.";
   },
   beforeUpdate() {},
   updated() {},
@@ -195,6 +195,7 @@ export default {
       var formData = new FormData();
       formData.append("j_username", _this.username);
       formData.append("j_password", _this.password);
+      this.$toast.center("u:" + _this.username + "p: " + _this.password);
 
       var querystring = require("querystring");
       var data = querystring.stringify({
@@ -341,7 +342,6 @@ export default {
 
       if (result == true || result == 1) {
         //지문인식 성공
-
         if (ConstAant.userAgent == "Android") {
           window.Android.closeFingerPrint();
         }
@@ -352,6 +352,7 @@ export default {
           } else if (Constant.userAgent == "iOS") {
             Jockey.send("closeWebView");
           }
+          _this.$toast.center("???");
           return false;
         } else {
           if (Constant.userAgent == "iOS") {
@@ -363,9 +364,10 @@ export default {
           }
 
           _this.password = _this.$store.state.user.authToken;
-          setTimeout(function() {
-            _this.login();
-          }, 500);
+          _this.$toast.center(_this.password);
+          // setTimeout(function() {
+          _this.login();
+          // }, 500);
         }
       } else {
         // this.$toast.center(loginTrue);
@@ -398,7 +400,7 @@ export default {
               _this.$router.push("/member/certCodeLogin");
             })
             .catch(e => {
-              // _this.$toast.center(ko.messages.error);
+              _this.$toast.center(ko.messages.error);
               // _this.$toast.center(e);
             });
         }

@@ -77,7 +77,6 @@ export default {
   methods: {
     modifyFingerPrint: function(obj) {
       let _this = this;
-      this.$toast.center(obj.target.className);
       if (obj.target.className == _this.btnOff) {
         //킬때
         this.$router.push("/mypage/regCertLogin");

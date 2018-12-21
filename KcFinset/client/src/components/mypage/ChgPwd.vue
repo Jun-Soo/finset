@@ -79,7 +79,7 @@ export default {
     }
 
     if (this.$store.state.isLoggedIn) {
-      this.$store.state.header.backPath = "/mypage/info";
+      this.$store.state.header.backPath = "/mypage/cert";
     } else {
       this.$store.state.header.backPath = "/member/certCodeLogin";
     }
@@ -210,7 +210,6 @@ export default {
           })
           .catch(e => {
             this.$toast.center(ko.messages.error);
-            this.$toast.center(e);
             _this.password = "";
             _this.initClassPass();
           });

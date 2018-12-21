@@ -207,9 +207,6 @@ export default {
               this.$toast.center(result.message);
               return false;
             }
-          })
-          .catch(e => {
-            this.$toast.center(ko.messages.error);
           });
       }
     },
@@ -238,9 +235,6 @@ export default {
             this.$toast.center(ko.messages.loginErr);
             return;
           }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
         });
     },
     /***

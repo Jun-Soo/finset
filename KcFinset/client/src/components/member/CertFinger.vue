@@ -97,7 +97,7 @@ export default {
   mounted() {
     this.fingerSVG = new Vivus("my-svg", {
       type: "delayed",
-      duration: 100,
+      duration: 50,
       start: "manual",
       animTimingFunction: Vivus.EASE
     });
@@ -131,9 +131,6 @@ export default {
             this.$toast.center(ko.messages.loginErr);
             return;
           }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
         });
     },
     chkFinger: function(gubun) {
@@ -145,7 +142,7 @@ export default {
         } else if (Constant.userAgent == "iOS") {
           //지문인식 결과 콜백 이벤트
           Jockey.on("resultFingerPrint", function(param) {
-            _this.resultFingerPrint(param.result);
+            resultFingerPrint(param.result);
           });
           Jockey.send("initFingerPrint");
         }
@@ -158,43 +155,44 @@ export default {
      **/
     resultFingerPrint: function(result) {
       var _this = this;
-      if (Constant.userAgent == "Android") {
-        window.Android.closeFingerPrint();
-      }
-      _this.fingerSVG.reset().play();
+      if (result == true || result == 1) {
+        if (Constant.userAgent == "Android") {
+          window.Android.closeFingerPrint();
+        }
+        _this.fingerSVG.reset().play();
 
-      var data = {
-        no_person: _this.noPerson,
-        yn_fingerprint: _this.ynFingerprint
-      };
-      this.$http
-        .get("/m/person/modifyFingerPrint.json", {
-          params: data
-        })
-        .then(response => {
-          var result = response.data;
-          if (result.result == "00") {
-            this.$toast.center("지문 로그인 설정이 완료되었습니다.");
-            this.$store.state.user.ynFingerprint = _this.ynFingerprint;
-            if (
-              Constant.userAgent == "Android" ||
-              Constant.userAgent == "iOS"
-            ) {
-              //_this.checkExistCert();
-              _this.$router.push("/scrap/fcLink");
+        var data = {
+          no_person: _this.noPerson,
+          yn_fingerprint: _this.ynFingerprint
+        };
+        this.$http
+          .get("/m/person/modifyFingerPrint.json", {
+            params: data
+          })
+          .then(response => {
+            var result = response.data;
+            if (result.result == "00") {
+              this.$toast.center("지문 로그인 설정이 완료되었습니다.");
+              this.$store.state.user.ynFingerprint = _this.ynFingerprint;
+              if (
+                Constant.userAgent == "Android" ||
+                Constant.userAgent == "iOS"
+              ) {
+                //_this.checkExistCert();
+                setTimeout(function() {
+                  _this.$router.push("/scrap/fcLink");
+                }, 1000);
+              } else {
+                setTimeout(function() {
+                  _this.login();
+                }, 2000);
+              }
             } else {
-              setTimeout(function() {
-                _this.login();
-              }, 2000);
+              this.$toast.center(result.message);
+              return false;
             }
-          } else {
-            this.$toast.center(result.message);
-            return false;
-          }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
-        });
+          });
+      }
     }
   }
 };

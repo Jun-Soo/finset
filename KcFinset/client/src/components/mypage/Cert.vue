@@ -66,7 +66,7 @@ export default {
     //   );
     // }
 
-    this.$store.state.header.backPath = "/mypage/info";
+    this.$store.state.header.backPath = "/main";
   },
   beforeMount() {},
   mounted() {},

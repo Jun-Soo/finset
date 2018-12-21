@@ -22,7 +22,7 @@
       </div>
     </div>
 
-    <div class="btn-wrap float">
+    <div class="btn-wrap float" v-if="chkall">
       <a @click="quitChkYn" class="solid box blue">탈퇴하기</a>
     </div>
   </section>
@@ -54,6 +54,7 @@ export default {
         this.chk3 = true;
         this.chk4 = true;
         this.chk5 = true;
+        window.scrollTo(0, window.innerHeight);
       } else {
         this.checked = "";
         this.chk1 = false;

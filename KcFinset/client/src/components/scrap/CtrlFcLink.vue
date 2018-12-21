@@ -162,6 +162,7 @@ export default {
     if (this.isScrap) {
       this.$parent.$parent.isFcScrapDone = false;
       this.$parent.$parent.isStScrapDone = false;
+      this.$parent.$parent.isScrapSuccess = true;
       this.$parent.$parent.startAutoScrap();
     }
   },

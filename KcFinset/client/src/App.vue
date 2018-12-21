@@ -206,9 +206,9 @@ export default {
           _this.isStScrapDone = true;
           console.log(
             "isStScrapDone : ",
-            this.isStScrapDone,
+            _this.isStScrapDone,
             " - isFcScrapDone : ",
-            this.isFcScrapDone
+            _this.isFcScrapDone
           );
           if (_this.isStScrapDone && _this.isFcScrapDone) {
             _this.hideProgressBanner();

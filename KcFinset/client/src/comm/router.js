@@ -215,6 +215,8 @@ import Gauge from '@/components/_sample/Gauge'
 import Progress from '@/components/_sample/Progress'
 import Calendar from '@/components/_sample/Calendar'
 import Select from '@/components/_sample/Select'
+import Datepicker from '@/components/_sample/Datepicker'
+import Money from '@/components/_sample/Money'
 
 import TemplateHome from '@/components/template/Home'
 import TemplateMain from '@/components/template/Main'
@@ -1704,6 +1706,22 @@ export const routes = [{
   path: '/sample/select',
   name: 'select',
   component: Select,
+  meta: {
+    allowPath: true
+  }
+},
+{
+  path: '/sample/datepicker',
+  name: 'datepicker',
+  component: Datepicker,
+  meta: {
+    allowPath: true
+  }
+},
+{
+  path: '/sample/money',
+  name: 'money',
+  component: Money,
   meta: {
     allowPath: true
   }

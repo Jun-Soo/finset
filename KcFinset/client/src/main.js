@@ -17,6 +17,7 @@ import multiselect from '@/components/plugins/multiselect/MultiSelect.vue'
 import SlimDialog from 'v-slim-dialog'
 import datepicker from 'vuejs-datepicker'
 import VueAnalytics from 'vue-analytics'
+import money from '@/components/plugins/money/Money.vue'
 
 import 'jquery'
 
@@ -57,6 +58,7 @@ Vue.use(window.VueCharts)
 Vue.use(SlimDialog)
 Vue.component('multiselect', multiselect)
 Vue.component('datepicker', datepicker)
+Vue.component('money', money)
 
 Vue.config.debug = true
 Vue.config.devtools = true

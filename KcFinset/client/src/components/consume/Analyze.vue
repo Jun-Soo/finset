@@ -44,12 +44,7 @@ export default {
           label: " ",
           backgroundColor: "rgba(228,42,59,0.6)",
           borderColor: "rgba(228,42,59,0.6)",
-          borderCapStyle: "butt",
-          borderDash: [],
-          borderDashOffset: 0.0,
-          borderJoinStyle: "miter",
-          data: [],
-          spanGaps: false
+          data: []
         }
       ],
       myoption: {
@@ -60,6 +55,15 @@ export default {
           yAxes: [
             {
               display: false
+            }
+          ],
+          xAxes: [
+            {
+              gridLines: {
+                drawBorder: true,
+                borderDash: [8, 4],
+                color: "#ccc"
+              }
             }
           ]
         },

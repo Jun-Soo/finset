@@ -14,7 +14,7 @@ export default {
     Constant.params = this.getParams()
 
     // ios a, button 태그 이벤트
-    $('body *').on('touchstart', function () { })
+    $('body *').on('touchstart', function () {})
 
     // Tab
     $('.tabs a').click(function (e) {
@@ -48,15 +48,6 @@ export default {
     if (!$('#mask').length > 0) {
       $('#wrapper').after("<div id='mask'></div>")
     }
-
-    // selectpicker
-    // $('.selectpicker').on('show.bs.select', function (e) {
-    //   this.flag()
-    // })
-    // $('.selectpicker').on('hide.bs.select', function (e) {
-    //   this.flag()
-    // })
-    // $('.selectbox').selectpicker()
 
     // collapse
     $('.collapse').on('show.bs.collapse', function (e) {
@@ -360,44 +351,6 @@ export default {
     })
     return name
   },
-  // makeOptions: function (cdGroup, defaultText, selectValue, pType) {
-  //   var type = pType
-  //   var data = {
-  //     'code_group': cdGroup
-  //   }
-  //   var cdList
-  //   $.ajax({
-  //     url: '/m/comm/getCodeList.json',
-  //     data: data,
-  //     contentType: 'application/x-www-form-urlencoded; charset=UTF-8',
-  //     type: 'GET',
-  //     async: false,
-  //     success: function (result) {
-  //       cdList = result.codeList
-  //     }
-  //   })
-  //   var result = ''
-  //   if ((defaultText || '') !== '') {
-  //     result += "<option value=''>" + defaultText + '</option>'
-  //     result += "<option data-divider='true' disabled></option>"
-  //   }
-  //   if (cdList != null && cdList.length > 0) {
-  //     for (var i = 0; i < cdList.length; i++) {
-  //       var value = cdList[i].code_value
-  //       // 기본선택 설정
-  //       if ((cdList[i].code_value || '') !== '' && cdList[i].code_value === selectValue) {
-  //         value += "' selected='selected"
-  //       }
-
-  //       if ((type || '') !== '' && type === 'ID.NM') {
-  //         result += "<option value='" + value + "'>" + cdList[i].code_value + '.' + cdList[i].nm_code + '</option>'
-  //       } else {
-  //         result += "<option value='" + value + "'>" + cdList[i].nm_code + '</option>'
-  //       }
-  //     }
-  //   }
-  //   return result
-  // },
   makeOptions: function (cdGroup, pType) {
     var type = pType
     var data = {
@@ -452,12 +405,7 @@ export default {
           document.getElementsByClassName(classNm)[i].children[1].children[2].style.background = '#FFFFFF'
           Constant.vueComponent = vueComponent
         }
-
         for (var j = 1; j < document.getElementsByClassName(classNm)[i].children.length; j++) {
-          // let leftMargin = document.getElementsByClassName(classNm)[i].offsetWidth - 300
-          // document.getElementsByClassName(classNm)[i].children[j].style.marginLeft = leftMargin + 'px'
-          // document.getElementsByClassName(classNm)[i].children[j].style.top = (document.body.clientHeight - 200) / 2 + 'px'
-          // document.getElementsByClassName(classNm)[i].children[j].style.left = (document.body.clientWidth - 300) / 2 + 'px'
           document.getElementsByClassName(classNm)[i].children[j].style.top = (document.documentElement.clientHeight - 200) / 2 + 'px'
           document.getElementsByClassName(classNm)[i].children[j].style.left = (document.documentElement.clientWidth - 300) / 2 + 'px'
         }
@@ -475,7 +423,7 @@ export default {
       Constant._el = document.getElementById(el)
     }
     Constant._this.addScroll()
-    Constant._callback(function () { })
+    Constant._callback(function () {})
   },
   handleScroll: function () {
     var html = document.documentElement

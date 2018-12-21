@@ -24,7 +24,8 @@
               <p class="key">금액</p>
               <p>
                 <!-- <input type="tel" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액"><em>원</em> -->
-                <input type="text" class="money" inputmode="numeric" pattern="[0-9]*" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액">
+                <!-- <input type="text" class="money" inputmode="numeric" pattern="[0-9]*" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액"> -->
+                <money inputmode="numeric" pattern="[0-9]*" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액" />
                 <em>원</em>
               </p>
             </li>
@@ -51,7 +52,7 @@
               <p class="key">날짜</p>
               <p>
                 <!-- <datepicker v-model="consumeVO.dt_trd" ref="datepicker" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDateDot" class="div-date" :disabled="chkReadonly"></datepicker> -->
-                <datepicker v-model="consumeVO.dt_trd" ref="datepicker" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDateDot" class="div-date" :disabled="chkReadonly"></datepicker>
+                <datepicker v-model="consumeVO.dt_trd" ref="datepicker" :language="ko" :format="formatDateDot" class="div-date" :disabled="chkReadonly"></datepicker>
                 <button class="cal" @click="openDatepicker"></button>
               </p>
             </li>

@@ -138,6 +138,7 @@ export default {
       var formData = new FormData();
 
       formData.append("type_in_out", this.$route.query.type_in_out);
+      formData.append("cd_fc", this.$route.query.cd_fc);
       formData.append("contents", this.$route.query.contents);
 
       this.$http

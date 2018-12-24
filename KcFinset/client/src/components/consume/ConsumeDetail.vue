@@ -698,8 +698,9 @@ export default {
       var _this = this;
 
       var formData = new FormData();
-      formData.append("type_in_out", _this.curTab);
-      formData.append("contents", _this.consumeVO.contents);
+      formData.append("type_in_out", this.curTab);
+      formData.append("cd_fc", this.consumeVO.cd_fc);
+      formData.append("contents", this.consumeVO.contents);
 
       this.$http
         .post("/m/consume/getBannerData.json", formData)
@@ -780,7 +781,8 @@ export default {
         path: "/consume/analyze",
         query: {
           type_in_out: this.curTab,
-          contents: this.consumeVO.contents
+          contents: this.consumeVO.contents,
+          cd_fc: this.consumeVO.cd_fc
         }
       });
     },

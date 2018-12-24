@@ -36,15 +36,15 @@ import 'vue2-toast/lib/toast.css'
 import './assets/css/v-slim-dialog.css'
 import './assets/css/reset.css'
 import './assets/css/style.css'
-VeeValidate.Validator.extend('multi', {
-  validate: value => (value || '') !== '' && (value.value || '') !== ''
-})
 
 Vue.use(VueAnalytics, {
   id: 'UA-126626513-1',
   router
 })
 
+VeeValidate.Validator.extend('multi', {
+  validate: value => (value || '') !== '' && (value.value || '') !== ''
+})
 Vue.use(VeeValidate, {
   events: '',
   locale: 'ko',
@@ -52,13 +52,6 @@ Vue.use(VeeValidate, {
     ko
   }
 })
-// Vue.use(Validator, {
-//   events: '',
-//   locale: 'ko',
-//   dictionary: {
-//     ko
-//   }
-// })
 
 Vue.use(toast, {
   type: 'center',

@@ -4,6 +4,10 @@
 import Vue from 'vue'
 import App from './App'
 import VeeValidate from 'vee-validate'
+// import {
+//   Validator
+// } from 'vee-validate'
+
 import ko from 'vee-validate/dist/locale/ko.js'
 import axios from 'axios'
 import router from './comm/router'
@@ -32,6 +36,9 @@ import 'vue2-toast/lib/toast.css'
 import './assets/css/v-slim-dialog.css'
 import './assets/css/reset.css'
 import './assets/css/style.css'
+VeeValidate.Validator.extend('multi', {
+  validate: value => (value || '') !== '' && (value.value || '') !== ''
+})
 
 Vue.use(VueAnalytics, {
   id: 'UA-126626513-1',
@@ -45,6 +52,13 @@ Vue.use(VeeValidate, {
     ko
   }
 })
+// Vue.use(Validator, {
+//   events: '',
+//   locale: 'ko',
+//   dictionary: {
+//     ko
+//   }
+// })
 
 Vue.use(toast, {
   type: 'center',

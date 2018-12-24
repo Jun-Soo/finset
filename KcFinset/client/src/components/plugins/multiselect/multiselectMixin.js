@@ -188,9 +188,6 @@ export default {
         this.selectext2 = ''
         return
       }
-      if ((obj.value || '') === '') {
-        return
-      }
       var selOpt = this.options.filter(option => option.value === obj.value)
 
       if ((selOpt || '') !== '' && selOpt.length === 1) {
@@ -224,9 +221,7 @@ export default {
       return this.valueKeys.indexOf(opt) > -1
     },
     open: function () {
-      console.log('startOpen')
       this.isShow = true
-      console.log('endOpen')
     },
     close: function () {
       this.isShow = false
@@ -236,11 +231,7 @@ export default {
       this.selected = option.text
       this.isShow = false
       if (this.onClose) this.onClose(option)
-      if (this.selected1 === '') {
-        this.$emit('input', null)
-      } else {
-        this.$emit('input', option)
-      }
+      this.$emit('input', option)
     },
     multiclick: function (option, key) {
       switch (key) {

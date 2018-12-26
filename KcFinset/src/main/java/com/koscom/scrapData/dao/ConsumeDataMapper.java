@@ -40,7 +40,7 @@ public interface ConsumeDataMapper {
 	 * @param consumeForm
 	 * @return
 	 */
-	List<Map<String, String>> listScrTransactionDetail(ConsumeDataForm consumeForm);
+	List<Map<String, String>> listScrTransactionDetailAuto(ConsumeDataForm consumeForm);
 	
 	/**
 	 * 업종명으로 소비항목코드를 조회

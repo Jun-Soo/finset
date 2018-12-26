@@ -53,6 +53,7 @@ import com.koscom.kcb.model.KcbCardDtlList;
 import com.koscom.kcb.model.KcbCardInfo;
 import com.koscom.kcb.model.KcbContactInfo;
 import com.koscom.kcb.model.KcbCreditInfoVO;
+import com.koscom.kcb.model.KcbFinDisorderInfo;
 import com.koscom.kcb.model.KcbGuaranteeInfo;
 import com.koscom.kcb.model.KcbJobInfo;
 import com.koscom.kcb.model.KcbOverdueDefaultInfo;
@@ -1278,13 +1279,14 @@ public class KcbManagerImpl implements KcbManager {
 						
 					} else {
 						cdType = "03"; //금융질서문란
-						kcbOverdueEctInfo.put("nm_agency",	 	(StringUtil.regExpFindNum(divPrdList.get(0).text())));	//관리점명
-						kcbOverdueEctInfo.put("ymd_default", 	(StringUtil.regExpFindNum(divPrdList.get(0).text())));	//발생일자
-						kcbOverdueEctInfo.put("amt_delay",		(StringUtil.addAmt(divPrdList.get(1).text())));			//연체금액
-						kcbOverdueEctInfo.put("ymd_repay",	 	(StringUtil.regExpFindNum(divPrdList.get(2).text())));	//상환일자
-						kcbOverdueEctInfo.put("amt_repay", 		(StringUtil.addAmt(divPrdList.get(3).text())));			//상환금액
-						kcbOverdueEctInfo.put("amt_regist",		(StringUtil.addAmt(divPrdList.get(4).text())));			//등록금액
-						kcbOverdueEctInfo.put("cd_default",	 	(StringUtil.regExpFindNum(divPrdList.get(5).text())));	//등록사유
+						kcbOverdueEctInfo.put("nm_agency",	 	(divPrdList.get(0).text()));							//관리점명
+						kcbOverdueEctInfo.put("ymd_default", 	(StringUtil.regExpFindNum(divPrdList.get(1).text())));	//등록일자
+						kcbOverdueEctInfo.put("amt_regist",		(StringUtil.addAmt(divPrdList.get(2).text())));			//등록금액
+						kcbOverdueEctInfo.put("amt_delay",	 	(StringUtil.addAmt(divPrdList.get(3).text())));			//연체금액
+						kcbOverdueEctInfo.put("dt_release",		(StringUtil.regExpFindNum(divPrdList.get(4).text())));	//해제일자
+						kcbOverdueEctInfo.put("cd_release",		(StringUtil.regExpFindNum(divPrdList.get(5).text())));	//해제구분
+						kcbOverdueEctInfo.put("no_case",	 	(StringUtil.regExpFindNum(divPrdList.get(6).text())));	//사건번호
+						kcbOverdueEctInfo.put("cd_default",	 	(StringUtil.regExpFindNum(divPrdList.get(7).text())));	//등록사유
 	
 						integerCdType = 3;
 					}
@@ -1326,6 +1328,20 @@ public class KcbManagerImpl implements KcbManager {
 						
 					case 3: //금융질서문란정보 - 들어오는 정보가 하나도 없어 CREDIT_CRAWLING_LOG에 담아두기로 
 						step = "[PAGE1_9_03] 금융질서문란";
+						KcbFinDisorderInfo kcbFinDisorderInfo = new KcbFinDisorderInfo();
+						kcbFinDisorderInfo.setNo_person(info.getNoPerson());									//회원관리번호
+						kcbFinDisorderInfo.setCd_fc(cdFc);														//금융사코드
+						kcbFinDisorderInfo.setNm_agency(divPrdList.get(0).text());								//관리점명
+						kcbFinDisorderInfo.setYmd_default(StringUtil.regExpFindNum(divPrdList.get(1).text()));	//등록일자
+						kcbFinDisorderInfo.setAmt_regist(StringUtil.addAmt(divPrdList.get(2).text()));			//등록금액
+						kcbFinDisorderInfo.setAmt_delay(StringUtil.addAmt(divPrdList.get(3).text()));			//연체금액
+						kcbFinDisorderInfo.setDt_release(StringUtil.regExpFindNum(divPrdList.get(4).text()));	//해제일자
+						kcbFinDisorderInfo.setCd_release(StringUtil.regExpFindNum(divPrdList.get(5).text()));	//해제구분
+						kcbFinDisorderInfo.setNo_case(StringUtil.regExpFindNum(divPrdList.get(6).text()));		//사건번호
+						kcbFinDisorderInfo.setCd_default(StringUtil.regExpFindNum(divPrdList.get(7).text()));	//등록사유
+						
+						creditMapper.saveKcbFinDisorderInfo(kcbFinDisorderInfo);
+						
 						Map<String, Object> logMap = new HashMap<String, Object>();
 						logMap.put("no_person", info.getNoPerson());
 						logMap.put("step", step);
@@ -1333,6 +1349,7 @@ public class KcbManagerImpl implements KcbManager {
 						logMap.put("log_html", info.getDoc_page1());
 						
 						creditMapper.insertCrawlingLog(logMap);
+						
 						break;
 						
 					default:

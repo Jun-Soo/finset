@@ -15,7 +15,7 @@ input[type="tel"] { width: 110px; }
 
 input[type="email"] { width: 200px; }
 
-input[type="button"] { height: 30px; line-height: 30px; background: #e52638; color: #fff; text-align: center; min-width: 130px; border: none; font-size: 12px; cursor: pointer; margin: 0 2px; -moz-appearance: none; -webkit-appearance: none; }
+input[type="button"] { height: 30px; line-height: 30px; background: #e52638; color: #fff; text-align: center; border: none; font-size: 12px; cursor: pointer; margin: 0 2px; -moz-appearance: none; -webkit-appearance: none; }
 
 textarea { width: 100%; height: 70vh; padding: 20px; border: 1px solid #e5e5e5; color: #666; line-height: 17px; font-size: 12px; vertical-align: baseline; -moz-appearance: none; -webkit-appearance: none; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
 
@@ -212,7 +212,7 @@ header .gnb-wrap.on { transform: translateX(0); width: 100%; overflow: auto; }
 .modal-con .cal-con .body .list div em.purple { background: #bf65f3; }
 .modal-con .cal-con .body .list div em.text { padding: 0; margin: 0; color: #666; }
 
-.modal-confirm { position: absolute; left: 50%; top: 50%; background: #fff; width: 80%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
+.modal-confirm { position: absolute; background: #fff; width: 80%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
 .modal-confirm .debt-modal-body { padding: 25px; padding-bottom: 80px; background: #fff; }
 .modal-confirm .debt-modal-body .text { font-size: 14px; color: #666; line-height: 18px; }
 .modal-confirm .modal-btns { position: absolute; left: 0; bottom: 0; display: flex; border-top: 2px solid #62c1d0; margin-top: 25px; width: 100%; }
@@ -840,25 +840,25 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .owl-theme .owl-dots .owl-dot.active a { background: #e52638; width: 6px; height: 6px; }
 
 .accodion { padding: 0 21px; border-top: 1px solid #e5e5e5; }
-.accodion ul { margin-top: 20px; }
-.accodion ul li { border: 1px solid #e5e5e5; margin-bottom: 10px; }
-.accodion ul li .top { padding: 20px; position: relative; }
-.accodion ul li .top em { position: absolute; right: 0; top: 50%; margin-top: -30px; display: inline-block; width: 60px; height: 60px; background: url("../images/common/accodion_arrow.png") no-repeat left top/60px; cursor: pointer; }
-.accodion ul li .top span { display: inline-block; position: relative; padding-left: 40px; color: #333; font-weight: 700; font-size: 15px; line-height: 19px; padding-top: 5px; }
-.accodion ul li .top span:before { position: absolute; left: 0; top: 0; display: inline-block; content: ""; width: 30px; height: 30px; vertical-align: top; margin-right: 10px; background: url(../images/_form/checkbox.png) no-repeat left top/30px; }
-.accodion ul li .top span.on:before { background-position: left bottom; }
-.accodion ul li .con { padding: 20px; display: none; }
-.accodion ul li .con .flex { display: flex; margin-bottom: 10px; }
-.accodion ul li .con .flex p { width: 70%; line-height: 35px; }
-.accodion ul li .con .flex p:first-child { font-size: 14px; font-weight: 700; color: #222; width: 30%; }
-.accodion ul li .con .flex p:last-child { text-align: right; line-height: 0; }
-.accodion ul li .con .flex p:last-child button { display: inline-block; width: 33px; height: 33px; border: 1px solid #e5e5e5; background: url("../images/common/btn_accodion_search.png") no-repeat center/contain; margin: 0; }
-.accodion ul li .con .flex p:last-child button.cal { background: url("../images/common/btn_cal.png") no-repeat center/18px; }
-.accodion ul li .con .flex p:last-child input[type="text"], .accodion ul li .con .flex p:last-child input[type="number"] { line-height: 35px; height: 33px; width: 110px; font-size: 15px; text-align: left; text-indent: 0; }
-.accodion ul li .con .text { font-size: 12px; line-height: 16px; color: #888; }
-.accodion ul li.on .top { border-bottom: 1px solid #e5e5e5; }
-.accodion ul li.on .top em { background-position: left bottom; }
-.accodion ul li.on .con { display: block; }
+.accodion > ul { margin-top: 20px; }
+.accodion > ul > li { border: 1px solid #e5e5e5; margin-bottom: 10px; }
+.accodion > ul > li > .top { padding: 20px; position: relative; }
+.accodion > ul > li > .top em { position: absolute; right: 0; top: 50%; margin-top: -30px; display: inline-block; width: 60px; height: 60px; background: url("../images/common/accodion_arrow.png") no-repeat left top/60px; cursor: pointer; }
+.accodion > ul > li > .top span { display: inline-block; position: relative; padding-left: 40px; color: #333; font-weight: 700; font-size: 15px; line-height: 19px; padding-top: 5px; }
+.accodion > ul > li > .top span:before { position: absolute; left: 0; top: 0; display: inline-block; content: ""; width: 30px; height: 30px; vertical-align: top; margin-right: 10px; background: url(../images/_form/checkbox.png) no-repeat left top/30px; }
+.accodion > ul > li > .top span.on:before { background-position: left bottom; }
+.accodion > ul > li .con { padding: 20px; display: none; }
+.accodion > ul > li .con .flex { display: flex; margin-bottom: 10px; }
+.accodion > ul > li .con .flex p { width: 70%; line-height: 35px; }
+.accodion > ul > li .con .flex p:first-child { font-size: 14px; font-weight: 700; color: #222; width: 30%; }
+.accodion > ul > li .con .flex p:last-child { text-align: right; line-height: 0; }
+.accodion > ul > li .con .flex p:last-child > button { display: inline-block; width: 33px; height: 33px; border: 1px solid #e5e5e5; background: url("../images/common/btn_accodion_search.png") no-repeat center/contain; margin: 0; }
+.accodion > ul > li .con .flex p:last-child > button.cal { background: url("../images/common/btn_cal.png") no-repeat center/18px; }
+.accodion > ul > li .con .flex p:last-child input[type="text"], .accodion > ul > li .con .flex p:last-child input[type="number"] { line-height: 35px; height: 33px; width: 110px; font-size: 15px; text-align: left; text-indent: 0; }
+.accodion > ul > li .con .text { font-size: 12px; line-height: 16px; color: #888; }
+.accodion > ul > li.on > .top { border-bottom: 1px solid #e5e5e5; }
+.accodion > ul > li.on > .top em { background-position: left bottom; }
+.accodion > ul > li.on .con { display: block; }
 
 /*   POP   */
 .pop-top { text-align: center; position: relative; }
@@ -1169,7 +1169,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .goal-list-wrap { padding-bottom: 50px; }
 .goal-list-wrap dl { border: 1px solid #e5e5e5; background: #fff; padding-bottom: 20px; }
 .goal-list-wrap .sum, .goal-list-wrap dd { display: grid; grid-template-columns: 1fr 1fr; background: #fff; }
-.goal-list-wrap .sum input[type="text"], .goal-list-wrap dd input[type="text"] { line-height: 33px; }
+.goal-list-wrap .sum input[type="text"], .goal-list-wrap dd input[type="text"] { line-height: 33px; width: 90%; text-align: right; padding: 0 10px; }
 .goal-list-wrap .sum p, .goal-list-wrap dd p { padding: 5px 0; line-height: 35px; color: #9b9489; font-size: 13px; font-weight: 700; }
 .goal-list-wrap .sum p:first-child, .goal-list-wrap dd p:first-child { padding-left: 15px; }
 .goal-list-wrap .sum p:last-child, .goal-list-wrap dd p:last-child { padding-right: 15px; }
@@ -1278,7 +1278,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .cert-wrap .grid.phone .multiselect__tags { border: 1px solid #e5e5e5; text-align: left; line-height: 30px; padding: 5px 20px 0 8px; margin-top: 0px; }
 .cert-wrap .grid.phone .multiselect__single { margin-bottom: 0; margin-top: 3px; }
 .cert-wrap .grid.phone .multiselect__select { top: 1px; margin-right: 5px; }
-.cert-wrap button { line-height: 46px; border: 2px solid #62c1d0; text-align: center; font-size: 15px; font-weight: 700; width: 100%; background: #fff; color: #62c1d0; margin-top: 10px; }
+.cert-wrap > button { line-height: 46px; border: 2px solid #62c1d0; text-align: center; font-size: 15px; font-weight: 700; width: 100%; background: #fff; color: #62c1d0; margin-top: 10px; }
 .cert-wrap .cert-num { display: grid; grid-template-columns: 7fr 3fr; align-items: center; margin-top: 15px; border: 1px solid #e5e5e5; }
 .cert-wrap .cert-num .time { text-align: center; color: #e52638; text-align: right; padding-right: 15px; }
 .cert-wrap .cert-num input { border: none; margin-top: 0; }
@@ -1313,7 +1313,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .debt-regist .list .flex { display: flex; justify-content: space-between; align-items: center; }
 .debt-regist .list .flex .key { flex-grow: 2; font-size: 13px; color: #9b9489; padding-left: 15px; line-height: 49px; }
 .debt-regist .list .flex .value { flex-grow: 3; text-align: right; padding-right: 15px; }
-.debt-regist .list .flex .value input[type="text"] { line-height: 49px; width: 200px; border: none; text-align: right; }
+.debt-regist .list .flex .value input[type="text"], .debt-regist .list .flex .value input[type="number"] { line-height: 49px; width: 200px; border: none; text-align: right; }
 .debt-regist .list .flex .value em { margin-left: 10px; color: #333; }
 .debt-regist .list .flex .value button { vertical-align: middle; }
 .debt-regist .list .flex .value button.human { width: 29px; height: 49px; background: url("../images/debt/btn-human.png") no-repeat center/contain; }
@@ -1336,7 +1336,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 /*   뉴스   */
 .search { display: flex; margin-bottom: 15px; justify-content: space-between; }
 .search div.right { text-align: right; }
-.search div.right button { width: 35px; height: 35px; background: url("../images/common/btn-search.png") no-repeat center/contain; }
+.search div.right > button { width: 35px; height: 35px; background: url("../images/common/btn-search.png") no-repeat center/contain; }
 .search div .total { display: inline-block; padding-left: 5px; margin-left: 5px; border-left: 1px solid #e5e5e5; margin-top: 10px; }
 .search div .total:first-child { adding-left: 0; margin-left: 0; border-left: none; }
 .search div .total em { color: #e52638; }
@@ -1500,6 +1500,8 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 span.cell.day.selected.today { color: #fff; }
 
 .vdp-datepicker.div-date input[type="text"]:disabled { background: transparent; }
+
+.vdp-datepicker__calendar .cell.selected { color: #fff; }
 
 .calendar-overlay { width: 100%; height: 200vh; position: fixed; top: 0 !important; bottom: 0 !important; left: 0 !important; background: rgba(0, 0, 0, 0.4); z-index: -1; }
 

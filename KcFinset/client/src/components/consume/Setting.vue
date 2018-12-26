@@ -1,13 +1,13 @@
 <template>
   <section v-if="seen">
-    <div class="cert-check-wrap">
-      <!-- <p class="title">회원정보</p> -->
-      <p class="title">월 시작일</p>
-      <multiselect v-model="dt_basic" label="text" :show-labels="false" :options="dt_basic_option" :searchable="false" :allow-empty="false" @select="modifyDt_basic" class="multiselect-basic mt10">
-      </multiselect>
-    </div>
-
     <dl class="setting-wrap">
+      <dd>
+        <p class="key">월 시작일</p>
+        <p class="value">
+          <multiselect v-model="dt_basic" label="text" :show-labels="false" :options="dt_basic_option" :searchable="false" :allow-empty="false" :onClose="modifyDt_basic" :title="'월 시작일'" class="multiselect-basic">
+          </multiselect>
+        </p>
+      </dd>
       <dt>지출</dt>
       <dd>
         <p class="key">지출예산설정</p>

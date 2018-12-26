@@ -112,10 +112,10 @@ export default {
           }
           _this.page++;
           this.$store.state.isLoading = false;
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
         });
+      // .catch(e => {
+      //   this.$toast.center(ko.messages.error);
+      // });
     },
     clickJob: function(index) {
       for (var i = 0; i < this.jobList.length; i++) {
@@ -169,10 +169,10 @@ export default {
               } else {
                 _this.$toast.center("다시 시도해주세요.");
               }
-            })
-            .catch(e => {
-              _this.$toast.center(ko.messages.error);
             });
+          // .catch(e => {
+          //   _this.$toast.center(ko.messages.error);
+          // });
         }
       }
     }

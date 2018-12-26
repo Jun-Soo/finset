@@ -269,6 +269,10 @@ export default {
             }
           }
         });
+      // .catch(e => {
+      //   this.$store.state.isLoading = false;
+      //   this.$toast.center(ko.messages.error);
+      // });
     },
     //면적 선택시 사용될 함수
     selectPricePyeong: function(param) {
@@ -318,10 +322,10 @@ export default {
               }
             });
           }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
         });
+      // .catch(e => {
+      //   this.$toast.center(ko.messages.error);
+      // });
     }
   }
 };

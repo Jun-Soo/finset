@@ -13,7 +13,7 @@
           <div>
             <p class="key">종류</p>
             <p>
-              <multiselect v-model="selectObj.building_type" ref="sel_building_type" label="text" :show-labels="false" :options="options_building_type" placeholder="종류 선택" :searchable="false" :allow-empty="false" @select="listAddrRegionFirst">
+              <multiselect v-model="selectObj.building_type" ref="sel_building_type" label="text" :show-labels="false" :options="options_building_type" placeholder="종류 선택" :searchable="false" :allow-empty="false" :onClose="listAddrRegionFirst">
               </multiselect>
             </p>
           </div>
@@ -22,7 +22,7 @@
           <div>
             <p class="key">시/도</p>
             <p>
-              <multiselect v-model="selectObj.region1" ref="sel_region1" label="text" :show-labels="false" :options="options_sel_region1" placeholder="시/도 선택" :searchable="false" :allow-empty="false" @select="listAddrRegionSecond">
+              <multiselect v-model="selectObj.region1" ref="sel_region1" label="text" :show-labels="false" :options="options_sel_region1" placeholder="시/도 선택" :searchable="false" :allow-empty="false" :onClose="listAddrRegionSecond">
               </multiselect>
             </p>
           </div>
@@ -31,7 +31,7 @@
           <div>
             <p class="key">시/군/구</p>
             <p>
-              <multiselect v-model="selectObj.region2" ref="sel_region2" label="text" :show-labels="false" :options="options_sel_region2" placeholder="시/군/구 선택" :searchable="false" :allow-empty="false" @select="listAddrRegionThird">
+              <multiselect v-model="selectObj.region2" ref="sel_region2" label="text" :show-labels="false" :options="options_sel_region2" placeholder="시/군/구 선택" :searchable="false" :allow-empty="false" :onClose="listAddrRegionThird">
               </multiselect>
             </p>
           </div>
@@ -40,7 +40,7 @@
           <div>
             <p class="key">읍/면/동</p>
             <p>
-              <multiselect v-model="selectObj.region3" ref="sel_region3" label="text" :show-labels="false" :options="options_sel_region3" placeholder="읍/면/동 선택" :searchable="false" :allow-empty="false" @select="listSrchApartment">
+              <multiselect v-model="selectObj.region3" ref="sel_region3" label="text" :show-labels="false" :options="options_sel_region3" placeholder="읍/면/동 선택" :searchable="false" :allow-empty="false" :onClose="listSrchApartment">
               </multiselect>
             </p>
           </div>
@@ -49,7 +49,7 @@
           <div>
             <p class="key">아파트명</p>
             <p>
-              <multiselect v-model="selectObj.apartment" ref="sel_apartment" label="text" :show-labels="false" :options="options_sel_apartment" placeholder="아파트명 선택" :searchable="false" :allow-empty="false" @select="scrapKbMarketPrice">
+              <multiselect v-model="selectObj.apartment" ref="sel_apartment" label="text" :show-labels="false" :options="options_sel_apartment" placeholder="아파트명 선택" :searchable="false" :allow-empty="false" :onClose="scrapKbMarketPrice">
               </multiselect>
             </p>
           </div>
@@ -58,7 +58,7 @@
           <div>
             <p class="key">공급면적/전용면적</p>
             <p>
-              <multiselect v-model="selectObj.pricePyeong" ref="sel_pricePyeong" label="text" :show-labels="false" :options="options_sel_pricePyeong" placeholder="면적 선택" :searchable="false" :allow-empty="false" @select="selectPricePyeong">
+              <multiselect v-model="selectObj.pricePyeong" ref="sel_pricePyeong" label="text" :show-labels="false" :options="options_sel_pricePyeong" placeholder="면적 선택" :searchable="false" :allow-empty="false" :onClose="selectPricePyeong">
               </multiselect>
             </p>
           </div>
@@ -68,7 +68,7 @@
         <li>
           <div>
             <p class="key">주소</p>
-            <p><input v-model="returnObj.address" type="text" readonly="readonly"><em @click="clickSearch">검색</em></p>
+            <p><input v-model="returnObj.address" type="text" readonly="readonly"><em :onClose="clickSearch">검색</em></p>
           </div>
         </li>
         <li>

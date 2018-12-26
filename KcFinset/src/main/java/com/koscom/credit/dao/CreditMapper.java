@@ -13,6 +13,7 @@ import com.koscom.kcb.model.KcbAddrInfo;
 import com.koscom.kcb.model.KcbCardDtlList;
 import com.koscom.kcb.model.KcbCardInfo;
 import com.koscom.kcb.model.KcbContactInfo;
+import com.koscom.kcb.model.KcbFinDisorderInfo;
 import com.koscom.kcb.model.KcbGuaranteeInfo;
 import com.koscom.kcb.model.KcbJobInfo;
 import com.koscom.kcb.model.KcbOverdueDefaultInfo;
@@ -218,6 +219,18 @@ public interface CreditMapper {
 	 */
 	void saveKcbOverduePublicInfo(KcbOverduePublicInfo kcbOverduePublicInfo);
 
+	/**
+	 * 공공정보 만료일자 오늘로 세팅 (KcbManagerImpl)
+	 * @param no_person
+	 */
+	void updateDtDeleteFinDisorderInfo(String no_person);
+
+	/**
+	 * 공공 정보 저장 (KcbManagerImpl)
+	 * @param kcbOverduePublicInfo
+	 */
+	void saveKcbFinDisorderInfo(KcbFinDisorderInfo kcbFinDisorderInfo);
+	
 	/**
 	 * 크롤링 실패 로그 저장 (KcbManagerImpl)
 	 * @param logMap

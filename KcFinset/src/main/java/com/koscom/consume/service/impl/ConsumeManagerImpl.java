@@ -144,6 +144,12 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	}
 
 	@Override
+	public List<Integer> listRegisteredSeqTran(ConsumeForm consumeForm) {
+		logger.debug("listRegisteredSeqTran");
+		return consumeMapper.listRegisteredSeqTran(consumeForm);
+	}
+	
+	@Override
 	public List<List<PersonTransDetailVO>> listPersonTransDetail(ConsumeForm consumeForm) {
 		logger.debug("listPersonTransDetail");
 		List<List<PersonTransDetailVO>> returnList = new ArrayList<List<PersonTransDetailVO>>();
@@ -312,11 +318,13 @@ public class ConsumeManagerImpl implements ConsumeManager {
 		if(cd_set.equals("01")) {
 			for(ConsumeDetailGoalInfoVO vo: consumeDetailGoalList) {
 				vo.setNo_person(consumeDetailGoalInfoVO.getNo_person());
+				vo.setAmt_budget(vo.getAmt_budget().replaceAll(",", ""));
 				consumeMapper.createDetailGoalClass(vo);
 			}
 		} else {
 			for(ConsumeDetailGoalInfoVO vo: consumeDetailGoalList) {
 				vo.setNo_person(consumeDetailGoalInfoVO.getNo_person());
+				vo.setAmt_budget(vo.getAmt_budget().replaceAll(",", ""));
 				consumeMapper.createDetailGoalMeans(vo);
 			}
 		}
@@ -442,7 +450,14 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	public void createConsumeInfo(ConsumeVO consumeVO) {
 		logger.debug("createConsumeInfo");
 		if("04".equals(consumeVO.getMeans_consume())) {
-			consumeMapper.createConsumeInfoAcc(consumeVO);
+			if(consumeVO.getYn_auto().equals("Y")) {
+				List<ConsumeVO> list = consumeMapper.listPrevTransactionDetail(consumeVO);
+				for(ConsumeVO vo: list) {
+					consumeMapper.createConsumeInfoOthers(vo);
+				}
+			} else {
+				consumeMapper.createConsumeInfoAcc(consumeVO);	
+			}
 		} else {
 			consumeMapper.createConsumeInfoOthers(consumeVO);
 		}

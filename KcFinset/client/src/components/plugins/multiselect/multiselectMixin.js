@@ -7,8 +7,7 @@ export default {
       selectext1: '',
       selectext2: '',
       selected1: '',
-      selected2: '',
-      cateHeight: ''
+      selected2: ''
     }
   },
   props: {
@@ -168,8 +167,7 @@ export default {
       default: false
     }
   },
-  mounted () {
-  },
+  mounted () {},
   computed: {
     internalValue () {
       return this.value || this.value === 0
@@ -190,9 +188,6 @@ export default {
         this.selectext2 = ''
         return
       }
-      if ((obj.value || '') === '') {
-        return
-      }
       var selOpt = this.options.filter(option => option.value === obj.value)
 
       if ((selOpt || '') !== '' && selOpt.length === 1) {
@@ -209,9 +204,9 @@ export default {
     getValue () {
       return this.multiple
         ? this.internalValue
-        : this.internalValue.length === 0
+        : (this.internalValue.length === 0
           ? null
-          : this.internalValue[0]
+          : this.internalValue[0])
     },
     /**
      * Finds out if the given element is already present
@@ -226,9 +221,7 @@ export default {
       return this.valueKeys.indexOf(opt) > -1
     },
     open: function () {
-      console.log('startOpen')
       this.isShow = true
-      console.log('endOpen')
     },
     close: function () {
       this.isShow = false
@@ -270,7 +263,8 @@ export default {
       this.close()
     },
     chkSelectValue: function () {
-      if ((this.value || '') === '') {
+      if (this.value === null || this.value === undefined) {
+        this.$emit('input', null)
         return
       }
       var selOpt = this.options.filter(option => option.value === this.value.value)
@@ -278,6 +272,28 @@ export default {
       if ((selOpt || '') !== '' && selOpt.length === 1) {
         this.selected = selOpt[0].text
         this.selected1 = selOpt[0].value
+      } else {
+        this.$emit('input', null)
+      }
+    },
+    cateSize: function (obj) {
+      if (obj.$el) {
+        let objWidth1 = Number(obj.$el.children[1].children[1].clientWidth.toString())
+        let objWidth2 = Number(obj.$el.children[1].children[1].children[0].clientWidth.toString())
+        // let fullWidth = Number(obj.$el.clientWidth.toString())
+        // let parentWidth = Number(obj.$el.parentElement.parentElement.clientWidth.toString())
+        // console.log(objWidth1 + '===' + objWidth2 + '===' + fullWidth + '===' + parentWidth + '===' + document.body.clientWidth)
+        // console.log(objWidth2 + '===' + document.body.clientWidth)
+        // if (!(objWidth1 !== parentWidth && objWidth2 !== parentWidth && fullWidth !== parentWidth)) {
+        // if (objWidth2 !== parentWidth && objWidth2 !== fullWidth && objWidth1 !== parentWidth && objWidth2 === document.body.clientWidth) {
+        if (objWidth2 === document.body.clientWidth) {
+          obj.$el.children[1].children[1].children[0].style.width = (objWidth1 - 80) + 'px'
+          obj.$el.children[1].children[1].style.width = (objWidth1 - 40) + 'px'
+        }
+        // }
+
+        let ht = this.options.length * 40
+        return 'height: ' + (ht > 300 ? 300 : ht) + 'px;'
       }
     }
   }

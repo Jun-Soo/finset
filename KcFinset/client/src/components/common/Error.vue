@@ -4,7 +4,7 @@
       일시적으로 서비스를 이용하실 수 없습니다.<br>잠시 후 다시 시도해주세요.
     </div>
     <div class="btn-wrap float">
-      <a @click="goBack()" class="solid box blue">뒤로가기</a>
+      <a @click="goBack()" class="solid box blue">홈으로 가기</a>
     </div>
   </section>
 </template>
@@ -43,7 +43,7 @@ export default {
           window.Android.exitApp();
         }
       } else {
-        history.back();
+        this.$router.push("/main");
       }
     }
   }

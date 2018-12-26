@@ -44,22 +44,46 @@ export default {
           label: " ",
           backgroundColor: "rgba(228,42,59,0.6)",
           borderColor: "rgba(228,42,59,0.6)",
-          borderCapStyle: "butt",
-          borderDash: [],
-          borderDashOffset: 0.0,
-          borderJoinStyle: "miter",
-          data: [],
-          spanGaps: false
+          data: []
         }
       ],
       myoption: {
         legend: {
           display: false
         },
+        layout: {
+          padding: {
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0
+          }
+        },
         scales: {
           yAxes: [
             {
-              display: false
+              gridLines: {
+                //offsetGridLines: true,
+                lineWidth: 1,
+                display: false,
+                drawBorder: true,
+                color: "#ccc"
+              },
+              ticks: {
+                display: false
+              }
+            }
+          ],
+          xAxes: [
+            {
+              gridLines: {
+                lineWidth: 1,
+                display: false,
+                drawBorder: true,
+                borderDash: [8, 4],
+                zeroLineColor: "#000",
+                color: "#ccc"
+              }
             }
           ]
         },
@@ -114,6 +138,7 @@ export default {
       var formData = new FormData();
 
       formData.append("type_in_out", this.$route.query.type_in_out);
+      formData.append("cd_fc", this.$route.query.cd_fc);
       formData.append("contents", this.$route.query.contents);
 
       this.$http

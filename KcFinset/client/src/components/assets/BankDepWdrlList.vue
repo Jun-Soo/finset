@@ -22,11 +22,11 @@
         <div class="wrap">
           <div class="date-pick">
             <p>
-              <datepicker v-model="txt_dt_from" ref="txtDtFromOpen" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDate" class="div-date"></datepicker>
+              <datepicker v-model="txt_dt_from" ref="txtDtFromOpen" :language="ko" :format="formatDate" class="div-date"></datepicker>
               <button @click="openDtFromPicker"></button>
             </p>
             <p>
-              <datepicker v-model="txt_dt_to" ref="txtDtToOpen" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDate" class="div-date"></datepicker>
+              <datepicker v-model="txt_dt_to" ref="txtDtToOpen" :language="ko" :format="formatDate" class="div-date"></datepicker>
               <button @click="openDtToPicker"></button>
             </p>
           </div>
@@ -146,7 +146,9 @@ export default {
     this.getSearchCondition();
   },
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    Common.datepickerInit("div-date", this);
+  },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
@@ -372,13 +374,13 @@ export default {
       formData.append("yn_share", _this.yn_share);
       formData.append(
         "scAccount",
-        _this.scAccount != "" ? _this.scAccount.value : ""
+        (_this.scAccount || "") != "" ? _this.scAccount.value : ""
       );
       formData.append("txt_dt_from", Common.formatDateDB(_this.txt_dt_from));
       formData.append("txt_dt_to", Common.formatDateDB(_this.txt_dt_to));
       formData.append(
         "scTrnsType",
-        _this.scTrnsType != "" ? _this.scTrnsType.value : ""
+        (_this.scTrnsType || "") != "" ? _this.scTrnsType.value : ""
       );
       formData.append("scKeyword", _this.scKeyword);
 
@@ -417,13 +419,13 @@ export default {
       formData.append("yn_share", _this.yn_share);
       formData.append(
         "scAccount",
-        _this.scAccount != "" ? _this.scAccount.value : ""
+        (_this.scAccount || "") != "" ? _this.scAccount.value : ""
       );
       formData.append("txt_dt_from", Common.formatDateDB(_this.txt_dt_from));
       formData.append("txt_dt_to", Common.formatDateDB(_this.txt_dt_to));
       formData.append(
         "scTrnsType",
-        _this.scTrnsType != "" ? _this.scTrnsType.value : ""
+        (_this.scTrnsType || "") != "" ? _this.scTrnsType.value : ""
       );
       formData.append("scKeyword", _this.scKeyword);
 

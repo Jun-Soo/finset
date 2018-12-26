@@ -15,9 +15,9 @@
 /*   Common   */
 
 h3{
-    color: #333;
+    color: #333; 
     font-size: 12px;
-    font-weight: 700; 
+    font-weight: 700;
 }
 
 .loading{
@@ -423,6 +423,7 @@ aside.search-wrap{
         }
         .top{
             display: flex;
+            align-items: center;
             p{
                 width: 50%;
                 line-height: 24px;
@@ -502,6 +503,27 @@ aside.search-wrap{
                 &.corp{
                     font-weight: 700;
                     color: #222;
+                }
+                &.number{
+                    font-size: 24px;
+                    font-weight: 700;
+                    color: #222;
+                    margin-top: 5px;
+                    em{
+                        margin-left: 2px;
+                        font-size: 12px;
+                        color: #222;
+                    }
+                }
+                &.goal{
+                    em{
+                        padding-left: 5px;
+                        margin-left: 5px;
+                        border-left: 1px solid $lineColor;
+                        &:first-child{
+                            border: none;
+                        }
+                    }
                 }
                 &:last-child{
                     text-align: right;
@@ -826,6 +848,60 @@ aside.search-wrap{
                 }
             }
         }
+        .form{
+            .key{
+                margin-top: 15px;
+                color: $col2;
+            }
+            input{
+                margin-top: 10px;
+            }
+        }
+        .gage{
+            //width: calc(100% - 96px);
+            position: relative;
+            padding: 10px 0;
+            p{
+                width: 100%;
+                height: 2px;
+                border-radius: 2px;
+                position: absolute;
+                background: #e1dfdb;
+                left: 0;
+                .active{
+                    height: 2px;
+                    border-radius: 2px;
+                    position: absolute;
+                    background: $col4;
+                    top: 0;
+                    left: 0;
+                }
+                .circle{
+                    width: 15px;
+                    height: 15px;
+                    position: absolute;
+                    border: 4px solid #fff;
+                    background: $col4;
+                    box-shadow: 0 0 15px rgba(#000,.1);
+                    border-radius: 100%;
+                    top: -6px;
+                    @include box-sizing(border-box);
+                }
+            }
+        }
+        .number-single{
+            text-align: right;
+            font-size: 24px;
+            font-weight: 700;
+            color: #222;
+            margin-top: 5px;
+            padding-bottom: 10px;
+            em{
+                margin-left: 2px;
+                font-size: 12px;
+                color: #222;
+            }
+        }
     }
     .select{
         display: flex;
@@ -945,6 +1021,10 @@ aside.search-wrap{
                     }
                 }
             }
+            &.bb{
+                border-bottom: 1px solid $lineColor;
+                padding-bottom: 20px;
+            }
         }
         .share{
             display: block;
@@ -1005,6 +1085,28 @@ aside.search-wrap{
                 color: inherit;
                 display: block;
                 background: url("../images/common/btn_red_arrow.png") no-repeat right center / 6px;
+            }
+        }
+        .star-list{
+            padding-top: 13px;
+            padding-bottom: 13px;
+            border-bottom: 1px solid $lineColor;
+            .list{
+                padding: 7px 0;
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr 1fr;
+                p{
+                    color: $col2;
+                    &.total{
+                        font-weight: 700;
+                        img{
+                            opacity: 1;
+                        }
+                    }
+                    img{
+                        opacity: .6;
+                    }
+                }
             }
         }
     }
@@ -2539,7 +2641,15 @@ aside.search-wrap{
             &.num{
                 color: $col2 !important;
             }
-           &:first-child{
+            &.blue{
+                color: $col4 !important;
+                font-weight: 700;
+            }
+            &.red{
+                color: $col1 !important;
+                font-weight: 700;
+            }
+            &:first-child{
                 color: #888;
             }
             &:last-child{
@@ -2547,7 +2657,23 @@ aside.search-wrap{
                 color: #333;
                 text-align: right;
             } 
+            .title{
+                color: #111;
+                font-weight: 700;
+            }
         }
+        &.noBD li{
+            border: none;
+        }
+    }
+    .name{
+        font-size: 14px;
+        color: #222;
+        font-weight: 700;
+        margin-top: 10px;
+        padding-left: 20px;
+        border-bottom: 1px solid $lineColor;
+        padding-bottom: 15px;
     }
 }
 
@@ -2763,12 +2889,12 @@ button.cal{
 .accodion{
     padding: 0 21px;
     border-top: 1px solid $lineColor;
-    ul{
+    >ul{
         margin-top: 20px;
-        li{
+        >li{
             border: 1px solid $lineColor;
             margin-bottom: 10px;
-            .top{
+            >.top{
                 padding: 20px;
                 position: relative;
                 em{
@@ -2828,7 +2954,7 @@ button.cal{
                         &:last-child{
                             text-align: right;
                             line-height: 0;
-                            button{
+                            >button{
                                 display: inline-block;
                                 width: 33px;
                                 height: 33px;
@@ -2858,7 +2984,7 @@ button.cal{
                 }
             }
             &.on{
-                .top{
+                >.top{
                     border-bottom: 1px solid $lineColor;
                     em{
                         background-position: left bottom;
@@ -4331,6 +4457,9 @@ button.cal{
         background: #fff;
         input[type="text"]{
             line-height: 33px;
+			width: 90%;
+			text-align: right;
+			padding: 0 10px;
         }
         p{
             padding: 5px 0;
@@ -4820,7 +4949,7 @@ button.cal{
             }
         }
     }
-    button{
+    >button{
         line-height: 46px;
         border: 2px solid $col4;
         text-align: center;
@@ -5001,7 +5130,7 @@ button.cal{
                 flex-grow: 3;
                 text-align: right;
                 padding-right: 15px;
-                input[type="text"]{
+                input[type="text"],input[type="number"]{
                     line-height: 49px;
                     width: 200px;
                     border: none;
@@ -5125,7 +5254,7 @@ button.cal{
         //width: auto;
         &.right{
             text-align: right;
-            button{
+            >button{
                 width: 35px;
                 height: 35px;
                 background: url("../images/common/btn-search.png") no-repeat center / contain;
@@ -5881,6 +6010,10 @@ span.cell.day.selected.today {
 
 }
 
+.vdp-datepicker__calendar .cell.selected{
+	color: #fff;
+}
+
 
 
 .calendar-overlay {
@@ -6008,6 +6141,119 @@ span.cell.day.selected.today {
 	height: 35px;
 	
 }
+
+
+.portfolio{
+    display: flex;
+    height: calc(100vh - 160px);
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    .title{
+        font-size: 20px;
+        color: #333;
+        margin-top: 40px;
+        line-height: 25px;
+    }
+    .text{
+        font-size: 15px;
+        color: #888;
+        margin-top: 15px;
+    }
+}
+
+.portfolio-top{
+    padding-top: 30px;
+    text-align: center;
+    .key{
+        font-size: 14px;
+        font-weight: 700;
+        color: $col2;
+    }
+    .value{
+        font-size: 20px;
+        color: #222;
+        font-weight: 700;
+        margin-top: 10px;
+    }
+    .star{
+        margin-top: 15px;
+        img{
+            margin: 0 4px;
+        }
+    }
+    a{
+        display: inline-block;
+        padding-right: 13px;
+        background: url("../images/common/portfolio_arrow.png") no-repeat center right / 7px;
+        font-size: 14px;
+        font-weight: 700;
+        color: $col2;
+        margin-top: 20px;
+    }
+}
+
+.portfolio-list{
+    .title{
+        font-size: 14px;
+        color: #333;
+        font-weight: 700;
+    }
+    .text{
+        font-size: 13px;
+        color: #666;
+        line-height: 18px;
+        margin-top: 10px;
+    }
+    .graph{
+        margin-top: 10px;
+        margin-bottom: 20px;
+    }
+}
+
+.gray-box{
+    background: #efeeec;
+    padding: 20px;
+    .title{
+        font-size: 14px;
+        font-weight: 700;
+        color: #333;
+        line-height: 18px;
+    }
+    .text{
+        color: #666;
+        font-size: 13px;
+        line-height: 18px;
+        margin-top: 5px;
+    }
+}
+
+.basic-list{
+    padding: 5px 21px 95px;
+    dt{
+        margin-top: 20px;
+        color: #333;
+        font-weight: 700;
+        font-size: 14px;
+    }
+    dd{
+        select{
+            width: 100%;
+            margin-top: 10px;
+			//width: 100%;
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
 
 
 

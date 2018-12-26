@@ -84,15 +84,16 @@
   font-size: 14px;
 }
 .v-dialog-container .v-dialog-body .content textarea {
-  height: 12vh;
+  height: 16vh;
   border: 0px;
   font-size: 13px;
   font-weight: 300;
   resize: none;
+  text-align: center;
 }
 
 .v-dialog-container .v-dialog-footer {
-  padding: 16px;
+  /* padding: 16px; */
   text-align: right;
 }
 .v-dialog-container .v-dialog-btn {
@@ -105,7 +106,7 @@
   cursor: pointer;
   display: inline-block;
   font-size: 16px;
-  height: 36px;
+  /* height: 36px; */
   line-height: 20px;
   outline: none;
   padding: 7px 8px;

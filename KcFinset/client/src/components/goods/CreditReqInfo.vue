@@ -128,10 +128,10 @@ export default {
               } else {
                 this.$toast.center(result.message);
               }
-            })
-            .catch(e => {
-              this.$toast.center(ko.messages.error);
             });
+          // .catch(e => {
+          //   this.$toast.center(ko.messages.error);
+          // });
         }
       });
     }

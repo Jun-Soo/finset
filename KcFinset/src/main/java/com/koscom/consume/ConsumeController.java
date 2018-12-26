@@ -118,6 +118,24 @@ public class ConsumeController {
     
     /**
      * VUE
+     * 기존 등록된 입출금내역 시퀀스 리스트 조회
+     * @param session
+     * @param model
+     * @param consumeForm
+     * @return
+     * @throws FinsetException
+     */
+    @RequestMapping("/listRegisteredSeqTran.json")
+	public String listRegisteredSeqTran(HttpSession session, Model model, ConsumeForm consumeForm) throws FinsetException {
+		logger.debug("listRegisteredSeqTran");
+		String no_person = (String) session.getAttribute("no_person");
+		consumeForm.setNo_person(no_person);
+		model.addAttribute("listRegisteredSeqTran", consumeManager.listRegisteredSeqTran(consumeForm));
+		return "jsonView";
+	}
+    
+    /**
+     * VUE
      * 계좌 입출금내역리스트 조회
      * @param model
      * @param ym

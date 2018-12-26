@@ -53,6 +53,7 @@
 						WHERE
 							B.NO_PERSON = #{no_person, jdbcType = VARCHAR}
 							AND B.MEANS_CONSUME = '01'
+							AND B.MON_REMAINING = '0'
 						GROUP BY
 							B.CD_FC
 					) B ON
@@ -270,7 +271,7 @@
 	<select id="getNtsCode" resultType="java.lang.String">
 		SELECT CD_FC FROM FC_INFO WHERE NM_FC LIKE '%국세청%'
 	</select>
-	<select id="listScrTransactionDetail" parameterType="com.koscom.scrapData.model.ConsumeDataForm" resultType="hashmap">
+	<select id="listScrTransactionDetailAuto" parameterType="com.koscom.scrapData.model.ConsumeDataForm" resultType="hashmap">
 		SELECT
 			 STI.NO_PERSON
 			,STI.AN

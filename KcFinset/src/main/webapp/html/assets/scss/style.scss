@@ -15,9 +15,9 @@
 /*   Common   */
 
 h3{
-    color: #333;
+    color: #333; 
     font-size: 12px;
-    font-weight: 700; 
+    font-weight: 700;
 }
 
 .loading{
@@ -2889,12 +2889,12 @@ button.cal{
 .accodion{
     padding: 0 21px;
     border-top: 1px solid $lineColor;
-    ul{
+    >ul{
         margin-top: 20px;
-        li{
+        >li{
             border: 1px solid $lineColor;
             margin-bottom: 10px;
-            .top{
+            >.top{
                 padding: 20px;
                 position: relative;
                 em{
@@ -2954,7 +2954,7 @@ button.cal{
                         &:last-child{
                             text-align: right;
                             line-height: 0;
-                            button{
+                            >button{
                                 display: inline-block;
                                 width: 33px;
                                 height: 33px;
@@ -2984,7 +2984,7 @@ button.cal{
                 }
             }
             &.on{
-                .top{
+                >.top{
                     border-bottom: 1px solid $lineColor;
                     em{
                         background-position: left bottom;
@@ -4468,6 +4468,9 @@ button.cal{
         background: #fff;
         input[type="text"]{
             line-height: 33px;
+			width: 90%;
+			text-align: right;
+			padding: 0 10px;
         }
         p{
             padding: 5px 0;
@@ -4957,7 +4960,7 @@ button.cal{
             }
         }
     }
-    button{
+    >button{
         line-height: 46px;
         border: 2px solid $col4;
         text-align: center;
@@ -5138,7 +5141,7 @@ button.cal{
                 flex-grow: 3;
                 text-align: right;
                 padding-right: 15px;
-                input[type="text"]{
+                input[type="text"],input[type="number"]{
                     line-height: 49px;
                     width: 200px;
                     border: none;
@@ -5262,7 +5265,7 @@ button.cal{
         //width: auto;
         &.right{
             text-align: right;
-            button{
+            >button{
                 width: 35px;
                 height: 35px;
                 background: url("../images/common/btn-search.png") no-repeat center / contain;
@@ -6018,6 +6021,10 @@ span.cell.day.selected.today {
 
 }
 
+.vdp-datepicker__calendar .cell.selected{
+	color: #fff;
+}
+
 
 
 .calendar-overlay {
@@ -6244,6 +6251,7 @@ span.cell.day.selected.today {
         select{
             width: 100%;
             margin-top: 10px;
+			//width: 100%;
         }
     }
 }

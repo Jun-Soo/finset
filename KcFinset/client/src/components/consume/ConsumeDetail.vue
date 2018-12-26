@@ -1,5 +1,5 @@
 <template>
-  <div v-if="seen">
+  <div v-show="seen">
     <section>
       <div class="tab">
         <div class="wrap">
@@ -23,8 +23,7 @@
             <li>
               <p class="key">금액</p>
               <p>
-                <!-- <input type="tel" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액"><em>원</em> -->
-                <input type="text" class="money" inputmode="numeric" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액" @keypress="chkAmt">
+                <money id="money" v-model="consumeVO.amt_in_out" :readonly="chkReadonly" v-validate="'required'" data-vv-name="금액" />
                 <em>원</em>
               </p>
             </li>
@@ -50,7 +49,8 @@
             <li>
               <p class="key">날짜</p>
               <p>
-                <datepicker v-model="consumeVO.dt_trd" ref="datepicker" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDateDot" class="div-date" :disabled="chkReadonly"></datepicker>
+                <!-- <datepicker v-model="consumeVO.dt_trd" ref="datepicker" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDateDot" class="div-date" :disabled="chkReadonly"></datepicker> -->
+                <datepicker v-model="consumeVO.dt_trd" ref="datepicker" :language="ko" :format="formatDateDot" class="div-date" :disabled="chkReadonly"></datepicker>
                 <button class="cal" @click="openDatepicker"></button>
               </p>
             </li>
@@ -126,7 +126,7 @@
         <div v-else class="nobox-list">
           <div v-for="(subList, index) in listTrans" :key="index">
             <p class="date">{{formatDateDot(listTrans[index][0].dt_trd,"mmdd")}}</p>
-            <div v-for="(vo, subIndex) in subList" :key="subIndex" @click="selectTrans(index, subIndex)" class="item">
+            <div v-for="(vo, subIndex) in subList" :key="subIndex" @click="selectTrans(index, subIndex)" class="item" :class="{'disabled':listRegSeqTran.filter(seq => seq == vo.seq_tran).length > 0}">
               <div class="flex">
                 <p>{{vo.contents}}</p>
                 <p><em class="number" :class="vo.type_in_out == '01'? 'blue':'red'">{{vo.amt}}</em>원</p>
@@ -173,6 +173,7 @@ export default {
       isShowBanner: false,
       isShowCategory: false,
       isShowTrans: false,
+      listRegSeqTran: [],
       listTrans: {},
       ko: ko,
       dt_trans: "",
@@ -274,7 +275,9 @@ export default {
     this.setDefault();
   },
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    Common.datepickerInit("div-date", this);
+  },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
@@ -401,11 +404,19 @@ export default {
       });
     },
     selectTrans: function(index, subIndex) {
+      // 기등록된 입출금 내역 확인
       var _this = this;
+      if (
+        this.listRegSeqTran.filter(
+          seq => seq == this.listTrans[index][subIndex].seq_tran
+        ).length > 0
+      ) {
+        return;
+      }
       var transText =
         this.curTab == "01"
-          ? "이후에도 해당 입금에 대해서 수입으로 등록할까요?"
-          : "이후에도 해당 출금에 대해서 지출로 등록할까요?";
+          ? "해당 항목과 동일한 입금을 수입으로 등록할까요?"
+          : "해당 항목과 동일한 출금을 지출로 등록할까요?";
       this.$dialogs.confirm(transText, Constant.options).then(res => {
         // console.log(res); // {ok: true|false|undefined}
         if (res.ok) {
@@ -473,30 +484,6 @@ export default {
         .then(function(response) {
           var consumeVO = response.data.consumeVO;
           _this.allocateConsume(consumeVO);
-          // vo.dt_trd = new Date(Common.formatDateDot(vo.dt_trd));
-          // // vo.nm_card = _this.formatNmCard(vo.nm_card);
-          // vo.amt_in_out = _this.chkReadonly
-          //   ? _this.formatNumber(vo.amt_in_out)
-          //   : vo.amt_in_out;
-          // _this.meansConsumeOption = [];
-          // _this.meansConsumeOption.push({
-          //   text: vo.nm_card,
-          //   value: vo.no_card
-          // });
-          // vo.means_consume = { text: vo.nm_card, value: vo.no_card };
-          // _this.consumeVO = vo;
-
-          // if (_this.curTab == "02") {
-          //   _this.curClass = vo.cd_class;
-          //   _this.curType = vo.cd_type;
-          //   _this.orgClass = vo.cd_class;
-          //   _this.orgType = vo.cd_type;
-          // } else {
-          //   _this.curClass = vo.cd_class;
-          //   _this.orgClass = vo.cd_class;
-          // }
-          // _this.nmBanner = vo.contents;
-          // _this.getBannerData();
         });
     },
     listPersonConsumeClassInfo: function() {
@@ -620,9 +607,8 @@ export default {
         ? formData.append("yn_person_regist", "Y")
         : formData.append("yn_person_regist", "N");
       if (this.isTran) {
-        formData.append("seq_tran", this.$route.query.seq_tran);
+        formData.append("seq_tran", this.consumeVO.seq_tran);
       }
-
       this.$http
         .post("/m/consume/createConsumeInfo.json", formData)
         .then(function(response) {
@@ -663,44 +649,55 @@ export default {
         });
     },
     listPersonTransDetail: function() {
+      //우선적으로 미리 등록된 입출금내역 시퀀스를 가져와야 한다
       var _this = this;
       this.$http
-        .get("/m/consume/listPersonTransDetail.json", {
+        .get("/m/consume/listRegisteredSeqTran.json", {
           params: {
             type_in_out: _this.curTab
           }
         })
         .then(function(response) {
-          var list = response.data.listPersonTransDetail;
-
-          for (var idx in list) {
-            for (var subIdx in list[idx]) {
-              if (list[idx][subIdx].amt_dep == "0") {
-                list[idx][subIdx].type_in_out = "02";
-                list[idx][subIdx].amt = Common.formatNumber(
-                  list[idx][subIdx].amt_wdrl,
-                  true,
-                  false
-                );
-              } else if (list[idx][subIdx].amt_wdrl == "0") {
-                list[idx][subIdx].type_in_out = "01";
-                list[idx][subIdx].amt = Common.formatNumber(
-                  list[idx][subIdx].amt_dep,
-                  false,
-                  true
-                );
+          _this.listRegSeqTran = response.data.listRegisteredSeqTran;
+          //등록된 입출금내역 시퀀스를 가져온 후 실제 입출금 내역 조회
+          _this.$http
+            .get("/m/consume/listPersonTransDetail.json", {
+              params: {
+                type_in_out: _this.curTab
               }
-              list[idx][subIdx].contents = _this.getTransText(
-                list[idx][subIdx]
-              );
-            }
-          }
-          if ((list || "") == "" || list[0].length == 0) {
-            _this.listTrans = [];
-          } else {
-            _this.listTrans = list;
-          }
-          _this.isShowTrans = true;
+            })
+            .then(function(response) {
+              var list = response.data.listPersonTransDetail;
+
+              for (var idx in list) {
+                for (var subIdx in list[idx]) {
+                  if (list[idx][subIdx].amt_dep == "0") {
+                    list[idx][subIdx].type_in_out = "02";
+                    list[idx][subIdx].amt = Common.formatNumber(
+                      list[idx][subIdx].amt_wdrl,
+                      true,
+                      false
+                    );
+                  } else if (list[idx][subIdx].amt_wdrl == "0") {
+                    list[idx][subIdx].type_in_out = "01";
+                    list[idx][subIdx].amt = Common.formatNumber(
+                      list[idx][subIdx].amt_dep,
+                      false,
+                      true
+                    );
+                  }
+                  list[idx][subIdx].contents = _this.getTransText(
+                    list[idx][subIdx]
+                  );
+                }
+              }
+              if ((list || "") == "" || list[0].length == 0) {
+                _this.listTrans = [];
+              } else {
+                _this.listTrans = list;
+              }
+              _this.isShowTrans = true;
+            });
         });
     },
     deleteConsume: function() {
@@ -720,8 +717,9 @@ export default {
       var _this = this;
 
       var formData = new FormData();
-      formData.append("type_in_out", _this.curTab);
-      formData.append("contents", _this.consumeVO.contents);
+      formData.append("type_in_out", this.curTab);
+      formData.append("cd_fc", this.consumeVO.cd_fc);
+      formData.append("contents", this.consumeVO.contents);
 
       this.$http
         .post("/m/consume/getBannerData.json", formData)
@@ -750,8 +748,6 @@ export default {
           if (consumeVO == null) {
             _this.getPersonTransDetail();
           } else {
-            // _this.consumeVO = consumeVO;
-            // _this.seen = true;
             _this.isNew = false;
             _this.isAuto = true;
             _this.allocateConsume(consumeVO);
@@ -781,6 +777,8 @@ export default {
       this.curClass = "";
       this.curType = "";
       this.dt_trans = "";
+      this.listRegSeqTran = [];
+      this.listTrans = {};
       if (this.curTab == "01") {
         this.listPersonIncomeClassInfo();
       } else {
@@ -804,15 +802,16 @@ export default {
         path: "/consume/analyze",
         query: {
           type_in_out: this.curTab,
-          contents: this.consumeVO.contents
+          contents: this.consumeVO.contents,
+          cd_fc: this.consumeVO.cd_fc
         }
       });
     },
     allocateConsume: function(consumeVO) {
       consumeVO.dt_trd = new Date(Common.formatDateDot(consumeVO.dt_trd));
-      consumeVO.amt_in_out = this.chkReadonly
-        ? this.formatNumber(consumeVO.amt_in_out)
-        : consumeVO.amt_in_out;
+      // consumeVO.amt_in_out = this.chkReadonly
+      //   ? this.formatNumber(consumeVO.amt_in_out)
+      //   : consumeVO.amt_in_out;
       this.meansConsumeOption = [];
       this.meansConsumeOption.push({
         text: consumeVO.nm_card,
@@ -861,20 +860,12 @@ export default {
       this.consumeVO.contents = this.getTransText(transVO);
       this.consumeVO.dt_trd = new Date(Common.formatDateDot(transVO.dt_trd));
       this.consumeVO.tm_trd = transVO.tm_trd;
+      this.consumeVO.seq_tran = transVO.seq_tran;
 
       this.isNew = true;
       this.isTran = true;
       this.isPersonRegist = false;
       this.isShowTrans = false;
-    },
-    chkAmt: function(event) {
-      if (event.which >= 37 && event.which <= 40) {
-        console.log("return");
-        return;
-      }
-      event.target.value = event.target.value
-        .replace(/\D/g, "")
-        .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
   }
 };
@@ -882,4 +873,7 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
+.item.disabled {
+  background: #ddd;
+}
 </style>

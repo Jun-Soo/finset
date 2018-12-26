@@ -936,6 +936,69 @@
 			)
 	</update>
 
+	<update id="updateDtDeleteFinDisorderInfo" parameterType="java.lang.String">
+		/* com.koscom.credit.dao.CreditMapper.updateDtDeleteFinDisorderInfo */
+		UPDATE
+			KCB_FIN_DISORDER_INFO
+		SET
+			DT_DELETE = TO_CHAR( SYSDATE, 'yyyyMMdd' )
+		WHERE
+			NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</update>
+
+	<update id="saveKcbFinDisorderInfo" parameterType="com.koscom.kcb.model.KcbFinDisorderInfo">
+	    /* com.koscom.credit.dao.CreditMapper.saveKcbOverduePublicInfo */
+		MERGE INTO KCB_FIN_DISORDER_INFO
+		  USING DUAL
+		  ON (		NO_PERSON 		= #{no_person,		jdbcType=VARCHAR}
+		  		AND CD_FC			= #{cd_fc,			jdbcType=VARCHAR}
+		  		AND YMD_DEFAULT		= #{ymd_default,	jdbcType=VARCHAR}
+		  		AND AMT_REGIST		= #{amt_regist,		jdbcType=VARCHAR})
+			WHEN MATCHED THEN
+		     UPDATE
+			    SET NM_AGENCY       = #{nm_agency,	 jdbcType=VARCHAR}
+			       ,CD_DEFAULT      = #{cd_default,	 jdbcType=VARCHAR}
+			       ,AMT_DELAY		= #{amt_delay,	 jdbcType=VARCHAR}
+			       ,DT_RELEASE		= #{dt_release,	 jdbcType=VARCHAR}
+			       ,CD_RELEASE		= #{cd_release,	 jdbcType=VARCHAR}
+			       ,NO_CASE       	= #{no_case,	 jdbcType=VARCHAR}
+			       ,DT_DELETE		= (null)
+			       ,ID_FRT			= #{no_person, 	 jdbcType=VARCHAR}
+			       ,DT_FRT      	= SYSDATE
+			WHEN NOT MATCHED THEN
+			INSERT
+			(
+				 NO_PERSON
+				,CD_FC
+				,NM_AGENCY
+				,CD_DEFAULT
+				,YMD_DEFAULT
+				,AMT_REGIST
+				,AMT_DELAY
+				,DT_RELEASE
+				,CD_RELEASE
+				,NO_CASE
+				,DT_DELETE
+				,ID_FRT
+				,DT_FRT
+			)
+			VALUES(
+				 #{no_person,           jdbcType=VARCHAR}
+				,#{cd_fc,			   	jdbcType=VARCHAR}
+				,#{nm_agency,			jdbcType=VARCHAR}
+				,#{cd_default,			jdbcType=VARCHAR}
+				,#{ymd_default,			jdbcType=VARCHAR}
+				,#{amt_regist,			jdbcType=VARCHAR}
+				,#{amt_delay,			jdbcType=VARCHAR}
+				,#{dt_release,			jdbcType=VARCHAR}
+				,#{cd_release,			jdbcType=VARCHAR}
+				,#{no_case,				jdbcType=VARCHAR}
+				,(null)
+				,#{no_person,			jdbcType=VARCHAR}
+				,SYSDATE
+			)
+	</update>
+
 	<update id="insertCrawlingLog" parameterType="java.util.HashMap">
 		INSERT INTO CREDIT_CRAWLING_LOG
 		(

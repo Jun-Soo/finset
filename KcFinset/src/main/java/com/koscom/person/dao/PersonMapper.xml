@@ -256,6 +256,16 @@
 		 , DT_LST  	= SYSDATE
         WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
     </update>
+    
+    <update id="modifyPersonCdTel" parameterType="com.koscom.person.model.PersonVO">
+    	/* com.koscom.person.dao.PersonMapper.modifyPersonEmail */
+        UPDATE PERSON_INFO
+        SET
+          CD_TEL 	= #{telComCd, jdbcType=VARCHAR}
+		 , ID_LST  	= #{id_lst, jdbcType=VARCHAR}
+		 , DT_LST  	= SYSDATE
+        WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+    </update>
 
     <update id="modifyPersonLogout" parameterType="com.koscom.person.model.PersonVO">
     	/* com.koscom.person.dao.PersonMapper.modifyPersonLogout */

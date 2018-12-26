@@ -889,12 +889,13 @@ public class ScrapManagerImpl implements ScrapManager {
 		List<FcLinkInfoVO> fcLinkInfoList = scrapMapper.getFcLinkInfo(fcLinkInfoVO);
 		
 		if(fcLinkInfoList == null || fcLinkInfoList.size() == 0)	{
+			logger.info("스크래핑 연동된 증권사가 없습니다.");
 			return Constant.SUCCESS;
 		}
 		
 		String token = getAccessToken();
 		if(token == null || token.length() <= 0)	{
-			logger.error("generate token failed");
+			logger.error("Open API Token 생성 실패~!");
 			return Constant.FAILED;
 		}
 		
@@ -1640,9 +1641,10 @@ public class ScrapManagerImpl implements ScrapManager {
                 scrCardLimitInfo.setNo_person(no_person);
                 scrCardLimitInfo.setCd_fc(cd_fc);
                 scrCardLimitInfo.setYn_delete("N");
-//              if(scrCardLimitInfo.getType_card() == null || scrCardLimitInfo.getType_card().length() == 0){
-//                	scrCardLimitInfo.setType_card("defalut");
-//              }
+                //카드 타입이 없을 경우 DB 저장에 문제가 있어서 default로 저장 
+                if(scrCardLimitInfo.getType_card() == null || scrCardLimitInfo.getType_card().length() == 0){
+                	scrCardLimitInfo.setType_card("default");
+                }
                 scrapMapper.createScrCardLimitInfo(scrCardLimitInfo);
     		}
     	}
@@ -2165,8 +2167,8 @@ public class ScrapManagerImpl implements ScrapManager {
 			
 			if(cd_agency.equals(codeManager.getCodeId("cd_agency", "은행")))	{
 				JSONArray jsonBankArr = new JSONArray();
-				//계좌별 조회 내역이 없을 경우 기본 시작일로 셋팅(3개월)
-				jsonRoot.put("DT_DEFAULT", DateUtil.addMonths(toDay, -3));
+				//계좌별 조회 내역이 없을 경우 기본 시작일로 셋팅(4개월)
+				jsonRoot.put("DT_DEFAULT", DateUtil.addMonths(toDay, -4));
 				for (int i = 0; i < fcLinkInfoList.size(); i++) {
 					JSONObject jsonBankInfo = new JSONObject();
 					String bankCode = null;
@@ -2250,7 +2252,8 @@ public class ScrapManagerImpl implements ScrapManager {
 						}
 					}
 					else	{
-						startDate = DateUtil.addMonths(toDay, -3);
+						//조회 내역이 없을 경우 기본 시작일로 셋팅(4개월)
+						startDate = DateUtil.addMonths(toDay, -4);
 					}
 					jsonCardInfo.put("DT_APPROVAL", startDate);
 					
@@ -2267,7 +2270,8 @@ public class ScrapManagerImpl implements ScrapManager {
 						}
 					}
 					else	{
-						startDate = DateUtil.addMonths(toDay, -3).substring(0, 6);
+						//조회 내역이 없을 경우 기본 시작일로 셋팅(4개월)
+						startDate = DateUtil.addMonths(toDay, -4).substring(0, 6);
 					}
 					jsonCardInfo.put("DT_CHARGE", startDate);
 					jsonCardArr.add(jsonCardInfo);
@@ -2292,7 +2296,8 @@ public class ScrapManagerImpl implements ScrapManager {
 					}
 				}
 				else	{
-					startMonth = DateUtil.addMonths(toDay, -3).substring(0, 6);
+					//조회 내역이 없을 경우 기본 시작일로 셋팅(4개월)
+					startMonth = DateUtil.addMonths(toDay, -4).substring(0, 6);
 				}
 				jsonRoot.put("RCPT_START_MONTH", startMonth);
 			}

@@ -102,11 +102,12 @@ export default {
         this.isBackKey = false;
         return;
       }
-
-      if (this.$store.state.header.backPath == "") {
-        this.$router.go(-1);
-      } else {
-        this.$router.push(this.$store.state.header.backPath);
+      if (this.$store.state.header.type == "sub") {
+        if (this.$store.state.header.backPath == "") {
+          this.$router.go(-1);
+        } else {
+          this.$router.push(this.$store.state.header.backPath);
+        }
       }
     },
     clickBack: function() {

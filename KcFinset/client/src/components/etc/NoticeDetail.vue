@@ -37,6 +37,7 @@ export default {
   created() {
     this.seq = this.$route.query.seq;
     this.id_board = this.$route.query.id_board;
+    this.$store.state.header.backPath == "/main";
     this.getEventDatail(this.seq, this.id_board);
   },
   beforeMount() {},
@@ -55,7 +56,7 @@ export default {
       this.$http.post(url, frm).then(response => {
         _this.boardForm = response.data.boardForm;
         _this.boardInfo = response.data.boardInfo;
-        _this.content = _this.seen = true;
+        _this.seen = true;
       });
     },
     formatDate: function(date) {

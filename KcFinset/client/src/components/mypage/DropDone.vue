@@ -4,17 +4,21 @@
       <em>서비스 탈퇴 완료</em><br>이용해 주셔서 감사합니다
     </div>
 
-    <div class="btn-wrap float">
+    <div v-if="isAndroid" class="btn-wrap float">
       <a @click="appQuit" class="solid box blue">앱 종료하기</a>
     </div>
   </section>
 </template>
 
 <script>
+import Constant from "./../../assets/js/constant.js";
+
 export default {
   name: "MypageDropDone",
   data() {
-    return {};
+    return {
+      isAndroid: true
+    };
   },
   components: {},
   computed: {},
@@ -27,6 +31,11 @@ export default {
     this.$store.state.isLoggedIn = false;
     this.$store.state.accessToken = null;
     this.$store.state.site = null;
+    if (Constant.userAgent == "Android") {
+      this.isAndroid = true;
+    } else {
+      this.isAndroid = false;
+    }
   },
   beforeMount() {},
   mounted() {},

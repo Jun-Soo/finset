@@ -45,14 +45,18 @@
         <li>
           <div>
             <p class="key">월소득</p>
-            <p><input type="number" id="amt_mm_income" v-model="amt_mm_income" placeholder="월소득" v-html="counselInfo.amt_income_total" @change="changeIncome()" v-validate="'required|numeric|max:10'" data-vv-name='월소득'></p>
+            <!-- <p><input type="number" id="amt_mm_income" v-model="amt_mm_income" placeholder="월소득" v-html="counselInfo.amt_income_total" @change="changeIncome()" v-validate="'required|numeric|max:10'" data-vv-name='월소득'></p> -->
+            <p>
+              <money :id="'amt_mm_income'" v-model="amt_mm_income" placeholder="월소득" :value="counselInfo.amt_income_total" :change="changeIncome()" v-validate="'required|numeric|max:10'" data-vv-name='월소득' />원</p>
           </div>
           <p class="warn" v-if="errors.has('월소득')">{{errors.first('월소득')}}</p>
         </li>
         <li>
           <div>
             <p class="key">월지출</p>
-            <p><input type="number" id="amt_mm_expense" v-model="amt_mm_expense" placeholder="월지출" v-html="counselInfo.amt_expense_total" @change="changeExpense()" v-validate="'required|numeric|max:10'" data-vv-name='월지출'></p>
+            <!-- <p><input type="number" id="amt_mm_expense" v-model="amt_mm_expense" placeholder="월지출" v-html="counselInfo.amt_expense_total" @change="changeExpense()" v-validate="'required|numeric|max:10'" data-vv-name='월지출'></p> -->
+            <p>
+              <money :id="'amt_mm_expense'" v-model="amt_mm_expense" placeholder="월지출" :value="counselInfo.amt_expense_total" :change="changeExpense()" v-validate="'required|numeric|max:10'" data-vv-name='월지출' />원</p>
           </div>
           <p class="warn" v-if="errors.has('월지출')">{{errors.first('월지출')}}</p>
         </li>

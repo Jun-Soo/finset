@@ -11,8 +11,8 @@ const store = new Vuex.Store({
     header: {
       type: '',
       active: '',
-      backPath: '',
-      fromPath: ''
+      async: false,
+      backPath: ''
     },
     user: {
       noPerson: '',
@@ -36,6 +36,7 @@ const store = new Vuex.Store({
     },
     returnUrl: '',
     proxyUrl: '',
+    proxyBackUrl: '',
     accessToken: null,
     isLoggedIn: false,
     site: null,
@@ -47,6 +48,7 @@ const store = new Vuex.Store({
     loginPath: '/check/j_spring_security_check',
     linkUrl: '',
     ynReload: 'N',
+    uuid: '',
     ajaxState: true
   },
   mutations: {

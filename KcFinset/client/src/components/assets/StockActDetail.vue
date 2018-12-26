@@ -224,11 +224,11 @@ export default {
       formData.append("no_account", _this.no_account);
       formData.append(
         "scAccType",
-        _this.scAccType != "" ? _this.scAccType.value : ""
+        (_this.scAccType || "") != "" ? _this.scAccType.value : ""
       );
       formData.append(
         "orderBy",
-        _this.orderBy != "" ? _this.orderBy.value : ""
+        (_this.orderBy || "") != "" ? _this.orderBy.value : ""
       );
 
       this.$http

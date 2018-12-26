@@ -66,6 +66,13 @@ public interface ConsumeMapper {
 	List<ConsumeVO> listShareInfoDetail(String no_person);
 	
 	/**
+	 * 이미 등록된 입출금 내역 시퀀스 리스트 조회
+	 * @param consumeForm
+	 * @return
+	 */
+	List<Integer> listRegisteredSeqTran(ConsumeForm consumeForm);
+	
+	/**
 	 * 개인 계좌 입출금내역 리스트 조회
 	 * @param person
 	 * @return
@@ -338,6 +345,13 @@ public interface ConsumeMapper {
 	 * @param consumeForm
 	 */
 	void deleteConsumeInfo(ConsumeForm consumeForm);
+	
+	/**
+	 * 입출금내역 중 해당하는 contents를 가진 리스트 조회
+	 * @param consumeVO
+	 * @return
+	 */
+	List<ConsumeVO> listPrevTransactionDetail(ConsumeVO consumeVO);
 	
 	/**
 	 * 소비지출내역 생성(계좌)

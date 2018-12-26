@@ -22,7 +22,7 @@
       </div>
 
       <div class="banner-wrap owl-carousel">
-        <carousel :perPage=1>
+        <carousel :perPage=1 :autoplay=true :autoplayTimeout=4000 :speed=700 :loop=true>
           <slide class="item">
             <a @click="clickBanner('calendar')">
               <div class="banner">

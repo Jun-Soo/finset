@@ -26,7 +26,7 @@
       <input type="text" ref="nm_person" class="form-control" name="nm_person" id="nm_person" v-model="nm_person" v-validate="'required|max:8'" v-bind:disabled="isDisabled" autocomplete="off" placeholder="이름을 입력하세요" data-vv-name='이름' />
       <p class="warn" v-if="errors.has('이름')">{{errors.first('이름')}}</p>
       <div class="grid">
-        <div class="number"><input type="number" placeholder="생년월일6자리" name="ssn_birth" id="ssn_birth" v-model="ssn_birth" v-validate="'required|length:6|max:6'" v-on:keyup="nextFocus('birth')" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='생년월일'></div>
+        <div class="number"><input type="number" placeholder="생년월일6자리" name="ssn_birth" id="ssn_birth" v-model="ssn_birth" v-validate="'required|length:6|max:6'" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='생년월일'></div>
         <div class="dash">-</div>
         <div class="number last"><input type="password" style="'-webkit-text-security: disc;'" pattern="[0-9]*" name="sex" id="sex" v-model="sex" inputmode="numeric" maxlength="1" v-bind:disabled="isDisabled" autocomplete="off" v-validate="'required|between:0,9|length:1|max:1'" data-vv-name='성별'>******</div>
       </div>
@@ -36,7 +36,7 @@
     <div class="cert-wrap pb90">
       <p class="title">휴대폰인증</p>
       <div class="grid phone">
-        <multiselect ref="telCom" v-bind:disabled="isDisabled" :onClose="nextFocus('telCom')" v-model="telCom" label="text" placeholder="통신사" :options="options" :title="'통신사'">
+        <multiselect ref="telCom" v-bind:disabled="isDisabled" v-model="telCom" label="text" placeholder="통신사" :options="options" :title="'통신사'">
         </multiselect>
         <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
       </div>
@@ -135,9 +135,19 @@ export default {
         $("#nm_person").focus();
       }
     },
+    ssn_birth: function() {
+      if ((this.sex == null || this.sex == "") && this.ssn_birth.length >= 6) {
+        $("#sex").focus();
+      }
+    },
     sex: function() {
       if ((this.telCom == null || this.telCom == "") && this.sex.length > 0) {
         this.$refs.telCom.open();
+      }
+    },
+    telCom: function() {
+      if ((this.hp == null || this.hp == "") && this.telCom != null) {
+        $("#hp").focus();
       }
     }
   },
@@ -214,12 +224,11 @@ export default {
     setRequestPhoneNumber: function(phoneNumber) {
       this.hp = phoneNumber;
     },
-    nextFocus: function(val) {
-      var _this = this;
-      if (val == "birth" && _this.ssn_birth.length == 6) $("#sex").focus();
-      if (val == "telCom" && _this.telCom) $("#hp").focus();
-      if (val == "hp" && _this.hp) $("").focus();
-    },
+    // nextFocus: function(val) {
+    //   var _this = this;
+    //   if (val == "birth" && _this.ssn_birth.length == 6) $("#sex").focus();
+    //   if (val == "telCom" && _this.telCom) $("#hp").focus();
+    // },
     personCertify: function() {
       let _this = this;
       let frm = new FormData();
@@ -249,9 +258,6 @@ export default {
                 return false;
               }
               _this.kcmRequestCertNo();
-            })
-            .catch(e => {
-              this.$toast.center(e);
             });
         } else {
           this.$toast.center(ko.messages.require);
@@ -326,9 +332,6 @@ export default {
                 _this.clicked = false;
                 return false;
               }
-            })
-            .catch(e => {
-              this.$toast.center(ko.messages.error);
             });
         } else {
           this.$toast.center(ko.messages.require);
@@ -353,26 +356,21 @@ export default {
       formData.append("svcTxSeqno", _this.svcTxSeqno);
       formData.append("hp", _this.hp);
       formData.append("smsCertNo", _this.smsCertNo);
-      this.$http
-        .post("/m/login/kcmCertify.json", formData)
-        .then(response => {
-          var result = response.data;
-          console.log(result);
-          if (result.result == "00") {
-            _this.kcb_ci = result.kcb_ci;
-            _this.kcb_di = result.kcb_di;
-            _this.kcb_cp = result.kcb_cp;
+      this.$http.post("/m/login/kcmCertify.json", formData).then(response => {
+        var result = response.data;
+        console.log(result);
+        if (result.result == "00") {
+          _this.kcb_ci = result.kcb_ci;
+          _this.kcb_di = result.kcb_di;
+          _this.kcb_cp = result.kcb_cp;
 
-            _this.$router.push("/mypage/chgPwd");
-          } else {
-            this.$toast.center(result.message);
-            _this.smsCertNo = "";
-            return false;
-          }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
-        });
+          _this.$router.push("/mypage/chgPwd");
+        } else {
+          this.$toast.center(result.message);
+          _this.smsCertNo = "";
+          return false;
+        }
+      });
     },
     start: function() {
       var _this = this;

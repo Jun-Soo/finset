@@ -114,6 +114,15 @@ import GoodsHsnInsIncome from '@/components/goods/HsnInsIncome'
 import GoodsHsnInsRepay from '@/components/goods/HsnInsRepay'
 // import GoodsHsnResult from '@/components/goods/HsnResult'
 import GoodsWorkerGoods from '@/components/goods/WorkerGoods'
+import GoodsStock1 from '@/components/goods/Stock1'
+import GoodsStock2 from '@/components/goods/Stock2'
+import GoodsStock3 from '@/components/goods/Stock3'
+import GoodsStock4 from '@/components/goods/Stock4'
+import GoodsStock5 from '@/components/goods/Stock5'
+import GoodsStock6 from '@/components/goods/Stock6'
+import GoodsStock7 from '@/components/goods/Stock7'
+import GoodsStock8 from '@/components/goods/Stock8'
+import GoodsStock9 from '@/components/goods/Stock9'
 
 import ConsumeHome from '@/components/consume/Home'
 import ConsumeMain from '@/components/consume/Main'
@@ -206,6 +215,8 @@ import Gauge from '@/components/_sample/Gauge'
 import Progress from '@/components/_sample/Progress'
 import Calendar from '@/components/_sample/Calendar'
 import Select from '@/components/_sample/Select'
+import Datepicker from '@/components/_sample/Datepicker'
+import Money from '@/components/_sample/Money'
 
 import TemplateHome from '@/components/template/Home'
 import TemplateMain from '@/components/template/Main'
@@ -274,7 +285,8 @@ export const routes = [{
     alias: '/loading',
     component: Loading,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -282,7 +294,8 @@ export const routes = [{
     alias: '/monthCal',
     component: CommonMonthCal,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -290,7 +303,8 @@ export const routes = [{
     alias: '/yearCal',
     component: CommonYearCal,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -298,7 +312,8 @@ export const routes = [{
     alias: '/calSetting',
     component: CommonCalSetting,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   }
   ]
@@ -691,7 +706,8 @@ export const routes = [{
     alias: '/main',
     component: DebtMain,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -699,7 +715,8 @@ export const routes = [{
     alias: '/calendar',
     component: DebtCalendar,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -708,25 +725,27 @@ export const routes = [{
     name: 'debtDetail',
     component: DebtDetail,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
-    // {
-    //   path: 'detail_2',
-    //   alias: '/detail_2',
-    //   name: 'debtDetail_2',
-    //   component: DebtDetail2,
-    //   meta: {
-    //     allowPath: true
-    //   }
-    // },
+  // {
+  //   path: 'detail_2',
+  //   alias: '/detail_2',
+  //   name: 'debtDetail_2',
+  //   component: DebtDetail2,
+  //   meta: {
+  //     allowPath: true
+  //   }
+  // },
   {
     path: 'repayment',
     alias: '/repayment',
     name: 'debtRepayment',
     component: DebtRepayment,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -735,7 +754,8 @@ export const routes = [{
     name: 'debtModify',
     component: DebtModify,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -744,7 +764,8 @@ export const routes = [{
     name: 'debtCalc',
     component: DebtCalc,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -753,7 +774,8 @@ export const routes = [{
     name: 'debtCalcSearch',
     component: DebtCalcSearch,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -762,7 +784,8 @@ export const routes = [{
     name: 'debtRegister',
     component: DebtRegister,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -771,25 +794,27 @@ export const routes = [{
     name: 'debtRegDetail',
     component: DebtRegDetail,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
-    // {
-    //   path: 'update',
-    //   alias: '/update',
-    //   name: 'debtUpdate',
-    //   component: DebtUpdate,
-    //   meta: {
-    //     allowPath: true
-    //   }
-    // },
+  // {
+  //   path: 'update',
+  //   alias: '/update',
+  //   name: 'debtUpdate',
+  //   component: DebtUpdate,
+  //   meta: {
+  //     allowPath: true
+  //   }
+  // },
   {
     path: 'reqIntrCut',
     alias: '/reqIntrCut',
     name: 'debtReqIntrCut',
     component: DebtReqIntrCut,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   }
   ]
@@ -802,7 +827,8 @@ export const routes = [{
     alias: '/register',
     component: MemoRegister,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -810,7 +836,8 @@ export const routes = [{
     alias: '/list',
     component: MemoList,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -818,7 +845,8 @@ export const routes = [{
     alias: '/detail',
     component: MemoDetail,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -826,7 +854,8 @@ export const routes = [{
     alias: '/main',
     component: MemoMain,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -834,7 +863,8 @@ export const routes = [{
     alias: '/create',
     component: MemoCreate,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   }
   ]
@@ -848,7 +878,8 @@ export const routes = [{
     name: 'consumeMain',
     component: ConsumeMain,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -857,7 +888,8 @@ export const routes = [{
     name: 'consumeRegGoal',
     component: ConsumeRegGoal,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -866,7 +898,8 @@ export const routes = [{
     name: 'consumeConsumeDetail',
     component: ConsumeConsumeDetail,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -875,7 +908,8 @@ export const routes = [{
     name: 'consumeAnalyze',
     component: ConsumeAnalyze,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -884,7 +918,8 @@ export const routes = [{
     name: 'consumeSetting',
     component: ConsumeSetting,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -893,7 +928,8 @@ export const routes = [{
     name: 'consumeConsumeClass',
     component: ConsumeConsumeClass,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -902,7 +938,8 @@ export const routes = [{
     name: 'consumeIncomeClass',
     component: ConsumeIncomeClass,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -911,7 +948,8 @@ export const routes = [{
     name: 'consumePayment',
     component: ConsumePayment,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -920,7 +958,8 @@ export const routes = [{
     name: 'consumePaymentDetail',
     component: ConsumePaymentDetail,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -929,7 +968,8 @@ export const routes = [{
     name: 'consumeSettlement',
     component: ConsumeSettlement,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -938,7 +978,8 @@ export const routes = [{
     name: 'consumeIncomeStats',
     component: ConsumeIncomeStats,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -946,7 +987,8 @@ export const routes = [{
     alias: '/draggable',
     component: ConsumeDraggable,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   }
   ]
@@ -959,7 +1001,8 @@ export const routes = [{
     alias: '/main',
     component: AssetsMain,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -968,7 +1011,8 @@ export const routes = [{
     name: 'assetsBankMain',
     component: AssetsBankMain,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -977,7 +1021,8 @@ export const routes = [{
     name: 'assetsBankActDetail',
     component: AssetsBankActDetail,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -986,7 +1031,8 @@ export const routes = [{
     name: 'assetsBankDepWdrlList',
     component: AssetsBankDepWdrlList,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -995,7 +1041,8 @@ export const routes = [{
     name: 'assetsBankDepWdrlDetail',
     component: AssetsBankDepWdrlDetail,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1004,7 +1051,8 @@ export const routes = [{
     name: 'assetsStockMain',
     component: AssetsStockMain,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1013,7 +1061,8 @@ export const routes = [{
     name: 'assetsStockBalcDetail',
     component: AssetsStockBalcDetail,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1022,7 +1071,8 @@ export const routes = [{
     name: 'assetsStockActDetail',
     component: AssetsStockActDetail,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1031,7 +1081,8 @@ export const routes = [{
     name: 'assetsStockShrDetail',
     component: AssetsStockShrDetail,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1040,7 +1091,8 @@ export const routes = [{
     name: 'assetsStockFndDetail',
     component: AssetsStockFndDetail,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1049,7 +1101,8 @@ export const routes = [{
     name: 'assetsEtcMain',
     component: AssetsEtcMain,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1057,7 +1110,8 @@ export const routes = [{
     alias: '/dirInput',
     component: AssetsDirInput,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   }
   ]
@@ -1070,7 +1124,9 @@ export const routes = [{
     alias: '/list',
     component: GoodsList,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true,
+      backCasePath: true
     }
   },
   {
@@ -1079,7 +1135,8 @@ export const routes = [{
     name: 'GoodsDetail',
     component: GoodsDetail,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1088,7 +1145,8 @@ export const routes = [{
     name: 'GoodsStockDetail',
     component: GoodsStockDetail,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1097,7 +1155,8 @@ export const routes = [{
     name: 'GoodsCertStep1',
     component: GoodsCertStep1,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1106,7 +1165,8 @@ export const routes = [{
     name: 'GoodsCertStep2',
     component: GoodsCertStep2,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1115,7 +1175,8 @@ export const routes = [{
     name: 'GoodsCreditReqInfo',
     component: GoodsCreditReqInfo,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1124,7 +1185,8 @@ export const routes = [{
     name: 'GoodsCreditJobIncome',
     component: GoodsCreditJobIncome,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1133,7 +1195,8 @@ export const routes = [{
     name: 'GoodsCreditSrcJobNm',
     component: GoodsCreditSrcJobNm,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1142,7 +1205,8 @@ export const routes = [{
     name: 'GoodsCreditInsJobNm',
     component: GoodsCreditInsJobNm,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1151,7 +1215,8 @@ export const routes = [{
     name: 'GoodsHsnInsReqInfo',
     component: GoodsHsnInsReqInfo,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1160,7 +1225,8 @@ export const routes = [{
     name: 'GoodsHsnInsHsnInfo',
     component: GoodsHsnInsHsnInfo,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1169,7 +1235,8 @@ export const routes = [{
     name: 'GoodsHsnInsIncome',
     component: GoodsHsnInsIncome,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1178,7 +1245,8 @@ export const routes = [{
     name: 'GoodsHsnInsRepay',
     component: GoodsHsnInsRepay,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1187,7 +1255,8 @@ export const routes = [{
     name: 'GoodsLoading',
     component: GoodsLoading,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1196,7 +1265,8 @@ export const routes = [{
     name: 'GoodsResult',
     component: GoodsResult,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1205,7 +1275,8 @@ export const routes = [{
     name: 'GoodsReqDone',
     component: GoodsReqDone,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1213,7 +1284,89 @@ export const routes = [{
     alias: '/workergoods',
     component: GoodsWorkerGoods,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'stock1',
+    alias: '/stock1',
+    component: GoodsStock1,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'stock2',
+    alias: '/stock2',
+    component: GoodsStock2,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'stock3',
+    alias: '/stock3',
+    component: GoodsStock3,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'stock4',
+    alias: '/stock4',
+    component: GoodsStock4,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'stock5',
+    alias: '/stock5',
+    component: GoodsStock5,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'stock6',
+    alias: '/stock6',
+    component: GoodsStock6,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'stock7',
+    alias: '/stock7',
+    component: GoodsStock7,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'stock8',
+    alias: '/stock8',
+    component: GoodsStock8,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
+    }
+  },
+  {
+    path: 'stock9',
+    alias: '/stock9',
+    component: GoodsStock9,
+    meta: {
+      allowPath: true,
+      requiresAuth: true
     }
   }
   ]
@@ -1293,7 +1446,8 @@ export const routes = [{
     name: 'etcAlarmHistory',
     component: EtcAlarmHistory,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1302,7 +1456,8 @@ export const routes = [{
     name: 'etcNoticeMain',
     component: EtcNoticeMain,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1311,7 +1466,8 @@ export const routes = [{
     name: 'etcNoticeDetail',
     component: EtcNoticeDetail,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1320,7 +1476,8 @@ export const routes = [{
     name: 'etcEventDetail',
     component: EtcEventDetail,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1329,7 +1486,8 @@ export const routes = [{
     name: 'etcFaqMain',
     component: EtcFaqMain,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1338,7 +1496,8 @@ export const routes = [{
     name: 'etcFaqList',
     component: EtcFaqList,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1347,7 +1506,8 @@ export const routes = [{
     name: 'etcFaqDetail',
     component: EtcFaqDetail,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1356,7 +1516,8 @@ export const routes = [{
     name: 'etcTerm',
     component: EtcTerm,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   }
   ]
@@ -1370,7 +1531,8 @@ export const routes = [{
     name: 'scrapCertStep',
     component: ScrapCertStep,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1379,7 +1541,8 @@ export const routes = [{
     name: 'scrapFcLink',
     component: ScrapFcLink,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1388,7 +1551,8 @@ export const routes = [{
     name: 'scrapResultFcLink',
     component: ScrapResultFcLink,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1397,7 +1561,8 @@ export const routes = [{
     name: 'scrapCtrlFcLink',
     component: ScrapCtrlFcLink,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1406,7 +1571,8 @@ export const routes = [{
     name: 'scrapLoading',
     component: ScrapLoading,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1415,7 +1581,8 @@ export const routes = [{
     name: 'scrapRegFcLink',
     component: ScrapRegFcLink,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1424,7 +1591,8 @@ export const routes = [{
     name: 'scrapSelFcLink',
     component: ScrapSelFcLink,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1433,7 +1601,8 @@ export const routes = [{
     name: 'scrapTerms',
     component: ScrapTerms,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   }
   ]
@@ -1627,6 +1796,22 @@ export const routes = [{
   }
 },
 {
+  path: '/sample/datepicker',
+  name: 'datepicker',
+  component: Datepicker,
+  meta: {
+    allowPath: true
+  }
+},
+{
+  path: '/sample/money',
+  name: 'money',
+  component: Money,
+  meta: {
+    allowPath: true
+  }
+},
+{
   path: '/template',
   name: 'template',
   component: TemplateHome,
@@ -1697,15 +1882,17 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  Store.state.header.backPath = ''
+  if (from.path !== '/proxy' && to.path !== '/proxy') Store.state.proxyBackUrl = from.path
+  if (from.path === '/proxy') Store.state.header.backPath = Store.state.proxyBackUrl
+  // else Store.state.header.backPath = ''
   if (to.path === '/index.html') {
     next('/home?hp=' + to.query.hp)
   } else {
     const hp = localStorage.getItem('hp')
     if (to.meta.allowPath) {
       if (to.meta.requiresAuth) {
-        if (to.meta.backCasePath && !Store.state.header.fromPath) Store.state.header.fromPath = from.fullPath
-        if (to.fullPath === Store.state.header.fromPath) Store.state.header.fromPath = ''
+        if (to.meta.backCasePath && !Store.state.header.backPath) Store.state.header.backPath = from.fullPath
+        if (Store.state.header.type === 'main') Store.state.header.backPath = ''
 
         const accessToken = localStorage.getItem('accessToken')
         if (!accessToken) {

@@ -12,6 +12,7 @@ public class ConsumeForm implements Serializable{
 
 	private String			no_person;				//회원 관리 번호
 	private List<String> 	no_person_list;			//회원 관리 번호 리스트
+	private String			cd_fc;					//금융사관리번호
 	private String			no_card;				//카드(계좌) 번호
 	private int				seq_consume;			//일련번호
 	private String			yn_pay_installment;		//할부분할여부
@@ -32,13 +33,14 @@ public class ConsumeForm implements Serializable{
 	public ConsumeForm() {
 	}
 	public ConsumeForm(String no_person, List<String> no_person_list,
-			String no_card, int seq_consume, String yn_pay_installment,
-			String no_approval, String ym_trd, String type_in_out,
-			String ymd_trd, String y_trd, String contents, int seq_tran,
-			String dt_from, String dt_to, String orderType, String listType,
-			String chartType) {
+			String cd_fc, String no_card, int seq_consume,
+			String yn_pay_installment, String no_approval, String ym_trd,
+			String type_in_out, String ymd_trd, String y_trd, String contents,
+			int seq_tran, String dt_from, String dt_to, String orderType,
+			String listType, String chartType) {
 		this.no_person = no_person;
 		this.no_person_list = no_person_list;
+		this.cd_fc = cd_fc;
 		this.no_card = no_card;
 		this.seq_consume = seq_consume;
 		this.yn_pay_installment = yn_pay_installment;
@@ -67,6 +69,12 @@ public class ConsumeForm implements Serializable{
 	}
 	public void setNo_person_list(List<String> no_person_list) {
 		this.no_person_list = no_person_list;
+	}
+	public String getCd_fc() {
+		return cd_fc;
+	}
+	public void setCd_fc(String cd_fc) {
+		this.cd_fc = cd_fc;
 	}
 	public String getNo_card() {
 		return no_card;

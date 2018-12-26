@@ -270,7 +270,7 @@ export default {
           formData.append("sex", _this.sex);
           formData.append(
             "telComCd",
-            _this.telComCd != "" ? _this.telCom.value : ""
+            (_this.telComCd || "") != "" ? _this.telCom.value : ""
           );
           formData.append("hp", _this.hp);
           formData.append("smsReSndYn", _this.smsReSndYn);

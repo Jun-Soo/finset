@@ -7,7 +7,7 @@
         <input type="text" class="form-control" name="nm_person" id="nm_person" ref="nmperson" v-model="nm_person" v-validate="'required|max:8'" v-bind:disabled="isDisabled" autocomplete="off" placeholder="이름을 입력하세요" data-vv-name='이름' />
         <p class="warn" v-if="errors.has('이름')">{{errors.first('이름')}}</p>
         <div class="grid">
-          <div class="number"><input type="number" placeholder="생년월일6자리" name="ssn_birth" id="ssn_birth" v-model="ssn_birth" v-validate="'required|length:6|max:6'" v-on:keyup="nextFocus('birth')" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='생년월일'></div>
+          <div class="number"><input type="number" placeholder="생년월일6자리" name="ssn_birth" id="ssn_birth" v-model="ssn_birth" v-validate="'required|length:6|max:6'" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='생년월일'></div>
           <div class="dash">-</div>
           <div class="number last"><input type="password" pattern="[0-9]*" name="sex" id="sex" v-model="sex" inputmode="numeric" maxlength="1" style="-webkit-text-security:disc" v-bind:disabled="isDisabled" autocomplete="off" v-validate="'required|between:0,9|length:1|max:1'" data-vv-name='성별'>******</div>
         </div>
@@ -17,7 +17,7 @@
       <div class="cert-wrap">
         <p class="title">휴대폰인증</p>
         <div class="grid phone">
-          <multiselect v-bind:disabled="isDisabled" :onClose="nextFocus('telCom')" ref="telCom" v-model="telCom" label="text" :title="'통신사'" placeholder="통신사" :options="options" v-validate="'required'" data-vv-name='통신사'>
+          <multiselect v-bind:disabled="isDisabled" ref="telCom" v-model="telCom" label="text" :title="'통신사'" placeholder="통신사" :options="options" v-validate="'required'" data-vv-name='통신사'>
           </multiselect>
           <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
         </div>
@@ -86,14 +86,19 @@ export default {
     };
   },
   watch: {
-    chkAll: function() {
-      if (this.chkAll) {
-        $("#nm_person").focus();
+    ssn_birth: function() {
+      if ((this.sex == null || this.sex == "") && this.ssn_birth.length >= 6) {
+        $("#sex").focus();
       }
     },
     sex: function() {
       if ((this.telCom == null || this.telCom == "") && this.sex.length > 0) {
         this.$refs.telCom.open();
+      }
+    },
+    telCom: function() {
+      if ((this.hp == null || this.hp == "") && this.telCom != null) {
+        $("#hp").focus();
       }
     }
   },
@@ -129,12 +134,6 @@ export default {
     //native call back
     setRequestPhoneNumber: function(phoneNumber) {
       this.hp = phoneNumber;
-    },
-    nextFocus: function(val) {
-      var _this = this;
-      if (val == "birth" && _this.ssn_birth.length == 6) $("#sex").focus();
-      if (val == "telCom" && _this.telCom) $("#hp").focus();
-      if (val == "hp" && _this.hp) $("").focus();
     },
     /**
      * 인증번호 요청
@@ -193,9 +192,6 @@ export default {
               } else if (result.result == "01") {
                 this.$toast.center(result.message);
               }
-            })
-            .catch(e => {
-              this.$toast.center(ko.messages.error);
             });
         } else {
           this.$toast.center(ko.messages.require);
@@ -214,47 +210,42 @@ export default {
       formData.append("svcTxSeqno", _this.svcTxSeqno);
       formData.append("hp", _this.hp);
       formData.append("smsCertNo", _this.smsCertNo);
-      this.$http
-        .post("/m/login/kcmCertify.json", formData)
-        .then(response => {
-          var result = response.data;
-          console.log(result);
-          if (result.result == "00") {
-            _this.kcb_ci = result.kcb_ci;
-            _this.kcb_di = result.kcb_di;
-            _this.kcb_cp = result.kcb_cp;
+      this.$http.post("/m/login/kcmCertify.json", formData).then(response => {
+        var result = response.data;
+        console.log(result);
+        if (result.result == "00") {
+          _this.kcb_ci = result.kcb_ci;
+          _this.kcb_di = result.kcb_di;
+          _this.kcb_cp = result.kcb_cp;
 
-            //기존 회원 여부 체크
-            if (result.no_person) {
-              Constant.params.hp = _this.hp;
+          //기존 회원 여부 체크
+          if (result.no_person) {
+            Constant.params.hp = _this.hp;
 
-              if (Constant.userAgent == "iOS") {
-                Jockey.send("setNoPerson", {
-                  noPerson: result.no_person,
-                  phNum: _this.hp
-                });
-              } else if (Constant.userAgent == "Android") {
-                window.Android.setNoPerson(result.no_person, _this.hp);
-              }
-
-              _this.$toast.center(
-                "고객님은 기존 회원이므로 로그인 페이지로 이동합니다."
-              );
-              setTimeout(function() {
-                _this.$router.push("/home?hp=" + _this.hp);
-              }, 700);
-            } else {
-              this.insertPerson();
+            if (Constant.userAgent == "iOS") {
+              Jockey.send("setNoPerson", {
+                noPerson: result.no_person,
+                phNum: _this.hp
+              });
+            } else if (Constant.userAgent == "Android") {
+              window.Android.setNoPerson(result.no_person, _this.hp);
             }
+
+            _this.$toast.center(
+              "고객님은 기존 회원이므로 로그인 페이지로 이동합니다."
+            );
+            setTimeout(function() {
+              _this.$router.push("/home?hp=" + _this.hp);
+            }, 700);
           } else {
-            this.$toast.center(result.message);
-            _this.smsCertNo = "";
-            return false;
+            this.insertPerson();
           }
-        })
-        .catch(e => {
-          this.$toast.center(e);
-        });
+        } else {
+          this.$toast.center(result.message);
+          _this.smsCertNo = "";
+          return false;
+        }
+      });
     },
     insertPerson: function() {
       var _this = this;
@@ -306,9 +297,6 @@ export default {
             }
             _this.$router.push("/home?hp=" + _this.hp);
           }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
         });
     },
     start: function() {

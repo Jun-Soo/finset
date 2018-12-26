@@ -29,13 +29,15 @@
           <dl>
             <dt class="sum">
               <p class="title">합계</p>
-              <p><input readonly type="tel" :value="sumGoal1"></p>
+              <p><input readonly type="text" :value="sumGoal1"> 원</p>
             </dt>
             <div v-for="(vo, index) in listDetailGoal1" :key="vo.cd_class">
               <dd>
                 <p>{{vo.nm_class}}</p>
                 <input type="hidden" :name="'list['+index+'].cd_class'" :value="vo.cd_class" />
-                <p><input :name="'list['+index+'].amt_budget'" class="each_amt" type="tel" v-model="vo.amt_budget" :readonly="curLabel != 'custom'" v-validate="'required|numeric'" :data-vv-name="vo.nm_class"></p>
+                <!-- <p><input :name="'list['+index+'].amt_budget'" class="each_amt money" type="text" inputmode="numeric" pattern="[0-9]*" v-model="vo.amt_budget" v-validate="'required|numeric'" :data-vv-name="vo.nm_class"> 원</p> -->
+                <p>
+                  <money :name="'list['+index+'].amt_budget'" :theme="'each_amt money'" v-model="vo.amt_budget" v-validate="'required|numeric'" :data-vv-name="vo.nm_class" /> 원</p>
               </dd>
               <p class="warn" v-if="errors.has(vo.nm_class)">{{errors.first(vo.nm_class)}}</p>
             </div>
@@ -48,16 +50,19 @@
           <dl>
             <dt class="sum">
               <p class="title">합계</p>
-              <p><input readonly type="tel" :value="sumGoal2"></p>
+              <p><input readonly type="text" :value="sumGoal2"> 원</p>
             </dt>
             <div v-for="(vo, index) in listDetailGoal2" :key="index">
               <dd>
-                <p>{{vo.nm_card}}</p>
+                <p>{{formatNmCard(vo.nm_card)}}</p>
                 <input v-if="vo.cd_type != '02'" type="hidden" :name="'list['+index+'].cd_fc'" :value="vo.cd_fc" />
                 <input type="hidden" :name="'list['+index+'].cd_type'" :value="vo.cd_type" />
                 <input v-if="vo.cd_type == '01' || vo.cd_type == '04'" type="hidden" :name="'list['+index+'].no_card'" :value="vo.no_card" />
                 <input v-if="vo.cd_type == '01' || vo.cd_type == '04'" type="hidden" :name="'list['+index+'].nm_card'" :value="vo.nm_card" />
-                <p><input :name="'list['+index+'].amt_budget'" class="each_amt" type="tel" v-model="vo.amt_budget" :readonly="curLabel != 'custom'" v-validate="'required|numeric'" :data-vv-name="vo.nm_card"></p>
+                <!-- <p><input :name="'list['+index+'].amt_budget'" class="each_amt money" type="text" inputmode="numeric" pattern="[0-9]*" v-model="vo.amt_budget" v-validate="'required|numeric'" :data-vv-name="vo.nm_card"> 원</p> -->
+                <p>
+                  <money :name="'list['+index+'].amt_budget'" :theme="'each_amt money'" v-model="vo.amt_budget" v-validate="'required|numeric'" :data-vv-name="vo.nm_card" /> 원
+                </p>
               </dd>
               <p class="warn" v-if="errors.has(vo.nm_card)">{{errors.first(vo.nm_card)}}</p>
             </div>
@@ -84,7 +89,8 @@ export default {
       curTab: "01",
       curLabel: "custom",
       listDetailGoal1: {},
-      listDetailGoal2: {}
+      listDetailGoal2: {},
+      listStandardConsume: {}
     };
   },
   components: {},
@@ -240,6 +246,13 @@ export default {
           // _this.$toast.center(ko.messages.require);
         }
       });
+    },
+    formatNmCard: function(nm_card) {
+      if (nm_card.length > 20) {
+        return nm_card.substring(0, 20) + "...";
+      } else {
+        return nm_card;
+      }
     }
   }
 };

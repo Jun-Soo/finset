@@ -358,7 +358,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 	}
 	
 	/**
-	 * 소비지출 데이터를 확보하기 위해 카드 승인 내역 스크래핑 데이터 조회 및 저장- 차후 해당 VO로 받아야 한다.
+	 * 소비지출 데이터를 확보하기 위해 입출금내역 조회
 	 * @param consumeForm
 	 * @return
 	 */
@@ -370,7 +370,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 		int insertCnt = 0;
 		
 		try{
-			transactionDetailList = consumeDataMapper.listScrTransactionDetail(consumeForm);
+			transactionDetailList = consumeDataMapper.listScrTransactionDetailAuto(consumeForm);
 			if(transactionDetailList!=null){
 				if(transactionDetailList.size()>0) {
 					for(Map<String, String> transactionMap: transactionDetailList) {
@@ -470,7 +470,6 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 										id_lst,
 										dt_lst
 										);
-						logger.debug(consumeVO.toString());
 						consumeList.add(consumeVO);
 					}
 				}

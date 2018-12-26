@@ -245,8 +245,8 @@ export default {
       formData.append("no_account", _this.no_account);
       formData.append("cd_detail_class", _this.cd_detail_class);
       formData.append(
-        "scTrnsType ",
-        _this.scTrnsType != "" ? _this.scTrnsType.value : ""
+        "scTrnsType",
+        (_this.scTrnsType || "") != "" ? _this.scTrnsType.value : ""
       );
       formData.append("scKeyword", _this.scKeyword);
 

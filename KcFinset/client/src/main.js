@@ -4,6 +4,10 @@
 import Vue from 'vue'
 import App from './App'
 import VeeValidate from 'vee-validate'
+// import {
+//   Validator
+// } from 'vee-validate'
+
 import ko from 'vee-validate/dist/locale/ko.js'
 import axios from 'axios'
 import router from './comm/router'
@@ -17,6 +21,7 @@ import multiselect from '@/components/plugins/multiselect/MultiSelect.vue'
 import SlimDialog from 'v-slim-dialog'
 import datepicker from 'vuejs-datepicker'
 import VueAnalytics from 'vue-analytics'
+import money from '@/components/plugins/money/Money.vue'
 
 import 'jquery'
 
@@ -37,6 +42,9 @@ Vue.use(VueAnalytics, {
   router
 })
 
+VeeValidate.Validator.extend('multi', {
+  validate: value => (value || '') !== '' && (value.value || '') !== ''
+})
 Vue.use(VeeValidate, {
   events: '',
   locale: 'ko',
@@ -57,6 +65,7 @@ Vue.use(window.VueCharts)
 Vue.use(SlimDialog)
 Vue.component('multiselect', multiselect)
 Vue.component('datepicker', datepicker)
+Vue.component('money', money)
 
 Vue.config.debug = true
 Vue.config.devtools = true
@@ -70,9 +79,9 @@ axios.interceptors.response.use((response) => {
   store.commit('AJAX_INIT')
   return response
 }, function (error) {
-  debugger
   if (store.getters.getError) {
     store.commit('AJAX_ERROR')
+    store.state.isLoading = false
     if (error.response.status === 401) {
       console.log('unauthorized, logging out ...')
       router.push('/mypage/logout')
@@ -83,7 +92,7 @@ axios.interceptors.response.use((response) => {
       return false
     } else {
       router.push('/Error')
-      return false
+      return Promise.reject(error.response)
     }
   }
 })

@@ -3785,6 +3785,17 @@ button.cal{
     }
 }
 
+.pop-wrap{
+    .debt-modify{
+        li div p{
+            width: 50%;
+            &.key{
+                width: 50%;
+            }
+        }
+    }
+}
+
 .calc-top{
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -6238,7 +6249,100 @@ span.cell.day.selected.today {
 }
 
 
+.finance-check{
+    text-align: center;
+    .wrap{
+        border: 1px solid $lineColor;
+        border-radius: 10px;
+        padding: 20px;
+        padding-bottom: 45px;
+        .top{
+            display: flex;
+            align-items: center;
+            width: 100%;
+            justify-content: space-between;
+            div{
+                &:last-child{
+                    width: 40px;
+                    height: 40px;
+                }
+            }
+            .key{
+                font-size: 14px;
+                font-weight: 700;
+                color: $col2;
+            }
+            .number{
+                font-size: 24px;
+                color: #222;
+                font-weight: 700;
+                margin-top: 10px;
+                text-align: left;
+                em{
+                    font-size: 14px;
+                    color: #222;
+                    margin-top: 10px;
+                }
+            }
+            .sunny{
+                background: url("../images/assets/ico_sunny.png") no-repeat center / 40px;
+            }
+            .cloudy{
+                background: url("../images/assets/ico_cloudy.png") no-repeat center / 40px;
+            }.rainy{
+                background: url("../images/assets/ico_rainy.png") no-repeat center / 40px;
+            }
+        }
+        .bar{
+            position: relative;
+            height: 3px;
+            background: #ecebe8;
+            border-radius: 5px;
+            margin-top: 10px;
+            p{
+                position: absolute;
+                height: 3px;
+                background: #62c1d0;
+                border-radius: 5px;
+            }
+        }
+        .peaker{
+            position: relative;
+            p{
+                position: absolute;
+                top: 0;
+                left: 43%;
+                padding-top: 10px;
+                &.lt{
+                    background: url("../images/assets/finance_arrow.png") no-repeat 0 0 / 7px;
+                    padding-left: 10px;
+                }
+                &.rt{
+                    background: url("../images/assets/finance_arrow.png") no-repeat 100% 0 / 7px;
+                    padding-right: 10px;
+                }
+            }
+        }
+    }
+    .finance{
+        font-size: 14px;
+        font-weight: 700;
+        color: $col2;
+        padding-right: 15px;
+        background: url("../images/common/portfolio_arrow.png") no-repeat right center / 7px !important;
+        margin-top: 15px;
+        display: inline-block !important;
+        width: auto !important;
+        margin-bottom: 20px;
+    }
+    
+}
 
+h2{
+    font-size: 14px;
+    color: #222;
+    font-weight: 700;
+}
 
 
 

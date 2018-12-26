@@ -374,13 +374,13 @@ export default {
       formData.append("yn_share", _this.yn_share);
       formData.append(
         "scAccount",
-        _this.scAccount != "" ? _this.scAccount.value : ""
+        (_this.scAccount || "") != "" ? _this.scAccount.value : ""
       );
       formData.append("txt_dt_from", Common.formatDateDB(_this.txt_dt_from));
       formData.append("txt_dt_to", Common.formatDateDB(_this.txt_dt_to));
       formData.append(
         "scTrnsType",
-        _this.scTrnsType != "" ? _this.scTrnsType.value : ""
+        (_this.scTrnsType || "") != "" ? _this.scTrnsType.value : ""
       );
       formData.append("scKeyword", _this.scKeyword);
 
@@ -419,13 +419,13 @@ export default {
       formData.append("yn_share", _this.yn_share);
       formData.append(
         "scAccount",
-        _this.scAccount != "" ? _this.scAccount.value : ""
+        (_this.scAccount || "") != "" ? _this.scAccount.value : ""
       );
       formData.append("txt_dt_from", Common.formatDateDB(_this.txt_dt_from));
       formData.append("txt_dt_to", Common.formatDateDB(_this.txt_dt_to));
       formData.append(
         "scTrnsType",
-        _this.scTrnsType != "" ? _this.scTrnsType.value : ""
+        (_this.scTrnsType || "") != "" ? _this.scTrnsType.value : ""
       );
       formData.append("scKeyword", _this.scKeyword);
 

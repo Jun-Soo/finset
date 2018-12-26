@@ -194,15 +194,15 @@ export default {
       formData.append("person_share_list", _this.person_share_list);
       formData.append(
         "scAccType",
-        _this.scAccType != "" ? _this.scAccType.value : ""
+        (_this.scAccType || "") != "" ? _this.scAccType.value : ""
       );
       formData.append(
         "scCompany",
-        _this.scCompany != "" ? _this.scCompany.value : ""
+        (_this.scCompany || "") != "" ? _this.scCompany.value : ""
       );
       formData.append(
         "orderBy",
-        _this.orderBy != "" ? _this.orderBy.value : ""
+        (_this.orderBy || "") != "" ? _this.orderBy.value : ""
       );
 
       this.$http

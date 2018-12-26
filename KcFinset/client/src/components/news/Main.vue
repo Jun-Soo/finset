@@ -138,7 +138,7 @@ export default {
       formData.append("page", _this.page);
       formData.append(
         "orderBy",
-        _this.orderBy != "" ? _this.orderBy.value : ""
+        (_this.orderBy || "") != "" ? _this.orderBy.value : ""
       );
       formData.append("scKeyword", _this.scKeyword);
 

@@ -7,7 +7,7 @@
         <input type="text" class="form-control" name="nm_person" id="nm_person" ref="nmperson" v-model="nm_person" v-validate="'required|max:8'" v-bind:disabled="isDisabled" autocomplete="off" placeholder="이름을 입력하세요" data-vv-name='이름' />
         <p class="warn" v-if="errors.has('이름')">{{errors.first('이름')}}</p>
         <div class="grid">
-          <div class="number"><input type="number" placeholder="생년월일6자리" name="ssn_birth" id="ssn_birth" v-model="ssn_birth" v-validate="'required|length:6|max:6'" v-on:keyup="nextFocus('birth')" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='생년월일'></div>
+          <div class="number"><input type="number" placeholder="생년월일6자리" name="ssn_birth" id="ssn_birth" v-model="ssn_birth" v-validate="'required|length:6|max:6'" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='생년월일'></div>
           <div class="dash">-</div>
           <div class="number last"><input type="password" pattern="[0-9]*" name="sex" id="sex" v-model="sex" inputmode="numeric" maxlength="1" style="-webkit-text-security:disc" v-bind:disabled="isDisabled" autocomplete="off" v-validate="'required|between:0,9|length:1|max:1'" data-vv-name='성별'>******</div>
         </div>
@@ -17,7 +17,7 @@
       <div class="cert-wrap">
         <p class="title">휴대폰인증</p>
         <div class="grid phone">
-          <multiselect v-bind:disabled="isDisabled" :onClose="nextFocus('telCom')" ref="telCom" v-model="telCom" label="text" :title="'통신사'" placeholder="통신사" :options="options" v-validate="'required'" data-vv-name='통신사'>
+          <multiselect v-bind:disabled="isDisabled" ref="telCom" v-model="telCom" label="text" :title="'통신사'" placeholder="통신사" :options="options" v-validate="'required'" data-vv-name='통신사'>
           </multiselect>
           <input type="tel" name="hp" id="hp" v-model="hp" v-validate="'required|max:11'" v-bind:disabled="isDisabled" placeholder="휴대폰 번호" data-vv-name='휴대폰 번호'>
         </div>
@@ -86,14 +86,19 @@ export default {
     };
   },
   watch: {
-    chkAll: function() {
-      if (this.chkAll) {
-        $("#nm_person").focus();
+    ssn_birth: function() {
+      if ((this.sex == null || this.sex == "") && this.ssn_birth.length >= 6) {
+        $("#sex").focus();
       }
     },
     sex: function() {
       if ((this.telCom == null || this.telCom == "") && this.sex.length > 0) {
         this.$refs.telCom.open();
+      }
+    },
+    telCom: function() {
+      if ((this.hp == null || this.hp == "") && this.telCom != null) {
+        $("#hp").focus();
       }
     }
   },
@@ -129,12 +134,6 @@ export default {
     //native call back
     setRequestPhoneNumber: function(phoneNumber) {
       this.hp = phoneNumber;
-    },
-    nextFocus: function(val) {
-      var _this = this;
-      if (val == "birth" && _this.ssn_birth.length == 6) $("#sex").focus();
-      if (val == "telCom" && _this.telCom) $("#hp").focus();
-      if (val == "hp" && _this.hp) $("").focus();
     },
     /**
      * 인증번호 요청

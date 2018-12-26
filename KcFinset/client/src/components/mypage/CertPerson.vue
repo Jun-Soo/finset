@@ -137,7 +137,6 @@ export default {
     },
     ssn_birth: function() {
       if ((this.sex == null || this.sex == "") && this.ssn_birth.length >= 6) {
-        // debugger;
         $("#sex").focus();
       }
     },
@@ -147,10 +146,7 @@ export default {
       }
     },
     telCom: function() {
-      if (
-        (this.hp == null || this.hp == "") &&
-        (this.telCom != undefined || this.telCom != "")
-      ) {
+      if ((this.hp == null || this.hp == "") && this.telCom != null) {
         $("#hp").focus();
       }
     }

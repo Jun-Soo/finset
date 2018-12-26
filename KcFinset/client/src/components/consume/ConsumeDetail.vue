@@ -126,7 +126,7 @@
         <div v-else class="nobox-list">
           <div v-for="(subList, index) in listTrans" :key="index">
             <p class="date">{{formatDateDot(listTrans[index][0].dt_trd,"mmdd")}}</p>
-            <div v-for="(vo, subIndex) in subList" :key="subIndex" @click="selectTrans(index, subIndex)" class="item">
+            <div v-for="(vo, subIndex) in subList" :key="subIndex" @click="selectTrans(index, subIndex)" class="item" :class="{'disabled':listRegSeqTran.filter(seq => seq == vo.seq_tran).length > 0}">
               <div class="flex">
                 <p>{{vo.contents}}</p>
                 <p><em class="number" :class="vo.type_in_out == '01'? 'blue':'red'">{{vo.amt}}</em>원</p>
@@ -173,6 +173,7 @@ export default {
       isShowBanner: false,
       isShowCategory: false,
       isShowTrans: false,
+      listRegSeqTran: [],
       listTrans: {},
       ko: ko,
       dt_trans: "",
@@ -272,7 +273,6 @@ export default {
         this.$route.query.isPersonRegist == true;
     }
     this.setDefault();
-    // Common.datepickerInit("div-date", this);
   },
   beforeMount() {},
   mounted() {
@@ -404,7 +404,15 @@ export default {
       });
     },
     selectTrans: function(index, subIndex) {
+      // 기등록된 입출금 내역 확인
       var _this = this;
+      if (
+        this.listRegSeqTran.filter(
+          seq => seq == this.listTrans[index][subIndex].seq_tran
+        ).length > 0
+      ) {
+        return;
+      }
       var transText =
         this.curTab == "01"
           ? "해당 항목과 동일한 입금을 수입으로 등록할까요?"
@@ -641,44 +649,55 @@ export default {
         });
     },
     listPersonTransDetail: function() {
+      //우선적으로 미리 등록된 입출금내역 시퀀스를 가져와야 한다
       var _this = this;
       this.$http
-        .get("/m/consume/listPersonTransDetail.json", {
+        .get("/m/consume/listRegisteredSeqTran.json", {
           params: {
             type_in_out: _this.curTab
           }
         })
         .then(function(response) {
-          var list = response.data.listPersonTransDetail;
-
-          for (var idx in list) {
-            for (var subIdx in list[idx]) {
-              if (list[idx][subIdx].amt_dep == "0") {
-                list[idx][subIdx].type_in_out = "02";
-                list[idx][subIdx].amt = Common.formatNumber(
-                  list[idx][subIdx].amt_wdrl,
-                  true,
-                  false
-                );
-              } else if (list[idx][subIdx].amt_wdrl == "0") {
-                list[idx][subIdx].type_in_out = "01";
-                list[idx][subIdx].amt = Common.formatNumber(
-                  list[idx][subIdx].amt_dep,
-                  false,
-                  true
-                );
+          _this.listRegSeqTran = response.data.listRegisteredSeqTran;
+          //등록된 입출금내역 시퀀스를 가져온 후 실제 입출금 내역 조회
+          _this.$http
+            .get("/m/consume/listPersonTransDetail.json", {
+              params: {
+                type_in_out: _this.curTab
               }
-              list[idx][subIdx].contents = _this.getTransText(
-                list[idx][subIdx]
-              );
-            }
-          }
-          if ((list || "") == "" || list[0].length == 0) {
-            _this.listTrans = [];
-          } else {
-            _this.listTrans = list;
-          }
-          _this.isShowTrans = true;
+            })
+            .then(function(response) {
+              var list = response.data.listPersonTransDetail;
+
+              for (var idx in list) {
+                for (var subIdx in list[idx]) {
+                  if (list[idx][subIdx].amt_dep == "0") {
+                    list[idx][subIdx].type_in_out = "02";
+                    list[idx][subIdx].amt = Common.formatNumber(
+                      list[idx][subIdx].amt_wdrl,
+                      true,
+                      false
+                    );
+                  } else if (list[idx][subIdx].amt_wdrl == "0") {
+                    list[idx][subIdx].type_in_out = "01";
+                    list[idx][subIdx].amt = Common.formatNumber(
+                      list[idx][subIdx].amt_dep,
+                      false,
+                      true
+                    );
+                  }
+                  list[idx][subIdx].contents = _this.getTransText(
+                    list[idx][subIdx]
+                  );
+                }
+              }
+              if ((list || "") == "" || list[0].length == 0) {
+                _this.listTrans = [];
+              } else {
+                _this.listTrans = list;
+              }
+              _this.isShowTrans = true;
+            });
         });
     },
     deleteConsume: function() {
@@ -758,6 +777,8 @@ export default {
       this.curClass = "";
       this.curType = "";
       this.dt_trans = "";
+      this.listRegSeqTran = [];
+      this.listTrans = {};
       if (this.curTab == "01") {
         this.listPersonIncomeClassInfo();
       } else {
@@ -852,4 +873,7 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
+.item.disabled {
+  background: #ddd;
+}
 </style>

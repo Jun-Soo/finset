@@ -144,6 +144,12 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	}
 
 	@Override
+	public List<Integer> listRegisteredSeqTran(ConsumeForm consumeForm) {
+		logger.debug("listRegisteredSeqTran");
+		return consumeMapper.listRegisteredSeqTran(consumeForm);
+	}
+	
+	@Override
 	public List<List<PersonTransDetailVO>> listPersonTransDetail(ConsumeForm consumeForm) {
 		logger.debug("listPersonTransDetail");
 		List<List<PersonTransDetailVO>> returnList = new ArrayList<List<PersonTransDetailVO>>();

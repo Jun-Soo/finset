@@ -121,19 +121,19 @@ public class KcbManagerImpl implements KcbManager {
 
         if(!"REAL".equals(profile)) {
 			logger.info("continue");
-//			info.setYn_craw_test("Y");
-//			info.setNoPerson(person.getNo_person());
-//			info.setNmCust(person.getNm_person());
-//			info.setNmIf("600420");
-//			info.setCd_regist("09");	//01 신규, 09 URL
-//			info.setBgn(person.getBgn());
-//			info.setDi(person.getKcb_di());
-//			info.setHp(person.getHp());
-//			ReturnClass returnClass = urlCrawling(info);
-//			info.setYn_craw_test("Y");
-//			returnClass = parseCrawling(info);
-//			debtManager.debtPdocRun(person.getNo_person());
-//			cd_result = returnClass.getCd_result();
+			info.setYn_craw_test("Y");
+			info.setNoPerson(person.getNo_person());
+			info.setNmCust(person.getNm_person());
+			info.setNmIf("600420");
+			info.setCd_regist("09");	//01 신규, 09 URL
+			info.setBgn(person.getBgn());
+			info.setDi(person.getKcb_di());
+			info.setHp(person.getHp());
+			ReturnClass returnClass = urlCrawling(info);
+			info.setYn_craw_test("Y");
+			returnClass = parseCrawling(info);
+			debtManager.debtPdocRun(person.getNo_person());
+			cd_result = returnClass.getCd_result();
 		} else {
 			
 			try {
@@ -1049,7 +1049,7 @@ public class KcbManagerImpl implements KcbManager {
 			}
 			vo.setList_card_use(cardUseList.toString());
 			//데이터 확인과 DB저장을 한번에 처리하는 메소드 호출
-			checkCardDtlListAndSave(kcbCardInfoMap, kcbCardDtlListMap);
+			checkCardDtlListAndSave(kcbCardInfoMap, kcbCardDtlListMap, info.getDoc_page1());
 			step = "[PAGE1_6] 대출개설정보";
 			/** 대출개설정보 및 이용정보 SET **/
 			JSONArray debtOpenList = new JSONArray();
@@ -1330,7 +1330,7 @@ public class KcbManagerImpl implements KcbManager {
 						logMap.put("no_person", info.getNoPerson());
 						logMap.put("step", step);
 						logMap.put("log", "금융 질서 문란 정보가 추가되었습니다. 데이터를 확인해 주세요");
-						logMap.put("log_html", info.getDoc_page2());
+						logMap.put("log_html", info.getDoc_page1());
 						
 						creditMapper.insertCrawlingLog(logMap);
 						break;
@@ -1402,6 +1402,7 @@ public class KcbManagerImpl implements KcbManager {
 			}
 			
 		} catch (Exception e) {
+			e.printStackTrace();
 			
 			Map<String, Object> logMap = new HashMap<String, Object>();
 			logMap.put("no_person", vo.getNo_person());
@@ -1577,6 +1578,8 @@ public class KcbManagerImpl implements KcbManager {
 			
 			//TODO 6. 집단대출대납구분, 연체대환대출여부, 신용회복지원여부, 거치기간
 		} catch(Exception e) {
+			e.printStackTrace();
+			
 			Map<String, Object> logMap = new HashMap<String, Object>();
 			logMap.put("no_person", vo.getNo_person());
 			logMap.put("step", step);
@@ -1635,7 +1638,7 @@ public class KcbManagerImpl implements KcbManager {
 	}
 
 	//20180629 김휘경 추가 - 카드 내역 상세에서 card_type을 지정해주고 처리하기 위한 함수
-	public void checkCardDtlListAndSave(Map<String, List<String>> kcbCardInfoMap, Map<String, List<KcbCardDtlList>> kcbCardDtlListMap) {
+	public void checkCardDtlListAndSave(Map<String, List<String>> kcbCardInfoMap, Map<String, List<KcbCardDtlList>> kcbCardDtlListMap, String doc1) {
 		//우선 각 카드사별로 생각해보자 - 기준은 상세내역 Map을 기준으로 생각
 		Iterator<String> iter = kcbCardDtlListMap.keySet().iterator();
 		
@@ -1667,7 +1670,7 @@ public class KcbManagerImpl implements KcbManager {
 				logMap.put("no_person", dtlListList.get(0).getNo_person());
 				logMap.put("step", "[PAGE1_4] 카드개설정보");
 				logMap.put("log", "동일한 카드사 중 보유 카드 갯수가 3개입니다. 데이터를 확인해주세요");
-				logMap.put("log_html", "");
+				logMap.put("log_html", doc1);
 				
 				paramMap.remove(cd_fc);
 				creditMapper.insertCrawlingLog(logMap);

@@ -4,7 +4,7 @@
     <div class="gnb-wrap">
       <div class="top">
         <div class="left">
-          <button class="alarm" @click="clickButton('/etc/alarmHistory')"></button>
+          <button class="alarm" @click="clickButton('/etc/alarmHistory', '/main')"></button>
           <button class="logout" @click="chkLogout"></button>
         </div>
         <div class="right">
@@ -15,42 +15,42 @@
         <div class="info">
           <p class="name">{{this.$store.state.user.nmPerson}}</p>
           <p class="date">최근 접속 {{connectTime}} </p>
-          <a @click="clickButton('/mypage/info')">MYPAGE</a>
+          <a @click="clickButton('/mypage/info', '/main')">MYPAGE</a>
         </div>
         <div class="links">
-          <a @click="clickButton('/etc/faqMain')">고객센터</a>
-          <a @click="clickButton('/mypage/cert')">인증보안</a>
-          <a @click="clickButton('/etc/noticeMain')">공지/이벤트</a>
-          <a @click="clickButton('/news/main')">뉴스</a>
-          <a @click="clickButton('/scrap/ctrlFcLink')">연동관리</a>
-          <a @click="clickButton('/share/main?cd_share=02')">정보공유관리</a>
-          <a @click="clickButton('/common/monthCal')">금융달력</a>
-          <a @click="clickButton('/debt/calc')">금융계산기</a>
+          <a @click="clickButton('/etc/faqMain', '/main')">고객센터</a>
+          <a @click="clickButton('/mypage/cert', '/main')">인증보안</a>
+          <a @click="clickButton('/etc/noticeMain', '/main')">공지/이벤트</a>
+          <a @click="clickButton('/news/main', '/main')">뉴스</a>
+          <a @click="clickButton('/scrap/ctrlFcLink', '/main')">연동관리</a>
+          <a @click="clickButton('/share/main?cd_share=02', '/credit/main')">정보공유관리</a>
+          <a @click="clickButton('/common/monthCal', '/main')">금융달력</a>
+          <a @click="clickButton('/debt/calc', '/main')">금융계산기</a>
         </div>
         <dl id="gnb">
           <dt>신용</dt>
-          <dd><a @click="clickButton('/credit/main')">신용정보</a></dd>
-          <dd><a @click="clickButton('/credit/raiseMain')">신용등급올리기</a></dd>
-          <dd><a @click="clickButton('/credit/smartReport')">스마트리포트</a></dd>
-          <dd><a @click="clickButton('/credit/counselMain')">신용상담</a></dd>
-          <dd><a @click="clickButton('/share/main?cd_share=01')">신용정보제공</a></dd>
+          <dd><a @click="clickButton('/credit/main', '')">신용정보</a></dd>
+          <dd><a @click="clickButton('/credit/raiseMain', '/credit/main')">신용등급올리기</a></dd>
+          <dd><a @click="clickButton('/credit/smartReport', '/credit/main')">스마트리포트</a></dd>
+          <dd><a @click="clickButton('/credit/counselMain', '/credit/main')">신용상담</a></dd>
+          <dd><a @click="clickButton('/share/main?cd_share=01', '/credit/main')">신용정보제공</a></dd>
 
           <dt>부채</dt>
-          <dd><a @click="clickButton('/debt/main')">부채현황</a></dd>
-          <dd><a @click="clickButton('/debt/calc')">계산기</a></dd>
-          <dd><a @click="clickButton('/debt/reqIntrCut')">금리인하요구</a></dd>
-          <dd><a @click="clickButton('/goods/list')">추천상품</a></dd>
+          <dd><a @click="clickButton('/debt/main', '')">부채현황</a></dd>
+          <dd><a @click="clickButton('/debt/calc', '/debt/main')">계산기</a></dd>
+          <dd><a @click="clickButton('/debt/reqIntrCut', '/debt/main')">금리인하요구</a></dd>
+          <dd><a @click="clickButton('/goods/list', '/debt/main')">추천상품</a></dd>
 
           <dt>소비지출</dt>
-          <dd><a @click="clickButton('/consume/main')">소비/지출 현황</a></dd>
-          <dd><a @click="clickButton('/common/monthCal')">지출캘린더</a></dd>
-          <dd><a @click="clickButton('/consume/payment')">카드대금 조회</a></dd>
+          <dd><a @click="clickButton('/consume/main', '')">소비/지출 현황</a></dd>
+          <dd><a @click="clickButton('/common/monthCal', '/consume/main')">지출캘린더</a></dd>
+          <dd><a @click="clickButton('/consume/payment', '/consume/main')">카드대금 조회</a></dd>
 
           <dt>자산</dt>
-          <dd><a @click="clickButton('/assets/main')">자산현황</a></dd>
-          <dd><a @click="clickButton('/assets/bankMain')">은행</a></dd>
-          <dd><a @click="clickButton('/assets/stockMain')">증권</a></dd>
-          <dd><a @click="clickButton('/assets/etcMain')">기타</a></dd>
+          <dd><a @click="clickButton('/assets/main', '')">자산현황</a></dd>
+          <dd><a @click="clickButton('/assets/bankMain', '/assets/main')">은행</a></dd>
+          <dd><a @click="clickButton('/assets/stockMain', '/assets/main')">증권</a></dd>
+          <dd><a @click="clickButton('/assets/etcMain', '/assets/main')">기타</a></dd>
         </dl>
       </div>
     </div>
@@ -109,7 +109,7 @@ export default {
           this.$toast.center(ko.messages.error);
         });
     },
-    clickButton: function(page) {
+    clickButton: function(page, back) {
       // GNB Close Event
       if (page === "/debt/calc") {
         this.$dialogs.alert("준비중 입니다.", Constant.options);
@@ -117,6 +117,10 @@ export default {
       }
       $(".gnb-wrap").removeClass("on");
       $("body").removeClass("not-scroll");
+      if (this.$store.state.header.type === "sub" && back) {
+        this.$store.state.header.backPath = back;
+      }
+
       this.$router.push(page);
     }
 

@@ -30,7 +30,17 @@
                 , SYSDATE
             )
     </insert>
-
+	<select id="getPersonAgreeHist" parameterType="String" resultType="com.koscom.person.model.PersonAgreeHistVO">
+		SELECT
+			NO_PERSON,
+			DT_AGREE,
+			CD_AGREE
+		FROM
+			PERSON_AGREE_HIST
+		WHERE
+			NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_AGREE != '04'
+	</select>
     <insert id="createPersonAgreedtHist" parameterType="com.koscom.person.model.PersonAgreedtHistVO">
         INSERT INTO PERSON_AGREEDT_HIST
             (     NO_PERSON

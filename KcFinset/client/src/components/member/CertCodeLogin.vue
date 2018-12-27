@@ -233,6 +233,7 @@ export default {
             _this.$store.commit("LOGIN", response.data);
 
             _this.changeLoginDB();
+            _this.chkYNagreement();
 
             if (_this.$store.state.linkUrl) {
               _this.$router.push(_this.$store.state.linkUrl);
@@ -268,6 +269,18 @@ export default {
           this.initClassPass();
           _this.password = "";
         });
+    },
+    chkYNagreement: function() {
+      var _this = this;
+      var url = "/m/person/getPersonAgreeHist.json";
+
+      _this.$http.get(url).then(response => {
+        var result = response.data.PersonAgreeHist;
+        if (result == 0) {
+          _this.$toast.center("약관 변경으로 재동의가 필요합니다.");
+          setTimeout(_this.$router.push("/member/certStep1"), 1000);
+        }
+      });
     },
     passCheck: function() {
       var _this = this;

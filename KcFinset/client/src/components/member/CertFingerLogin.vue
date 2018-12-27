@@ -1,5 +1,5 @@
 <template>
-  <section id="content">
+  <section>
     <!-- <div class="certcode-wrap">
     </div> -->
     <div class="cert-finger" aria-readonly="true">
@@ -72,8 +72,7 @@ export default {
       password: "",
       cntFailFinger: this.$store.state.user.cntFailFinger,
       hp: this.$store.state.user.hp,
-      fingerSVG: {},
-      firstLoad: true
+      fingerSVG: {}
     };
   },
   component: {},
@@ -81,7 +80,7 @@ export default {
   beforeCreate() {},
   created() {
     this.$store.state.title = "지문인증";
-    window.resultFingerPrint = this.resultFingerPrint;
+    // window.resultFingerPrint = this.resultFingerPrint;
     console.log(this.$store.state.user.cntFailFinger);
     // this.$toast.center("created");
     this.errMsg =
@@ -89,7 +88,7 @@ export default {
   },
   beforeMount() {},
   mounted() {
-    this.firstLoad = true;
+    var _this = this;
     this.fingerSVG = new Vivus("my-svg", {
       type: "delayed",
       duration: 50,
@@ -104,7 +103,7 @@ export default {
         Jockey.on("resultFingerPrint", function(param) {
           var result = false;
           if (param.result == 1) result = true;
-          resultFingerPrint(param.result);
+          _this.resultFingerPrint(param.result);
         });
 
         Jockey.send("initFingerPrint");
@@ -120,7 +119,6 @@ export default {
     //   }
     //   return false;
     // }
-    console.log(this.$store.state.user.cntFailFinger);
   },
   beforeUpdate() {},
   updated() {},
@@ -173,6 +171,7 @@ export default {
             _this.$store.state.isLoading = false;
             _this.$store.commit("LOGIN", response.data);
             _this.changeLoginDB();
+            _this.chkYNagreement();
 
             if (_this.$store.state.linkUrl) {
               _this.$router.push(_this.$store.state.linkUrl);
@@ -182,7 +181,6 @@ export default {
           } else {
             _this.$store.state.isLoading = false;
             // this.$toast.center(ko.messages.loginErr);
-            // this.$toast.center("login시류패");
 
             if (response.data.result == "21") {
               //ID오류
@@ -190,12 +188,19 @@ export default {
               //PASSWD오류
             }
           }
-        })
-        .catch(e => {
-          this.$toast.center("login catch");
-          // this.$toast.center(ko.messages.error);
-          // this.$toast.center(e);
         });
+    },
+    chkYNagreement: function() {
+      var _this = this;
+      var url = "/m/person/getPersonAgreeHist.json";
+
+      _this.$http.get(url).then(response => {
+        var result = response.data.PersonAgreeHist;
+        if (result == 0) {
+          _this.$toast.center("약관 변경으로 재동의가 필요합니다.");
+          setTimeout(_this.$router.push("/member/certStep1"), 1000);
+        }
+      });
     },
     //비밀번호 틀린횟수 변경
     modifyPwdFailCnt: function(mode, cnt_fail) {
@@ -210,10 +215,6 @@ export default {
         })
         .then(response => {
           var result = response.data;
-        })
-        .catch(e => {
-          // this.$toast.center(ko.messages.error);
-          // this.$toast.center("틀린횟수변경Catch");
         });
     },
     //로그인값 db 변경
@@ -231,12 +232,6 @@ export default {
           if (result.result != "00") {
             this.$toast.center(result.messages);
           }
-        })
-        .catch(e => {
-          // this.$toast.center(ko.messages.error);
-          this.$toast.center("changeLoginDBCatch");
-
-          // _this.$toast.center(e);
         });
     },
     /***
@@ -244,7 +239,7 @@ export default {
      **/
     resultFingerPrint: function(result) {
       var _this = this;
-
+      this.$toast.center(result);
       if (result == true || result == 1) {
         //지문인식 성공
         if (Constant.userAgent == "Android") {
@@ -270,7 +265,7 @@ export default {
           _this.password = _this.$store.state.user.authToken;
           setTimeout(function() {
             _this.login();
-          }, 500);
+          }, 1000);
         }
       } else {
         //지문 틀린 누적횟수 증가
@@ -296,10 +291,6 @@ export default {
             .then(response => {
               _this.$store.state.user.ynFingerprint = "N";
               _this.$router.push("/member/certCodeLogin");
-            })
-            .catch(e => {
-              // _this.$toast.center(ko.messages.error);
-              // _this.$toast.center(e);
             });
         }
         return false;

@@ -33,12 +33,14 @@ import com.koscom.kcb.model.KcbCreditInfoVO;
 import com.koscom.kcb.service.KcbManager;
 import com.koscom.person.dao.PersonMapper;
 import com.koscom.person.model.PersonActiveHistVO;
+import com.koscom.person.model.PersonAgreeHistVO;
 import com.koscom.person.model.PersonCertificateInfoVO;
 import com.koscom.person.model.PersonShareInfoForm;
 import com.koscom.person.model.PersonSmsListVO;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
 import com.koscom.util.Constant;
+import com.koscom.util.DateUtil;
 import com.koscom.util.FinsetException;
 import com.koscom.util.ReturnClass;
 
@@ -657,5 +659,27 @@ public class PersonManagerImpl implements PersonManager {
 	@Override
 	public void insertDefaultPersonSet(String no_person) {
 		personMapper.insertDefaultPersonSet(no_person);
+	}
+	
+	@Override
+	public List<PersonAgreeHistVO> getPersonAgreeHist(String no_person) {
+		return personMapper.getPersonAgreeHist(no_person);
+	}
+
+	@Override
+	public int createPersonAgreeHist(String no_person, String eventPush) {
+		int result = 0;
+		PersonAgreeHistVO agree = new PersonAgreeHistVO();
+		agree.setNo_person(no_person);
+		agree.setDt_agree(DateUtil.getCurrentYMD());
+		agree.setCd_agree("01");
+		result += personMapper.createPersonAgreeHist(agree);
+		agree.setCd_agree("02");
+		result += personMapper.createPersonAgreeHist(agree);
+		if("Y".equals(eventPush)) {
+			agree.setCd_agree("03");
+			result += personMapper.createPersonAgreeHist(agree);
+		}
+		return result;
 	}
 }

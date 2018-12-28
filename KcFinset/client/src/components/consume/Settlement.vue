@@ -49,10 +49,10 @@
     </div>
     <div class="box-list list02 noMG">
       <div class="select pb20">
-        <multiselect class="multiselect-basic" track-by="text" v-model="listType" label="text" :preselect-first="true" :options="type1" :searchable="false" :allow-empty="false">
+        <multiselect v-model="listType" label="text" :title="'종류별'" :preselect-first="true" :options="type1">
         </multiselect>
         <p></p>
-        <multiselect class="multiselect-basic" track-by="text" v-model="orderType" label="text" :preselect-first="true" :options="type2" :searchable="false" :allow-empty="false">
+        <multiselect v-model="orderType" label="text" :title="'조회순'" :preselect-first="true" :options="type2">
         </multiselect>
       </div>
 
@@ -169,10 +169,10 @@ export default {
       this.getChartList();
     },
     listType: function() {
-      if (!this.initYN) {
-        // console.log(this.listType.value);
-        this.getRangeList();
-      }
+      // if (!this.initYN) {
+      // console.log(this.listType.value);
+      this.getRangeList();
+      // }
     },
     orderType: function() {
       if (!this.initYN) {

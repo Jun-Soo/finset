@@ -15,8 +15,7 @@
           <p class="total" v-if="cd_goods_alliance=='02'">선택 (<em>{{selectedCount}}</em>개)</p>
         </div>
         <div class="right">
-          <multiselect class="multiselect-basic" :title="'대출구분'" v-model="cd_goods_class" label="text" :show-labels="false" :options="options" :searchable="false" :allow-empty="false" @select="optingOnChange">
-          </multiselect>
+          <multiselect class="multiselect-basic" :title="'대출구분'" v-model="cd_goods_class" :options="options" :onClose="optingOnChange" />
           <!-- <select v-model="cd_goods_class" @change="optingOnChange()">
             <option v-for="option in options" :key="option.index" v-bind:value="option.value">
               {{ option.text }}

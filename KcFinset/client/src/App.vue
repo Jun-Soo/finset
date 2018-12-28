@@ -67,6 +67,15 @@ export default {
   },
   mounted() {
     this.orderCssFile();
+
+    var _this = this;
+    if (Constant.userAgent == "iOS") {
+      //스크래핑 완료 관련 iOS 함수 등록
+      Jockey.on("resultAutoScrap", function(param) {
+        console.log("iOS resultAutoScrap called");
+        _this.resultAutoScrap(param.isSuccess);
+      });
+    }
   },
   methods: {
     sendPush: function() {
@@ -143,9 +152,9 @@ export default {
       }
     },
     //스크래핑 완료 (모바일에서 호출)
-    resultAutoScrap: function(isSucccess) {
-      console.log("resultAutoScrap called : ", isSucccess);
-      if (isSucccess == "false") {
+    resultAutoScrap: function(isSuccess) {
+      console.log("resultAutoScrap called : ", isSuccess);
+      if (isSuccess == "false") {
         this.isScrapSuccess = false;
       }
       this.isFcScrapDone = true;

@@ -122,19 +122,19 @@ public class KcbManagerImpl implements KcbManager {
 
         if(!"REAL".equals(profile)) {
 			logger.info("continue");
-			info.setYn_craw_test("Y");
-			info.setNoPerson(person.getNo_person());
-			info.setNmCust(person.getNm_person());
-			info.setNmIf("600420");
-			info.setCd_regist("09");	//01 신규, 09 URL
-			info.setBgn(person.getBgn());
-			info.setDi(person.getKcb_di());
-			info.setHp(person.getHp());
-			ReturnClass returnClass = urlCrawling(info);
-			info.setYn_craw_test("Y");
-			returnClass = parseCrawling(info);
-			debtManager.debtPdocRun(person.getNo_person());
-			cd_result = returnClass.getCd_result();
+//			info.setYn_craw_test("Y");
+//			info.setNoPerson(person.getNo_person());
+//			info.setNmCust(person.getNm_person());
+//			info.setNmIf("600420");
+//			info.setCd_regist("09");	//01 신규, 09 URL
+//			info.setBgn(person.getBgn());
+//			info.setDi(person.getKcb_di());
+//			info.setHp(person.getHp());
+//			ReturnClass returnClass = urlCrawling(info);
+//			info.setYn_craw_test("Y");
+//			returnClass = parseCrawling(info);
+//			debtManager.debtPdocRun(person.getNo_person());
+//			cd_result = returnClass.getCd_result();
 		} else {
 			
 			try {

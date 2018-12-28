@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="graph-wrapper mt30" v-if="!isNoData">
       <chartjs-bar v-if="!isNone" :labels="mylabels" :datasets="mydatasets" :option="myoption" :bind="true">
       </chartjs-bar>
@@ -37,6 +37,7 @@ export default {
   name: "ConsumeAnalyze",
   data() {
     return {
+      seen: false,
       isNone: true,
       mylabels: ["0", "0", "0"],
       mydatasets: [
@@ -112,7 +113,7 @@ export default {
     this.$store.state.header.type = "sub";
     this.$store.state.title = this.$route.query.contents + " 이력 상세";
     this.createDefaultLabel();
-    this.listConsumeAnalyze();
+    // this.listConsumeAnalyze();
   },
   beforeMount() {},
   mounted() {},
@@ -132,6 +133,7 @@ export default {
         labelDate.setMonth(labelDate.getMonth() + 1);
         this.$set(this.mylabels, i, Common.formatDate(labelDate, "yyyymm"));
       }
+      this.listConsumeAnalyze();
     },
     listConsumeAnalyze: function() {
       var _this = this;
@@ -164,6 +166,7 @@ export default {
           _this.listConsumeAnalyzeDay = response.data.listConsumeAnalyzeDay;
 
           _this.isNone = false;
+          _this.seen = true;
         });
     },
     formatTime: function(time) {

@@ -47,6 +47,7 @@ public class ConsumeDataVO implements Serializable{
 	private String 	yn_auto;					// 자동등록여부
 	private String	yn_budget_except;			// 예산 제외 여부
 	private String	yn_person_regist;			// 사용자 등록 여부
+	private int		seq_tran;					// 입출금일련번호
 	private String 	id_frt;						// 최초입력아이디
 	private Date 	dt_frt;						// 최초입력시간
 	private String 	id_lst;						// 최종수정아이디
@@ -63,7 +64,8 @@ public class ConsumeDataVO implements Serializable{
 			String mon_installment, String mon_remaining,
 			String yn_pay_installment, String yn_cancel, String yn_delete,
 			String yn_auto, String yn_budget_except, String yn_person_regist,
-			String id_frt, Date dt_frt, String id_lst, Date dt_lst) {
+			int seq_tran, String id_frt, Date dt_frt, String id_lst,
+			Date dt_lst) {
 		this.no_person = no_person;
 		this.seq_consume = seq_consume;
 		this.type_in_out = type_in_out;
@@ -92,12 +94,14 @@ public class ConsumeDataVO implements Serializable{
 		this.yn_auto = yn_auto;
 		this.yn_budget_except = yn_budget_except;
 		this.yn_person_regist = yn_person_regist;
+		this.seq_tran = seq_tran;
 		this.id_frt = id_frt;
 		this.dt_frt = dt_frt;
 		this.id_lst = id_lst;
 		this.dt_lst = dt_lst;
 	}
-	
+
+
 	public String getNo_person() {
 		return no_person;
 	}
@@ -265,6 +269,12 @@ public class ConsumeDataVO implements Serializable{
 	}
 	public void setYn_person_regist(String yn_person_regist) {
 		this.yn_person_regist = yn_person_regist;
+	}
+	public int getSeq_tran() {
+		return seq_tran;
+	}
+	public void setSeq_tran(int seq_tran) {
+		this.seq_tran = seq_tran;
 	}
 	public String getId_frt() {
 		return id_frt;

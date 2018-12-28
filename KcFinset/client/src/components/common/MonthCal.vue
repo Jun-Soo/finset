@@ -3,7 +3,7 @@
     <VueScheduler v-if="isMonth" :events="events" event-display="name" @event-clicked="openDetail" :shareList="shareList" :clickShare="clickShare" :sumData="sumData" :type="type" :settingList="settingList" @curYM="curYM" ref="scheduler" />
 
     <vue-modal name="my-modal" transitionName="fade" theme="width: 90%" :height="'auto'">
-      <EventPop slot="body" :modalDate="modalDate" :incomeList="incomeList" :consumeList="consumeList" :debtList="debtList" :incomeTotal="incomeTotal" :consumeTotal="consumeTotal" :debtTotal="debtTotal" :settingList="settingList" :shareList="shareList" />
+      <EventPop slot="body" :modalDate="modalDate" :incomeList="incomeList" :consumeList="consumeList" :debtList="debtList" :incomeTotal="incomeTotal" :consumeTotal="consumeTotal" :debtTotal="debtTotal" :settingList="settingList" :shareList="shareList" @hideDetail="hideDetail" />
     </vue-modal>
   </div>
 </template>
@@ -225,7 +225,7 @@ export default {
     formatNumber(number) {
       return Common.formatNumber(number);
     },
-    hide() {
+    hideDetail() {
       this.$modals.hide("my-modal");
     },
     clickShare: function(params) {

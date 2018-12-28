@@ -1,7 +1,7 @@
 <template>
   <section v-if="seen">
     <div class="container">
-      <multiselect track-by="text" v-model="orderType" label="text" :preselect-first="true" :options="options" :searchable="false" :allow-empty="false">
+      <multiselect v-model="orderType" :options="options" :title="'조회순'">
       </multiselect>
       <div v-if="orderType.value=='date'">
         <div class="nobox-list" v-for="(each, idx) in detailList" :key="idx">
@@ -70,6 +70,8 @@ export default {
       if (!this.initYN) {
         this.seen = false;
         this.getSettlementDetail();
+      } else {
+        this.orderType = this.options[0];
       }
     }
   },

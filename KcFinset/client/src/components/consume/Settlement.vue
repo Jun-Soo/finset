@@ -49,10 +49,10 @@
     </div>
     <div class="box-list list02 noMG">
       <div class="select pb20">
-        <multiselect v-model="listType" label="text" :title="'종류별'" :preselect-first="true" :options="type1">
+        <multiselect class="multiselect-basic" v-model="listType" label="text" :title="'종류별'" :preselect-first="true" :options="type1">
         </multiselect>
         <p></p>
-        <multiselect v-model="orderType" label="text" :title="'조회순'" :preselect-first="true" :options="type2">
+        <multiselect class="multiselect-basic" v-model="orderType" label="text" :title="'조회순'" :preselect-first="true" :options="type2">
         </multiselect>
       </div>
 

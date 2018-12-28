@@ -277,6 +277,12 @@ export default {
           this.filterShareList();
         localStorage.setItem("no_card", idx.no_card);
         localStorage.setItem("nm_card", idx.nm_card);
+        console.log(
+          "localStorageSetItem=> no_card: " +
+            idx.no_card +
+            " nm_card : " +
+            idx.nm_card
+        );
       }
       localStorage.setItem("shareList", this.shareList);
       this.$router.push("/consume/consumeIncomeStats" + param);

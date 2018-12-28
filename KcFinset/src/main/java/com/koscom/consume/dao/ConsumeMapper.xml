@@ -2568,7 +2568,8 @@
 				MM.DT_TRD,
 				MM.TM_TRD,
 				MM.NM_CARD, 
-				MM.NO_CARD, 
+				MM.NO_CARD,
+				MM.CD_CLASS, 
 				MM.NM_CLASS, 
 				MM.CONTENTS, 
 				MM.AMT_IN_OUT,
@@ -2587,6 +2588,7 @@
 						,CI.DT_TRD
 						,CI.TM_TRD
 						,FI.NM_FC
+						,PCCI.CD_CLASS
 						,PCCI.NM_CLASS
 						,PCCI.NM_TYPE
 						,CI.CONTENTS

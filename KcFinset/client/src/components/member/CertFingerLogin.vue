@@ -5,7 +5,6 @@
     <div class="cert-finger" aria-readonly="true">
       <div class="wrap">
         <p class="text">지문을 입력해 주세요.</p>
-        <!-- <p class="warn" id="err_message">안뇽</p> -->
         <p class="warn" id="err_message" v-if="cntFailFinger> 0">{{ errMsg }}</p>
       </div>
       <div class="svg">

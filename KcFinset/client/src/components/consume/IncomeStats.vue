@@ -82,7 +82,6 @@ export default {
   },
   created() {
     this.dataSet(this.$route.query);
-    this.listConsumeShareInfo();
   },
   beforeMount() {},
   mounted() {},
@@ -181,9 +180,10 @@ export default {
       } else {
         cFrm.append("no_card", localStorage.getItem("no_card"));
         cFrm.append("contents", localStorage.getItem("nm_card"));
-        localStorage.removeItem("no_card", idx.no_card);
-        localStorage.removeItem("nm_card", idx.nm_card);
+        localStorage.removeItem("no_card");
+        localStorage.removeItem("nm_card");
       }
+      this.listConsumeShareInfo();
     },
     splitPersonList: function(str) {
       return str.split(",");

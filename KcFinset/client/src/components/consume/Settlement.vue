@@ -61,8 +61,8 @@
           <div class="flex">
 
             <p class="key" v-if="listType.value=='category'"><img :src="getConsumeIconSrc(item.type_in_out, item.cd_class)" width="15px" class="mr5" alt="" />{{item.nm_class}} <em>({{item.grade}})</em></p>
-            <p class="key" v-else-if="listType.value=='store'"><img :src="getConsumeIconSrc(item.type_in_out, item.cd_class)" width="15px" class="mr5" alt="" />{{item.contents}} <em>({{item.grade}})</em></p>
-            <p class="key" v-else-if="listType.value=='means'"><img :src="getConsumeIconSrc(item.type_in_out, item.cd_class)" width="15px" class="mr5" alt="" />{{item.nm_card}} <em>({{item.grade}})</em></p>
+            <p class="key" v-else-if="listType.value=='store'">{{item.contents}} <em>({{item.grade}})</em></p>
+            <p class="key" v-else-if="listType.value=='means'">{{item.nm_card}} <em>({{item.grade}})</em></p>
             <p class="number">{{item.amt_in_out}}<em>원</em></p>
           </div>
           <div class="bar">

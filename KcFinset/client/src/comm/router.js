@@ -225,6 +225,7 @@ import TemplateChartSingleLine2 from '@/components/template/ChartSingleLine2'
 import TemplateChartMultipleBar from '@/components/template/ChartMultipleBar'
 
 import Store from '@/comm/store'
+import { debug } from 'util';
 Vue.use(Router)
 
 export const routes = [{
@@ -1891,8 +1892,9 @@ router.beforeEach((to, from, next) => {
     const hp = localStorage.getItem('hp')
     if (to.meta.allowPath) {
       if (to.meta.requiresAuth) {
-        if (to.meta.backCasePath && !Store.state.header.backPath) Store.state.header.backPath = from.fullPath
-        if (Store.state.header.type === 'main') Store.state.header.backPath = ''
+        if (to.meta.backCasePath && !Store.state.header.fromPath) {
+          Store.state.header.fromPath = from.fullPath
+        }
 
         const accessToken = localStorage.getItem('accessToken')
         if (!accessToken) {

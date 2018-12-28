@@ -118,7 +118,7 @@ export default {
       $(".gnb-wrap").removeClass("on");
       $("body").removeClass("not-scroll");
       if (this.$store.state.header.type === "sub" && back) {
-        this.$store.state.header.backPath = back;
+        this.$store.state.header.fromPath = back;
       }
 
       this.$router.push(page);

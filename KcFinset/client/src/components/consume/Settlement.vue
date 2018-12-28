@@ -169,15 +169,19 @@ export default {
       this.getChartList();
     },
     listType: function() {
-      // if (!this.initYN) {
-      // console.log(this.listType.value);
-      this.getRangeList();
-      // }
+      if (!this.initYN) {
+        console.log(this.listType.value);
+        this.getRangeList();
+      } else {
+        this.listType = this.type1[0];
+      }
     },
     orderType: function() {
       if (!this.initYN) {
         // console.log(this.orderType.value);
         this.getRangeList();
+      } else {
+        this.orderType = this.type2[0];
       }
     },
     chartList: function() {

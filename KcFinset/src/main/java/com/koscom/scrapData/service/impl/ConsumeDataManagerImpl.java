@@ -380,14 +380,20 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 						String nm_biz = null;
 						String cd_consume_class = cd_class + cd_type;
 						String contents = "";
-						if(doc1 == null || doc1.equals("")) {
+						
+						if(doc1 == null || doc1.equals("")) { //doc1 값이 없을 때
 							contents = doc2;
-							if(doc2.indexOf("급여") > 0) {
+							if(doc2.indexOf("급여") > -1) {
 								listSeqTranIncome.add(seq_tran);
 							}
-						} else {
+						} else if(doc2 == null || doc2.equals("")){ //doc2 값이 없을 때
 							contents = doc1;
-							if(doc1.indexOf("급여") > 0) {
+							if(doc1.indexOf("급여") > -1) {
+								listSeqTranIncome.add(seq_tran);
+							}
+						} else { // doc1,2 둘 다 값이 있을 때
+							contents = doc1;
+							if((doc1.indexOf("급여")>-1)||(doc2.indexOf("급여")>-1)) {
 								listSeqTranIncome.add(seq_tran);
 							}
 						}

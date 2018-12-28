@@ -82,7 +82,6 @@ export default {
     this.$store.state.title = "지문인증";
     // window.resultFingerPrint = this.resultFingerPrint;
     console.log(this.$store.state.user.cntFailFinger);
-    // this.$toast.center("created");
     this.errMsg =
       "지문인증을 " + this.cntFailFinger + "회 실패한 이력이 있습니다.";
   },
@@ -111,14 +110,6 @@ export default {
     } else {
       this.$router.push("/member/certCodeLogin");
     }
-    // if (this.$store.state.ynReload == "Y") {
-    //   if (Constant.userAgent == "Android") {
-    //     window.Android.closeWebView();
-    //   } else if (Constant.userAgent == "iOS") {
-    //     Jockey.send("closeWebView");
-    //   }
-    //   return false;
-    // }
   },
   beforeUpdate() {},
   updated() {},
@@ -158,13 +149,6 @@ export default {
             } else if (Constant.userAgent == "Android") {
               window.Android.setNoPerson(_this.username, _this.hp);
             }
-            // _this.fingerSVG = new Vivus("my-svg", {
-            //   type: "delayed",
-            //   duration: 100,
-            //   start: "manual",
-            //   animTimingFunction: Vivus.EASE
-            // });
-            // _this.fingerSVG.reset().play();
             _this.$store.state.user.cntFailFinger = 0;
             _this.$store.state.user.cntFailPwd = 0;
             _this.$store.state.user.authToken = null;
@@ -172,12 +156,6 @@ export default {
             _this.$store.commit("LOGIN", response.data);
             _this.changeLoginDB();
             _this.chkYNagreement();
-
-            if (_this.$store.state.linkUrl) {
-              _this.$router.push(_this.$store.state.linkUrl);
-            } else {
-              _this.$router.push("/main");
-            }
           } else {
             _this.$store.state.isLoading = false;
             // this.$toast.center(ko.messages.loginErr);
@@ -199,6 +177,10 @@ export default {
         if (result == 0) {
           _this.$toast.center("약관 변경으로 재동의가 필요합니다.");
           setTimeout(_this.$router.push("/member/certStep1"), 1000);
+        } else if (_this.$store.state.linkUrl) {
+          _this.$router.push(_this.$store.state.linkUrl);
+        } else {
+          _this.$router.push("/main");
         }
       });
     },
@@ -239,7 +221,6 @@ export default {
      **/
     resultFingerPrint: function(result) {
       var _this = this;
-      this.$toast.center(result);
       if (result == true || result == 1) {
         //지문인식 성공
         if (Constant.userAgent == "Android") {

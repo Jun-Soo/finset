@@ -234,12 +234,6 @@ export default {
 
             _this.changeLoginDB();
             _this.chkYNagreement();
-
-            if (_this.$store.state.linkUrl) {
-              _this.$router.push(_this.$store.state.linkUrl);
-            } else {
-              _this.$router.push("/main");
-            }
           } else {
             _this.$store.state.isLoading = false;
             _this.initClassPass();
@@ -277,8 +271,14 @@ export default {
       _this.$http.get(url).then(response => {
         var result = response.data.PersonAgreeHist;
         if (result == 0) {
+          //약관DB에 데이터가 없을 경우
           _this.$toast.center("약관 변경으로 재동의가 필요합니다.");
           setTimeout(_this.$router.push("/member/certStep1"), 1000);
+        } else if (_this.$store.state.linkUrl) {
+          // push 클릭후 들어왔을 경우
+          _this.$router.push(_this.$store.state.linkUrl);
+        } else {
+          _this.$router.push("/main");
         }
       });
     },

@@ -272,6 +272,7 @@ export default {
         var result = response.data.PersonAgreeHist;
         if (result == 0) {
           //약관DB에 데이터가 없을 경우
+          _this.$store.state.isLoading = false;
           _this.$toast.center("약관 변경으로 재동의가 필요합니다.");
           setTimeout(_this.$router.push("/member/certStep1"), 1000);
         } else if (_this.$store.state.linkUrl) {

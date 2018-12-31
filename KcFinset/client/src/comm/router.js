@@ -156,6 +156,10 @@ import AssetsStockShrDetail from '@/components/assets/StockShrDetail'
 import AssetsStockFndDetail from '@/components/assets/StockFndDetail'
 import AssetsEtcMain from '@/components/assets/etcMain'
 import AssetsDirInput from '@/components/assets/DirInput'
+import AssetsStockAnalysis from '@/components/assets/StockAnalysis'
+import AssetsStockSpcfAnls from '@/components/assets/StockSpcfAnls'
+import AssetsStockIvtmBhvr from '@/components/assets/StockIvtmBhvr'
+import AssetsStockGoalSet from '@/components/assets/StockGoalSet'
 
 import MypageHome from '@/components/mypage/Home'
 // import MypageMain from '@/components/mypage/Main'
@@ -1113,6 +1117,42 @@ export const routes = [{
     meta: {
       allowPath: true,
       requiresAuth: true
+    }
+  },
+  {
+    path: 'stockAnalysis',
+    alias: '/stockAnalysis',
+    component: AssetsStockAnalysis,
+    meta: {
+      allowPath: true
+      // requiresAuth: true
+    }
+  },
+  {
+    path: 'stockSpcfAnls',
+    alias: '/stockSpcfAnls',
+    component: AssetsStockSpcfAnls,
+    meta: {
+      allowPath: true
+      // requiresAuth: true
+    }
+  },
+  {
+    path: 'stockIvtmBhvr',
+    alias: '/stockIvtmBhvr',
+    component: AssetsStockIvtmBhvr,
+    meta: {
+      allowPath: true
+      // requiresAuth: true
+    }
+  },
+  {
+    path: 'stockGoalSet',
+    alias: '/stockGoalSet',
+    component: AssetsStockGoalSet,
+    meta: {
+      allowPath: true
+      // requiresAuth: true
     }
   }
   ]

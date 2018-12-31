@@ -15,7 +15,7 @@ export default {
       errMsg: ""
     }
   },
-  component: {
+  components: {
   },
   computed: {
   },

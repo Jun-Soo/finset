@@ -21,9 +21,9 @@
           <a @click="clickButton('/etc/faqMain', '/main')">고객센터</a>
           <a @click="clickButton('/mypage/cert', '/main')">인증보안</a>
           <a @click="clickButton('/etc/noticeMain', '/main')">공지/이벤트</a>
-          <a @click="clickButton('/news/main', '/main')">뉴스</a>
-          <a @click="clickButton('/scrap/ctrlFcLink', '/main')">연동관리</a>
-          <a @click="clickButton('/share/main?cd_share=02', '/credit/main')">정보공유관리</a>
+          <a @click="clickButton('/news/main', '/main')">금융뉴스</a>
+          <a @click="clickButton('/scrap/ctrlFcLink', '/main')">금융사연동</a>
+          <a @click="clickButton('/share/main?cd_share=02', '/credit/main')">금융정보공유</a>
           <a @click="clickButton('/common/monthCal', '/main')">금융달력</a>
           <a @click="clickButton('/debt/calc', '/main')">금융계산기</a>
         </div>
@@ -111,8 +111,12 @@ export default {
     },
     clickButton: function(page, back) {
       // GNB Close Event
-      if (page === "/debt/calc") {
-        this.$dialogs.alert("준비중 입니다.", Constant.options);
+      if (
+        page === "/debt/calc" ||
+        page === "/credit/counselMain" ||
+        page === "/assets/stockMain"
+      ) {
+        this.$dialogs.alert("서비스 준비중 입니다.", Constant.options);
         return false;
       }
       $(".gnb-wrap").removeClass("on");

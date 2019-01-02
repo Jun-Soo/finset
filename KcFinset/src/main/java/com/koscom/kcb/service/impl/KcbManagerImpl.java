@@ -122,19 +122,19 @@ public class KcbManagerImpl implements KcbManager {
 
         if(!"REAL".equals(profile)) {
 			logger.info("continue");
-			info.setYn_craw_test("Y");
-			info.setNoPerson(person.getNo_person());
-			info.setNmCust(person.getNm_person());
-			info.setNmIf("600420");
-			info.setCd_regist("09");	//01 신규, 09 URL
-			info.setBgn(person.getBgn());
-			info.setDi(person.getKcb_di());
-			info.setHp(person.getHp());
-			ReturnClass returnClass = urlCrawling(info);
-			info.setYn_craw_test("Y");
-			returnClass = parseCrawling(info);
-			debtManager.debtPdocRun(person.getNo_person());
-			cd_result = returnClass.getCd_result();
+//			info.setYn_craw_test("Y");
+//			info.setNoPerson(person.getNo_person());
+//			info.setNmCust(person.getNm_person());
+//			info.setNmIf("600420");
+//			info.setCd_regist("09");	//01 신규, 09 URL
+//			info.setBgn(person.getBgn());
+//			info.setDi(person.getKcb_di());
+//			info.setHp(person.getHp());
+//			ReturnClass returnClass = urlCrawling(info);
+//			info.setYn_craw_test("Y");
+//			returnClass = parseCrawling(info);
+//			debtManager.debtPdocRun(person.getNo_person());
+//			cd_result = returnClass.getCd_result();
 		} else {
 			
 			try {
@@ -207,9 +207,9 @@ public class KcbManagerImpl implements KcbManager {
 
 			HashMap<String, String> clobMap = creditMapper.getKcbInfoCLOB(schMap);
 			// DB에 기존 요청 내역이 있을 경우 정상 처리
-			if( clobMap == null)	{
-				logger.error("기존 요청 한 내역이 있습니다.");
-				return new ReturnClass(Constant.SUCCESS, "기존 요청 한 내역이 있습니다.");
+			if( clobMap != null)	{
+				logger.info("당일 요청한 내역이 있습니다.");
+				return new ReturnClass(Constant.SUCCESS, "당일 요청한 내역이 있습니다.");
 			}
 			
 			//신용리포트 조회 및 데이터 확인용 조회
@@ -914,7 +914,7 @@ public class KcbManagerImpl implements KcbManager {
 					kcbCardInfo.put("ymd_open",	 	(StringUtil.regExpFindNum(divPrdList.get(0).text())));	//개설일자
 					kcbCardInfo.put("amt_limit", 	(StringUtil.addAmt(divPrdList.get(1).text())));			//총한도
 					kcbCardInfo.put("amt_ca_limit", (StringUtil.addAmt(divPrdList.get(2).text())));			//단기카드대출 한도
-	
+
 					cardOpenList.add(kcbCardInfo);
 					
 					//상단 내용을 기준으로 KCB_CARD_INFO에도 집어넣기

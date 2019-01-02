@@ -130,17 +130,19 @@ export default {
   created() {
     let _this = this;
     let frm = new FormData();
-
+    if (_this.$store.state.isLoggedIn) {
+      _this.$store.state.header.type = "noHeader";
+    }
     _this.$store.state.title = "약관동의";
     frm.append("code_value", "1.0");
     frm.append("code_group", "OPENAPI_TERMS");
     _this.$http.post("/m/login/getAgreeTerm.json", frm).then(response => {
       //정상, 에러 처리 필요
-      if(response.data.result =="1"){
+      if (response.data.result == "1") {
         _this.term_db = response.data.etc;
         _this.nm_code = response.data.nm_code;
-      }else { //openAPI 못불러옴
-
+      } else {
+        //openAPI 못불러옴
       }
     });
   },
@@ -164,6 +166,7 @@ export default {
         _this.$store.state.user.isEventPush = true;
       }
     });
+    $("body").removeClass("not-scroll");
   },
   beforeUpdate() {},
   updated() {
@@ -198,8 +201,22 @@ export default {
     },
     confirmedTerms: function() {
       var _this = this;
+      var url = "/m/person/createPersonAgreeHist.json";
       if (_this.chkBox1 && _this.chkBox2) {
-        _this.$router.push("/member/certStep2");
+        console.log(_this.$store.state.isLoggedIn);
+        if (_this.$store.state.isLoggedIn) {
+          var tJson = {
+            no_person: _this.$store.state.user.noPerson,
+            marketingAgree: _this.chkBox3
+          };
+          _this.$http.get(url, { params: tJson }).then(response => {
+            var result = response.data.result;
+            _this.$router.push("/main");
+            $(document).scrollTop(0);
+          });
+        } else {
+          _this.$router.push("/member/certStep2");
+        }
       }
     },
     openPop: function(gubun) {

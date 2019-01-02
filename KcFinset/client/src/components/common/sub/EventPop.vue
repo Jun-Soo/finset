@@ -2,7 +2,7 @@
   <div id="modal-con" class="modal-con" style="display:block;">
     <div class="top">
       {{modalDate}}
-      <button class="modal-close"></button>
+      <button class="modal-close" @click="hideDetail"></button>
     </div>
     <div class="cal-con">
       <div class="cal-top">
@@ -125,7 +125,7 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    formatModalDate(date) {
+    formatModalDate: function(date) {
       var mm = date.getMonth() + 1;
       var dd = date.getDate();
 
@@ -140,6 +140,9 @@ export default {
 
       var weekday = weekdays[date.getDay()];
       return mm + "." + dd + ". " + weekday;
+    },
+    hideDetail: function() {
+      this.$emit("hideDetail");
     }
   }
 };

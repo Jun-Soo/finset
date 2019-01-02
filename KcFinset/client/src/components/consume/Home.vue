@@ -2,7 +2,7 @@
   <main>
     <FinsetHeader></FinsetHeader>
     <router-view />
-    <FinsetBottom v-if="isBottom"></FinsetBottom>
+    <FinsetBottom></FinsetBottom>
   </main>
 </template>
 
@@ -13,11 +13,6 @@ import "./../../assets/js/common.js";
 
 export default {
   name: "ConsumeHome",
-  data() {
-    return {
-      isBottom: false
-    };
-  },
   components: {
     FinsetHeader: FinsetHeader,
     FinsetBottom: FinsetBottom

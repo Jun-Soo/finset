@@ -23,10 +23,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.google.gson.Gson;
 import com.koscom.login.service.LoginManager;
 import com.koscom.person.model.PersonActiveHistVO;
+import com.koscom.person.model.PersonAgreeHistVO;
 import com.koscom.person.model.PersonSmsListVO;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
 import com.koscom.util.Constant;
+import com.koscom.util.DateUtil;
 import com.koscom.util.FinsetException;
 import com.koscom.util.LogUtil;
 import com.koscom.util.ReturnClass;
@@ -154,6 +156,9 @@ public class PersonController {
 		} else {
 
 			ReturnClass returnClass = personManager.insertPerson(personVO);
+			String noPerson = personManager.getPersonInfoHp(personVO.getHp()).getNo_person();
+			int result = personManager.createPersonAgreeHist(noPerson, personVO.getYn_eventPush());
+			logger.debug("약관동의 DB insert result : " + result);
 			model.addAttribute("message", returnClass.getMessage());
 			model.addAttribute("result", returnClass.getCd_result());
 
@@ -597,6 +602,55 @@ public class PersonController {
 		String no_person = (String)session.getAttribute("no_person");
 
 		model.addAttribute("connectTime", personManager.getPersonConnectTime(no_person));
+
+		return "jsonView";
+	}
+	
+	/**
+	 * VUE
+     * 기존 회원 약관 동의 여부 확인 
+     * @param request
+     * @param session
+     * @param model
+     * @return String
+     * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/getPersonAgreeHist.json")
+	public String getPersonAgreeHist(HttpServletRequest request,HttpSession session,Model model) throws FinsetException, IOException{
+		
+		String no_person = (String)session.getAttribute("no_person");
+		List<PersonAgreeHistVO> agreeList = personManager.getPersonAgreeHist(no_person);
+		
+		if(agreeList.size() > 0 && agreeList != null ) {
+			model.addAttribute("PersonAgreeHist", agreeList );
+		} else {
+			model.addAttribute("PersonAgreeHist", 0 );
+		}
+
+		return "jsonView";
+	}
+	
+	/**
+	 * VUE
+     * 회원 약관 동의 
+     * @param request
+     * @param session
+     * @param model
+     * @return String
+     * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/createPersonAgreeHist.json")
+	public String createPersonAgreeHist(HttpServletRequest request,HttpSession session,Model model, String no_person, boolean marketingAgree) throws FinsetException, IOException{
+		
+		int result = 0;
+		
+		if(marketingAgree) {
+			result = personManager.createPersonAgreeHist(no_person, "Y");
+		}else {
+			result = personManager.createPersonAgreeHist(no_person, "N");
+		}
+		
+		model.addAttribute("result", result);
 
 		return "jsonView";
 	}

@@ -61,13 +61,21 @@ export default {
   },
   created() {
     window.resultAutoScrap = this.resultAutoScrap;
-    window.saveScrapData = this.saveScrapData;
     window.resultCheckDevicesUUID = this.resultCheckDevicesUUID;
     window.pushUrlLink = this.pushUrlLink;
     window.resultHasCertPassword = this.resultHasCertPassword;
   },
   mounted() {
     this.orderCssFile();
+
+    var _this = this;
+    if (Constant.userAgent == "iOS") {
+      //스크래핑 완료 관련 iOS 함수 등록
+      Jockey.on("resultAutoScrap", function(param) {
+        console.log("iOS resultAutoScrap called");
+        _this.resultAutoScrap(param.isSuccess);
+      });
+    }
   },
   methods: {
     sendPush: function() {
@@ -144,9 +152,9 @@ export default {
       }
     },
     //스크래핑 완료 (모바일에서 호출)
-    resultAutoScrap: function(isSucccess) {
-      console.log("resultAutoScrap called : ", isSucccess);
-      if (isSucccess == "false") {
+    resultAutoScrap: function(isSuccess) {
+      console.log("resultAutoScrap called : ", isSuccess);
+      if (isSuccess == "false") {
         this.isScrapSuccess = false;
       }
       this.isFcScrapDone = true;
@@ -157,13 +165,15 @@ export default {
         this.isFcScrapDone
       );
       if (this.isStScrapDone && this.isFcScrapDone) {
-        this.hideProgressBanner();
+        this.saveScrapData();
         if (!this.isScrapSuccess) {
           this.sendPush();
         }
       }
     },
+    // 스크래핑 데이터 가공 및 저장
     saveScrapData: function() {
+      var _this = this;
       this.$http
         .post("/m/scrapData/saveScrapData.json")
         .then(function(response) {
@@ -171,6 +181,7 @@ export default {
           console.log(
             "응답 코드:" + result.cd_err + "/응답 메세지:" + result.msg_err
           );
+          _this.hideProgressBanner();
         });
     },
     // UUID 체크
@@ -211,7 +222,7 @@ export default {
             _this.isFcScrapDone
           );
           if (_this.isStScrapDone && _this.isFcScrapDone) {
-            _this.hideProgressBanner();
+            _this.saveScrapData();
             if (!_this.isScrapSuccess) {
               _this.sendPush();
             }

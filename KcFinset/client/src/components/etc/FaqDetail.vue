@@ -10,7 +10,7 @@
       <p class="title">{{nm_board}}</p>
       <div v-if="pagedList.length == 0" class="nodata">등록 내역이 없습니다</div>
       <div v-else class="list" v-for="page in pagedList" :key="page.board_idx">
-        <p><a v-html="page.title"></a></p>
+        <p><a href="#" v-html="page.title"></a></p>
         <p v-html="page.content"></p>
       </div>
     </div>
@@ -18,7 +18,7 @@
     <div class="faq-list" v-else>
       <div v-if="pagedList.length == 0" class="nodata">검색 내역이 없습니다</div>
       <div v-else class="list" v-for="page in pagedList" :key="page.board_idx">
-        <p><a v-html="page.title"></a></p>
+        <p><a href="#" v-html="page.title"></a></p>
         <p v-html="page.content"></p>
       </div>
     </div>

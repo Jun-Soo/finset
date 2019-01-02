@@ -293,6 +293,13 @@ export default {
       return ''
     }
   },
+  formatDtObjFromStr: function (date) {
+    if (typeof date !== 'string') {
+      return date
+    } else {
+      return new Date(date.substring(0, 4), parseInt(date.substring(4, 6)) - 1, date.substring(6, 8))
+    }
+  },
   getCodeName: function (group, code) {
     var data = {
       'group': group,

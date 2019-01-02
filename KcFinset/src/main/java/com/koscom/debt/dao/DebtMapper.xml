@@ -193,16 +193,17 @@
 
 	<select id="listDebtSharePersonInfo" parameterType="java.lang.String" resultType="com.koscom.domain.PersonInfo">
 		SELECT
-			 OFFER_NO_PERSON AS NO_PERSON
-			,OFFER_NM_PERSON AS NM_PERSON
+			 SI.OFFER_NO_PERSON AS NO_PERSON
+			,PI.NM_PERSON AS NM_PERSON
 			,0 AS PRIORITY
 		FROM
-			SHARE_INFO
+			SHARE_INFO SI, PERSON_INFO PI
 		WHERE
-				REQ_NO_PERSON			= #{no_person, jdbcType=VARCHAR}
-			AND SHARE_STATUS			= '02'
-			AND YN_DEBT_INFO			= 'Y'
-			AND DT_END_OFFER			IS NULL
+				SI.REQ_NO_PERSON		= #{no_person, jdbcType = VARCHAR}
+			AND SI.OFFER_NO_PERSON		= PI.NO_PERSON
+			AND SI.SHARE_STATUS			= '02'
+			AND SI.YN_DEBT_INFO			= 'Y'
+			AND SI.DT_END_OFFER			IS NULL
 		UNION(
 			SELECT
 				 NO_PERSON
@@ -211,10 +212,10 @@
 			FROM
 				PERSON_INFO
 			WHERE
-				NO_PERSON = #{no_person, jdbcType=VARCHAR}
+				NO_PERSON = #{no_person, jdbcType = VARCHAR}
 		)
 		ORDER BY
-			PRIORITY DESC
+		PRIORITY DESC
 	</select>
 	<select id="getDebtSummary" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtSummaryVO">
 		SELECT MAX(DT_STD)							AS DT_STD
@@ -984,16 +985,17 @@
 	</insert>
 	<select id="listCalendarShareInfo" parameterType="java.lang.String" resultType="com.koscom.domain.PersonInfo">
 		SELECT
-			 OFFER_NO_PERSON AS NO_PERSON
-			,OFFER_NM_PERSON AS NM_PERSON
+			 SI.OFFER_NO_PERSON AS NO_PERSON
+			,PI.NM_PERSON AS NM_PERSON
 			,0 AS PRIORITY
 		FROM
-			SHARE_INFO
+			SHARE_INFO SI, PERSON_INFO PI
 		WHERE
-				REQ_NO_PERSON			= #{no_person, jdbcType=VARCHAR}
-			AND SHARE_STATUS			= '02'
-			AND (YN_DEBT_INFO = 'Y' OR YN_INCOME_INFO = 'Y')
-			AND DT_END_OFFER			IS NULL
+				SI.REQ_NO_PERSON		= #{no_person, jdbcType=VARCHAR}
+			AND SI.OFFER_NO_PERSON		= PI.NO_PERSON
+			AND SI.SHARE_STATUS			= '02'
+			AND (SI.YN_DEBT_INFO = 'Y' OR YN_INCOME_INFO = 'Y')
+			AND SI.DT_END_OFFER			IS NULL
 		UNION(
 			SELECT
 				 NO_PERSON

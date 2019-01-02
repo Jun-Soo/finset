@@ -49,8 +49,7 @@
             <li>
               <p class="key">날짜</p>
               <p>
-                <!-- <datepicker v-model="consumeVO.dt_trd" ref="datepicker" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDateDot" class="div-date" :disabled="chkReadonly"></datepicker> -->
-                <datepicker v-model="consumeVO.dt_trd" ref="datepicker" :language="ko" :format="formatDateDot" class="div-date" :disabled="chkReadonly"></datepicker>
+                <datepicker v-model="consumeVO.dt_trd" ref="datepicker" :language="ko" :format="Common.formatDateDot" class="div-date" :disabled="chkReadonly"></datepicker>
                 <button class="cal" @click="openDatepicker"></button>
               </p>
             </li>
@@ -69,7 +68,6 @@
         </div>
 
         <div v-if="isNew&&isMine&&chkNecessary" class="btn-wrap float">
-          <!-- <div class="btn-wrap float"> -->
           <a @click="clickSave" class="solid blue box">저장</a>
         </div>
         <div v-if="!isNew&&isMine&&chkNecessary" class="btn-wrap col2">
@@ -125,7 +123,7 @@
         </div>
         <div v-else class="nobox-list">
           <div v-for="(subList, index) in listTrans" :key="index">
-            <p class="date">{{formatDateDot(listTrans[index][0].dt_trd,"mmdd")}}</p>
+            <p class="date">{{Common.formatDateDot(listTrans[index][0].dt_trd,"mmdd")}}</p>
             <div v-for="(vo, subIndex) in subList" :key="subIndex" @click="selectTrans(index, subIndex)" class="item" :class="{'disabled':listRegSeqTran.filter(seq => seq == vo.seq_tran).length > 0}">
               <div class="flex">
                 <p>{{vo.contents}}</p>
@@ -154,41 +152,43 @@ export default {
   name: "ConsumeConsumeDetail",
   data() {
     return {
-      seen: false,
-      Common: Common,
-      curTab: "02",
-      consumeCategory: {},
-      orgClass: "",
-      orgType: "",
-      curClass: "",
-      curType: "",
+      seen: false, // 화면 표출 여부
+      Common: Common, // 공통
+      curTab: "02", // 탭 코드(01: 수입, 02: 지출)
+      consumeCategory: {}, // 분류, 항목
+      orgClass: "", // 기존 분류
+      orgType: "", // 기존 항목
+      curClass: "", // 현재 컨트롤 되는 분류
+      curType: "", // 현재 컨트롤 되는 항목
+      // 소비지출 데이터
       consumeVO: {
         dt_trd: new Date()
       },
-      bannerData: "",
-      isNew: true,
-      isMine: true,
-      isPersonRegist: true,
-      isTran: false,
-      isShowBanner: false,
-      isShowCategory: false,
-      isShowTrans: false,
-      listRegSeqTran: [],
-      listTrans: {},
-      ko: ko,
-      dt_trans: "",
+      isNew: true, // 신규 여부(아니면 수정)
+      isMine: true, // 본인 데이터 여부(아니면 공유된 사용자)
+      isPersonRegist: true, // 회원 등록 여부(현금으로 등록한 것만)
+      isTran: false, // 자산에서 넘어온 데이터 여부
+      isShowCategory: false, // 하단 카테고리 팝업 표시 여부
+      isShowTrans: false, // 입출금내역 팝업 표시 여부
+      listRegSeqTran: [], // 기등록된 입출금 내역 리스트
+      listTrans: {}, // 입출금 내역 데이터
+      ko: ko, // 데이트피커 한글
+      // dt_trans: "", //
+      // 소비 수단 옵션(멀티셀렉트)
       meansConsumeOption: [
         { text: "현금", value: "02", means_consume: "02" },
         { text: "입출금계좌", value: "04", means_consume: "04" }
       ],
-      isAuto: false,
-      nmBanner: ""
+      isAuto: false, // 자동 등록 여부
+      nmBanner: "", // 배너명
+      bannerData: "" // 이번 달에 contents에 해당하는 소비 지출 내역 수
     };
   },
   components: {
     datepicker
   },
   computed: {
+    // 카테고리에 들어갈 텍스트
     categoryText: function() {
       if ((this.consumeVO.cd_class || "") == "") {
         return "카테고리를 선택하세요";
@@ -200,6 +200,7 @@ export default {
         }
       }
     },
+    // 금액, 결제처(출처), 날짜를 readonly 로 만들어 줄 조건
     chkReadonly: function() {
       if (!this.isMine) {
         return true;
@@ -211,6 +212,7 @@ export default {
         return true;
       }
     },
+    // 탭 코드에 따라 다른 텍스트 출력
     meansConsumeText: function() {
       if (this.curTab == "01") {
         return "입금";
@@ -218,6 +220,7 @@ export default {
         return "결제수단";
       }
     },
+    // 탭 코드에 따라 다른 텍스트 출력
     contentsText: function() {
       if (this.curTab == "01") {
         return "출처";
@@ -225,6 +228,7 @@ export default {
         return "결제처";
       }
     },
+    // 하단 버튼 표시 여부
     chkNecessary: function() {
       if (
         (this.consumeVO.means_consume || "") != "" &&
@@ -239,6 +243,7 @@ export default {
     }
   },
   watch: {
+    // 입출금내역 모달 표출 여부
     isShowTrans: function(key) {
       if (key == true) {
         this.$modals.show("transModal");
@@ -252,7 +257,7 @@ export default {
     this.$store.state.title = "정보수정";
   },
   created() {
-    this.consumeVO.dt_trd = new Date();
+    // ko에 ymd 를 true 로 바꿔주어야 yyyymmdd 의 형식으로 나옴
     this.ko.ymd = true;
     this.isNew = (this.$route.query.seq_consume || "") == "";
     this.isTran = (this.$route.query.seq_tran || "") != "";
@@ -283,13 +288,7 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    //데이터 포멧 부분
-    formatNumber: function(number) {
-      return Common.formatNumber(number);
-    },
-    formatDateDot: function(date, pattern) {
-      return Common.formatDateDot(date, pattern);
-    },
+    // ---------------------데이터 포멧---------------------
     formatNmCard: function(nm_card) {
       if ((nm_card || "") == "") {
         return "-";
@@ -297,7 +296,9 @@ export default {
         return nm_card.substr(0, 25);
       }
     },
-    //화면 컨트롤 부분
+    // ---------------------//데이터 포멧---------------------
+    // ---------------------화면 컨트롤---------------------
+    // 탭 클릭
     clickTab: function(key) {
       if (!this.isNew || !this.isPersonRegist || this.curTab == key) {
         return;
@@ -305,6 +306,7 @@ export default {
       this.curTab = key;
       this.setDefault();
     },
+    // 카테고리 팝업창에서 카테고리 선택
     clickCategory: function(code, key) {
       switch (key) {
         case "class":
@@ -318,6 +320,7 @@ export default {
           break;
       }
     },
+    // 카테고리 팝업창을 확인 버튼이 아니라 그냥 닫을 시
     closeCategory: function() {
       if (!this.isNew) {
         this.isShowCategory = false;
@@ -360,6 +363,7 @@ export default {
         }
       }
     },
+    // 카테고리 팝업 창 확인 버튼 클릭 시
     clickConfirm: function() {
       if (this.curTab == "02") {
         this.$set(this.consumeVO, "cd_class", this.curClass);
@@ -390,6 +394,7 @@ export default {
         this.isShowCategory = false;
       }
     },
+    // 저장 버튼 클릭 시
     clickSave: function() {
       this.$validator.validateAll().then(res => {
         if (res) {
@@ -403,6 +408,7 @@ export default {
         }
       });
     },
+    // 입출금 내역 선택 시
     selectTrans: function(index, subIndex) {
       // 기등록된 입출금 내역 확인
       var _this = this;
@@ -418,16 +424,16 @@ export default {
           ? "해당 항목과 동일한 입금을 수입으로 등록할까요?"
           : "해당 항목과 동일한 출금을 지출로 등록할까요?";
       this.$dialogs.confirm(transText, Constant.options).then(res => {
-        // console.log(res); // {ok: true|false|undefined}
         if (res.ok) {
           _this.isAuto = true;
         } else {
-          // this.$dialogs.alert("취소를 선택했습니다.", Constant.options);
+          _this.isAuto = false;
         }
       });
       var transVO = this.listTrans[index][subIndex];
       this.makeConsumeVOByTran(transVO);
     },
+    // 삭제 버튼 클릭 시
     clickDelete: function() {
       var _this = this;
       var text = "정말로 삭제하시겠습니까?";
@@ -435,14 +441,12 @@ export default {
         text += "\n\n동일 할부 내역도\n같이 삭제됩니다.";
       }
       this.$dialogs.confirm(text, Constant.options).then(res => {
-        // console.log(res); // {ok: true|false|undefined}
         if (res.ok) {
           _this.deleteConsume();
-        } else {
-          // this.$dialogs.alert("취소를 선택했습니다.", Constant.options);
         }
       });
     },
+    // 결제 수단(입금) 선택 시
     selectMeans: function(meansOption) {
       this.setDefault();
       if (meansOption.means_consume != "02") {
@@ -452,26 +456,42 @@ export default {
         this.isPersonRegist = true;
       }
     },
+    // 팝업창 띄우기
     showCategory: function() {
       this.isShowCategory = true;
     },
+    // 입출금내역 모달 닫기
     closeTransModal: function() {
       this.setDefault();
       this.isShowTrans = false;
     },
+    // 날짜 데이트피커 열기
     openDatepicker: function() {
       this.$refs.datepicker.showCalendar();
     },
+    // 카테고리 팝업창 내부 세팅 버튼 킬릭 시
     clickSetting: function(event) {
       event.stopPropagation();
-      // this.$router.push("/consume/setting");
       if (this.curTab == "01") {
         this.$router.push("/consume/incomeClass");
       } else {
         this.$router.push("/consume/consumeClass");
       }
     },
-    //데이터 이동부분
+    // 이력 상세 이동
+    goAnalyze: function() {
+      this.$router.push({
+        path: "/consume/analyze",
+        query: {
+          type_in_out: this.curTab,
+          contents: this.consumeVO.contents,
+          cd_fc: this.consumeVO.cd_fc
+        }
+      });
+    },
+    // ---------------------//화면 컨트롤---------------------
+    // ---------------------데이터 이동---------------------
+    // 소비지출 세부내역 조회
     getConsumeInfo: function() {
       var _this = this;
       this.$http
@@ -486,6 +506,7 @@ export default {
           _this.allocateConsume(consumeVO);
         });
     },
+    // 소비 분류, 항목 조회
     listPersonConsumeClassInfo: function() {
       var _this = this;
       this.$http
@@ -527,6 +548,7 @@ export default {
           }
         });
     },
+    // 수입 분류 조회
     listPersonIncomeClassInfo: function() {
       var _this = this;
       this.$http
@@ -551,6 +573,7 @@ export default {
           }
         });
     },
+    // 소비지출 데이터 생성
     createConsume: function() {
       this.consumeVO.type_in_out = this.curTab;
 
@@ -615,6 +638,7 @@ export default {
           _this.$router.go(-1);
         });
     },
+    // 소비 지출 데이터 수정
     modifyConsume: function() {
       var _this = this;
 
@@ -648,6 +672,7 @@ export default {
           _this.$router.go(-1);
         });
     },
+    // 입출금계좌 조회
     listPersonTransDetail: function() {
       //우선적으로 미리 등록된 입출금내역 시퀀스를 가져와야 한다
       var _this = this;
@@ -700,6 +725,7 @@ export default {
             });
         });
     },
+    // 소비 지출 삭제처리
     deleteConsume: function() {
       var _this = this;
 
@@ -713,6 +739,7 @@ export default {
           _this.$router.go(-1);
         });
     },
+    // 배너 데이터 조회
     getBannerData: function() {
       var _this = this;
 
@@ -725,15 +752,11 @@ export default {
         .post("/m/consume/getBannerData.json", formData)
         .then(function(response) {
           var data = response.data.bannerData;
-          if (data == 0) {
-            _this.isShowBanner = false;
-          } else {
-            _this.isShowBanner = true;
-          }
           _this.bannerData = data;
           _this.seen = true;
         });
     },
+    // seq_tran을 통해 소비지출 데이터 조회
     chkTrans: function() {
       var seq_tran = this.$route.query.seq_tran;
       var _this = this;
@@ -754,6 +777,7 @@ export default {
           }
         });
     },
+    // chkTrans에서 조회된 데이터가 없을 때 신규 생성을 위해 입출금내역 조회
     getPersonTransDetail: function() {
       var _this = this;
       this.$http
@@ -768,7 +792,9 @@ export default {
           _this.seen = true;
         });
     },
-    //기타 편의를 위해 함수로 구현한 부분
+    // ---------------------//데이터 이동---------------------
+    // ---------------------기타---------------------
+    // 화면 데이터 초기화
     setDefault: function() {
       this.consumeVO = {
         dt_trd: new Date(),
@@ -776,7 +802,6 @@ export default {
       };
       this.curClass = "";
       this.curType = "";
-      this.dt_trans = "";
       this.listRegSeqTran = [];
       this.listTrans = {};
       if (this.curTab == "01") {
@@ -785,6 +810,7 @@ export default {
         this.listPersonConsumeClassInfo();
       }
     },
+    // 입출금내역 중 표기 될 텍스트 선택
     getTransText: function(vo) {
       var regexp = /^[0-9]*$/;
       if (regexp.test(vo.doc1) || (vo.doc1 || "") == "") {
@@ -797,21 +823,8 @@ export default {
         return vo.doc1;
       }
     },
-    goAnalyze: function() {
-      this.$router.push({
-        path: "/consume/analyze",
-        query: {
-          type_in_out: this.curTab,
-          contents: this.consumeVO.contents,
-          cd_fc: this.consumeVO.cd_fc
-        }
-      });
-    },
+    // 소비지출 데이터를 화면에 표출되는 형식에 맞게 할당
     allocateConsume: function(consumeVO) {
-      consumeVO.dt_trd = new Date(Common.formatDateDot(consumeVO.dt_trd));
-      // consumeVO.amt_in_out = this.chkReadonly
-      //   ? this.formatNumber(consumeVO.amt_in_out)
-      //   : consumeVO.amt_in_out;
       this.meansConsumeOption = [];
       this.meansConsumeOption.push({
         text: consumeVO.nm_card,
@@ -821,6 +834,7 @@ export default {
         text: consumeVO.nm_card,
         value: consumeVO.no_card
       };
+      consumeVO.dt_trd = Common.formatDtObjFromStr(consumeVO.dt_trd);
       this.consumeVO = consumeVO;
 
       if (this.curTab == "02") {
@@ -835,6 +849,7 @@ export default {
       this.nmBanner = consumeVO.contents;
       this.getBannerData();
     },
+    // 입출금 내역을 소비지출 데이터에 맞게 변경
     makeConsumeVOByTran: function(transVO) {
       this.meansConsumeOption = [
         {
@@ -858,7 +873,7 @@ export default {
         parseInt(transVO.amt_dep) + parseInt(transVO.amt_wdrl) + ""
       );
       this.consumeVO.contents = this.getTransText(transVO);
-      this.consumeVO.dt_trd = new Date(Common.formatDateDot(transVO.dt_trd));
+      this.consumeVO.dt_trd = Common.formatDtObjFromStr(transVO.dt_trd);
       this.consumeVO.tm_trd = transVO.tm_trd;
       this.consumeVO.seq_tran = transVO.seq_tran;
 
@@ -867,6 +882,7 @@ export default {
       this.isPersonRegist = false;
       this.isShowTrans = false;
     }
+    // ---------------------//기타---------------------
   }
 };
 </script>

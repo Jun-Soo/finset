@@ -18,10 +18,9 @@
       </p>
       <p>
         <em>제휴 문의</em>
-        <em>finset.@koscom.co.kr</em>
+        <em>finset@koscom.co.kr</em>
       </p>
     </div>
-
   </section>
 </template>
 
@@ -91,6 +90,12 @@ export default {
       _this.$http.get(url).then(response => {
         _this.newest_version = response.data.newest_version;
         var version = _this.newest_version;
+        console.log(
+          "newest_version:" +
+            _this.newest_version +
+            " / curVersion:" +
+            appVersion
+        );
         var versionSplit = version.split("."); //최신버전
         var chkVersionSplit = appVersion.split("."); //현재버전
         for (var i = 0; i < versionSplit.length; i++) {

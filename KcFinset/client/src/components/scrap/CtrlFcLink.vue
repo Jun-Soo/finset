@@ -378,8 +378,8 @@ export default {
         });
         Jockey.send("updateAvaliableLoginScrapInfo", {
           noPerson: no_person,
-          nmPerson: agency,
-          cd_coocon: cd_coocon
+          agency: agency,
+          cdCoocon: cd_coocon
         });
       } else if (Constant.userAgent == "Android") {
         window.Android.updateAvaliableLoginScrapInfo(

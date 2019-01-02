@@ -5,16 +5,17 @@
 <mapper namespace="com.koscom.consume.dao.ConsumeMapper">
 	<select id="listConsumeSharePersonInfo" parameterType="java.lang.String" resultType="com.koscom.domain.PersonInfo">
 		SELECT
-			 OFFER_NO_PERSON AS NO_PERSON
-			,OFFER_NM_PERSON AS NM_PERSON
+			 SI.OFFER_NO_PERSON AS NO_PERSON
+			,PI.NM_PERSON AS NM_PERSON
 			,0 AS PRIORITY
 		FROM
-			SHARE_INFO
+			SHARE_INFO SI, PERSON_INFO PI
 		WHERE
-				REQ_NO_PERSON			= #{no_person, jdbcType=VARCHAR}
-			AND SHARE_STATUS			= '02'
-			AND YN_CONSUME_INFO			= 'Y'
-			AND DT_END_OFFER			IS NULL
+				SI.REQ_NO_PERSON		= #{no_person, jdbcType = VARCHAR}
+			AND SI.OFFER_NO_PERSON		= PI.NO_PERSON
+			AND SI.SHARE_STATUS			= '02'
+			AND SI.YN_CONSUME_INFO		= 'Y'
+			AND SI.DT_END_OFFER			IS NULL
 		UNION(
 			SELECT
 				 NO_PERSON
@@ -23,7 +24,7 @@
 			FROM
 				PERSON_INFO
 			WHERE
-				NO_PERSON = #{no_person, jdbcType=VARCHAR}
+				NO_PERSON = #{no_person, jdbcType = VARCHAR}
 		)
 		ORDER BY
 		PRIORITY DESC
@@ -93,10 +94,11 @@
 	</select>
 	<select id="listConsumeInfoAmt" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.ConsumeVO">
 		SELECT
-			TYPE_IN_OUT, NVL( SUM( AMT_IN_OUT ), 0 ) AS AMT_IN_OUT
+			 TYPE_IN_OUT
+			,NVL( SUM( AMT_IN_OUT ), 0 ) AS AMT_IN_OUT
 		FROM
-			CONSUME_INFO CI,
-			(
+			 CONSUME_INFO CI
+			,(
 				SELECT
 					 YN_INSTALLMENT
 					,CASE
@@ -114,7 +116,7 @@
 					PERSON_SET_INFO
 				WHERE
 					NO_PERSON = #{no_person, jdbcType = VARCHAR}
-			) PSI
+			 ) PSI
 		WHERE
 			NO_PERSON IN
 				<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
@@ -603,7 +605,15 @@
 			NVL( SUM( CI.AMT_IN_OUT ), 0 ) AS AMT_IN_OUT,
 			CI.DT_TRD
 		FROM
-			CONSUME_INFO CI
+			 CONSUME_INFO CI
+			,(
+				SELECT
+					YN_INSTALLMENT
+				FROM
+					PERSON_SET_INFO
+				WHERE
+					NO_PERSON = #{no_person, jdbcType = VARCHAR}
+			 ) PSI
 		WHERE
 			NO_PERSON IN
 				<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
@@ -612,6 +622,14 @@
 			AND SUBSTR(CI.DT_TRD, 0, 6)	= #{ym_trd, jdbcType = VARCHAR}
 			AND CI.YN_CANCEL			= 'N'
 			AND CI.YN_BUDGET_EXCEPT		= 'N'
+		    AND 1 =
+				(
+				CASE WHEN CI.YN_PAY_INSTALLMENT = 'N' THEN 1
+					WHEN PSI.YN_INSTALLMENT = 'N' AND CI.YN_PAY_INSTALLMENT = 'Y' AND CI.MON_REMAINING = '0' THEN 1
+					WHEN PSI.YN_INSTALLMENT = 'Y' AND CI.YN_PAY_INSTALLMENT = 'Y' AND CI.MON_REMAINING != '0' THEN 1
+					ELSE 0
+				END
+				)
 			AND EXISTS (
 				SELECT
 				      1
@@ -681,29 +699,46 @@
 				SELECT
 				      1
 				   FROM
-				      ( SELECT
-				         DISTINCT NO_PERSON AS OFFER_NO_PERSON, MEANS_CONSUME AS CD_TYPE, NO_CARD AS NO_CARD_ACC
-				         FROM
-				            CONSUME_INFO
-				         WHERE
-				            NO_PERSON = #{no_person, jdbcType = VARCHAR}
-				      UNION ALL SELECT
-				            OFFER_NO_PERSON, CD_TYPE, NO_CARD_ACC
-				         FROM
-				            SHARE_INFO_DETAIL A
-				         INNER JOIN SHARE_INFO B ON
-				            A.SEQ_SHARE = B.SEQ_SHARE
-				            AND B.REQ_NO_PERSON = #{no_person, jdbcType = VARCHAR}
-				            AND B.SHARE_STATUS = '02'
-				            AND B.YN_CONSUME_INFO = 'Y'
-				            AND B.DT_END_OFFER IS NULL
-				         WHERE
-				            1 = 1
-				            AND A.CD_INFO = '03'
-				            AND A.YN_SHARE = 'Y' )
+				      (
+					      SELECT
+					         DISTINCT NO_PERSON AS OFFER_NO_PERSON, MEANS_CONSUME AS CD_TYPE, NO_CARD AS NO_CARD_ACC
+					         FROM
+					            CONSUME_INFO
+					         WHERE
+					            NO_PERSON = #{no_person, jdbcType = VARCHAR}
+					      UNION ALL SELECT
+					            OFFER_NO_PERSON, CD_TYPE, NO_CARD_ACC
+					         FROM
+					            SHARE_INFO_DETAIL A
+					         INNER JOIN SHARE_INFO B ON
+					            A.SEQ_SHARE = B.SEQ_SHARE
+					            AND B.REQ_NO_PERSON = #{no_person, jdbcType = VARCHAR}
+					            AND B.SHARE_STATUS = '02'
+					            AND B.YN_CONSUME_INFO = 'Y'
+					            AND B.DT_END_OFFER IS NULL
+					         WHERE
+					            1 = 1
+					            AND A.CD_INFO = '03'
+					            AND A.YN_SHARE = 'Y' 
+				       )
+				       ,(
+					       	SELECT
+					       		YN_INSTALLMENT
+					       	FROM
+					       		PERSON_SET_INFO
+					       	WHERE NO_PERSON = #{no_person, jdbcType = VARCHAR}
+				       )
 				   WHERE
 				      1 = 1
 				      AND OFFER_NO_PERSON = CI.NO_PERSON
+				      AND 1 =
+						(
+							CASE WHEN YN_PAY_INSTALLMENT = 'N' THEN 1
+								WHEN YN_INSTALLMENT = 'N' AND YN_PAY_INSTALLMENT = 'Y' AND MON_REMAINING = '0' THEN 1
+								WHEN YN_INSTALLMENT = 'Y' AND YN_PAY_INSTALLMENT = 'Y' AND MON_REMAINING != '0' THEN 1
+								ELSE 0
+							END
+						)
 				      AND
 				      ( CASE
 				         WHEN CD_TYPE = '01' THEN SUBSTR( NO_CARD_ACC, - 3 ) /* 카드 */
@@ -923,20 +958,22 @@
 					 CONSUME_INFO CI
 					,(
 						SELECT
-							CASE
+							 CASE
 								WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| '00'
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DT_BASIC
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 2 ), 'YYYYMM' )|| DT_BASIC
-							END AS DT_FROM,
-							CASE
+							 END AS DT_FROM
+							,CASE
 								WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( LAST_DAY( ADD_MONTHS( SYSDATE,- 1 ) ), 'YYYYMMDD' )
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 0 ), 'YYYYMM' )|| DT_BASIC
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DT_BASIC
-							END AS DT_TO
+							 END AS DT_TO
+							,YN_INSTALLMENT
 						FROM
 							(
 								SELECT
-									DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC ) AS DT_BASIC
+									 DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC ) AS DT_BASIC
+									,YN_INSTALLMENT
 								FROM
 									PERSON_SET_INFO
 								WHERE
@@ -948,6 +985,17 @@
 					AND CI.TYPE_IN_OUT				 = '02'
 					AND TO_NUMBER(CI.DT_TRD)<![CDATA[>=]]>	TO_NUMBER(PSI.DT_FROM)
 					AND TO_NUMBER(CI.DT_TRD)<![CDATA[<]]>	TO_NUMBER(PSI.DT_TO)
+					AND 1 = (
+						CASE
+							WHEN CI.YN_PAY_INSTALLMENT = 'N' THEN 1
+							WHEN PSI.YN_INSTALLMENT = 'Y' AND CI.YN_PAY_INSTALLMENT = 'Y' AND CI.MON_REMAINING != '0' THEN 1
+							WHEN PSI.YN_INSTALLMENT = 'N' AND CI.YN_PAY_INSTALLMENT = 'Y' AND CI.MON_REMAINING = '0' THEN 1
+							ELSE 0
+						END
+					)
+					AND CI.YN_CANCEL				 =		'N'
+					AND CI.YN_DELETE				 =		'N'
+					AND CI.YN_BUDGET_EXCEPT			 =		'N'
 				GROUP BY
 					CI.CD_CLASS
 			) CGI ON
@@ -1019,20 +1067,22 @@
 					 CONSUME_INFO CI
 					,(
 						SELECT
-							CASE
+							 CASE
 								WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| '00'
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DT_BASIC
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 2 ), 'YYYYMM' )|| DT_BASIC
-							END AS DT_FROM,
-							CASE
+							 END AS DT_FROM
+							,CASE
 								WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( LAST_DAY( ADD_MONTHS( SYSDATE,- 1 ) ), 'YYYYMMDD' )
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 0 ), 'YYYYMM' )|| DT_BASIC
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DT_BASIC
-							END AS DT_TO
+							 END AS DT_TO
+							,YN_INSTALLMENT
 						FROM
 							(
 								SELECT
-									DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC ) AS DT_BASIC
+									 DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC ) AS DT_BASIC
+									,YN_INSTALLMENT
 								FROM
 									PERSON_SET_INFO
 								WHERE
@@ -1044,6 +1094,14 @@
 					AND CI.TYPE_IN_OUT				 =		'02'
 					AND TO_NUMBER(CI.DT_TRD)<![CDATA[>=]]>	TO_NUMBER(PSI.DT_FROM)
 					AND TO_NUMBER(CI.DT_TRD)<![CDATA[<]]>	TO_NUMBER(PSI.DT_TO)
+					AND 1 = (
+						CASE
+							WHEN CI.YN_PAY_INSTALLMENT = 'N' THEN 1
+							WHEN PSI.YN_INSTALLMENT = 'Y' AND CI.YN_PAY_INSTALLMENT = 'Y' AND CI.MON_REMAINING != '0' THEN 1
+							WHEN PSI.YN_INSTALLMENT = 'N' AND CI.YN_PAY_INSTALLMENT = 'Y' AND CI.MON_REMAINING = '0' THEN 1
+							ELSE 0
+						END
+					)
 					AND CI.YN_CANCEL				 =		'N'
 					AND CI.YN_DELETE				 =		'N'
 					AND CI.YN_BUDGET_EXCEPT			 =		'N'
@@ -1090,20 +1148,22 @@
 					CONSUME_INFO CI
 					,(
 						SELECT
-							CASE
+							 CASE
 								WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| '00'
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 3 ), 'YYYYMM' )|| DT_BASIC
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 4 ), 'YYYYMM' )|| DT_BASIC
-							END AS DT_FROM,
-							CASE
+							 END AS DT_FROM
+							,CASE
 								WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( LAST_DAY( ADD_MONTHS( SYSDATE,- 1 ) ), 'YYYYMMDD' )
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 0 ), 'YYYYMM' )|| DT_BASIC
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DT_BASIC
-							END AS DT_TO
+							 END AS DT_TO
+							,YN_INSTALLMENT
 						FROM
 							(
 								SELECT
-									DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC ) AS DT_BASIC
+									 DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC ) AS DT_BASIC
+									,YN_INSTALLMENT
 								FROM
 									PERSON_SET_INFO
 								WHERE
@@ -1114,6 +1174,17 @@
 						CI.NO_PERSON				 =		#{no_person, jdbcType=VARCHAR}
 					AND TO_NUMBER(CI.DT_TRD)<![CDATA[>=]]>	TO_NUMBER(PSI.DT_FROM)
 					AND TO_NUMBER(CI.DT_TRD)<![CDATA[<]]>	TO_NUMBER(PSI.DT_TO)
+					AND 1 = (
+						CASE
+							WHEN CI.YN_PAY_INSTALLMENT = 'N' THEN 1
+							WHEN PSI.YN_INSTALLMENT = 'Y' AND CI.YN_PAY_INSTALLMENT = 'Y' AND CI.MON_REMAINING != '0' THEN 1
+							WHEN PSI.YN_INSTALLMENT = 'N' AND CI.YN_PAY_INSTALLMENT = 'Y' AND CI.MON_REMAINING = '0' THEN 1
+							ELSE 0
+						END
+					)
+					AND CI.YN_CANCEL				 =		'N'
+					AND CI.YN_DELETE				 =		'N'
+					AND CI.YN_BUDGET_EXCEPT			 =		'N'
 				GROUP BY
 					 CI.NO_PERSON
 					,CI.CD_CLASS
@@ -2087,6 +2158,14 @@
 					AND CI.CD_CLASS = PCCI.CD_CLASS
 					AND CI.CD_TYPE = PCCI.CD_TYPE
 					AND CI.NO_PERSON = PSI.NO_PERSON
+				    AND 1 =
+						(
+						CASE WHEN CI.YN_PAY_INSTALLMENT = 'N' THEN 1
+							WHEN PSI.YN_INSTALLMENT = 'N' AND CI.YN_PAY_INSTALLMENT = 'Y' AND CI.MON_REMAINING = '0' THEN 1
+							WHEN PSI.YN_INSTALLMENT = 'Y' AND CI.YN_PAY_INSTALLMENT = 'Y' AND CI.MON_REMAINING != '0' THEN 1
+							ELSE 0
+						END
+						)
 					AND YN_CANCEL = 'N'
 					AND YN_DELETE = 'N'
 					AND YN_BUDGET_EXCEPT = 'N'
@@ -2568,7 +2647,8 @@
 				MM.DT_TRD,
 				MM.TM_TRD,
 				MM.NM_CARD, 
-				MM.NO_CARD, 
+				MM.NO_CARD,
+				MM.CD_CLASS, 
 				MM.NM_CLASS, 
 				MM.CONTENTS, 
 				MM.AMT_IN_OUT,
@@ -2587,6 +2667,7 @@
 						,CI.DT_TRD
 						,CI.TM_TRD
 						,FI.NM_FC
+						,PCCI.CD_CLASS
 						,PCCI.NM_CLASS
 						,PCCI.NM_TYPE
 						,CI.CONTENTS

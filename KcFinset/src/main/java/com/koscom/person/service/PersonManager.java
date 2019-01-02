@@ -8,6 +8,7 @@ import com.koscom.domain.PersonLoginHistInfo;
 import com.koscom.domain.PersonShareInfo;
 import com.koscom.domain.PersonShareMessageInfo;
 import com.koscom.person.model.PersonActiveHistVO;
+import com.koscom.person.model.PersonAgreeHistVO;
 import com.koscom.person.model.PersonCertificateInfoVO;
 import com.koscom.person.model.PersonShareInfoForm;
 import com.koscom.person.model.PersonSmsListVO;
@@ -350,4 +351,18 @@ public interface PersonManager {
 	 * @param no_person
 	 */
 	void insertDefaultPersonSet(String no_person);
+	
+	/**
+	 * 약관 동의 이력 조회
+	 * @param String
+	 * @return PersonAgreeHistVO
+	 */
+	List<PersonAgreeHistVO> getPersonAgreeHist(String no_person);
+	
+	/**
+	 * 약관 동의 이력 저장
+	 * @param PersonAgreeHistVO
+	 * @return
+	 */
+	int createPersonAgreeHist(String no_person, String eventPush);
 }

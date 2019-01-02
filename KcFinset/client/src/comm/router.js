@@ -156,6 +156,10 @@ import AssetsStockShrDetail from '@/components/assets/StockShrDetail'
 import AssetsStockFndDetail from '@/components/assets/StockFndDetail'
 import AssetsEtcMain from '@/components/assets/etcMain'
 import AssetsDirInput from '@/components/assets/DirInput'
+import AssetsStockAnalysis from '@/components/assets/StockAnalysis'
+import AssetsStockSpcfAnls from '@/components/assets/StockSpcfAnls'
+import AssetsStockIvtmBhvr from '@/components/assets/StockIvtmBhvr'
+import AssetsStockGoalSet from '@/components/assets/StockGoalSet'
 
 import MypageHome from '@/components/mypage/Home'
 // import MypageMain from '@/components/mypage/Main'
@@ -225,6 +229,7 @@ import TemplateChartSingleLine2 from '@/components/template/ChartSingleLine2'
 import TemplateChartMultipleBar from '@/components/template/ChartMultipleBar'
 
 import Store from '@/comm/store'
+import { debug } from 'util';
 Vue.use(Router)
 
 export const routes = [{
@@ -1113,6 +1118,42 @@ export const routes = [{
       allowPath: true,
       requiresAuth: true
     }
+  },
+  {
+    path: 'stockAnalysis',
+    alias: '/stockAnalysis',
+    component: AssetsStockAnalysis,
+    meta: {
+      allowPath: true
+      // requiresAuth: true
+    }
+  },
+  {
+    path: 'stockSpcfAnls',
+    alias: '/stockSpcfAnls',
+    component: AssetsStockSpcfAnls,
+    meta: {
+      allowPath: true
+      // requiresAuth: true
+    }
+  },
+  {
+    path: 'stockIvtmBhvr',
+    alias: '/stockIvtmBhvr',
+    component: AssetsStockIvtmBhvr,
+    meta: {
+      allowPath: true
+      // requiresAuth: true
+    }
+  },
+  {
+    path: 'stockGoalSet',
+    alias: '/stockGoalSet',
+    component: AssetsStockGoalSet,
+    meta: {
+      allowPath: true
+      // requiresAuth: true
+    }
   }
   ]
 },
@@ -1891,8 +1932,9 @@ router.beforeEach((to, from, next) => {
     const hp = localStorage.getItem('hp')
     if (to.meta.allowPath) {
       if (to.meta.requiresAuth) {
-        if (to.meta.backCasePath && !Store.state.header.backPath) Store.state.header.backPath = from.fullPath
-        if (Store.state.header.type === 'main') Store.state.header.backPath = ''
+        if (to.meta.backCasePath && !Store.state.header.fromPath) {
+          Store.state.header.fromPath = from.fullPath
+        }
 
         const accessToken = localStorage.getItem('accessToken')
         if (!accessToken) {

@@ -49,10 +49,10 @@
     </div>
     <div class="box-list list02 noMG">
       <div class="select pb20">
-        <multiselect class="multiselect-basic" track-by="text" v-model="listType" label="text" :preselect-first="true" :options="type1" :searchable="false" :allow-empty="false">
+        <multiselect class="multiselect-basic" v-model="listType" label="text" :title="'종류별'" :preselect-first="true" :options="type1">
         </multiselect>
         <p></p>
-        <multiselect class="multiselect-basic" track-by="text" v-model="orderType" label="text" :preselect-first="true" :options="type2" :searchable="false" :allow-empty="false">
+        <multiselect class="multiselect-basic" v-model="orderType" label="text" :title="'조회순'" :preselect-first="true" :options="type2">
         </multiselect>
       </div>
 
@@ -61,8 +61,8 @@
           <div class="flex">
 
             <p class="key" v-if="listType.value=='category'"><img :src="getConsumeIconSrc(item.type_in_out, item.cd_class)" width="15px" class="mr5" alt="" />{{item.nm_class}} <em>({{item.grade}})</em></p>
-            <p class="key" v-else-if="listType.value=='store'"><img :src="getConsumeIconSrc(item.type_in_out, item.cd_class)" width="15px" class="mr5" alt="" />{{item.contents}} <em>({{item.grade}})</em></p>
-            <p class="key" v-else-if="listType.value=='means'"><img :src="getConsumeIconSrc(item.type_in_out, item.cd_class)" width="15px" class="mr5" alt="" />{{item.nm_card}} <em>({{item.grade}})</em></p>
+            <p class="key" v-else-if="listType.value=='store'">{{item.contents}} <em>({{item.grade}})</em></p>
+            <p class="key" v-else-if="listType.value=='means'">{{item.nm_card}} <em>({{item.grade}})</em></p>
             <p class="number">{{item.amt_in_out}}<em>원</em></p>
           </div>
           <div class="bar">
@@ -170,14 +170,18 @@ export default {
     },
     listType: function() {
       if (!this.initYN) {
-        // console.log(this.listType.value);
+        console.log(this.listType.value);
         this.getRangeList();
+      } else {
+        this.listType = this.type1[0];
       }
     },
     orderType: function() {
       if (!this.initYN) {
         // console.log(this.orderType.value);
         this.getRangeList();
+      } else {
+        this.orderType = this.type2[0];
       }
     },
     chartList: function() {
@@ -273,6 +277,12 @@ export default {
           this.filterShareList();
         localStorage.setItem("no_card", idx.no_card);
         localStorage.setItem("nm_card", idx.nm_card);
+        console.log(
+          "localStorageSetItem=> no_card: " +
+            idx.no_card +
+            " nm_card : " +
+            idx.nm_card
+        );
       }
       localStorage.setItem("shareList", this.shareList);
       this.$router.push("/consume/consumeIncomeStats" + param);

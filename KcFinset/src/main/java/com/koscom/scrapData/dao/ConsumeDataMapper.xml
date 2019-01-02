@@ -2,25 +2,26 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<!-- VITCOM  SYSTEM MANAGEMENT  KHK  20180724 ~ 0822 -->
 <mapper namespace="com.koscom.scrapData.dao.ConsumeDataMapper">
-<!-- 소비지출 테이블(CONSUME_INFO)에 데이터를 쌓기 위해 카드 승인 내역(SCR_CARD_APPROVAL_INFO)에서 데이터를 가져옴 -->
-	<select id="getTmFromConsumeInfo" parameterType="java.lang.String" resultType="java.lang.String">
+	<select id="getDtFromCashReceipt" parameterType="java.lang.String" resultType="java.lang.String">
 		SELECT
-			TO_CHAR( MAX( TO_NUMBER( DT_TRD || TM_TRD )))
+			NVL(TO_CHAR( MAX( TO_NUMBER( DT_TRD || TM_TRD ))), '00000000000000')
 		FROM
 			CONSUME_INFO
 		WHERE
-			NO_PERSON = #{no_person, jdbcType = VARCHAR}
-			AND CD_FC =(
-				SELECT
-					CD_FC
-				FROM
-					FC_INFO
-				WHERE
-					NM_FC LIKE '%국세청%'
-			)
+				NO_PERSON		= #{no_person, jdbcType = VARCHAR}
+			AND MEANS_CONSUME	= '03'
 	</select>
+	<select id="getDtFromTransaction" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT
+			NVL(TO_CHAR( MAX( TO_NUMBER( DT_TRD || TM_TRD ))), '00000000000000')
+		FROM
+			CONSUME_INFO
+		WHERE
+				NO_PERSON		= #{no_person, jdbcType = VARCHAR}
+			AND MEANS_CONSUME	= '04'
+	</select>
+	<!-- 소비지출 테이블(CONSUME_INFO)에 데이터를 쌓기 위해 카드 승인 내역(SCR_CARD_APPROVAL_INFO)에서 데이터를 가져옴 -->
 	<select id="listScrCardApprovalInfo" parameterType="com.koscom.scrapData.model.ConsumeDataForm" resultType="hashmap">
 		SELECT
 			 NO_PERSON
@@ -42,25 +43,25 @@
 			,CD_CURRENCY
 			,CD_IN_OUT
 			,DT_FRT
+		FROM
+			SCR_CARD_APPROVAL_INFO A
+		LEFT OUTER JOIN(
+				SELECT
+					 B.CD_FC
+					,MAX( TO_NUMBER( B.DT_TRD || B.TM_TRD )) AS TRD
 				FROM
-					SCR_CARD_APPROVAL_INFO A
-				LEFT OUTER JOIN(
-						SELECT
-							B.CD_FC,
-							MAX( TO_NUMBER( B.DT_TRD || B.TM_TRD )) AS TRD
-						FROM
-							CONSUME_INFO B
-						WHERE
-							B.NO_PERSON = #{no_person, jdbcType = VARCHAR}
-							AND B.MEANS_CONSUME = '01'
-							AND B.MON_REMAINING = '0'
-						GROUP BY
-							B.CD_FC
-					) B ON
-					A.CD_FC = B.CD_FC
+					CONSUME_INFO B
 				WHERE
-					A.NO_PERSON = #{no_person, jdbcType = VARCHAR}
-					AND A.DT_APPROVAL || A.TM_APPROVAL > CASE WHEN B.TRD IS NULL THEN 0 ELSE B.TRD END
+						B.NO_PERSON		= #{no_person, jdbcType = VARCHAR}
+					AND B.MEANS_CONSUME = '01'
+					AND B.MON_REMAINING = '0'
+				GROUP BY
+					B.CD_FC
+			) B ON
+			A.CD_FC = B.CD_FC
+		WHERE
+				A.NO_PERSON = #{no_person, jdbcType = VARCHAR}
+			AND A.DT_APPROVAL || A.TM_APPROVAL <![CDATA[>]]> CASE WHEN B.TRD IS NULL THEN 0 ELSE B.TRD END
 	</select>
 <!-- 소비지출 테이블(CONSUME_INFO)에 데이터를 쌓기 위해 현금영수증 사용내역(SCR_RESP_CASH_RECEIPT)에서 데이터를 가져옴 -->
 	<select id="listScrRespCashReceipt" parameterType="com.koscom.scrapData.model.ConsumeDataForm"  resultType="hashmap">
@@ -76,11 +77,11 @@
 			,YN_DEDUCTION
 			,TYPE_ISSUE
 			,DT_FRT
-				FROM SCR_RESP_CASH_RECEIPT
+		FROM
+			SCR_RESP_CASH_RECEIPT
 		WHERE
 				NO_PERSON = #{no_person, jdbcType=VARCHAR}
-			AND TO_NUMBER(CONCAT(TO_CHAR(YMD_DEAL),TO_CHAR(TIME_DEAL))) <![CDATA[>]]> TO_NUMBER(#{tm_from, jdbcType=VARCHAR})
-			AND TO_NUMBER(CONCAT(TO_CHAR(YMD_DEAL),TO_CHAR(TIME_DEAL))) <![CDATA[<=]]> TO_NUMBER(TO_CHAR(SYSDATE,'YYYYMMDDHH24MISS'))
+			AND TO_NUMBER(CONCAT(TO_CHAR(YMD_DEAL),TO_CHAR(TIME_DEAL))) <![CDATA[>]]> TO_NUMBER(#{dt_from, jdbcType=VARCHAR})
 	</select>
 	
 <!-- 업종명으로 소비항목코드를 가져옴 -->
@@ -106,7 +107,7 @@
 <!-- 	소비지출 데이터 insert -->
 	<insert id="createConsumeInfo" parameterType="com.koscom.scrapData.model.ConsumeDataVO">
 		<selectKey keyProperty="seq_consume" resultType="java.lang.Integer" order="BEFORE">
-			(SELECT NVL(MAX(SEQ_CONSUME),0)+1 FROM CONSUME_INFO)
+			(SELECT NVL(MAX(SEQ_CONSUME),0)+1 FROM CONSUME_INFO WHERE NO_PERSON = #{no_person, jdbcType = VARCHAR})
 		</selectKey>
 			INSERT INTO CONSUME_INFO(
 				 NO_PERSON
@@ -173,33 +174,38 @@
 	             ,SYSDATE 										AS DT_FRT
 	             ,#{id_lst					, jdbcType=VARCHAR} AS ID_LST
 	             ,SYSDATE 										AS DT_LST
-	                FROM DUAL, 
-	                	(SELECT FN_CD_CONSUME_CLASS(
+                FROM
+                	 DUAL
+	                ,(
+	                	SELECT
+	                		FN_CD_CONSUME_CLASS(
 	                		 #{no_person			, jdbcType=VARCHAR}
 	                		,#{cd_fc				, jdbcType=VARCHAR}
 	                		,#{nm_biz				, jdbcType=VARCHAR}
 	                		) AS CD_CONSUME_CLASS
-	                			FROM DUAL),
-	                	 (SELECT 
-	                	 	NM_CARD AS NM_CARD,
+	                	FROM DUAL
+					 )
+	                ,(
+	                	SELECT 
+	                		NM_CARD AS NM_CARD,
 	                	 	CASE
 	                	 		WHEN #{no_card, jdbcType=VARCHAR} IS NOT NULL THEN
 	                	 			CASE
 	                	 				WHEN NM_CARD LIKE '%체크%' 	THEN '02'
 	                	 				ELSE 							 '01'
 	                	 			END
-	                	 	ELSE NULL
+	                	 		ELSE NULL
 	                	 	END AS TYPE_CARD
-	                	 		FROM SCR_CARD_INFO
-	                	  WHERE 	NO_PERSON 			= 		 #{no_person	, jdbcType=VARCHAR}
-	                	  		AND CD_FC 				= 		 #{cd_fc		, jdbcType=VARCHAR}
-	                	  		AND SUBSTR(NO_CARD,-3) 	= SUBSTR(#{no_card		, jdbcType=VARCHAR},-3)
-	                	  )
+               	 		FROM SCR_CARD_INFO
+	                	WHERE		NO_PERSON 			= 		 #{no_person	, jdbcType=VARCHAR}
+	                			AND CD_FC 				= 		 #{cd_fc		, jdbcType=VARCHAR}
+	                			AND SUBSTR(NO_CARD,-3) 	= SUBSTR(#{no_card		, jdbcType=VARCHAR},-3)
+					 )
 	</insert>
 <!-- 	소비지출 데이터 insert -->
 	<insert id="createConsumeInfoTransaction" parameterType="com.koscom.scrapData.model.ConsumeDataVO">
 		<selectKey keyProperty="seq_consume" resultType="java.lang.Integer" order="BEFORE">
-			(SELECT NVL(MAX(SEQ_CONSUME),0)+1 FROM CONSUME_INFO)
+			(SELECT NVL(MAX(SEQ_CONSUME),0)+1 FROM CONSUME_INFO WHERE NO_PERSON = #{no_person, jdbcType = VARCHAR})
 		</selectKey>
 			INSERT INTO CONSUME_INFO(
 				 NO_PERSON
@@ -229,6 +235,7 @@
 				,YN_AUTO
 				,YN_BUDGET_EXCEPT
 				,YN_PERSON_REGIST
+				,SEQ_TRAN
 				,ID_FRT
 				,DT_FRT
 				,ID_LST
@@ -262,6 +269,7 @@
 				,#{yn_auto				, jdbcType = VARCHAR}
 				,#{yn_budget_except		, jdbcType = VARCHAR}
 				,#{yn_person_regist		, jdbcType = VARCHAR}
+				,#{seq_tran				, jdbcType = VARCHAR}
 				,#{id_frt				, jdbcType = VARCHAR}
 				,SYSDATE
 				,#{id_lst				, jdbcType = VARCHAR}
@@ -273,7 +281,8 @@
 	</select>
 	<select id="listScrTransactionDetailAuto" parameterType="com.koscom.scrapData.model.ConsumeDataForm" resultType="hashmap">
 		SELECT
-			 STI.NO_PERSON
+			 TO_CHAR(STI.SEQ_TRAN) AS SEQ_TRAN
+			,STI.NO_PERSON
 			,STI.AN
 			,STI.DT_TRD
 			,STI.TM_TRD
@@ -337,8 +346,100 @@
 				   STI.DOC1						=	 CI.CONTENTS
 				OR STI.DOC2						=	 CI.CONTENTS
 				)
-			AND TO_NUMBER( STI.DT_TRD )<![CDATA[>=]]>TO_NUMBER( TO_CHAR( CI.DT_FRT, 'YYYYMMDD' ))
-			AND TO_NUMBER( STI.TM_TRD )<![CDATA[>]]> TO_NUMBER( TO_CHAR( CI.DT_FRT, 'HH24MISS' ))
+			AND TO_NUMBER( STI.DT_TRD || STI.TM_TRD )<![CDATA[>]]> TO_NUMBER( #{dt_from, jdbcType = VARCHAR} )
+	</select>
+	<select id="listScrTransactionDetailIncome" parameterType="com.koscom.scrapData.model.ConsumeDataForm" resultType="hashmap">
+		SELECT
+			 TO_CHAR(STI.SEQ_TRAN) AS SEQ_TRAN
+			,STI.NO_PERSON
+			,STI.AN
+			,STI.DT_TRD
+			,STI.TM_TRD
+			,STI.CD_CRNCY
+			,STI.AMT_WDRL
+			,STI.AMT_DEP
+			,STI.BALANCE
+			,STI.DOC1
+			,STI.DOC2
+			,STI.DEALWAY1
+			,STI.DEALWAY2
+			,STI.DT_FRT
+			,PCCI.CD_CLASS
+			,PCCI.CD_TYPE
+			,BAAI.CD_FC
+			,BAAI.NM_AN
+		FROM
+			  SCR_TRANSACTION_DETAIL STI
+			,(
+				SELECT
+					 NO_PERSON
+					,MAX( DT_FROM ) AS DT_FROM
+				FROM
+					(
+						SELECT
+							 NO_PERSON
+							,MAX( DT_TRD || TM_TRD ) AS DT_FROM
+						FROM
+							CONSUME_INFO
+						WHERE
+							NO_PERSON = #{no_person, jdbcType = VARCHAR}
+						GROUP BY
+							NO_PERSON
+					UNION SELECT
+							#{no_person, jdbcType = VARCHAR} AS NO_PERSON,
+							'00000000000000'
+						FROM
+							DUAL
+					)
+				GROUP BY
+					NO_PERSON
+			 ) CI
+			,(
+				SELECT
+					CD_FC,
+					AN,
+					NM_AN
+				FROM
+					SCR_BANK_API_AN_INFO
+				WHERE
+					NO_PERSON = #{no_person, jdbcType = VARCHAR}
+			 ) BAAI
+			,(
+				SELECT
+					 CASE
+						WHEN ISEXIST = 0 THEN '99'
+						ELSE '01'
+					 END AS CD_CLASS
+					,'000' AS CD_TYPE
+				FROM
+					(
+						SELECT
+							COUNT( 1 ) AS ISEXIST
+						FROM
+							PERSON_CONSUME_CLASS_INFO
+						WHERE
+								TYPE_IN_OUT			= '01'
+							AND NO_PERSON			= #{no_person, jdbcType = VARCHAR}
+							AND CD_CONSUME_CLASS	= '01000'
+							AND YN_USE				= 'Y'
+					)
+			) PCCI
+		WHERE
+				STI.NO_PERSON					= #{no_person, jdbcType = VARCHAR}
+			AND STI.AN							= BAAI.AN
+			AND(
+					REPLACE(STI.DOC1,' ','')	LIKE '%급여%'
+				OR	REPLACE(STI.DOC2,' ','')	LIKE '%급여%'
+			)
+			AND STI.AMT_WDRL					= '0'
+			AND STI.AMT_DEP						!= '0'
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(listSeqTranIncome)">
+				AND STI.SEQ_TRAN					NOT IN
+				<foreach item="each_seq_tran" collection="listSeqTranIncome" open="(" separator="," close=")">
+					#{each_seq_tran}
+				</foreach>
+			</if>
+			AND TO_NUMBER( STI.DT_TRD || STI.TM_TRD )<![CDATA[>]]> TO_NUMBER( #{dt_from, jdbcType = VARCHAR} )
 	</select>
 	<insert id="createNewBusinessTypeInfo" parameterType="com.koscom.scrapData.model.BusinessTypeInfoVO">
 		INSERT INTO

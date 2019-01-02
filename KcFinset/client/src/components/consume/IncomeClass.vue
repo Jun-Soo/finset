@@ -9,7 +9,7 @@
                 <p class="title handle">{{eachClass.nm_class}}</p>
                 <p class="links">
                   <button class="delete" @click="deleteCate(eachClass.cd_class, eachClass.sort_class)"></button>
-                  <button class="modify" @click="modifyCate(eachClass.cd_class, eachClass.nm_class)"></button>
+                  <button class="modify" @click="clickModify(eachClass.cd_class, eachClass.nm_class)"></button>
                 </p>
               </div>
             </li>
@@ -19,7 +19,7 @@
               <p class="title etc">기타</p>
             </div>
           </li>
-          <button v-if="!isMax" class="add-cate" @click="clickAdd">항목추가</button>
+          <button class="add-cate" @click="clickAdd">항목추가</button>
         </ul>
       </div>
     </section>
@@ -49,16 +49,16 @@ export default {
   name: "ConsumeIncomeClass",
   data() {
     return {
-      seen: false,
-      incomeCategory: [],
-      isShowAdd: false,
-      isModify: false,
+      seen: false, // 화면 표출 여부
+      incomeCategory: [], // 수입 카테고리 리스트
+      isShowAdd: false, // 하단 팝업창 표출 여부
+      isModify: false, // 수정 여부(아니면 추가)
+      // draggable에서 사용하는 옵션
       draggableOptions: {
-        handle: ".handle",
-        touchStartThreshold: 200
+        handle: ".handle", // 드래그 시킬 태그의 클래스
+        touchStartThreshold: 200 // 드래그 시작까지 누르고 있어야 하는 시간
       },
-      nmCate: "",
-      isMax: false
+      nmCate: "" // 하단 팝업창에 들어갈 문구
     };
   },
   components: {
@@ -79,6 +79,28 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    // ---------------------화면 컨트롤---------------------
+    // 항목추가 클릭
+    clickAdd: function() {
+      this.isModify = false;
+      this.nmCate = "";
+      this.isShowAdd = true;
+    },
+    // 항목추가 팝업창 닫기
+    closeAdd: function() {
+      this.errors.clear();
+      this.isShowAdd = false;
+    },
+    // 수정 버튼 클릭
+    clickModify: function(cd_class, nm_class) {
+      this.isModify = true;
+      this.curClass = cd_class;
+      this.nmCate = nm_class;
+      this.isShowAdd = true;
+    },
+    // ---------------------//화면 컨트롤---------------------
+    // ---------------------데이터 이동---------------------
+    // 수입 분류 리스트 조회
     listPersonIncomeClassInfo: function() {
       var _this = this;
       this.$http
@@ -94,15 +116,7 @@ export default {
           _this.seen = true;
         });
     },
-    clickAdd: function() {
-      this.isModify = false;
-      this.nmCate = "";
-      this.isShowAdd = true;
-    },
-    closeAdd: function() {
-      this.errors.clear();
-      this.isShowAdd = false;
-    },
+    // 수입 분류 추가 혹은 수정
     addCate: function() {
       var _this = this;
       this.$validator.validateAll().then(res => {
@@ -131,17 +145,11 @@ export default {
         }
       });
     },
-    modifyCate: function(cd_class, nm_class) {
-      this.isModify = true;
-      this.curClass = cd_class;
-      this.nmCate = nm_class;
-      this.isShowAdd = true;
-    },
+    // 수입 분류 삭제
     deleteCate: function(cd_class, sort_class) {
       this.$dialogs
         .confirm("정말로 삭제하시겠습니까?", Constant.options)
         .then(res => {
-          // console.log(res); // {ok: true|false|undefined}
           if (res.ok) {
             var _this = this;
             var formData = new FormData();
@@ -153,11 +161,10 @@ export default {
               .then(function(response) {
                 _this.listPersonIncomeClassInfo();
               });
-          } else {
-            // this.$dialogs.alert("취소를 선택했습니다.", Constant.options);
           }
         });
     },
+    // 수입 분류 정렬 순서 변경
     changeClass: function() {
       var _this = this;
       var incomeClasses = this.incomeCategory;
@@ -177,6 +184,7 @@ export default {
           _this.listPersonIncomeClassInfo();
         });
     }
+    // ---------------------//데이터 이동---------------------
   }
 };
 </script>

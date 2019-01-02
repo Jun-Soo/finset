@@ -16,10 +16,11 @@
       <a @click="$router.push('/mypage/cert')">인증/보안</a>
       <a @click="$router.push('/share/main')">공유관리</a>
       <a @click="$router.push('/scrap/ctrlFcLink')">연동관리</a>
-      <a @click="$router.push('/credit/counselInfo')">신용컨설팅</a>
+      <!-- <a @click="$router.push('/credit/counselMain')">신용상담</a> -->
+      <a @click="clickButton('/credit/counselMain', '/credit/main')">신용상담</a>
       <a @click="$router.push('/mypage/favGoods')">관심상품</a>
       <a @click="$router.push('/mypage/rstlInqGoods')">상품조회결과</a>
-      <a @click="$router.push('/mypage/state')">상품신청현황</a>
+      <!-- <a @click="$router.push('/mypage/state')">상품신청현황</a> -->
     </div>
 
     <div class="member-exit">
@@ -30,6 +31,7 @@
 </template>
 
 <script>
+import Constant from "./../../assets/js/constant.js";
 export default {
   name: "MypageInfo",
   data() {
@@ -77,7 +79,20 @@ export default {
   updated() {},
   beforeDestroy() {},
   destroyed() {},
-  methods: {}
+  methods: {
+    clickButton: function(page, back) {
+      // GNB Close Event
+      if (page === "/credit/counselMain") {
+        this.$dialogs.alert("서비스 준비중 입니다.", Constant.options);
+        return false;
+      }
+      if (this.$store.state.header.type === "sub" && back) {
+        this.$store.state.header.fromPath = back;
+      }
+
+      this.$router.push(page);
+    }
+  }
 };
 </script>
 

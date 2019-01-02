@@ -3,7 +3,7 @@
     <section>
       <div class="box-list noMG">
         <ul class="consume-cate-list">
-          <draggable v-model="consumeCategory" @start="drag=true" :options="draggableOptions" @update="changeClass">
+          <draggable v-model="consumeCategory" @start="drag=true" :options="draggableOptions" @update="modifyClassSort">
             <li v-for="(eachClass, index) in consumeCategory" :key="index" class="liClass" @click="toggleSlide">
               <div class="wrap each-class">
                 <!-- <p class="title" @click="slideUpAll">{{eachClass[1]}}</p> -->
@@ -15,7 +15,7 @@
                 </p>
               </div>
               <ul>
-                <draggable v-model="eachClass[3]" :options="draggableOptions" @update="changeType(index)">
+                <draggable v-model="eachClass[3]" :options="draggableOptions" @update="modifyTypeSort(index)">
                   <!-- <li v-for="eachType in eachClass[2]" :key="eachType.nm_type"> -->
                   <li v-for="eachType in eachClass[3]" :key="eachType.nm_type">
                     <!-- <div class="wrap" :slot="eachType.cd_type == '99'?'footer':false"> -->
@@ -71,24 +71,26 @@ export default {
   name: "ConsumeConsumeClass",
   data() {
     return {
-      seen: true,
-      consumeCategory: [],
-      isShowAdd: false,
-      isClass: true,
-      isModify: false,
+      seen: true, // 화면 표시 여부
+      consumeCategory: [], // 지출 분류, 항목
+      isShowAdd: false, // 추가, 수정 팝업 표시 여부
+      isClass: true, // 팝업 화면 표출 시 분류 여부(아닐 시 항목)
+      isModify: false, // 팝업 화면 표출 시 수정 여부(아닐 시 삭제)
+      // draggable에 필요한 옵션
       draggableOptions: {
-        handle: ".handle",
-        touchStartThreshold: 200
+        handle: ".handle", // 드래그 컨트롤 할 태그의 클래스
+        touchStartThreshold: 200 // 드래그가 시작될 때 까지 터치가 유저되어야 하는 시간
       },
-      nmCate: "",
-      curCdClass: "",
-      curCdType: ""
+      nmCate: "", // 팝업 input 태그에 들어가는 문구
+      curCdClass: "", // 현재 컨트롤 되고 있는 분류의 코드
+      curCdType: "" // 현개 컨트롤 되고 있는 항목의 코드
     };
   },
   components: {
     draggable
   },
   computed: {
+    // 팝업창 상단의 텍스트
     headTitle: function() {
       if (this.isClass && this.isModify) {
         return "카테고리 수정";
@@ -115,12 +117,47 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    // ---------------------화면 이벤트---------------------
+    // 항목추가 버튼 클릭
+    clickAdd: function(key, cd_class) {
+      this.isModify = false;
+      this.nmCate = "";
+      if (key == "class") {
+        this.isClass = true;
+      } else if (key == "type") {
+        this.isClass = false;
+        this.curCdClass = cd_class;
+      }
+      this.isShowAdd = true;
+    },
+    // 수정 버튼 클릭
+    clickModify: function(key, name, cd_class, cd_type) {
+      this.isModify = true;
+      this.nmCate = name;
+      this.curCdClass = cd_class;
+      if (key == "class") {
+        this.isClass = true;
+      } else if (key == "type") {
+        this.isClass = false;
+        this.curCdType = cd_type;
+      }
+      this.isShowAdd = true;
+    },
+    // 팝업창 종료 버튼 클릭
+    closeAdd: function() {
+      this.errors.clear();
+      this.isShowAdd = false;
+    },
+    // ---------------------//화면 컨트롤---------------------
+    // ---------------------데이터 이동---------------------
+    // 소비지출 카테고리 조회
     listPersonConsumeClassInfo: function() {
       var _this = this;
       this.$http
         .get("/m/consume/listPersonConsumeClassInfo.json")
         .then(function(response) {
           var list = response.data.listPersonConsumeClassInfo;
+          // 기타의 경우 별도로 움직여야 해서 리스트에서 마지막 요소를 제거
           list.pop();
           var listCdClass = new Array();
           var i = 0;
@@ -151,46 +188,8 @@ export default {
           _this.seen = true;
         });
     },
-    clickAdd: function(key, cd_class) {
-      this.isModify = false;
-      this.nmCate = "";
-      if (key == "class") {
-        this.isClass = true;
-      } else if (key == "type") {
-        this.isClass = false;
-        this.curCdClass = cd_class;
-      }
-      this.isShowAdd = true;
-    },
-    clickModify: function(key, name, cd_class, cd_type) {
-      this.isModify = true;
-      this.nmCate = name;
-      this.curCdClass = cd_class;
-      if (key == "class") {
-        this.isClass = true;
-      } else if (key == "type") {
-        this.isClass = false;
-        this.curCdType = cd_type;
-      }
-      this.isShowAdd = true;
-    },
-    closeAdd: function() {
-      this.errors.clear();
-      this.isShowAdd = false;
-    },
-    slideUpAll: function() {
-      var liClasses = $(".liClass");
-
-      for (var eachClass of liClasses) {
-        if ($(eachClass).hasClass("on")) {
-          $(eachClass)
-            .find("ul")
-            .slideUp(0, "easeInOutExpo");
-          $(eachClass).removeClass("on");
-        }
-      }
-    },
-    changeClass: function() {
+    // 분류 정렬 순서 변경
+    modifyClassSort: function() {
       var _this = this;
       var consumeClass = this.consumeCategory;
       var formData = new FormData();
@@ -203,7 +202,8 @@ export default {
         .post("/m/consume/modifyPersonSortClass.json", formData)
         .then(function(response) {});
     },
-    changeType: function(index) {
+    // 항목 정렬 순서 변경
+    modifyTypeSort: function(index) {
       var _this = this;
       var cd_class = this.consumeCategory[index][0];
       var consumeType = this.consumeCategory[index][3];
@@ -217,31 +217,7 @@ export default {
         .post("/m/consume/modifyPersonSortType.json", formData)
         .then(function(response) {});
     },
-    toggleSlide: function(param) {
-      if (param.srcElement.localName == "div") {
-        if (
-          $(param.target)
-            .closest("li")
-            .hasClass("on")
-        ) {
-          $(param.target)
-            .closest("li")
-            .find("ul")
-            .slideUp(500, "easeInOutExpo");
-          $(param.target)
-            .closest("li")
-            .removeClass("on");
-        } else {
-          $(param.target)
-            .closest("li")
-            .find("ul")
-            .slideDown(500, "easeInOutExpo");
-          $(param.target)
-            .closest("li")
-            .addClass("on");
-        }
-      }
-    },
+    // 분류 삭제 처리
     deleteClass: function(cd_class, sort_class) {
       this.$dialogs
         .confirm("정말로 삭제하시겠습니까?", Constant.options)
@@ -264,6 +240,7 @@ export default {
           }
         });
     },
+    // 항목 삭제 처리
     deleteType: function(cd_class, cd_type, sort_type) {
       this.$dialogs
         .confirm("정말로 삭제하시겠습니까?", Constant.options)
@@ -286,6 +263,7 @@ export default {
           }
         });
     },
+    // 분류, 항목 삭제 혹은 수정 처리
     confirmCate: function() {
       var _this = this;
       this.$validator.validateAll().then(res => {
@@ -341,7 +319,49 @@ export default {
           }
         }
       });
+    },
+    // ---------------------//데이터 이동---------------------
+    // ---------------------기타---------------------
+    // 전체 아코디언 접기
+    slideUpAll: function() {
+      var liClasses = $(".liClass");
+
+      for (var eachClass of liClasses) {
+        if ($(eachClass).hasClass("on")) {
+          $(eachClass)
+            .find("ul")
+            .slideUp(0, "easeInOutExpo");
+          $(eachClass).removeClass("on");
+        }
+      }
+    },
+    // 아코디언 접고 펼치기
+    toggleSlide: function(param) {
+      if (param.srcElement.localName == "div") {
+        if (
+          $(param.target)
+            .closest("li")
+            .hasClass("on")
+        ) {
+          $(param.target)
+            .closest("li")
+            .find("ul")
+            .slideUp(500, "easeInOutExpo");
+          $(param.target)
+            .closest("li")
+            .removeClass("on");
+        } else {
+          $(param.target)
+            .closest("li")
+            .find("ul")
+            .slideDown(500, "easeInOutExpo");
+          $(param.target)
+            .closest("li")
+            .addClass("on");
+        }
+      }
     }
+    // ---------------------//기타---------------------
   }
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="graph-wrapper mt30" v-if="!isNoData">
-      <chartjs-bar v-if="!isNone" :labels="mylabels" :datasets="mydatasets" :option="myoption" :bind="true">
+      <chartjs-bar v-if="!isNoData" :labels="mylabels" :datasets="mydatasets" :option="myoption" :bind="true">
       </chartjs-bar>
     </div>
 
@@ -37,7 +37,12 @@ export default {
   name: "ConsumeAnalyze",
   data() {
     return {
-      isNone: true,
+      seen: false, // 화면 표출 유뮤
+      Common: Common, // 공통
+      listConsumeAnalyzeMonth: {}, // 월별 데이터
+      listConsumeAnalyzeDay: {}, // 일별 데이터
+      isNoData: true, // 데이터 유무
+      // 차트 관련 데이터
       mylabels: ["0", "0", "0"],
       mydatasets: [
         {
@@ -63,7 +68,6 @@ export default {
           yAxes: [
             {
               gridLines: {
-                //offsetGridLines: true,
                 lineWidth: 1,
                 display: false,
                 drawBorder: true,
@@ -98,11 +102,7 @@ export default {
             }
           }
         }
-      },
-      listConsumeAnalyzeMonth: {},
-      listConsumeAnalyzeDay: {},
-      Common: Common,
-      isNoData: true
+      }
     };
   },
   components: {},
@@ -112,7 +112,6 @@ export default {
     this.$store.state.header.type = "sub";
     this.$store.state.title = this.$route.query.contents + " 이력 상세";
     this.createDefaultLabel();
-    this.listConsumeAnalyze();
   },
   beforeMount() {},
   mounted() {},
@@ -121,6 +120,7 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    // 차트에 있을 3개월 라벨 생성
     createDefaultLabel: function() {
       var labelDate = new Date();
       if (this.$store.state.user.dt_basic > labelDate.getDate()) {
@@ -132,7 +132,9 @@ export default {
         labelDate.setMonth(labelDate.getMonth() + 1);
         this.$set(this.mylabels, i, Common.formatDate(labelDate, "yyyymm"));
       }
+      this.listConsumeAnalyze();
     },
+    // 월별, 일별 소비지출 데이터 조회
     listConsumeAnalyze: function() {
       var _this = this;
       var formData = new FormData();
@@ -147,6 +149,7 @@ export default {
           var list = response.data.listConsumeAnalyzeMonth;
           if (list == null || list.length == 0) {
             _this.isNoData = true;
+            _this.seen = true;
             return;
           } else {
             _this.isNoData = false;
@@ -163,9 +166,10 @@ export default {
           _this.listConsumeAnalyzeMonth = response.data.listConsumeAnalyzeMonth;
           _this.listConsumeAnalyzeDay = response.data.listConsumeAnalyzeDay;
 
-          _this.isNone = false;
+          _this.seen = true;
         });
     },
+    // 화면에 표출된 시간 포맷
     formatTime: function(time) {
       var hh = time.substring(0, 2);
       var mm = time.substring(2, 4);

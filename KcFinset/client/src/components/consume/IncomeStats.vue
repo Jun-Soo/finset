@@ -1,7 +1,7 @@
 <template>
   <section v-if="seen">
     <div class="container">
-      <multiselect track-by="text" v-model="orderType" label="text" :preselect-first="true" :options="options" :searchable="false" :allow-empty="false">
+      <multiselect v-model="orderType" :options="options" :title="'조회순'">
       </multiselect>
       <div v-if="orderType.value=='date'">
         <div class="nobox-list" v-for="(each, idx) in detailList" :key="idx">
@@ -12,7 +12,7 @@
               <p><em class="number">{{numberWithCommas(each.amt_in_out)}}</em>원</p>
             </div>
             <div class="flex">
-              <p class="key"><img src="../../assets/images/common/bu_list_drug.png" width="15px" class="mr5" alt="" />{{each.nm_class}}</p>
+              <p class="key"><img :src="getConsumeIconSrc(each.type_in_out, each.cd_class)" width="15px" class="mr5" alt="" />{{each.nm_class}}</p>
               <p class="key">{{each.nm_fc}}</p>
             </div>
           </div>
@@ -27,7 +27,7 @@
               <p><em class="number">{{numberWithCommas(_item.amt_in_out)}}</em>원</p>
             </div>
             <div class="flex">
-              <p class="key"><img src="../../assets/images/common/bu_list_drug.png" width="15px" class="mr5" alt="" />{{_item.nm_class}}</p>
+              <p class="key"><img :src="getConsumeIconSrc(_item.type_in_out, _item.cd_class)" width="15px" class="mr5" alt="" />{{_item.nm_class}}</p>
               <p class="key">{{_item.nm_fc}}</p>
             </div>
           </div>
@@ -70,6 +70,8 @@ export default {
       if (!this.initYN) {
         this.seen = false;
         this.getSettlementDetail();
+      } else {
+        this.orderType = this.options[0];
       }
     }
   },
@@ -80,7 +82,6 @@ export default {
   },
   created() {
     this.dataSet(this.$route.query);
-    this.listConsumeShareInfo();
   },
   beforeMount() {},
   mounted() {},
@@ -91,6 +92,24 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    getConsumeIconSrc: function(type_in_out, cd_class) {
+      let cd;
+      if ((cd_class || "") == "" || (type_in_out || "") == "") {
+        cd = "99";
+      } else if (type_in_out == "01") {
+      } else {
+        //default로 설정된 cd_class가 24까지밖에 없음
+        if (parseInt(cd_class) > 24) {
+          cd = "99";
+        } else {
+          cd = cd_class;
+        }
+      }
+      if (cd == undefined) {
+        return require("@/assets/images/consume/icon/99.png");
+      }
+      return require("@/assets/images/consume/icon/" + cd + ".png");
+    },
     listConsumeShareInfo: function() {
       var _this = this;
       this.$http
@@ -137,8 +156,10 @@ export default {
         }
         if (_this.orderType.value == "date") {
           _this.detailList = tList;
+          console.log(_this.detailList);
         } else {
           _this.detailList2 = tList;
+          console.log(_this.detailList2);
         }
         _this.seen = true;
       });
@@ -159,9 +180,10 @@ export default {
       } else {
         cFrm.append("no_card", localStorage.getItem("no_card"));
         cFrm.append("contents", localStorage.getItem("nm_card"));
-        localStorage.removeItem("no_card", idx.no_card);
-        localStorage.removeItem("nm_card", idx.nm_card);
+        localStorage.removeItem("no_card");
+        localStorage.removeItem("nm_card");
       }
+      this.listConsumeShareInfo();
     },
     splitPersonList: function(str) {
       return str.split(",");

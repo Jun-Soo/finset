@@ -102,19 +102,23 @@ export default {
         this.isBackKey = false;
         return;
       }
-      if (this.$store.state.header.type == "sub") {
-        if (this.$store.state.header.backPath == "") {
-          this.$router.go(-1);
-        } else {
-          this.$router.push(this.$store.state.header.backPath);
-        }
-      }
+
+      this.clickBack();
     },
     clickBack: function() {
-      if (this.$store.state.header.backPath == "") {
+      if (
+        this.$store.state.header.fromPath != "" &&
+        this.$store.state.header.backPath == ""
+      ) {
+        var from = this.$store.state.header.fromPath;
+        this.$store.state.header.fromPath = "";
+        this.$router.push(from);
+      } else if (this.$store.state.header.backPath == "") {
         this.$router.go(-1);
       } else {
-        this.$router.push(this.$store.state.header.backPath);
+        var back = this.$store.state.header.backPath;
+        this.$store.state.header.backPath = "";
+        this.$router.push(back);
       }
     }
   }

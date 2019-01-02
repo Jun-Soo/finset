@@ -27,6 +27,13 @@ public interface PersonMapper {
 	 * @return
 	 */
 	int createPersonAgreeHist(PersonAgreeHistVO personAgreeHistVO);
+	
+	/**
+	 * 약관 동의 이력 조회
+	 * @param String
+	 * @return PersonAgreeHistVO
+	 */
+	List<PersonAgreeHistVO> getPersonAgreeHist(String no_person);
 
 	/**
 	 * 약관 동의 이력 상세 저장

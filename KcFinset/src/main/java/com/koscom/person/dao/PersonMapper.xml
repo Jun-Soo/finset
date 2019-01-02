@@ -1329,7 +1329,7 @@
 				)
 			VALUES(
 				 #{no_person, jdbcType = VARCHAR}
-				,'1'
+				,'01'
 				,'N'
 				,#{no_person, jdbcType = VARCHAR}
 				,SYSDATE

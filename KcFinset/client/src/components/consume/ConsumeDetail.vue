@@ -825,7 +825,6 @@ export default {
     },
     // 소비지출 데이터를 화면에 표출되는 형식에 맞게 할당
     allocateConsume: function(consumeVO) {
-      consumeVO.dt_trd = new Date(Common.formatDateDot(consumeVO.dt_trd));
       this.meansConsumeOption = [];
       this.meansConsumeOption.push({
         text: consumeVO.nm_card,
@@ -835,6 +834,7 @@ export default {
         text: consumeVO.nm_card,
         value: consumeVO.no_card
       };
+      consumeVO.dt_trd = Common.formatDtObjFromStr(consumeVO.dt_trd);
       this.consumeVO = consumeVO;
 
       if (this.curTab == "02") {
@@ -873,7 +873,14 @@ export default {
         parseInt(transVO.amt_dep) + parseInt(transVO.amt_wdrl) + ""
       );
       this.consumeVO.contents = this.getTransText(transVO);
-      this.consumeVO.dt_trd = new Date(Common.formatDateDot(transVO.dt_trd));
+      // this.consumeVO.dt_trd = new Date(Common.formatDateDot(transVO.dt_trd));
+      // this.consumeVO.dt_trd = new Date(Common.formatDateDot(transVO.dt_trd));
+      // this.consumeVO.dt_trd = new Date(
+      //   consumeVO.dt_trd.substring(0, 4),
+      //   parseInt(consumeVO.dt_trd.substring(4, 6)) - 1,
+      //   consumeVO.dt_trd.substring(6, 8)
+      // );
+      this.consumeVO.dt_trd = Common.formatDtObjFromStr(transVO.dt_trd);
       this.consumeVO.tm_trd = transVO.tm_trd;
       this.consumeVO.seq_tran = transVO.seq_tran;
 

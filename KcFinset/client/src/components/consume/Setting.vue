@@ -50,7 +50,10 @@ export default {
   created() {
     this.getPersonSetInfo();
     for (var i = 1; i <= 31; i++) {
-      this.dt_basic_option.push({ text: i + "일", value: i + "" });
+      this.dt_basic_option.push({
+        text: i + "일",
+        value: (i + "").length == 1 ? "0" + i : i + ""
+      });
     }
   },
   beforeMount() {},

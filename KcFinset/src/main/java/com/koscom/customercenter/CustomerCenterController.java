@@ -1277,7 +1277,7 @@ public class CustomerCenterController implements Constant {
 	 * @return
 	 */
 	@RequestMapping("/getCustomerServiceCenter.json")
-	public String frameCustomerServiceCenter(HttpServletRequest request, Model model, HttpSession session) {
+	public String getCustomerServiceCenter(HttpServletRequest request, Model model, HttpSession session) {
 
 		String no_person = (String) session.getAttribute("no_person");
 		ReturnClass rc = cacheManager.clearCacheCode();

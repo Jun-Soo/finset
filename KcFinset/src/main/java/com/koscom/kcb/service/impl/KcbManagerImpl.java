@@ -207,9 +207,9 @@ public class KcbManagerImpl implements KcbManager {
 
 			HashMap<String, String> clobMap = creditMapper.getKcbInfoCLOB(schMap);
 			// DB에 기존 요청 내역이 있을 경우 정상 처리
-			if( clobMap == null)	{
-				logger.error("기존 요청 한 내역이 있습니다.");
-				return new ReturnClass(Constant.SUCCESS, "기존 요청 한 내역이 있습니다.");
+			if( clobMap != null)	{
+				logger.info("당일 요청한 내역이 있습니다.");
+				return new ReturnClass(Constant.SUCCESS, "당일 요청한 내역이 있습니다.");
 			}
 			
 			//신용리포트 조회 및 데이터 확인용 조회

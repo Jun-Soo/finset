@@ -37,7 +37,7 @@ export default {
     return {
       seen: false, // 화면 표출 여부
       yn_installment: "N", // 할부 적용 여부
-      dt_basic: { text: "1일", value: "1" }, // 기준일
+      dt_basic: { text: "1일", value: "01" }, // 기준일
       dt_basic_option: [] // 기준일 리스트
     };
   },

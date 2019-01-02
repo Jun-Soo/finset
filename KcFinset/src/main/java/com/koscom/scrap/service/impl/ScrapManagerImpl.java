@@ -1593,15 +1593,15 @@ public class ScrapManagerImpl implements ScrapManager {
         }
         scrapMapper.updateFcLinkInfo(fcLinkInfoVO);
         
-        //카드내역 저장 전 삭제상태로 변경
-        ScrCardInfoVO scrCardInfoVO = new ScrCardInfoVO();
-        scrCardInfoVO.setNo_person(no_person);
-        scrCardInfoVO.setCd_fc(cd_fc);
-        scrapMapper.updateScrCardInfo(scrCardInfoVO);
-        
     	//카드내역 저장
     	List<ScrCardInfoVO> ScrCardInfoList = userCardOutputVO.getCARD_INFO();
     	if(ScrCardInfoList != null && ScrCardInfoList.size() > 0){
+    		//카드내역 저장 전 삭제상태로 변경
+            ScrCardInfoVO scrCardInfoVO = new ScrCardInfoVO();
+            scrCardInfoVO.setNo_person(no_person);
+            scrCardInfoVO.setCd_fc(cd_fc);
+            scrapMapper.updateScrCardInfo(scrCardInfoVO);
+            
     		for (ScrCardInfoVO scrCardInfo : ScrCardInfoList) {		
     			logger.debug("scrCardInfo.getNo_card     : "+ scrCardInfo.getNo_card());
                 logger.debug("scrCardInfo.getNm_card     : "+ scrCardInfo.getNm_card());
@@ -1625,14 +1625,15 @@ public class ScrapManagerImpl implements ScrapManager {
         scrapMapper.insertScrReqCardHist(scrReqCardVO);
         scrapMapper.createScrReqCard(scrReqCardVO);
         
-        //카드 한도내역 저장 전 삭제상태로 변경
-        ScrCardLimitInfoVO scrCardLimitInfoVO = new ScrCardLimitInfoVO();
-        scrCardLimitInfoVO.setNo_person(no_person);
-        scrCardLimitInfoVO.setCd_fc(cd_fc);
-        scrapMapper.updateScrCardLimitInfo(scrCardLimitInfoVO);
         //카드 한도내역 저장
     	List<ScrCardLimitInfoVO> ScrCardLimitInfoList = userCardOutputVO.getCARD_LIMIT();
     	if(ScrCardLimitInfoList != null && ScrCardLimitInfoList.size() > 0){
+    		//카드 한도내역 저장 전 삭제상태로 변경
+            ScrCardLimitInfoVO scrCardLimitInfoVO = new ScrCardLimitInfoVO();
+            scrCardLimitInfoVO.setNo_person(no_person);
+            scrCardLimitInfoVO.setCd_fc(cd_fc);
+            scrapMapper.updateScrCardLimitInfo(scrCardLimitInfoVO);
+            
     		for (ScrCardLimitInfoVO scrCardLimitInfo : ScrCardLimitInfoList) {		
     			logger.debug("scrCardLimitInfo.getType_card      : "+ scrCardLimitInfo.getType_card());
                 logger.debug("scrCardLimitInfo.getAmt_cash_limit : "+ scrCardLimitInfo.getAmt_cash_limit());

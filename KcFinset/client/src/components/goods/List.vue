@@ -73,13 +73,13 @@
         <button>검색</button>
       </div>
       <div class="wrap">
-        <div class="item">
+        <!-- <div class="item">
           <div class="key">신용등급</div>
           <div class="bar">
             <p><span class="active" style="width: 20%;"></span><span class="circle" style="left: 20%;"></span></p>
           </div>
           <div class="num">3</div>
-        </div>
+        </div> -->
         <div class="check-wrap">
           <div class="key">종류</div>
           <div class="search-check">

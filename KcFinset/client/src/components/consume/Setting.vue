@@ -35,10 +35,10 @@ export default {
   name: "ConsumeSetting",
   data() {
     return {
-      seen: false,
-      yn_installment: "N",
-      dt_basic: { text: "1일", value: "1" },
-      dt_basic_option: []
+      seen: false, // 화면 표출 여부
+      yn_installment: "N", // 할부 적용 여부
+      dt_basic: { text: "1일", value: "1" }, // 기준일
+      dt_basic_option: [] // 기준일 리스트
     };
   },
   components: {},
@@ -63,7 +63,10 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    // ---------------------화면 컨트롤---------------------
+    // 버튼 클릭 시
     clickSetting: function(key) {
+      // 할부 분할 여부만 object가 떨어짐
       if (typeof key == "object") {
         if (this.yn_installment == "Y") {
           this.yn_installment = "N";
@@ -75,6 +78,9 @@ export default {
         this.$router.push("/consume/" + key);
       }
     },
+    // ---------------------//화면 컨트롤---------------------
+    // ---------------------데이터 이동---------------------
+    // 사용자 설정 정보 조회
     getPersonSetInfo: function() {
       var _this = this;
       this.$http
@@ -82,7 +88,6 @@ export default {
         .then(function(response) {
           var personInfo = response.data.personInfo;
           _this.yn_installment = personInfo.yn_installment;
-          // _this.dt_basic = personInfo.dt_basic;
           _this.dt_basic = {
             text: personInfo.dt_basic + "일",
             value: personInfo.dt_basic + ""
@@ -90,6 +95,7 @@ export default {
           _this.seen = true;
         });
     },
+    // 할부 적용 여부 업데이트
     modifyYn_installment: function() {
       var _this = this;
       var formData = new FormData();
@@ -98,6 +104,7 @@ export default {
         .post("/m/consume/modifyYn_installment.json", formData)
         .then(function(response) {});
     },
+    // 기준일 업데이트
     modifyDt_basic: function(param) {
       var _this = this;
       var formData = new FormData();
@@ -108,6 +115,7 @@ export default {
           _this.$store.state.user.dt_basic = param.value;
         });
     }
+    // ---------------------//데이터 이동---------------------
   }
 };
 </script>

@@ -10,7 +10,7 @@
         <div class="wrap">
           <div class="item">
             <p class="key">대금<em>(원)</em></p>
-            <p class="value">{{formatNumber(paymentSummary.sum_charge_yyyymm)}}</p>
+            <p class="value">{{Common.formatNumber(paymentSummary.sum_charge_yyyymm)}}</p>
           </div>
           <div class="item">
             <p class="key">청구내역 수</p>
@@ -34,7 +34,6 @@
       <div v-else v-for="(payment, index) in paymentList" :key="index" class="item">
         <div class="top">
           <p class="symbol"><img :src="payment.imgSrc" alt="" />{{payment.nm_fc}}</p>
-          <!-- <p class="text"><span class="circle" :class="settingList[shareList.findIndex(person => person.no_person === payment.no_person)].color">{{payment.nm_person.substring(payment.nm_person.length-2)}}</span></p> -->
           <p class="text" v-if="shareList.length != 1">
             <span class="circle" :class="settingList[shareList.findIndex(person => person.no_person === payment.no_person)].color">{{payment.nm_person}}</span>
           </p>
@@ -42,7 +41,7 @@
         <div class="number-wrap">
           <div class="left">
             <p class="key">결제금액</p>
-            <p class="number">{{formatNumber(payment.monthly_charge)}}<em>원</em></p>
+            <p class="number">{{Common.formatNumber(payment.monthly_charge)}}<em>원</em></p>
           </div>
         </div>
       </div>
@@ -58,10 +57,12 @@ export default {
   name: "ConsumePayment",
   data() {
     return {
-      seen: false,
-      ym: "",
-      standardDt: new Date(),
-      shareList: [],
+      seen: false, // 화면 표출 여부
+      Common: Common, // 공통
+      ym: "", // 상단에 들어갈 월 텍스트
+      standardDt: new Date(), // 기준일
+      shareList: [], // 공유된 사용자 리스트
+      // 공유된 사용자의 색 class 및 id
       settingList: [
         { color: "red", id: "chk1" },
         { color: "orange", id: "chk2" },
@@ -69,14 +70,12 @@ export default {
         { color: "blue", id: "chk4" },
         { color: "purple", id: "chk5" }
       ],
-      isScrap: false,
-      paymentSummary: { sum_charge_yyyymm: 0, count_fc: 0 },
-      paymentList: []
+      isScrap: false, // 스크래핑 여부
+      paymentSummary: { sum_charge_yyyymm: 0, count_fc: 0 }, // 대금액 및 청구내역 수
+      paymentList: [] // 청구내역 리스트
     };
   },
   components: {},
-  // computed () {
-  // },
   beforeCreate() {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "카드 대금 조회";
@@ -121,26 +120,29 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    getYm: function(date) {
-      return (
-        date.getFullYear() +
-        ((date.getMonth() + 1 + "").length == 1 ? "0" : "") +
-        (date.getMonth() + 1)
-      );
-    },
+    // ---------------------데이터 포멧---------------------
+    // 상단에 표출될 년 월 텍스트
     formatHead: function(dateStr) {
       return dateStr.substr(0, 4) + "." + dateStr.substr(4, 6);
     },
-    setPrevMM: function() {
-      this.standardDt.setMonth(this.standardDt.getMonth() - 1);
-      this.ym = this.formatHead(this.getYm(this.standardDt));
+    // ---------------------//데이터 포멧---------------------
+    // ---------------------화면 컨트롤---------------------
+    // 공유된 사용자 버튼 클릭 시
+    clickShare: function(params) {
+      var no_person_list = this.filterShareList();
+      if (no_person_list.length <= 1 && this.shareList[params].isShow == true) {
+        return;
+      }
+      this.shareList[params].isShow = !this.shareList[params].isShow;
       this.listPayment();
     },
-    setNextMM: function() {
-      this.standardDt.setMonth(this.standardDt.getMonth() + 1);
-      this.ym = this.formatHead(this.getYm(this.standardDt));
-      this.listPayment();
+    // 금융사 연동 화면으로 이동
+    goCtrlFcLink: function() {
+      this.$router.push("/scrap/CtrlFcLink");
     },
+    // ---------------------//화면 컨트롤---------------------
+    // ---------------------데이터 이동---------------------
+    // 공유된 사용자 정보 리스트 조회
     listConsumeShareInfo: function() {
       var _this = this;
       this.$http
@@ -154,6 +156,7 @@ export default {
           _this.listPayment();
         });
     },
+    // 카드 대금 리스트 조회
     listPayment: function() {
       var _this = this;
       this.$http
@@ -175,6 +178,29 @@ export default {
           _this.seen = true;
         });
     },
+    // ---------------------//데이터 이동---------------------
+    // ---------------------기타---------------------
+    // Date 에서 YYYYMM 형식의 String으로 데이터 변형
+    getYm: function(date) {
+      return (
+        date.getFullYear() +
+        ((date.getMonth() + 1 + "").length == 1 ? "0" : "") +
+        (date.getMonth() + 1)
+      );
+    },
+    // 이전 달 세팅
+    setPrevMM: function() {
+      this.standardDt.setMonth(this.standardDt.getMonth() - 1);
+      this.ym = this.formatHead(this.getYm(this.standardDt));
+      this.listPayment();
+    },
+    // 다음 달 세팅
+    setNextMM: function() {
+      this.standardDt.setMonth(this.standardDt.getMonth() + 1);
+      this.ym = this.formatHead(this.getYm(this.standardDt));
+      this.listPayment();
+    },
+    // 공유된 사용자 중 on 처리 되어 있는 사용자 리스트
     filterShareList: function() {
       var shareList = new Array();
       var _this = this;
@@ -184,24 +210,8 @@ export default {
         }
       }
       return shareList;
-    },
-    formatNumber: function(number) {
-      return Common.formatNumber(number);
-    },
-    clickShare: function(params) {
-      var no_person_list = this.filterShareList();
-      if (no_person_list.length <= 1 && this.shareList[params].isShow == true) {
-        return;
-      }
-      this.shareList[params].isShow = !this.shareList[params].isShow;
-      this.listPayment();
-    },
-    formatDateDot: function(date) {
-      return Common.formatDateDot(date);
-    },
-    goCtrlFcLink: function() {
-      this.$router.push("/scrap/CtrlFcLink");
     }
+    // ---------------------//기타---------------------
   }
 };
 </script>

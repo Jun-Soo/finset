@@ -11,11 +11,11 @@
         <div class="wrap">
           <div class="item">
             <p class="key">지출<em>(원)</em></p>
-            <p class="value">{{formatNumber(consume)}}</p>
+            <p class="value">{{Common.formatNumber(consume)}}</p>
           </div>
           <div class="item">
             <p class="key">수입<em>(원)</em></p>
-            <p class="value">{{formatNumber(income)}}</p>
+            <p class="value">{{Common.formatNumber(income)}}</p>
           </div>
         </div>
         <Progress :max="progressOption.max" :text="progressOption.text" :click="clickProgress" />
@@ -85,7 +85,7 @@
           <div class="nodata">수입, 소비 내역이 없습니다</div>
         </div>
         <div v-else v-for="(subList, index) in consumeList" :key="index" class="list-wrap">
-          <p class="date">{{formatDate(subList[0].dt_trd,"mmdd")}}</p>
+          <p class="date">{{Common.formatDate(subList[0].dt_trd,"mmdd")}}</p>
           <div v-for="vo in subList" :key="vo.index" class="item" @click="clickConsumeList(vo.seq_consume, vo.no_person, vo.type_in_out, vo.yn_person_regist)">
             <div class="left">
               <p class="name">{{vo.contents}}</p>
@@ -95,7 +95,7 @@
               </p>
             </div>
             <div class="right">
-              <p :class="chkType(vo.type_in_out)" class="number">{{formatNumber(vo.amt_in_out,vo.type_in_out=='02',vo.type_in_out=='01')}}<em>원</em></p>
+              <p :class="chkType(vo.type_in_out)" class="number">{{Common.formatNumber(vo.amt_in_out,vo.type_in_out=='02',vo.type_in_out=='01')}}<em>원</em></p>
               <p class="circle red" v-if="shareList.length != 1"><span :class="settingList[shareList.findIndex(person => person.no_person === vo.no_person)].color"></span></p>
               <p class="text">{{formatMeansConsume(vo.means_consume)}}</p>
             </div>
@@ -116,17 +116,19 @@ export default {
   name: "ConsumeMain",
   data() {
     return {
-      seen: false,
-      ym: "",
-      consumeList: [],
-      shareList: [],
-      isScrap: false,
-      isGoal: false,
-      curDate: new Date(),
-      curTab: "00",
-      standardDt: new Date(),
-      income: "",
-      consume: "",
+      seen: false, // 화면 표출 여부
+      Common: Common, // 공통
+      ym: "", // 메인 상단에 들어갈 월 텍스트
+      consumeList: [], // 소비지출 내역
+      shareList: [], // 공유된 사용자 리스트
+      isScrap: false, // 스크래핑 여부
+      isGoal: false, // 예산설정 여부
+      curDate: new Date(), // 현재 일자
+      curTab: "00", // 현재 탭(00: 전체, 01: 수입, 02: 지출)
+      standardDt: new Date(), // 기준일(현재 일자와 비교)
+      income: "", // 수입 합계
+      consume: "", // 지출 합계
+      // 공유된 사용자의 색 class 및 id
       settingList: [
         { color: "red", id: "chk1" },
         { color: "orange", id: "chk2" },
@@ -134,14 +136,15 @@ export default {
         { color: "blue", id: "chk4" },
         { color: "purple", id: "chk5" }
       ],
-      progressText: "설정된 예산이 없습니다",
-      progressMax: 0
+      progressText: "설정된 예산이 없습니다", // progressbar 에 표출될 텍스트
+      progressMax: 0 // progressbar 에 채워질 길이(0 ~ 1)
     };
   },
   components: {
     Progress
   },
   computed: {
+    // 조건에 따른 progressbar 변형
     progressOption: function() {
       if (!this.isScrap) {
         return {
@@ -171,49 +174,9 @@ export default {
       }
     }
   },
-  // watch: {
-  //   isScrap: function(param) {
-  //     console.log("isScrap:" + param);
-  //     if (param) {
-  //     } else {
-  //       this.progressOption = {
-  //         text: "공인 인증서를 등록하여 소비내역을 관리하세요",
-  //         max: 0
-  //       };
-  //     }
-  //   },
-  //   isGoal: function(param) {
-  //     console.log("isGoal:" + param);
-  //     if (this.isScrap == true) {
-  //       if (param) {
-  //       } else {
-  //         if (
-  //           this.curDate.getFullYear() == this.standardDt.getFullYear() &&
-  //           this.curDate.getMonth() == this.standardDt.getMonth()
-  //         ) {
-  //           this.progressOption = {
-  //             text: "예산을 설정하여 목표를 이루세요",
-  //             max: 0
-  //           };
-  //         } else {
-  //           this.progressOption = {
-  //             text: "설정된 예산이 없습니다",
-  //             max: 0
-  //           };
-  //         }
-  //       }
-  //     } else {
-  //       this.progressOption = {
-  //         text: "공인 인증서를 등록하여 소비내역을 관리하세요",
-  //         max: 0
-  //       };
-  //     }
-  //   }
-  // },
   beforeCreate() {
     this.$store.state.header.type = "main";
     this.$store.state.header.active = "consume";
-    this.$parent.isBottom = true;
   },
   created() {
     if (this.$store.state.user.dt_basic > this.standardDt.getDate()) {
@@ -230,101 +193,12 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    listConsumeShareInfo: function() {
-      var _this = this;
-      this.$http
-        .get("/m/consume/listConsumeSharePersonInfo.json", { params: {} })
-        .then(function(response) {
-          var list = response.data.listConsumeSharePersonInfo;
-
-          for (var idx in list) {
-            list[idx].isShow = true;
-          }
-          _this.shareList = list;
-          _this.listConsumeInfo();
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
-          _this.seen = true;
-        });
-    },
-    listConsumeInfo: function() {
-      this.$store.state.isLoading = true;
-      var _this = this;
-      this.$http
-        .get("/m/consume/listConsumeInfo.json", {
-          params: {
-            ym: _this.ym.replace(".", ""),
-            type_in_out: _this.curTab,
-            no_person_list: _this.filterShareList()
-          }
-        })
-        .then(function(response) {
-          _this.income = response.data.income;
-          _this.consume = response.data.consume;
-          var consumeGoal = response.data.consumeGoal;
-          if ((consumeGoal || "") == "") {
-            _this.isGoal = false;
-          } else {
-            _this.isGoal = true;
-            // _this.progressOption.text =
-            _this.progressText =
-              consumeGoal.amt_expense / consumeGoal.amt_budget > 1
-                ? Common.formatNumber(
-                    consumeGoal.amt_expense - consumeGoal.amt_budget + ""
-                  ) +
-                  "원 초과 (" +
-                  Common.formatNumber(consumeGoal.amt_budget) +
-                  "원)"
-                : Common.formatNumber(
-                    consumeGoal.amt_expense - consumeGoal.amt_budget
-                  ) +
-                  "원 (" +
-                  Common.formatNumber(consumeGoal.amt_budget) +
-                  "원)";
-            // _this.progressOption.max =
-            _this.progressMax =
-              consumeGoal.amt_expense / consumeGoal.amt_budget > 1
-                ? 1
-                : consumeGoal.amt_expense / consumeGoal.amt_budget;
-          }
-          _this.isScrap = response.data.isScrap;
-          _this.consumeList = response.data.listConsumeInfo;
-          _this.$store.state.isLoading = false;
-          _this.seen = true;
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
-          _this.$store.state.isLoading = false;
-          _this.seen = true;
-        });
-    },
+    // ---------------------데이터 포멧---------------------
+    // 상단에 표출될 년 월 텍스트
     formatHead: function(dateStr) {
       return dateStr.substr(0, 4) + "." + dateStr.substr(4, 6);
     },
-    getYm: function(date) {
-      return (
-        date.getFullYear() +
-        ((date.getMonth() + 1 + "").length == 1 ? "0" : "") +
-        (date.getMonth() + 1)
-      );
-    },
-    setPrevMM: function() {
-      this.standardDt.setMonth(this.standardDt.getMonth() - 1);
-      this.ym = this.formatHead(this.getYm(this.standardDt));
-      this.listConsumeInfo();
-    },
-    setNextMM: function() {
-      this.standardDt.setMonth(this.standardDt.getMonth() + 1);
-      this.ym = this.formatHead(this.getYm(this.standardDt));
-      this.listConsumeInfo();
-    },
-    formatNumber: function(number, isMinus, isPlus) {
-      return Common.formatNumber(number, isMinus, isPlus);
-    },
-    formatDate: function(date, pattern) {
-      return Common.formatDate(date, pattern);
-    },
+    // 소비수단코드에 따른 소비수단명
     formatMeansConsume: function(means_consume) {
       switch (means_consume) {
         case "01":
@@ -348,27 +222,14 @@ export default {
           break;
       }
     },
+    // ---------------------//데이터 포멧---------------------
+    // ---------------------화면 컨트롤---------------------
+    // 탭 클릭 시
     clickTab: function(code) {
       this.curTab = code;
       this.listConsumeInfo();
     },
-    chkType: function(type) {
-      if (type === "01") {
-        return "blue";
-      } else {
-        return "red";
-      }
-    },
-    filterShareList: function() {
-      var shareList = new Array();
-      var _this = this;
-      for (var idx in _this.shareList) {
-        if (_this.shareList[idx].isShow) {
-          shareList.push(_this.shareList[idx].no_person);
-        }
-      }
-      return shareList;
-    },
+    // 공유된 사용자 버튼 클릭 시
     clickShare: function(params) {
       var no_person_list = this.filterShareList();
       if (no_person_list.length <= 1 && this.shareList[params].isShow == true) {
@@ -377,6 +238,7 @@ export default {
       this.shareList[params].isShow = !this.shareList[params].isShow;
       this.listConsumeInfo();
     },
+    // carousel 배너 클릭 시
     clickBanner: function(key) {
       var _this = this;
       switch (key) {
@@ -396,9 +258,11 @@ export default {
           break;
       }
     },
+    // 설정 버튼 클릭 시
     clickSetting: function() {
       this.$router.push("/consume/setting");
     },
+    // 각 소비 지출 리스트 클릭 시
     clickConsumeList: function(
       seq_consume,
       no_person,
@@ -421,9 +285,131 @@ export default {
         }
       });
     },
+    // 우측 하단 + 버튼 클릭 시
     regConsume: function() {
       this.$router.push("/consume/consumeDetail");
     },
+    // progressbar 클릭 시
+    clickProgress: function() {
+      if (!this.isScrap) {
+        this.$router.push("/scrap/CtrlFcLink");
+      } else if (!this.isGoal) {
+        if (
+          this.curDate.getFullYear() == this.standardDt.getFullYear() &&
+          this.curDate.getMonth() == this.standardDt.getMonth()
+        ) {
+          this.$router.push("/consume/regGoal");
+        }
+      }
+    },
+    // ---------------------//화면 컨트롤---------------------
+    // ---------------------데이터 이동---------------------
+    // 공유된 사용자 정보 리스트 조회
+    listConsumeShareInfo: function() {
+      var _this = this;
+      this.$http
+        .get("/m/consume/listConsumeSharePersonInfo.json", { params: {} })
+        .then(function(response) {
+          var list = response.data.listConsumeSharePersonInfo;
+
+          for (var idx in list) {
+            list[idx].isShow = true;
+          }
+          _this.shareList = list;
+          _this.listConsumeInfo();
+        })
+        .catch(e => {
+          this.$toast.center(ko.messages.error);
+          _this.seen = true;
+        });
+    },
+    // 소비지출 리스트 조회
+    listConsumeInfo: function() {
+      // this.$store.state.isLoading = true;
+      var _this = this;
+      this.$http
+        .get("/m/consume/listConsumeInfo.json", {
+          params: {
+            ym: _this.ym.replace(".", ""),
+            type_in_out: _this.curTab,
+            no_person_list: _this.filterShareList()
+          }
+        })
+        .then(function(response) {
+          _this.income = response.data.income;
+          _this.consume = response.data.consume;
+          var consumeGoal = response.data.consumeGoal;
+          if ((consumeGoal || "") == "") {
+            _this.isGoal = false;
+          } else {
+            _this.isGoal = true;
+            _this.progressText =
+              consumeGoal.amt_expense / consumeGoal.amt_budget > 1
+                ? Common.formatNumber(
+                    consumeGoal.amt_expense - consumeGoal.amt_budget + ""
+                  ) +
+                  "원 초과 (" +
+                  Common.formatNumber(consumeGoal.amt_budget) +
+                  "원)"
+                : Common.formatNumber(
+                    consumeGoal.amt_expense - consumeGoal.amt_budget
+                  ) +
+                  "원 (" +
+                  Common.formatNumber(consumeGoal.amt_budget) +
+                  "원)";
+            _this.progressMax =
+              consumeGoal.amt_expense / consumeGoal.amt_budget > 1
+                ? 1
+                : consumeGoal.amt_expense / consumeGoal.amt_budget;
+          }
+          _this.isScrap = response.data.isScrap;
+          _this.consumeList = response.data.listConsumeInfo;
+          // _this.$store.state.isLoading = false;
+          _this.seen = true;
+        });
+    },
+    // ---------------------//데이터 이동---------------------
+    // ---------------------기타---------------------
+    // 공유된 사용자 중 on 처리 되어 있는 사용자 리스트
+    filterShareList: function() {
+      var shareList = new Array();
+      var _this = this;
+      for (var idx in _this.shareList) {
+        if (_this.shareList[idx].isShow) {
+          shareList.push(_this.shareList[idx].no_person);
+        }
+      }
+      return shareList;
+    },
+    // Date 에서 YYYYMM 형식의 String으로 데이터 변형
+    getYm: function(date) {
+      return (
+        date.getFullYear() +
+        ((date.getMonth() + 1 + "").length == 1 ? "0" : "") +
+        (date.getMonth() + 1)
+      );
+    },
+    // 이전 달 세팅
+    setPrevMM: function() {
+      this.standardDt.setMonth(this.standardDt.getMonth() - 1);
+      this.ym = this.formatHead(this.getYm(this.standardDt));
+      this.listConsumeInfo();
+    },
+    // 다음 달 세팅
+    setNextMM: function() {
+      this.standardDt.setMonth(this.standardDt.getMonth() + 1);
+      this.ym = this.formatHead(this.getYm(this.standardDt));
+      this.listConsumeInfo();
+    },
+    // 수입인지 지출인지 확인해서 해당하는 class 리턴
+    chkType: function(type) {
+      if (type === "01") {
+        return "blue";
+      } else {
+        return "red";
+      }
+    },
+    // 아이콘 url
     getConsumeIconSrc: function(type_in_out, cd_class) {
       let cd;
       if ((cd_class || "") == "" || (type_in_out || "") == "") {
@@ -441,27 +427,12 @@ export default {
         return require("@/assets/images/consume/icon/99.png");
       }
       return require("@/assets/images/consume/icon/" + cd + ".png");
-    },
-    clickProgress: function() {
-      if (!this.isScrap) {
-        this.$router.push("/scrap/CtrlFcLink");
-      } else if (!this.isGoal) {
-        if (
-          this.curDate.getFullYear() == this.standardDt.getFullYear() &&
-          this.curDate.getMonth() == this.standardDt.getMonth()
-        ) {
-          this.$router.push("/consume/regGoal");
-        }
-      }
     }
+    // ---------------------//기타---------------------
   }
 };
 </script>
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
-.active {
-  background: green;
-  color: white;
-}
 </style>

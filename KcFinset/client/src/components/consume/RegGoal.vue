@@ -78,19 +78,18 @@
 </template>
 
 <script>
-import ko from "vee-validate/dist/locale/ko.js";
 import Common from "@/assets/js/common.js";
+import ko from "vee-validate/dist/locale/ko.js";
 
 export default {
   name: "ConsumeRegGoal",
   data() {
     return {
-      seen: true,
-      curTab: "01",
-      curLabel: "custom",
-      listDetailGoal1: {},
-      listDetailGoal2: {},
-      listStandardConsume: {}
+      seen: false, // 화면 표출 여부
+      curTab: "01", // 현재 탭(01: 분류별, 02: 수단별)
+      curLabel: "custom", // 현재 라벨(average: 3개월 평균, prevMon: 전 월, custom: 사용자 지정)
+      listDetailGoal1: {}, // 분류별 예산 리스트
+      listDetailGoal2: {} // 수단별 예산 리스트
     };
   },
   components: {},
@@ -130,6 +129,18 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    // ---------------------데이터 포멧---------------------
+    // 20자 이상인 카드 명은 잘라내기
+    formatNmCard: function(nm_card) {
+      if (nm_card.length > 20) {
+        return nm_card.substring(0, 20) + "...";
+      } else {
+        return nm_card;
+      }
+    },
+    // ---------------------//데이터 포멧---------------------
+    // ---------------------화면 컨트롤---------------------
+    // 탭 클릭 시
     clickTab: function(key) {
       if (this.curTab == key) {
         return;
@@ -138,6 +149,32 @@ export default {
       this.curLabel = "custom";
       this.listGoal();
     },
+    // 라벨 클릭 시
+    clickLabel: function(key) {
+      if (this.curLabel == key) {
+        return;
+      }
+      this.curLabel = key;
+      switch (key) {
+        case "average":
+          this.listAverageConsume();
+          break;
+
+        case "prevMon":
+          this.listPrevMonthConsume();
+          break;
+
+        case "custom":
+          this.listGoal();
+          break;
+
+        default:
+          break;
+      }
+    },
+    // ---------------------//화면 컨트롤---------------------
+    // ---------------------데이터 이동---------------------
+    // 사용자 지정 예산 리스트 조회
     listGoal: function() {
       var _this = this;
       this.$http
@@ -150,10 +187,10 @@ export default {
           } else {
             _this.listDetailGoal2 = response.data.listDetailGoal;
           }
-
-          // _this.seen = true;
+          _this.seen = true;
         });
     },
+    // 전월 사용 리스트 조회
     listPrevMonthConsume: function() {
       var _this = this;
       this.$http
@@ -181,6 +218,7 @@ export default {
           }
         });
     },
+    // 3개월 평균 리스트 조회
     listAverageConsume: function() {
       var _this = this;
       this.$http
@@ -208,28 +246,7 @@ export default {
           }
         });
     },
-    clickLabel: function(key) {
-      if (this.curLabel == key) {
-        return;
-      }
-      this.curLabel = key;
-      switch (key) {
-        case "average":
-          this.listAverageConsume();
-          break;
-
-        case "prevMon":
-          this.listPrevMonthConsume();
-          break;
-
-        case "custom":
-          this.listGoal();
-          break;
-
-        default:
-          break;
-      }
-    },
+    // 예산 등록
     createGoal: function() {
       var _this = this;
       this.$validator.validateAll().then(res => {
@@ -242,18 +259,10 @@ export default {
             .then(function(response) {
               _this.$toast.center("저장되었습니다");
             });
-        } else {
-          // _this.$toast.center(ko.messages.require);
         }
       });
-    },
-    formatNmCard: function(nm_card) {
-      if (nm_card.length > 20) {
-        return nm_card.substring(0, 20) + "...";
-      } else {
-        return nm_card;
-      }
     }
+    // ---------------------//데이터 이동---------------------
   }
 };
 </script>

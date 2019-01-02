@@ -914,7 +914,7 @@ public class KcbManagerImpl implements KcbManager {
 					kcbCardInfo.put("ymd_open",	 	(StringUtil.regExpFindNum(divPrdList.get(0).text())));	//개설일자
 					kcbCardInfo.put("amt_limit", 	(StringUtil.addAmt(divPrdList.get(1).text())));			//총한도
 					kcbCardInfo.put("amt_ca_limit", (StringUtil.addAmt(divPrdList.get(2).text())));			//단기카드대출 한도
-	
+
 					cardOpenList.add(kcbCardInfo);
 					
 					//상단 내용을 기준으로 KCB_CARD_INFO에도 집어넣기

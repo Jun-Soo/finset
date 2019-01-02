@@ -478,6 +478,17 @@ export default {
         this.$router.push("/consume/consumeClass");
       }
     },
+    // 이력 상세 이동
+    goAnalyze: function() {
+      this.$router.push({
+        path: "/consume/analyze",
+        query: {
+          type_in_out: this.curTab,
+          contents: this.consumeVO.contents,
+          cd_fc: this.consumeVO.cd_fc
+        }
+      });
+    },
     // ---------------------//화면 컨트롤---------------------
     // ---------------------데이터 이동---------------------
     // 소비지출 세부내역 조회
@@ -812,17 +823,6 @@ export default {
         return vo.doc1;
       }
     },
-    // 이력 상세 이동
-    goAnalyze: function() {
-      this.$router.push({
-        path: "/consume/analyze",
-        query: {
-          type_in_out: this.curTab,
-          contents: this.consumeVO.contents,
-          cd_fc: this.consumeVO.cd_fc
-        }
-      });
-    },
     // 소비지출 데이터를 화면에 표출되는 형식에 맞게 할당
     allocateConsume: function(consumeVO) {
       this.meansConsumeOption = [];
@@ -873,13 +873,6 @@ export default {
         parseInt(transVO.amt_dep) + parseInt(transVO.amt_wdrl) + ""
       );
       this.consumeVO.contents = this.getTransText(transVO);
-      // this.consumeVO.dt_trd = new Date(Common.formatDateDot(transVO.dt_trd));
-      // this.consumeVO.dt_trd = new Date(Common.formatDateDot(transVO.dt_trd));
-      // this.consumeVO.dt_trd = new Date(
-      //   consumeVO.dt_trd.substring(0, 4),
-      //   parseInt(consumeVO.dt_trd.substring(4, 6)) - 1,
-      //   consumeVO.dt_trd.substring(6, 8)
-      // );
       this.consumeVO.dt_trd = Common.formatDtObjFromStr(transVO.dt_trd);
       this.consumeVO.tm_trd = transVO.tm_trd;
       this.consumeVO.seq_tran = transVO.seq_tran;

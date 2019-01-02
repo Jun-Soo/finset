@@ -8,7 +8,7 @@
             <div class="btn-menu-wrap" :class="{'on':isOpen}" v-if="isMine">
               <button id="btn-menu-pop" class="btn-menu-pop" @click="openMenu"></button>
               <div class="menu">
-                <a @click="clickMenu('modify')">수정</a>
+                <!-- <a @click="clickMenu('modify')">수정</a> -->
                 <a @click="clickMenu('delete')">삭제</a>
                 <a @click="clickMenu('memo')">메모</a>
                 <a @click="clickMenu('tel')">전화걸기</a>
@@ -105,9 +105,9 @@
       <RepPop slot="body" :curRepay="curRepay" :close="closeRepPop" />
     </vue-modal>
 
-    <div v-if="!isAuto && isMine" class="btn-wrap float">
+    <!-- <div v-if="!isAuto && isMine" class="btn-wrap float">
       <a @click="repayment" class="blue box solid">상환금 입력</a>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -120,15 +120,14 @@ export default {
   name: "DebtDetail",
   data() {
     return {
-      seen: false,
-      curTab: "contract",
-      isMine: true,
-      debtVO: "",
-      listDebtRepay: "",
-      curIndex: "",
-      curRepay: "",
-      isOpen: false,
-      isAuto: true
+      seen: false, // 화면 표출 여부
+      curTab: "contract", // 현재 탭(contract: 계약 정보, repaymnet: 상환 정보)
+      isMine: true, // 보인 부채 여주
+      debtVO: "", // 부채 데이터
+      listDebtRepay: "", // 12개월 상환 정보
+      curRepay: "", // 상세 상환 정보로 나올 데이터
+      isOpen: false, // 모달 표시 여부
+      isAuto: true // kcb 등록 여부(아니면 개인 등록 부채로 현재 사용하지 않음)
     };
   },
   components: {
@@ -217,8 +216,6 @@ export default {
                 .then(function(response) {
                   _this.$router.push("/debt/main");
                 });
-            } else {
-              // this.$dialogs.alert("취소를 선택했습니다.", Constant.options);
             }
           });
       } else if (key == "memo") {

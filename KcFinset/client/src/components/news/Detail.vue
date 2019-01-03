@@ -7,8 +7,8 @@
           <p class="date"><em>{{newsCompany}}</em>{{pubDate}}</p>
         </li>
         <li>
-          <img :src="bodyImg" /><br />
-          <p v-html="contents" />
+          <img :src="bodyImg" />
+          <div class="mt10 mb30" v-html="contents" />
         </li>
       </ul>
     </div>

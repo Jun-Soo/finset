@@ -17,10 +17,10 @@
           </div>
           <p class="key">상환금액(당월)</p>
           <div class="wrap">
-            <div class="left">{{formatNumber(debtVO.cur_mm_amt_repay * 10000)}}<em>원</em></div>
+            <div class="left">{{Common.formatNumber(debtVO.cur_mm_amt_repay * 10000)}}<em>원</em></div>
             <div class="right">
               <p class="key">잔액</p>
-              <p class="value">{{formatNumber(debtVO.amt_remain)}}<em>원</em></p>
+              <p class="value">{{Common.formatNumber(debtVO.amt_remain)}}<em>원</em></p>
             </div>
           </div>
           <div class="bar">
@@ -62,7 +62,7 @@
           </li>
           <li>
             <p class="key">대출원금</p>
-            <p class="value">{{formatNumber(debtVO.amt_contract/10000)}}만원</p>
+            <p class="value">{{Common.formatNumber(debtVO.amt_contract/10000)}}만원</p>
           </li>
           <li>
             <p class="key">대출기간</p>
@@ -74,7 +74,7 @@
           </li>
           <li>
             <p class="key">대출잔액</p>
-            <p class="value">{{formatNumber(debtVO.amt_remain/10000)}}만원</p>
+            <p class="value">{{Common.formatNumber(debtVO.amt_remain/10000)}}만원</p>
           </li>
           <li>
             <p class="key">잔여기간</p>
@@ -106,7 +106,7 @@
     </vue-modal>
 
     <!-- <div v-if="!isAuto && isMine" class="btn-wrap float">
-      <a @click="repayment" class="blue box solid">상환금 입력</a>
+      <a @click="goRepayment" class="blue box solid">상환금 입력</a>
     </div> -->
   </div>
 </template>
@@ -121,6 +121,7 @@ export default {
   data() {
     return {
       seen: false, // 화면 표출 여부
+      Common: Common, // 공통
       curTab: "contract", // 현재 탭(contract: 계약 정보, repaymnet: 상환 정보)
       isMine: true, // 보인 부채 여주
       debtVO: "", // 부채 데이터
@@ -150,30 +151,17 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    getDebtInfo: function() {
-      var _this = this;
-      this.$http
-        .get("/m/debt/getDebtInfo.json", {
-          params: {
-            no_person: this.$route.query.no_person,
-            no_manage_info: this.$route.query.no_manage_info
-          }
-        })
-        .then(function(response) {
-          if ((response.data.debtVO || "") != "") {
-            _this.debtVO = response.data.debtVO;
-            _this.listDebtRepay = response.data.listDebtRepay;
-            _this.isAuto =
-              _this.debtVO.debt_yn == null || _this.debtVO.debt_yn == "N"
-                ? true
-                : false;
-          }
-          _this.seen = true;
-        });
+    // ---------------------데이터 포맷---------------------
+    // 잘못된 데이터 체크가 들어간 날짜 포맷
+    formatDateDot: function(date) {
+      if ((date || "") == "") {
+        return;
+      }
+      return Common.formatDateDot(date.replace("-", ""));
     },
-    formatNumber: function(number) {
-      return Common.formatNumber(number);
-    },
+    // ---------------------//데이터 포맷---------------------
+    // ---------------------화면 이벤트---------------------
+    // 탭 클릭 시
     clickTab: function(key) {
       if (key == this.curTab) {
         return;
@@ -184,6 +172,7 @@ export default {
         this.curTab = "repay";
       }
     },
+    // 메뉴 클릭 시
     clickMenu: function(key) {
       var _this = this;
       if (key == "modify") {
@@ -230,20 +219,63 @@ export default {
         this.callFc(this.debtVO.tel);
       }
     },
+    // 메뉴 열기
     openMenu: function(e) {
       this.isOpen = true;
+      // 부모로의 이벤트 전달을 막아 closeMenu() 를 실행시키지 않도록
       e.stopPropagation();
     },
+    // 메뉴 닫기
     closeMenu: function() {
       this.isOpen = false;
     },
+    // 상환 모달 표출
     openRepPop: function(index) {
       this.curRepay = this.listDebtRepay[index];
       this.$modals.show("repModal");
     },
+    // 상환 모달 닫기
     closeRepPop: function() {
       this.$modals.hide("repModal");
     },
+    // 상환금 입력(현재 사용하지 않음)
+    goRepayment: function() {
+      var _this = this;
+      this.$router.push({
+        path: "/debt/repayment",
+        query: {
+          no_person: _this.$route.query.no_person,
+          no_manage_info: _this.$route.query.no_manage_info
+        }
+      });
+    },
+    // ---------------------//화면 이벤트---------------------
+    // ---------------------데이터 이동---------------------
+    // 부채정보 조회
+    getDebtInfo: function() {
+      var _this = this;
+      this.$http
+        .get("/m/debt/getDebtInfo.json", {
+          params: {
+            no_person: this.$route.query.no_person,
+            no_manage_info: this.$route.query.no_manage_info
+          }
+        })
+        .then(function(response) {
+          if ((response.data.debtVO || "") != "") {
+            _this.debtVO = response.data.debtVO;
+            _this.listDebtRepay = response.data.listDebtRepay;
+            _this.isAuto =
+              _this.debtVO.debt_yn == null || _this.debtVO.debt_yn == "N"
+                ? true
+                : false;
+          }
+          _this.seen = true;
+        });
+    },
+    // ---------------------//데이터 이동---------------------
+    // ---------------------기타---------------------
+    // 부채 상환 상태에 따른 class 결정
     getCdStateColor: function(cd_state) {
       switch (cd_state) {
         case "0":
@@ -259,22 +291,6 @@ export default {
           return "etc";
       }
     },
-    formatDateDot: function(date) {
-      if ((date || "") == "") {
-        return;
-      }
-      return Common.formatDateDot(date.replace("-", ""));
-    },
-    repayment: function() {
-      var _this = this;
-      this.$router.push({
-        path: "/debt/repayment",
-        query: {
-          no_person: _this.$route.query.no_person,
-          no_manage_info: _this.$route.query.no_manage_info
-        }
-      });
-    },
     //금융사 연결
     callFc: function(tel) {
       if (Constant.userAgent == "iOS") {
@@ -285,6 +301,7 @@ export default {
         window.Android.phoneCall(tel);
       }
     }
+    // ---------------------//기타---------------------
   }
 };
 </script>

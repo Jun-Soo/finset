@@ -5,7 +5,6 @@
         <button class="prev" @click="prev"></button>
         <p>{{calendarYear}}.{{calendarMonth}}</p>
         <button class="next" @click="next"></button>
-        <!-- <button class="setting" @click="goYear"></button> -->
         <button class="year" @click="goYear">년</button>
         <button class="today" @click="goToToday">TODAY</button>
       </div>

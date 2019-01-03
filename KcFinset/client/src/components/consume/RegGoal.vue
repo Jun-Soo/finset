@@ -94,6 +94,7 @@ export default {
   },
   components: {},
   computed: {
+    // 분류 별 예산 합
     sumGoal1: function() {
       var sum = 0;
       for (var idx in this.listDetailGoal1) {
@@ -104,6 +105,7 @@ export default {
       }
       return Common.formatNumber(sum);
     },
+    // 수단 별 예산 합
     sumGoal2: function() {
       var sum = 0;
       for (var idx in this.listDetailGoal2) {

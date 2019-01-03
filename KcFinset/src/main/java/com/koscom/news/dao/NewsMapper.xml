@@ -8,7 +8,7 @@
 		<where>
 		    ANR.SEQ_SEARCH = AN.SEQ_SEARCH
 			AND ANR.YN_USE = 'Y'
-			AND ANR.NEWS_STATUS='02'
+			AND ANR.NEWS_STATUS='03'
 			<choose>
 			<when test="@com.koscom.util.MybatisUtil@isNotEmpty(scKeyword)">
 				AND(

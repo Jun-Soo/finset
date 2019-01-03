@@ -23,24 +23,20 @@ export default {
         //스크래핑 완료시 갱신할 화면 목록
         "/main",
         "/common/monthCal",
-        "/common/monthCalPop",
         "/common/yearCal",
         "/consume/main",
-        "/consume/consumeDetail",
+        //"/consume/consumeDetail",
         "/consume/main",
-        "/consume/transPop",
-        "/consume/incomeAnalyze",
-        "/comsume/consumeAnalyze",
+        //"/consume/transPop",
+        //"/consume/analyze",
         "/consume/payment",
-        "/consume/paymentDetail",
         "/consume/settlement",
-        "/consume/consumeStats",
-        "/consume/incomeStats",
+        //"/consume/incomeStats",
         "/assets/main",
-        "/assets/bankMain",
-        "/assets/bankActDetail",
-        "/assets/bankDepWdrlList",
-        "/assets/bankDepWdrlDetail"
+        "/assets/bankMain"
+        //"/assets/bankActDetail",
+        //"/assets/bankDepWdrlList",
+        //"/assets/bankDepWdrlDetail"
       ]
     };
   },

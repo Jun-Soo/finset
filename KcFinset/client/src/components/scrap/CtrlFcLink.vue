@@ -9,7 +9,7 @@
       <div class="wrap">
         <a :class="{'on':curTab === 'bank'}" @click="tabOnClick('bank', $event)">은행</a>
         <a :class="{'on':curTab === 'card'}" @click="tabOnClick('card', $event)">카드</a>
-        <a :class="{'on':curTab === 'stock'}" @click="tabOnClick('stock', $event)">증권</a>
+        <!-- <a :class="{'on':curTab === 'stock'}" @click="tabOnClick('stock', $event)">증권</a> -->
         <a :class="{'on':curTab === 'etc'}" @click="tabOnClick('etc', $event)">기타</a>
       </div>
     </div>
@@ -548,7 +548,11 @@ export default {
       if (cd_err == "00000000") {
         this.$toast.center("금융사 연동이 완료되었습니다.");
         setTimeout(function() {
-          _this.$parent.startAutoScrap();
+          _this.$parent.$parent.isFcScrapDone = false;
+          _this.$parent.$parent.isStScrapDone = false;
+          _this.$parent.$parent.isScrapSuccess = true;
+          _this.$parent.$parent.startAutoScrap();
+
           _this.listFcLinkInfo();
         }, 1000);
       } else {

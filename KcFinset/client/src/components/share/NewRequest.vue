@@ -2,8 +2,8 @@
   <section>
     <div class="container">
       <div class="info-share">
-        <p class="title">공유를 요청할 사용자를 선택하세요</p>
-        <p class="text">하루동안 응답이 없으면 자동으로 취소 됩니다</p>
+        <p class="title mb25">공유를 요청할 사용자를 선택하세요</p>
+        <!-- <p class="text">하루동안 응답이 없으면 자동으로 취소 됩니다</p> -->
         <div class="input-wrap">
           <input type="text" v-model="offer_nm_person" readonly="readonly">
           <a @click="srcPerson();"></a>

@@ -183,6 +183,9 @@ export default {
       this.standardDt.setMonth(this.standardDt.getMonth() - 1);
       this.curDate.setMonth(this.curDate.getMonth() - 1);
     }
+    if (this.$store.state.user.dtConsume) {
+      this.standardDt = this.$store.state.user.dtConsume;
+    }
     this.ym = this.formatHead(this.getYm(this.standardDt));
     this.listConsumeShareInfo();
   },
@@ -190,7 +193,9 @@ export default {
   mounted() {},
   beforeUpdate() {},
   updated() {},
-  beforeDestroy() {},
+  beforeDestroy() {
+    this.$store.state.user.dtConsume = this.standardDt;
+  },
   destroyed() {},
   methods: {
     // ---------------------데이터 포멧---------------------
@@ -293,7 +298,7 @@ export default {
     clickProgress: function() {
       if (!this.isScrap) {
         this.$router.push("/scrap/CtrlFcLink");
-      } else if (!this.isGoal) {
+      } else {
         if (
           this.curDate.getFullYear() == this.standardDt.getFullYear() &&
           this.curDate.getMonth() == this.standardDt.getMonth()
@@ -317,15 +322,10 @@ export default {
           }
           _this.shareList = list;
           _this.listConsumeInfo();
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
-          _this.seen = true;
         });
     },
     // 소비지출 리스트 조회
     listConsumeInfo: function() {
-      // this.$store.state.isLoading = true;
       var _this = this;
       this.$http
         .get("/m/consume/listConsumeInfo.json", {
@@ -364,7 +364,7 @@ export default {
           }
           _this.isScrap = response.data.isScrap;
           _this.consumeList = response.data.listConsumeInfo;
-          // _this.$store.state.isLoading = false;
+
           _this.seen = true;
         });
     },

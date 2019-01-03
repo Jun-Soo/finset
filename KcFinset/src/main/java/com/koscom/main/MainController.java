@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.koscom.board.service.BoardManager;
 import com.koscom.credit.service.CreditManager;
+import com.koscom.main.model.MainForm;
 import com.koscom.main.service.MainManager;
 import com.koscom.util.FinsetException;
 
@@ -50,9 +51,19 @@ public class MainController {
 
         model.addAttribute("noPerson", no_person);
         model.addAttribute("creditInfo", creditManager.getCreditMainBaseInfo(no_person)); //신용정보
-		model.addAttribute("consumeSumAmt", mainManager.getMainConsumeSumAmt(no_person)); //지출정보
-		model.addAttribute("assetsSumAmt", mainManager.getMainAssetsSumAmt(no_person)); //자산정보
-		model.addAttribute("debtSumAmt", mainManager.getMainDebtSumAmt(no_person)); //부채정보
+
+        MainForm mainForm = new MainForm();
+        mainForm.setNo_person(no_person);
+
+        mainForm.setCd_agency("05"); //카드
+        model.addAttribute("cardScrapCnt", mainManager.getMainScrapCnt(mainForm)); //카드스크래핑건수
+		model.addAttribute("consumeSumAmt", mainManager.getMainConsumeSumAmt(no_person)); //지출총금액
+
+		mainForm.setCd_agency("04"); //은행
+		model.addAttribute("bankScrapCnt", mainManager.getMainScrapCnt(mainForm)); //은행스크래핑건수
+		model.addAttribute("assetsSumAmt", mainManager.getMainAssetsSumAmt(no_person)); //자산총금액
+
+		model.addAttribute("debtSumAmt", mainManager.getMainDebtSumAmt(no_person)); //부채총금액
 
 		return "jsonView";
 	}

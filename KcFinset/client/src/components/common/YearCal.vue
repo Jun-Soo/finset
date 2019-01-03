@@ -5,7 +5,6 @@
         <button class="prev" @click="setYear('prev')"></button>
         <p>{{headDt}}</p>
         <button class="next" @click="setYear('next')"></button>
-        <!-- <button class="setting" @click="goMonth"></button> -->
         <button class="month" @click="goMonth">월</button>
         <button class="today" @click="setYear('today')">TODAY</button>
       </div>
@@ -56,8 +55,10 @@ export default {
   name: "CommonYearCal",
   data() {
     return {
-      seen: false,
-      standardDt: new Date(),
+      seen: false, // 화면 표출 여부
+      Common: Common, // 공통
+      standardDt: new Date(), // 기준일
+      // 합계로 계산된 데이터
       calData: [
         { income: 0, consume: 0, debt: 0 },
         { income: 0, consume: 0, debt: 0 },
@@ -72,7 +73,7 @@ export default {
         { income: 0, consume: 0, debt: 0 },
         { income: 0, consume: 0, debt: 0 }
       ],
-      Common: Common,
+      // 공유된 사용자의 색 class 및 id
       settingList: [
         { color: "red", id: "chk1" },
         { color: "orange", id: "chk2" },
@@ -80,14 +81,16 @@ export default {
         { color: "blue", id: "chk4" },
         { color: "purple", id: "chk5" }
       ],
-      shareList: []
+      shareList: [] // 공유된 사용자
     };
   },
   components: {},
   computed: {
+    // 상단에 표시된 텍스트
     headDt: function() {
       return this.standardDt.getFullYear();
     },
+    // 수입 합계
     sumIncome: function() {
       var sum = 0;
       for (var idx in this.calData) {
@@ -95,6 +98,7 @@ export default {
       }
       return Common.formatNumber(sum);
     },
+    // 지출 합계
     sumConsume: function() {
       var sum = 0;
       for (var idx in this.calData) {
@@ -102,6 +106,7 @@ export default {
       }
       return Common.formatNumber(sum);
     },
+    // 부채 합계
     sumDebt: function() {
       var sum = 0;
       for (var idx in this.calData) {
@@ -149,11 +154,50 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    // ---------------------화면 이벤트---------------------
+    // 년도 세팅
+    setYear(key) {
+      switch (key) {
+        case "prev":
+          this.standardDt = new Date(
+            this.standardDt.setFullYear(this.standardDt.getFullYear() - 1)
+          );
+          this.listCalendarDataYear();
+          break;
+        case "next":
+          this.standardDt = new Date(
+            this.standardDt.setFullYear(this.standardDt.getFullYear() + 1)
+          );
+          this.listCalendarDataYear();
+          break;
+        case "today":
+          this.standardDt = new Date();
+          this.listCalendarDataYear();
+          break;
+        default:
+          break;
+      }
+    },
+    // 공유된 사용자 버튼 클릭
+    clickShare: function(params) {
+      var no_person_list = this.filterShareList();
+      if (no_person_list.length <= 1 && this.shareList[params].isShow == true) {
+        return;
+      }
+      this.shareList[params].isShow = !this.shareList[params].isShow;
+      this.listCalendarDataYear();
+    },
+    // 월 달력으로 이동
+    goMonth: function() {
+      this.$router.push("/common/monthCal");
+    },
+    // ---------------------//화면 이벤트---------------------
+    // ---------------------데이터 이동---------------------
+    // 공유된 사용자 조회
     listCalendarShareInfo: function() {
       var _this = this;
-
       this.$http
-        .get("/m/debt/listCalendarShareInfo.json", { params: {} })
+        .get("/m/debt/listCalendarShareInfo.json")
         .then(function(response) {
           var list = response.data.listCalendarShareInfo;
 
@@ -164,10 +208,10 @@ export default {
           _this.listCalendarDataYear();
         });
     },
+    // 년 달력 데이터 리스트 조회
     listCalendarDataYear: function() {
       var _this = this;
       var calData = this.getDefaultCalData();
-
       this.$http
         .get("/m/debt/listCalendarDataYear.json", {
           params: {
@@ -205,28 +249,9 @@ export default {
           _this.seen = true;
         });
     },
-    setYear(key) {
-      switch (key) {
-        case "prev":
-          this.standardDt = new Date(
-            this.standardDt.setFullYear(this.standardDt.getFullYear() - 1)
-          );
-          this.listCalendarDataYear();
-          break;
-        case "next":
-          this.standardDt = new Date(
-            this.standardDt.setFullYear(this.standardDt.getFullYear() + 1)
-          );
-          this.listCalendarDataYear();
-          break;
-        case "today":
-          this.standardDt = new Date();
-          this.listCalendarDataYear();
-          break;
-        default:
-          break;
-      }
-    },
+    // ---------------------//데이터 이동---------------------
+    // ---------------------기타---------------------
+    // 달력을 초기화 시킬 데이터
     getDefaultCalData: function() {
       return [
         { income: 0, consume: 0, debt: 0, sum: 0 },
@@ -243,13 +268,7 @@ export default {
         { income: 0, consume: 0, debt: 0, sum: 0 }
       ];
     },
-    setCalData: function(list) {
-      for (var idx in list) {
-        this.$set(this.calData[idx], "income", list[idx].income);
-        this.$set(this.calData[idx], "consume", list[idx].consume);
-        this.$set(this.calData[idx], "debt", list[idx].debt);
-      }
-    },
+    // 공유된 사용자 중 on 처리 되어 있는 사용자 리스트
     filterShareList: function() {
       var shareList = new Array();
       var _this = this;
@@ -259,18 +278,8 @@ export default {
         }
       }
       return shareList;
-    },
-    clickShare: function(params) {
-      var no_person_list = this.filterShareList();
-      if (no_person_list.length <= 1 && this.shareList[params].isShow == true) {
-        return;
-      }
-      this.shareList[params].isShow = !this.shareList[params].isShow;
-      this.listCalendarDataYear();
-    },
-    goMonth: function() {
-      this.$router.push("/common/monthCal");
     }
+    // ---------------------//기타---------------------
   }
 };
 </script>

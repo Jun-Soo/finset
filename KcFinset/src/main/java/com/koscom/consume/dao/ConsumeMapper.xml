@@ -436,34 +436,12 @@
     			FROM 	 SCR_TRANSACTION_DETAIL STD
     					,SCR_BANK_API_AN_INFO SBAAI
     					,FC_INFO FI
-						,(
-							SELECT
-								CASE
-									WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 0 ), 'YYYYMM' )|| '00'
-									WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 0 ), 'YYYYMM' )|| DT_BASIC
-									WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DT_BASIC
-								END AS DT_FROM,
-								CASE
-									WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( LAST_DAY( ADD_MONTHS( SYSDATE,- 0 ) ), 'YYYYMMDD' )
-									WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 0 ), 'YYYYMMDD' )
-									WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 0 ), 'YYYYMM' )|| DT_BASIC
-								END AS DT_TO
-							FROM
-								(
-									SELECT
-										DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC ) AS DT_BASIC
-									FROM
-										PERSON_SET_INFO
-									WHERE
-										NO_PERSON = #{no_person, jdbcType=VARCHAR}
-								)
-						) PSI
 		WHERE 		STD.NO_PERSON				  =		#{no_person, jdbcType=VARCHAR}
         		AND STD.NO_PERSON				  = 	SBAAI.NO_PERSON
         		AND SBAAI.CD_FC					  = 	FI.CD_FC
         		AND STD.AN						  = 	SBAAI.AN
-				AND TO_NUMBER(STD.DT_TRD)<![CDATA[>=]]>	TO_NUMBER(PSI.DT_FROM)
-				AND TO_NUMBER(STD.DT_TRD)<![CDATA[<]]>	TO_NUMBER(PSI.DT_TO)
+				AND TO_NUMBER(STD.DT_TRD)<![CDATA[>=]]>	TO_NUMBER(TO_CHAR(TRUNC(ADD_MONTHS(SYSDATE, -1), 'MM'), 'YYYYMMDD'))
+				AND TO_NUMBER(STD.DT_TRD)<![CDATA[<]]>	TO_NUMBER(TO_CHAR(SYSDATE, 'YYYYMMDD'))
         		<choose>
         			<when test="@com.koscom.util.MybatisUtil@contains('01',type_in_out)">
         				AND STD.AMT_DEP					 != '0'
@@ -1257,20 +1235,22 @@
 					 CONSUME_INFO CI
 					,(
 						SELECT
-							CASE
+							 CASE
 								WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| '00'
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DT_BASIC
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 2 ), 'YYYYMM' )|| DT_BASIC
-							END AS DT_FROM,
-							CASE
+							 END AS DT_FROM
+							,CASE
 								WHEN DT_BASIC						   IS NULL		  THEN TO_CHAR( LAST_DAY( ADD_MONTHS( SYSDATE,- 1 ) ), 'YYYYMMDD' )
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[>]]>  DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 0 ), 'YYYYMM' )|| DT_BASIC
 								WHEN TO_CHAR( SYSDATE, 'DD' ) <![CDATA[<=]]> DT_BASIC THEN TO_CHAR( ADD_MONTHS( SYSDATE,- 1 ), 'YYYYMM' )|| DT_BASIC
-							END AS DT_TO
+							 END AS DT_TO
+							,YN_INSTALLMENT
 						FROM
 							(
 								SELECT
-									DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC ) AS DT_BASIC
+									 DECODE( LENGTH( DT_BASIC ), 1, '0' || DT_BASIC, DT_BASIC ) AS DT_BASIC
+									,YN_INSTALLMENT
 								FROM
 									PERSON_SET_INFO
 								WHERE
@@ -1282,6 +1262,14 @@
 					AND CI.TYPE_IN_OUT = '02'
 					AND TO_NUMBER(CI.DT_TRD)<![CDATA[>=]]>	TO_NUMBER(PSI.DT_FROM)
 					AND TO_NUMBER(CI.DT_TRD)<![CDATA[<]]>	TO_NUMBER(PSI.DT_TO)
+					AND 1 = (
+						CASE
+							WHEN CI.YN_PAY_INSTALLMENT = 'N' THEN 1
+							WHEN PSI.YN_INSTALLMENT = 'Y' AND CI.YN_PAY_INSTALLMENT = 'Y' AND CI.MON_REMAINING != '0' THEN 1
+							WHEN PSI.YN_INSTALLMENT = 'N' AND CI.YN_PAY_INSTALLMENT = 'Y' AND CI.MON_REMAINING = '0' THEN 1
+							ELSE 0
+						END
+					)
 					AND CI.YN_CANCEL = 'N'
 					AND CI.YN_DELETE = 'N'
 					AND CI.YN_BUDGET_EXCEPT = 'N'

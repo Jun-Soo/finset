@@ -4,14 +4,26 @@
 
 <mapper namespace="com.koscom.main.dao.MainMapper">
 
+    <select id="getMainScrapCnt" parameterType="java.lang.String" resultType="int">
+        /* com.koscom.main.dao.MainMapper.getMainCardScrapCnt 스크래핑건수*/
+		SELECT
+			COUNT(*) AS SCRAP_CNT
+		FROM
+			FC_LINK_INFO
+		WHERE
+			YN_LINK = 'Y'
+			AND CD_AGENCY = #{cd_agency, jdbcType=VARCHAR}
+			AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
+    </select>
+
 	<select id="getMainConsumeSumAmt" parameterType="java.lang.String" resultType="java.lang.String">
-		/* com.koscom.main.dao.MainMapper.getMainConsumeSumAmt 소비총금액*/
+		/* com.koscom.main.dao.MainMapper.getMainConsumeSumAmt 지출총금액*/
 		<![CDATA[
 		SELECT
 			CASE WHEN PSI.DT_BASIC IS NULL
 				THEN(
 					SELECT
-						SUM( AMT_IN_OUT )
+						NVL( SUM( AMT_IN_OUT ), 0)
 					FROM
 						CONSUME_INFO
 					WHERE
@@ -24,7 +36,7 @@
 				WHEN PSI.DT_BASIC < TO_CHAR( SYSDATE, 'DD' )
 				THEN(
 					SELECT
-						SUM( AMT_IN_OUT )
+						NVL( SUM( AMT_IN_OUT ), 0)
 					FROM
 						CONSUME_INFO
 					WHERE
@@ -37,7 +49,7 @@
 				WHEN PSI.DT_BASIC = TO_CHAR( SYSDATE, 'DD' )
 				THEN(
 					SELECT
-						SUM( AMT_IN_OUT )
+						NVL( SUM( AMT_IN_OUT ), 0)
 					FROM
 						CONSUME_INFO
 					WHERE
@@ -49,7 +61,7 @@
 				WHEN PSI.DT_BASIC > TO_CHAR( SYSDATE, 'DD' )
 				THEN(
 					SELECT
-						SUM( AMT_IN_OUT )
+						NVL( SUM( AMT_IN_OUT ), 0)
 					FROM
 						CONSUME_INFO
 					WHERE
@@ -76,12 +88,13 @@
 	<select id="getMainAssetsSumAmt" parameterType="java.lang.String" resultType="java.lang.String">
 		/* com.koscom.main.dao.MainMapper.getMainAssetsSumAmt 자산총금액*/
 		SELECT
-			SUM( NVL( AMT_BALANCE, 0 )+ NVL( AMT_EVALUATION, 0 )) AS SUM_AMT
+			NVL( SUM( NVL( AMT_BALANCE, 0 )+ NVL( AMT_EVALUATION, 0 )), 0) AS SUM_AMT
 		FROM
 			ASSETS_INFO
 		WHERE
 			(DT_EXPIRE IS NULL OR DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 			AND YN_DELETE = 'N'
+			AND CD_ASSETS_CLASS != '01' <!-- 증권제외 -->
 			AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</select>
 

@@ -1,7 +1,7 @@
 <template>
   <section v-if="seen">
     <div class="alarm-setting">
-      <ul>
+      <ul v-if="!isiOS">
         <li>
           <p><em>방해금지모드</em>소리/진동 없이 알림 받기</p>
           <p><button v-bind:class="personVo.cd_push=='0'?btnOn:btnOff" name="notAlarm" @click="allChkPush"></button></p>
@@ -37,7 +37,8 @@ export default {
       item_push: "", //each-푸시항목명
       stat_push: "", //each푸시 yn 체크
       yn_push: "", //all푸시 yn체크,
-      seen: false
+      seen: false,
+      isiOS: false
     };
   },
   components: {},
@@ -59,6 +60,9 @@ export default {
         }
         _this.seen = true;
       });
+    if (Constant.userAgent === "iOS") {
+      _this.isiOS = true;
+    }
   },
   beforeMount() {},
   mounted() {},
@@ -115,7 +119,7 @@ export default {
         })
         .then(response => {});
     },
-    //방해금지모드 설정
+    //방해금지모드 설정 (only Android / iOS는 기능X)
     allChkPush: function(obj) {
       let _this = this;
       _this.type_push = "all";

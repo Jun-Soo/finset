@@ -55,7 +55,6 @@
       <div class="wrap">
         <a id="02" name="consume" :class="{'on':curTab === '02'}" @change="changeTab">지출</a>
         <a id="01" name="income" :class="{'on':curTab === '01'}" @change="changeTab">수입</a>
-        <a id="03" name="hey" :class="{'on':curTab === '03'}" @change="changeTab">수입</a>
       </div>
     </div>
     <div class="box-list list02 noMG">
@@ -155,11 +154,13 @@ export default {
       //datePicker setting
       debugger;
       if (this.dataPeriod == "yr") {
-        this.dt_from = new Date(moment()
-          .add(-3, "month")
-          .format("YYYYMM"));
+        this.dt_from = new Date(
+          moment(this.dt_to)
+            .add(-3, "month")
+            .format("YYYYMM")
+        );
       } else if (this.dataPeriod == "mon") {
-        /* 기준일 base month
+        /* 기준일 base month*/
         let yrmon = null;
         if (Number(dt_basic) < today.getDate()) {
           yrmon = moment().format("YYYYMM");
@@ -174,13 +175,12 @@ export default {
           dt_basic = "01";
         }
         this.dt_from = new Date(moment(yrmon + dt_basic, "YYYYMMDD"));
-        */
 
-        this.dt_from = new Date(
-          moment(today)
-            .add(-1, "month")
-            .format("YYYYMMDD")
-        );
+        // this.dt_from = new Date(
+        //   moment(today)
+        //     .add(-1, "month")
+        //     .format("YYYYMMDD")
+        // );
       } else if (this.dataPeriod == "week") {
         // console.log(this.$moment(today).isoWeekday(7));
         this.dt_from = new Date(moment(today).add(-7, "days")); //7일전

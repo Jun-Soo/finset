@@ -22,7 +22,7 @@
 
     <div class="my-main-list">
       <!--지출-->
-      <div v-if="consumeSumAmt != null" class="list">
+      <div v-if="cardScrapCnt != 0" class="list">
         <div class="item">
           <div class="left">
             <a @click="$router.push('/consume/main')">지출</a>
@@ -45,7 +45,7 @@
         </div>
       </div>
       <!--자산-->
-      <div v-if="assetsSumAmt != null" class="list">
+      <div v-if="bankScrapCnt != 0" class="list">
         <div class="item">
           <div class="left">
             <a @click="$router.push('/assets/main')">자산</a>
@@ -121,7 +121,9 @@ export default {
       creditInfo: "",
       ci_percentage: "", //상위%
       ci_rating_credit: "", //신용점수
+      cardScrapCnt: 0, //카드스크래핑건수
       consumeSumAmt: "", //지출총금액
+      bankScrapCnt: 0, //은행스크래핑건수
       assetsSumAmt: "", //자산총금액
       debtSumAmt: "", //부채총금액
       gaugeValue: 0,
@@ -170,7 +172,9 @@ export default {
             _this.ci_rating_credit = creditInfo.rating_credit;
           }
           _this.creditInfo = creditInfo;
+          _this.cardScrapCnt = response.data.cardScrapCnt;
           _this.consumeSumAmt = response.data.consumeSumAmt;
+          _this.bankScrapCnt = response.data.bankScrapCnt;
           _this.assetsSumAmt = response.data.assetsSumAmt;
           _this.debtSumAmt = response.data.debtSumAmt;
 

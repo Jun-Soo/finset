@@ -94,7 +94,8 @@ export default {
      * 차트 그릴때,
      * 1. 현재 type, dt_from , dt_to 날짜 가져옴
      * 2. 라벨값 for문 돌려서 입력
-     * 3. 라벨값과 데이터값 같으면 dataList에 push, 같지 않으면 continue
+     * 3. 라벨값과 서버에서 가져온 데이터값이 같으면 dataList에 서버에서 가져온 값 push, 같지 않으면 빈값 push
+     * 4. rangeList는 각 날짜범위 : YYYYMMDD
      * 4. dataList1 : 지출, dataList2 : 수입
      * 5. year 일땐, 달별로 sum
      * 6. mon 일땐, 월요일 기준으로 주별로
@@ -112,22 +113,58 @@ export default {
       if (this.dataPeriod == "yr") {
         var fromMon = this.dt_from.getMonth();
         var toMon = this.dt_to.getMonth();
-        for (var k = fromMon; k <= toMon; k++) {
-          this.mylabels.push(k + 1 + "월");
+        // if (this.dt_from.getFullYear() == this.dt_to.getFullYear()) {
+        //   for (var k = fromMon; k <= toMon; k++) {
+        //     this.mylabels.push(k + 1 + "월");
+        //     this.rangeDate.push(
+        //       moment(this.dt_from)
+        //         .add(k, "month")
+        //         .format("YYYYMMDD")
+        //     );
+        //     for (var i in _chartList) {
+        //       if (k + 1 == _chartList[i].dt_trd.substring(4, 6)) {
+        //         if (_chartList[i].type_in_out == "02") {
+        //           _dataList1.push(_chartList[i].amt_in_out);
+        //         } else {
+        //           _dataList2.push(_chartList[i].amt_in_out);
+        //         }
+        //       } else {
+        //         continue;
+        //       }
+        //     } //for
+        //     if (k + 1 != _dataList1.length) {
+        //       _dataList1.push("");
+        //     }
+        //     if (k + 1 != _dataList2.length) {
+        //       _dataList2.push("");
+        //     }
+        //   } //for
+        // } else {
+        var diffMon = "";
+        if (moment(this.dt_to, "DD") >= moment(this.dt_from, "DD")) {
+          diffMon = moment(this.dt_to, "YYYYMM").diff(this.dt_from, "month");
+        } else {
+          diffMon =
+            moment(this.dt_to, "YYYYMM").diff(this.dt_from, "month") + 1;
+        }
+        for (var k = 0; k <= diffMon; k++) {
           this.rangeDate.push(
             moment(this.dt_from)
               .add(k, "month")
-              .format("YYYYMMDD")
+              .format("YYYYMM")
+          );
+          this.mylabels.push(
+            moment(this.dt_from)
+              .add(k, "month")
+              .format("MM[월]")
           );
           for (var i in _chartList) {
-            if (k + 1 == _chartList[i].dt_trd.substring(4, 6)) {
+            if (this.rangeDate[k] == _chartList[i].dt_trd.substring(0, 6)) {
               if (_chartList[i].type_in_out == "02") {
                 _dataList1.push(_chartList[i].amt_in_out);
               } else {
                 _dataList2.push(_chartList[i].amt_in_out);
               }
-            } else {
-              continue;
             }
           } //for
           if (k + 1 != _dataList1.length) {
@@ -137,6 +174,7 @@ export default {
             _dataList2.push("");
           }
         } //for
+        // }
       } else if (this.dataPeriod == "mon") {
         //월 클릭시
         // console.log(moment(moment(this.dt_from).weekday(1)).diff(moment(this.dt_to).weekday(1), "days"));
@@ -181,7 +219,7 @@ export default {
         } //for
       } else {
         //주 클릭시
-        var range = Math.abs( moment(this.dt_to).diff(this.dt_from, "days")) + 2; //기간
+        var range = Math.abs(moment(this.dt_to).diff(this.dt_from, "days")) + 2; //기간
         for (var k = 0; k < range; k++) {
           this.rangeDate.push(
             moment(this.dt_from)

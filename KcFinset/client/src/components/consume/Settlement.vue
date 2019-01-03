@@ -6,14 +6,24 @@
         <input type="radio" id="rds2" :class="{'checked':dataPeriod === 'mon'}" v-model="dataPeriod" value="mon"><label for="rds2">월</label>
         <input type="radio" id="rds3" :class="{'checked':dataPeriod === 'week'}" v-model="dataPeriod" value="week"><label for="rds3">주</label>
       </div>
-      <div class="date">
+      <div class="date" v-if="dataPeriod=='yr'">
+        <p>
+          <datepicker :minimum-view="'month'" v-model="dt_from" ref="datepicker0" :format="'yyyy.MM'" :language="ko" class="div-date"></datepicker>
+          <button class="cal" @click="openDatepicker0"></button>
+        </p>
+        <p>
+          <datepicker :minimum-view="'month'" v-model="dt_to" :opend="Common.datepickerInit('div-date', this)" ref="datepicker00" :format="'yyyy.MM'" :language="ko" class="div-date"></datepicker>
+          <button class="cal" @click="openDatepicker00"></button>
+        </p>
+      </div>
+      <div v-else class="date">
         <p>
           <datepicker v-model="dt_from" ref="datepicker1" :opend="Common.datepickerInit('div-date', this)" :format="formatDateDot" :language="ko" class="div-date"></datepicker>
-          <button class="cal" @click="openDatepicker1"></button>
+          <button class="cal" @click="openDatepicker(1)"></button>
         </p>
         <p>
           <datepicker v-model="dt_to" ref="datepicker2" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDateDot" class="div-date"></datepicker>
-          <button class="cal" @click="openDatepicker2"></button>
+          <button class="cal" @click="openDatepicker(2)"></button>
         </p>
       </div>
       <div v-if="shareList.length>1" class="filter-wrap mt20">
@@ -45,6 +55,7 @@
       <div class="wrap">
         <a id="02" name="consume" :class="{'on':curTab === '02'}" @change="changeTab">지출</a>
         <a id="01" name="income" :class="{'on':curTab === '01'}" @change="changeTab">수입</a>
+        <a id="03" name="hey" :class="{'on':curTab === '03'}" @change="changeTab">수입</a>
       </div>
     </div>
     <div class="box-list list02 noMG">
@@ -143,30 +154,34 @@ export default {
       let dt_basic = this.dt_basic;
       //datePicker setting
       if (this.dataPeriod == "yr") {
-        this.dt_from = new Date(today.getFullYear().toString());
+        this.dt_from = moment()
+          .add(-3, "month")
+          .format("YYYYMM");
       } else if (this.dataPeriod == "mon") {
-        let mon = null;
-        if (dt_basic < today.getDate()) {
-          mon = (today.getMonth() + 1).toString();
+        /* 기준일 base month
+        let yrmon = null;
+        if (Number(dt_basic) < today.getDate()) {
+          yrmon = moment().format("YYYYMM");
         } else {
           //(dt_basic >= today.getDate())
-          mon = today.getMonth().toString();
+          yrmon = moment()
+            .add(-1, "month")
+            .format("YYYYMM");
         }
         if (dt_basic == null || dt_basic == "") {
           //기준일이 null일 경우
           dt_basic = "01";
         }
-        this.dt_from = new Date(
-          today.getFullYear().toString() + "/" + mon + "/" + dt_basic
-        ); //기준일
+        this.dt_from = new Date(moment(yrmon + dt_basic, "YYYYMMDD"));
+        */
+        this.dt_from = moment()
+          .add(-1, "month")
+          .format("YYYYMMDD");
       } else if (this.dataPeriod == "week") {
         // console.log(this.$moment(today).isoWeekday(7));
         this.dt_from = new Date(moment(today).add(-7, "days")); //7일전
         // this.dt_from = new Date(this.$moment(today).isoWeekday(0)); //주 초 (일요일부터)
       }
-
-      //chart setting
-      this.getChartList();
     },
     listType: function() {
       if (!this.initYN) {
@@ -187,6 +202,16 @@ export default {
     chartList: function() {
       this.initRangeList();
       // this.getRangeList();
+    },
+    dt_from: function() {
+      console.log("sssssss");
+      //chart setting
+      this.getChartList();
+    },
+    dt_to: function() {
+      console.log("aaaaaa");
+      //chart setting
+      this.getChartList();
     }
   },
   beforeCreate() {
@@ -436,6 +461,12 @@ export default {
           }
           // console.log(_this.rangeList);
         });
+    },
+    openDatepicker0: function() {
+      this.$refs.datepicker0.showCalendar();
+    },
+    openDatepicker00: function() {
+      this.$refs.datepicker00.showCalendar();
     },
     openDatepicker1: function() {
       this.$refs.datepicker1.showCalendar();

@@ -156,7 +156,7 @@ export default {
       if (this.dataPeriod == "yr") {
         this.dt_from = new Date(moment(this.dt_to).add(-3, "month"));
       } else if (this.dataPeriod == "mon") {
-        /* 기준일 base month*/
+        /* 기준일 base month
         let yrmon = null;
         if (Number(dt_basic) < today.getDate()) {
           yrmon = moment().format("YYYYMM");
@@ -171,12 +171,8 @@ export default {
           dt_basic = "01";
         }
         this.dt_from = new Date(moment(yrmon + dt_basic, "YYYYMMDD"));
-
-        // this.dt_from = new Date(
-        //   moment(today)
-        //     .add(-1, "month")
-        //     .format("YYYYMMDD")
-        // );
+*/
+        this.dt_from = new Date(moment(today).add(-1, "month"));
       } else if (this.dataPeriod == "week") {
         // console.log(this.$moment(today).isoWeekday(7));
         this.dt_from = new Date(moment(today).add(-7, "days")); //7일전
@@ -204,12 +200,10 @@ export default {
       // this.getRangeList();
     },
     dt_from: function() {
-      console.log("sssssss");
       //chart setting
       this.getChartList();
     },
     dt_to: function() {
-      console.log("aaaaaa");
       //chart setting
       this.getChartList();
     }

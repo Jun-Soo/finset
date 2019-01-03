@@ -3,9 +3,6 @@
     <chartjs-bar ref="chart" :labels="mylabels" :datasets="mydatasets" :scalesdisplay="false" :option="options" :bind="true"></chartjs-bar>
   </div>
 </template>
-
-
-
 <script type="text/javascript">
 import Common from "@/assets/js/common.js";
 import moment from "moment";

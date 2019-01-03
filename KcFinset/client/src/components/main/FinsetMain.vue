@@ -40,7 +40,7 @@
             <a @click="$router.push('/consume/main')">지출</a>
           </div>
           <div class="right">
-            <a @click="$router.push('/scrap/ctrlFcLink')">등록하신 후 사용하세요</a>
+            <a @click="$router.push('/scrap/ctrlFcLink')">금융사 연동하기</a>
           </div>
         </div>
       </div>
@@ -63,7 +63,7 @@
             <a @click="$router.push('/assets/main')">자산</a>
           </div>
           <div class="right">
-            <a @click="$router.push('/scrap/ctrlFcLink')">등록하신 후 사용하세요</a>
+            <a @click="$router.push('/scrap/ctrlFcLink')">금융사 연동하기</a>
           </div>
         </div>
       </div>

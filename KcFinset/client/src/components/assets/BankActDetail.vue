@@ -6,7 +6,8 @@
           <div class="top">
             <p class="symbol"><img :src="assetsInfo.fcImg" alt="" />{{assetsInfo.nm_fc}}</p>
             <p class="text">
-              <em class="blue bold">{{assetsInfo.nm_account}}({{getCodeName('cd_assets_bank',assetsInfo.cd_detail_class)}})</em>
+              <em class="blue bold">{{assetsInfo.nm_account}}
+                <!--({{getCodeName('cd_assets_bank',assetsInfo.cd_detail_class)}})--></em>
               <span v-if="yn_share=='Y'" class="circle" :class="colorList[colorIndex]">{{nm_person}}</span>
             </p>
           </div>

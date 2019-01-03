@@ -5,40 +5,36 @@
       <div class="banner-wrap owl-carousel">
         <carousel :perPage=1>
           <slide class="item">
-              <a href="#">
-                  <div class="banner">
-                    <div class="left">
-                      <p class="value">금융거래에 활용되는<br><strong>신용등급과 신용평점을 확인</strong>하세요.</p>
-                    </div>
-                    <div class="right">
-                      <img src="./../../assets/images/intro_phone_1.png" alt=""/>
-                    </div>
-                  </div>
-              </a>
+            <a href="#">
+              <div class="banner">
+                <img src="./../../assets/images/intro_phone_1.png" alt="" />
+                <p class="value">금융거래에 활용되는<br><strong>신용등급과 신용평점을 확인</strong>하세요.</p>
+              </div>
+            </a>
           </slide>
           <slide class="item">
-              <a href="#">
-                  <div class="banner">
-                    <div class="left">
-                    <p class="value">수많은 <strong>대출정보를<br>한곳에서</strong> 관리하세요.</p>
-                    </div>
-                    <div class="right">
-                    <img src="./../../assets/images/intro_phone_2.png" alt=""/>
-                     </div>
-                  </div>
-              </a>
+            <a href="#">
+              <div class="banner">
+                <img src="./../../assets/images/intro_phone_1.png" alt="" />
+                <p class="value">금융거래에 활용되는<br><strong>신용등급과 신용평점을 확인</strong>하세요.</p>
+              </div>
+            </a>
           </slide>
           <slide class="item">
-              <a href="#">
-                  <div class="banner">
-                    <div class="left">
-                    <p class="value">다양한 금융기관의 <strong>대출금리와<br>한도를 확인</strong>해보세요.</p>
-                    </div>
-                    <div class="right">
-                    <img src="./../../assets/images/intro_phone_3.png" alt=""/>
-                     </div>
-                  </div>
-              </a>
+            <a href="#">
+              <div class="banner">
+                <img src="./../../assets/images/intro_phone_1.png" alt="" />
+                <p class="value">금융거래에 활용되는<br><strong>신용등급과 신용평점을 확인</strong>하세요.</p>
+              </div>
+            </a>
+          </slide>
+          <slide class="item">
+            <a href="#">
+              <div class="banner">
+                <img src="./../../assets/images/intro_phone_1.png" alt="" />
+                <p class="value">금융거래에 활용되는<br><strong>신용등급과 신용평점을 확인</strong>하세요.</p>
+              </div>
+            </a>
           </slide>
         </carousel>
       </div>
@@ -49,7 +45,7 @@
       </div>
     </section>
     <!-- //Content-->
-    
+
   </div>
 </template>
 
@@ -57,42 +53,44 @@
 import Constant from "@/assets/js/constant.js";
 
 export default {
-  name: 'Intro',
+  name: "Intro",
   data() {
     return {
-      errMsg: ''
-    }
+      errMsg: ""
+    };
   },
   component: {
     // swiper:swiper
   },
   // computed () {
   // },
-  beforeCreate() {
-  },
+  beforeCreate() {},
   created() {
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
     }
   },
-  beforeMount() {
-  },
-  mounted() {
-  },
-  beforeUpdate() {
-  },
-  updated() {
-  },
-  beforeDestroy() {
-  },
-  destroyed() {
-  },
-  methods: {
-  }
-}
+  beforeMount() {},
+  mounted() {},
+  beforeUpdate() {},
+  updated() {},
+  beforeDestroy() {},
+  destroyed() {},
+  methods: {}
+};
 </script>
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
-
+.banner-wrap .item a .banner img {
+  width: 100%;
+}
+.banner-wrap .item a .banner p.value {
+  color: #222;
+  font-size: 16px;
+  font-weight: 700;
+  margin-top: 10px;
+  line-height: 22px;
+  text-align: center;
+}
 </style>

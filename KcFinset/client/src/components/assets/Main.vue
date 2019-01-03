@@ -15,7 +15,7 @@
 
     <div class="banner-wrap owl-carousel">
       <carousel :perPage=1 :autoplay=true :autoplayTimeout=4000 :speed=700 :loop=true>
-        <slide class="item">
+        <!-- <slide class="item">
           <a @click="goMenu('ctrlFcLink')">
             <div class="banner">
               <div class="left">
@@ -27,10 +27,10 @@
               </div>
             </div>
           </a>
-        </slide>
+        </slide> -->
         <!-- 준비중 -->
-        <slide class="item">
-          <a>
+        <!-- <slide class="item">
+          <a @click="goMenu('ctrlFcLink')">
             <div class="banner">
               <div class="left">
                 <p class="key">내 토지 찾기</p>
@@ -41,10 +41,10 @@
               </div>
             </div>
           </a>
-        </slide>
+        </slide> -->
         <!-- 준비중 -->
         <slide class="item">
-          <a>
+          <a @click="goMenu('assetsAnalysis')">
             <div class="banner">
               <div class="left">
                 <p class="key">자산분석</p>
@@ -67,12 +67,14 @@
           <p class="number big">{{(assetsBankInfo.sum_amt_balance == null)? '-' : formatNumber(assetsBankInfo.sum_amt_balance)}}<em>원</em></p>
         </div>
       </div>
+      <!--
       <div @click="goMenu('stock')" class="item">
         <div class="flex">
           <p class="corp big">증권(주식/펀드/CMA)<em>{{assetsStockInfo.cnt_account}}건</em></p>
           <p class="number big">{{(assetsStockInfo.sum_amt_stock == null)? '-' : formatNumber(assetsStockInfo.sum_amt_stock)}}<em>원</em></p>
         </div>
       </div>
+      -->
       <!--
       <div class="item">
         <div class="flex">
@@ -158,6 +160,14 @@ export default {
           name: "scrapCtrlFcLink",
           params: { tab: "stock" }
         });
+        //자산분석
+      } else if ("assetsAnalysis" == menu) {
+        this.$dialogs.alert("서비스 준비중 입니다.", Constant.options);
+        return false;
+        // this.$router.push({
+        //   name: "assetsBankMain",
+        //   params: {}
+        // });
         //은행메인
       } else if ("bank" == menu) {
         this.$router.push({

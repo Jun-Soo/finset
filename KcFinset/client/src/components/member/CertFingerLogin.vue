@@ -79,7 +79,7 @@ export default {
   beforeCreate() {},
   created() {
     this.$store.state.title = "지문인증";
-    // window.resultFingerPrint = this.resultFingerPrint;
+    window.resultFingerPrint = this.resultFingerPrint;
     console.log(this.$store.state.user.cntFailFinger);
     this.errMsg =
       "지문인증을 " + this.cntFailFinger + "회 실패한 이력이 있습니다.";

@@ -89,6 +89,7 @@ table td button { line-height: 16px; background: #7c7c7c; color: #fff; min-width
 .board .view li .subject b { font-size: inherit; color: inherit; }
 .board .view li .date { color: #666; font-size: 12px; margin-top: 10px; }
 .board .view li .date em { display: inline-block; padding-right: 5px; margin-right: 5px; border-right: 1px solid #e5e5e5; }
+.board .view li img { max-width: 100% }
 
 .board.event .list li a { display: flex; }
 .board.event .list li div { width: calc( 100% - 80px); display: block; }
@@ -1353,7 +1354,7 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .board-list .list .left .sub { margin-top: 30px; display: flex; }
 .board-list .list .left .sub p { width: 50%; font-size: 12px; color: #666; }
 .board-list .list .left .sub p:last-child { text-align: right; }
-.board-list .list .right img { height: 80px; }
+.board-list .list .right img { height: 80px; max-width: 100%; }
 
 /*   My   */
 .alarm-setting { padding: 30px 21px; }

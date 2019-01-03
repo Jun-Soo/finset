@@ -8,7 +8,7 @@
       </div>
       <div class="date" v-if="dataPeriod=='yr'">
         <p>
-          <datepicker :minimum-view="'month'" v-model="dt_from" ref="datepicker0" :format="'yyyy.MM'" :language="ko" class="div-date"></datepicker>
+          <datepicker :minimum-view="'month'" v-model="dt_from" :opend="Common.datepickerInit('div-date', this)" ref="datepicker0" :format="'yyyy.MM'" :language="ko" class="div-date"></datepicker>
           <button class="cal" @click="openDatepicker0"></button>
         </p>
         <p>
@@ -19,11 +19,11 @@
       <div v-else class="date">
         <p>
           <datepicker v-model="dt_from" ref="datepicker1" :opend="Common.datepickerInit('div-date', this)" :format="formatDateDot" :language="ko" class="div-date"></datepicker>
-          <button class="cal" @click="openDatepicker(1)"></button>
+          <button class="cal" @click="openDatepicker1"></button>
         </p>
         <p>
           <datepicker v-model="dt_to" ref="datepicker2" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDateDot" class="div-date"></datepicker>
-          <button class="cal" @click="openDatepicker(2)"></button>
+          <button class="cal" @click="openDatepicker2"></button>
         </p>
       </div>
       <div v-if="shareList.length>1" class="filter-wrap mt20">
@@ -153,10 +153,11 @@ export default {
       let today = new Date();
       let dt_basic = this.dt_basic;
       //datePicker setting
+      debugger;
       if (this.dataPeriod == "yr") {
-        this.dt_from = moment()
+        this.dt_from = new Date(moment()
           .add(-3, "month")
-          .format("YYYYMM");
+          .format("YYYYMM"));
       } else if (this.dataPeriod == "mon") {
         /* 기준일 base month
         let yrmon = null;
@@ -174,9 +175,12 @@ export default {
         }
         this.dt_from = new Date(moment(yrmon + dt_basic, "YYYYMMDD"));
         */
-        this.dt_from = moment()
-          .add(-1, "month")
-          .format("YYYYMMDD");
+
+        this.dt_from = new Date(
+          moment(today)
+            .add(-1, "month")
+            .format("YYYYMMDD")
+        );
       } else if (this.dataPeriod == "week") {
         // console.log(this.$moment(today).isoWeekday(7));
         this.dt_from = new Date(moment(today).add(-7, "days")); //7일전

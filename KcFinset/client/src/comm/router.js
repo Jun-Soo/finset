@@ -38,8 +38,6 @@ import MemoHome from '@/components/memo/Home'
 import MemoRegister from '@/components/memo/Register'
 import MemoList from '@/components/memo/List'
 import MemoDetail from '@/components/memo/Detail'
-import MemoMain from '@/components/memo/Main'
-import MemoCreate from '@/components/memo/Create'
 
 import NewsHome from '@/components/news/Home'
 import NewsMain from '@/components/news/Main'
@@ -90,7 +88,6 @@ import DebtRegDetail from '@/components/debt/RegDetail'
 // import DebtCreditLoan from '@/components/debt/CreditLoan'
 // import DebtMortgageLoan from '@/components/debt/MortgageLoan'
 import DebtReqIntrCut from '@/components/debt/ReqIntrCut'
-import DebtCalendar from '@/components/debt/Calendar'
 // import DebtUpdate from '@/components/debt/Update'
 
 import GoodsHome from '@/components/goods/Home'
@@ -129,8 +126,6 @@ import ConsumeMain from '@/components/consume/Main'
 import ConsumeRegGoal from '@/components/consume/RegGoal'
 import ConsumeConsumeDetail from '@/components/consume/ConsumeDetail'
 import ConsumeAnalyze from '@/components/consume/Analyze'
-// import ConsumeIncomeAnalyze from '@/components/consume/IncomeAnalyze'
-// import ConsumeConsumeAnalyze from '@/components/consume/ConsumeAnalyze'
 import ConsumeSetting from '@/components/consume/Setting'
 import ConsumeConsumeClass from '@/components/consume/ConsumeClass'
 import ConsumeIncomeClass from '@/components/consume/IncomeClass'
@@ -140,8 +135,6 @@ import ConsumeSettlement from '@/components/consume/Settlement'
 import ConsumeIncomeStats from '@/components/consume/IncomeStats'
 // import ConsumeConsumeStats from '@/components/consume/ConsumeStats'
 // import ConsumePeriodStats from '@/components/consume/PeriodStats'
-
-import ConsumeDraggable from '@/components/consume/Draggable'
 
 import AssetsHome from '@/components/assets/Home'
 import AssetsMain from '@/components/assets/Main'
@@ -229,7 +222,7 @@ import TemplateChartSingleLine2 from '@/components/template/ChartSingleLine2'
 import TemplateChartMultipleBar from '@/components/template/ChartMultipleBar'
 
 import Store from '@/comm/store'
-import { debug } from 'util';
+
 Vue.use(Router)
 
 export const routes = [{
@@ -274,8 +267,8 @@ export const routes = [{
   }
 },
 {
-  path: 'spinner',
-  alias: '/spinner',
+  path: '/spinner',
+  name: 'spinner',
   component: Spinner,
   meta: {
     allowPath: true
@@ -287,7 +280,7 @@ export const routes = [{
   component: MemberHome,
   children: [{
     path: 'loading',
-    alias: '/loading',
+    name: 'commonLoading',
     component: Loading,
     meta: {
       allowPath: true,
@@ -296,7 +289,7 @@ export const routes = [{
   },
   {
     path: 'monthCal',
-    alias: '/monthCal',
+    name: 'commonMonthCal',
     component: CommonMonthCal,
     meta: {
       allowPath: true,
@@ -305,7 +298,7 @@ export const routes = [{
   },
   {
     path: 'yearCal',
-    alias: '/yearCal',
+    name: 'commonYearCal',
     component: CommonYearCal,
     meta: {
       allowPath: true,
@@ -314,7 +307,7 @@ export const routes = [{
   },
   {
     path: 'calSetting',
-    alias: '/calSetting',
+    name: 'commonCalSetting',
     component: CommonCalSetting,
     meta: {
       allowPath: true,
@@ -329,7 +322,7 @@ export const routes = [{
   component: MemberHome,
   children: [{
     path: 'terms1',
-    alias: '/terms1',
+    name: 'memberTerms1',
     component: MemberTerms1,
     meta: {
       allowPath: true
@@ -337,7 +330,7 @@ export const routes = [{
   },
   {
     path: 'terms2',
-    alias: '/terms2',
+    name: 'memberTerms2',
     component: MemberTerms2,
     meta: {
       allowPath: true
@@ -345,7 +338,7 @@ export const routes = [{
   },
   {
     path: 'terms3',
-    alias: '/terms3',
+    name: 'memberTerms3',
     component: MemberTerms3,
     meta: {
       allowPath: true
@@ -353,7 +346,7 @@ export const routes = [{
   },
   {
     path: 'terms4',
-    alias: '/terms4',
+    name: 'memberTerms4',
     component: MemberTerms4,
     meta: {
       allowPath: true
@@ -361,7 +354,7 @@ export const routes = [{
   },
   {
     path: 'terms5',
-    alias: '/terms5',
+    name: 'memberTerms5',
     component: MemberTerms5,
     meta: {
       allowPath: true
@@ -369,7 +362,7 @@ export const routes = [{
   },
   {
     path: 'terms6',
-    alias: '/terms6',
+    name: 'memberTerms6',
     component: MemberTerms6,
     meta: {
       allowPath: true
@@ -377,7 +370,7 @@ export const routes = [{
   },
   {
     path: 'terms7',
-    alias: '/terms7',
+    name: 'memberTerms7',
     component: MemberTerms7,
     meta: {
       allowPath: true
@@ -385,7 +378,7 @@ export const routes = [{
   },
   {
     path: 'terms8',
-    alias: '/terms8',
+    name: 'memberTerms8',
     component: MemberTerms8,
     meta: {
       allowPath: true
@@ -393,7 +386,7 @@ export const routes = [{
   },
   {
     path: 'terms9',
-    alias: '/terms9',
+    name: 'memberTerms9',
     component: MemberTerms9,
     meta: {
       allowPath: true
@@ -401,7 +394,7 @@ export const routes = [{
   },
   {
     path: 'terms10',
-    alias: '/terms10',
+    name: 'memberTerms10',
     component: MemberTerms10,
     meta: {
       allowPath: true
@@ -409,7 +402,7 @@ export const routes = [{
   },
   {
     path: 'certStep1',
-    alias: '/certStep1',
+    name: 'memberCertStep1',
     component: MemberCertStep1,
     meta: {
       allowPath: true
@@ -417,7 +410,7 @@ export const routes = [{
   },
   {
     path: 'certStep2',
-    alias: '/certStep2',
+    name: 'memberCertStep2',
     component: MemberCertStep2,
     meta: {
       allowPath: true
@@ -425,7 +418,7 @@ export const routes = [{
   },
   {
     path: 'certCode',
-    alias: '/certCode',
+    name: 'memberCertCode',
     component: MemberCertCode,
     meta: {
       allowPath: true
@@ -433,7 +426,7 @@ export const routes = [{
   },
   {
     path: 'certFinger',
-    alias: '/certFinger',
+    name: 'memberCertFinger',
     component: MemberCertFinger,
     meta: {
       allowPath: true
@@ -441,7 +434,7 @@ export const routes = [{
   },
   {
     path: 'certCodeLogin',
-    alias: '/certCodeLogin',
+    name: 'memberCertCodeLogin',
     component: MemberCertCodeLogin,
     meta: {
       allowPath: true
@@ -449,7 +442,7 @@ export const routes = [{
   },
   {
     path: 'certFingerLogin',
-    alias: '/certFingerLogin',
+    name: 'memberCertFingerLogin',
     component: MemberCertFingerLogin,
     meta: {
       allowPath: true
@@ -462,7 +455,7 @@ export const routes = [{
   component: CreditHome,
   children: [{
     path: 'main',
-    alias: '/main',
+    name: 'creditMain',
     component: CreditMain,
     meta: {
       allowPath: true,
@@ -471,7 +464,7 @@ export const routes = [{
   },
   {
     path: 'detail',
-    alias: '/detail',
+    name: 'creditDetail',
     component: CreditDetail,
     meta: {
       allowPath: true,
@@ -480,7 +473,6 @@ export const routes = [{
   },
   {
     path: 'cardInfo',
-    alias: '/cardInfo',
     name: 'creditCardInfo',
     component: CreditCardInfo,
     meta: {
@@ -490,7 +482,6 @@ export const routes = [{
   },
   {
     path: 'loanInfo',
-    alias: '/loanInfo',
     name: 'creditLoanInfo',
     component: CreditLoanInfo,
     meta: {
@@ -500,7 +491,6 @@ export const routes = [{
   },
   {
     path: 'overdueInfo',
-    alias: '/overdueInfo',
     name: 'creditOverdueInfo',
     component: CreditOverdueInfo,
     meta: {
@@ -510,7 +500,6 @@ export const routes = [{
   },
   {
     path: 'guaranteeInfo',
-    alias: '/guaranteeInfo',
     name: 'creditGuaranteeInfo',
     component: CreditGuaranteeInfo,
     meta: {
@@ -520,7 +509,6 @@ export const routes = [{
   },
   {
     path: 'smartReport',
-    alias: '/smartReport',
     name: 'creditSmartReport',
     component: CreditSmartReport,
     meta: {
@@ -530,7 +518,6 @@ export const routes = [{
   },
   {
     path: 'raiseInsPersonInfo',
-    alias: '/raiseInsPersonInfo',
     name: 'CreditRaiseInsPersonInfo',
     component: CreditRaiseInsPersonInfo,
     meta: {
@@ -540,7 +527,7 @@ export const routes = [{
   },
   {
     path: 'raiseInsPersonInfoNts',
-    alias: '/raiseInsPersonInfoNts',
+    name: 'creditRaiseInsPersonInfoNts',
     component: CreditRaiseInsPersonInfoNts,
     meta: {
       allowPath: true,
@@ -549,7 +536,7 @@ export const routes = [{
   },
   {
     path: 'loading',
-    alias: '/loading',
+    name: 'creditLoading',
     component: CreditLoading,
     meta: {
       allowPath: true,
@@ -558,7 +545,7 @@ export const routes = [{
   },
   {
     path: 'raiseMain',
-    alias: '/raiseMain',
+    name: 'creditRaiseMain',
     component: CreditRaiseMain,
     meta: {
       allowPath: true,
@@ -568,7 +555,7 @@ export const routes = [{
   },
   {
     path: 'raiseInfo',
-    alias: '/raiseInfo',
+    name: 'creditRaiseInfo',
     component: CreditRaiseInfo,
     meta: {
       allowPath: true,
@@ -577,7 +564,7 @@ export const routes = [{
   },
   {
     path: 'raiseNhis',
-    alias: '/raiseNhis',
+    name: 'creditRaiseNhis',
     component: CreditRaiseNhis,
     meta: {
       allowPath: true,
@@ -586,7 +573,7 @@ export const routes = [{
   },
   {
     path: 'raiseNps',
-    alias: '/raiseNps',
+    name: 'creditRaiseNps',
     component: CreditRaiseNps,
     meta: {
       allowPath: true,
@@ -595,7 +582,7 @@ export const routes = [{
   },
   {
     path: 'raiseNts',
-    alias: '/raiseNts',
+    name: 'creditRaiseNts',
     component: CreditRaiseNts,
     meta: {
       allowPath: true,
@@ -604,7 +591,7 @@ export const routes = [{
   },
   {
     path: 'raiseRetry',
-    alias: '/raiseRetry',
+    name: 'creditRaiseRetry',
     component: CreditRaiseRetry,
     meta: {
       allowPath: true,
@@ -613,9 +600,8 @@ export const routes = [{
   },
   {
     path: 'raiseResult',
-    alias: '/raiseResult',
-    component: CreditRaiseResult,
     name: 'creditRaiseResult',
+    component: CreditRaiseResult,
     meta: {
       allowPath: true,
       requiresAuth: true
@@ -623,9 +609,8 @@ export const routes = [{
   },
   {
     path: 'counselMain',
-    alias: '/counselMain',
-    component: CreditCounselMain,
     name: 'creditCounselMain',
+    component: CreditCounselMain,
     meta: {
       allowPath: true,
       requiresAuth: true
@@ -633,9 +618,8 @@ export const routes = [{
   },
   {
     path: 'counselInfo',
-    alias: '/counselInfo',
-    component: CreditCounselInfo,
     name: 'creditCounselInfo',
+    component: CreditCounselInfo,
     meta: {
       allowPath: true,
       requiresAuth: true
@@ -643,9 +627,8 @@ export const routes = [{
   },
   {
     path: 'counselReqStep1',
-    alias: '/counselReqStep1',
-    component: CreditCounselReqStep1,
     name: 'creditCounselReqStep1',
+    component: CreditCounselReqStep1,
     meta: {
       allowPath: true,
       requiresAuth: true
@@ -653,9 +636,8 @@ export const routes = [{
   },
   {
     path: 'counselReqStep2',
-    alias: '/counselReqStep2',
-    component: CreditCounselReqStep2,
     name: 'creditCounselReqStep2',
+    component: CreditCounselReqStep2,
     meta: {
       allowPath: true,
       requiresAuth: true
@@ -663,9 +645,8 @@ export const routes = [{
   },
   {
     path: 'counselReqStep3',
-    alias: '/counselReqStep3',
-    component: CreditCounselReqStep3,
     name: 'creditCounselReqStep3',
+    component: CreditCounselReqStep3,
     meta: {
       allowPath: true,
       requiresAuth: true
@@ -673,9 +654,8 @@ export const routes = [{
   },
   {
     path: 'counselReqStep4',
-    alias: '/counselReqStep4',
-    component: CreditCounselReqStep4,
     name: 'creditCounselReqStep4',
+    component: CreditCounselReqStep4,
     meta: {
       allowPath: true,
       requiresAuth: true
@@ -683,9 +663,8 @@ export const routes = [{
   },
   {
     path: 'counselReqStep5',
-    alias: '/counselReqStep5',
-    component: CreditCounselReqStep5,
     name: 'creditCounselReqStep5',
+    component: CreditCounselReqStep5,
     meta: {
       allowPath: true,
       requiresAuth: true
@@ -693,9 +672,8 @@ export const routes = [{
   },
   {
     path: 'counselResult',
-    alias: '/counselResult',
-    component: CreditCounselResult,
     name: 'creditCounselResult',
+    component: CreditCounselResult,
     meta: {
       allowPath: true,
       requiresAuth: true
@@ -708,7 +686,7 @@ export const routes = [{
   component: DebtHome,
   children: [{
     path: 'main',
-    alias: '/main',
+    name: 'debtMain',
     component: DebtMain,
     meta: {
       allowPath: true,
@@ -716,17 +694,7 @@ export const routes = [{
     }
   },
   {
-    path: 'calendar',
-    alias: '/calendar',
-    component: DebtCalendar,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
     path: 'detail',
-    alias: '/detail',
     name: 'debtDetail',
     component: DebtDetail,
     meta: {
@@ -734,18 +702,8 @@ export const routes = [{
       requiresAuth: true
     }
   },
-  // {
-  //   path: 'detail_2',
-  //   alias: '/detail_2',
-  //   name: 'debtDetail_2',
-  //   component: DebtDetail2,
-  //   meta: {
-  //     allowPath: true
-  //   }
-  // },
   {
     path: 'repayment',
-    alias: '/repayment',
     name: 'debtRepayment',
     component: DebtRepayment,
     meta: {
@@ -755,7 +713,6 @@ export const routes = [{
   },
   {
     path: 'modify',
-    alias: '/modify',
     name: 'debtModify',
     component: DebtModify,
     meta: {
@@ -765,7 +722,6 @@ export const routes = [{
   },
   {
     path: 'calc',
-    alias: '/calc',
     name: 'debtCalc',
     component: DebtCalc,
     meta: {
@@ -775,7 +731,6 @@ export const routes = [{
   },
   {
     path: 'calcSearch',
-    alias: '/calcSearch',
     name: 'debtCalcSearch',
     component: DebtCalcSearch,
     meta: {
@@ -785,7 +740,6 @@ export const routes = [{
   },
   {
     path: 'register',
-    alias: '/register',
     name: 'debtRegister',
     component: DebtRegister,
     meta: {
@@ -795,7 +749,6 @@ export const routes = [{
   },
   {
     path: 'regDetail',
-    alias: '/regDetail',
     name: 'debtRegDetail',
     component: DebtRegDetail,
     meta: {
@@ -803,18 +756,8 @@ export const routes = [{
       requiresAuth: true
     }
   },
-  // {
-  //   path: 'update',
-  //   alias: '/update',
-  //   name: 'debtUpdate',
-  //   component: DebtUpdate,
-  //   meta: {
-  //     allowPath: true
-  //   }
-  // },
   {
     path: 'reqIntrCut',
-    alias: '/reqIntrCut',
     name: 'debtReqIntrCut',
     component: DebtReqIntrCut,
     meta: {
@@ -829,7 +772,7 @@ export const routes = [{
   component: MemoHome,
   children: [{
     path: 'register',
-    alias: '/register',
+    name: 'memoRegister',
     component: MemoRegister,
     meta: {
       allowPath: true,
@@ -838,7 +781,7 @@ export const routes = [{
   },
   {
     path: 'list',
-    alias: '/list',
+    name: 'memoList',
     component: MemoList,
     meta: {
       allowPath: true,
@@ -847,26 +790,8 @@ export const routes = [{
   },
   {
     path: 'detail',
-    alias: '/detail',
+    name: 'memoDetail',
     component: MemoDetail,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'main',
-    alias: '/main',
-    component: MemoMain,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'create',
-    alias: '/create',
-    component: MemoCreate,
     meta: {
       allowPath: true,
       requiresAuth: true
@@ -879,7 +804,6 @@ export const routes = [{
   component: ConsumeHome,
   children: [{
     path: 'main',
-    alias: '/main',
     name: 'consumeMain',
     component: ConsumeMain,
     meta: {
@@ -889,7 +813,6 @@ export const routes = [{
   },
   {
     path: 'regGoal',
-    alias: '/regGoal',
     name: 'consumeRegGoal',
     component: ConsumeRegGoal,
     meta: {
@@ -899,7 +822,6 @@ export const routes = [{
   },
   {
     path: 'consumeDetail',
-    alias: '/consumeDetail',
     name: 'consumeConsumeDetail',
     component: ConsumeConsumeDetail,
     meta: {
@@ -909,7 +831,6 @@ export const routes = [{
   },
   {
     path: 'analyze',
-    alias: '/analyze',
     name: 'consumeAnalyze',
     component: ConsumeAnalyze,
     meta: {
@@ -919,7 +840,6 @@ export const routes = [{
   },
   {
     path: 'setting',
-    alias: '/setting',
     name: 'consumeSetting',
     component: ConsumeSetting,
     meta: {
@@ -929,7 +849,6 @@ export const routes = [{
   },
   {
     path: 'consumeClass',
-    alias: '/consumeClass',
     name: 'consumeConsumeClass',
     component: ConsumeConsumeClass,
     meta: {
@@ -939,7 +858,6 @@ export const routes = [{
   },
   {
     path: 'incomeClass',
-    alias: '/incomeClass',
     name: 'consumeIncomeClass',
     component: ConsumeIncomeClass,
     meta: {
@@ -949,7 +867,6 @@ export const routes = [{
   },
   {
     path: 'payment',
-    alias: '/payment',
     name: 'consumePayment',
     component: ConsumePayment,
     meta: {
@@ -959,7 +876,6 @@ export const routes = [{
   },
   {
     path: 'paymentDetail',
-    alias: '/paymentDetail',
     name: 'consumePaymentDetail',
     component: ConsumePaymentDetail,
     meta: {
@@ -969,7 +885,6 @@ export const routes = [{
   },
   {
     path: 'settlement',
-    alias: '/settlement',
     name: 'consumeSettlement',
     component: ConsumeSettlement,
     meta: {
@@ -979,18 +894,8 @@ export const routes = [{
   },
   {
     path: 'consumeIncomeStats',
-    alias: '/consumeIncomeStats',
     name: 'consumeIncomeStats',
     component: ConsumeIncomeStats,
-    meta: {
-      allowPath: true,
-      requiresAuth: true
-    }
-  },
-  {
-    path: 'draggable',
-    alias: '/draggable',
-    component: ConsumeDraggable,
     meta: {
       allowPath: true,
       requiresAuth: true
@@ -1003,7 +908,7 @@ export const routes = [{
   component: AssetsHome,
   children: [{
     path: 'main',
-    alias: '/main',
+    name: 'assetsMain',
     component: AssetsMain,
     meta: {
       allowPath: true,
@@ -1012,7 +917,6 @@ export const routes = [{
   },
   {
     path: 'bankMain',
-    alias: '/bankMain',
     name: 'assetsBankMain',
     component: AssetsBankMain,
     meta: {
@@ -1022,7 +926,6 @@ export const routes = [{
   },
   {
     path: 'bankActDetail',
-    alias: '/bankActDetail',
     name: 'assetsBankActDetail',
     component: AssetsBankActDetail,
     meta: {
@@ -1032,7 +935,6 @@ export const routes = [{
   },
   {
     path: 'bankDepWdrlList',
-    alias: '/bankDepWdrlList',
     name: 'assetsBankDepWdrlList',
     component: AssetsBankDepWdrlList,
     meta: {
@@ -1042,7 +944,6 @@ export const routes = [{
   },
   {
     path: 'bankDepWdrlDetail',
-    alias: '/bankDepWdrlDetail',
     name: 'assetsBankDepWdrlDetail',
     component: AssetsBankDepWdrlDetail,
     meta: {
@@ -1052,7 +953,6 @@ export const routes = [{
   },
   {
     path: 'stockMain',
-    alias: '/stockMain',
     name: 'assetsStockMain',
     component: AssetsStockMain,
     meta: {
@@ -1062,7 +962,6 @@ export const routes = [{
   },
   {
     path: 'stockBalcDetail',
-    alias: '/stockBalcDetail',
     name: 'assetsStockBalcDetail',
     component: AssetsStockBalcDetail,
     meta: {
@@ -1072,7 +971,6 @@ export const routes = [{
   },
   {
     path: 'stockActDetail',
-    alias: '/stockActDetail',
     name: 'assetsStockActDetail',
     component: AssetsStockActDetail,
     meta: {
@@ -1082,7 +980,6 @@ export const routes = [{
   },
   {
     path: 'stockShrDetail',
-    alias: '/stockShrDetail',
     name: 'assetsStockShrDetail',
     component: AssetsStockShrDetail,
     meta: {
@@ -1092,7 +989,6 @@ export const routes = [{
   },
   {
     path: 'stockFndDetail',
-    alias: '/stockFndDetail',
     name: 'assetsStockFndDetail',
     component: AssetsStockFndDetail,
     meta: {
@@ -1102,7 +998,6 @@ export const routes = [{
   },
   {
     path: 'etcMain',
-    alias: '/etcMain',
     name: 'assetsEtcMain',
     component: AssetsEtcMain,
     meta: {
@@ -1112,7 +1007,7 @@ export const routes = [{
   },
   {
     path: 'dirInput',
-    alias: '/dirInput',
+    name: 'assetsDirInput',
     component: AssetsDirInput,
     meta: {
       allowPath: true,
@@ -1121,7 +1016,7 @@ export const routes = [{
   },
   {
     path: 'stockAnalysis',
-    alias: '/stockAnalysis',
+    name: 'assetsStockAnalysis',
     component: AssetsStockAnalysis,
     meta: {
       allowPath: true
@@ -1130,7 +1025,7 @@ export const routes = [{
   },
   {
     path: 'stockSpcfAnls',
-    alias: '/stockSpcfAnls',
+    name: 'assetsStockSpcfAnls',
     component: AssetsStockSpcfAnls,
     meta: {
       allowPath: true
@@ -1139,7 +1034,7 @@ export const routes = [{
   },
   {
     path: 'stockIvtmBhvr',
-    alias: '/stockIvtmBhvr',
+    name: 'assetsStockIvtmBhvr',
     component: AssetsStockIvtmBhvr,
     meta: {
       allowPath: true
@@ -1148,7 +1043,7 @@ export const routes = [{
   },
   {
     path: 'stockGoalSet',
-    alias: '/stockGoalSet',
+    name: 'assetsStockGoalSet',
     component: AssetsStockGoalSet,
     meta: {
       allowPath: true
@@ -1162,7 +1057,7 @@ export const routes = [{
   component: GoodsHome,
   children: [{
     path: 'list',
-    alias: '/list',
+    name: 'goodsList',
     component: GoodsList,
     meta: {
       allowPath: true,
@@ -1172,7 +1067,6 @@ export const routes = [{
   },
   {
     path: 'detail',
-    alias: '/detail',
     name: 'GoodsDetail',
     component: GoodsDetail,
     meta: {
@@ -1182,7 +1076,6 @@ export const routes = [{
   },
   {
     path: 'stockDetail',
-    alias: '/stockDetail',
     name: 'GoodsStockDetail',
     component: GoodsStockDetail,
     meta: {
@@ -1192,7 +1085,6 @@ export const routes = [{
   },
   {
     path: 'certStep1',
-    alias: '/certStep1',
     name: 'GoodsCertStep1',
     component: GoodsCertStep1,
     meta: {
@@ -1202,7 +1094,6 @@ export const routes = [{
   },
   {
     path: 'certStep2',
-    alias: '/certStep2',
     name: 'GoodsCertStep2',
     component: GoodsCertStep2,
     meta: {
@@ -1212,7 +1103,6 @@ export const routes = [{
   },
   {
     path: 'creditReqInfo',
-    alias: '/creditReqInfo',
     name: 'GoodsCreditReqInfo',
     component: GoodsCreditReqInfo,
     meta: {
@@ -1222,7 +1112,6 @@ export const routes = [{
   },
   {
     path: 'creditJobIncome',
-    alias: '/creditJobIncome',
     name: 'GoodsCreditJobIncome',
     component: GoodsCreditJobIncome,
     meta: {
@@ -1232,7 +1121,6 @@ export const routes = [{
   },
   {
     path: 'creditSrcJobNm',
-    alias: '/creditSrcJobNm',
     name: 'GoodsCreditSrcJobNm',
     component: GoodsCreditSrcJobNm,
     meta: {
@@ -1242,7 +1130,6 @@ export const routes = [{
   },
   {
     path: 'creditInsJobNm',
-    alias: '/creditInsJobNm',
     name: 'GoodsCreditInsJobNm',
     component: GoodsCreditInsJobNm,
     meta: {
@@ -1252,7 +1139,6 @@ export const routes = [{
   },
   {
     path: 'hsnInsReqInfo',
-    alias: '/hsnInsReqInfo',
     name: 'GoodsHsnInsReqInfo',
     component: GoodsHsnInsReqInfo,
     meta: {
@@ -1262,7 +1148,6 @@ export const routes = [{
   },
   {
     path: 'hsnInsHsnInfo',
-    alias: '/hsnInsHsnInfo',
     name: 'GoodsHsnInsHsnInfo',
     component: GoodsHsnInsHsnInfo,
     meta: {
@@ -1272,7 +1157,6 @@ export const routes = [{
   },
   {
     path: 'hsnInsIncome',
-    alias: '/hsnInsIncome',
     name: 'GoodsHsnInsIncome',
     component: GoodsHsnInsIncome,
     meta: {
@@ -1282,7 +1166,6 @@ export const routes = [{
   },
   {
     path: 'hsnInsRepay',
-    alias: '/hsnInsRepay',
     name: 'GoodsHsnInsRepay',
     component: GoodsHsnInsRepay,
     meta: {
@@ -1292,7 +1175,6 @@ export const routes = [{
   },
   {
     path: 'loading',
-    alias: '/loading',
     name: 'GoodsLoading',
     component: GoodsLoading,
     meta: {
@@ -1302,7 +1184,6 @@ export const routes = [{
   },
   {
     path: 'result',
-    alias: '/result',
     name: 'GoodsResult',
     component: GoodsResult,
     meta: {
@@ -1312,7 +1193,6 @@ export const routes = [{
   },
   {
     path: 'reqDone',
-    alias: '/reqDone',
     name: 'GoodsReqDone',
     component: GoodsReqDone,
     meta: {
@@ -1322,7 +1202,7 @@ export const routes = [{
   },
   {
     path: 'workergoods',
-    alias: '/workergoods',
+    name: 'workergoods',
     component: GoodsWorkerGoods,
     meta: {
       allowPath: true,
@@ -1331,7 +1211,7 @@ export const routes = [{
   },
   {
     path: 'stock1',
-    alias: '/stock1',
+    name: 'goodsStock1',
     component: GoodsStock1,
     meta: {
       allowPath: true,
@@ -1340,7 +1220,7 @@ export const routes = [{
   },
   {
     path: 'stock2',
-    alias: '/stock2',
+    name: 'goodsStock2',
     component: GoodsStock2,
     meta: {
       allowPath: true,
@@ -1349,7 +1229,7 @@ export const routes = [{
   },
   {
     path: 'stock3',
-    alias: '/stock3',
+    name: 'goodsStock3',
     component: GoodsStock3,
     meta: {
       allowPath: true,
@@ -1358,7 +1238,7 @@ export const routes = [{
   },
   {
     path: 'stock4',
-    alias: '/stock4',
+    name: 'goodsStock4',
     component: GoodsStock4,
     meta: {
       allowPath: true,
@@ -1367,7 +1247,7 @@ export const routes = [{
   },
   {
     path: 'stock5',
-    alias: '/stock5',
+    name: 'goodsStock5',
     component: GoodsStock5,
     meta: {
       allowPath: true,
@@ -1376,7 +1256,7 @@ export const routes = [{
   },
   {
     path: 'stock6',
-    alias: '/stock6',
+    name: 'goodsStock6',
     component: GoodsStock6,
     meta: {
       allowPath: true,
@@ -1385,7 +1265,7 @@ export const routes = [{
   },
   {
     path: 'stock7',
-    alias: '/stock7',
+    name: 'goodsStock7',
     component: GoodsStock7,
     meta: {
       allowPath: true,
@@ -1394,7 +1274,7 @@ export const routes = [{
   },
   {
     path: 'stock8',
-    alias: '/stock8',
+    name: 'goodsStock8',
     component: GoodsStock8,
     meta: {
       allowPath: true,
@@ -1403,7 +1283,7 @@ export const routes = [{
   },
   {
     path: 'stock9',
-    alias: '/stock9',
+    name: 'goodsStock9',
     component: GoodsStock9,
     meta: {
       allowPath: true,
@@ -1418,7 +1298,6 @@ export const routes = [{
   component: ShareHome,
   children: [{
     path: 'main',
-    alias: '/main',
     name: 'shareMain',
     component: ShareMain,
     meta: {
@@ -1428,7 +1307,6 @@ export const routes = [{
   },
   {
     path: 'history',
-    alias: '/history',
     name: 'shareHistory',
     component: ShareHistory,
     meta: {
@@ -1438,7 +1316,6 @@ export const routes = [{
   },
   {
     path: 'newRequest',
-    alias: '/newRequest',
     name: 'shareNewRequest',
     component: ShareNewRequest,
     meta: {
@@ -1448,7 +1325,6 @@ export const routes = [{
   },
   {
     path: 'reqSetting',
-    alias: '/reqSetting',
     name: 'shareReqSetting',
     component: ShareReqSetting,
     meta: {
@@ -1458,7 +1334,6 @@ export const routes = [{
   },
   {
     path: 'offerSetting',
-    alias: '/offerSetting',
     name: 'shareOfferSetting',
     component: ShareOfferSetting,
     meta: {
@@ -1468,7 +1343,6 @@ export const routes = [{
   },
   {
     path: 'detail',
-    alias: '/detail',
     name: 'shareDetail',
     component: ShareDetail,
     meta: {
@@ -1483,7 +1357,6 @@ export const routes = [{
   component: EtcHome,
   children: [{
     path: 'alarmHistory',
-    alias: '/alarmHistory',
     name: 'etcAlarmHistory',
     component: EtcAlarmHistory,
     meta: {
@@ -1493,7 +1366,6 @@ export const routes = [{
   },
   {
     path: 'noticeMain',
-    alias: '/noticeMain',
     name: 'etcNoticeMain',
     component: EtcNoticeMain,
     meta: {
@@ -1503,7 +1375,6 @@ export const routes = [{
   },
   {
     path: 'noticeDetail',
-    alias: '/noticeDetail',
     name: 'etcNoticeDetail',
     component: EtcNoticeDetail,
     meta: {
@@ -1513,7 +1384,6 @@ export const routes = [{
   },
   {
     path: 'eventDetail',
-    alias: '/eventDetail',
     name: 'etcEventDetail',
     component: EtcEventDetail,
     meta: {
@@ -1523,7 +1393,6 @@ export const routes = [{
   },
   {
     path: 'faqMain',
-    alias: '/faqMain',
     name: 'etcFaqMain',
     component: EtcFaqMain,
     meta: {
@@ -1533,7 +1402,6 @@ export const routes = [{
   },
   {
     path: 'faqList',
-    alias: '/faqList',
     name: 'etcFaqList',
     component: EtcFaqList,
     meta: {
@@ -1543,7 +1411,6 @@ export const routes = [{
   },
   {
     path: 'faqDetail',
-    alias: '/faqDetail',
     name: 'etcFaqDetail',
     component: EtcFaqDetail,
     meta: {
@@ -1553,7 +1420,6 @@ export const routes = [{
   },
   {
     path: 'term',
-    alias: '/term',
     name: 'etcTerm',
     component: EtcTerm,
     meta: {
@@ -1568,7 +1434,6 @@ export const routes = [{
   component: ScrapHome,
   children: [{
     path: 'certStep',
-    alias: '/certStep',
     name: 'scrapCertStep',
     component: ScrapCertStep,
     meta: {
@@ -1578,7 +1443,6 @@ export const routes = [{
   },
   {
     path: 'fcLink',
-    alias: '/fcLink',
     name: 'scrapFcLink',
     component: ScrapFcLink,
     meta: {
@@ -1588,7 +1452,6 @@ export const routes = [{
   },
   {
     path: 'resultFcLink',
-    alias: '/resultFcLink',
     name: 'scrapResultFcLink',
     component: ScrapResultFcLink,
     meta: {
@@ -1598,7 +1461,6 @@ export const routes = [{
   },
   {
     path: 'ctrlFcLink',
-    alias: '/ctrlFcLink',
     name: 'scrapCtrlFcLink',
     component: ScrapCtrlFcLink,
     meta: {
@@ -1608,7 +1470,6 @@ export const routes = [{
   },
   {
     path: 'loading',
-    alias: '/loadaing',
     name: 'scrapLoading',
     component: ScrapLoading,
     meta: {
@@ -1618,7 +1479,6 @@ export const routes = [{
   },
   {
     path: 'regFcLink',
-    alias: '/regFcLink',
     name: 'scrapRegFcLink',
     component: ScrapRegFcLink,
     meta: {
@@ -1628,7 +1488,6 @@ export const routes = [{
   },
   {
     path: 'selFcLink',
-    alias: '/selFcLink',
     name: 'scrapSelFcLink',
     component: ScrapSelFcLink,
     meta: {
@@ -1638,7 +1497,6 @@ export const routes = [{
   },
   {
     path: 'terms',
-    alias: '/terms',
     name: 'scrapTerms',
     component: ScrapTerms,
     meta: {
@@ -1654,7 +1512,7 @@ export const routes = [{
   component: MypageHome,
   children: [{
     path: 'info',
-    alias: '/info',
+    name: 'mypageInfo',
     component: MypageInfo,
     meta: {
       allowPath: true,
@@ -1663,7 +1521,7 @@ export const routes = [{
   },
   {
     path: 'email',
-    alias: '/email',
+    name: 'mypageEmail',
     component: MypageEmail,
     meta: {
       allowPath: true,
@@ -1672,7 +1530,7 @@ export const routes = [{
   },
   {
     path: 'logout',
-    alias: '/logout',
+    name: 'mypageLogout',
     component: MypageLogout,
     meta: {
       allowPath: true
@@ -1680,7 +1538,7 @@ export const routes = [{
   },
   {
     path: 'regAlarm',
-    alias: '/regAlarm',
+    name: 'mypageRegAlarm',
     component: MypageRegAlarm,
     meta: {
       allowPath: true,
@@ -1689,7 +1547,7 @@ export const routes = [{
   },
   {
     path: 'drop',
-    alias: '/drop',
+    name: 'mypageDrop',
     component: MypageDrop,
     meta: {
       allowPath: true,
@@ -1698,7 +1556,7 @@ export const routes = [{
   },
   {
     path: 'dropDone',
-    alias: '/dropDone',
+    name: 'mypageDropDone',
     component: MypageDropDone,
     meta: {
       allowPath: true,
@@ -1707,7 +1565,7 @@ export const routes = [{
   },
   {
     path: 'cert',
-    alias: '/cert',
+    name: 'mypageCert',
     component: MypageCert,
     meta: {
       allowPath: true,
@@ -1716,7 +1574,7 @@ export const routes = [{
   },
   {
     path: 'regCertLogin',
-    alias: '/regCertLogin',
+    name: 'mypageRegCertLogin',
     component: MypageRegCertLogin,
     meta: {
       allowPath: true,
@@ -1725,7 +1583,7 @@ export const routes = [{
   },
   {
     path: 'certPerson',
-    alias: '/certPerson',
+    name: 'mypageCertPerson',
     component: MypageCertPerson,
     meta: {
       allowPath: true
@@ -1733,7 +1591,7 @@ export const routes = [{
   },
   {
     path: 'chgPwd',
-    alias: '/chgPwd',
+    name: 'mypageChgPwd',
     component: MypageChgPwd,
     meta: {
       allowPath: true
@@ -1741,7 +1599,7 @@ export const routes = [{
   },
   {
     path: 'favGoods',
-    alias: '/favGoods',
+    name: 'mypageFavGoods',
     component: MypageFavGoods,
     meta: {
       allowPath: true,
@@ -1750,7 +1608,6 @@ export const routes = [{
   },
   {
     path: 'favDetail',
-    alias: '/favDetail',
     name: 'MypageFavDetail',
     component: MypageFavDetail,
     meta: {
@@ -1760,7 +1617,7 @@ export const routes = [{
   },
   {
     path: 'rstlInqGoods',
-    alias: '/rstlInqGoods',
+    name: 'mypageRstlInqGoods',
     component: MypageRstlInqGoods,
     meta: {
       allowPath: true,
@@ -1769,7 +1626,7 @@ export const routes = [{
   },
   {
     path: 'rstlInqSucc',
-    alias: '/rstlInqSucc',
+    name: 'mypageRstlInqSucc',
     component: MypageRstlInqSucc,
     meta: {
       allowPath: true,
@@ -1778,7 +1635,7 @@ export const routes = [{
   },
   {
     path: 'rstlInqSucc',
-    alias: '/rstlInqSucc',
+    name: 'mypageRstlInqSucc',
     component: MypageRstlInqSucc,
     meta: {
       allowPath: true,
@@ -1787,7 +1644,7 @@ export const routes = [{
   },
   {
     path: 'state',
-    alias: '/state',
+    name: 'mypageState',
     component: MypageState,
     meta: {
       allowPath: true,
@@ -1858,7 +1715,7 @@ export const routes = [{
   component: TemplateHome,
   children: [{
     path: 'main',
-    alias: '/main',
+    name: 'main',
     component: TemplateMain,
     meta: {
       allowPath: true
@@ -1866,7 +1723,7 @@ export const routes = [{
   },
   {
     path: 'chartSingleLine',
-    alias: '/chartSingleLine',
+    name: 'chartSingleLine',
     component: TemplateChartSingleLine,
     meta: {
       allowPath: true
@@ -1874,7 +1731,7 @@ export const routes = [{
   },
   {
     path: 'chartSingleLine2',
-    alias: '/chartSingleLine2',
+    name: 'chartSingleLine2',
     component: TemplateChartSingleLine2,
     meta: {
       allowPath: true
@@ -1882,7 +1739,7 @@ export const routes = [{
   },
   {
     path: 'chartMultipleBar',
-    alias: '/chartMultipleBar',
+    name: 'chartMultipleBar',
     component: TemplateChartMultipleBar,
     meta: {
       allowPath: true
@@ -1895,7 +1752,6 @@ export const routes = [{
   component: NewsHome,
   children: [{
     path: 'main',
-    alias: '/main',
     name: 'newsMain',
     component: NewsMain,
     meta: {
@@ -1905,7 +1761,6 @@ export const routes = [{
   },
   {
     path: 'detail',
-    alias: '/detail',
     name: 'newsDetail',
     component: NewsDetail,
     meta: {
@@ -1923,6 +1778,7 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
+  console.log(to)
   if (from.path !== '/proxy' && to.path !== '/proxy') Store.state.proxyBackUrl = from.path
   if (from.path === '/proxy') Store.state.header.backPath = Store.state.proxyBackUrl
   // else Store.state.header.backPath = ''

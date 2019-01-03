@@ -152,13 +152,9 @@ export default {
       let today = new Date();
       let dt_basic = this.dt_basic;
       //datePicker setting
-      debugger;
+      // debugger;
       if (this.dataPeriod == "yr") {
-        this.dt_from = new Date(
-          moment(this.dt_to)
-            .add(-3, "month")
-            .format("YYYYMM")
-        );
+        this.dt_from = new Date(moment(this.dt_to).add(-3, "month"));
       } else if (this.dataPeriod == "mon") {
         /* 기준일 base month*/
         let yrmon = null;

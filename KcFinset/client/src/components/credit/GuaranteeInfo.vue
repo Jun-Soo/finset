@@ -1,39 +1,39 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="container">
-         <div v-if="guaranteeList.length == 0" class="nodata">등록 내역이 없습니다</div>
-     	   <div v-else class="col-top">
-	            <div>
-	                <p class="key">보증건수</p>
-	                <p class="value">{{guaranteeCnt}}</p>
-	            </div>
-	            <div>
-	                <p class="key">보증금액</p>
-	                <p class="value">{{amtGuarantee}}</p>
-	            </div>
-	        </div>
-	    </div>
-	    
-	    <div v-if="guaranteeList.length != 0" class="box-list list01">
-	        <div class="item" v-for="guaranteeInfo in guaranteeList" :key="guaranteeInfo.index">
-	            <div class="top">
-	                <p class="symbol"><img :src="guaranteeInfo.fcImg" alt=""/>{{guaranteeInfo.nm_fc}}</p>
-	            </div>
-	            <div class="text-wrap">
-	                <div class="left">
-	                    <p class="key">보증금액</p>
-	                    <p class="value">{{formatNumber(guaranteeInfo.amt_guar_object)}}</p>
-	                </div>
-	                <div class="right">
-	                    <p class="key">보증약정일자</p>
-	                    <p class="value">{{formatDateDot(guaranteeInfo.dtGuarAgree)}}</p>
-	                </div>
-	            </div>
-	        </div>
+      <div v-if="guaranteeList.length == 0" class="nodata">등록 내역이 없습니다</div>
+      <div v-else class="col-top">
+        <div>
+          <p class="key">보증건수</p>
+          <p class="value">{{guaranteeCnt}}</p>
+        </div>
+        <div>
+          <p class="key">보증금액</p>
+          <p class="value">{{amtGuarantee}}</p>
+        </div>
+      </div>
+    </div>
 
-          <!--noti-->
-          <div class="info-massage">연대보증 정보는 미해지 기준으로 제공되기 때문에 일부 연대보증 정보는 만기일이 지났어도 제공될 수 있습니다.</div>
-	    </div>
+    <div v-if="guaranteeList.length != 0" class="box-list list01">
+      <div class="item" v-for="guaranteeInfo in guaranteeList" :key="guaranteeInfo.index">
+        <div class="top">
+          <p class="symbol"><img :src="guaranteeInfo.fcImg" alt="" />{{guaranteeInfo.nm_fc}}</p>
+        </div>
+        <div class="text-wrap">
+          <div class="left">
+            <p class="key">보증금액</p>
+            <p class="value">{{formatNumber(guaranteeInfo.amt_guar_object)}}</p>
+          </div>
+          <div class="right">
+            <p class="key">보증약정일자</p>
+            <p class="value">{{formatDateDot(guaranteeInfo.dtGuarAgree)}}</p>
+          </div>
+        </div>
+      </div>
+
+      <!--noti-->
+      <div class="info-massage">연대보증 정보는 미해지 기준으로 제공되기 때문에 일부 연대보증 정보는 만기일이 지났어도 제공될 수 있습니다.</div>
+    </div>
   </section>
 </template>
 
@@ -47,6 +47,7 @@ export default {
   data() {
     return {
       errMsg: "",
+      seen: false,
       guaranteeCnt: "", //연대보증건수
       amtGuarantee: "", //연대보증금액
       guaranteeList: [] //연대보증list
@@ -81,9 +82,11 @@ export default {
           //금융사ICON 셋팅
           var list = response.data.guaranteeList;
           for (var i = 0; i < list.length; i++) {
-            list[i].fcImg = "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + list[i].cd_fc;
+            list[i].fcImg =
+              "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + list[i].cd_fc;
           }
           _this.guaranteeList = response.data.guaranteeList;
+          _this.seen = true;
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);

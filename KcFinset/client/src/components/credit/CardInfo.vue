@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="tab">
       <div class="wrap">
         <a @click="clickTab('credit')" :class="{on: this.listType=='credit'}">신용카드</a>
@@ -204,6 +204,7 @@ export default {
   data() {
     return {
       errMsg: "",
+      seen: false,
       listType: "credit",
       useMonth: "",
       //신용카드
@@ -332,6 +333,7 @@ export default {
           }
 
           _this.checkList = ckList;
+          _this.seen = true;
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);

@@ -27,7 +27,7 @@
         <div class="wrap">
           <a :class="{'on':curTab === 'loanWorker'}" @click="tabOnClick('loanWorker')">신용대출</a>
           <a :class="{'on':curTab === 'loanHome'}" @click="tabOnClick('loanHome')">주택담보</a>
-          <a :class="{'on':curTab === 'loanStock'}" @click="tabOnClick('loanStock')">스탁론</a>
+          <!-- <a :class="{'on':curTab === 'loanStock'}" @click="tabOnClick('loanStock')">스탁론</a> -->
         </div>
       </div>
       <!-- <div class="banner-wrap" :style="{'display-none':curTab == 'loanStock'}" v-if="curTab == 'loanStock'"> -->

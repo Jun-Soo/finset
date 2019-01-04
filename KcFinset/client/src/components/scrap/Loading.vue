@@ -132,9 +132,7 @@ export default {
     },
     checkFcUpdate: function() {
       var _this = this;
-      console.log("checkFcUpdate start1");
       if (Constant.userAgent == "iOS") {
-        console.log("checkFcUpdate start2");
         Jockey.on("resultUpdateScrapInfo", function(param) {
           _this.resultUpdateScrapInfo(param.cd_err, param.msg_err);
         });

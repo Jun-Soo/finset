@@ -9,7 +9,7 @@
       <div class="wrap">
         <a :class="{'on':curTab === 'bank'}" @click="tabOnClick('bank', $event)">은행</a>
         <a :class="{'on':curTab === 'card'}" @click="tabOnClick('card', $event)">카드</a>
-        <!-- <a :class="{'on':curTab === 'stock'}" @click="tabOnClick('stock', $event)">증권</a> -->
+        <a :class="{'on':curTab === 'stock'}" @click="tabOnClick('stock', $event)">증권</a>
         <a :class="{'on':curTab === 'etc'}" @click="tabOnClick('etc', $event)">기타</a>
       </div>
     </div>

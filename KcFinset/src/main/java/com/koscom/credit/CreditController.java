@@ -150,15 +150,6 @@ public class CreditController {
         return "jsonView";
     }
 
-
-
-
-
-
-
-
-
-
     /**
      * 신용관리 메인
      * @param request
@@ -1275,6 +1266,32 @@ public class CreditController {
     public String getCreditRaiseInfo(HttpSession session, Model model, HttpServletRequest request) {
         String no_person    = (String)session.getAttribute("no_person");
         logger.info("frameCreditRaise");
+        
+        Gson gson = new Gson();
+        Type gsonType = new TypeToken<ArrayList<Map<String, String>>>() {}.getType();
+        
+        HashMap<String, String> creditDetailJsonInfoMap = creditManager.getCreditDetailJsonInfo(no_person);
+        
+        ArrayList<Map<String, String>> listOverdueInfoGson = new ArrayList<Map<String, String>>();
+        String listOverdueInfoStr = "";
+        int cntDefault = 0;
+        int cntOverdue = 0;
+        if(creditDetailJsonInfoMap != null) {
+        	String cnt_default = "";
+        	cnt_default = creditDetailJsonInfoMap.get("cnt_default");
+        	if(cnt_default != null && cnt_default.length() > 0)	{
+        		cntDefault = Integer.parseInt(cnt_default);
+        	}
+        	listOverdueInfoStr = creditDetailJsonInfoMap.get("list_overdue_info");
+        	if(listOverdueInfoStr != null && listOverdueInfoStr.length() > 0)	{
+        		listOverdueInfoGson = gson.fromJson(listOverdueInfoStr, gsonType);
+        		cntOverdue = listOverdueInfoGson.size();
+        	}
+        	 
+        }
+        model.addAttribute("cntDefault", cntDefault);
+        model.addAttribute("cntOverdue", cntOverdue);
+                
         KcbReqNonfiInfoVO kcbReqNonfiInfoVO = new KcbReqNonfiInfoVO();
         kcbReqNonfiInfoVO.setNo_person(no_person);
 

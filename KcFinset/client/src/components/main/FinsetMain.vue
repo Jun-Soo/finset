@@ -146,7 +146,7 @@ export default {
     //로그인 처리 할때만 자동스트래핑 요청
     if (this.$store.state.isScrap) {
       console.log("startScrapSt call");
-      this.$parent.startAutoScrap();
+      //this.$parent.startAutoScrap();
       this.$store.state.isScrap = false;
     }
 

@@ -6,7 +6,7 @@
         <div class="checks grid2 mt10" v-if="isSingle!=true">
           <p><input type="checkbox" id="chk1" :checked="isCheckBank" @click="clickCheck('bank')"><label for="chk1">은행</label></p>
           <p><input type="checkbox" id="chk2" :checked="isCheckCard" @click="clickCheck('card')"><label for="chk2">카드</label></p>
-          <!-- <p class="mt10"><input type="checkbox" id="chk3" :checked="isCheckStock" @click="clickCheck('stock')"><label for="chk3">증권</label></p> -->
+          <p class="mt10"><input type="checkbox" id="chk3" :checked="isCheckStock" @click="clickCheck('stock')"><label for="chk3">증권</label></p>
           <p class="mt10"><input type="checkbox" id="chk4" :checked="isCheckNts" @click="clickCheck('nts')"><label for="chk4">국세청</label></p>
         </div>
 
@@ -45,7 +45,7 @@ export default {
     return {
       isCheckBank: true,
       isCheckCard: true,
-      isCheckStock: false, //증권은 추후 서비스 제공시에 true로 변경 필요
+      isCheckStock: true, //증권은 추후 서비스 제공시에 true로 변경 필요
       isCheckNts: true,
       isCheckCert: false,
       showButton: true,

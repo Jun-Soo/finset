@@ -1778,7 +1778,6 @@ const router = new Router({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(to)
   if (from.path !== '/proxy' && to.path !== '/proxy') Store.state.proxyBackUrl = from.path
   if (from.path === '/proxy') Store.state.header.backPath = Store.state.proxyBackUrl
   // else Store.state.header.backPath = ''

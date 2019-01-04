@@ -209,6 +209,12 @@ public interface ConsumeMapper {
 	 * @return
 	 */
 	List<ConsumeDetailGoalInfoVO> listPrevMonthMeans(String no_person);
+
+	/**
+	 * 예산 상세 내역 저장(단순 insert)
+	 * @param consumeDetailGoalInfoVO
+	 */
+	void createDetailGoal(ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO);
 	
 	/**
 	 * 예산 상세 내역 저장(분류별)
@@ -435,4 +441,18 @@ public interface ConsumeMapper {
 	 * @return
 	 */
 	List<ConsumeVO> getSettlementDetail(ConsumeForm consumeForm);
+	
+	/**
+	 * 분류별 예산 데이터 확인
+	 * @param no_person
+	 * @return
+	 */
+	List<ConsumeDetailGoalInfoVO> chkConsumeGoalInfoClass(String no_person);
+	
+	/**
+	 * 수단별 예산 데이터 확인
+	 * @param no_person
+	 * @return
+	 */
+	List<ConsumeDetailGoalInfoVO> chkConsumeGoalInfoMeans(String no_person);
 }

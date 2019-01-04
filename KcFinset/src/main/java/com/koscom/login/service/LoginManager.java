@@ -307,7 +307,7 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 	        if(!consumeManager.chkPersonConsumeClassInfoExist(no_person)) {
 	        	consumeManager.createDefaultConsumeClassInfo(no_person);
 	        }
-
+	        consumeManager.autoRegisterGoal(no_person);
 		} catch (Exception e) {
 			LogUtil.error(logger, e);
 			cd_result = Constant.FAILED;

@@ -23,6 +23,7 @@ import com.koscom.consume.model.PersonSetInfoVO;
 import com.koscom.consume.model.PersonTransDetailVO;
 import com.koscom.consume.service.ConsumeManager;
 import com.koscom.domain.PersonInfo;
+import com.koscom.util.DateUtil;
 
 @Service("consumeManager")
 public class ConsumeManagerImpl implements ConsumeManager {
@@ -521,5 +522,55 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	public List<ConsumeVO> getSettlementDetail(ConsumeForm consumeForm) {
 		logger.debug("getSettlementDetail");
 		return consumeMapper.getSettlementDetail(consumeForm);
+	}
+
+	@Override
+	public void autoRegisterGoal(String no_person) {
+		String req_yyyymm = ""; // 예산에서 max값으로 나온 년월 
+		String cur_yyyymm = DateUtil.getCurrentDateTime("yyyyMM"); // 금일에 해당하는 년월
+		String tmp_yyyymm = cur_yyyymm; // for구문을 돌릴 때 사용할 년월
+		List<ConsumeDetailGoalInfoVO> listClass = new ArrayList<ConsumeDetailGoalInfoVO>();
+		listClass = consumeMapper.chkConsumeGoalInfoClass(no_person);
+		if(listClass != null) {
+			if(listClass.size() != 0) {
+				// 데이터가 존재
+				req_yyyymm = listClass.get(0).getReq_yyyymm();
+				if(!req_yyyymm.equals(cur_yyyymm)) {
+					while(true) {
+						if(Integer.parseInt(req_yyyymm)>=Integer.parseInt(tmp_yyyymm)) {
+							break;
+						}
+						for(ConsumeDetailGoalInfoVO vo: listClass) {
+							vo.setReq_yyyymm(tmp_yyyymm);
+							consumeMapper.createDetailGoal(vo);
+						}
+						//addMonths 에서 사용하는 값이 yyyyMMdd 형식이라 임의로 01 추가
+						tmp_yyyymm = DateUtil.addMonths(tmp_yyyymm+"01", -1).substring(0,6);
+					}
+				}
+			}
+		}
+		tmp_yyyymm = cur_yyyymm;
+		List<ConsumeDetailGoalInfoVO> listMeans = new ArrayList<ConsumeDetailGoalInfoVO>();
+		listMeans = consumeMapper.chkConsumeGoalInfoMeans(no_person);
+		if(listMeans != null) {
+			if(listMeans.size() != 0) {
+				// 데이터가 존재
+				req_yyyymm = listMeans.get(0).getReq_yyyymm();
+				if(!req_yyyymm.equals(cur_yyyymm)) {
+					while(true) {
+						if(Integer.parseInt(req_yyyymm)>=Integer.parseInt(tmp_yyyymm)) {
+							break;
+						}
+						for(ConsumeDetailGoalInfoVO vo: listMeans) {
+							vo.setReq_yyyymm(tmp_yyyymm);
+							consumeMapper.createDetailGoal(vo);
+						}
+						//addMonths 에서 사용하는 값이 yyyyMMdd 형식이라 임의로 01 추가
+						tmp_yyyymm = DateUtil.addMonths(tmp_yyyymm+"01", -1).substring(0,6);
+					}
+				}
+			}
+		}
 	}
 }

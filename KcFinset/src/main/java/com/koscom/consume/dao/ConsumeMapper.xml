@@ -1301,6 +1301,42 @@
 		ORDER BY
 			CD_TYPE ASC, CD_FC ASC, NO_CARD ASC
     </select>
+    <insert id="createDetailGoal" parameterType="com.koscom.consume.model.ConsumeDetailGoalInfoVO">
+		INSERT INTO CONSUME_GOAL_INFO
+			(
+				NO_PERSON,
+				REQ_YYYYMM,
+				CD_SET,
+				CD_CLASS,
+				CD_TYPE,
+				CD_FC,
+				NM_CARD,
+				NO_CARD,
+				AMT_BUDGET,
+				AMT_EXPENSE,
+				ID_FRT,
+				DT_FRT,
+				ID_LST,
+				DT_LST
+			)
+		VALUES
+			(
+				 #{no_person	, jdbcType = VARCHAR}
+				,#{req_yyyymm	, jdbcType = VARCHAR}
+				,#{cd_set		, jdbcType = VARCHAR}
+				,#{cd_class		, jdbcType = VARCHAR}
+				,#{cd_type		, jdbcType = VARCHAR}
+				,#{cd_fc		, jdbcType = VARCHAR}
+				,#{nm_card		, jdbcType = VARCHAR}
+				,#{no_card		, jdbcType = VARCHAR}
+				,#{amt_budget	, jdbcType = VARCHAR}
+				,#{amt_expense	, jdbcType = VARCHAR}
+				,#{id_frt		, jdbcType = VARCHAR}
+				,SYSDATE
+				,#{id_lst		, jdbcType = VARCHAR}
+				,SYSDATE
+			)
+    </insert>
     <insert id="createDetailGoalClass" parameterType="com.koscom.consume.model.ConsumeDetailGoalInfoVO">
 		<selectKey keyProperty="req_yyyymm" resultType="java.lang.String" order="BEFORE">
 			SELECT
@@ -2716,5 +2752,67 @@
 				<if test="@com.koscom.util.MybatisUtil@contains('amt',orderType)">
 					TO_NUMBER(AMT_IN_OUT) DESC
 				</if>
-	</select>	   
+	</select>
+	<select id="chkConsumeGoalInfoClass" parameterType="java.lang.String" resultType="com.koscom.consume.model.ConsumeDetailGoalInfoVO">
+		SELECT
+			 NO_PERSON
+			,REQ_YYYYMM
+			,CD_SET
+			,CD_CLASS
+			,CD_TYPE
+			,CD_FC
+			,NM_CARD
+			,NO_CARD
+			,AMT_BUDGET
+			,AMT_EXPENSE
+			,ID_FRT
+			,DT_FRT
+			,ID_LST
+			,DT_LST
+		FROM
+			CONSUME_GOAL_INFO
+		WHERE
+				NO_PERSON	= #{no_person, jdbcType = VARCHAR}
+			AND CD_SET		= '01'
+			AND REQ_YYYYMM	=(
+				SELECT
+					MAX( REQ_YYYYMM )
+				FROM
+					CONSUME_GOAL_INFO
+				WHERE
+						NO_PERSON	= #{no_person, jdbcType = VARCHAR}
+					AND CD_SET		= '01'
+			)
+	</select>
+	<select id="chkConsumeGoalInfoMeans" parameterType="java.lang.String" resultType="com.koscom.consume.model.ConsumeDetailGoalInfoVO">
+		SELECT
+			 NO_PERSON
+			,REQ_YYYYMM
+			,CD_SET
+			,CD_CLASS
+			,CD_TYPE
+			,CD_FC
+			,NM_CARD
+			,NO_CARD
+			,AMT_BUDGET
+			,AMT_EXPENSE
+			,ID_FRT
+			,DT_FRT
+			,ID_LST
+			,DT_LST
+		FROM
+			CONSUME_GOAL_INFO
+		WHERE
+				NO_PERSON	= #{no_person, jdbcType = VARCHAR}
+			AND CD_SET		= '02'
+			AND REQ_YYYYMM	=(
+				SELECT
+					MAX( REQ_YYYYMM )
+				FROM
+					CONSUME_GOAL_INFO
+				WHERE
+						NO_PERSON	= #{no_person, jdbcType = VARCHAR}
+					AND CD_SET		= '02'
+			)
+	</select>
 </mapper>

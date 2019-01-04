@@ -16,7 +16,7 @@
           </div>
         </li>
         <li>
-          <img v-if="boardImgInfo.img_files!=null" :src="getImgUrl(boardImgInfo)" v-bind:alt="boardImgInfo" width="100%" />
+          <img v-if="boardImgInfo.img_files!=null" :src="getImgUrl(boardImgInfo)" v-bind:alt="boardImgInfo" />
           <div v-html="boardInfo.content"></div>
         </li>
       </ul>
@@ -48,6 +48,7 @@ export default {
   created() {
     this.seq = this.$route.query.seq;
     this.id_board = this.$route.query.id_board;
+    this.$store.state.header.backPath = "/etc/noticeMain?tab=01";
     this.getEventDatail(this.seq, this.id_board);
   },
   beforeMount() {},

@@ -117,7 +117,7 @@ export default {
   },
   beforeCreate() {
     this.$store.state.header.type = "sub";
-    this.$store.state.title = "습관달력";
+    this.$store.state.title = "캘린더(년)";
   },
   created() {},
   beforeMount() {},

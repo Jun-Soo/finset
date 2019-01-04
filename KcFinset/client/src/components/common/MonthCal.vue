@@ -53,7 +53,7 @@ export default {
   },
   beforeCreate() {
     this.$store.state.header.type = "sub";
-    this.$store.state.title = "캘린더";
+    this.$store.state.title = "캘린더(월)";
   },
   created() {
     this.standardDt = Common.formatDate(this.standardDt)

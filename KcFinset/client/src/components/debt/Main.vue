@@ -21,15 +21,21 @@
                 <p class="active" :style="debtSummary.repayStyle"></p>
               </div>
             </div>
-            <div class="item">
+            <!-- <div class="item">
               <p class="key">상환능력<em>(소득대비)</em></p>
               <div class="text-wrap">
-                <!-- <p class="big">{{calDsr(debtSummary.cur_mon_mid_rpy, debtSummary.amt_etm_income)}}<em>%</em></p> -->
+                <p class="big">{{calDsr(debtSummary.cur_mon_mid_rpy, debtSummary.amt_etm_income)}}<em>%</em></p>
                 <p class="big">0<em>%</em></p>
               </div>
               <div class="bar">
-                <!-- <p class="active" :style="debtSummary.dsrStyle"></p> -->
+                <p class="active" :style="debtSummary.dsrStyle"></p>
                 <p class="active"></p>
+              </div>
+            </div> -->
+            <div class="item">
+              <p class="key">금리<em>(평균)</em></p>
+              <div class="text-wrap">
+                <p class="big">{{debtSummary.ever_interest}}<em>%</em></p>
               </div>
             </div>
           </div>
@@ -360,6 +366,8 @@ export default {
                 debtSummary.amt_etm_income
               ) +
               "%";
+            debtSummary.intStyle =
+              "width:" + _this.calInterest(debtSummary.ever_interest) + "%";
             _this.mylabels = response.data.dateList;
             _this.$set(_this.mydatasets[0], "data", response.data.dataList);
           } else {
@@ -392,6 +400,17 @@ export default {
         return 0;
       } else {
         return (repay / income) * 100;
+      }
+    },
+    calInterest: function(data) {
+      if ((data || "") == "") {
+        return data;
+      } else {
+        if ((data + "").indexOf(".") == 0) {
+          return "0" + data;
+        } else {
+          return data;
+        }
       }
     }
     // ---------------------//기타---------------------

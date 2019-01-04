@@ -60,13 +60,15 @@ export default {
   components: {},
   computed: {},
   beforeCreate() {
-    this.$store.state.header.type = "sub";
-    this.$store.state.title = "이전 내역 보기";
-  },
-  created() {
     this.cd_share = this.$route.query.cd_share;
     this.type_list = this.$route.query.type_list;
 
+    this.$store.state.header.type = "sub";
+    this.$store.state.title = "이전 내역 보기";
+    this.$store.state.header.backPath =
+      "/share/main?cd_share=" + this.cd_share + "&type_list=" + this.type_list;
+  },
+  created() {
     this.getHistInfo();
   },
   beforeMount() {},

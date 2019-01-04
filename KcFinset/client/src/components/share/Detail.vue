@@ -111,6 +111,8 @@ export default {
   created() {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "님 신용정보";
+    this.$store.state.header.backPath =
+      "/share/main?cd_share=" + this.cd_share + "&type_list=req";
 
     this.seq_share = this.$route.query.seq_share;
     this.getDetailInfo();

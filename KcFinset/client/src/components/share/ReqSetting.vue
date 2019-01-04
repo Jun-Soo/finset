@@ -102,6 +102,8 @@ export default {
       this.$store.state.title = "금융정보 공유항목";
     }
     this.cd_share = cd_share;
+    this.$store.state.header.backPath =
+      "/share/main?cd_share=" + this.cd_share + "&type_list=req";
 
     this.seq_share = this.$route.query.seq_share;
     this.getSettingInfo();

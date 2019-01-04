@@ -108,35 +108,6 @@ export default {
 
       //연 클릭시
       if (this.dataPeriod == "yr") {
-        var fromMon = this.dt_from.getMonth();
-        var toMon = this.dt_to.getMonth();
-        // if (this.dt_from.getFullYear() == this.dt_to.getFullYear()) {
-        //   for (var k = fromMon; k <= toMon; k++) {
-        //     this.mylabels.push(k + 1 + "월");
-        //     this.rangeDate.push(
-        //       moment(this.dt_from)
-        //         .add(k, "month")
-        //         .format("YYYYMMDD")
-        //     );
-        //     for (var i in _chartList) {
-        //       if (k + 1 == _chartList[i].dt_trd.substring(4, 6)) {
-        //         if (_chartList[i].type_in_out == "02") {
-        //           _dataList1.push(_chartList[i].amt_in_out);
-        //         } else {
-        //           _dataList2.push(_chartList[i].amt_in_out);
-        //         }
-        //       } else {
-        //         continue;
-        //       }
-        //     } //for
-        //     if (k + 1 != _dataList1.length) {
-        //       _dataList1.push("");
-        //     }
-        //     if (k + 1 != _dataList2.length) {
-        //       _dataList2.push("");
-        //     }
-        //   } //for
-        // } else {
         var diffMon = "";
         if (moment(this.dt_to, "DD") >= moment(this.dt_from, "DD")) {
           diffMon = moment(this.dt_to, "YYYYMM").diff(this.dt_from, "month");

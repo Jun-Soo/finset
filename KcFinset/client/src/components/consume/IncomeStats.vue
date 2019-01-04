@@ -1,8 +1,12 @@
 <template>
   <section v-if="seen">
     <div class="container">
-      <multiselect v-model="orderType" :options="options" :title="'조회순'" class="multiselect-basic">
-      </multiselect>
+      <div class="mypage-links">
+        <multiselect v-model="orderType" :options="options" :title="'조회순'" class="multiselect-basic">
+        </multiselect>
+        <p></p>
+        <p></p>
+      </div>
       <div v-if="orderType.value=='date'">
         <div class="nobox-list" v-for="(each, idx) in detailList" :key="idx">
           <p class="date" v-if="idx==0 || (idx!=0&&each.dt_trd!=detailList[idx-1].dt_trd)">{{formatDateDot(each.dt_trd)}}</p>
@@ -81,7 +85,24 @@ export default {
     this.$store.state.title = "지출상세";
   },
   created() {
-    this.dataSet(this.$route.query);
+    var qData = this.$route.query;
+    this.dataSet(qData);
+    var bPath = {
+      name: "consumeSettlement",
+      params: this.$route.params,
+      query: {
+        dataPeriod: qData.chartType,
+        dt_from: qData.dt_from, //this.dt_from,
+        dt_to: qData.dt_to,
+        dt_trd: qData.dt_trd,
+        listType: qData.listType,
+        type_in_out: qData.type_in_out,
+        personList: qData.personList,
+        prdFromDt: qData.prdFromDt,
+        prdToDt: qData.prdToDt
+      }
+    };
+    this.$store.state.header.backPath = bPath;
   },
   beforeMount() {},
   mounted() {},
@@ -172,7 +193,7 @@ export default {
       cFrm.append("listType", jsonObj.listType);
       cFrm.append("orderType", this.orderType.value);
       cFrm.append("type_in_out", jsonObj.type_in_out);
-      cFrm.append("no_person_list", this.splitPersonList(jsonObj.personList));
+      cFrm.append("no_person_list", jsonObj.personList);
       if (jsonObj.listType == "category") {
         cFrm.append("contents", jsonObj.nm_class);
       } else if (jsonObj.listType == "store") {
@@ -185,9 +206,9 @@ export default {
       }
       this.listConsumeShareInfo();
     },
-    splitPersonList: function(str) {
-      return str.split(",");
-    },
+    // splitPersonList: function(arr) {
+    //   return str.split(",");
+    // },
     numberWithCommas: function(x) {
       return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },

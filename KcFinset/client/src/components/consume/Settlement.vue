@@ -2,9 +2,9 @@
   <section v-if="seen">
     <div class="report-top">
       <div class="checks round">
-        <input type="radio" id="rds1" :class="{'checked':dataPeriod === 'yr'}" v-model="dataPeriod" value="yr"><label for="rds1">년</label>
-        <input type="radio" id="rds2" :class="{'checked':dataPeriod === 'mon'}" v-model="dataPeriod" value="mon"><label for="rds2">월</label>
-        <input type="radio" id="rds3" :class="{'checked':dataPeriod === 'week'}" v-model="dataPeriod" value="week"><label for="rds3">주</label>
+        <input type="radio" id="rds1" :class="{'checked':dataPeriod === 'yr'}" v-model="dataPeriod" @click="clickPeriod" value="yr"><label for="rds1">년</label>
+        <input type="radio" id="rds2" :class="{'checked':dataPeriod === 'mon'}" v-model="dataPeriod" @click="clickPeriod" value="mon"><label for="rds2">월</label>
+        <input type="radio" id="rds3" :class="{'checked':dataPeriod === 'week'}" v-model="dataPeriod" @click="clickPeriod" value="week"><label for="rds3">주</label>
       </div>
       <div class="date" v-if="dataPeriod=='yr'">
         <p>
@@ -53,8 +53,8 @@
 
     <div class="tab">
       <div class="wrap">
-        <a id="02" name="consume" :class="{'on':curTab === '02'}" @change="changeTab">지출</a>
-        <a id="01" name="income" :class="{'on':curTab === '01'}" @change="changeTab">수입</a>
+        <a id="02" name="consume" :class="{'on':curTab === '02'}" @click="changeTabByTooltip">지출</a>
+        <a id="01" name="income" :class="{'on':curTab === '01'}" @click="changeTabByTooltip">수입</a>
       </div>
     </div>
     <div class="box-list list02 noMG">
@@ -103,7 +103,7 @@ export default {
     return {
       curTab: "02",
       curTabName: "consume",
-      dataPeriod: "",
+      dataPeriod: "yr",
       shareList: [],
       settingList: [
         { color: "red", id: "chk1" },
@@ -150,9 +150,81 @@ export default {
   watch: {
     dataPeriod: function() {
       let today = new Date();
+      if (this.dataPeriod == "yr") {
+        this.dt_from = new Date(moment(this.dt_to).add(-3, "month"));
+      } else if (this.dataPeriod == "mon") {
+        this.dt_from = new Date(moment(today).add(-1, "month"));
+      } else if (this.dataPeriod == "week") {
+        this.dt_from = new Date(moment(today).add(-7, "days")); //7일전
+      }
+    },
+    listType: function() {
+      if (!this.initYN) {
+        console.log(this.listType.value);
+        this.getRangeList();
+      } else {
+        this.listType = this.type1[0];
+      }
+    },
+    orderType: function() {
+      if (!this.initYN) {
+        // console.log(this.orderType.value);
+        this.getRangeList();
+      } else {
+        this.orderType = this.type2[0];
+      }
+    },
+    chartList: function() {
+      this.initRangeList();
+    },
+    dt_from: function() {
+      //chart setting
+      this.getChartList();
+    },
+    dt_to: function() {
+      this.getChartList();
+    }
+  },
+  beforeCreate() {
+    this.$store.state.header.type = "sub";
+    this.$store.state.title = "수입·지출 보고서";
+    this.$store.state.header.backPath = "/consume/main";
+  },
+  created() {
+    if (Object.keys(this.$route.query).length != 0) {
+      this.chartEl = this.$route.params.chartEl;
+      //dt_to, dt_from 보다 dataPeriod를 먼저 setting 해야함 (dataPeriod =>Yr로 바뀔때마다 dt_from을 3개월전으로 바꿈)
+      this.dataPeriod = this.$route.query.dataPeriod;
+      //시작 순서 dataPeriod -> dt_to ->dt_from
+      this.dt_to = new Date(moment(this.$route.query.dt_to, "YYYYMMDD"));
+      this.dt_from = new Date(moment(this.$route.query.dt_from, "YYYYMMDD"));
+      this.type_in_out = this.$route.query.type_in_out;
+      this.prdFromDt = this.$route.query.prdFromDt;
+      this.prdToDt = this.$route.query.prdToDt;
+      this.shareList = JSON.parse(localStorage.getItem("shareList"));
+      this.listType = JSON.parse(localStorage.getItem("listType"));
+      this.orderType = JSON.parse(localStorage.getItem("orderType"));
+
+      localStorage.removeItem("listType");
+      localStorage.removeItem("orderType");
+    } else {
+      this.listConsumeShareInfo();
+    }
+  },
+  beforeMount() {},
+  mounted() {},
+  beforeUpdate() {},
+  updated() {
+    this.initYN = false;
+  },
+  beforeDestroy() {},
+  destroyed() {},
+  methods: {
+    clickPeriod: function() {
+      let today = new Date();
       let dt_basic = this.dt_basic;
       //datePicker setting
-      // debugger;
+      this.dt_to = today;
       if (this.dataPeriod == "yr") {
         this.dt_from = new Date(moment(this.dt_to).add(-3, "month"));
       } else if (this.dataPeriod == "mon") {
@@ -179,52 +251,6 @@ export default {
         // this.dt_from = new Date(this.$moment(today).isoWeekday(0)); //주 초 (일요일부터)
       }
     },
-    listType: function() {
-      if (!this.initYN) {
-        console.log(this.listType.value);
-        this.getRangeList();
-      } else {
-        this.listType = this.type1[0];
-      }
-    },
-    orderType: function() {
-      if (!this.initYN) {
-        // console.log(this.orderType.value);
-        this.getRangeList();
-      } else {
-        this.orderType = this.type2[0];
-      }
-    },
-    chartList: function() {
-      this.initRangeList();
-      // this.getRangeList();
-    },
-    dt_from: function() {
-      //chart setting
-      this.getChartList();
-    },
-    dt_to: function() {
-      //chart setting
-      this.getChartList();
-    }
-  },
-  beforeCreate() {
-    this.$store.state.header.type = "sub";
-    this.$store.state.title = "수입·지출 보고서";
-  },
-  created() {
-    this.listConsumeShareInfo();
-    // this.getChartList();
-  },
-  beforeMount() {},
-  mounted() {},
-  beforeUpdate() {},
-  updated() {
-    this.initYN = false;
-  },
-  beforeDestroy() {},
-  destroyed() {},
-  methods: {
     getConsumeIconSrc: function(type_in_out, cd_class) {
       let cd;
       if ((cd_class || "") == "" || (type_in_out || "") == "") {
@@ -252,59 +278,38 @@ export default {
       this.getChartList();
     },
     goDetail: function(idx) {
-      let param = "";
+      let param = {};
       let listType = this.listType.value;
-      if (listType == "category") {
-        param =
-          "?dt_trd=" +
-          idx.dt_trd +
-          "&listType=" +
-          listType +
-          "&nm_class=" +
-          idx.nm_class +
-          "&type_in_out=" +
-          idx.type_in_out +
-          "&chartType=" +
-          this.dataPeriod +
-          "&personList=" +
-          this.filterShareList();
-      } else if (listType == "store") {
-        param =
-          "?dt_trd=" +
-          idx.dt_trd +
-          "&listType=" +
-          listType +
-          "&contents=" +
-          idx.contents +
-          "&type_in_out=" +
-          idx.type_in_out +
-          "&chartType=" +
-          this.dataPeriod +
-          "&personList=" +
-          this.filterShareList();
-      } else if (listType == "means") {
-        param =
-          "?dt_trd=" +
-          idx.dt_trd +
-          "&listType=" +
-          listType +
-          "&type_in_out=" +
-          idx.type_in_out +
-          "&chartType=" +
-          this.dataPeriod +
-          "&personList=" +
-          this.filterShareList();
+      // if (listType == "category") {
+      //   param["nm_class"] = idx.nm_class;
+      // } else if (listType == "store") {
+      //   param["contents"] = idx.contents;
+      // } else
+      if (listType == "means") {
         localStorage.setItem("no_card", idx.no_card);
         localStorage.setItem("nm_card", idx.nm_card);
-        console.log(
-          "localStorageSetItem=> no_card: " +
-            idx.no_card +
-            " nm_card : " +
-            idx.nm_card
-        );
       }
-      localStorage.setItem("shareList", this.shareList);
-      this.$router.push("/consume/consumeIncomeStats" + param);
+      localStorage.setItem("listType", JSON.stringify(this.listType));
+      localStorage.setItem("orderType", JSON.stringify(this.orderType));
+      localStorage.setItem("shareList", JSON.stringify(this.shareList));
+      // localStorage.setItem("chartEl", JSON.stringify(this.chartEl));
+      this.$router.push({
+        name: "consumeIncomeStats", //"/consume/consumeIncomeStats" + param,
+        params: { chartEl: this.chartEl },
+        query: {
+          dt_trd: idx.dt_trd,
+          listType: listType,
+          type_in_out: idx.type_in_out,
+          chartType: this.dataPeriod,
+          personList: this.filterShareList(),
+          dt_from: Common.formatDateDot(this.dt_from).replace(/[.]/g, ""), //this.dt_from,
+          dt_to: Common.formatDateDot(this.dt_to).replace(/[.]/g, ""),
+          prdFromDt: this.prdFromDt,
+          prdToDt: this.prdToDt,
+          nm_class: idx.nm_class,
+          contents: idx.contents
+        }
+      });
     },
     formatDateDot: function(date, pattern) {
       return Common.formatDateDot(date, pattern);
@@ -319,7 +324,6 @@ export default {
         _this.rangeList = _this.consumeList;
       }
     },
-    initData: function() {},
     getChartList: function() {
       let _this = this;
       let url = "/m/consume/listConsumeforSettlement.json";
@@ -341,6 +345,9 @@ export default {
         _this.consumeForm = response.data.consumeForm;
         _this.seen = true;
         _this.getSum();
+        if (_this.chartEl[0] != undefined) {
+          _this.getRangeList();
+        }
       });
     },
     /**
@@ -391,7 +398,9 @@ export default {
             }
           }
           _this.shareList = list;
-          _this.dataPeriod = "yr";
+          console.log(list);
+          // _this.dataPeriod = "yr";
+          _this.clickPeriod();
           // _this.getChartList();
         });
     },
@@ -456,6 +465,25 @@ export default {
           // console.log(_this.rangeList);
         });
     },
+    /**
+     * 차트 선택시 수입 지출 탭바꾸기
+     */
+    changeTabByTooltip: function(datasetIdx) {
+      console.log(datasetIdx);
+      if (datasetIdx != "undefined") {
+        let _tab = { srcElement: {} };
+        if (datasetIdx == 0) {
+          _tab.srcElement.id = "02";
+          _tab.srcElement.name = "지출";
+        } else {
+          _tab.srcElement.id = "01";
+          _tab.srcElement.name = "수입";
+        }
+        this.changeTab(_tab);
+      } else {
+        this.rangeList = [];
+      }
+    },
     openDatepicker0: function() {
       this.$refs.datepicker0.showCalendar();
     },
@@ -487,7 +515,7 @@ export default {
         this.prdToDt = rangeDate;
       }
       this.chartEl = el;
-      // console.log(el);
+      console.log(el);
       this.getRangeList();
     },
     calcPercentage: function(obj) {
@@ -523,5 +551,8 @@ export default {
 <style lang="scss">
 .div-date {
   display: inline;
+}
+.filter-wrap {
+  margin-bottom: 0px;
 }
 </style>

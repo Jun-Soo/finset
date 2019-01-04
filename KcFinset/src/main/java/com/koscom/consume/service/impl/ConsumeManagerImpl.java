@@ -497,6 +497,12 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	@Override
 	public List<ConsumeVO> listSettlementConsumeDataYear(ConsumeForm consumeForm) {
 		logger.debug("listSettlementConsumeDataYear");
+		if(consumeForm.getDt_from().length() > 6) {
+			consumeForm.setDt_from(consumeForm.getDt_from().substring(0,6));
+		}
+		if(consumeForm.getDt_to().length() > 6) {
+			consumeForm.setDt_to(consumeForm.getDt_to().substring(0,6));
+		}
 		return consumeMapper.listSettlementConsumeDataYear(consumeForm);
 	}
 	

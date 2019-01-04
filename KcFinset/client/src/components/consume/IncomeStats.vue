@@ -1,7 +1,7 @@
 <template>
   <section v-if="seen">
     <div class="container">
-      <multiselect v-model="orderType" :options="options" :title="'조회순'">
+      <multiselect v-model="orderType" :options="options" :title="'조회순'" class="multiselect-basic">
       </multiselect>
       <div v-if="orderType.value=='date'">
         <div class="nobox-list" v-for="(each, idx) in detailList" :key="idx">

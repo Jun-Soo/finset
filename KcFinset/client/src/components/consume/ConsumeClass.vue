@@ -71,7 +71,7 @@ export default {
   name: "ConsumeConsumeClass",
   data() {
     return {
-      seen: true, // 화면 표시 여부
+      seen: false, // 화면 표시 여부
       consumeCategory: [], // 지출 분류, 항목
       isShowAdd: false, // 추가, 수정 팝업 표시 여부
       isClass: true, // 팝업 화면 표출 시 분류 여부(아닐 시 항목)

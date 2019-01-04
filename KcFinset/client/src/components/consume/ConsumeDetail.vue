@@ -281,7 +281,7 @@ export default {
   },
   beforeMount() {},
   mounted() {
-    Common.datepickerInit("div-date", this);
+    // Common.datepickerInit("div-date", this);
   },
   beforeUpdate() {},
   updated() {},

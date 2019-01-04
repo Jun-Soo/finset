@@ -8,21 +8,21 @@
       </div>
       <div class="date" v-if="dataPeriod=='yr'">
         <p>
-          <datepicker :minimum-view="'month'" v-model="dt_from" :opend="Common.datepickerInit('div-date', this)" ref="datepicker0" :format="'yyyy.MM'" :language="ko" class="div-date"></datepicker>
+          <datepicker :minimum-view="'month'" v-model="dt_from" ref="datepicker0" :disabledDates="disabledDate" :format="'yyyy.MM'" :language="ko" class="div-date"></datepicker>
           <button class="cal" @click="openDatepicker0"></button>
         </p>
         <p>
-          <datepicker :minimum-view="'month'" v-model="dt_to" :opend="Common.datepickerInit('div-date', this)" ref="datepicker00" :format="'yyyy.MM'" :language="ko" class="div-date"></datepicker>
+          <datepicker :minimum-view="'month'" v-model="dt_to" ref="datepicker00" :format="'yyyy.MM'" :language="ko" class="div-date"></datepicker>
           <button class="cal" @click="openDatepicker00"></button>
         </p>
       </div>
       <div v-else class="date">
         <p>
-          <datepicker v-model="dt_from" ref="datepicker1" :opend="Common.datepickerInit('div-date', this)" :format="formatDateDot" :language="ko" class="div-date"></datepicker>
+          <datepicker v-model="dt_from" ref="datepicker1" :format="formatDateDot" :language="ko" class="div-date"></datepicker>
           <button class="cal" @click="openDatepicker1"></button>
         </p>
         <p>
-          <datepicker v-model="dt_to" ref="datepicker2" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDateDot" class="div-date"></datepicker>
+          <datepicker v-model="dt_to" ref="datepicker2" :language="ko" :format="formatDateDot" class="div-date"></datepicker>
           <button class="cal" @click="openDatepicker2"></button>
         </p>
       </div>
@@ -53,8 +53,8 @@
 
     <div class="tab">
       <div class="wrap">
-        <a id="02" name="consume" :class="{'on':curTab === '02'}" @click="changeTabByTooltip">지출</a>
-        <a id="01" name="income" :class="{'on':curTab === '01'}" @click="changeTabByTooltip">수입</a>
+        <a id="02" name="consume" :class="{'on':curTab === '02'}" @click="changeTab">지출</a>
+        <a id="01" name="income" :class="{'on':curTab === '01'}" @click="changeTab">수입</a>
       </div>
     </div>
     <div class="box-list list02 noMG">
@@ -141,7 +141,11 @@ export default {
       consumeList: [],
       chartEl: {},
       initYN: true,
-      lastToolTip: {}
+      lastToolTip: {},
+      disabledDate0: {},
+      disabledDate00: {},
+      disabledDate1: {},
+      disabledDate2: {}
     };
   },
   components: {
@@ -466,23 +470,10 @@ export default {
         });
     },
     /**
-     * 차트 선택시 수입 지출 탭바꾸기
+     * 탭 선택시 챠트 및 탭바꾸기
      */
-    changeTabByTooltip: function(datasetIdx) {
-      console.log(datasetIdx);
-      if (datasetIdx != "undefined") {
-        let _tab = { srcElement: {} };
-        if (datasetIdx == 0) {
-          _tab.srcElement.id = "02";
-          _tab.srcElement.name = "지출";
-        } else {
-          _tab.srcElement.id = "01";
-          _tab.srcElement.name = "수입";
-        }
-        this.changeTab(_tab);
-      } else {
-        this.rangeList = [];
-      }
+    changeTabByTooltip: function(e) {
+      this.changeTab(e);
     },
     openDatepicker0: function() {
       this.$refs.datepicker0.showCalendar();

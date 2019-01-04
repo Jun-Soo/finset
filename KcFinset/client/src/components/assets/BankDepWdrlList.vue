@@ -146,9 +146,7 @@ export default {
     this.getSearchCondition();
   },
   beforeMount() {},
-  mounted() {
-    Common.datepickerInit("div-date", this);
-  },
+  mounted() {},
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},

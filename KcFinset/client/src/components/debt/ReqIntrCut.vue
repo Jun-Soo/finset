@@ -324,9 +324,7 @@ export default {
     this.setCurrentDate();
   },
   beforeMount() {},
-  mounted() {
-    Common.datepickerInit("div-date", this);
-  },
+  mounted() {},
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},

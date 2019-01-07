@@ -275,7 +275,7 @@ export default {
           }
         })
         .catch(e => {
-          _this.$toast.center(ko.messages.error);
+          _this.$toast.center(e);
         });
     },
     getAutoScrapInfo: function() {

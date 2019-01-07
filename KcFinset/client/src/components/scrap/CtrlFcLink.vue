@@ -158,8 +158,9 @@ export default {
     this.listFcLinkInfo();
     this.$store.state.header.backPath = "/main";
 
-    console.log("isScrap : " + this.isScrap);
+    console.log("mount isScrap : " + this.isScrap);
     if (this.isScrap) {
+      console.log("mount autoScrap Start");
       this.$parent.$parent.isFcScrapDone = false;
       this.$parent.$parent.isStScrapDone = false;
       this.$parent.$parent.isScrapSuccess = true;
@@ -316,6 +317,7 @@ export default {
     },
     clickCert: function(fcInfo, event) {
       event.stopPropagation();
+      this.closeAllMemu();
       var no_person = this.$store.state.user.noPerson;
       var cd_coocon = fcInfo.cd_coocon;
       var nm_code = fcInfo.nm_code;
@@ -356,6 +358,7 @@ export default {
     },
     clickId: function(bank, event) {
       event.stopPropagation();
+      this.closeAllMemu();
       var _this = this;
       var no_person = this.$store.state.user.noPerson;
       var cd_coocon = bank.cd_coocon;
@@ -553,6 +556,7 @@ export default {
       if (cd_err == "00000000") {
         this.$toast.center("금융사 연동이 완료되었습니다.");
         setTimeout(function() {
+          console.log("resultUpdateScrapInfo autoScrap Start");
           _this.$parent.$parent.isFcScrapDone = false;
           _this.$parent.$parent.isStScrapDone = false;
           _this.$parent.$parent.isScrapSuccess = true;

@@ -146,7 +146,7 @@ export default {
     //로그인 처리 할때만 자동스트래핑 요청
     if (this.$store.state.isScrap) {
       console.log("startScrapSt call");
-      //this.$parent.startAutoScrap();
+      this.$parent.startAutoScrap();
       this.$store.state.isScrap = false;
     }
 
@@ -160,6 +160,7 @@ export default {
   destroyed() {},
   methods: {
     getMainInfo: function() {
+      console.log("getMainInfo start");
       var _this = this;
       this.$http
         .get("/m/main/getMainInfo.json", {
@@ -183,6 +184,7 @@ export default {
             _this.gaugeText = _this.creditInfo.grade_credit + "등급";
           }
           this.$store.state.isLoading = false;
+          console.log("getMainInfo end");
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);

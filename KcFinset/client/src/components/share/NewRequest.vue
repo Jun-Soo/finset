@@ -108,10 +108,12 @@ export default {
   methods: {
     //사용자검색
     srcPerson: function() {
+      var _this = this;
       if (Constant.userAgent == "iOS") {
         Jockey.send("getAddressList");
         Jockey.on("resultAddress", function(param) {
-          resultAddress(param.src_nm_person, param.src_hp);
+          _this.resultAddress(param.src_nm_person, param.src_hp);
+          Jockey.on("resultAddress");
         });
       } else if (Constant.userAgent == "Android") {
         window.Android.getAddressList();

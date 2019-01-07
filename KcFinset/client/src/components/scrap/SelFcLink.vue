@@ -295,6 +295,7 @@ export default {
         //공인인증서 유무 체크 결과 콜백 이벤트
         Jockey.on("resultCertSignInfo", function(param) {
           _this.resultCertSignInfo(param.jwsInfo);
+          Jockey.off("resultCertSignInfo");
         });
         Jockey.send("getCertSignInfo", {
           payload: financeTerms.text
@@ -314,6 +315,7 @@ export default {
         //공인인증서 유무 체크 결과 콜백 이벤트
         Jockey.on("resultCheckDevicesUUID", function(param) {
           _this.resultCheckDevicesUUID(uuid);
+          Jockey.off("resultCheckDevicesUUID");
         });
         Jockey.send("checkDevicesUUID");
       } else if (Constant.userAgent == "Android") {

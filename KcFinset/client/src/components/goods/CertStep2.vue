@@ -345,6 +345,7 @@ export default {
         //보안키패드 결과값 수신 콜백 이벤
         Jockey.on("resultKeypad", function(param) {
           _this.resultKeypad(param.encPwd);
+          Jockey.off("resultKeypad");
         });
       } else if (Constant.userAgent == "Android") {
         window.Android.showSecureKeypad("numeric", 7, "주민등록번호 뒷자리");

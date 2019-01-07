@@ -90,6 +90,7 @@ export default {
           var iscert = "false";
           if (param.isCert == 1) iscert = "true";
           _this.resultCheckCert(iscert);
+          Jockey.off("resultCheckCert");
         });
         Jockey.send("checkExistCert");
       } else if (Constant.userAgent == "Android") {
@@ -116,6 +117,7 @@ export default {
         if (Constant.userAgent == "iOS") {
           Jockey.on("resultCheckPasswordCert", function(param) {
             _this.resultCheckPasswordCert(param.dn, param.cn);
+            Jockey.off("resultCheckPasswordCert");
           });
           Jockey.send("checkPasswordCert", {
             noPerson: this.$store.state.user.noPerson,

@@ -48,12 +48,13 @@ export default {
 
     if (Constant.userAgent == "Android") {
       _this.app_version = window.Android.checkAppVersion();
-      checkAppVersion(_this.app_version);
+      _this.checkAppVersion(_this.app_version);
     } else if (Constant.userAgent == "iOS") {
       //앱버전 조회결과 콜백
       Jockey.on("receiveAppVersion", function(param) {
         _this.app_version = param.appVersion;
-        checkAppVersion(param.appVersion);
+        _this.checkAppVersion(param.appVersion);
+        Jockey.off("receiveAppVersion");
       });
       //앱버전 조회 네이티브 호출
       Jockey.send("checkAppVersion");

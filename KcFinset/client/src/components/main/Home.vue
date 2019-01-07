@@ -46,6 +46,7 @@ export default {
       //지문인식 가능여부 체크 결과 콜백 이벤트
       Jockey.on("resultCheckFingerPrint", function(param) {
         resultCheckFingerPrint(param);
+        Jockey.off("resultCheckFingerPrint");
       });
       Jockey.send("checkFingerPrint");
     } else {
@@ -86,6 +87,7 @@ export default {
             //지문인식 결과 콜백 이벤트
             // Jockey.on("resultFingerPrint", function(param) {
             //   resultFingerPrint(param.result);
+            //   Jockey.off("resultFingerPrint");
             // });
 
             // if (response.data.yn_fingerprint == "Y") {

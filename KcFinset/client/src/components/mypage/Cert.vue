@@ -45,6 +45,7 @@ export default {
     this.$store.state.title = "인증/보안";
   },
   created() {
+    var _this = this;
     window.resultCheckFingerPrint = this.resultCheckFingerPrint;
     // if (yn_fingerprint == "Y") {
     if (Constant.userAgent == "Android") {
@@ -52,7 +53,8 @@ export default {
     } else if (Constant.userAgent == "iOS") {
       //지문인식 가능여부 체크 결과 콜백 이벤트
       Jockey.on("resultCheckFingerPrint", function(param) {
-        resultCheckFingerPrint(param);
+        _this.resultCheckFingerPrint(param);
+        Jockey.off("resultCheckFingerPrint");
       });
 
       Jockey.send("checkFingerPrint");

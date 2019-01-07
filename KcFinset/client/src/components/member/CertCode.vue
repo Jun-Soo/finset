@@ -78,6 +78,7 @@ export default {
       //지문인식 가능여부 체크 결과 콜백 이벤트
       Jockey.on("resultCheckFingerPrint", function(param) {
         resultCheckFingerPrint(param);
+        Jockey.off("resultCheckFingerPrint");
       });
       Jockey.send("checkFingerPrint");
     }

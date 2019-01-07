@@ -141,6 +141,7 @@ export default {
       if (Constant.userAgent == "iOS") {
         Jockey.on("resultCreditRatingUpgrade", function(param) {
           resultCreditRatingUpgrade(param.result, param.scrapCode);
+          Jockey.off("resultCreditRatingUpgrade");
         });
         Jockey.send("creditRatingUpgrade", {
           scrapCode: _this.scrap_code,
@@ -182,6 +183,7 @@ export default {
               var iscert = "false";
               if (param.isCert == 1) iscert = "true";
               _this.resultCheckCert(iscert);
+              Jockey.off("resultCheckCert");
             });
             Jockey.send("checkExistCert");
           } else if (Constant.userAgent == "Android") {
@@ -202,6 +204,7 @@ export default {
         //보안키패드 결과값 수신 콜백 이벤
         Jockey.on("resultKeypad", function(param) {
           _this.resultKeypad(param.encPwd);
+          Jockey.off("resultKeypad");
         });
       } else if (Constant.userAgent == "Android") {
         window.Android.showSecureKeypad("numeric", 7, 7, "주민등록번호 뒷자리");

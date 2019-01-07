@@ -375,6 +375,7 @@ export default {
       if (Constant.userAgent == "iOS") {
         Jockey.on("resultUpdateScrapInfo", function(param) {
           _this.resultUpdateScrapInfo(param.cd_err, param.msg_err);
+          Jockey.off("resultUpdateScrapInfo");
         });
         Jockey.send("updateAvaliableLoginScrapInfo", {
           noPerson: no_person,
@@ -447,9 +448,11 @@ export default {
       if (Constant.userAgent == "iOS") {
         //공인인증서 유무 체크 결과 콜백 이벤트
         Jockey.on("resultCheckCert", function(param) {
+          console.log("Jockey.on  : resultCheckCert");
           var iscert = "false";
           if (param.isCert == 1) iscert = "true";
           _this.resultCheckCert(iscert);
+          Jockey.off("resultCheckCert");
         });
         Jockey.send("checkExistCert");
       } else if (Constant.userAgent == "Android") {
@@ -467,6 +470,7 @@ export default {
           if (Constant.userAgent == "iOS") {
             Jockey.on("resultCheckPasswordCertForUpdate", function(param) {
               _this.resultCheckPasswordCertForUpdate(param.dn, param.cn);
+              Jockey.off("resultCheckPasswordCertForUpdate");
             });
             Jockey.send("checkPasswordCertForUpdate", {
               noPerson: this.$store.state.user.noPerson,
@@ -485,6 +489,7 @@ export default {
             Jockey.on("resultCheckPasswordCert", function(param) {
               console.log("param.dn : " + param.dn + " param.cn : " + param.cn);
               _this.resultCheckPasswordCert(param.dn, param.cn);
+              Jockey.off("resultCheckPasswordCert");
             });
             Jockey.send("checkPasswordCert", {
               noPerson: this.$store.state.user.noPerson,

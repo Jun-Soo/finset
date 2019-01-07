@@ -136,7 +136,6 @@ export default {
     },
     chkFinger: function(gubun) {
       let _this = this;
-      debugger;
       if (gubun == "Y") {
         _this.ynFingerprint = "Y";
         if (Constant.userAgent == "Android") {
@@ -144,7 +143,8 @@ export default {
         } else if (Constant.userAgent == "iOS") {
           //지문인식 결과 콜백 이벤트
           Jockey.on("resultFingerPrint", function(param) {
-            resultFingerPrint(param.result);
+            _this.resultFingerPrint(param.result);
+            Jockey.off("resultFingerPrint");
           });
           Jockey.send("initFingerPrint");
         }

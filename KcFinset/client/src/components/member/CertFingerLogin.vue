@@ -102,6 +102,7 @@ export default {
           var result = false;
           if (param.result == 1) result = true;
           _this.resultFingerPrint(param.result);
+          Jockey.off("resultFingerPrint");
         });
 
         Jockey.send("initFingerPrint");

@@ -70,6 +70,7 @@ export default {
       Jockey.on("resultAutoScrap", function(param) {
         console.log("iOS resultAutoScrap called");
         _this.resultAutoScrap(param.isSuccess);
+        Jockey.off("resultAutoScrap");
       });
     }
   },
@@ -187,6 +188,7 @@ export default {
         //공인인증서 유무 체크 결과 콜백 이벤트
         Jockey.on("resultCheckDevicesUUID", function(param) {
           _this.resultCheckDevicesUUID(param.uuid);
+          Jockey.off("resultCheckDevicesUUID");
         });
         Jockey.send("checkDevicesUUID");
       } else if (Constant.userAgent == "Android") {
@@ -260,6 +262,7 @@ export default {
             if (Constant.userAgent == "iOS") {
               Jockey.on("resultHasCertPassword", function(param) {
                 _this.resultHasCertPassword(param.isExist);
+                Jockey.off("resultHasCertPassword");
               });
               Jockey.send("hasCertPassword");
             } else if (Constant.userAgent == "Android") {

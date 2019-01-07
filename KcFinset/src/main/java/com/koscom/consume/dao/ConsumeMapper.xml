@@ -39,17 +39,33 @@
 			AND CD_AGENCY		= '05'
 			AND CD_LINK_STAT	= '00'
 	</select>
-	<select id="getConsumeGoal" parameterType="com.koscom.consume.model.ConsumeDetailGoalInfoVO" resultType="com.koscom.consume.model.ConsumeDetailGoalInfoVO">
+	<select id="getConsumeGoal" parameterType="com.koscom.consume.model.ConsumeDetailGoalInfoVO" resultType="java.lang.String">
 		SELECT
-			 CD_SET
-			,TO_CHAR( NVL( SUM( TO_NUMBER( AMT_BUDGET ) ), 0 )) AS AMT_BUDGET
+			TO_CHAR(NVL(SUM(AMT_BUDGET), 0)) AS AMT_BUDGET
 		FROM
 			CONSUME_GOAL_INFO
 		WHERE
-				NO_PERSON	= #{no_person	, jdbcType = VARCHAR}
-			AND REQ_YYYYMM	= #{req_yyyymm	, jdbcType = VARCHAR}
-		GROUP BY CD_SET
-		ORDER BY CD_SET ASC
+				NO_PERSON = #{no_person, jdbcType = VARCHAR}
+			AND REQ_YYYYMM = #{req_yyyymm, jdbcType = VARCHAR}
+			AND CD_SET =
+				(
+					SELECT
+						DISTINCT CD_SET
+					FROM
+						CONSUME_GOAL_INFO
+					WHERE
+							NO_PERSON		 = #{no_person, jdbcType = VARCHAR}
+						AND DT_LST			 =
+							(
+								SELECT
+									MAX( DT_LST )
+								FROM
+									CONSUME_GOAL_INFO
+								WHERE
+										NO_PERSON			= #{no_person, jdbcType = VARCHAR}
+									AND YN_PERSON_REGIST	= 'Y'
+							)
+				)
 	</select>
 	<select id="getConsumeInfoAmt" parameterType="com.koscom.consume.model.ConsumeForm" resultType="java.lang.String">
 		SELECT
@@ -990,7 +1006,7 @@
 			 A.CODE_VALUE AS CD_TYPE
 			,B.CD_FC
 			,B.NO_CARD
-			,B.NM_CARD
+			,NVL( B.NM_CARD, '현금' ) AS NM_CARD
 			,NVL( C.AMT_EXPENSE, 0 ) AS AMT_EXPENSE
 		FROM
 			COMM_CD A
@@ -1010,7 +1026,7 @@
 						 #{no_person, jdbcType = VARCHAR} AS NO_PERSON
 						,CD_FC
 						,NULL AS NO_CARD
-						,NULL AS NM_CARD
+						,'현금영수증' AS NM_CARD
 						,'03' AS CODE_VALUE
 					FROM
 						FC_INFO
@@ -1180,7 +1196,7 @@
 			 A.CODE_VALUE AS CD_TYPE
 			,B.CD_FC
 			,B.NO_CARD
-			,B.NM_CARD
+			,NVL( B.NM_CARD, '현금' ) AS NM_CARD
 			,ROUND(NVL( C.AMT_EXPENSE/ 3, 0 ), 0) AS AMT_EXPENSE
 		FROM
 			COMM_CD A
@@ -1200,7 +1216,7 @@
 						 #{no_person, jdbcType = VARCHAR} AS NO_PERSON
 						,CD_FC
 						,NULL AS NO_CARD
-						,NULL AS NO_CARD
+						,'현금영수증' AS NM_CARD
 						,'03' AS CODE_VALUE
 					FROM
 						FC_INFO
@@ -1314,6 +1330,7 @@
 				NO_CARD,
 				AMT_BUDGET,
 				AMT_EXPENSE,
+				YN_PERSON_REGIST,
 				ID_FRT,
 				DT_FRT,
 				ID_LST,
@@ -1321,19 +1338,20 @@
 			)
 		VALUES
 			(
-				 #{no_person	, jdbcType = VARCHAR}
-				,#{req_yyyymm	, jdbcType = VARCHAR}
-				,#{cd_set		, jdbcType = VARCHAR}
-				,#{cd_class		, jdbcType = VARCHAR}
-				,#{cd_type		, jdbcType = VARCHAR}
-				,#{cd_fc		, jdbcType = VARCHAR}
-				,#{nm_card		, jdbcType = VARCHAR}
-				,#{no_card		, jdbcType = VARCHAR}
-				,#{amt_budget	, jdbcType = VARCHAR}
-				,#{amt_expense	, jdbcType = VARCHAR}
-				,#{id_frt		, jdbcType = VARCHAR}
+				 #{no_person		, jdbcType = VARCHAR}
+				,#{req_yyyymm		, jdbcType = VARCHAR}
+				,#{cd_set			, jdbcType = VARCHAR}
+				,#{cd_class			, jdbcType = VARCHAR}
+				,#{cd_type			, jdbcType = VARCHAR}
+				,#{cd_fc			, jdbcType = VARCHAR}
+				,#{nm_card			, jdbcType = VARCHAR}
+				,#{no_card			, jdbcType = VARCHAR}
+				,#{amt_budget		, jdbcType = VARCHAR}
+				,#{amt_expense		, jdbcType = VARCHAR}
+				,#{yn_person_regist	, jdbcType = VARCHAR}
+				,#{id_frt			, jdbcType = VARCHAR}
 				,SYSDATE
-				,#{id_lst		, jdbcType = VARCHAR}
+				,#{id_lst			, jdbcType = VARCHAR}
 				,SYSDATE
 			)
     </insert>
@@ -1359,10 +1377,11 @@
 				)
 				WHEN MATCHED THEN UPDATE
 				SET
-					 AMT_BUDGET		= #{amt_budget	, jdbcType = VARCHAR}
-					,AMT_EXPENSE	= #{amt_expense	, jdbcType = VARCHAR}
-					,ID_LST			= #{no_person	, jdbcType = VARCHAR}
-					,DT_LST			= SYSDATE
+					 AMT_BUDGET			= #{amt_budget		, jdbcType = VARCHAR}
+					,AMT_EXPENSE		= #{amt_expense		, jdbcType = VARCHAR}
+					,YN_PERSON_REGIST	= #{yn_person_regist, jdbcType = VARCHAR}
+					,ID_LST				= #{no_person		, jdbcType = VARCHAR}
+					,DT_LST				= SYSDATE
 					WHEN NOT MATCHED THEN INSERT
 						(
 							 NO_PERSON
@@ -1371,21 +1390,23 @@
 							,CD_CLASS
 							,AMT_BUDGET
 							,AMT_EXPENSE
+							,YN_PERSON_REGIST
 							,ID_FRT
 							,DT_FRT
 							,ID_LST
 							,DT_LST
 						)
 					VALUES(
-						 #{no_person	, jdbcType = VARCHAR}
-						,#{req_yyyymm	, jdbcType = VARCHAR}
+						 #{no_person		, jdbcType = VARCHAR}
+						,#{req_yyyymm		, jdbcType = VARCHAR}
 						,'01'
-						,#{cd_class		, jdbcType = VARCHAR}
-						,#{amt_budget	, jdbcType = VARCHAR}
-						,#{amt_expense	, jdbcType = VARCHAR}
-						,#{no_person	, jdbcType = VARCHAR}
+						,#{cd_class			, jdbcType = VARCHAR}
+						,#{amt_budget		, jdbcType = VARCHAR}
+						,#{amt_expense		, jdbcType = VARCHAR}
+						,#{yn_person_regist	, jdbcType = VARCHAR}
+						,#{no_person		, jdbcType = VARCHAR}
 						,SYSDATE
-						,#{no_person	, jdbcType = VARCHAR}
+						,#{no_person		, jdbcType = VARCHAR}
 						,SYSDATE
 					)
     </insert>
@@ -1413,10 +1434,11 @@
 			)
 			WHEN MATCHED THEN UPDATE
 			SET
-				 AMT_BUDGET		= #{amt_budget	, jdbcType = VARCHAR}
-				,AMT_EXPENSE	= #{amt_expense	, jdbcType = VARCHAR}
-				,ID_LST			= #{no_person	, jdbcType = VARCHAR}
-				,DT_LST			= SYSDATE
+				 AMT_BUDGET			= #{amt_budget		, jdbcType = VARCHAR}
+				,AMT_EXPENSE		= #{amt_expense		, jdbcType = VARCHAR}
+				,YN_PERSON_REGIST	= #{yn_person_regist, jdbcType = VARCHAR}
+				,ID_LST				= #{no_person		, jdbcType = VARCHAR}
+				,DT_LST				= SYSDATE
 				WHEN NOT MATCHED THEN INSERT
 					(
 						 NO_PERSON
@@ -1428,24 +1450,26 @@
 						,NM_CARD
 						,AMT_BUDGET
 						,AMT_EXPENSE
+						,YN_PERSON_REGIST
 						,ID_FRT
 						,DT_FRT
 						,ID_LST
 						,DT_LST
 					)
 				VALUES(
-					 #{no_person	, jdbcType = VARCHAR}
-					,#{req_yyyymm	, jdbcType = VARCHAR}
+					 #{no_person		, jdbcType = VARCHAR}
+					,#{req_yyyymm		, jdbcType = VARCHAR}
 					,'02'
-					,#{cd_type		, jdbcType = VARCHAR}
-					,#{cd_fc		, jdbcType = VARCHAR}
-					,#{no_card		, jdbcType = VARCHAR}
-					,#{nm_card		, jdbcType = VARCHAR}
-					,#{amt_budget	, jdbcType = VARCHAR}
-					,#{amt_expense	, jdbcType = VARCHAR}
-					,#{no_person	, jdbcType = VARCHAR}
+					,#{cd_type			, jdbcType = VARCHAR}
+					,#{cd_fc			, jdbcType = VARCHAR}
+					,#{no_card			, jdbcType = VARCHAR}
+					,#{nm_card			, jdbcType = VARCHAR}
+					,#{amt_budget		, jdbcType = VARCHAR}
+					,#{amt_expense		, jdbcType = VARCHAR}
+					,#{yn_person_regist	, jdbcType = VARCHAR}
+					,#{no_person		, jdbcType = VARCHAR}
 					,SYSDATE
-					,#{no_person	, jdbcType = VARCHAR}
+					,#{no_person		, jdbcType = VARCHAR}
 					,SYSDATE
 				)
     </insert>

@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import Constant from "@/assets/js/constant.js";
+
 export default {
   name: "MemoDetail",
   data() {
@@ -58,14 +60,18 @@ export default {
         });
     },
     deleteMemo: function() {
-      var _this = this;
-      var formData = new FormData();
-      formData.append("seq_memo_info", _this.memoVO.seq_memo_info);
-      this.$http
-        .post("/m/memo/deleteMemo.json", formData)
-        .then(function(response) {
-          _this.$router.go(-1);
-        });
+      this.$dialogs.confirm("정말 삭제할까요?", Constant.options).then(res => {
+        if (res.ok) {
+          var _this = this;
+          var formData = new FormData();
+          formData.append("seq_memo_info", _this.memoVO.seq_memo_info);
+          this.$http
+            .post("/m/memo/deleteMemo.json", formData)
+            .then(function(response) {
+              _this.$router.go(-1);
+            });
+        }
+      });
     }
   }
 };

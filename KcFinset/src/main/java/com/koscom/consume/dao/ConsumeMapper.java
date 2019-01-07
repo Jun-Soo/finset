@@ -32,10 +32,10 @@ public interface ConsumeMapper {
 	
 	/**
 	 * 설정된 예산 조회
-	 * @param no_person
+	 * @param consumeDetailGoalInfoVO
 	 * @return
 	 */
-	List<ConsumeDetailGoalInfoVO> getConsumeGoal(ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO);
+	String getConsumeGoal(ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO);
 	
 	/**
 	 * 해당 월 지출 합계

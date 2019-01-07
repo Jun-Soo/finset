@@ -11,17 +11,18 @@ public class ConsumeDetailGoalInfoVO implements Serializable{
 	
 	private static final long serialVersionUID = -2473734196250963548L;
 	
-	private String	no_person;		//회원관리번호
-	private String	req_yyyymm;		//기준년월
-	private String	cd_set;			//설정구분
-	private String	cd_class;		//분류코드
-	private String	nm_class;		//분류명
-	private String	cd_type;		//항목코드
-	private String	cd_fc;			//금융사코드
-	private String	nm_card;		//카드명
-	private String	no_card;		//카드번호
-	private String	amt_budget;		//예산금액
-	private String	amt_expense;	//지출금액
+	private String	no_person;			//회원관리번호
+	private String	req_yyyymm;			//기준년월
+	private String	cd_set;				//설정구분
+	private String	cd_class;			//분류코드
+	private String	nm_class;			//분류명
+	private String	cd_type;			//항목코드
+	private String	cd_fc;				//금융사코드
+	private String	nm_card;			//카드명
+	private String	no_card;			//카드번호
+	private String	amt_budget;			//예산금액
+	private String	amt_expense;		//지출금액
+	private String	yn_person_regist;	//사용자등록여부
 	private String	id_frt;
 	private Date	dt_frt;
 	private String	id_lst;
@@ -34,8 +35,9 @@ public class ConsumeDetailGoalInfoVO implements Serializable{
 	public ConsumeDetailGoalInfoVO(String no_person, String req_yyyymm,
 			String cd_set, String cd_class, String nm_class, String cd_type,
 			String cd_fc, String nm_card, String no_card, String amt_budget,
-			String amt_expense, String id_frt, Date dt_frt, String id_lst,
-			Date dt_lst, List<ConsumeDetailGoalInfoVO> list) {
+			String amt_expense, String yn_person_regist, String id_frt,
+			Date dt_frt, String id_lst, Date dt_lst,
+			List<ConsumeDetailGoalInfoVO> list) {
 		this.no_person = no_person;
 		this.req_yyyymm = req_yyyymm;
 		this.cd_set = cd_set;
@@ -47,6 +49,7 @@ public class ConsumeDetailGoalInfoVO implements Serializable{
 		this.no_card = no_card;
 		this.amt_budget = amt_budget;
 		this.amt_expense = amt_expense;
+		this.yn_person_regist = yn_person_regist;
 		this.id_frt = id_frt;
 		this.dt_frt = dt_frt;
 		this.id_lst = id_lst;
@@ -119,6 +122,12 @@ public class ConsumeDetailGoalInfoVO implements Serializable{
 	}
 	public void setAmt_expense(String amt_expense) {
 		this.amt_expense = amt_expense;
+	}
+	public String getYn_person_regist() {
+		return yn_person_regist;
+	}
+	public void setYn_person_regist(String yn_person_regist) {
+		this.yn_person_regist = yn_person_regist;
 	}
 	public String getId_frt() {
 		return id_frt;

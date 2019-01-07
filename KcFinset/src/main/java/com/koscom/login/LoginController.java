@@ -19,6 +19,7 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -124,7 +125,9 @@ public class LoginController {
 		String[] app_version = appVersion.split("\\.");
 		
 		try {
-			if(app_version.length == new_version.length) {
+			if("".equals(appVersion)) {
+				model.addAttribute("result", "pass");
+			} else if(app_version.length == new_version.length) {
 				for(int i=0; i<new_version.length; i++) {
 					if(Integer.valueOf(new_version[i]) > Integer.valueOf(app_version[i]) && "1.1.1".equals(codeInfo.getNm_code())) {
 						model.addAttribute("result", "update");

@@ -1446,8 +1446,7 @@ export const routes = [{
     name: 'scrapFcLink',
     component: ScrapFcLink,
     meta: {
-      allowPath: true,
-      requiresAuth: true
+      allowPath: true
     }
   },
   {

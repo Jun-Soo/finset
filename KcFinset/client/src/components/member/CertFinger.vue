@@ -109,6 +109,7 @@ export default {
   methods: {
     login: function() {
       var _this = this;
+      debugger;
       var querystring = require("querystring");
       var data = querystring.stringify({
         j_username: _this.noPerson,
@@ -135,6 +136,7 @@ export default {
     },
     chkFinger: function(gubun) {
       let _this = this;
+      debugger;
       if (gubun == "Y") {
         _this.ynFingerprint = "Y";
         if (Constant.userAgent == "Android") {
@@ -148,6 +150,13 @@ export default {
         }
       } else if (gubun == "N") {
         _this.ynFingerprint = "N";
+        if (Constant.userAgent == "Android" || Constant.userAgent == "iOS") {
+          _this.$router.push("/scrap/fcLink");
+        } else {
+          setTimeout(function() {
+            _this.login();
+          }, 2000);
+        }
       }
     },
     /***

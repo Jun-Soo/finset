@@ -8,21 +8,21 @@
       </div>
       <div class="date" v-if="dataPeriod=='yr'">
         <p>
-          <datepicker :minimum-view="'month'" v-model="dt_from" ref="datepicker0" :disabledDates="disabledDate" :format="'yyyy.MM'" :language="ko" class="div-date"></datepicker>
+          <datepicker :minimum-view="'month'" v-model="dt_from" ref="datepicker0" :disabledDates="disabledDate0" :format="'yyyy.MM'" :language="ko" class="div-date"></datepicker>
           <button class="cal" @click="openDatepicker0"></button>
         </p>
         <p>
-          <datepicker :minimum-view="'month'" v-model="dt_to" ref="datepicker00" :format="'yyyy.MM'" :language="ko" class="div-date"></datepicker>
+          <datepicker :minimum-view="'month'" v-model="dt_to" ref="datepicker00" :disabledDates="disabledDate00" :format="'yyyy.MM'" :language="ko" class="div-date"></datepicker>
           <button class="cal" @click="openDatepicker00"></button>
         </p>
       </div>
       <div v-else class="date">
         <p>
-          <datepicker v-model="dt_from" ref="datepicker1" :format="formatDateDot" :language="ko" class="div-date"></datepicker>
+          <datepicker v-model="dt_from" ref="datepicker1" :disabledDates="disabledDate1" :format="formatDateDot" :language="ko" class="div-date"></datepicker>
           <button class="cal" @click="openDatepicker1"></button>
         </p>
         <p>
-          <datepicker v-model="dt_to" ref="datepicker2" :language="ko" :format="formatDateDot" class="div-date"></datepicker>
+          <datepicker v-model="dt_to" ref="datepicker2" :disabledDates="disabledDate2" :language="ko" :format="formatDateDot" class="div-date"></datepicker>
           <button class="cal" @click="openDatepicker2"></button>
         </p>
       </div>
@@ -114,6 +114,7 @@ export default {
       ],
       dt_from: new Date(),
       dt_to: new Date(),
+      today: new Date(),
       ko: ko,
       chkReadonly: false,
       dt_basic: this.$store.state.user.dt_basic,
@@ -142,10 +143,13 @@ export default {
       chartEl: {},
       initYN: true,
       lastToolTip: {},
-      disabledDate0: {},
-      disabledDate00: {},
-      disabledDate1: {},
-      disabledDate2: {}
+      disabledDate0: {
+        to: new Date(moment(this.dt_to).add(-1, "years")),
+        from: new Date(this.dt_to)
+      }, //year disabled dates from
+      disabledDate00: {}, //year disabled dates to
+      disabledDate1: {}, //mon, day disabled dates from
+      disabledDate2: {} //mon, day disabled dates to
     };
   },
   components: {
@@ -248,7 +252,6 @@ export default {
         }
         this.dt_from = new Date(moment(yrmon + dt_basic, "YYYYMMDD"));
 */
-        this.dt_from = new Date(moment(today).add(-1, "month"));
       } else if (this.dataPeriod == "week") {
         // console.log(this.$moment(today).isoWeekday(7));
         this.dt_from = new Date(moment(today).add(-7, "days")); //7일전
@@ -345,12 +348,17 @@ export default {
       param.append("no_person_list", _this.filterShareList());
       // console.log(param);
       _this.$http.post(url, param).then(function(response) {
-        _this.chartList = response.data.listSettlementConsumeData;
-        _this.consumeForm = response.data.consumeForm;
-        _this.seen = true;
-        _this.getSum();
-        if (_this.chartEl[0] != undefined) {
-          _this.getRangeList();
+        if (response.data.result == "00") {
+          _this.chartList = response.data.listSettlementConsumeData;
+          _this.consumeForm = response.data.consumeForm;
+          _this.seen = true;
+          _this.getSum();
+          if (_this.chartEl[0] != undefined) {
+            _this.getRangeList();
+          }
+        } else {
+          _this.$toast.center(response.data.message);
+          // _this.$refs.datepicker0.$el.focus();
         }
       });
     },
@@ -476,16 +484,49 @@ export default {
       this.changeTab(e);
     },
     openDatepicker0: function() {
+      this.getDateDisabledRange();
       this.$refs.datepicker0.showCalendar();
     },
     openDatepicker00: function() {
+      this.getDateDisabledRange();
       this.$refs.datepicker00.showCalendar();
     },
     openDatepicker1: function() {
+      this.getDateDisabledRange();
       this.$refs.datepicker1.showCalendar();
     },
     openDatepicker2: function() {
+      this.getDateDisabledRange();
       this.$refs.datepicker2.showCalendar();
+    },
+    getDateDisabledRange: function() {
+      if (this.dataPeriod == "yr") {
+        this.disabledDate0 = {
+          to: new Date(moment(this.dt_to).add(-3, "month")),
+          from: new Date(this.dt_to)
+        };
+        this.disabledDate00 = {
+          from: new Date(this.today) // Disable all dates after specific date
+        };
+      } else if (this.dataPeriod == "mon") {
+        this.disabledDate1 = {
+          to: new Date(moment(this.dt_to).add(-2, "month")),
+          from: new Date(this.dt_to),
+          days: [6, 0, 2, 3, 4, 5]
+        };
+        this.disabledDate2 = {
+          from: new Date(this.today), // Disable all dates after specific date
+          days: [6, 1, 2, 3, 4, 5]
+        };
+      } else if (this.dataPeriod == "week") {
+        this.disabledDate1 = {
+          to: new Date(moment(this.dt_to).add(-14, "days")),
+          from: new Date(this.dt_to)
+        };
+        this.disabledDate2 = {
+          from: new Date(this.today) // Disable all dates after specific date
+        };
+      }
     },
     clickChart: function(rangeDate, typePeriod, el) {
       if (typePeriod == "yr") {

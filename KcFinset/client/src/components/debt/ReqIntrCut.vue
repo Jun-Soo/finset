@@ -414,6 +414,10 @@ export default {
           _this.debtList = list;
 
           _this.isInit = false;
+          _this.$toast.center("검색이 완료되었습니다.");
+          // setTimeout(function() {
+          $(document).scrollTop(0);
+          // }, 500);
 
           console.log(_this.isInit);
           console.log(_this.debtList);

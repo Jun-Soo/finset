@@ -23,7 +23,6 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.koscom.base.BaseController;
 import com.koscom.env.model.CodeInfo;
 import com.koscom.env.service.CodeManager;
 import com.koscom.login.service.SecureManager;
@@ -455,8 +454,11 @@ public class LoginController {
                 model.addAttribute("kcb_cp", result.get(2));
                 logger.debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ");
 
-                if(personManager.getPersonInfoHp(mbphnNo)!=null) {
-                	model.addAttribute("no_person", personManager.getPersonInfoHp(mbphnNo).getNo_person());
+                PersonVO vo = personManager.getPersonInfoHp(mbphnNo);
+                if(vo != null) {
+	                if(!StringUtils.isEmpty(vo.getNo_person())) {
+	                	model.addAttribute("no_person", vo.getNo_person());
+	                }
                 }
 
                 session.setAttribute("cert_result_value", Constant.SUCCESS);

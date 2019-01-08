@@ -26,7 +26,6 @@ export default {
       this.$toast.center("이미 로그인되어 있습니다. 다시 시도해주세요.");
       return;
     }
-    debugger;
     // 앱버전 체크
     var chkVersion = "";
     if (Constant.userAgent == "Android") {

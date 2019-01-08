@@ -16,6 +16,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -28,7 +29,6 @@ import com.koscom.person.model.PersonSmsListVO;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
 import com.koscom.util.Constant;
-import com.koscom.util.DateUtil;
 import com.koscom.util.FinsetException;
 import com.koscom.util.LogUtil;
 import com.koscom.util.ReturnClass;
@@ -125,19 +125,17 @@ public class PersonController {
 			//KCB_CI를 기준으로 회원을 확인해, 기존 회원의 핸드폰 번호가 변경 된 것이지 확인
 			String no_person = personManager.getPersonInfoDupCi(personVO);
 			//없으면 넘어가도록 한다
-			if(no_person!=null){
-				if(!no_person.equals("")){
-					personVO.setNo_person(no_person);
-					int isUpdated = personManager.modifyPersonHp(personVO);
-					if(isUpdated!=0){
-						ReturnClass returnClass = new ReturnClass(personVO.PERSON_EXIST, "이미 등록된 정보가 있습니다.");
-						model.addAttribute("message", returnClass.getMessage());
-						model.addAttribute("result", returnClass.getCd_result());
-						model.addAttribute("returnData", personVO.getNo_person());
-						logger.debug("기존 회원 KCB_CI 가 있습니다.:"+personVO.getKcb_ci());
-					} else {
-						throw new FinsetException("기존 회원의 hp를 업데이트 하지 못했습니다. 확인해주세요.");
-					}
+			if(!StringUtils.isEmpty(no_person)){
+				personVO.setNo_person(no_person);
+				int isUpdated = personManager.modifyPersonHp(personVO);
+				if(isUpdated != 0){
+					ReturnClass returnClass = new ReturnClass(personVO.PERSON_EXIST, "이미 가입된 정보가 있습니다.");
+					model.addAttribute("message", returnClass.getMessage());
+					model.addAttribute("result", returnClass.getCd_result());
+					model.addAttribute("returnData", personVO.getNo_person());
+					logger.debug("기존 회원 KCB_CI 가 있습니다.:"+personVO.getKcb_ci());
+				} else {
+					throw new FinsetException("기존 회원의 hp를 업데이트 하지 못했습니다. 확인해주세요.");
 				}
 			}
 		}

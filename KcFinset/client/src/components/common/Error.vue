@@ -43,7 +43,11 @@ export default {
           window.Android.exitApp();
         }
       } else {
-        this.$router.push("/main");
+        if (this.$store.state.isLoggedIn) {
+          this.$router.push("/main");
+        } else {
+          this.$router.push("/home?hp=" + localStorage.getItem("hp"));
+        }
       }
     }
   }

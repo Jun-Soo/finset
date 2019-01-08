@@ -173,31 +173,39 @@ export default {
   destroyed() {},
 
   methods: {
-    closeAllMemu: function() {
+    closeAllMenu: function() {
       // 전체 메뉴 닫기
-      for (var i = 0; i < this.bankList.length; i++) {
-        let bank = this.bankList[i];
-        bank.isClickMenu = false;
-        bank.isClickLink = false;
-        this.$set(this.bankList, i, bank);
+      if ((this.bankList || "") != "") {
+        for (var i = 0; i < this.bankList.length; i++) {
+          let bank = this.bankList[i];
+          bank.isClickMenu = false;
+          bank.isClickLink = false;
+          this.$set(this.bankList, i, bank);
+        }
       }
-      for (var i = 0; i < this.cardList.length; i++) {
-        let card = this.cardList[i];
-        card.isClickMenu = false;
-        card.isClickLink = false;
-        this.$set(this.cardList, i, card);
+      if ((this.cardList || "") != "") {
+        for (var i = 0; i < this.cardList.length; i++) {
+          let card = this.cardList[i];
+          card.isClickMenu = false;
+          card.isClickLink = false;
+          this.$set(this.cardList, i, card);
+        }
       }
-      for (var i = 0; i < this.stockList.length; i++) {
-        let stock = this.stockList[i];
-        stock.isClickMenu = false;
-        stock.isClickLink = false;
-        this.$set(this.stockList, i, stock);
+      if ((this.stockList || "") != "") {
+        for (var i = 0; i < this.stockList.length; i++) {
+          let stock = this.stockList[i];
+          stock.isClickMenu = false;
+          stock.isClickLink = false;
+          this.$set(this.stockList, i, stock);
+        }
       }
-      for (var i = 0; i < this.etcList.length; i++) {
-        let etc = this.etcList[i];
-        etc.isClickMenu = false;
-        etc.isClickLink = false;
-        this.$set(this.etcList, i, etc);
+      if ((this.etcList || "") != "") {
+        for (var i = 0; i < this.etcList.length; i++) {
+          let etc = this.etcList[i];
+          etc.isClickMenu = false;
+          etc.isClickLink = false;
+          this.$set(this.etcList, i, etc);
+        }
       }
     },
     tabOnClick: function(type, event) {
@@ -205,11 +213,11 @@ export default {
         event.stopPropagation();
       }
       this.curTab = type;
-      this.closeAllMemu();
+      this.closeAllMenu();
     },
     clickClear: function() {
       console.log("clickClear");
-      this.closeAllMemu();
+      this.closeAllMenu();
     },
     clickMenu: function(cd_fc, event) {
       event.stopPropagation();
@@ -317,7 +325,7 @@ export default {
     },
     clickCert: function(fcInfo, event) {
       event.stopPropagation();
-      this.closeAllMemu();
+      this.closeAllMenu();
       var no_person = this.$store.state.user.noPerson;
       var cd_coocon = fcInfo.cd_coocon;
       var nm_code = fcInfo.nm_code;
@@ -358,7 +366,7 @@ export default {
     },
     clickId: function(bank, event) {
       event.stopPropagation();
-      this.closeAllMemu();
+      this.closeAllMenu();
       var _this = this;
       var no_person = this.$store.state.user.noPerson;
       var cd_coocon = bank.cd_coocon;

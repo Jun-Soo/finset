@@ -338,6 +338,7 @@ export default {
       if (Constant.userAgent == "iOS") {
         Jockey.send("showSecureKeypad", {
           keypadType: "numeric",
+          minInputLength: 7,
           maxInputLength: 7,
           subTitle: "주민등록번호 뒷자리",
           placeholderText: "숫자를 입력하세요."
@@ -348,7 +349,7 @@ export default {
           Jockey.off("resultKeypad");
         });
       } else if (Constant.userAgent == "Android") {
-        window.Android.showSecureKeypad("numeric", 7, "주민등록번호 뒷자리");
+        window.Android.showSecureKeypad("numeric", 7, 7, "주민등록번호 뒷자리");
       }
     },
     //native call

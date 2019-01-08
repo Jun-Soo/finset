@@ -1,7 +1,7 @@
 <template>
   <div v-if="seen">
     <section>
-      <div class="con-top credit-up" v-if="cnt_default+cntOverdue === 0">
+      <div class="con-top credit-up" v-if="cnt_default+cnt_overdue === 0">
         <p><em>몇번의 클릭으로</em><br><em class="red">신용점수를 UP하세요</em></p>
         <a @click="openPop()">제도 설명 보기</a>
       </div>

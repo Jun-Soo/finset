@@ -1289,6 +1289,7 @@ public class CreditController {
         	}
         	 
         }
+        logger.info("cntDefault : "+ cntDefault + " || cntOverdue : "+cntOverdue );
         model.addAttribute("cntDefault", cntDefault);
         model.addAttribute("cntOverdue", cntOverdue);
                 

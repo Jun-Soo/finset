@@ -67,14 +67,14 @@
           <p class="number big">{{(assetsBankInfo.sum_amt_balance == null)? '-' : formatNumber(assetsBankInfo.sum_amt_balance)}}<em>원</em></p>
         </div>
       </div>
-      <!--
+
       <div @click="goMenu('stock')" class="item">
         <div class="flex">
           <p class="corp big">증권(주식/펀드/CMA)<em>{{assetsStockInfo.cnt_account}}건</em></p>
           <p class="number big">{{(assetsStockInfo.sum_amt_stock == null)? '-' : formatNumber(assetsStockInfo.sum_amt_stock)}}<em>원</em></p>
         </div>
       </div>
-      -->
+
       <!--
       <div class="item">
         <div class="flex">

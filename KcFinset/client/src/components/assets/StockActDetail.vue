@@ -277,8 +277,13 @@ export default {
     viewDetail: function(acc_type, acc_code) {
       var _this = this;
 
-      this.$store.state.scListParam.query1 = _this.scAccType.value;
-      this.$store.state.scListParam.query2 = _this.orderBy.value;
+      //검색조건유지
+      if ((_this.scAccType || "") != "") {
+        this.$store.state.scListParam.query1 = _this.scAccType.value; //계좌종류
+      }
+      if ((_this.orderBy || "") != "") {
+        this.$store.state.scListParam.query2 = _this.orderBy.value; //정렬조건
+      }
 
       console.log(acc_code);
       if ("shr" == acc_type) {

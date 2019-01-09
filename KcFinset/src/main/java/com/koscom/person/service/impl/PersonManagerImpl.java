@@ -671,7 +671,8 @@ public class PersonManagerImpl implements PersonManager {
 		int result = 0;
 		PersonAgreeHistVO agree = new PersonAgreeHistVO();
 		agree.setNo_person(no_person);
-		agree.setDt_agree(DateUtil.getCurrentYMD());
+		agree.setId_frt(no_person);
+		agree.setDt_agree(DateUtil.getCurrentDateTime());
 		agree.setCd_agree("01");
 		result += personMapper.createPersonAgreeHist(agree);
 		agree.setCd_agree("02");

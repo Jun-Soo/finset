@@ -19,10 +19,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.koscom.base.BaseController;
 import com.koscom.env.model.CodeInfo;
 import com.koscom.env.service.CodeManager;
 import com.koscom.login.service.SecureManager;
@@ -124,7 +124,9 @@ public class LoginController {
 		String[] app_version = appVersion.split("\\.");
 		
 		try {
-			if(app_version.length == new_version.length) {
+			if("".equals(appVersion)) {
+				model.addAttribute("result", "pass");
+			} else if(app_version.length == new_version.length) {
 				for(int i=0; i<new_version.length; i++) {
 					if(Integer.valueOf(new_version[i]) > Integer.valueOf(app_version[i]) && "1.1.1".equals(codeInfo.getNm_code())) {
 						model.addAttribute("result", "update");
@@ -452,8 +454,11 @@ public class LoginController {
                 model.addAttribute("kcb_cp", result.get(2));
                 logger.debug("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX ");
 
-                if(personManager.getPersonInfoHp(mbphnNo)!=null) {
-                	model.addAttribute("no_person", personManager.getPersonInfoHp(mbphnNo).getNo_person());
+                PersonVO vo = personManager.getPersonInfoHp(mbphnNo);
+                if(vo != null) {
+	                if(!StringUtils.isEmpty(vo.getNo_person())) {
+	                	model.addAttribute("no_person", vo.getNo_person());
+	                }
                 }
 
                 session.setAttribute("cert_result_value", Constant.SUCCESS);

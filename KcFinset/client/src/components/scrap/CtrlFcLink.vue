@@ -158,8 +158,9 @@ export default {
     this.listFcLinkInfo();
     this.$store.state.header.backPath = "/main";
 
-    console.log("isScrap : " + this.isScrap);
+    console.log("mount isScrap : " + this.isScrap);
     if (this.isScrap) {
+      console.log("mount autoScrap Start");
       this.$parent.$parent.isFcScrapDone = false;
       this.$parent.$parent.isStScrapDone = false;
       this.$parent.$parent.isScrapSuccess = true;
@@ -172,31 +173,39 @@ export default {
   destroyed() {},
 
   methods: {
-    closeAllMemu: function() {
+    closeAllMenu: function() {
       // 전체 메뉴 닫기
-      for (var i = 0; i < this.bankList.length; i++) {
-        let bank = this.bankList[i];
-        bank.isClickMenu = false;
-        bank.isClickLink = false;
-        this.$set(this.bankList, i, bank);
+      if ((this.bankList || "") != "") {
+        for (var i = 0; i < this.bankList.length; i++) {
+          let bank = this.bankList[i];
+          bank.isClickMenu = false;
+          bank.isClickLink = false;
+          this.$set(this.bankList, i, bank);
+        }
       }
-      for (var i = 0; i < this.cardList.length; i++) {
-        let card = this.cardList[i];
-        card.isClickMenu = false;
-        card.isClickLink = false;
-        this.$set(this.cardList, i, card);
+      if ((this.cardList || "") != "") {
+        for (var i = 0; i < this.cardList.length; i++) {
+          let card = this.cardList[i];
+          card.isClickMenu = false;
+          card.isClickLink = false;
+          this.$set(this.cardList, i, card);
+        }
       }
-      for (var i = 0; i < this.stockList.length; i++) {
-        let stock = this.stockList[i];
-        stock.isClickMenu = false;
-        stock.isClickLink = false;
-        this.$set(this.stockList, i, stock);
+      if ((this.stockList || "") != "") {
+        for (var i = 0; i < this.stockList.length; i++) {
+          let stock = this.stockList[i];
+          stock.isClickMenu = false;
+          stock.isClickLink = false;
+          this.$set(this.stockList, i, stock);
+        }
       }
-      for (var i = 0; i < this.etcList.length; i++) {
-        let etc = this.etcList[i];
-        etc.isClickMenu = false;
-        etc.isClickLink = false;
-        this.$set(this.etcList, i, etc);
+      if ((this.etcList || "") != "") {
+        for (var i = 0; i < this.etcList.length; i++) {
+          let etc = this.etcList[i];
+          etc.isClickMenu = false;
+          etc.isClickLink = false;
+          this.$set(this.etcList, i, etc);
+        }
       }
     },
     tabOnClick: function(type, event) {
@@ -204,11 +213,11 @@ export default {
         event.stopPropagation();
       }
       this.curTab = type;
-      this.closeAllMemu();
+      this.closeAllMenu();
     },
     clickClear: function() {
       console.log("clickClear");
-      this.closeAllMemu();
+      this.closeAllMenu();
     },
     clickMenu: function(cd_fc, event) {
       event.stopPropagation();
@@ -316,6 +325,7 @@ export default {
     },
     clickCert: function(fcInfo, event) {
       event.stopPropagation();
+      this.closeAllMenu();
       var no_person = this.$store.state.user.noPerson;
       var cd_coocon = fcInfo.cd_coocon;
       var nm_code = fcInfo.nm_code;
@@ -356,6 +366,7 @@ export default {
     },
     clickId: function(bank, event) {
       event.stopPropagation();
+      this.closeAllMenu();
       var _this = this;
       var no_person = this.$store.state.user.noPerson;
       var cd_coocon = bank.cd_coocon;
@@ -375,6 +386,7 @@ export default {
       if (Constant.userAgent == "iOS") {
         Jockey.on("resultUpdateScrapInfo", function(param) {
           _this.resultUpdateScrapInfo(param.cd_err, param.msg_err);
+          Jockey.off("resultUpdateScrapInfo");
         });
         Jockey.send("updateAvaliableLoginScrapInfo", {
           noPerson: no_person,
@@ -447,9 +459,11 @@ export default {
       if (Constant.userAgent == "iOS") {
         //공인인증서 유무 체크 결과 콜백 이벤트
         Jockey.on("resultCheckCert", function(param) {
+          console.log("Jockey.on  : resultCheckCert");
           var iscert = "false";
           if (param.isCert == 1) iscert = "true";
           _this.resultCheckCert(iscert);
+          Jockey.off("resultCheckCert");
         });
         Jockey.send("checkExistCert");
       } else if (Constant.userAgent == "Android") {
@@ -467,6 +481,7 @@ export default {
           if (Constant.userAgent == "iOS") {
             Jockey.on("resultCheckPasswordCertForUpdate", function(param) {
               _this.resultCheckPasswordCertForUpdate(param.dn, param.cn);
+              Jockey.off("resultCheckPasswordCertForUpdate");
             });
             Jockey.send("checkPasswordCertForUpdate", {
               noPerson: this.$store.state.user.noPerson,
@@ -485,6 +500,7 @@ export default {
             Jockey.on("resultCheckPasswordCert", function(param) {
               console.log("param.dn : " + param.dn + " param.cn : " + param.cn);
               _this.resultCheckPasswordCert(param.dn, param.cn);
+              Jockey.off("resultCheckPasswordCert");
             });
             Jockey.send("checkPasswordCert", {
               noPerson: this.$store.state.user.noPerson,
@@ -548,7 +564,12 @@ export default {
       if (cd_err == "00000000") {
         this.$toast.center("금융사 연동이 완료되었습니다.");
         setTimeout(function() {
-          _this.$parent.startAutoScrap();
+          console.log("resultUpdateScrapInfo autoScrap Start");
+          _this.$parent.$parent.isFcScrapDone = false;
+          _this.$parent.$parent.isStScrapDone = false;
+          _this.$parent.$parent.isScrapSuccess = true;
+          _this.$parent.$parent.startAutoScrap();
+
           _this.listFcLinkInfo();
         }, 1000);
       } else {

@@ -1,8 +1,12 @@
 <template>
   <div v-if="seen">
     <section>
-      <div class="con-top credit-up">
+      <div class="con-top credit-up" v-if="cnt_default+cnt_overdue === 0">
         <p><em>몇번의 클릭으로</em><br><em class="red">신용점수를 UP하세요</em></p>
+        <a @click="openPop()">제도 설명 보기</a>
+      </div>
+      <div class="con-top credit-up" v-else>
+        <p><em class="red">죄송합니다.</em><br><em>현재 연체, 채무불이행 이력이</em><br><em>존재하여 신청이 불가합니다.</em></p>
         <a @click="openPop()">제도 설명 보기</a>
       </div>
 
@@ -44,6 +48,8 @@ export default {
   data() {
     return {
       seen: false,
+      cnt_default: 0,
+      cnt_overdue: 0,
       nts_button: "",
       nhis_button: "",
       nps_button: "",
@@ -82,26 +88,31 @@ export default {
         })
         .then(response => {
           var result = response.data;
-          if (result != null) {
-            _this.nts_button = result.nts_button;
-            _this.nhis_button = result.nhis_button;
-            _this.nps_button = result.nps_button;
 
-            _this.nts_status = result.nts_status;
-            _this.nhis_status = result.nhis_status;
-            _this.nps_status = result.nps_status;
+          _this.cnt_default = result.cntDefault;
+          _this.cnt_overdue = result.cntOverdue;
 
-            _this.nts_date = result.nts_date;
-            _this.nhis_date = result.nhis_date;
-            _this.nps_date = result.nps_date;
-          } else {
-            this.$toast.center(ko.messages.error);
-          }
+          _this.nts_button = result.nts_button;
+          _this.nhis_button = result.nhis_button;
+          _this.nps_button = result.nps_button;
+
+          _this.nts_status = result.nts_status;
+          _this.nhis_status = result.nhis_status;
+          _this.nps_status = result.nps_status;
+
+          _this.nts_date = result.nts_date;
+          _this.nhis_date = result.nhis_date;
+          _this.nps_date = result.nps_date;
+
           _this.seen = true;
         });
     },
     clickItem: function(type) {
       var button, status, url;
+      //연체, 채무불이행 이력이 있으면 패스
+      if (this.cnt_default + this.cnt_overdue > 0) {
+        return;
+      }
       switch (type) {
         case "nhis":
           status = this.nhis_status;

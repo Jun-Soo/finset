@@ -27,7 +27,7 @@
         <div class="wrap">
           <a :class="{'on':curTab === 'loanWorker'}" @click="tabOnClick('loanWorker')">신용대출</a>
           <a :class="{'on':curTab === 'loanHome'}" @click="tabOnClick('loanHome')">주택담보</a>
-          <a :class="{'on':curTab === 'loanStock'}" @click="tabOnClick('loanStock')">스탁론</a>
+          <!-- <a :class="{'on':curTab === 'loanStock'}" @click="tabOnClick('loanStock')">스탁론</a> -->
         </div>
       </div>
       <!-- <div class="banner-wrap" :style="{'display-none':curTab == 'loanStock'}" v-if="curTab == 'loanStock'"> -->
@@ -186,7 +186,7 @@ export default {
     }
     this.page = 1;
     this.listGoods();
-    Common.pagination(this.$refs.form.listGoods);
+    Common.pagination(this.$refs.form.listBankGoods);
   },
   beforeUpdate() {},
   updated() {},
@@ -227,11 +227,11 @@ export default {
         this.cd_type_pay = "01";
         // if (this.isCheckApart)
         // if (this.isCheckEtc)
-        if (this.isCheckFixed) this.cd_ratio_type = this.cd_ratio_type + ", 01";
+        if (this.isCheckFixed) this.cd_ratio_type = this.cd_ratio_type + ",01";
         if (this.isCheckFloating)
-          this.cd_ratio_type = this.cd_ratio_type + ", 02";
-        if (this.isCheckDiv) this.cd_type_pay = this.cd_type_pay + ", 02";
-        if (this.isCheckBullet) this.cd_type_pay = this.cd_type_pay + ", 03";
+          this.cd_ratio_type = this.cd_ratio_type + ",02";
+        if (this.isCheckDiv) this.cd_type_pay = this.cd_type_pay + ",02";
+        if (this.isCheckBullet) this.cd_type_pay = this.cd_type_pay + ",03";
       }
       this.page = 1;
       this.loadGoodsTab(this.curTab);
@@ -262,14 +262,13 @@ export default {
       this.orderby = option;
       this.page = 1;
       this.listGoods();
-      Common.pagination(this.$refs.form.listGoods);
+      Common.pagination(this.$refs.form.listBankGoods);
     },
     loadGoodsTab: function(type) {
       if (type == undefined || type == "") {
         type = "loanWorker";
       }
       this.curTab = type;
-
       if ("loanWorker" == this.curTab) {
         this.cd_goods_class_l = "01";
         this.cd_goods_class_m = "03,08,09";
@@ -286,7 +285,7 @@ export default {
         //do nothing
       }
       //this.listGoods();
-      Common.pagination(this.$refs.form.listGoods);
+      Common.pagination(this.$refs.form.listBankGoods);
     },
     listGoods: function() {
       var _this = this;

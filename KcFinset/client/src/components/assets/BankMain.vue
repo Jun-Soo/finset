@@ -39,7 +39,8 @@
                 </p>
               </div>
               <div class="text-wrap">
-                <div class="left">
+                <div class="left" style="width:70%">
+                  <p class="key">{{accountMyInfo.nm_account}}</p>
                   <p class="key">{{accountMyInfo.no_account}}</p>
                 </div>
                 <div class="right">
@@ -60,7 +61,8 @@
               </p>
             </div>
             <div class="text-wrap">
-              <div class="left">
+              <div class="left" style="width:70%">
+                <p class="key">{{accountShareInfo.nm_account}}</p>
                 <p class="key">{{accountShareInfo.no_account}}</p>
               </div>
               <div class="right">
@@ -82,7 +84,8 @@
               </p>
             </div>
             <div class="text-wrap">
-              <div class="left">
+              <div class="left" style="width:70%">
+                <p class="key">{{accountInfo.nm_account}}</p>
                 <p class="key">{{accountInfo.no_account}}</p>
               </div>
               <div class="right">

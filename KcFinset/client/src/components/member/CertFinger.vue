@@ -142,12 +142,20 @@ export default {
         } else if (Constant.userAgent == "iOS") {
           //지문인식 결과 콜백 이벤트
           Jockey.on("resultFingerPrint", function(param) {
-            resultFingerPrint(param.result);
+            _this.resultFingerPrint(param.result);
+            Jockey.off("resultFingerPrint");
           });
           Jockey.send("initFingerPrint");
         }
       } else if (gubun == "N") {
         _this.ynFingerprint = "N";
+        if (Constant.userAgent == "Android" || Constant.userAgent == "iOS") {
+          _this.$router.push("/scrap/fcLink");
+        } else {
+          setTimeout(function() {
+            _this.login();
+          }, 2000);
+        }
       }
     },
     /***

@@ -14,9 +14,9 @@
               <li><a v-on:click="openPop('1')">서비스 이용약관</a></li>
               <li><a v-on:click="openPop('2')">개인정보 처리방침</a></li>
               <li><a v-on:click="openPop('3')">KCB 올크레딧 이용약관</a></li>
+              <li><a v-on:click="openPop('6')">{{nm_code}}</a></li>
               <li><a v-on:click="openPop('4')">개인정보 수집·이용 동의</a></li>
               <li><a v-on:click="openPop('5')">개인정보 제3자 제공 동의</a></li>
-              <li><a v-on:click="openPop('6')">{{nm_code}}</a></li>
             </ul>
           </div>
 

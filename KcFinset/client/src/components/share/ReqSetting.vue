@@ -102,6 +102,8 @@ export default {
       this.$store.state.title = "금융정보 공유항목";
     }
     this.cd_share = cd_share;
+    this.$store.state.header.backPath =
+      "/share/main?cd_share=" + this.cd_share + "&type_list=req";
 
     this.seq_share = this.$route.query.seq_share;
     this.getSettingInfo();
@@ -122,12 +124,11 @@ export default {
         })
         .then(response => {
           _this.shareInfo = response.data.shareInfo;
+          _this.seen = true;
         })
         .catch(e => {
           _this.$toast.center(ko.messages.error);
         });
-
-      _this.seen = true;
     },
     formatDateDot: function(data) {
       return Common.formatDateDot(data);

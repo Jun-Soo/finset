@@ -25,7 +25,7 @@ const store = new Vuex.Store({
       dt_basic: '',
       isEventPush: false,
       authToken: '',
-      noManageInfo: ''
+      dtConsume: null
     },
     scListParam: {
       query1: undefined,

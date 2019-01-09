@@ -296,6 +296,10 @@ export default {
             } else if (Constant.userAgent == "Android") {
               window.Android.setNoPerson(noPerson, _this.hp);
             }
+
+            _this.$toast.center(
+              "고객님은 기존 회원이므로 로그인 페이지로 이동합니다."
+            );
             _this.$router.push("/home?hp=" + _this.hp);
           }
         });

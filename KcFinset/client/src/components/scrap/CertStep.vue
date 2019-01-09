@@ -183,12 +183,14 @@ export default {
   methods: {
     // 공인인증서 유무 체크
     checkExistCert: function() {
+      var _this = this;
       if (Constant.userAgent == "iOS") {
         //공인인증서 유무 체크 결과 콜백 이벤트
         Jockey.on("resultCheckCert", function(param) {
           var iscert = "false";
           if (param.isCert == 1) iscert = "true";
-          resultCheckCert(iscert);
+          _this.resultCheckCert(iscert);
+          Jockey.off("resultCheckCert");
         });
         Jockey.send("checkExistCert");
       } else if (Constant.userAgent == "Android") {
@@ -208,11 +210,13 @@ export default {
     },
     //공인인증서 유무 결과 (모바일에서 호출)
     resultCheckCert: function(isCert) {
+      var _this = this;
       if (isCert == "true") {
         // 공인인증서가 있을 경우
         if (Constant.userAgent == "iOS") {
           Jockey.on("checkPasswordCert", function(param) {
-            resultCheckPasswordCert();
+            _this.resultCheckPasswordCert();
+            Jockey.off("checkPasswordCert");
           });
           Jockey.send("checkPasswordCert", {
             noPerson: this.$store.state.user.noPerson,

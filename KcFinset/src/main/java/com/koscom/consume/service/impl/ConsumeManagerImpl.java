@@ -23,6 +23,7 @@ import com.koscom.consume.model.PersonSetInfoVO;
 import com.koscom.consume.model.PersonTransDetailVO;
 import com.koscom.consume.service.ConsumeManager;
 import com.koscom.domain.PersonInfo;
+import com.koscom.util.DateUtil;
 
 @Service("consumeManager")
 public class ConsumeManagerImpl implements ConsumeManager {
@@ -61,43 +62,13 @@ public class ConsumeManagerImpl implements ConsumeManager {
 		ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO = new ConsumeDetailGoalInfoVO();
 		consumeDetailGoalInfoVO.setNo_person(no_person);
 		consumeDetailGoalInfoVO.setReq_yyyymm(ym);
-		List<ConsumeDetailGoalInfoVO> listGoal = consumeMapper.getConsumeGoal(consumeDetailGoalInfoVO);
-		
 		ConsumeGoalInfoVO consumeGoalInfoVO = new ConsumeGoalInfoVO();
 		consumeGoalInfoVO.setAmt_expense(consumeAmt);
-		
-		if(listGoal == null) {
+		String amt_budget = consumeMapper.getConsumeGoal(consumeDetailGoalInfoVO);
+		if(amt_budget == null || amt_budget.equals("") || amt_budget.equals("0")) {
 			return null;
 		}
-		int key = listGoal.size();
-		switch (key) {
-		case 0:
-			return null;
-		case 1:
-			if(listGoal.get(0).getAmt_budget().equals("0")) {
-				return null;
-			} else {
-				consumeGoalInfoVO.setAmt_budget(listGoal.get(0).getAmt_budget());
-			}
-			break;
-		case 2:
-			String classAmt_budget = listGoal.get(0).getAmt_budget();  
-			String meansAmt_budget = listGoal.get(1).getAmt_budget();
-			if(classAmt_budget.equals("0") && meansAmt_budget.equals("0")) {
-				return null;
-			} else if(!classAmt_budget.equals("0") && !meansAmt_budget.equals("0")) {
-				consumeGoalInfoVO.setAmt_budget(classAmt_budget);
-			} else {
-				if(classAmt_budget.equals("0")) {
-					consumeGoalInfoVO.setAmt_budget(meansAmt_budget);
-				} else {
-					consumeGoalInfoVO.setAmt_budget(classAmt_budget);
-				}
-			}
-			break;
-		default:
-			return null;
-		}
+		consumeGoalInfoVO.setAmt_budget(amt_budget);
 		return consumeGoalInfoVO;
 	}
 	
@@ -319,12 +290,14 @@ public class ConsumeManagerImpl implements ConsumeManager {
 			for(ConsumeDetailGoalInfoVO vo: consumeDetailGoalList) {
 				vo.setNo_person(consumeDetailGoalInfoVO.getNo_person());
 				vo.setAmt_budget(vo.getAmt_budget().replaceAll(",", ""));
+				vo.setYn_person_regist("Y");
 				consumeMapper.createDetailGoalClass(vo);
 			}
 		} else {
 			for(ConsumeDetailGoalInfoVO vo: consumeDetailGoalList) {
 				vo.setNo_person(consumeDetailGoalInfoVO.getNo_person());
 				vo.setAmt_budget(vo.getAmt_budget().replaceAll(",", ""));
+				vo.setYn_person_regist("Y");
 				consumeMapper.createDetailGoalMeans(vo);
 			}
 		}
@@ -496,6 +469,12 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	@Override
 	public List<ConsumeVO> listSettlementConsumeDataYear(ConsumeForm consumeForm) {
 		logger.debug("listSettlementConsumeDataYear");
+		if(consumeForm.getDt_from().length() > 6) {
+			consumeForm.setDt_from(consumeForm.getDt_from().substring(0,6));
+		}
+		if(consumeForm.getDt_to().length() > 6) {
+			consumeForm.setDt_to(consumeForm.getDt_to().substring(0,6));
+		}
 		return consumeMapper.listSettlementConsumeDataYear(consumeForm);
 	}
 	
@@ -521,5 +500,57 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	public List<ConsumeVO> getSettlementDetail(ConsumeForm consumeForm) {
 		logger.debug("getSettlementDetail");
 		return consumeMapper.getSettlementDetail(consumeForm);
+	}
+
+	@Override
+	public void autoRegisterGoal(String no_person) {
+		String req_yyyymm = ""; // 예산에서 max값으로 나온 년월 
+		String cur_yyyymm = DateUtil.getCurrentDateTime("yyyyMM"); // 금일에 해당하는 년월
+		String tmp_yyyymm = cur_yyyymm; // for구문을 돌릴 때 사용할 년월
+		List<ConsumeDetailGoalInfoVO> listClass = new ArrayList<ConsumeDetailGoalInfoVO>();
+		listClass = consumeMapper.chkConsumeGoalInfoClass(no_person);
+		if(listClass != null) {
+			if(listClass.size() != 0) {
+				// 데이터가 존재
+				req_yyyymm = listClass.get(0).getReq_yyyymm();
+				if(!req_yyyymm.equals(cur_yyyymm)) {
+					while(true) {
+						if(Integer.parseInt(req_yyyymm)>=Integer.parseInt(tmp_yyyymm)) {
+							break;
+						}
+						for(ConsumeDetailGoalInfoVO vo: listClass) {
+							vo.setReq_yyyymm(tmp_yyyymm);
+							vo.setYn_person_regist("N");
+							consumeMapper.createDetailGoal(vo);
+						}
+						//addMonths 에서 사용하는 값이 yyyyMMdd 형식이라 임의로 01 추가
+						tmp_yyyymm = DateUtil.addMonths(tmp_yyyymm+"01", -1).substring(0,6);
+					}
+				}
+			}
+		}
+		tmp_yyyymm = cur_yyyymm;
+		List<ConsumeDetailGoalInfoVO> listMeans = new ArrayList<ConsumeDetailGoalInfoVO>();
+		listMeans = consumeMapper.chkConsumeGoalInfoMeans(no_person);
+		if(listMeans != null) {
+			if(listMeans.size() != 0) {
+				// 데이터가 존재
+				req_yyyymm = listMeans.get(0).getReq_yyyymm();
+				if(!req_yyyymm.equals(cur_yyyymm)) {
+					while(true) {
+						if(Integer.parseInt(req_yyyymm)>=Integer.parseInt(tmp_yyyymm)) {
+							break;
+						}
+						for(ConsumeDetailGoalInfoVO vo: listMeans) {
+							vo.setReq_yyyymm(tmp_yyyymm);
+							vo.setYn_person_regist("N");
+							consumeMapper.createDetailGoal(vo);
+						}
+						//addMonths 에서 사용하는 값이 yyyyMMdd 형식이라 임의로 01 추가
+						tmp_yyyymm = DateUtil.addMonths(tmp_yyyymm+"01", -1).substring(0,6);
+					}
+				}
+			}
+		}
 	}
 }

@@ -3,12 +3,12 @@
     <div class="board event">
       <ul class="view">
         <li>
-          <p class="subject" v-html="title"></p>
+          <p class="subject" v-html="title" />
           <p class="date"><em>{{newsCompany}}</em>{{pubDate}}</p>
         </li>
         <li>
-          <img :src="bodyImg"/><br/>
-          {{contents}}
+          <img :src="bodyImg" />
+          <div class="mt10 mb30" v-html="contents" />
         </li>
       </ul>
     </div>
@@ -70,7 +70,9 @@ export default {
           //본문이미지 셋팅
           if (newsInfo.seq_body_file != null) {
             _this.bodyImg =
-              "/m/news/getApiNewsImg.json?seq_news=" + newsInfo.seq_news + "&file_type=02";
+              "/m/news/getApiNewsImg.json?seq_news=" +
+              newsInfo.seq_news +
+              "&file_type=02";
           }
 
           _this.seen = true;

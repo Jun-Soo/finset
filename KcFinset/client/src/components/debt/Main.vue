@@ -5,7 +5,7 @@
         <div class="wrap">
           <div class="balance">
             <p class="key">대출잔액</p>
-            <p class="value">{{formatNumber(debtSummary.amt_remain * 10000)}}<em>원</em></p>
+            <p class="value">{{Common.formatNumber(debtSummary.amt_remain * 10000)}}<em>원</em></p>
           </div>
           <div class="graph">
             <chartjs-line :labels="mylabels" :datasets="mydatasets" :option="myoption" :bind="true"></chartjs-line>
@@ -15,21 +15,27 @@
               <p class="key">상환율</p>
               <div class="text-wrap">
                 <p class="big">{{debtSummary.rate_amt_contract}}<em>%</em></p>
-                <p class="small">{{formatNumber(debtSummary.amt_contract/10000)}}<em>만원</em></p>
+                <p class="small">{{Common.formatNumber(debtSummary.amt_contract/10000)}}<em>만원</em></p>
               </div>
               <div class="bar">
                 <p class="active" :style="debtSummary.repayStyle"></p>
               </div>
             </div>
-            <div class="item">
+            <!-- <div class="item">
               <p class="key">상환능력<em>(소득대비)</em></p>
               <div class="text-wrap">
-                <!-- <p class="big">{{calDsr(debtSummary.cur_mon_mid_rpy, debtSummary.amt_etm_income)}}<em>%</em></p> -->
+                <p class="big">{{calDsr(debtSummary.cur_mon_mid_rpy, debtSummary.amt_etm_income)}}<em>%</em></p>
                 <p class="big">0<em>%</em></p>
               </div>
               <div class="bar">
-                <!-- <p class="active" :style="debtSummary.dsrStyle"></p> -->
+                <p class="active" :style="debtSummary.dsrStyle"></p>
                 <p class="active"></p>
+              </div>
+            </div> -->
+            <div class="item">
+              <p class="key">금리<em>(평균)</em></p>
+              <div class="text-wrap">
+                <p class="big">{{debtSummary.ever_interest}}<em>%</em></p>
               </div>
             </div>
           </div>
@@ -124,11 +130,11 @@
             <div class="number-wrap">
               <div class="left">
                 <p class="key"><span>잔액</span></p>
-                <p class="number">{{formatNumber(vo.amt_remain * 10000)}}<em>원</em></p>
+                <p class="number">{{Common.formatNumber(vo.amt_remain * 10000)}}<em>원</em></p>
               </div>
               <div class="right">
                 <p class="key"><span>원금</span></p>
-                <p class="value"><span>{{formatNumber(vo.amt_contract * 10000)}}<em>원</em></span></p>
+                <p class="value"><span>{{Common.formatNumber(vo.amt_contract * 10000)}}<em>원</em></span></p>
               </div>
             </div>
             <div class="bar">
@@ -137,7 +143,7 @@
             <div class="text-wrap">
               <div class="left">
                 <p class="key"><span>월 상환금액</span></p>
-                <p class="value"><span>{{formatNumber((vo.amt_repay) * 10000)}}<em>원</em></span></p>
+                <p class="value"><span>{{Common.formatNumber((vo.amt_repay) * 10000)}}<em>원</em></span></p>
               </div>
               <div class="right">
                 <p class="key"><span>이자율</span></p>
@@ -165,10 +171,12 @@ export default {
   name: "DebtMain",
   data() {
     return {
-      seen: false,
-      isNone: true,
-      debtList: [],
-      debtSummary: "",
+      seen: false, // 화면 표출 여부
+      Common: Common, // 공통
+      isNone: true, // 데이터 비존재 여부
+      debtList: [], // 부채 리스트
+      debtSummary: "", // 부채 요약
+      // 차트관련 데이터
       dataList: [1, 2, 3, 4, 5, 6, 7],
       mylabels: [],
       mydatasets: [
@@ -218,7 +226,9 @@ export default {
           }
         }
       },
-      shareList: [],
+      // //차트관련 데이터
+      shareList: [], // 공유된 사용자 리스트
+      // 공유된 사용자 각가에 필요한 색 class 및 id
       settingList: [
         { color: "red", id: "chk1" },
         { color: "orange", id: "chk2" },
@@ -229,8 +239,6 @@ export default {
     };
   },
   components: {},
-  // computed () {
-  // },
   beforeCreate() {
     this.$store.state.header.type = "main";
     this.$store.state.header.active = "debt";
@@ -246,6 +254,68 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    // ---------------------화면 이벤트---------------------
+    // 공유된 사용자 버튼 클릭 시
+    clickShare: function(params) {
+      var no_person_list = this.filterShareList();
+      if (no_person_list.length <= 1 && this.shareList[params].isShow == true) {
+        return;
+      }
+      this.shareList[params].isShow = !this.shareList[params].isShow;
+      this.listDebtPg();
+    },
+    // carousel 배너 클릭 시
+    clickBanner: function(key) {
+      var _this = this;
+      switch (key) {
+        case "goods":
+          _this.$router.push("/goods/list");
+          break;
+        case "calendar":
+          _this.$router.push({
+            path: "/common/monthCal",
+            query: { type: "debt" }
+          });
+          break;
+        case "news":
+          _this.$router.push({
+            name: "newsMain",
+            query: { scKeyword: ["02"] }
+          });
+          break;
+        case "reqIntrCut":
+          _this.$router.push("/debt/reqIntrCut");
+          break;
+        case "calc":
+          _this.$router.push("/debt/calc");
+          break;
+        default:
+          break;
+      }
+    },
+    // 상세 정보 이동
+    goDetail: function(no_person, no_manage_info) {
+      var _this = this;
+
+      this.$router.push({
+        path: "/debt/detail",
+        query: {
+          no_person: no_person,
+          no_manage_info: no_manage_info,
+          isMine:
+            _this.shareList.findIndex(
+              person => person.no_person === no_person
+            ) == 0
+        }
+      });
+    },
+    // 부채 등록 이동(현재 사용되지 않음)
+    registerDebt: function() {
+      this.$router.push("/debt/register");
+    },
+    // ---------------------//화면 이벤트---------------------
+    // ---------------------데이터 이동---------------------
+    // 부채 공유된 사용자 리스트 조회
     listDebtSharePersonInfo: function() {
       var _this = this;
       this.$http
@@ -257,12 +327,9 @@ export default {
           }
           _this.shareList = list;
           _this.listDebtPg();
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
-          _this.seen = true;
         });
     },
+    // 부채 리스트 조회
     listDebtPg: function() {
       var _this = this;
       var no_person_list = this.filterShareList();
@@ -299,6 +366,8 @@ export default {
                 debtSummary.amt_etm_income
               ) +
               "%";
+            debtSummary.intStyle =
+              "width:" + _this.calInterest(debtSummary.ever_interest) + "%";
             _this.mylabels = response.data.dateList;
             _this.$set(_this.mydatasets[0], "data", response.data.dataList);
           } else {
@@ -310,22 +379,11 @@ export default {
           _this.debtSummary = debtSummary;
           _this.isNone = false;
           _this.seen = true;
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
-          _this.seen = true;
         });
     },
-    formatNumber: function(number) {
-      return Common.formatNumber(number);
-    },
-    calDsr: function(repay, income) {
-      if (repay == "-" || income == "-") {
-        return 0;
-      } else {
-        return (repay / income) * 100;
-      }
-    },
+    // ---------------------//데이터 이동---------------------
+    // ---------------------기타---------------------
+    // 공유된 사용자 중 on 처리 되어 있는 사용자 리스트
     filterShareList: function() {
       var shareList = new Array();
       var _this = this;
@@ -336,60 +394,26 @@ export default {
       }
       return shareList;
     },
-    clickShare: function(params) {
-      var no_person_list = this.filterShareList();
-      if (no_person_list.length <= 1 && this.shareList[params].isShow == true) {
-        return;
-      }
-      this.shareList[params].isShow = !this.shareList[params].isShow;
-      this.listDebtPg();
-    },
-    clickBanner: function(key) {
-      var _this = this;
-      switch (key) {
-        case "goods":
-          _this.$router.push("/goods/list");
-          break;
-        case "calendar":
-          _this.$router.push({
-            path: "/common/monthCal",
-            query: { type: "debt" }
-          });
-          break;
-        case "news":
-          _this.$router.push({
-            name: "newsMain",
-            query: { scKeyword: ["02"] }
-          });
-          break;
-        case "reqIntrCut":
-          _this.$router.push("/debt/reqIntrCut");
-          break;
-        case "calc":
-          _this.$router.push("/debt/calc");
-          break;
-        default:
-          break;
+    // Dsr 계산식(애시당초 잘못된 함수이고, 현재 사용되지 않음)
+    calDsr: function(repay, income) {
+      if (repay == "-" || income == "-") {
+        return 0;
+      } else {
+        return (repay / income) * 100;
       }
     },
-    goDetail: function(no_person, no_manage_info) {
-      var _this = this;
-
-      this.$router.push({
-        path: "/debt/detail",
-        query: {
-          no_person: no_person,
-          no_manage_info: no_manage_info,
-          isMine:
-            _this.shareList.findIndex(
-              person => person.no_person === no_person
-            ) == 0
+    calInterest: function(data) {
+      if ((data || "") == "") {
+        return data;
+      } else {
+        if ((data + "").indexOf(".") == 0) {
+          return "0" + data;
+        } else {
+          return data;
         }
-      });
-    },
-    registerDebt: function() {
-      this.$router.push("/debt/register");
+      }
     }
+    // ---------------------//기타---------------------
   }
 };
 </script>

@@ -1633,7 +1633,7 @@ public class ScrapManagerImpl implements ScrapManager {
             scrCardLimitInfoVO.setNo_person(no_person);
             scrCardLimitInfoVO.setCd_fc(cd_fc);
             scrapMapper.updateScrCardLimitInfo(scrCardLimitInfoVO);
-            
+    		
     		for (ScrCardLimitInfoVO scrCardLimitInfo : ScrCardLimitInfoList) {		
     			logger.debug("scrCardLimitInfo.getType_card      : "+ scrCardLimitInfo.getType_card());
                 logger.debug("scrCardLimitInfo.getAmt_cash_limit : "+ scrCardLimitInfo.getAmt_cash_limit());

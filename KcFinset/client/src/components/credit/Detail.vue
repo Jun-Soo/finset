@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="tab">
       <div class="wrap">
         <a @click="clickTab('inquiry')" :class="{on: this.listType=='inquiry'}">신용조회</a>
@@ -165,6 +165,7 @@ export default {
   data() {
     return {
       errMsg: "",
+      seen: false,
       listType: "inquiry",
       //신용조회
       inquiryMmCnt: "", //최근1개월건수
@@ -248,6 +249,7 @@ export default {
               "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + ovdList[i].cd_fc;
           }
           _this.overdueList = ovdList;
+          _this.seen = true;
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);

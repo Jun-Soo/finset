@@ -23,24 +23,20 @@ export default {
         //스크래핑 완료시 갱신할 화면 목록
         "/main",
         "/common/monthCal",
-        "/common/monthCalPop",
         "/common/yearCal",
         "/consume/main",
-        "/consume/consumeDetail",
+        //"/consume/consumeDetail",
         "/consume/main",
-        "/consume/transPop",
-        "/consume/incomeAnalyze",
-        "/comsume/consumeAnalyze",
+        //"/consume/transPop",
+        //"/consume/analyze",
         "/consume/payment",
-        "/consume/paymentDetail",
         "/consume/settlement",
-        "/consume/consumeStats",
-        "/consume/incomeStats",
+        //"/consume/incomeStats",
         "/assets/main",
-        "/assets/bankMain",
-        "/assets/bankActDetail",
-        "/assets/bankDepWdrlList",
-        "/assets/bankDepWdrlDetail"
+        "/assets/bankMain"
+        //"/assets/bankActDetail",
+        //"/assets/bankDepWdrlList",
+        //"/assets/bankDepWdrlDetail"
       ]
     };
   },
@@ -74,6 +70,7 @@ export default {
       Jockey.on("resultAutoScrap", function(param) {
         console.log("iOS resultAutoScrap called");
         _this.resultAutoScrap(param.isSuccess);
+        Jockey.off("resultAutoScrap");
       });
     }
   },
@@ -191,6 +188,7 @@ export default {
         //공인인증서 유무 체크 결과 콜백 이벤트
         Jockey.on("resultCheckDevicesUUID", function(param) {
           _this.resultCheckDevicesUUID(param.uuid);
+          Jockey.off("resultCheckDevicesUUID");
         });
         Jockey.send("checkDevicesUUID");
       } else if (Constant.userAgent == "Android") {
@@ -264,6 +262,7 @@ export default {
             if (Constant.userAgent == "iOS") {
               Jockey.on("resultHasCertPassword", function(param) {
                 _this.resultHasCertPassword(param.isExist);
+                Jockey.off("resultHasCertPassword");
               });
               Jockey.send("hasCertPassword");
             } else if (Constant.userAgent == "Android") {
@@ -276,7 +275,7 @@ export default {
           }
         })
         .catch(e => {
-          _this.$toast.center(ko.messages.error);
+          _this.$toast.center(e);
         });
     },
     getAutoScrapInfo: function() {

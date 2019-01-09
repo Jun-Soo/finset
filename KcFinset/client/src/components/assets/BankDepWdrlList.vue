@@ -146,9 +146,7 @@ export default {
     this.getSearchCondition();
   },
   beforeMount() {},
-  mounted() {
-    Common.datepickerInit("div-date", this);
-  },
+  mounted() {},
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
@@ -479,10 +477,14 @@ export default {
 
       //store 검색조건 유지
       this.$store.state.scListParam.query1 = _this.scTermType; //날짜유형
-      this.$store.state.scListParam.query2 = _this.scAccount.value; //계좌
+      if ((_this.scAccount || "") != "") {
+        this.$store.state.scListParam.query2 = _this.scAccount.value; //계좌
+      }
       this.$store.state.scListParam.query3 = _this.txt_dt_from; //날짜시작일
       this.$store.state.scListParam.query4 = _this.txt_dt_to; //날짜종료일
-      this.$store.state.scListParam.query5 = _this.scTrnsType.value; //계좌유형
+      if ((_this.scTrnsType || "") != "") {
+        this.$store.state.scListParam.query5 = _this.scTrnsType.value; //계좌유형
+      }
       this.$store.state.scListParam.query6 = _this.scKeyword; //검색키워드
 
       this.$router.push({

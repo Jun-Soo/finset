@@ -564,9 +564,6 @@ public class DebtController {
 			model.addAttribute("debtTotal", debtTotal);
 			model.addAttribute("debtList", debtList);
 		}
-		int sumTotal = incomeTotal-consumeTotal-debtTotal;
-		model.addAttribute("sumTotal", sumTotal);
-
 		return "jsonView";
 	}
 

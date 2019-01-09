@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="container">
       <div v-if="debtList.length == 0" class="nodata">등록 내역이 없습니다</div>
       <div v-else class="bar-top">
@@ -72,6 +72,7 @@ export default {
   data() {
     return {
       errMsg: "",
+      seen: false,
       //상단정보
       debtSum: "",
       ds_sum_amt_remain: "0", //대출잔액
@@ -138,6 +139,7 @@ export default {
           }
 
           _this.debtList = list;
+          _this.seen = true;
         })
         .catch(e => {
           this.$toast.center(ko.messages.error);

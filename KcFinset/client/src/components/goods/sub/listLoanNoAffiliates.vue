@@ -45,7 +45,7 @@ export default {
     favourite: function(yn_favourite) {
       return yn_favourite == "Y";
     },
-    listGoods: function(callback) {
+    listBankGoods: function(callback) {
       var _this = this;
       var _parent = this.$parent;
       var formData = new FormData();

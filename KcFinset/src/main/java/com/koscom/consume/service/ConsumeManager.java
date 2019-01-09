@@ -351,4 +351,10 @@ public interface ConsumeManager {
 	 * @return
 	 */
 	List<ConsumeVO> getSettlementDetail(ConsumeForm consumeForm);
+	
+	/**
+	 * 이전 예산 데이터를 통한 자동등록
+	 * @param no_person
+	 */
+	void autoRegisterGoal(String no_person);
 }

@@ -1,5 +1,8 @@
 package com.koscom.consume;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +27,7 @@ import com.koscom.consume.model.PersonSetInfoForm;
 import com.koscom.consume.model.PersonSetInfoVO;
 import com.koscom.consume.service.ConsumeManager;
 import com.koscom.util.FinsetException;
+import com.koscom.util.ReturnClass;
 
 @Controller
 @RequestMapping("/m/consume")
@@ -697,20 +701,31 @@ public class ConsumeController {
      * @param consumeForm
      * @return
      * @throws FinsetException
+     * @throws ParseException 
      */
     @RequestMapping("/listConsumeforSettlement.json")
-    public String listConsumeforSettlement(HttpSession session, Model model, ConsumeForm consumeForm) throws FinsetException {
+    public String listConsumeforSettlement(HttpSession session, Model model, ConsumeForm consumeForm) throws FinsetException, ParseException {
     	logger.debug("listConsumeforSettlement");
     	String type = consumeForm.getContents();
-    	if("yr".equals(type)) {
-    		model.addAttribute("listSettlementConsumeData", consumeManager.listSettlementConsumeDataYear(consumeForm));
-    	} else if ("mon".equals(type)) {
-    		model.addAttribute("listSettlementConsumeData", consumeManager.listSettlementConsumeDataWeek(consumeForm));
-    	} else if("week".equals(type)) {
-    		model.addAttribute("listSettlementConsumeData", consumeManager.listSettlementConsumeDataDay(consumeForm));
-    	} else {
-    		//에러처리 페이지 필요
-    	}	
+    	
+    	SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
+		Date fromDt = format.parse(consumeForm.getDt_from());
+		Date toDt = format.parse(consumeForm.getDt_to());
+		if(toDt.compareTo(fromDt)<0) {
+			ReturnClass returnClass = new ReturnClass("01" , "시작 날짜가 종료 날짜보다 더 큽니다.");
+			model.addAttribute("message", returnClass.getMessage());
+			model.addAttribute("result", returnClass.getCd_result());
+		}else {
+			model.addAttribute("result", "00");
+			if("yr".equals(type)) {
+				model.addAttribute("listSettlementConsumeData", consumeManager.listSettlementConsumeDataYear(consumeForm));
+			} else if ("mon".equals(type)) {
+				model.addAttribute("listSettlementConsumeData", consumeManager.listSettlementConsumeDataWeek(consumeForm));
+			} else if("week".equals(type)) {
+				model.addAttribute("listSettlementConsumeData", consumeManager.listSettlementConsumeDataDay(consumeForm));
+			}	
+		}
+    	
     	return "jsonView";
     }
     

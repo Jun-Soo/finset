@@ -32,10 +32,10 @@ public interface ConsumeMapper {
 	
 	/**
 	 * 설정된 예산 조회
-	 * @param no_person
+	 * @param consumeDetailGoalInfoVO
 	 * @return
 	 */
-	List<ConsumeDetailGoalInfoVO> getConsumeGoal(ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO);
+	String getConsumeGoal(ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO);
 	
 	/**
 	 * 해당 월 지출 합계
@@ -209,6 +209,12 @@ public interface ConsumeMapper {
 	 * @return
 	 */
 	List<ConsumeDetailGoalInfoVO> listPrevMonthMeans(String no_person);
+
+	/**
+	 * 예산 상세 내역 저장(단순 insert)
+	 * @param consumeDetailGoalInfoVO
+	 */
+	void createDetailGoal(ConsumeDetailGoalInfoVO consumeDetailGoalInfoVO);
 	
 	/**
 	 * 예산 상세 내역 저장(분류별)
@@ -435,4 +441,18 @@ public interface ConsumeMapper {
 	 * @return
 	 */
 	List<ConsumeVO> getSettlementDetail(ConsumeForm consumeForm);
+	
+	/**
+	 * 분류별 예산 데이터 확인
+	 * @param no_person
+	 * @return
+	 */
+	List<ConsumeDetailGoalInfoVO> chkConsumeGoalInfoClass(String no_person);
+	
+	/**
+	 * 수단별 예산 데이터 확인
+	 * @param no_person
+	 * @return
+	 */
+	List<ConsumeDetailGoalInfoVO> chkConsumeGoalInfoMeans(String no_person);
 }

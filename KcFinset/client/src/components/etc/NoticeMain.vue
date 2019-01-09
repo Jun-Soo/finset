@@ -74,8 +74,17 @@ export default {
   beforeCreate() {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "공지/이벤트";
+    this.$store.state.header.backPath = "/main";
   },
-  created() {},
+  created() {
+    if (this.$route.query.tab == "01") {
+      this.curTab = this.$route.query.tab;
+      this.curTabName = "event";
+    } else if (this.$route.query.tab == "00") {
+      this.curTab = this.$route.query.tab;
+      this.curTabName = "notice";
+    }
+  },
   beforeMount() {},
   mounted() {
     let _this = this;

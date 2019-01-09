@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.koscom.main.dao.MainMapper;
+import com.koscom.main.model.MainForm;
 import com.koscom.main.service.MainManager;
 
 @Service("mainManager")
@@ -15,6 +16,11 @@ public class MainManagerImpl implements MainManager {
 
 	@Autowired
 	private MainMapper mainMapper;
+
+	@Override
+	public int getMainScrapCnt(MainForm mainForm) {
+		return mainMapper.getMainScrapCnt(mainForm);
+	}
 
 	@Override
 	public String getMainConsumeSumAmt(String no_person) {

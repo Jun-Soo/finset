@@ -142,8 +142,10 @@ export default {
     this.$store.state.header.type = "sub";
     if ("01" == this.cd_share) {
       this.$store.state.title = "신용정보 제공";
+      this.$store.state.header.backPath = "/credit/main";
     } else if ("02" == this.cd_share) {
       this.$store.state.title = "금융정보 공유";
+      this.$store.state.header.backPath = "/main";
     }
 
     this.getMainInfo();
@@ -173,12 +175,11 @@ export default {
           _this.reqPmList = response.data.reqPmList;
           _this.offerSbList = response.data.offerSbList;
           _this.offerPmList = response.data.offerPmList;
+          _this.seen = true;
         })
         .catch(e => {
           _this.$toast.center(ko.messages.error);
         });
-
-      _this.seen = true;
     },
     formatDateDot: function(data) {
       return Common.formatDateDot(data);

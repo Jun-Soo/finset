@@ -1,29 +1,29 @@
 <template>
   <div id="wrapper" class="pop-full">
-	<!-- Header  -->
-	<div class="pop-top">
-		<p class="title">{{title_p}}</p>
-		<a class="btn-close" v-on:click="$emit('popclose')"></a> 
-	</div> 
-	<!-- Content -->
-	<div class="container pop-wrap">
-		<p class="date">{{date_p}}</p>
-		<!-- tab1 v-for="explain in explains" v-bind:key="explain.value" -->
-		<div id="tab1">
-			<h2>{{subtitle_p}}</h2>
-			<div v-for="article in articles" v-bind:key='article.value'>
-				<h3>{{article.h3_c}}</h3> 
-				<p class="mt15" v-if="article.p_c && article.num!=8">{{article.p_c}}</p>
-				<ol class="list-style03">
-					<li class="mt15" v-for="listArg in listArgs" v-bind:key="listArg.key" v-if="article.num===listArg.num">   {{listArg.text}}</li>
-						<!-- <ol class="list-style04">
+    <!-- Header  -->
+    <div class="pop-top">
+      <p class="title">{{title_p}}</p>
+      <a class="btn-close" v-on:click="$emit('popclose')"></a>
+    </div>
+    <!-- Content -->
+    <div class="container pop-wrap">
+      <!-- <p class="date">{{date_p}}</p> -->
+      <!-- tab1 v-for="explain in explains" v-bind:key="explain.value" -->
+      <div id="tab1">
+        <h2>{{subtitle_p}}</h2>
+        <div v-for="article in articles" v-bind:key='article.value'>
+          <h3>{{article.h3_c}}</h3>
+          <p class="mt15" v-if="article.p_c && article.num!=8">{{article.p_c}}</p>
+          <ol class="list-style03">
+            <li class="mt15" v-for="listArg in listArgs" v-bind:key="listArg.key" v-if="article.num===listArg.num"> {{listArg.text}}</li>
+            <!-- <ol class="list-style04">
 							<li><span>{{listkey_p}}</span>{{sublistArg}}</li>
 						</ol>	 -->
-					<!-- <li>abcd</li>  -->
-				</ol>
-				<p class="mt15" v-if="article.p_c&& article.num===8">{{article.p_c}}</p>
-			</div>
-			<!-- <div>
+            <!-- <li>abcd</li>  -->
+          </ol>
+          <p class="mt15" v-if="article.p_c&& article.num===8">{{article.p_c}}</p>
+        </div>
+        <!-- <div>
 				<h3>제12조 (개인정보의 처리)</h3>  
 				<ol class="list-style03">
 					<li>회사는 서비스 제공을 위하여 수집된 본인확인정보의 취급 및 관리 등의 업무를 스스로 수행함을 원칙으로 하나, 필요한 경우 아래 표와 같이 회사가 선정한 사업자에게 위탁할 수 있습니다.
@@ -54,9 +54,9 @@
 					</li>
 				</ol>
 			</div> -->
-		</div>
-	</div>
-</div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>

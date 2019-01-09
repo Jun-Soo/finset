@@ -1186,7 +1186,7 @@
         	NO_PERSON
 			, YN_USE
         FROM PERSON_INFO
-         WHERE NO_PERSON = #{nm_person, jdbcType=VARCHAR} AND HP = #{hp, jdbcType=VARCHAR}
+         WHERE NM_PERSON = #{nm_person, jdbcType=VARCHAR} AND HP = #{hp, jdbcType=VARCHAR}
     </select>
 
     <insert id="insertPerson">

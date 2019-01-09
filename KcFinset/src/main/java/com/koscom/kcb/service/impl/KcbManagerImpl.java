@@ -206,18 +206,19 @@ public class KcbManagerImpl implements KcbManager {
 			schMap.put("nm_if_sub", StringUtil.NVL(infoVO.getNmIfSub(), ""));
 
 			HashMap<String, String> clobMap = creditMapper.getKcbInfoCLOB(schMap);
-			// DB에 기존 요청 내역이 있을 경우 정상 처리
-			if( clobMap != null)	{
-				logger.info("당일 요청한 내역이 있습니다.");
-				return new ReturnClass(Constant.SUCCESS, "당일 요청한 내역이 있습니다.");
-			}
 			
 			//신용리포트 조회 및 데이터 확인용 조회
 			if("220".equals(infoVO.getNmIfSub()) || "Y".equals(infoVO.getYn_craw_test())) clobMap = null; 
-
 			//해지는 무조건 전문전송
 			if("600".equals(infoVO.getNmIf()) && "05".equals(infoVO.getCd_regist())) clobMap = null;
 			if("600420".equals(infoVO.getNmIf()) && "03".equals(infoVO.getCd_regist())) clobMap = null;
+			
+			
+			// DB에 기존 요청 내역이 있을 경우 정상 처리
+			if (clobMap != null) {
+				logger.info("당일 요청한 내역이 있습니다.");
+				return new ReturnClass(Constant.SUCCESS, "당일 요청한 내역이 있습니다.");
+			}
 			
 			if (infoVO != null) {
 				if(StringUtil.isEmpty(infoVO.getNoPerson()) || StringUtil.isEmpty(infoVO.getNmIf())) {

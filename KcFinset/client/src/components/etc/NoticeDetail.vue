@@ -37,7 +37,7 @@ export default {
   created() {
     this.seq = this.$route.query.seq;
     this.id_board = this.$route.query.id_board;
-    this.$store.state.header.backPath == "/main";
+    this.$store.state.header.backPath = "/etc/noticeMain?tab=00";
     this.getEventDatail(this.seq, this.id_board);
   },
   beforeMount() {},

@@ -1,5 +1,4 @@
 <template>
-  <!-- <input type="text" inputmode="numeric" pattern="[0-9]*" v-model="formatedValue" :id="id" :placeholder="placeholder" :class="theme" :readonly="readonly" :disabled="disabled" @change="change" /> -->
   <input type="text" autocomplete="off" inputmode="numeric" pattern="[0-9]*" v-model="formatedVal" :id="id" :placeholder="placeholder" :class="theme" :name="name" :readonly="readonly" :disabled="disabled" @focus="deformatValue" @blur="formatValue" />
 </template>
 
@@ -77,6 +76,7 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    // formatedVal 에 콤마가 찍힌 숫자를 넣고, 콤마가 없는 숫자를 v-model 에 넘겨준다
     formatValue: function(val) {
       if ((val || "") == "") {
         val = "";
@@ -93,6 +93,7 @@ export default {
       }
       this.$emit("input", this.orgVal);
     },
+    // input 태그를 수정할 때에는 숫자에 콤마를 없애 수정이 가능하게 해 주어야 한다
     deformatValue: function() {
       if (!this.readonly && !this.disabled) {
         this.formatedVal = this.orgVal;

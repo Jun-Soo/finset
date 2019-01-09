@@ -2,17 +2,27 @@
   <section v-if="seen">
     <div class="report-top">
       <div class="checks round">
-        <input type="radio" id="rds1" :class="{'checked':dataPeriod === 'yr'}" v-model="dataPeriod" value="yr"><label for="rds1">년</label>
-        <input type="radio" id="rds2" :class="{'checked':dataPeriod === 'mon'}" v-model="dataPeriod" value="mon"><label for="rds2">월</label>
-        <input type="radio" id="rds3" :class="{'checked':dataPeriod === 'week'}" v-model="dataPeriod" value="week"><label for="rds3">주</label>
+        <input type="radio" id="rds1" :class="{'checked':dataPeriod === 'yr'}" v-model="dataPeriod" @click="clickPeriod" value="yr"><label for="rds1">년</label>
+        <input type="radio" id="rds2" :class="{'checked':dataPeriod === 'mon'}" v-model="dataPeriod" @click="clickPeriod" value="mon"><label for="rds2">월</label>
+        <input type="radio" id="rds3" :class="{'checked':dataPeriod === 'week'}" v-model="dataPeriod" @click="clickPeriod" value="week"><label for="rds3">주</label>
       </div>
-      <div class="date">
+      <div class="date" v-if="dataPeriod=='yr'">
         <p>
-          <datepicker v-model="dt_from" ref="datepicker1" :opend="Common.datepickerInit('div-date', this)" :format="formatDateDot" :language="ko" class="div-date"></datepicker>
+          <datepicker :minimum-view="'month'" v-model="dt_from" ref="datepicker0" :disabledDates="disabledDate0" :format="'yyyy.MM'" :language="ko" class="div-date"></datepicker>
+          <button class="cal" @click="openDatepicker0"></button>
+        </p>
+        <p>
+          <datepicker :minimum-view="'month'" v-model="dt_to" ref="datepicker00" :disabledDates="disabledDate00" :format="'yyyy.MM'" :language="ko" class="div-date"></datepicker>
+          <button class="cal" @click="openDatepicker00"></button>
+        </p>
+      </div>
+      <div v-else class="date">
+        <p>
+          <datepicker v-model="dt_from" ref="datepicker1" :disabledDates="disabledDate1" :format="formatDateDot" :language="ko" class="div-date"></datepicker>
           <button class="cal" @click="openDatepicker1"></button>
         </p>
         <p>
-          <datepicker v-model="dt_to" ref="datepicker2" :opend="Common.datepickerInit('div-date', this)" :language="ko" :format="formatDateDot" class="div-date"></datepicker>
+          <datepicker v-model="dt_to" ref="datepicker2" :disabledDates="disabledDate2" :language="ko" :format="formatDateDot" class="div-date"></datepicker>
           <button class="cal" @click="openDatepicker2"></button>
         </p>
       </div>
@@ -43,8 +53,8 @@
 
     <div class="tab">
       <div class="wrap">
-        <a id="02" name="consume" :class="{'on':curTab === '02'}" @change="changeTab">지출</a>
-        <a id="01" name="income" :class="{'on':curTab === '01'}" @change="changeTab">수입</a>
+        <a id="02" name="consume" :class="{'on':curTab === '02'}" @click="changeTab">지출</a>
+        <a id="01" name="income" :class="{'on':curTab === '01'}" @click="changeTab">수입</a>
       </div>
     </div>
     <div class="box-list list02 noMG">
@@ -93,7 +103,7 @@ export default {
     return {
       curTab: "02",
       curTabName: "consume",
-      dataPeriod: "",
+      dataPeriod: "yr",
       shareList: [],
       settingList: [
         { color: "red", id: "chk1" },
@@ -104,6 +114,7 @@ export default {
       ],
       dt_from: new Date(),
       dt_to: new Date(),
+      today: new Date(),
       ko: ko,
       chkReadonly: false,
       dt_basic: this.$store.state.user.dt_basic,
@@ -131,7 +142,14 @@ export default {
       consumeList: [],
       chartEl: {},
       initYN: true,
-      lastToolTip: {}
+      lastToolTip: {},
+      disabledDate0: {
+        to: new Date(moment(this.dt_to).add(-1, "years")),
+        from: new Date(this.dt_to)
+      }, //year disabled dates from
+      disabledDate00: {}, //year disabled dates to
+      disabledDate1: {}, //mon, day disabled dates from
+      disabledDate2: {} //mon, day disabled dates to
     };
   },
   components: {
@@ -140,33 +158,13 @@ export default {
   watch: {
     dataPeriod: function() {
       let today = new Date();
-      let dt_basic = this.dt_basic;
-      //datePicker setting
       if (this.dataPeriod == "yr") {
-        this.dt_from = new Date(today.getFullYear().toString());
+        this.dt_from = new Date(moment(this.dt_to).add(-3, "month"));
       } else if (this.dataPeriod == "mon") {
-        let mon = null;
-        if (dt_basic < today.getDate()) {
-          mon = (today.getMonth() + 1).toString();
-        } else {
-          //(dt_basic >= today.getDate())
-          mon = today.getMonth().toString();
-        }
-        if (dt_basic == null || dt_basic == "") {
-          //기준일이 null일 경우
-          dt_basic = "01";
-        }
-        this.dt_from = new Date(
-          today.getFullYear().toString() + "/" + mon + "/" + dt_basic
-        ); //기준일
+        this.dt_from = new Date(moment(today).add(-1, "month"));
       } else if (this.dataPeriod == "week") {
-        // console.log(this.$moment(today).isoWeekday(7));
         this.dt_from = new Date(moment(today).add(-7, "days")); //7일전
-        // this.dt_from = new Date(this.$moment(today).isoWeekday(0)); //주 초 (일요일부터)
       }
-
-      //chart setting
-      this.getChartList();
     },
     listType: function() {
       if (!this.initYN) {
@@ -186,16 +184,40 @@ export default {
     },
     chartList: function() {
       this.initRangeList();
-      // this.getRangeList();
+    },
+    dt_from: function() {
+      //chart setting
+      this.getChartList();
+    },
+    dt_to: function() {
+      this.getChartList();
     }
   },
   beforeCreate() {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "수입·지출 보고서";
+    this.$store.state.header.backPath = "/consume/main";
   },
   created() {
-    this.listConsumeShareInfo();
-    // this.getChartList();
+    if (Object.keys(this.$route.query).length != 0) {
+      this.chartEl = this.$route.params.chartEl;
+      //dt_to, dt_from 보다 dataPeriod를 먼저 setting 해야함 (dataPeriod =>Yr로 바뀔때마다 dt_from을 3개월전으로 바꿈)
+      this.dataPeriod = this.$route.query.dataPeriod;
+      //시작 순서 dataPeriod -> dt_to ->dt_from
+      this.dt_to = new Date(moment(this.$route.query.dt_to, "YYYYMMDD"));
+      this.dt_from = new Date(moment(this.$route.query.dt_from, "YYYYMMDD"));
+      this.type_in_out = this.$route.query.type_in_out;
+      this.prdFromDt = this.$route.query.prdFromDt;
+      this.prdToDt = this.$route.query.prdToDt;
+      this.shareList = JSON.parse(localStorage.getItem("shareList"));
+      this.listType = JSON.parse(localStorage.getItem("listType"));
+      this.orderType = JSON.parse(localStorage.getItem("orderType"));
+
+      localStorage.removeItem("listType");
+      localStorage.removeItem("orderType");
+    } else {
+      this.listConsumeShareInfo();
+    }
   },
   beforeMount() {},
   mounted() {},
@@ -206,6 +228,36 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    clickPeriod: function() {
+      let today = new Date();
+      let dt_basic = this.dt_basic;
+      //datePicker setting
+      this.dt_to = today;
+      if (this.dataPeriod == "yr") {
+        this.dt_from = new Date(moment(this.dt_to).add(-3, "month"));
+      } else if (this.dataPeriod == "mon") {
+        /* 기준일 base month
+        let yrmon = null;
+        if (Number(dt_basic) < today.getDate()) {
+          yrmon = moment().format("YYYYMM");
+        } else {
+          //(dt_basic >= today.getDate())
+          yrmon = moment()
+            .add(-1, "month")
+            .format("YYYYMM");
+        }
+        if (dt_basic == null || dt_basic == "") {
+          //기준일이 null일 경우
+          dt_basic = "01";
+        }
+        this.dt_from = new Date(moment(yrmon + dt_basic, "YYYYMMDD"));
+*/
+      } else if (this.dataPeriod == "week") {
+        // console.log(this.$moment(today).isoWeekday(7));
+        this.dt_from = new Date(moment(today).add(-7, "days")); //7일전
+        // this.dt_from = new Date(this.$moment(today).isoWeekday(0)); //주 초 (일요일부터)
+      }
+    },
     getConsumeIconSrc: function(type_in_out, cd_class) {
       let cd;
       if ((cd_class || "") == "" || (type_in_out || "") == "") {
@@ -233,59 +285,38 @@ export default {
       this.getChartList();
     },
     goDetail: function(idx) {
-      let param = "";
+      let param = {};
       let listType = this.listType.value;
-      if (listType == "category") {
-        param =
-          "?dt_trd=" +
-          idx.dt_trd +
-          "&listType=" +
-          listType +
-          "&nm_class=" +
-          idx.nm_class +
-          "&type_in_out=" +
-          idx.type_in_out +
-          "&chartType=" +
-          this.dataPeriod +
-          "&personList=" +
-          this.filterShareList();
-      } else if (listType == "store") {
-        param =
-          "?dt_trd=" +
-          idx.dt_trd +
-          "&listType=" +
-          listType +
-          "&contents=" +
-          idx.contents +
-          "&type_in_out=" +
-          idx.type_in_out +
-          "&chartType=" +
-          this.dataPeriod +
-          "&personList=" +
-          this.filterShareList();
-      } else if (listType == "means") {
-        param =
-          "?dt_trd=" +
-          idx.dt_trd +
-          "&listType=" +
-          listType +
-          "&type_in_out=" +
-          idx.type_in_out +
-          "&chartType=" +
-          this.dataPeriod +
-          "&personList=" +
-          this.filterShareList();
+      // if (listType == "category") {
+      //   param["nm_class"] = idx.nm_class;
+      // } else if (listType == "store") {
+      //   param["contents"] = idx.contents;
+      // } else
+      if (listType == "means") {
         localStorage.setItem("no_card", idx.no_card);
         localStorage.setItem("nm_card", idx.nm_card);
-        console.log(
-          "localStorageSetItem=> no_card: " +
-            idx.no_card +
-            " nm_card : " +
-            idx.nm_card
-        );
       }
-      localStorage.setItem("shareList", this.shareList);
-      this.$router.push("/consume/consumeIncomeStats" + param);
+      localStorage.setItem("listType", JSON.stringify(this.listType));
+      localStorage.setItem("orderType", JSON.stringify(this.orderType));
+      localStorage.setItem("shareList", JSON.stringify(this.shareList));
+      // localStorage.setItem("chartEl", JSON.stringify(this.chartEl));
+      this.$router.push({
+        name: "consumeIncomeStats", //"/consume/consumeIncomeStats" + param,
+        params: { chartEl: this.chartEl },
+        query: {
+          dt_trd: idx.dt_trd,
+          listType: listType,
+          type_in_out: idx.type_in_out,
+          chartType: this.dataPeriod,
+          personList: this.filterShareList(),
+          dt_from: Common.formatDateDot(this.dt_from).replace(/[.]/g, ""), //this.dt_from,
+          dt_to: Common.formatDateDot(this.dt_to).replace(/[.]/g, ""),
+          prdFromDt: this.prdFromDt,
+          prdToDt: this.prdToDt,
+          nm_class: idx.nm_class,
+          contents: idx.contents
+        }
+      });
     },
     formatDateDot: function(date, pattern) {
       return Common.formatDateDot(date, pattern);
@@ -300,7 +331,6 @@ export default {
         _this.rangeList = _this.consumeList;
       }
     },
-    initData: function() {},
     getChartList: function() {
       let _this = this;
       let url = "/m/consume/listConsumeforSettlement.json";
@@ -318,10 +348,18 @@ export default {
       param.append("no_person_list", _this.filterShareList());
       // console.log(param);
       _this.$http.post(url, param).then(function(response) {
-        _this.chartList = response.data.listSettlementConsumeData;
-        _this.consumeForm = response.data.consumeForm;
-        _this.seen = true;
-        _this.getSum();
+        if (response.data.result == "00") {
+          _this.chartList = response.data.listSettlementConsumeData;
+          _this.consumeForm = response.data.consumeForm;
+          _this.seen = true;
+          _this.getSum();
+          if (_this.chartEl[0] != undefined) {
+            _this.getRangeList();
+          }
+        } else {
+          _this.$toast.center(response.data.message);
+          // _this.$refs.datepicker0.$el.focus();
+        }
       });
     },
     /**
@@ -372,7 +410,9 @@ export default {
             }
           }
           _this.shareList = list;
-          _this.dataPeriod = "yr";
+          console.log(list);
+          // _this.dataPeriod = "yr";
+          _this.clickPeriod();
           // _this.getChartList();
         });
     },
@@ -437,11 +477,56 @@ export default {
           // console.log(_this.rangeList);
         });
     },
+    /**
+     * 탭 선택시 챠트 및 탭바꾸기
+     */
+    changeTabByTooltip: function(e) {
+      this.changeTab(e);
+    },
+    openDatepicker0: function() {
+      this.getDateDisabledRange();
+      this.$refs.datepicker0.showCalendar();
+    },
+    openDatepicker00: function() {
+      this.getDateDisabledRange();
+      this.$refs.datepicker00.showCalendar();
+    },
     openDatepicker1: function() {
+      this.getDateDisabledRange();
       this.$refs.datepicker1.showCalendar();
     },
     openDatepicker2: function() {
+      this.getDateDisabledRange();
       this.$refs.datepicker2.showCalendar();
+    },
+    getDateDisabledRange: function() {
+      if (this.dataPeriod == "yr") {
+        this.disabledDate0 = {
+          to: new Date(moment(this.dt_to).add(-3, "month")),
+          from: new Date(this.dt_to)
+        };
+        this.disabledDate00 = {
+          from: new Date(this.today) // Disable all dates after specific date
+        };
+      } else if (this.dataPeriod == "mon") {
+        this.disabledDate1 = {
+          to: new Date(moment(this.dt_to).add(-2, "month")),
+          from: new Date(this.dt_to),
+          days: [6, 0, 2, 3, 4, 5]
+        };
+        this.disabledDate2 = {
+          from: new Date(this.today), // Disable all dates after specific date
+          days: [6, 1, 2, 3, 4, 5]
+        };
+      } else if (this.dataPeriod == "week") {
+        this.disabledDate1 = {
+          to: new Date(moment(this.dt_to).add(-14, "days")),
+          from: new Date(this.dt_to)
+        };
+        this.disabledDate2 = {
+          from: new Date(this.today) // Disable all dates after specific date
+        };
+      }
     },
     clickChart: function(rangeDate, typePeriod, el) {
       if (typePeriod == "yr") {
@@ -462,7 +547,7 @@ export default {
         this.prdToDt = rangeDate;
       }
       this.chartEl = el;
-      // console.log(el);
+      console.log(el);
       this.getRangeList();
     },
     calcPercentage: function(obj) {
@@ -498,5 +583,8 @@ export default {
 <style lang="scss">
 .div-date {
   display: inline;
+}
+.filter-wrap {
+  margin-bottom: 0px;
 }
 </style>

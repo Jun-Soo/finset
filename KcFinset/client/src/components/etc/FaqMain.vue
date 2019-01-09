@@ -43,14 +43,18 @@ export default {
     this.$store.state.title = "고객센터";
   },
   created() {
+    window.checkAppVersion = this.checkAppVersion;
+    var _this = this;
+
     if (Constant.userAgent == "Android") {
-      this.app_version = window.Android.checkAppVersion();
-      this.checkAppVersion(this.app_version);
+      _this.app_version = window.Android.checkAppVersion();
+      _this.checkAppVersion(_this.app_version);
     } else if (Constant.userAgent == "iOS") {
       //앱버전 조회결과 콜백
       Jockey.on("receiveAppVersion", function(param) {
-        this.app_version = param.appVersion;
-        this.checkAppVersion(param.appVersion);
+        _this.app_version = param.appVersion;
+        _this.checkAppVersion(param.appVersion);
+        Jockey.off("receiveAppVersion");
       });
       //앱버전 조회 네이티브 호출
       Jockey.send("checkAppVersion");
@@ -75,12 +79,12 @@ export default {
       }
     },
     updateApp: function() {
-      //test 필요
+      var _this = this;
       if (Constant.userAgent == "Android") {
         window.Android.updateApp();
       } else if (Constant.userAgent == "iOS") {
         Jockey.send("updateApp", {
-          app_id: ""
+          app_id: "" //App 고유코드->네이티브에서 들고있어서 안넣는게 더 나음
         });
       }
     },
@@ -90,12 +94,6 @@ export default {
       _this.$http.get(url).then(response => {
         _this.newest_version = response.data.newest_version;
         var version = _this.newest_version;
-        console.log(
-          "newest_version:" +
-            _this.newest_version +
-            " / curVersion:" +
-            appVersion
-        );
         var versionSplit = version.split("."); //최신버전
         var chkVersionSplit = appVersion.split("."); //현재버전
         for (var i = 0; i < versionSplit.length; i++) {

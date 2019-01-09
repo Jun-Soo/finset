@@ -375,7 +375,7 @@
 			       		#{item, jdbcType=VARCHAR}
 				      </foreach>
 					  AND GI.YN_USE = 'Y'
-					  AND (    /*GI.MAX_LOAN_TERM IS NULL*/
+					  <!-- AND (    /*GI.MAX_LOAN_TERM IS NULL*/
 							/* 대출기간(상환기간) 검색사용안함 */
 							/*OR*/ 1 = (SELECT (CASE WHEN CD_TERM_LOAN_01 = 'N'
 												  AND CD_TERM_LOAN_02 = 'N'
@@ -526,8 +526,9 @@
                                     AND CD IS NOT NULL
 					  			 )
 					  	  )
+					  	  ]]> -->
 	             ) LST
-]]>
+
 	</select>
 	
 	<select id="listGoodsNoAllianceBiz" parameterType="com.koscom.goodsbank.model.GoodsbankForm" resultType="com.koscom.goodsbank.model.GoodsbankVO">

@@ -80,6 +80,7 @@
 <script>
 import Common from "@/assets/js/common.js";
 import ko from "vee-validate/dist/locale/ko.js";
+import Constant from "@/assets/js/constant.js";
 
 export default {
   name: "ConsumeRegGoal",
@@ -94,6 +95,7 @@ export default {
   },
   components: {},
   computed: {
+    // 분류 별 예산 합
     sumGoal1: function() {
       var sum = 0;
       for (var idx in this.listDetailGoal1) {
@@ -104,6 +106,7 @@ export default {
       }
       return Common.formatNumber(sum);
     },
+    // 수단 별 예산 합
     sumGoal2: function() {
       var sum = 0;
       for (var idx in this.listDetailGoal2) {
@@ -254,10 +257,19 @@ export default {
           var frmRegGoal = document.getElementById("frmRegGoal");
           var formData = new FormData(frmRegGoal);
           formData.append("cd_set", this.curTab);
-          this.$http
-            .post("/m/consume/createGoal.json", formData)
-            .then(function(response) {
-              _this.$toast.center("저장되었습니다");
+          this.$dialogs
+            .confirm(
+              "예산을 설정하시겠습니까? \n설정된 예산은 당월부터 적용됩니다.",
+              Constant.options
+            )
+            .then(res => {
+              if (res.ok) {
+                this.$http
+                  .post("/m/consume/createGoal.json", formData)
+                  .then(function(response) {
+                    _this.$toast.center("저장되었습니다");
+                  });
+              }
             });
         }
       });

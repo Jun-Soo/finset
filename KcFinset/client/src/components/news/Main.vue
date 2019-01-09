@@ -187,8 +187,11 @@ export default {
     viewDetail: function(seq_news) {
       var _this = this;
 
-      this.$store.state.scListParam.query1 = _this.scKeyword;
-      this.$store.state.scListParam.query2 = _this.orderBy.value;
+      //검색조건유지
+      this.$store.state.scListParam.query1 = _this.scKeyword; //검색키워드
+      if ((_this.orderBy || "") != "") {
+        this.$store.state.scListParam.query2 = _this.orderBy.value; //정렬조건
+      }
 
       this.$router.push({
         name: "newsDetail",

@@ -4,7 +4,7 @@
       <div class="spend-top">
         <div class="date-wrap">
           <button class="prev" @click="setPrevMM"></button>
-          <p>{{ym}}</p>
+          <p @click="openDatepicker">{{ymText}}</p>
           <button class="next" @click="setNextMM"></button>
           <button class="setting" @click="clickSetting"></button>
         </div>
@@ -104,13 +104,19 @@
         <button @click="regConsume" class="btn-spend-add"></button>
       </div>
     </section>
+    <div>
+      <div>
+        <datepicker v-model="standardDt" @selected="selectDate" :minimum-view="'month'" :language="ko" :format="Common.formatDateDot" :hideInput="true" class="div-date" ref="datepicker" />
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import Common from "@/assets/js/common.js";
 import Progress from "@/components/plugins/progress/Progress.vue";
-import ko from "vee-validate/dist/locale/ko.js";
+import { ko } from "vuejs-datepicker/dist/locale";
+import korean from "vee-validate/dist/locale/ko.js";
 
 export default {
   name: "ConsumeMain",
@@ -118,7 +124,7 @@ export default {
     return {
       seen: false, // 화면 표출 여부
       Common: Common, // 공통
-      ym: "", // 메인 상단에 들어갈 월 텍스트
+      ko: ko, // 데이터피커 한글
       consumeList: [], // 소비지출 내역
       shareList: [], // 공유된 사용자 리스트
       isScrap: false, // 스크래핑 여부
@@ -172,6 +178,9 @@ export default {
           max: this.progressMax
         };
       }
+    },
+    ymText: function() {
+      return this.formatHead(this.getYm(this.standardDt));
     }
   },
   beforeCreate() {
@@ -183,14 +192,19 @@ export default {
       this.standardDt.setMonth(this.standardDt.getMonth() - 1);
       this.curDate.setMonth(this.curDate.getMonth() - 1);
     }
-    this.ym = this.formatHead(this.getYm(this.standardDt));
+    if (this.$store.state.user.dtConsume) {
+      this.standardDt = this.$store.state.user.dtConsume;
+    }
+    // this.ym = this.formatHead(this.getYm(this.standardDt));
     this.listConsumeShareInfo();
   },
   beforeMount() {},
   mounted() {},
   beforeUpdate() {},
   updated() {},
-  beforeDestroy() {},
+  beforeDestroy() {
+    this.$store.state.user.dtConsume = this.standardDt;
+  },
   destroyed() {},
   methods: {
     // ---------------------데이터 포멧---------------------
@@ -293,7 +307,7 @@ export default {
     clickProgress: function() {
       if (!this.isScrap) {
         this.$router.push("/scrap/CtrlFcLink");
-      } else if (!this.isGoal) {
+      } else {
         if (
           this.curDate.getFullYear() == this.standardDt.getFullYear() &&
           this.curDate.getMonth() == this.standardDt.getMonth()
@@ -301,6 +315,9 @@ export default {
           this.$router.push("/consume/regGoal");
         }
       }
+    },
+    openDatepicker: function() {
+      this.$refs.datepicker.showCalendar();
     },
     // ---------------------//화면 컨트롤---------------------
     // ---------------------데이터 이동---------------------
@@ -317,20 +334,18 @@ export default {
           }
           _this.shareList = list;
           _this.listConsumeInfo();
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
-          _this.seen = true;
         });
     },
     // 소비지출 리스트 조회
-    listConsumeInfo: function() {
-      // this.$store.state.isLoading = true;
+    listConsumeInfo: function(date) {
       var _this = this;
       this.$http
         .get("/m/consume/listConsumeInfo.json", {
           params: {
-            ym: _this.ym.replace(".", ""),
+            ym:
+              (date || "") == ""
+                ? _this.getYm(this.standardDt)
+                : _this.getYm(date),
             type_in_out: _this.curTab,
             no_person_list: _this.filterShareList()
           }
@@ -364,7 +379,7 @@ export default {
           }
           _this.isScrap = response.data.isScrap;
           _this.consumeList = response.data.listConsumeInfo;
-          // _this.$store.state.isLoading = false;
+
           _this.seen = true;
         });
     },
@@ -392,13 +407,13 @@ export default {
     // 이전 달 세팅
     setPrevMM: function() {
       this.standardDt.setMonth(this.standardDt.getMonth() - 1);
-      this.ym = this.formatHead(this.getYm(this.standardDt));
+      this.standardDt = new Date(this.standardDt.getTime());
       this.listConsumeInfo();
     },
     // 다음 달 세팅
     setNextMM: function() {
       this.standardDt.setMonth(this.standardDt.getMonth() + 1);
-      this.ym = this.formatHead(this.getYm(this.standardDt));
+      this.standardDt = new Date(this.standardDt.getTime());
       this.listConsumeInfo();
     },
     // 수입인지 지출인지 확인해서 해당하는 class 리턴
@@ -427,6 +442,10 @@ export default {
         return require("@/assets/images/consume/icon/99.png");
       }
       return require("@/assets/images/consume/icon/" + cd + ".png");
+    },
+    // 데이트피커 선택
+    selectDate: function(date) {
+      this.listConsumeInfo(date);
     }
     // ---------------------//기타---------------------
   }

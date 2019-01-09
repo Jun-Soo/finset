@@ -162,6 +162,7 @@ export default {
       if (Constant.userAgent == "iOS") {
         Jockey.on("getAddressList", function(param) {
           resultAddress(param.src_nm_person, param.src_hp);
+          Jockey.off("getAddressList");
         });
       } else if (Constant.userAgent == "Android") {
         window.Android.getAddressList();

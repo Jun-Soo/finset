@@ -402,22 +402,22 @@ export default {
     }
   },
   datepickerInit: function (classNm, vueComponent) {
-    if (document.getElementsByClassName(classNm)) {
-      for (var i = 0; i < document.getElementsByClassName(classNm).length; i++) {
-        if (!document.getElementsByClassName(classNm)[i].children[1].children[0].classList.contains('calendar-overlay')) {
-          var calendarOverlay = document.createElement('div')
-          calendarOverlay.className = 'calendar-overlay'
-          calendarOverlay.addEventListener('click', this.calendarDimClick)
-          document.getElementsByClassName(classNm)[i].children[1].prepend(calendarOverlay)
-          document.getElementsByClassName(classNm)[i].children[1].children[2].style.background = '#FFFFFF'
-          Constant.vueComponent = vueComponent
-        }
-        for (var j = 1; j < document.getElementsByClassName(classNm)[i].children.length; j++) {
-          document.getElementsByClassName(classNm)[i].children[j].style.top = (document.documentElement.clientHeight - 200) / 2 + 'px'
-          document.getElementsByClassName(classNm)[i].children[j].style.left = (document.documentElement.clientWidth - 300) / 2 + 'px'
-        }
-      }
-    }
+    // if (document.getElementsByClassName(classNm)) {
+    //   for (var i = 0; i < document.getElementsByClassName(classNm).length; i++) {
+    //     if (!document.getElementsByClassName(classNm)[i].children[1].children[0].classList.contains('calendar-overlay')) {
+    //       var calendarOverlay = document.createElement('div')
+    //       calendarOverlay.className = 'calendar-overlay'
+    //       calendarOverlay.addEventListener('click', this.calendarDimClick)
+    //       document.getElementsByClassName(classNm)[i].children[1].prepend(calendarOverlay)
+    //       document.getElementsByClassName(classNm)[i].children[1].children[2].style.background = '#FFFFFF'
+    //       Constant.vueComponent = vueComponent
+    //     }
+    //     for (var j = 1; j < document.getElementsByClassName(classNm)[i].children.length; j++) {
+    //       document.getElementsByClassName(classNm)[i].children[j].style.top = (document.documentElement.clientHeight - 200) / 2 + 'px'
+    //       document.getElementsByClassName(classNm)[i].children[j].style.left = (document.documentElement.clientWidth - 300) / 2 + 'px'
+    //     }
+    //   }
+    // }
   },
   // pagination 사용법
   // 필요한 함수를 작성하되, 함수 파라미터로 callback을 선언

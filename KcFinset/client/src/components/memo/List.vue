@@ -1,7 +1,7 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="container">
-      <div class="memo-list">
+      <div v-if="!isEmpty" class="memo-list">
         <ul>
           <li v-for="(memoVO, index) in memoList" :key="index">
             <a @click="detailMemo(memoVO.seq_memo_info)">
@@ -10,6 +10,9 @@
             </a>
           </li>
         </ul>
+      </div>
+      <div v-if="isEmpty" class="nodata">
+        등록된 메모가 없습니다
       </div>
       <button class="btn-spend-add" @click="registerMemo"></button>
     </div>
@@ -24,8 +27,10 @@ export default {
   name: "MemoList",
   data() {
     return {
-      memoList: new Array(),
-      page: 1
+      seen: false, // 화면 표출 여부
+      isEmpty: true, // 리스트가 비었는지 여부
+      memoList: [], // 메모 리스트
+      page: 1 // 현재 페이지
     };
   },
   components: {},
@@ -56,14 +61,20 @@ export default {
         .then(function(response) {
           var list = response.data.listMemo;
           if ((list || "") == "") {
+            if (_this.page == 1) {
+              _this.isEmpty = true;
+            }
+            _this.seen = true;
             callback();
             return;
           } else {
+            _this.isEmpty = false;
             for (var idx in list) {
               list[idx].memo_head = _this.getMemoHead(list[idx].memo_text);
             }
             _this.memoList = _this.memoList.concat(list);
             _this.page++;
+            _this.seen = true;
           }
         });
     },

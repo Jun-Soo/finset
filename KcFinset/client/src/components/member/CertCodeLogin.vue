@@ -77,6 +77,7 @@ export default {
   },
   beforeMount() {},
   mounted() {
+    var _this = this;
     this.errMsg =
       "비밀번호를 " + this.cntFailPwd + "회 실패한 이력이 있습니다.";
     if (this.$store.state.user.ynFingerprint == "Y") {
@@ -86,7 +87,8 @@ export default {
         Jockey.on("resultFingerPrint", function(param) {
           var result = false;
           if (param.result == 1) result = true;
-          resultFingerPrint(param.result);
+          _this.resultFingerPrint(param.result);
+          Jockey.off("resultFingerPrint");
         });
         Jockey.send("initFingerPrint");
       }

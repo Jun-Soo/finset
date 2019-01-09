@@ -84,7 +84,7 @@ export default {
         window.Android.updateApp();
       } else if (Constant.userAgent == "iOS") {
         Jockey.send("updateApp", {
-          app_id: "" //App 고유코드
+          app_id: "" //App 고유코드->네이티브에서 들고있어서 안넣는게 더 나음
         });
       }
     },

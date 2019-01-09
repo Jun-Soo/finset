@@ -300,7 +300,9 @@ export default {
       var cd_detail_class = _this.cd_detail_class;
 
       //store 검색조건 유지
-      this.$store.state.scListParam.query1 = _this.scTrnsType.value; //계좌유형
+      if ((_this.scTrnsType || "") != "") {
+        this.$store.state.scListParam.query1 = _this.scTrnsType.value; //계좌유형
+      }
       this.$store.state.scListParam.query2 = _this.scKeyword; //검색키워드
 
       //입출금

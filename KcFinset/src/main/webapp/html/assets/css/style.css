@@ -527,6 +527,7 @@ p{ width: 100%; height: 2px; border-radius: 2px; position: absolute; background:
 .con-top.goal-top { background: url("../images/consume/con_top_goal.png") no-repeat top center/contain; }
 .con-top.share-top { background: url("../images/share/con_top_share.png") no-repeat top center/contain; }
 .con-top.credit-up { background: url("../images/credit/con_top_creditup.png") no-repeat top center/contain; }
+.con-top.credit-up2 { background: url("../images/credit/con_top_creditup2.png") no-repeat top center/contain; }
 .con-top.counsel-info { background: url("../images/credit/con_top_counsel_info.png") no-repeat top center/contain; }
 
 /*   Main   */
@@ -1295,13 +1296,13 @@ button.cal { width: 29px; height: 49px; background: url("../images/common/btn_ca
 .certcode-wrap .textred { color: #e52638; margin-top: 10px; text-align: center; }
 .certcode-wrap .pass-wrap { margin-top: 30px; display: grid; grid-column-gap: 15px; justify-content: center; grid-template-columns: 40px 40px 40px 40px; }
 .certcode-wrap .pass-wrap input[type="password"] { border: none; border-bottom: 1px solid #e5e5e5; font-size: 40px; width: 100%; text-align: center; padding: 0; text-indent: 0; }
-.certcode-wrap .number { display: grid; grid-column-gap: 35px; grid-row-gap: 15px; justify-content: center; margin: 30px auto 0; grid-template-columns: 75px 75px 75px; }
-.certcode-wrap .number a { text-align: center; width: 75px; line-height: 75px; font-size: 30px; color: #333; font-weight: 700; border-radius: 100%; background: none; }
+.certcode-wrap .number { display: grid; grid-column-gap: 35px; grid-row-gap: 15px; justify-content: center; margin: 30px auto 0; grid-template-columns: 75px 75px 75px; align-items: center; }
+.certcode-wrap .number a { text-align: center; width: 75px; height: 75px; line-height: 75px; font-size: 30px; color: #333; font-weight: 700; border-radius: 100%; background: none; }
 .certcode-wrap .number a:active { background: #62c1d0; color: #fff; }
 .certcode-wrap .number a.del { background: url("../images/member/btn_delete.png") no-repeat center top/75px; }
-.certcode-wrap .number a.del:active { background: url("../images/member/btn_delete.png") no-repeat center bottom #62c1d0; background-size: 75px; }
+.certcode-wrap .number a.del:active { background: url("../images/member/btn_delete.png") no-repeat center bottom #62c1d0; background-size: 70px; }
 .certcode-wrap .number a.finger { background: url("../images/member/btn_fingerprint.png") no-repeat center top/75px; }
-.certcode-wrap .number a.finger:active { background: url("../images/member/btn_fingerprint.png") no-repeat center bottom #62c1d0; background-size: 75px; }
+.certcode-wrap .number a.finger:active { background: url("../images/member/btn_fingerprint.png") no-repeat center bottom #62c1d0; background-size: 70px; }
 
 .cert-finger { height: 70vh; position: relative; }
 .cert-finger .wrap { position: absolute; left: 0; top: 50%; margin-top: -140px; text-align: center; width: 100%; }

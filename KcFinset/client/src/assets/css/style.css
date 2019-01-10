@@ -3137,8 +3137,7 @@ p{ width: 100%; height: 2px; border-radius: 2px; position: absolute; background:
   box-sizing: border-box;
   position: inherit; 
   left: 0; 
-  padding-left: 20px; 
-  text-align: right; 
+  text-align: center; 
 }
 
 .my-links {

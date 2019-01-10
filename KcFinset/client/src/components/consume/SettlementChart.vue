@@ -77,13 +77,9 @@ export default {
     //chart 클릭시 이벤트 발생하는 부분
     this.$set(this.$refs.chart.option, "onClick", this._clickChart);
     this.$refs.chart.renderChart();
-    // console.log("mounted");
   },
   beforeUpdate() {},
-  updated() {
-    // this.$refs.chart.renderChart();
-    // console.log("updated");
-  },
+  updated() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {

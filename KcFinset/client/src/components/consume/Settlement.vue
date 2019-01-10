@@ -1,34 +1,41 @@
 <template>
   <section v-if="seen">
     <div class="report-top">
-      <div class="checks round">
-        <input type="radio" id="rds1" :class="{'checked':dataPeriod === 'yr'}" v-model="dataPeriod" @click="clickPeriod" value="yr"><label for="rds1">년</label>
-        <input type="radio" id="rds2" :class="{'checked':dataPeriod === 'mon'}" v-model="dataPeriod" @click="clickPeriod" value="mon"><label for="rds2">월</label>
-        <input type="radio" id="rds3" :class="{'checked':dataPeriod === 'week'}" v-model="dataPeriod" @click="clickPeriod" value="week"><label for="rds3">주</label>
-      </div>
-      <div class="date" v-if="dataPeriod=='yr'">
+      <div class="checks round" style="';display:grid;grid-template-columns: 70% 1fr;background: #efeeec;'">
         <p>
-          <datepicker :minimum-view="'month'" v-model="dt_from" ref="datepicker0" :disabledDates="disabledDate0" :format="'yyyy.MM'" :language="ko" class="div-date"></datepicker>
-          <button class="cal" @click="openDatepicker0"></button>
+          <input type="radio" id="rds1" :class="{'checked':dataPeriod === 'yr'}" v-model="dataPeriod" @click="clickPeriod" value="yr"><label for="rds1">년</label>
+          <input type="radio" id="rds2" :class="{'checked':dataPeriod === 'mon'}" v-model="dataPeriod" @click="clickPeriod" value="mon"><label for="rds2">월</label>
+          <input type="radio" id="rds3" :class="{'checked':dataPeriod === 'week'}" v-model="dataPeriod" @click="clickPeriod" value="week"><label for="rds3">주</label>
         </p>
         <p>
-          <datepicker :minimum-view="'month'" v-model="dt_to" ref="datepicker00" :disabledDates="disabledDate00" :format="'yyyy.MM'" :language="ko" class="div-date"></datepicker>
-          <button class="cal" @click="openDatepicker00"></button>
+          <input type="label" v-bind:class="detailSelection?'on':''" @click="detailSelection?detailSelection=false:detailSelection=true" value="조건설정" readonly>
         </p>
       </div>
-      <div v-else class="date">
-        <p>
-          <datepicker v-model="dt_from" ref="datepicker1" :disabledDates="disabledDate1" :format="formatDateDot" :language="ko" class="div-date"></datepicker>
-          <button class="cal" @click="openDatepicker1"></button>
-        </p>
-        <p>
-          <datepicker v-model="dt_to" ref="datepicker2" :disabledDates="disabledDate2" :language="ko" :format="formatDateDot" class="div-date"></datepicker>
-          <button class="cal" @click="openDatepicker2"></button>
-        </p>
-      </div>
-      <div v-if="shareList.length>1" class="filter-wrap mt20">
-        <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
-          <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.viewName}}</label>
+      <div v-if="detailSelection">
+        <div class="date" v-if="dataPeriod=='yr'">
+          <p>
+            <datepicker :minimum-view="'month'" v-model="dt_from" ref="datepicker0" :disabledDates="disabledDate0" :format="'yyyy.MM'" :language="ko" class="div-date"></datepicker>
+            <button class="cal" @click="openDatepicker0"></button>
+          </p>
+          <p>
+            <datepicker :minimum-view="'month'" v-model="dt_to" ref="datepicker00" :disabledDates="disabledDate00" :format="'yyyy.MM'" :language="ko" class="div-date"></datepicker>
+            <button class="cal" @click="openDatepicker00"></button>
+          </p>
+        </div>
+        <div v-else class="date">
+          <p>
+            <datepicker v-model="dt_from" ref="datepicker1" :disabledDates="disabledDate1" :format="formatDateDot" :language="ko" class="div-date"></datepicker>
+            <button class="cal" @click="openDatepicker1"></button>
+          </p>
+          <p>
+            <datepicker v-model="dt_to" ref="datepicker2" :disabledDates="disabledDate2" :language="ko" :format="formatDateDot" class="div-date"></datepicker>
+            <button class="cal" @click="openDatepicker2"></button>
+          </p>
+        </div>
+        <div v-if="shareList.length>1" class="filter-wrap mt20">
+          <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
+            <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.viewName}}</label>
+          </div>
         </div>
       </div>
     </div>
@@ -45,6 +52,7 @@
           </div>
         </div>
         <Graph v-if="chartList" ref="graph" v-model="chartList" :chartList="chartList" :consumeForm="consumeForm" :dt_from="dt_from" :dt_to="dt_to" :dataPeriod="dataPeriod"></Graph>
+        <!-- <TEST v-if="chartList" ref="graph" v-model="chartList" :chartList="chartList" :consumeForm="consumeForm" :dt_from="dt_from" :dt_to="dt_to" :dataPeriod="dataPeriod"></TEST> -->
       </div>
       <div class="nodata" v-else-if="chartList.length==0">
         조회하신 범위에 수입, 지출 내역이 없습니다
@@ -91,6 +99,7 @@
 
 <script>
 import Graph from "./SettlementChart";
+import TEST from "./SettlementChart_test";
 import Common from "@/assets/js/common.js";
 import Constant from "@/assets/js/constant.js";
 import datepicker from "vuejs-datepicker";
@@ -101,6 +110,9 @@ export default {
   name: "ConsumeSettlement",
   data() {
     return {
+      ko: ko,
+      seen: false,
+      Common: Common,
       curTab: "02",
       curTabName: "consume",
       dataPeriod: "yr",
@@ -115,17 +127,11 @@ export default {
       dt_from: new Date(),
       dt_to: new Date(),
       today: new Date(),
-      ko: ko,
-      chkReadonly: false,
       dt_basic: this.$store.state.user.dt_basic,
       chartList: [],
-      seen: false,
-      Common: Common,
       consumeSum: 0,
       incomeSum: 0,
       consumeForm: {},
-      listType: "",
-      orderType: "",
       type1: [
         { text: "카테고리별", value: "category" },
         { text: "가맹점별", value: "store" },
@@ -135,14 +141,21 @@ export default {
         { text: "금액순", value: "sum" },
         { text: "건수순", value: "count" }
       ],
+      listType: { text: "카테고리별", value: "category" },
+      orderType: { text: "금액순", value: "sum" },
+      //range select 위한 data
       prdFromDt: "",
       prdToDt: "",
-      rangeList: [],
+      rangeList: [], //보여지는 실제값
       incomeList: [],
       consumeList: [],
+      //기타기능
+      isRangeList: false, //chart범위 선택했는지 여부
       chartEl: {},
       initYN: true,
       lastToolTip: {},
+      detailSelection: false,
+      //datepicker disabled 범위
       disabledDate0: {
         to: new Date(moment(this.dt_to).add(-1, "years")),
         from: new Date(this.dt_to)
@@ -154,10 +167,12 @@ export default {
   },
   components: {
     Graph: Graph
+    // TEST: TEST,
   },
   watch: {
     dataPeriod: function() {
       let today = new Date();
+      this.isRangeList = false;
       if (this.dataPeriod == "yr") {
         this.dt_from = new Date(moment(this.dt_to).add(-3, "month"));
       } else if (this.dataPeriod == "mon") {
@@ -168,28 +183,24 @@ export default {
     },
     listType: function() {
       if (!this.initYN) {
-        console.log(this.listType.value);
         this.getRangeList();
-      } else {
-        this.listType = this.type1[0];
       }
     },
     orderType: function() {
       if (!this.initYN) {
-        // console.log(this.orderType.value);
         this.getRangeList();
-      } else {
-        this.orderType = this.type2[0];
       }
     },
     chartList: function() {
       this.initRangeList();
     },
     dt_from: function() {
+      this.isRangeList = false;
       //chart setting
       this.getChartList();
     },
     dt_to: function() {
+      this.isRangeList = false;
       this.getChartList();
     }
   },
@@ -203,16 +214,18 @@ export default {
       this.chartEl = this.$route.params.chartEl;
       //dt_to, dt_from 보다 dataPeriod를 먼저 setting 해야함 (dataPeriod =>Yr로 바뀔때마다 dt_from을 3개월전으로 바꿈)
       this.dataPeriod = this.$route.query.dataPeriod;
+
       //시작 순서 dataPeriod -> dt_to ->dt_from
       this.dt_to = new Date(moment(this.$route.query.dt_to, "YYYYMMDD"));
       this.dt_from = new Date(moment(this.$route.query.dt_from, "YYYYMMDD"));
       this.type_in_out = this.$route.query.type_in_out;
       this.prdFromDt = this.$route.query.prdFromDt;
       this.prdToDt = this.$route.query.prdToDt;
-      this.shareList = JSON.parse(localStorage.getItem("shareList"));
+
       this.listType = JSON.parse(localStorage.getItem("listType"));
       this.orderType = JSON.parse(localStorage.getItem("orderType"));
-
+      this.shareList = JSON.parse(localStorage.getItem("shareList"));
+      //refresh되면 에러남 -> 추후 해결필요
       localStorage.removeItem("listType");
       localStorage.removeItem("orderType");
     } else {
@@ -300,6 +313,7 @@ export default {
       localStorage.setItem("orderType", JSON.stringify(this.orderType));
       localStorage.setItem("shareList", JSON.stringify(this.shareList));
       // localStorage.setItem("chartEl", JSON.stringify(this.chartEl));
+
       this.$router.push({
         name: "consumeIncomeStats", //"/consume/consumeIncomeStats" + param,
         params: { chartEl: this.chartEl },
@@ -353,7 +367,23 @@ export default {
           _this.consumeForm = response.data.consumeForm;
           _this.seen = true;
           _this.getSum();
-          if (_this.chartEl[0] != undefined) {
+
+          if (_this.isRangeList) {
+            //Array.isArray(_this.chartEl)
+            //chart 클릭시에만 타야함 (현재 상세보기갔다가 뒤로오면 chartEl에 data를 담기때문에 이쪽으로 넘어옴)
+            _this.getRangeList();
+          } else {
+            if (_this.dataPeriod == "yr") {
+              //기준일인지 아닌지 확인
+              _this.prdFromDt = moment(_this.dt_from).format("YYYYMM");
+              _this.prdToDt = moment(_this.dt_to).format("YYYYMM");
+            } else if (_this.dataPeriod == "mon") {
+              _this.prdFromDt = moment(_this.dt_from).format("YYYYMMDD");
+              _this.prdToDt = moment(_this.dt_to).format("YYYYMMDD");
+            } else {
+              _this.prdFromDt = moment(_this.dt_from).format("YYYYMMDD");
+              _this.prdToDt = moment(_this.dt_to).format("YYYYMMDD");
+            }
             _this.getRangeList();
           }
         } else {
@@ -426,6 +456,10 @@ export default {
       //event는 마우스 이벤트(클릭), el은 해당 데이터를 묶어서 던져줌
       var _this = this;
       var frm = new FormData();
+      if (_this.isRangeList) {
+        //chart 클릭시에만 타야함 (현재 상세보기갔다가 뒤로오면 chartEl에 data를 담기때문에 이쪽으로 넘어옴)
+        frm.append("contents", "total");
+      }
       frm.append("listType", _this.listType.value);
       frm.append("orderType", _this.orderType.value);
       frm.append("type_in_out", _this.curTab);
@@ -459,20 +493,28 @@ export default {
           // console.log(_this.listType);
 
           // 차트 선택시 수입 지출 탭바꾸기
-          let datasetIdx =
-            _this.chartEl[0]._chart.chart.tooltip._active[0]._datasetIndex; //tooltip이 없어지면 index값 undefined 남****고치기
-          if (datasetIdx != "undefined") {
-            let _tab = { srcElement: {} };
-            if (datasetIdx == 0) {
-              _tab.srcElement.id = "02";
-              _tab.srcElement.name = "지출";
+          let _tab = { srcElement: {} };
+          if (_this.isRangeList) {
+            // chart 클릭시에만 타야함 (현재 상세보기갔다가 뒤로오면 chartEl에 data를 담기때문에 이쪽으로 넘어옴)
+            let datasetIdx =
+              _this.chartEl[0]._chart.chart.tooltip._active[0]._datasetIndex; //tooltip이 없어지면 index값 undefined 남****고치기
+            if (datasetIdx != "undefined") {
+              if (datasetIdx == 0) {
+                _tab.srcElement.id = "02";
+                _tab.srcElement.name = "지출";
+              } else {
+                _tab.srcElement.id = "01";
+                _tab.srcElement.name = "수입";
+              }
+              _this.changeTab(_tab);
             } else {
-              _tab.srcElement.id = "01";
-              _tab.srcElement.name = "수입";
+              _this.rangeList = [];
             }
-            _this.changeTab(_tab);
           } else {
-            _this.rangeList = [];
+            //기본 tab 설정
+            _tab.srcElement.id = "02";
+            _tab.srcElement.name = "지출";
+            _this.changeTab(_tab);
           }
           // console.log(_this.rangeList);
         });
@@ -502,7 +544,7 @@ export default {
     getDateDisabledRange: function() {
       if (this.dataPeriod == "yr") {
         this.disabledDate0 = {
-          to: new Date(moment(this.dt_to).add(-3, "month")),
+          to: new Date(moment(this.dt_to).add(-1, "year")),
           from: new Date(this.dt_to)
         };
         this.disabledDate00 = {
@@ -528,7 +570,9 @@ export default {
         };
       }
     },
+    //** call from SettlementChart.clickChart */
     clickChart: function(rangeDate, typePeriod, el) {
+      this.isRangeList = true;
       if (typePeriod == "yr") {
         //기준일인지 아닌지 확인
         let yearNmon = rangeDate.substring(0, 6);
@@ -547,7 +591,7 @@ export default {
         this.prdToDt = rangeDate;
       }
       this.chartEl = el;
-      console.log(el);
+      // console.log(el);
       this.getRangeList();
     },
     calcPercentage: function(obj) {
@@ -586,5 +630,44 @@ export default {
 }
 .filter-wrap {
   margin-bottom: 0px;
+}
+.btn-arrow {
+  padding-right: 20px;
+  background: url("./../../assets/images/consume/btn_cate.png") no-repeat 95%
+    center/10px;
+  color: #454545;
+  text-align: left;
+  width: 100%;
+  padding-left: 10px;
+}
+input[type="label"] {
+  // url("../images/assets/search_arrow.png") no-repeat 65px 0/9px;
+  background: url("./../../assets/images/assets/search_arrow.png") no-repeat
+    100% top/12px #efeeec;
+  line-height: 38px;
+  height: 40px;
+  text-indent: 10px;
+  width: 100%;
+  font-size: 14px;
+  vertical-align: middle;
+  padding-left: 5px;
+  box-sizing: border-box;
+  // -moz-appearance: none;
+  // -webkit-appearance: none;
+}
+input[type="label"].on {
+  // url("../images/assets/search_arrow.png") no-repeat 65px 0/9px;
+  background: url("./../../assets/images/assets/search_arrow.png") no-repeat
+    100% bottom/12px #efeeec;
+  line-height: 38px;
+  height: 40px;
+  text-indent: 10px;
+  width: 100%;
+  font-size: 14px;
+  vertical-align: middle;
+  padding-left: 5px;
+  box-sizing: border-box;
+  // -moz-appearance: none;
+  // -webkit-appearance: none;
 }
 </style>

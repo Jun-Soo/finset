@@ -43,6 +43,7 @@
 
 <script>
 import Common from "@/assets/js/common.js";
+import moment from "moment";
 
 export default {
   name: "ConsumeIncomeStats",
@@ -188,7 +189,24 @@ export default {
     dataSet: function(jsonObj) {
       let cFrm = this.consumeForm;
 
-      cFrm.append("dt_from", jsonObj.dt_trd);
+      if (jsonObj.dt_trd == null || jsonObj.dt_trd == "") {
+        //챠트 전체데이터
+        cFrm.append("dt_from", jsonObj.dt_from);
+        cFrm.append("dt_to", jsonObj.dt_to);
+      } else {
+        if (jsonObj.chartType == "mon") {
+          jsonObj.dt_from = jsonObj.dt_trd;
+          jsonObj.dt_to = moment(jsonObj.dt_trd, "YYYYMMDD")
+            .add(6, "days")
+            .format("YYYYMMDD");
+          cFrm.append("dt_from", jsonObj.dt_from);
+          cFrm.append("dt_to", jsonObj.dt_to);
+        } else {
+          //챠트 클릭시의 범위 데이터
+          cFrm.append("dt_from", jsonObj.dt_trd);
+          cFrm.append("dt_to", jsonObj.dt_trd);
+        }
+      }
       cFrm.append("chartType", jsonObj.chartType);
       cFrm.append("listType", jsonObj.listType);
       cFrm.append("orderType", this.orderType.value);

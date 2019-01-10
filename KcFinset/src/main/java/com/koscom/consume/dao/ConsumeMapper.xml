@@ -2579,6 +2579,7 @@
 	</select>
 	<select id="getRangeListforSettlement" parameterType="com.koscom.consume.model.ConsumeForm" resultType="com.koscom.consume.model.ConsumeVO">
 		SELECT
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(contents)">
 				<if test="@com.koscom.util.MybatisUtil@contains('yr', chartType)">
 					MM.MM_BASIC AS DT_TRD,
 				</if>
@@ -2588,6 +2589,7 @@
 				<if test="@com.koscom.util.MybatisUtil@contains('week',chartType)">
 					 MM.DT_TRD AS DT_TRD, 
 				</if>
+			</if>
 				<if test="@com.koscom.util.MybatisUtil@contains('category',listType)">
 					MM.CD_CLASS,
 					MM.NM_CLASS,
@@ -2600,7 +2602,7 @@
 				<if test="@com.koscom.util.MybatisUtil@contains('means',listType)">
 					MM.NM_CARD, 
 					MM.NO_CARD,
-					COUNT( MM.NO_CARD ) AS GRADE,
+					COUNT( NVL(MM.NO_CARD,0) ) AS GRADE,
 				</if>
 				SUM( MM.AMT_IN_OUT ) AS AMT_IN_OUT,
 				MM.TYPE_IN_OUT AS TYPE_IN_OUT
@@ -2648,15 +2650,20 @@
 				) MM
 			WHERE
 				1 = 1
+				
 				<if test="@com.koscom.util.MybatisUtil@contains('yr', chartType)">
-					AND  MM.MM_BASIC = #{dt_from, jdbcType = VARCHAR}
+					AND  MM.MM_BASIC <![CDATA[>=]]> #{dt_from, jdbcType = VARCHAR}
+					AND  MM.MM_BASIC <![CDATA[<=]]> #{dt_to, jdbcType = VARCHAR}
 				</if>
 				<if test="@com.koscom.util.MybatisUtil@contains('mon',chartType)">
-					AND  MM.START_WEEK = #{dt_from, jdbcType = VARCHAR}
+					AND  MM.START_WEEK <![CDATA[>=]]> #{dt_from, jdbcType = VARCHAR}
+					AND  MM.START_WEEK <![CDATA[<=]]> #{dt_to, jdbcType = VARCHAR}
 				</if>
 				<if test="@com.koscom.util.MybatisUtil@contains('week',chartType)">
-					 AND  MM.DT_TRD = #{dt_from, jdbcType = VARCHAR}
+					 AND  MM.DT_TRD <![CDATA[>=]]> #{dt_from, jdbcType = VARCHAR}
+					 AND  MM.DT_TRD <![CDATA[<=]]> #{dt_to, jdbcType = VARCHAR}
 				</if>
+				
 			GROUP BY
 				<if test="@com.koscom.util.MybatisUtil@contains('category',listType)">
 					MM.NM_CLASS,
@@ -2669,16 +2676,18 @@
 					MM.NM_CARD, 
 					MM.NO_CARD,
 				</if>
-				MM.TYPE_IN_OUT,
-				<if test="@com.koscom.util.MybatisUtil@contains('yr', chartType)">
-					MM.MM_BASIC
+				<if test="@com.koscom.util.MybatisUtil@isNotEmpty(contents)">
+					<if test="@com.koscom.util.MybatisUtil@contains('yr', chartType)">
+						MM.MM_BASIC,
+					</if>
+					<if test="@com.koscom.util.MybatisUtil@contains('mon',chartType)">
+						MM.START_WEEK,
+					</if>
+					<if test="@com.koscom.util.MybatisUtil@contains('week',chartType)">
+						MM.DT_TRD,
+					</if>
 				</if>
-				<if test="@com.koscom.util.MybatisUtil@contains('mon',chartType)">
-					MM.START_WEEK
-				</if>
-				<if test="@com.koscom.util.MybatisUtil@contains('week',chartType)">
-					MM.DT_TRD
-				</if>
+				MM.TYPE_IN_OUT
 			ORDER BY
 				MM.TYPE_IN_OUT,
 				<if test="@com.koscom.util.MybatisUtil@contains('sum',orderType)">
@@ -2750,13 +2759,16 @@
 				1 = 1
 				AND MM.TYPE_IN_OUT = #{type_in_out, jdbcType = VARCHAR}
 				<if test="@com.koscom.util.MybatisUtil@contains('yr', chartType)">
-					AND  MM.MM_BASIC = #{dt_from, jdbcType = VARCHAR}
+					AND  MM.MM_BASIC <![CDATA[>=]]> #{dt_from, jdbcType = VARCHAR}
+					AND  MM.MM_BASIC <![CDATA[<=]]> #{dt_to, jdbcType = VARCHAR}
 				</if>
 				<if test="@com.koscom.util.MybatisUtil@contains('mon',chartType)">
-					AND  MM.START_WEEK = #{dt_from, jdbcType = VARCHAR}
+					AND  MM.START_WEEK <![CDATA[>=]]> #{dt_from, jdbcType = VARCHAR}
+					AND  MM.START_WEEK <![CDATA[<=]]> #{dt_to, jdbcType = VARCHAR}
 				</if>
 				<if test="@com.koscom.util.MybatisUtil@contains('week',chartType)">
-					 AND  MM.DT_TRD = #{dt_from, jdbcType = VARCHAR}
+					 AND  MM.DT_TRD <![CDATA[>=]]> #{dt_from, jdbcType = VARCHAR}
+					AND  MM.DT_TRD <![CDATA[<=]]> #{dt_to, jdbcType = VARCHAR}
 				</if>
 				<if test="@com.koscom.util.MybatisUtil@contains('category',listType)">
 					AND MM.NM_CLASS = #{contents, jdbcType = VARCHAR}
@@ -2766,7 +2778,14 @@
 				</if>
 				<if test="@com.koscom.util.MybatisUtil@contains('means',listType)">
 					AND MM.NM_CARD= #{contents, jdbcType = VARCHAR}
-					AND MM.NO_CARD= #{no_card, jdbcType = VARCHAR} 
+					<choose>
+	        			<when test="@com.koscom.util.MybatisUtil@contains('null', no_card)">
+	        				AND MM.NO_CARD is null
+	        			</when>
+	        			<otherwise>
+	        				AND MM.NO_CARD= #{no_card, jdbcType = VARCHAR} 
+	        			</otherwise>
+        			</choose>
 				</if>
 			ORDER BY
 				<if test="@com.koscom.util.MybatisUtil@contains('date',orderType)">

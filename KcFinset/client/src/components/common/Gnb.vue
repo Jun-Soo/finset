@@ -31,7 +31,7 @@
           <dt>신용</dt>
           <dd><a @click="clickButton('/credit/main', '')">신용정보</a></dd>
           <dd><a @click="clickButton('/credit/raiseMain', '/credit/main')">신용등급올리기</a></dd>
-          <dd><a @click="clickButton('/credit/smartReport', '/credit/main')">스마트리포트</a></dd>
+          <dd><a @click="clickButton('/credit/smartReport', '/credit/main')">신용통계분석</a></dd>
           <dd><a @click="clickButton('/credit/counselMain', '/credit/main')">신용상담</a></dd>
           <dd><a @click="clickButton('/share/main?cd_share=01', '/credit/main')">신용정보제공</a></dd>
 
@@ -42,9 +42,9 @@
           <dd><a @click="clickButton('/goods/list', '/debt/main')">추천상품</a></dd>
 
           <dt>소비지출</dt>
-          <dd><a @click="clickButton('/consume/main', '')">소비/지출 현황</a></dd>
+          <dd><a @click="clickButton('/consume/main', '')">소비현황</a></dd>
           <dd><a @click="clickButton('/common/monthCal', '/consume/main')">지출캘린더</a></dd>
-          <dd><a @click="clickButton('/consume/payment', '/consume/main')">카드대금 조회</a></dd>
+          <dd><a @click="clickButton('/consume/payment', '/consume/main')">카드대금조회</a></dd>
 
           <dt>자산</dt>
           <dd><a @click="clickButton('/assets/main', '')">자산현황</a></dd>
@@ -86,7 +86,7 @@ export default {
     chkLogout: function() {
       let _this = this;
       _this.$dialogs
-        .confirm("로그아웃 하시겠습니까", Constant.options)
+        .confirm("로그아웃 하시겠습니까?", Constant.options)
         .then(res => {
           if (res.ok) {
             _this.$router.push("/mypage/logout");

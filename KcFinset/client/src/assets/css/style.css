@@ -297,7 +297,7 @@ textarea {
 
 .filter-wrap {
   display: table;
-  margin-bottom: 15px;
+  padding-bottom: 10px;
 }
 
 .filter-wrap .filter {
@@ -513,7 +513,7 @@ table td button {
 }
 
 .board .list li .subject a {
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 500;
   color: #222;
   line-height: 18px;
@@ -522,6 +522,8 @@ table td button {
 .board .view li {
   border-bottom: 1px solid #e5e5e5;
   padding: 15px 0;
+  font-size: 14px;
+  line-height: 20px;
 }
 
 .board .view li .subject {
@@ -1150,7 +1152,7 @@ header .gnb-wrap.on {
   left: 0;
   bottom: 0;
   display: flex;
-  border-top: 2px solid #62c1d0;
+  border-top: 1px solid #213e6a;
   margin-top: 25px;
   width: 100%;
 }
@@ -1164,12 +1166,12 @@ header .gnb-wrap.on {
 }
 
 .modal-confirm .modal-btns a.stroke {
-  color: #62c1d0;
+  color: #213e6a;
   background: #fff;
 }
 
 .modal-confirm .modal-btns a.solid {
-  background: #62c1d0;
+  background: #213e6a;
   color: #fff;
 }
 
@@ -3057,13 +3059,14 @@ p{ width: 100%; height: 2px; border-radius: 2px; position: absolute; background:
 }
 
 .my-main-list .list .item .left p {
-  color: #222;
-  font-weight: 700;
-  font-size: 24px;
-  margin-top: 15px;
-  position: absolute;
-  left: 0;
-  text-align: center;
+  color: #222; 
+  font-weight: 700; 
+  font-size: 24px; 
+  margin-top: 15px; 
+  position: inherit; 
+  left: 0; 
+  padding-left: 20px; 
+  text-align: right; 
   width: 100%;
 }
 
@@ -3132,6 +3135,10 @@ p{ width: 100%; height: 2px; border-radius: 2px; position: absolute; background:
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  position: inherit; 
+  left: 0; 
+  padding-left: 20px; 
+  text-align: right; 
 }
 
 .my-links {
@@ -3543,7 +3550,7 @@ p{ width: 100%; height: 2px; border-radius: 2px; position: absolute; background:
 }
 
 .spend-list .list-wrap {
-  padding-top: 21px;
+  padding-top: 1px;
 }
 
 .spend-list .list-wrap .date {
@@ -7295,11 +7302,12 @@ button.cal {
 }
 
 .board-list .list .left .title a {
-  font-size: 14px;
+  font-size: 15px;
+  font-weight: 500;
   color: #222;
   line-height: 18px;
   display: -webkit-box;
-  white-space: normal;
+  white-space: normal;  
   -webkit-line-clamp: 2;
   word-break: break-all;
   overflow: hidden;

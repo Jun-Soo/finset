@@ -216,10 +216,10 @@ header .gnb-wrap.on { transform: translateX(0); width: 100%; overflow: auto; }
 .modal-confirm { position: absolute; background: #fff; width: 80%; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: border-box; }
 .modal-confirm .debt-modal-body { padding: 25px; padding-bottom: 80px; background: #fff; }
 .modal-confirm .debt-modal-body .text { font-size: 14px; color: #666; line-height: 18px; }
-.modal-confirm .modal-btns { position: absolute; left: 0; bottom: 0; display: flex; border-top: 2px solid #62c1d0; margin-top: 25px; width: 100%; }
+.modal-confirm .modal-btns { position: absolute; left: 0; bottom: 0; display: flex; border-top: 1px solid #213e6a; margin-top: 25px; width: 100%; }
 .modal-confirm .modal-btns a { line-height: 45px; text-align: center; font-size: 15px; font-weight: 700; flex-grow: 1; }
 .modal-confirm .modal-btns a.stroke { color: #62c1d0; background: #fff; }
-.modal-confirm .modal-btns a.solid { background: #62c1d0; color: #fff; }
+.modal-confirm .modal-btns a.solid { background: #213e6a; color: #fff; }
 
 /*   Event   */
 aside { position: fixed; left: 0; bottom: 0; width: 100%; z-index: 3; }
@@ -563,7 +563,7 @@ p{ width: 100%; height: 2px; border-radius: 2px; position: absolute; background:
 .my-main-list .list .item { display: flex; width: 100%; position: relative; }
 .my-main-list .list .item .left { width: 70%; }
 .my-main-list .list .item .left a { color: #9b9489; font-size: 12px; padding-right: 10px; }
-.my-main-list .list .item .left p { color: #222; font-weight: 700; font-size: 24px; margin-top: 15px; position: absolute; left: 0; text-align: center; width: 100%; }
+.my-main-list .list .item .left p { color: #222; font-weight: 700; font-size: 24px; margin-top: 15px; position: inherit; left: 0; padding-left: 20px; text-align: right; width: 100%; }
 .my-main-list .list .item .left p em { font-size: 12px; color: inherit; margin-left: 5px; }
 .my-main-list .list .item .right { text-align: right; width: 30%; }
 .my-main-list .list .item .right a { display: inline-block; width: 20px; height: 20px; border-radius: 100%; text-indent: -9999px; background: url(../images/mypage/ico_nodata.png) no-repeat center; background-size: 20px; }
@@ -650,7 +650,7 @@ p{ width: 100%; height: 2px; border-radius: 2px; position: absolute; background:
 .bar-graph .item .bar p { position: absolute; height: 5px; background: #62c1d0; border-radius: 5px; }
 
 .spend-list { padding-bottom: 95px; }
-.spend-list .list-wrap { padding-top: 21px; }
+.spend-list .list-wrap { padding-top: 1px; }
 .spend-list .list-wrap .date { font-size: 12px; color: #9b9489; line-height: 1; }
 .spend-list .list-wrap .item { display: flex; background: #fff; border-radius: 10px; padding: 10px 20px; margin-top: 10px; }
 .spend-list .list-wrap .item .left { width: 50%; }

@@ -12,7 +12,7 @@
     </div>
 
     <div class="box-list list01 noMG pb90">
-      <div class="align-item mb20">
+      <div class="align-item">
         <em class="mr10">정렬하기</em><button @click="setOrder()" class="btn-onoff" :class="{on: isSetOrder}" :disabled="accountList.length==0"></button>
       </div>
 

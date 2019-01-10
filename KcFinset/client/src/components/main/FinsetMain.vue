@@ -74,19 +74,21 @@
             <a @click="$router.push('/debt/main')">부채</a>
             <p @click="$router.push('/debt/main')">{{formatNumber(debtSumAmt)}}<em>원</em></p>
           </div>
+          <!--
           <div class="right">
-            <a @click="$router.push('/debt/register')"></a>
-            <p></p>
+             <a @click="$router.push('/debt/register')"></a> 
           </div>
+          -->
         </div>
       </div>
       <div v-else class="list no">
         <div class="item">
           <div class="left">
             <a @click="$router.push('/debt/main')">부채</a>
+            <p @click="$router.push('/debt/register')">-<em> 원</em></p>
           </div>
           <div class="right">
-            <a @click="$router.push('/debt/register')">-<em> 원</em></a>
+            <a @click="$router.push('/debt/register')"></a>
           </div>
         </div>
       </div>

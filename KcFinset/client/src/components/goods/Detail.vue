@@ -42,7 +42,7 @@
           <p class="key">유의사항</p>
           <p class="value" v-html="goodsInfo.desc_etc"></p>
         </div>
-        <div class="btn-wrap" v-if="isAffiliates">
+        <div class="btn-wrap" v-if="isAffiliates && enableButton">
           <a class="solid blue" @click="clickSerchInterest()">금리/한도 조회하기</a>
         </div>
       </div>

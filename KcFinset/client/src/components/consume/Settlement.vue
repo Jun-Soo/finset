@@ -12,17 +12,17 @@
         </p>
       </div>
       <div v-if="detailSelection">
-        <div class="date" v-if="dataPeriod=='yr'">
+        <div class="date">
           <p>
-            <datepicker :minimum-view="'month'" v-model="dt_from" ref="datepicker0" :disabledDates="disabledDate0" :format="'yyyy.MM'" :language="ko" class="div-date"></datepicker>
-            <button class="cal" @click="openDatepicker0"></button>
+            <datepicker :minimum-view="dp_minimumView" v-model="dt_from" ref="datepicker1" :disabledDates="disabledDate1" :format="dp_format" :language="ko" class="div-date"></datepicker>
+            <button class="cal" @click="openDatepicker1"></button>
           </p>
           <p>
-            <datepicker :minimum-view="'month'" v-model="dt_to" ref="datepicker00" :disabledDates="disabledDate00" :format="'yyyy.MM'" :language="ko" class="div-date"></datepicker>
-            <button class="cal" @click="openDatepicker00"></button>
+            <datepicker :minimum-view="dp_minimumView" v-model="dt_to" ref="datepicker2" :disabledDates="disabledDate2" :format="dp_format" :language="ko" class="div-date"></datepicker>
+            <button class="cal" @click="openDatepicker2"></button>
           </p>
         </div>
-        <div v-else class="date">
+        <!-- <div v-else class="date">
           <p>
             <datepicker v-model="dt_from" ref="datepicker1" :disabledDates="disabledDate1" :format="formatDateDot" :language="ko" class="div-date"></datepicker>
             <button class="cal" @click="openDatepicker1"></button>
@@ -31,7 +31,7 @@
             <datepicker v-model="dt_to" ref="datepicker2" :disabledDates="disabledDate2" :language="ko" :format="formatDateDot" class="div-date"></datepicker>
             <button class="cal" @click="openDatepicker2"></button>
           </p>
-        </div>
+        </div> -->
         <div v-if="shareList.length>1" class="filter-wrap mt20">
           <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
             <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.viewName}}</label>
@@ -74,7 +74,10 @@
         </multiselect>
       </div>
 
-      <div class="item" v-for="(item, idx) in rangeList" :key="idx">
+      <div class="nodata" v-if="seen2 && rangeList.length==0">
+        조회하신 범위에 수입 또는 지출 내역이 없습니다
+      </div>
+      <div class="item" v-else v-for="(item, idx) in rangeList" :key="idx">
         <a @click="goDetail(item)" class="block">
           <div class="flex">
 
@@ -99,7 +102,7 @@
 
 <script>
 import Graph from "./SettlementChart";
-import TEST from "./SettlementChart_test";
+// import TEST from "./SettlementChart_test";
 import Common from "@/assets/js/common.js";
 import Constant from "@/assets/js/constant.js";
 import datepicker from "vuejs-datepicker";
@@ -112,10 +115,13 @@ export default {
     return {
       ko: ko,
       seen: false,
+      seen2: false,
       Common: Common,
       curTab: "02",
       curTabName: "consume",
       dataPeriod: "yr",
+      dp_minimumView: "month",
+      dp_format: "yyyy.MM",
       shareList: [],
       settingList: [
         { color: "red", id: "chk1" },
@@ -174,10 +180,16 @@ export default {
       let today = new Date();
       this.isRangeList = false;
       if (this.dataPeriod == "yr") {
+        this.dp_minimumView = "month";
+        this.dp_format = "yyyy.MM";
         this.dt_from = new Date(moment(this.dt_to).add(-3, "month"));
       } else if (this.dataPeriod == "mon") {
+        this.dp_minimumView = "day";
+        this.dp_format = "yyyy.MM.dd";
         this.dt_from = new Date(moment(today).add(-1, "month"));
       } else if (this.dataPeriod == "week") {
+        this.dp_minimumView = "day";
+        this.dp_format = "yyyy.MM.dd";
         this.dt_from = new Date(moment(today).add(-7, "days")); //7일전
       }
     },
@@ -299,6 +311,7 @@ export default {
     },
     goDetail: function(idx) {
       let param = {};
+      var _this = this;
       let listType = this.listType.value;
       // if (listType == "category") {
       //   param["nm_class"] = idx.nm_class;
@@ -313,7 +326,22 @@ export default {
       localStorage.setItem("orderType", JSON.stringify(this.orderType));
       localStorage.setItem("shareList", JSON.stringify(this.shareList));
       // localStorage.setItem("chartEl", JSON.stringify(this.chartEl));
-
+      console.log(
+        "prdFromDt : " +
+          _this.prdFromDt +
+          " // dt_from : " +
+          _this.dt_from +
+          "// prdToDt : " +
+          _this.prdToDt +
+          " // dt_to : " +
+          _this.dt_to
+      );
+      console.log(
+        "dt_from: " +
+          Common.formatDateDot(_this.dt_from).replace(/[.]/g, "") +
+          "dt_to: " +
+          Common.formatDateDot(_this.dt_to).replace(/[.]/g, "")
+      );
       this.$router.push({
         name: "consumeIncomeStats", //"/consume/consumeIncomeStats" + param,
         params: { chartEl: this.chartEl },
@@ -321,12 +349,12 @@ export default {
           dt_trd: idx.dt_trd,
           listType: listType,
           type_in_out: idx.type_in_out,
-          chartType: this.dataPeriod,
-          personList: this.filterShareList(),
-          dt_from: Common.formatDateDot(this.dt_from).replace(/[.]/g, ""), //this.dt_from,
-          dt_to: Common.formatDateDot(this.dt_to).replace(/[.]/g, ""),
-          prdFromDt: this.prdFromDt,
-          prdToDt: this.prdToDt,
+          chartType: _this.dataPeriod,
+          personList: _this.filterShareList(),
+          dt_from: moment(_this.dt_from).format("YYYYMMDD"), //this.dt_from,
+          dt_to: moment(_this.dt_to).format("YYYYMMDD"),
+          prdFromDt: _this.prdFromDt,
+          prdToDt: _this.prdToDt,
           nm_class: idx.nm_class,
           contents: idx.contents
         }
@@ -365,7 +393,7 @@ export default {
         if (response.data.result == "00") {
           _this.chartList = response.data.listSettlementConsumeData;
           _this.consumeForm = response.data.consumeForm;
-          _this.seen = true;
+          // _this.seen = true;
           _this.getSum();
 
           if (_this.isRangeList) {
@@ -384,6 +412,16 @@ export default {
               _this.prdFromDt = moment(_this.dt_from).format("YYYYMMDD");
               _this.prdToDt = moment(_this.dt_to).format("YYYYMMDD");
             }
+            console.log(
+              "prdFromDt : " +
+                _this.prdFromDt +
+                " // dt_from : " +
+                _this.dt_from +
+                "// prdToDt : " +
+                _this.prdToDt +
+                " // dt_to : " +
+                _this.dt_to
+            );
             _this.getRangeList();
           }
         } else {
@@ -473,6 +511,7 @@ export default {
         .post("/m/consume/getRangeListforSettlement.json", frm)
         .then(function(response) {
           let totalRangeList = response.data.rangeList;
+          _this.seen2 = false;
           _this.initRangeList();
 
           _this.calcPercentage(totalRangeList);
@@ -516,6 +555,8 @@ export default {
             _tab.srcElement.name = "지출";
             _this.changeTab(_tab);
           }
+          _this.seen = true;
+          _this.seen2 = true;
           // console.log(_this.rangeList);
         });
     },
@@ -525,14 +566,14 @@ export default {
     changeTabByTooltip: function(e) {
       this.changeTab(e);
     },
-    openDatepicker0: function() {
-      this.getDateDisabledRange();
-      this.$refs.datepicker0.showCalendar();
-    },
-    openDatepicker00: function() {
-      this.getDateDisabledRange();
-      this.$refs.datepicker00.showCalendar();
-    },
+    // openDatepicker0: function() {
+    //   this.getDateDisabledRange();
+    //   this.$refs.datepicker0.showCalendar();
+    // },
+    // openDatepicker00: function() {
+    //   this.getDateDisabledRange();
+    //   this.$refs.datepicker00.showCalendar();
+    // },
     openDatepicker1: function() {
       this.getDateDisabledRange();
       this.$refs.datepicker1.showCalendar();
@@ -543,11 +584,11 @@ export default {
     },
     getDateDisabledRange: function() {
       if (this.dataPeriod == "yr") {
-        this.disabledDate0 = {
+        this.disabledDate1 = {
           to: new Date(moment(this.dt_to).add(-1, "year")),
           from: new Date(this.dt_to)
         };
-        this.disabledDate00 = {
+        this.disabledDate2 = {
           from: new Date(this.today) // Disable all dates after specific date
         };
       } else if (this.dataPeriod == "mon") {
@@ -572,6 +613,7 @@ export default {
     },
     //** call from SettlementChart.clickChart */
     clickChart: function(rangeDate, typePeriod, el) {
+      var _this = this;
       this.isRangeList = true;
       if (typePeriod == "yr") {
         //기준일인지 아닌지 확인
@@ -590,6 +632,16 @@ export default {
         this.prdFromDt = rangeDate;
         this.prdToDt = rangeDate;
       }
+      console.log(
+        "prdFromDt : " +
+          _this.prdFromDt +
+          " // dt_from : " +
+          _this.dt_from +
+          "// prdToDt : " +
+          _this.prdToDt +
+          " // dt_to : " +
+          _this.dt_to
+      );
       this.chartEl = el;
       // console.log(el);
       this.getRangeList();

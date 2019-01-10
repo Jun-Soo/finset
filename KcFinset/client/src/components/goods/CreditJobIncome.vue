@@ -61,7 +61,7 @@
             <div>
               <p class="key">연소득</p>
               <p>
-                <money id="amt_year_income" v-model="amt_year_income" :change="changeAmtYearIncome" :disabled="disable_amt_year_income" v-validate="'required'" data-vv-name='연소득' /> 만원</p>
+                <money id="amt_year_income" v-model="amt_year_income" :keydown="changeAmtYearIncome" :disabled="disable_amt_year_income" v-validate="'required'" data-vv-name='연소득' /> 만원</p>
             </div>
             <p class=" warn" v-if="errors.has('연소득')">{{errors.first('연소득')}}</p>
           </li>
@@ -188,8 +188,8 @@ export default {
         $("#amt_year_income").focus();
       }, 100);
     },
-    changeAmtYearIncome: function(option) {
-      if (this.amt_year_income != "") {
+    changeAmtYearIncome: function(income) {
+      if (income != "") {
         this.show_next = true;
       }
     },

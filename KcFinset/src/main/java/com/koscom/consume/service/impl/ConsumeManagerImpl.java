@@ -14,6 +14,7 @@ import com.koscom.consume.dao.ConsumeMapper;
 import com.koscom.consume.model.ConsumeDetailGoalInfoVO;
 import com.koscom.consume.model.ConsumeForm;
 import com.koscom.consume.model.ConsumeGoalInfoVO;
+import com.koscom.consume.model.PaymentDetailVO;
 import com.koscom.consume.model.PersonSetInfoForm;
 import com.koscom.consume.model.ConsumeVO;
 import com.koscom.consume.model.PaymentForm;
@@ -237,15 +238,15 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	}
 	
 	@Override
-	public PaymentVO getPaymentSummary(PaymentForm paymentForm) {
-		logger.debug("getPaymentSummary");
-		return consumeMapper.getPaymentSummary(paymentForm);
-	}
-	
-	@Override
 	public List<PaymentVO> listPayment(PaymentForm paymentForm) {
 		logger.debug("listPayment");
 		return consumeMapper.listPayment(paymentForm);
+	}
+	
+	@Override
+	public List<PaymentDetailVO> listPaymentDetail(PaymentForm paymentForm) {
+		logger.debug("listPaymentDetail");
+		return consumeMapper.listPaymentDetail(paymentForm);
 	}
 
 	@Override

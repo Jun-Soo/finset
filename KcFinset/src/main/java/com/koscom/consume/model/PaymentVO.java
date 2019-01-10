@@ -16,29 +16,34 @@ public class PaymentVO implements Serializable{
 	
 	//리스트 조회
 	private String	no_person;			//회원관리번호
-	private String	nm_person;			//회원명
 	private String	cd_fc;				//금융사코드
 	private String	nm_fc;				//금융사명
+	private String	no_card;			//카드번호
+	private String	nm_card;			//카드명
 	private String	charge_yyyymm;		//청구 년월
+	private String	dt_payment;			//청구일
 	private String	monthly_charge;		//청구액
 	private Date	dt_frt;
 	
 	public PaymentVO() {
-	}
+	}	
 	public PaymentVO(String count_fc, String sum_charge_yyyymm,
-			String no_person, String nm_person, String cd_fc, String nm_fc,
-			String charge_yyyymm, String monthly_charge, Date dt_frt) {
+			String no_person, String cd_fc, String nm_fc, String no_card,
+			String nm_card, String charge_yyyymm, String dt_payment,
+			String monthly_charge, Date dt_frt) {
 		this.count_fc = count_fc;
 		this.sum_charge_yyyymm = sum_charge_yyyymm;
 		this.no_person = no_person;
-		this.nm_person = nm_person;
 		this.cd_fc = cd_fc;
 		this.nm_fc = nm_fc;
+		this.no_card = no_card;
+		this.nm_card = nm_card;
 		this.charge_yyyymm = charge_yyyymm;
+		this.dt_payment = dt_payment;
 		this.monthly_charge = monthly_charge;
 		this.dt_frt = dt_frt;
 	}
-
+	
 	public String getCount_fc() {
 		return count_fc;
 	}
@@ -57,12 +62,6 @@ public class PaymentVO implements Serializable{
 	public void setNo_person(String no_person) {
 		this.no_person = no_person;
 	}
-	public String getNm_person() {
-		return nm_person;
-	}
-	public void setNm_person(String nm_person) {
-		this.nm_person = nm_person;
-	}
 	public String getCd_fc() {
 		return cd_fc;
 	}
@@ -75,11 +74,29 @@ public class PaymentVO implements Serializable{
 	public void setNm_fc(String nm_fc) {
 		this.nm_fc = nm_fc;
 	}
+	public String getNo_card() {
+		return no_card;
+	}
+	public void setNo_card(String no_card) {
+		this.no_card = no_card;
+	}
+	public String getNm_card() {
+		return nm_card;
+	}
+	public void setNm_card(String nm_card) {
+		this.nm_card = nm_card;
+	}
 	public String getCharge_yyyymm() {
 		return charge_yyyymm;
 	}
 	public void setCharge_yyyymm(String charge_yyyymm) {
 		this.charge_yyyymm = charge_yyyymm;
+	}
+	public String getDt_payment() {
+		return dt_payment;
+	}
+	public void setDt_payment(String dt_payment) {
+		this.dt_payment = dt_payment;
 	}
 	public String getMonthly_charge() {
 		return monthly_charge;

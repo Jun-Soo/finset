@@ -231,11 +231,18 @@ public class ConsumeController {
     	logger.debug("listPayment");
     	String no_person = (String) session.getAttribute("no_person");
     	PaymentForm paymentForm = new PaymentForm();
+    	paymentForm.setNo_person(no_person);
     	paymentForm.setNo_person_list(no_person_list);
     	paymentForm.setCharge_yyyymm(charge_yyyymm);
     	model.addAttribute("isScrap", consumeManager.chkScrapCard(no_person));
-    	model.addAttribute("paymentSummary",consumeManager.getPaymentSummary(paymentForm));
     	model.addAttribute("paymentList",consumeManager.listPayment(paymentForm));
+    	return "jsonView";
+    }
+    
+    @RequestMapping("/listPaymentDetail.json")
+    public String listPaymentDetail(Model model, PaymentForm paymentForm) {
+    	logger.debug("listPaymentDetail");
+    	model.addAttribute("listPaymentDetail", consumeManager.listPaymentDetail(paymentForm));
     	return "jsonView";
     }
     

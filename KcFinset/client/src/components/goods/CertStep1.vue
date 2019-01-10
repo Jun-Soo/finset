@@ -113,8 +113,8 @@ export default {
   },
   beforeCreate() {},
   created() {
-    _this.$store.state.title = "약관동의";
-    _this.$store.state.header.type = "sub";
+    this.$store.state.title = "약관동의";
+    this.$store.state.header.type = "sub";
   },
   beforeMount() {},
   mounted() {
@@ -136,14 +136,14 @@ export default {
   methods: {
     allChecked: function() {
       this.chkAll = !this.chkAll;
-      if (_this.chkAll) {
-        _this.chkBox1 = true;
-        _this.chkBox2 = true;
-        _this.chkBox3 = true;
+      if (this.chkAll) {
+        this.chkBox1 = true;
+        this.chkBox2 = true;
+        this.chkBox3 = true;
       } else {
-        _this.chkBox1 = false;
-        _this.chkBox2 = false;
-        _this.chkBox3 = false;
+        this.chkBox1 = false;
+        this.chkBox2 = false;
+        this.chkBox3 = false;
       }
     },
     closePop: function(gubun) {

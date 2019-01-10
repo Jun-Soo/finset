@@ -750,40 +750,95 @@
 		ORDER BY
 			TYPE_IN_OUT ASC
     </select>
-    <select id="getPaymentSummary" parameterType="com.koscom.consume.model.PaymentForm" resultType="com.koscom.consume.model.PaymentVO">
-		SELECT
-			 COUNT(CD_FC) AS COUNT_FC
-			,SUM(MONTHLY_CHARGE) AS SUM_CHARGE_YYYYMM
-		FROM
-			 SCR_CARD_CHARGE_INFO
-		WHERE
-				NO_PERSON IN
-					<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
-						#{each_person}
-					</foreach>
-			AND CHARGE_YYYYMM = #{charge_yyyymm, jdbcType = VARCHAR} 
-    </select>
     <select id="listPayment" parameterType="com.koscom.consume.model.PaymentForm" resultType="com.koscom.consume.model.PaymentVO">
 		SELECT
-			 SCCI.NO_PERSON
-			,PI.NM_PERSON
-			,SCCI.CD_FC
-			,FI.NM_FC
-			,SCCI.CHARGE_YYYYMM
-			,SCCI.MONTHLY_CHARGE
-			,SCCI.DT_FRT
+			 SCCD.NO_PERSON
+			,SCCD.CD_FC
+			,SCCD.NM_FC
+			,SCCD.NO_CARD
+			,SCI.NM_CARD
+			,SCCD.DT_PAYMENT
+			,SCCD.MONTHLY_CHARGE
 		FROM
-			 SCR_CARD_CHARGE_INFO SCCI
-			,PERSON_INFO PI
-			,FC_INFO FI
+			(
+				SELECT
+					 AA.NO_PERSON
+					,AA.CD_FC
+					,BB.NM_FC
+					,AA.NO_CARD
+					,AA.DT_PAYMENT
+					,SUM( TO_NUMBER( AA.AMT_CHARGE )) AS MONTHLY_CHARGE
+				FROM
+					SCR_CARD_CHARGE_DETAIL AA
+				LEFT OUTER JOIN FC_INFO BB ON
+					AA.CD_FC = BB.CD_FC
+				WHERE
+						AA.CHARGE_YYYYMM = #{charge_yyyymm, jdbcType = VARCHAR}
+					AND EXISTS
+						(
+							SELECT
+								1
+							FROM
+								(
+									SELECT
+										 A.OFFER_NO_PERSON AS NO_PERSON
+										,B.NO_CARD_ACC AS NO_CARD
+									FROM
+										 SHARE_INFO A
+										,SHARE_INFO_DETAIL B
+									WHERE
+											A.REQ_NO_PERSON		= #{no_person, jdbcType = VARCHAR}
+										AND A.YN_CONSUME_INFO	= 'Y'
+										AND A.DT_END_OFFER		IS NULL
+										AND A.SHARE_STATUS		= '02'
+										AND A.SEQ_SHARE			= B.SEQ_SHARE
+										AND B.CD_INFO			= '03'
+										AND B.CD_TYPE			= '01'
+								UNION(
+										SELECT
+											 NO_PERSON
+											,NO_CARD
+										FROM
+											SCR_CARD_INFO
+										WHERE
+											NO_PERSON = #{no_person, jdbcType = VARCHAR}
+									)
+								) BB
+							WHERE
+									AA.NO_PERSON = BB.NO_PERSON
+								AND AA.NO_PERSON IN
+									<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
+										#{each_person}
+									</foreach>
+								AND SUBSTR( AA.NO_CARD, INSTR( AA.NO_CARD, '*',- 1 )+ 1 )= SUBSTR( BB.NO_CARD, INSTR( AA.NO_CARD, '*',- 1 )+ 1 )
+						)
+					AND AA.DT_PAYMENT IS NOT NULL
+				GROUP BY
+					 AA.NO_PERSON
+					,AA.CD_FC
+					,BB.NM_FC
+					,AA.DT_PAYMENT
+					,AA.NO_CARD
+			) SCCD
+		LEFT OUTER JOIN SCR_CARD_INFO SCI ON
+			SCCD.NO_PERSON = SCI.NO_PERSON
+			AND SUBSTR( SCCD.NO_CARD, INSTR( SCCD.NO_CARD, '*',- 1 )+ 1 )= SUBSTR( SCI.NO_CARD, INSTR( SCCD.NO_CARD, '*',- 1 )+ 1 )
+    </select>
+    <select id="listPaymentDetail" parameterType="com.koscom.consume.model.PaymentForm" resultType="com.koscom.consume.model.PaymentDetailVO">
+		SELECT
+			 NM_MEMBER
+			,MONTH_INSTALLMENT
+			,AMT_CHARGE
+		FROM
+			SCR_CARD_CHARGE_DETAIL
 		WHERE
-				SCCI.NO_PERSON		IN
-					<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
-						#{each_person}
-					</foreach>
-			AND SCCI.NO_PERSON	= PI.NO_PERSON
-			AND SCCI.CD_FC		= FI.CD_FC 
-			AND CHARGE_YYYYMM	= #{charge_yyyymm	, jdbcType=VARCHAR}
+				NO_PERSON		= #{no_person, jdbcType = VARCHAR}
+			AND NO_CARD			= #{no_card, jdbcType = VARCHAR}
+			AND CHARGE_YYYYMM	= #{charge_yyyymm, jdbcType = VARCHAR}
+			AND CD_FC			= #{cd_fc, jdbcType = VARCHAR}
+			AND AMT_CHARGE		!= '0'
+		ORDER BY
+			DT_USE DESC
     </select>
     <update id="modifyYn_installment" parameterType="com.koscom.consume.model.PersonSetInfoForm">
 		UPDATE

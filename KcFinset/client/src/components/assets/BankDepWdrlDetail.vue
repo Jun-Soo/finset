@@ -198,6 +198,7 @@ export default {
       var _this = this;
       var contents = _this.getCopyContents();
       Constant.options.title = "FINSET";
+      Constant.options.size = "lg";
       this.$dialogs
         .confirm("내역을 복사하시겠습니까?\n\n" + contents, Constant.options)
         .then(res => {
@@ -210,6 +211,7 @@ export default {
               window.Android.copyToClipBoard(contents);
             }
           }
+          Constant.options.size = "sm";
         });
     }
   }

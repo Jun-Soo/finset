@@ -53,7 +53,7 @@
           <li v-if="show_dt_join_view">
             <div>
               <p class="key">입사년월</p>
-              <p><input id="dt_join_view" type="month" laceholder="입사년월" v-model="dt_join_view" @change="changeDtJoinView" v-validate="'required'" data-vv-name='입사년월'></p>
+              <p class="month"><input id="dt_join_view" type="month" placeholder="입사년월" v-model="dt_join_view" @change="changeDtJoinView" v-validate="'required'" data-vv-name='입사년월'></p>
             </div>
             <p class=" warn" v-if="errors.has('입사년월')">{{errors.first('입사년월')}}</p>
           </li>

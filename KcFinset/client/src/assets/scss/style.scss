@@ -515,16 +515,6 @@ aside.search-wrap{
                         color: #222;
                     }
                 }
-                &.goal{
-                    em{
-                        padding-left: 5px;
-                        margin-left: 5px;
-                        border-left: 1px solid $lineColor;
-                        &:first-child{
-                            border: none;
-                        }
-                    }
-                }
                 &:last-child{
                     text-align: right;
                 }
@@ -725,6 +715,19 @@ aside.search-wrap{
             &.col3 div{
                 width: 33.3%
             }
+            .goal{
+                text-align: right;
+                width: 100%;
+                em{
+                    padding-left: 5px;
+                    margin-left: 5px;
+                    border-left: 1px solid $lineColor;
+                    &:first-child{
+                        border: none;
+                    }
+                }
+            }
+            
         }
         .hide-con{
             border-top: 1px solid $lineColor;
@@ -858,8 +861,33 @@ aside.search-wrap{
             }
         }
         .gage{
-            //width: calc(100% - 96px);
-            position: relative;
+            input[type="range"]{
+                width: 100%;
+                -webkit-appearance: none;
+            }
+            input[type="range"]::-webkit-slider-runnable-track {
+                width: 100%;
+                height: 3px;
+                cursor: pointer;
+                background: #dedcd8;
+                border-radius: 5px;
+            }
+            input[type="range"]::-webkit-slider-thumb {
+                box-shadow: 0px 0px 15px #aaa, 0px 0px 1px #666;
+                height: 15px;
+                width: 15px;
+                border-radius: 15px;
+                cursor: pointer;
+                -webkit-appearance: none;
+                margin-top: -7px;
+                border: 4px solid #fff;
+                background: $col4;
+            }
+            input[type="range"]:focus::-webkit-slider-runnable-track {
+                background: $col4;
+                outline: none;
+            }
+            /*position: relative;
             padding: 10px 0;
             p{
                 width: 100%;
@@ -887,7 +915,7 @@ aside.search-wrap{
                     top: -6px;
                     @include box-sizing(border-box);
                 }
-            }
+            }*/
         }
         .number-single{
             text-align: right;
@@ -1370,6 +1398,9 @@ aside.search-wrap{
     }
     &.credit-up{
         background: url("../images/credit/con_top_creditup.png") no-repeat top center / contain;
+    }
+    &.credit-up2{
+        background: url("../images/credit/con_top_creditup2.png") no-repeat top center / contain;
     }
     &.counsel-info{
         background: url("../images/credit/con_top_counsel_info.png") no-repeat top center / contain;
@@ -3785,6 +3816,17 @@ button.cal{
     }
 }
 
+.pop-wrap{
+    .debt-modify{
+        li div p{
+            width: 50%;
+            &.key{
+                width: 50%;
+            }
+        }
+    }
+}
+
 .calc-top{
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -5025,10 +5067,12 @@ button.cal{
         justify-content: center;
         margin: 30px auto 0;
         grid-template-columns: 75px 75px 75px;
+        align-items: center;
         //width: 295px;
         a{
             text-align: center;
             width: 75px;
+            height: 75px;
             line-height: 75px;
             font-size: 30px;
             color: #333;
@@ -5043,14 +5087,14 @@ button.cal{
                 background: url("../images/member/btn_delete.png") no-repeat center top / 75px;
                 &:active{
                      background: url("../images/member/btn_delete.png") no-repeat center bottom $col4;
-                     background-size: 75px;
+                     background-size: 70px;
                 }
             }
             &.finger{
                 background: url("../images/member/btn_fingerprint.png") no-repeat center top / 75px;
                 &:active{
                      background: url("../images/member/btn_fingerprint.png") no-repeat center bottom $col4;
-                     background-size: 75px;
+                     background-size: 70px;
                 }
             }
         }
@@ -6246,7 +6290,100 @@ span.cell.day.selected.today {
 }
 
 
+.finance-check{
+    text-align: center;
+    .wrap{
+        border: 1px solid $lineColor;
+        border-radius: 10px;
+        padding: 20px;
+        padding-bottom: 45px;
+        .top{
+            display: flex;
+            align-items: center;
+            width: 100%;
+            justify-content: space-between;
+            div{
+                &:last-child{
+                    width: 40px;
+                    height: 40px;
+                }
+            }
+            .key{
+                font-size: 14px;
+                font-weight: 700;
+                color: $col2;
+            }
+            .number{
+                font-size: 24px;
+                color: #222;
+                font-weight: 700;
+                margin-top: 10px;
+                text-align: left;
+                em{
+                    font-size: 14px;
+                    color: #222;
+                    margin-top: 10px;
+                }
+            }
+            .sunny{
+                background: url("../images/assets/ico_sunny.png") no-repeat center / 40px;
+            }
+            .cloudy{
+                background: url("../images/assets/ico_cloudy.png") no-repeat center / 40px;
+            }.rainy{
+                background: url("../images/assets/ico_rainy.png") no-repeat center / 40px;
+            }
+        }
+        .bar{
+            position: relative;
+            height: 3px;
+            background: #ecebe8;
+            border-radius: 5px;
+            margin-top: 10px;
+            p{
+                position: absolute;
+                height: 3px;
+                background: #62c1d0;
+                border-radius: 5px;
+            }
+        }
+        .peaker{
+            position: relative;
+            p{
+                position: absolute;
+                top: 0;
+                left: 43%;
+                padding-top: 10px;
+                &.lt{
+                    background: url("../images/assets/finance_arrow.png") no-repeat 0 0 / 7px;
+                    padding-left: 10px;
+                }
+                &.rt{
+                    background: url("../images/assets/finance_arrow.png") no-repeat 100% 0 / 7px;
+                    padding-right: 10px;
+                }
+            }
+        }
+    }
+    .finance{
+        font-size: 14px;
+        font-weight: 700;
+        color: $col2;
+        padding-right: 15px;
+        background: url("../images/common/portfolio_arrow.png") no-repeat right center / 7px !important;
+        margin-top: 15px;
+        display: inline-block !important;
+        width: auto !important;
+        margin-bottom: 20px;
+    }
+    
+}
 
+h2{
+    font-size: 14px;
+    color: #222;
+    font-weight: 700;
+}
 
 
 

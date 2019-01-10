@@ -47,6 +47,12 @@ export default {
       type: Function,
       required: false,
       default: function() {}
+    },
+    // key를 누를 때마다 실행되는 이벤트
+    keydown: {
+      type: Function,
+      required: false,
+      default: function() {}
     }
   },
   watch: {
@@ -54,6 +60,11 @@ export default {
       this.formatValue(val);
       if (this.change) {
         this.change();
+      }
+    },
+    formatedVal: function(val) {
+      if (this.keydown) {
+        this.keydown(val.replace(/[^0-9]/g, ""));
       }
     }
   },

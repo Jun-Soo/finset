@@ -446,8 +446,7 @@ export default {
       viewHeight = html.clientHeight
       scrollY = Constant._el.scrollTop
     }
-    var scrollBottom = docHeight - viewHeight - scrollY
-
+    var scrollBottom = parseInt(docHeight - viewHeight - scrollY)
     if (scrollBottom <= 0) {
       Constant._callback(Constant._this.removeScroll)
     }

@@ -3059,14 +3059,14 @@ p{ width: 100%; height: 2px; border-radius: 2px; position: absolute; background:
 }
 
 .my-main-list .list .item .left p {
-  color: #222; 
-  font-weight: 700; 
-  font-size: 24px; 
-  margin-top: 15px; 
-  position: inherit; 
-  left: 0; 
-  padding-left: 20px; 
-  text-align: right; 
+  color: #222;
+  font-weight: 700;
+  font-size: 24px;
+  margin-top: 15px;
+  position: inherit;
+  left: 0;
+  padding-left: 20px;
+  text-align: right;
   width: 100%;
 }
 
@@ -3135,9 +3135,9 @@ p{ width: 100%; height: 2px; border-radius: 2px; position: absolute; background:
   -moz-box-sizing: border-box;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
-  position: inherit; 
-  left: 0; 
-  text-align: center; 
+  position: inherit;
+  left: 0;
+  text-align: center;
 }
 
 .my-links {
@@ -7306,7 +7306,7 @@ button.cal {
   color: #222;
   line-height: 18px;
   display: -webkit-box;
-  white-space: normal;  
+  white-space: normal;
   -webkit-line-clamp: 2;
   word-break: break-all;
   overflow: hidden;
@@ -7445,11 +7445,11 @@ button.cal {
   background: url("../images/mypage/my_ico5.png") no-repeat 50% 30px/24px;
 }
 
-.mypage-links a:nth-child(6) {
+/* .mypage-links a:nth-child(6) {
   background: url("../images/mypage/my_ico6.png") no-repeat 50% 30px/24px;
-}
+} */
 
-.mypage-links a:nth-child(7) {
+.mypage-links a:nth-child(6) {
   background: url("../images/mypage/my_ico7.png") no-repeat 50% 30px/24px;
 }
 

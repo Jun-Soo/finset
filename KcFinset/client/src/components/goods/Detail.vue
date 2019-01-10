@@ -101,7 +101,7 @@
           <p class="key">유의사항</p>
           <p class="value" v-html="goodsInfo.desc_etc"></p>
         </div>
-        <div class="btn-wrap" v-if="isAffiliates">
+        <div class="btn-wrap" v-if="isAffiliates && enableButton">
           <a class="solid blue" @click="clickSerchInterest()">금리/한도 조회하기</a>
         </div>
       </div>
@@ -116,6 +116,7 @@ export default {
   data() {
     return {
       seen: false,
+      enableButton: false,
       isAffiliates: this.$route.query.isAffiliates,
       type: this.$route.query.type,
       cd_fc: this.$route.query.cd_fc,
@@ -162,6 +163,9 @@ export default {
           _this.goodsInfo.icon =
             "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + _this.goodsInfo.cd_fc;
           _this.keyword_list = _this.goodsInfo.keyword_list.split(",");
+          if (_this.isAffiliates) {
+            _this.enableButton = response.data.enableButton;
+          }
           _this.seen = true;
         }
       });

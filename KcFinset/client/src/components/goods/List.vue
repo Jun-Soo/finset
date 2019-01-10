@@ -7,7 +7,8 @@
             <a @click="loanGoodsDetail(goods)">
               <div class="top">
                 <p class="symbol"><img :src="goods.icon" alt="" />{{goods.nm_fc}}</p>
-                <p class="text blue">{{goods.nm_goods}} <button class="btn-star" :class="{'on':goods.isChecked}" @click="loanGoodsChoice(goods, $event)"></button></p>
+                <!-- <p class="text blue">{{goods.nm_goods}} <button class="btn-star" :class="{'on':goods.isChecked}" @click="loanGoodsChoice(goods, $event)"></button></p> -->
+                <p class="text blue">{{goods.nm_goods}}</p>
               </div>
               <div class="goods-benefit">
                 <div>{{goods.rto_interest_from}}~{{goods.rto_interest_to}}<em> %</em></div>

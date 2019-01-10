@@ -18,7 +18,7 @@
       <a @click="$router.push('/scrap/ctrlFcLink')">연동관리</a>
       <!-- <a @click="$router.push('/credit/counselMain')">신용상담</a> -->
       <a @click="clickButton('/credit/counselMain', '/credit/main')">신용상담</a>
-      <a @click="$router.push('/mypage/favGoods')">관심상품</a>
+      <!-- <a @click="$router.push('/mypage/favGoods')">관심상품</a> -->
       <a @click="$router.push('/mypage/rstlInqGoods')">상품조회결과</a>
       <!-- <a @click="$router.push('/mypage/state')">상품신청현황</a> -->
     </div>

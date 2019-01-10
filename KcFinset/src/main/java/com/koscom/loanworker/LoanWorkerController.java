@@ -27,6 +27,8 @@ import com.koscom.goodsbank.service.GoodsbankManager;
 import com.koscom.kisline.model.KisCompanyOutlineVO;
 import com.koscom.kisline.service.KislineManager;
 import com.koscom.loan.service.LoanManager;
+import com.koscom.person.model.PersonVO;
+import com.koscom.person.service.PersonManager;
 import com.koscom.util.AuthUtil;
 import com.koscom.util.Constant;
 import com.koscom.util.Pagination;
@@ -57,6 +59,9 @@ public class LoanWorkerController implements Constant{
 	
 	@Autowired
 	KislineManager kislineManager;
+	
+	@Autowired
+	PersonManager personManager;
 	
 	/** VUE
 	 * 상품리스트 (제휴)
@@ -122,10 +127,16 @@ public class LoanWorkerController implements Constant{
 	@RequestMapping("/getLoanAffiliatesDetail.json")
 	public String getLoanAffiliatesDetail(Model model, HttpServletRequest request, GoodsForm goodsForm, HttpSession session) {
      	String no_person = (String) session.getAttribute("no_person");
+     	Boolean enable_button = false;
 		goodsForm.setNo_person(no_person);
 		GoodsVO goodsInfo = new GoodsVO();
 		GoodsVO goodsVO = new GoodsVO();
-
+		
+		//테스트 인원에 대해서만 금리 조회 버튼 활성화
+		PersonVO personVO = personManager.getPersonInfo(no_person);
+		if("01083532858".equals(personVO.getHp()) || "01026882453".equals(personVO.getHp()) || "01086385150".equals(personVO.getHp()))	{
+			enable_button = true;
+		}
 		if(goodsForm.getCd_fc() != null && goodsForm.getCd_goods() != null){
 			goodsVO.setCd_fc(goodsForm.getCd_fc());
 			goodsVO.setCd_goods(goodsForm.getCd_goods());
@@ -134,6 +145,7 @@ public class LoanWorkerController implements Constant{
 			logger.debug("goodsInfo.toString() : "+goodsInfo.toString());
 			model.addAttribute("goodsInfo", goodsInfo);
 		}
+		model.addAttribute("enableButton", enable_button);
 		return "jsonView";
 	}
 

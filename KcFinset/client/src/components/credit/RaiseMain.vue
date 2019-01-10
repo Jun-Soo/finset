@@ -5,8 +5,8 @@
         <p><em>몇번의 클릭으로</em><br><em class="red">신용점수를 UP하세요</em></p>
         <a @click="openPop()">제도 설명 보기</a>
       </div>
-      <div class="con-top credit-up" v-else>
-        <p><em class="red">죄송합니다.</em><br><em>현재 연체, 채무불이행 이력이</em><br><em>존재하여 신청이 불가합니다.</em></p>
+      <div class="con-top credit-up2" v-else>
+        <p>죄송합니다<br><em>현재 연체, 채무불이행 이력이<br>존재하여 신청이 불가합니다.</em></p>
         <a @click="openPop()">제도 설명 보기</a>
       </div>
 

@@ -672,15 +672,28 @@ public class PersonManagerImpl implements PersonManager {
 		PersonAgreeHistVO agree = new PersonAgreeHistVO();
 		agree.setNo_person(no_person);
 		agree.setId_frt(no_person);
-		agree.setDt_agree(DateUtil.getCurrentDateTime());
-		agree.setCd_agree("01");
+		//DB Date형식에 String을 넣어서 DB 에러 -> 쿼리에서 SYSDATE로 변경
+		//agree.setDt_agree(DateUtil.getCurrentDateTime());
+		agree.setCd_agree("01"); //01 서비스 이용동의(금투사포함), 02 휴대전화 본인인증 동의, 03 마케팅 정보 수신동의, 	04 금투사 정보제공동의 전자서명, 05 연계상품조회 관련
 		result += personMapper.createPersonAgreeHist(agree);
-		agree.setCd_agree("02");
+		agree.setCd_agree("02"); //01 서비스 이용동의(금투사포함), 02 휴대전화 본인인증 동의, 03 마케팅 정보 수신동의, 	04 금투사 정보제공동의 전자서명, 05 연계상품조회 관련
 		result += personMapper.createPersonAgreeHist(agree);
 		if("Y".equals(eventPush)) {
-			agree.setCd_agree("03");
+			agree.setCd_agree("03"); //01 서비스 이용동의(금투사포함), 02 휴대전화 본인인증 동의, 03 마케팅 정보 수신동의, 	04 금투사 정보제공동의 전자서명, 05 연계상품조회 관련
 			result += personMapper.createPersonAgreeHist(agree);
 		}
+		return result;
+	}
+
+	@Override
+	public int createPersonAgreeHistGoods(String no_person) {
+		int result = 0;
+		PersonAgreeHistVO agree = new PersonAgreeHistVO();
+		agree.setNo_person(no_person);
+		agree.setId_frt(no_person);
+		agree.setCd_agree("05"); //01 서비스 이용동의(금투사포함), 02 휴대전화 본인인증 동의, 03 마케팅 정보 수신동의, 	04 금투사 정보제공동의 전자서명, 05 연계상품조회 관련
+		result = personMapper.createPersonAgreeHist(agree);
+		
 		return result;
 	}
 }

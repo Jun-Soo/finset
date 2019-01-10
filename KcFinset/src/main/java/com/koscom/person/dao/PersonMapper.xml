@@ -18,7 +18,7 @@
                 , DT_FRT
             ) VALUES (
                   #{no_person, 			jdbcType=VARCHAR}
-                , #{dt_agree, 			jdbcType=VARCHAR}
+                , SYSDATE
                 , #{cd_agree, 			jdbcType=VARCHAR}
                 , #{terms_content, 		jdbcType=VARCHAR}
                 , #{terms_version, 		jdbcType=VARCHAR}

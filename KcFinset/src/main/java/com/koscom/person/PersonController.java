@@ -652,4 +652,25 @@ public class PersonController {
 
 		return "jsonView";
 	}
+	
+	/**
+	 * VUE
+     * 상품조회 약관 동의 
+     * @param request
+     * @param session
+     * @param model
+     * @return String
+     * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/createPersonAgreeHistGoods.json")
+	public String createPersonAgreeHistGoods(HttpServletRequest request,HttpSession session,Model model, String no_person) throws FinsetException, IOException{
+		
+		int result = 0;
+		
+		result = personManager.createPersonAgreeHistGoods(no_person);
+		
+		model.addAttribute("result", result);
+
+		return "jsonView";
+	}
 }

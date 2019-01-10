@@ -365,4 +365,11 @@ public interface PersonManager {
 	 * @return
 	 */
 	int createPersonAgreeHist(String no_person, String eventPush);
+	
+	/**
+	 * 약관 동의 이력 저장(상품조회)
+	 * @param String
+	 * @return
+	 */
+	int createPersonAgreeHistGoods(String no_person);
 }

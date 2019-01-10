@@ -117,9 +117,10 @@ export default {
           console.log("Page : " + this.reloadPageList[i]);
           if (this.$router.currentRoute.path == this.reloadPageList[i]) {
             console.log("reload page ~ !!!!!!");
-            _this.$toast.center(
-              "스크래핑 완료로 인하여<br/>정보를 갱신하겠습니다."
-            );
+            // _this.$toast.center(
+            //   "스크래핑 완료로 인하여<br/>정보를 갱신하겠습니다."
+            // );
+            _this.$toast.center("데이터 업데이트를 완료하였습니다.");
             // 화면 갱신 처리
             setTimeout(function() {
               // proxy화면 이동 후 현재화면으로 이동 (화면 갱신하면 Store가 갱신되는 현상으로 인한 임시 방편)
@@ -351,6 +352,10 @@ export default {
     resultHasCertPassword: function(isExist) {
       console.log("resultHasCertPassword : " + isExist);
       if (isExist == "true") {
+        //IOS의 경우 상단스크래핑 상태 배너가 없어서 토스트로 대체
+        if (Constant.userAgent == "iOS") {
+          this.$toast.center("데이터 업데이트를 시작하겠습니다.");
+        }
         this.getAutoScrapInfo();
         this.autoScrapCallback(true);
       } else {

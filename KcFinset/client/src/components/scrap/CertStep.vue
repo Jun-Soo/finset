@@ -201,7 +201,7 @@ export default {
      * Native Call function
      ***/
     resultCheckFingerPrint: function(result) {
-      console.log(result);
+      //console.log(result);
       if (result == true || result == 1) {
         this.chkFingerPrint = "Y";
       } else {

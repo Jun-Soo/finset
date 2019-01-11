@@ -201,7 +201,7 @@ export default {
     },
     resultUpdateScrapInfo: function(cd_err, msg_err) {
       // 금융정보제공동의서 확인여부 체크 필요
-      console.log("resultUpdateScrapInfo called");
+      //console.log("resultUpdateScrapInfo called");
       var _this = this;
       var isScrap = true;
       if (cd_err == "00000000") {

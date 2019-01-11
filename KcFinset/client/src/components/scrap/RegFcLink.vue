@@ -79,11 +79,11 @@ export default {
   destroyed() {},
   methods: {
     isLinked: function(yn_linked) {
-      console.log("isLinked : " + yn_linked);
+      //console.log("isLinked : " + yn_linked);
       return yn_linked == "Y";
     },
     changeLinked: function(cd_fc) {
-      console.log("changeLinked : " + cd_fc);
+      //console.log("changeLinked : " + cd_fc);
       for (var i = 0; i < this.linkedFcInfoList.length; i++) {
         if (this.linkedFcInfoList[i].cd_fc == cd_fc) {
           if (this.linkedFcInfoList[i].yn_link == "N") {

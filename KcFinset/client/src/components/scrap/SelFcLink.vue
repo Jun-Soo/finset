@@ -99,9 +99,9 @@ export default {
           }
         })
         .then(function(response) {
-          console.log("response.data.email : " + response.data.email);
+          //console.log("response.data.email : " + response.data.email);
           _this.emailFromDB = response.data.email || "";
-          console.log("_this.emailFromDB : " + _this.emailFromDB);
+          //console.log("_this.emailFromDB : " + _this.emailFromDB);
           if (_this.emailFromDB != "") {
             _this.emailtext = _this.emailFromDB;
           }
@@ -138,7 +138,7 @@ export default {
     },
     clickCheckCert: function(event) {
       event.stopPropagation();
-      console.log(event);
+      //console.log(event);
       var _this = this;
       this.$validator.validateAll().then(res => {
         if (res) {
@@ -196,14 +196,14 @@ export default {
     updateEmail: function() {
       var _this = this;
       var formData = new FormData();
-      console.log("updateEmail call");
+      //console.log("updateEmail call");
       formData.append("no_person", this.$store.state.user.noPerson);
       formData.append("email", this.emailtext);
       this.$http
         .post("/m/person/modifyPersonEmail.json", formData)
         .then(function(response) {
           var result = response.data.result;
-          console.log("updateEmail result : " + result);
+          //console.log("updateEmail result : " + result);
         });
     },
     //금융정보제공동의서 조회
@@ -252,7 +252,7 @@ export default {
       this.$http
         .post("/m/scrap/sendTermsContent.json", formData)
         .then(function(response) {
-          console.log(response.data);
+          //console.log(response.data);
           _this.nextStep();
         })
         .catch(e => {

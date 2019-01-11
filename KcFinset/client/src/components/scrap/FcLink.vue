@@ -60,7 +60,7 @@ export default {
           }
         })
         .then(response => {
-          console.log("login result");
+          //console.log("login result");
           if (response.data.result == "10") {
             //정상
             localStorage.removeItem("tempPwd");
@@ -101,7 +101,7 @@ export default {
      * Native Call function
      ***/
     resultCheckFingerPrint: function(result) {
-      console.log(result);
+      //console.log(result);
       if (result == true || result == 1) {
         this.chkFingerPrint = "Y";
       } else {
@@ -110,7 +110,7 @@ export default {
     },
     //공인인증서 유무 결과 (모바일에서 호출)
     resultCheckCert: function(isCert) {
-      console.log("isCert : " + isCert);
+      //console.log("isCert : " + isCert);
       var _this = this;
       if (isCert == "true") {
         // 공인인증서가 있을 경우

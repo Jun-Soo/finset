@@ -158,9 +158,9 @@ export default {
     this.listFcLinkInfo();
     this.$store.state.header.backPath = "/main";
 
-    console.log("mount isScrap : " + this.isScrap);
+    //console.log("mount isScrap : " + this.isScrap);
     if (this.isScrap) {
-      console.log("mount autoScrap Start");
+      //console.log("mount autoScrap Start");
       this.$parent.$parent.isFcScrapDone = false;
       this.$parent.$parent.isStScrapDone = false;
       this.$parent.$parent.isScrapSuccess = true;
@@ -216,7 +216,7 @@ export default {
       this.closeAllMenu();
     },
     clickClear: function() {
-      console.log("clickClear");
+      //console.log("clickClear");
       this.closeAllMenu();
     },
     clickMenu: function(cd_fc, event) {
@@ -308,7 +308,7 @@ export default {
       event.stopPropagation();
       var _this = this;
       var formData = new FormData();
-      console.log(this.$store.state);
+      //console.log(this.$store.state);
       formData.append("no_person", this.$store.state.user.noPerson);
       formData.append("cd_fc", bank.cd_fc);
       this.$http
@@ -455,11 +455,11 @@ export default {
       }
       var _this = this;
       this.isSingle = isSingle;
-      console.log("userAgent::" + Constant.userAgent);
+      //console.log("userAgent::" + Constant.userAgent);
       if (Constant.userAgent == "iOS") {
         //공인인증서 유무 체크 결과 콜백 이벤트
         Jockey.on("resultCheckCert", function(param) {
-          console.log("Jockey.on  : resultCheckCert");
+          //console.log("Jockey.on  : resultCheckCert");
           var iscert = "false";
           if (param.isCert == 1) iscert = "true";
           _this.resultCheckCert(iscert);
@@ -475,7 +475,7 @@ export default {
       var _this = this;
       // 공인인증서가 있을 경우
       if (isCert == "true") {
-        console.log("this.isSingle  : " + this.isSingle);
+        //console.log("this.isSingle  : " + this.isSingle);
         // 한개 금융사의 경우
         if (this.isSingle) {
           if (Constant.userAgent == "iOS") {
@@ -498,7 +498,7 @@ export default {
         else {
           if (Constant.userAgent == "iOS") {
             Jockey.on("resultCheckPasswordCert", function(param) {
-              console.log("param.dn : " + param.dn + " param.cn : " + param.cn);
+              //console.log("param.dn : " + param.dn + " param.cn : " + param.cn);
               _this.resultCheckPasswordCert(param.dn, param.cn);
               Jockey.off("resultCheckPasswordCert");
             });
@@ -529,7 +529,7 @@ export default {
     },
     resultCheckPasswordCertForUpdate: function(dn, cn) {
       // 증권인 경우 금융정보제공동의서 화면으로 이동
-      console.log("this.agency  : " + this.agency);
+      //console.log("this.agency  : " + this.agency);
       if (this.agency == "stock") {
         this.$router.push({
           name: "scrapSelFcLink",
@@ -564,7 +564,7 @@ export default {
       if (cd_err == "00000000") {
         this.$toast.center("금융사 연동이 완료되었습니다.");
         setTimeout(function() {
-          console.log("resultUpdateScrapInfo autoScrap Start");
+          //console.log("resultUpdateScrapInfo autoScrap Start");
           _this.$parent.$parent.isFcScrapDone = false;
           _this.$parent.$parent.isStScrapDone = false;
           _this.$parent.$parent.isScrapSuccess = true;

@@ -198,7 +198,7 @@ export default {
             })
             .then(response => {
               var result = response.data;
-              console.log(result);
+              //console.log(result);
               if (result.result == "00") {
                 _this.smsCertNo = "";
                 this.$toast.center(result.message);
@@ -246,7 +246,7 @@ export default {
         .post("/m/login/kcmCertify.json", formData)
         .then(response => {
           var result = response.data;
-          console.log(result);
+          //console.log(result);
           if (result.result == "00") {
             _this.kcb_ci = result.kcb_ci;
             _this.kcb_di = result.kcb_di;
@@ -318,15 +318,15 @@ export default {
       var _this = this;
       var formData = new FormData();
       formData.append("telComCd", _this.telComCd.value);
-      console.log("modifyPersonCdTel start");
+      //console.log("modifyPersonCdTel start");
       this.$http
         .post("/m/person/modifyPersonCdTel.json", formData)
         .then(response => {
           var result = response.data;
           if (result.result == "00") {
-            console.log("modifyPersonCdTel success");
+            //console.log("modifyPersonCdTel success");
           } else {
-            console.log("modifyPersonCdTel failed");
+            //console.log("modifyPersonCdTel failed");
           }
         });
       // .catch(e => {
@@ -377,8 +377,8 @@ export default {
       var _this = this;
       $("#smsCertNo").removeAttr("readOnly");
       _this.time = _this.minutes * 60 + _this.secondes;
-      console.log(_this.time);
-      console.log(this.timerObj);
+      //console.log(_this.time);
+      //console.log(this.timerObj);
       if (!this.timerObj) {
         this.timerObj = setInterval(() => {
           if (_this.time > 0) {

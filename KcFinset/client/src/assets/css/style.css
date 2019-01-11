@@ -6383,14 +6383,14 @@ button.cal {
 .goal-list-wrap .sum,
 .goal-list-wrap dd {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 3fr 2fr;
   background: #fff;
 }
 
 .goal-list-wrap .sum input[type="text"],
 .goal-list-wrap dd input[type="text"] {
   line-height: 33px;
-  width: 90%;
+  width: 80%;
   text-align: right;
   padding: 0 10px;
 }

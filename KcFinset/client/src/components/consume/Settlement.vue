@@ -348,7 +348,6 @@ export default {
         if (response.data.result == "00") {
           _this.chartList = response.data.listSettlementConsumeData;
           _this.consumeForm = response.data.consumeForm;
-          // _this.seen = true;
           _this.getSum();
 
           if (_this.isRangeList) {

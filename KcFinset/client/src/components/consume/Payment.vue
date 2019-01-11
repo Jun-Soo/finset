@@ -31,25 +31,26 @@
       <div v-if="(paymentList||'')==''">
         <div class="nodata">등록 내역이 없습니다</div>
       </div>
-      <!-- <div v-else v-for="(payment, index) in paymentList" :key="index" @click="goPaymentDetail(payment.no_person, payment.cd_fc, payment.no_card)" class="item"> -->
       <div v-else v-for="(payment, index) in paymentList" :key="index" @click="goPaymentDetail(payment)" class="item">
         <div class="top">
           <p class="symbol"><img :src="payment.imgSrc" alt="" />{{payment.nm_fc}}</p>
-          <!-- <p class="symbol"><img :src="payment.imgSrc" alt="" />{{payment.nm_card}}</p> -->
           <p class="text" v-if="shareList.length != 1">
             <span class="circle" :class="settingList[shareList.findIndex(person => person.no_person === payment.no_person)].color">{{payment.nm_person}}</span>
           </p>
         </div>
         <div class="number-wrap">
           <div class="left">
+            {{formatNmCard(payment.nm_card)}}
+          </div>
+          <div class="right">
             <p class="key">결제금액</p>
-            <p class="number">{{Common.formatNumber(payment.monthly_charge)}}<em>원</em></p>
+            <p class="number" style="text-align:right">{{Common.formatNumber(payment.monthly_charge)}}<em>원</em></p>
           </div>
         </div>
         <div class="text-wrap">
           <div class="left">
             <p class="key">카드번호</p>
-            <p class="value">{{payment.no_card}}</p>
+            <p class="value">{{formatNoCard(payment.no_card)}}</p>
           </div>
           <div class="right">
             <p class="key">결제일</p>
@@ -175,6 +176,32 @@ export default {
         return a.sortOrder - b.sortOrder;
       });
       return list;
+    },
+    // 카드번호 포맷
+    formatNoCard: function(no_card) {
+      if ((no_card || "") == "" || no_card.length != 16) {
+        return no_card;
+      } else {
+        return (
+          no_card.substring(0, 4) +
+          "-" +
+          no_card.substring(4, 8) +
+          "-" +
+          no_card.substring(8, 12) +
+          "-" +
+          no_card.substring(12, 16)
+        );
+      }
+    },
+    // 카드명 길이 자르기
+    formatNmCard: function(nm_card) {
+      if ((nm_card || "") == "") {
+        return nm_card;
+      } else if (nm_card.length < 25) {
+        return nm_card;
+      } else {
+        return (nm_card + "").substring(0, 25) + "...";
+      }
     },
     // ---------------------//데이터 포멧---------------------
     // ---------------------화면 컨트롤---------------------

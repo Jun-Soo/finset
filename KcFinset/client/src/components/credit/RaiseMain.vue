@@ -73,7 +73,9 @@ export default {
     this.getCreditRaiseInfo();
   },
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    this.$store.state.header.backPath = "/main";
+  },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},

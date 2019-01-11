@@ -137,7 +137,6 @@ export default {
             _dataList2.push("");
           }
         } //for
-        // }
       } else if (this.dataPeriod == "mon") {
         //월 클릭시
         // console.log(moment(moment(this.dt_from).weekday(1)).diff(moment(this.dt_to).weekday(1), "days"));
@@ -173,7 +172,10 @@ export default {
         } //for
       } else {
         //주 클릭시
-        var range = Math.abs(moment(this.dt_to).diff(this.dt_from, "days")) + 2; //기간
+        var range =
+          Math.abs(
+            Math.round(moment(this.dt_to).diff(this.dt_from, "days", true))
+          ) + 1; //기간
         for (var k = 0; k < range; k++) {
           this.rangeDate.push(
             moment(this.dt_from)

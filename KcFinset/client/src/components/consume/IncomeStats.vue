@@ -87,8 +87,7 @@ export default {
   },
   created() {
     var qData = this.$route.query;
-    var data = this.$route.query;
-    this.dataSet(data);
+    this.dataSet(qData);
     var bPath = {
       name: "consumeSettlement",
       params: this.$route.params,
@@ -97,6 +96,7 @@ export default {
         date_from: qData.date_from, //this.dt_from,
         date_to: qData.date_to,
         dt_trd: qData.dt_trd,
+        isRangeList: qData.isRangeList,
         listType: qData.listType,
         type_in_out: qData.type_in_out,
         personList: qData.personList,

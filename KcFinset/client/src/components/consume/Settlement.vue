@@ -22,7 +22,7 @@
             <button @click="openDatepicker2"></button>
           </p>
         </div>
-        <div v-if="shareList.length>1" class="filter-wrap mt20">
+        <div v-if="shareList.length>1" class="filter-wrap mt10">
           <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
             <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.viewName}}</label>
           </div>
@@ -56,7 +56,7 @@
       </div>
     </div>
     <div class="in-box-list list02 noMG">
-      <div class="select pb20">
+      <div class="select pb10">
         <multiselect class="multiselect-basic" v-model="listType" label="text" :title="'종류별'" :preselect-first="true" :options="type1">
         </multiselect>
         <p></p>
@@ -209,7 +209,6 @@ export default {
     this.$store.state.header.backPath = "/consume/main";
   },
   created() {
-    console.log(this.$route.query);
     if (Object.keys(this.$route.query).length != 0) {
       this.chartEl = this.$route.params.chartEl;
       //dt_to, dt_from 보다 dataPeriod를 먼저 setting 해야함 (dataPeriod =>Yr로 바뀔때마다 dt_from을 3개월전으로 바꿈)
@@ -221,6 +220,7 @@ export default {
       this.type_in_out = this.$route.query.type_in_out;
       this.prdFromDt = this.$route.query.prdFromDt;
       this.prdToDt = this.$route.query.prdToDt;
+      this.isRangeList = this.$route.query.isRangeList;
 
       this.listType = JSON.parse(localStorage.getItem("listType"));
       this.orderType = JSON.parse(localStorage.getItem("orderType"));
@@ -253,22 +253,6 @@ export default {
       if (this.dataPeriod == "yr") {
         this.dt_from = new Date(moment(this.dt_to).add(-3, "month"));
       } else if (this.dataPeriod == "mon") {
-        /* 기준일 base month
-        let yrmon = null;
-        if (Number(dt_basic) < today.getDate()) {
-          yrmon = moment().format("YYYYMM");
-        } else {
-          //(dt_basic >= today.getDate())
-          yrmon = moment()
-            .add(-1, "month")
-            .format("YYYYMM");
-        }
-        if (dt_basic == null || dt_basic == "") {
-          //기준일이 null일 경우
-          dt_basic = "01";
-        }
-        this.dt_from = new Date(moment(yrmon + dt_basic, "YYYYMMDD"));
-*/
       } else if (this.dataPeriod == "week") {
         // console.log(this.$moment(today).isoWeekday(7));
         this.dt_from = new Date(moment(today).add(-7, "days")); //7일전
@@ -312,22 +296,6 @@ export default {
       localStorage.setItem("listType", JSON.stringify(this.listType));
       localStorage.setItem("orderType", JSON.stringify(this.orderType));
       localStorage.setItem("shareList", JSON.stringify(this.shareList));
-      console.log(
-        "prdFromDt : " +
-          _this.prdFromDt +
-          " // dt_from : " +
-          _this.dt_from +
-          "// prdToDt : " +
-          _this.prdToDt +
-          " // dt_to : " +
-          _this.dt_to
-      );
-      console.log(
-        "dt_from: " +
-          Common.formatDateDot(_this.dt_from).replace(/[.]/g, "") +
-          "dt_to: " +
-          Common.formatDateDot(_this.dt_to).replace(/[.]/g, "")
-      );
       this.$router.push({
         name: "consumeIncomeStats", //"/consume/consumeIncomeStats" + param,
         params: { chartEl: this.chartEl },
@@ -339,6 +307,7 @@ export default {
           personList: _this.filterShareList(),
           date_from: moment(_this.dt_from).format("YYYYMMDD"), //this.dt_from,
           date_to: moment(_this.dt_to).format("YYYYMMDD"),
+          isRangeList: _this.isRangeList,
           prdFromDt: _this.prdFromDt,
           prdToDt: _this.prdToDt,
           nm_class: idx.nm_class,
@@ -375,7 +344,6 @@ export default {
         Common.formatDateDot(_this.dt_to).replace(/[.]/g, "")
       );
       param.append("no_person_list", _this.filterShareList());
-      // console.log(param);
       _this.$http.post(url, param).then(function(response) {
         if (response.data.result == "00") {
           _this.chartList = response.data.listSettlementConsumeData;
@@ -398,16 +366,6 @@ export default {
               _this.prdFromDt = moment(_this.dt_from).format("YYYYMMDD");
               _this.prdToDt = moment(_this.dt_to).format("YYYYMMDD");
             }
-            console.log(
-              "prdFromDt : " +
-                _this.prdFromDt +
-                " // dt_from : " +
-                _this.dt_from +
-                "// prdToDt : " +
-                _this.prdToDt +
-                " // dt_to : " +
-                _this.dt_to
-            );
             _this.getRangeList();
           }
         } else {
@@ -581,7 +539,7 @@ export default {
           from: new Date(this.dt_to)
         };
         this.disabledDate2 = {
-          from: new Date(this.today) // Disable all dates after specific date
+          from: new Date(moment(this.today).add(1, "days")) // Disable all dates after specific date
         };
       }
     },
@@ -606,16 +564,6 @@ export default {
         this.prdFromDt = rangeDate;
         this.prdToDt = rangeDate;
       }
-      console.log(
-        "prdFromDt : " +
-          _this.prdFromDt +
-          " // dt_from : " +
-          _this.dt_from +
-          "// prdToDt : " +
-          _this.prdToDt +
-          " // dt_to : " +
-          _this.dt_to
-      );
       this.chartEl = el;
       this.getRangeList();
     },

@@ -85,10 +85,11 @@
         <div class="item">
           <div class="left">
             <a @click="$router.push('/debt/main')">부채</a>
-            <p @click="$router.push('/debt/register')">-<em> 원</em></p>
+            <!-- <p @click="$router.push('/debt/register')">-<em> 원</em></p> -->
           </div>
           <div class="right">
-            <a @click="$router.push('/debt/register')"></a>
+            <!-- <a @click="$router.push('/debt/register')"></a> -->
+            <a style="background:none">- 원</a>
           </div>
         </div>
       </div>

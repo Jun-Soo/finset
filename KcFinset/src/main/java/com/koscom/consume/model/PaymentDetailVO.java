@@ -9,19 +9,27 @@ public class PaymentDetailVO implements Serializable{
 	
 	private static final long serialVersionUID = -578559704591747648L;
 	
-	private String nm_member;	// 가맹정 명
+	private String dt_use;				// 사용일
+	private String nm_member;			// 가맹정 명
 	private String month_installment;	// 할부 개월
-	private String amt_charge;	// 청구 금액
+	private String amt_charge;			// 청구 금액
 	
 	public PaymentDetailVO() {
 	}
-	public PaymentDetailVO(String nm_member, String month_installment,
-			String amt_charge) {
+	public PaymentDetailVO(String dt_use, String nm_member,
+			String month_installment, String amt_charge) {
+		this.dt_use = dt_use;
 		this.nm_member = nm_member;
 		this.month_installment = month_installment;
 		this.amt_charge = amt_charge;
 	}
 	
+	public String getDt_use() {
+		return dt_use;
+	}
+	public void setDt_use(String dt_use) {
+		this.dt_use = dt_use;
+	}
 	public String getNm_member() {
 		return nm_member;
 	}

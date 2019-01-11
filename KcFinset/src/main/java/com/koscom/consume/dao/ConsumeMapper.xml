@@ -826,7 +826,8 @@
     </select>
     <select id="listPaymentDetail" parameterType="com.koscom.consume.model.PaymentForm" resultType="com.koscom.consume.model.PaymentDetailVO">
 		SELECT
-			 NM_MEMBER
+			 DT_USE
+			,NM_MEMBER
 			,MONTH_INSTALLMENT
 			,AMT_CHARGE
 		FROM

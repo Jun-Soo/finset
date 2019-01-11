@@ -28,7 +28,8 @@
       <div v-if="!isNone" class="card-detail-list pb30">
         <ul>
           <li v-for="(detail, index) in listDetail" :key="index">
-            <p>{{detail.nm_member}}</p>
+            <em>{{Common.formatDateDot(detail.dt_use,"mmdd")}}</em>
+            <p>{{formatNmMember(detail.nm_member)}}</p>
             <p>{{Common.formatNumber(detail.amt_charge)}}<em v-if="detail.month_installment != 0">할부</em></p>
           </li>
         </ul>
@@ -87,6 +88,24 @@ export default {
         );
       }
     },
+    formatNmMember: function(nm_member) {
+      if ((nm_member || "") == "") {
+        return nm_member;
+      } else if (nm_member.length < 20) {
+        return nm_member;
+      } else {
+        return (nm_member + "").substring(0, 20) + "...";
+      }
+    },
+    // formatDtUse: function(dt_use) {
+    //   if ((dt_use || "") == "") {
+    //     return dt_use;
+    //   } else if (dt_use.length > 8) {
+    //     return dt_use;
+    //   } else {
+    //     return Common.formatDateDot(dt_use).substring(4, 8);
+    //   }
+    // },
     // ---------------------//데이터 포맷---------------------
     // ---------------------데이터 이동---------------------
     // 청구 상세 내역 리스트 조회

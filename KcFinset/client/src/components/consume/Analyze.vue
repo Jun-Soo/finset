@@ -74,7 +74,8 @@ export default {
                 color: "#ccc"
               },
               ticks: {
-                display: false
+                display: false,
+                beginAtZero: true
               }
             }
           ],

@@ -141,7 +141,9 @@ export default {
         //월 클릭시
         // console.log(moment(moment(this.dt_from).weekday(1)).diff(moment(this.dt_to).weekday(1), "days"));
         var diffDates =
-          Math.abs(moment(this.dt_from).diff(this.dt_to, "days")) + 2;
+          Math.abs(
+            Math.round(moment(this.dt_to).diff(this.dt_from, "days", true))
+          ) + 1;
         var range = Math.ceil(diffDates / 7);
         for (var k = 0; k < range; k++) {
           var dtFrom_Monday = moment(this.dt_from).weekday(1); //월요일계산

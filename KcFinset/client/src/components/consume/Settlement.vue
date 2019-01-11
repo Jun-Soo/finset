@@ -222,14 +222,15 @@ export default {
     this.$store.state.header.backPath = "/consume/main";
   },
   created() {
+    console.log(this.$route.query);
     if (Object.keys(this.$route.query).length != 0) {
       this.chartEl = this.$route.params.chartEl;
       //dt_to, dt_from 보다 dataPeriod를 먼저 setting 해야함 (dataPeriod =>Yr로 바뀔때마다 dt_from을 3개월전으로 바꿈)
       this.dataPeriod = this.$route.query.dataPeriod;
 
       //시작 순서 dataPeriod -> dt_to ->dt_from
-      this.dt_to = new Date(moment(this.$route.query.dt_to, "YYYYMMDD"));
-      this.dt_from = new Date(moment(this.$route.query.dt_from, "YYYYMMDD"));
+      this.dt_to = new Date(moment(this.$route.query.date_to, "YYYYMMDD"));
+      this.dt_from = new Date(moment(this.$route.query.date_from, "YYYYMMDD"));
       this.type_in_out = this.$route.query.type_in_out;
       this.prdFromDt = this.$route.query.prdFromDt;
       this.prdToDt = this.$route.query.prdToDt;
@@ -237,6 +238,10 @@ export default {
       this.listType = JSON.parse(localStorage.getItem("listType"));
       this.orderType = JSON.parse(localStorage.getItem("orderType"));
       this.shareList = JSON.parse(localStorage.getItem("shareList"));
+     // if (Array.isArray(this.chartEl)) {
+        // chartEl 이 있을 경우 url있고, refresh될때
+      //  this.clickChart(this.prdFromDt, this.dataPeriod, this.chartEl);
+     // }
       //refresh되면 에러남 -> 추후 해결필요
       localStorage.removeItem("listType");
       localStorage.removeItem("orderType");
@@ -351,8 +356,8 @@ export default {
           type_in_out: idx.type_in_out,
           chartType: _this.dataPeriod,
           personList: _this.filterShareList(),
-          dt_from: moment(_this.dt_from).format("YYYYMMDD"), //this.dt_from,
-          dt_to: moment(_this.dt_to).format("YYYYMMDD"),
+          date_from: moment(_this.dt_from).format("YYYYMMDD"), //this.dt_from,
+          date_to: moment(_this.dt_to).format("YYYYMMDD"),
           prdFromDt: _this.prdFromDt,
           prdToDt: _this.prdToDt,
           nm_class: idx.nm_class,
@@ -377,6 +382,7 @@ export default {
       let _this = this;
       let url = "/m/consume/listConsumeforSettlement.json";
       let param = new FormData();
+      _this.seen2 = false;
       param.append("no_person", this.$store.state.user.noPerson);
       param.append("contents", _this.dataPeriod);
       param.append(

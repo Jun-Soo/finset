@@ -87,14 +87,15 @@ export default {
   },
   created() {
     var qData = this.$route.query;
-    this.dataSet(qData);
+    var data = this.$route.query;
+    this.dataSet(data);
     var bPath = {
       name: "consumeSettlement",
       params: this.$route.params,
       query: {
         dataPeriod: qData.chartType,
-        dt_from: qData.dt_from, //this.dt_from,
-        dt_to: qData.dt_to,
+        date_from: qData.date_from, //this.dt_from,
+        date_to: qData.date_to,
         dt_trd: qData.dt_trd,
         listType: qData.listType,
         type_in_out: qData.type_in_out,
@@ -191,16 +192,12 @@ export default {
 
       if (jsonObj.dt_trd == null || jsonObj.dt_trd == "") {
         //챠트 전체데이터
-        cFrm.append("dt_from", jsonObj.dt_from);
-        cFrm.append("dt_to", jsonObj.dt_to);
+        cFrm.append("dt_from", jsonObj.date_from);
+        cFrm.append("dt_to", jsonObj.date_to);
       } else {
         if (jsonObj.chartType == "mon") {
-          jsonObj.dt_from = jsonObj.dt_trd;
-          jsonObj.dt_to = moment(jsonObj.dt_trd, "YYYYMMDD")
-            .add(6, "days")
-            .format("YYYYMMDD");
-          cFrm.append("dt_from", jsonObj.dt_from);
-          cFrm.append("dt_to", jsonObj.dt_to);
+          cFrm.append("dt_from", jsonObj.prdFromDt);
+          cFrm.append("dt_to", jsonObj.prdToDt);
         } else {
           //챠트 클릭시의 범위 데이터
           cFrm.append("dt_from", jsonObj.dt_trd);

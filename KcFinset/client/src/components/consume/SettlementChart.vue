@@ -101,7 +101,6 @@ export default {
       var _dataList2 = [];
       this.mylabels = [];
       this.rangeDate = [];
-
       //연 클릭시
       if (this.dataPeriod == "yr") {
         var diffMon = "";
@@ -142,18 +141,9 @@ export default {
       } else if (this.dataPeriod == "mon") {
         //월 클릭시
         // console.log(moment(moment(this.dt_from).weekday(1)).diff(moment(this.dt_to).weekday(1), "days"));
-        // console.log(Math.abs(moment(moment(this.dt_from).weekday(1)).diff(moment(this.dt_to).weekday(1), "days")) + 2);
-        var range = Math.ceil(
-          (Math.abs(
-            moment(moment(this.dt_from).weekday(1)).diff(
-              moment(this.dt_to).weekday(1),
-              "days"
-            )
-          ) +
-            2) /
-            7
-        ); //기간
-        // var date = [];
+        var diffDates =
+          Math.abs(moment(this.dt_from).diff(this.dt_to, "days")) + 2;
+        var range = Math.ceil(diffDates / 7);
         for (var k = 0; k < range; k++) {
           var dtFrom_Monday = moment(this.dt_from).weekday(1); //월요일계산
           // console.log(dtFrom_Monday.add((7*k), "days").format("YYYYMMDD"));

@@ -266,7 +266,7 @@
 		 , DT_LST  	= SYSDATE
         WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
     </update>
-    
+
     <update id="modifyPersonCdTel" parameterType="com.koscom.person.model.PersonVO">
     	/* com.koscom.person.dao.PersonMapper.modifyPersonEmail */
         UPDATE PERSON_INFO
@@ -630,7 +630,7 @@
 	    	ROWNUM AS RNUM,
 			SID.YN_SHARE,
 			TB.CD_ASSETS_CLASS,
-	    	TB.NO_ACCOUNT,
+			XX1.DEC_VARCHAR2_SEL(TB.NO_ACCOUNT, '10','FS_ARIA','ASSETS_INFO','NO_ACCOUNT') AS NO_ACCOUNT,
 	    	TB.NM_ACCOUNT
 	    FROM (
 	    		SELECT
@@ -643,6 +643,7 @@
 					AND AI.YN_DELETE = 'N'
 					AND AI.CD_ASSETS_CLASS = '00'
 					AND AI.NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
+				<!-- 추후 추가(증권)
 				UNION ALL
 				SELECT
 					AI.CD_ASSETS_CLASS,
@@ -670,6 +671,7 @@
 					AND AI.YN_DELETE = 'N'
 					AND AI.CD_ASSETS_CLASS = '10'
 					AND AI.NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
+				 -->
 				ORDER BY CD_ASSETS_CLASS, NM_ACCOUNT
 			) TB
 		LEFT OUTER JOIN SHARE_INFO_DETAIL SID
@@ -940,7 +942,14 @@
 			#{cd_info, jdbcType=VARCHAR},
 			#{cd_type, jdbcType=VARCHAR},
 			#{no_manage_info, jdbcType=VARCHAR},
-			#{no_card_acc, jdbcType=VARCHAR},
+			<choose>
+				<when test="'02'.equals(cd_info)">	<!-- 자산 -->
+					XX1.ENC_VARCHAR2_INS(#{no_card_acc, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SHARE_INFO_DETAIL', 'NO_CARD_ACC')
+				</when>
+				<otherwise>
+				    #{no_card_acc, jdbcType=VARCHAR},
+				</otherwise>
+			</choose>
 			#{yn_share, jdbcType=VARCHAR},
 			#{id_frt, jdbcType=VARCHAR},
 			SYSDATE,

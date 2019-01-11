@@ -6434,25 +6434,35 @@ button.cal {
 }
 
 .report-top {
-  padding: 25px 21px;
+  padding: 10px 21px;
   background: #efeeec;
 }
 
 .report-top .date {
-  margin-top: 15px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-gap: 6px;
+  grid-gap: 5px;
+  align-items: center;
 }
 
 .report-top .date p {
-  background: #fff;
   border: 1px solid #e5e5e5;
+  background: #fff;
 }
 
 .report-top .date p input[type="text"] {
-  width: calc(100% - 40px);
+  width: calc(100% - 50px);
   border: none;
+  vertical-align: middle;
+  line-height: 33px;
+}
+
+.report-top .date p button {
+  width: 33px;
+  height: 33px;
+  background: url("../images/common/btn_cal.png") no-repeat center/19px;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .report-con .flex {
@@ -6475,9 +6485,17 @@ button.cal {
   color: #9b9489;
 }
 
-.report-con .flex div .value {
+.report-con .flex div .value1 {
   font-size: 24px;
-  color: #222;
+  /* color: #222; */
+  color: #62c1d0;
+  margin-top: 10px;
+  font-weight: 700;
+}
+
+.report-con .flex div .value2 {
+  font-size: 24px;
+  color: #e52638;
   margin-top: 10px;
   font-weight: 700;
 }

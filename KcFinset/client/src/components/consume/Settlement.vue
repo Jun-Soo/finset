@@ -2,7 +2,7 @@
   <section v-if="seen">
     <div class="report-top">
       <div class="checks round" style="';display:grid;grid-template-columns: 70% 1fr;background: #efeeec;'">
-        <p>
+        <p style="';margin-top: 4px;'">
           <input type="radio" id="rds1" :class="{'checked':dataPeriod === 'yr'}" v-model="dataPeriod" @click="clickPeriod" value="yr"><label for="rds1">년</label>
           <input type="radio" id="rds2" :class="{'checked':dataPeriod === 'mon'}" v-model="dataPeriod" @click="clickPeriod" value="mon"><label for="rds2">월</label>
           <input type="radio" id="rds3" :class="{'checked':dataPeriod === 'week'}" v-model="dataPeriod" @click="clickPeriod" value="week"><label for="rds3">주</label>
@@ -15,23 +15,13 @@
         <div class="date">
           <p>
             <datepicker :minimum-view="dp_minimumView" v-model="dt_from" ref="datepicker1" :disabledDates="disabledDate1" :format="dp_format" :language="ko" class="div-date"></datepicker>
-            <button class="cal" @click="openDatepicker1"></button>
+            <button @click="openDatepicker1"></button>
           </p>
           <p>
             <datepicker :minimum-view="dp_minimumView" v-model="dt_to" ref="datepicker2" :disabledDates="disabledDate2" :format="dp_format" :language="ko" class="div-date"></datepicker>
-            <button class="cal" @click="openDatepicker2"></button>
+            <button @click="openDatepicker2"></button>
           </p>
         </div>
-        <!-- <div v-else class="date">
-          <p>
-            <datepicker v-model="dt_from" ref="datepicker1" :disabledDates="disabledDate1" :format="formatDateDot" :language="ko" class="div-date"></datepicker>
-            <button class="cal" @click="openDatepicker1"></button>
-          </p>
-          <p>
-            <datepicker v-model="dt_to" ref="datepicker2" :disabledDates="disabledDate2" :language="ko" :format="formatDateDot" class="div-date"></datepicker>
-            <button class="cal" @click="openDatepicker2"></button>
-          </p>
-        </div> -->
         <div v-if="shareList.length>1" class="filter-wrap mt20">
           <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
             <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.viewName}}</label>
@@ -39,16 +29,16 @@
         </div>
       </div>
     </div>
-    <div class="container">
+    <div class="inner_container">
       <div v-if="chartList.length!=0" class="report-con">
         <div class="flex">
           <div>
             <p class="key"><strong>수입</strong>(만원)</p>
-            <p class="value">{{incomeSum}}</p>
+            <p class="value1">{{incomeSum}}</p>
           </div>
           <div>
             <p class="key"><strong>지출</strong>(만원)</p>
-            <p class="value">{{consumeSum}}</p>
+            <p class="value2">{{consumeSum}}</p>
           </div>
         </div>
         <Graph v-if="chartList" ref="graph" v-model="chartList" :chartList="chartList" :consumeForm="consumeForm" :dt_from="dt_from" :dt_to="dt_to" :dataPeriod="dataPeriod"></Graph>
@@ -65,7 +55,7 @@
         <a id="01" name="income" :class="{'on':curTab === '01'}" @click="changeTab">수입</a>
       </div>
     </div>
-    <div class="box-list list02 noMG">
+    <div class="in-box-list list02 noMG">
       <div class="select pb20">
         <multiselect class="multiselect-basic" v-model="listType" label="text" :title="'종류별'" :preselect-first="true" :options="type1">
         </multiselect>
@@ -152,9 +142,9 @@ export default {
       //range select 위한 data
       prdFromDt: "",
       prdToDt: "",
-      rangeList: [], //보여지는 실제값
-      incomeList: [],
-      consumeList: [],
+      rangeList: [], //보여지는 리스트값
+      incomeList: [], //조회한 수입 리스트
+      consumeList: [], //조회한 지출리스트
       //기타기능
       isRangeList: false, //chart범위 선택했는지 여부
       chartEl: {},
@@ -162,12 +152,10 @@ export default {
       lastToolTip: {},
       detailSelection: false,
       //datepicker disabled 범위
-      disabledDate0: {
+      disabledDate1: {
         to: new Date(moment(this.dt_to).add(-1, "years")),
         from: new Date(this.dt_to)
-      }, //year disabled dates from
-      disabledDate00: {}, //year disabled dates to
-      disabledDate1: {}, //mon, day disabled dates from
+      }, //mon, day disabled dates from
       disabledDate2: {} //mon, day disabled dates to
     };
   },
@@ -208,7 +196,6 @@ export default {
     },
     dt_from: function() {
       this.isRangeList = false;
-      //chart setting
       this.getChartList();
     },
     dt_to: function() {
@@ -238,10 +225,10 @@ export default {
       this.listType = JSON.parse(localStorage.getItem("listType"));
       this.orderType = JSON.parse(localStorage.getItem("orderType"));
       this.shareList = JSON.parse(localStorage.getItem("shareList"));
-     // if (Array.isArray(this.chartEl)) {
-        // chartEl 이 있을 경우 url있고, refresh될때
+      // if (Array.isArray(this.chartEl)) {
+      // chartEl 이 있을 경우 url있고, refresh될때
       //  this.clickChart(this.prdFromDt, this.dataPeriod, this.chartEl);
-     // }
+      // }
       //refresh되면 에러남 -> 추후 해결필요
       localStorage.removeItem("listType");
       localStorage.removeItem("orderType");
@@ -318,11 +305,6 @@ export default {
       let param = {};
       var _this = this;
       let listType = this.listType.value;
-      // if (listType == "category") {
-      //   param["nm_class"] = idx.nm_class;
-      // } else if (listType == "store") {
-      //   param["contents"] = idx.contents;
-      // } else
       if (listType == "means") {
         localStorage.setItem("no_card", idx.no_card);
         localStorage.setItem("nm_card", idx.nm_card);
@@ -330,7 +312,6 @@ export default {
       localStorage.setItem("listType", JSON.stringify(this.listType));
       localStorage.setItem("orderType", JSON.stringify(this.orderType));
       localStorage.setItem("shareList", JSON.stringify(this.shareList));
-      // localStorage.setItem("chartEl", JSON.stringify(this.chartEl));
       console.log(
         "prdFromDt : " +
           _this.prdFromDt +
@@ -403,7 +384,6 @@ export default {
           _this.getSum();
 
           if (_this.isRangeList) {
-            //Array.isArray(_this.chartEl)
             //chart 클릭시에만 타야함 (현재 상세보기갔다가 뒤로오면 chartEl에 data를 담기때문에 이쪽으로 넘어옴)
             _this.getRangeList();
           } else {
@@ -454,8 +434,6 @@ export default {
       //만원단위
       this.consumeSum = Math.round(this.consumeSum / 10000);
       this.incomeSum = Math.round(this.incomeSum / 10000);
-      // this.consumeSum = Math.round(this.consumeSum);
-      // this.incomeSum = Math.round(this.incomeSum);
     },
     filterShareList: function() {
       var shareList = new Array();
@@ -535,7 +513,6 @@ export default {
               _this.incomeList.push(totalRangeList[i]);
             }
           } //for
-          // console.log(_this.listType);
 
           // 차트 선택시 수입 지출 탭바꾸기
           let _tab = { srcElement: {} };
@@ -563,7 +540,6 @@ export default {
           }
           _this.seen = true;
           _this.seen2 = true;
-          // console.log(_this.rangeList);
         });
     },
     /**
@@ -572,14 +548,6 @@ export default {
     changeTabByTooltip: function(e) {
       this.changeTab(e);
     },
-    // openDatepicker0: function() {
-    //   this.getDateDisabledRange();
-    //   this.$refs.datepicker0.showCalendar();
-    // },
-    // openDatepicker00: function() {
-    //   this.getDateDisabledRange();
-    //   this.$refs.datepicker00.showCalendar();
-    // },
     openDatepicker1: function() {
       this.getDateDisabledRange();
       this.$refs.datepicker1.showCalendar();
@@ -649,7 +617,6 @@ export default {
           _this.dt_to
       );
       this.chartEl = el;
-      // console.log(el);
       this.getRangeList();
     },
     calcPercentage: function(obj) {
@@ -699,7 +666,6 @@ export default {
   padding-left: 10px;
 }
 input[type="label"] {
-  // url("../images/assets/search_arrow.png") no-repeat 65px 0/9px;
   background: url("./../../assets/images/assets/search_arrow.png") no-repeat
     100% top/12px #efeeec;
   line-height: 38px;
@@ -710,11 +676,8 @@ input[type="label"] {
   vertical-align: middle;
   padding-left: 5px;
   box-sizing: border-box;
-  // -moz-appearance: none;
-  // -webkit-appearance: none;
 }
 input[type="label"].on {
-  // url("../images/assets/search_arrow.png") no-repeat 65px 0/9px;
   background: url("./../../assets/images/assets/search_arrow.png") no-repeat
     100% bottom/12px #efeeec;
   line-height: 38px;
@@ -725,7 +688,12 @@ input[type="label"].on {
   vertical-align: middle;
   padding-left: 5px;
   box-sizing: border-box;
-  // -moz-appearance: none;
-  // -webkit-appearance: none;
+}
+.inner_container {
+  padding: 10px 21px;
+}
+.in-box-list {
+  background: #efeeec;
+  padding: 10px;
 }
 </style>

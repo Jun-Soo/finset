@@ -109,11 +109,6 @@ export default {
     this.$store.state.title = "카드 대금 조회";
   },
   created() {
-    if (this.$store.state.user.dt_basic > this.standardDt.getDate()) {
-      this.standardDt.setMonth(this.standardDt.getMonth() - 1);
-    }
-    this.ym = this.formatHead(this.getYm(this.standardDt));
-
     //화면 이동 로직
     var _this = this;
     let origMousePoint;
@@ -138,7 +133,7 @@ export default {
       }
     });
     ////화면 이동 로직
-    this.listConsumeShareInfo();
+    this.chkExistPayment();
   },
   beforeMount() {},
   mounted() {},
@@ -262,6 +257,27 @@ export default {
           _this.isScrap = response.data.isScrap;
           _this.paymentList = list;
           _this.seen = true;
+        });
+    },
+    // 카드대금조회 데이터 존재여부 확인 및 날짜 조회
+    chkExistPayment: function() {
+      var _this = this;
+      this.$http
+        .get("/m/consume/chkExistPayment.json")
+        .then(function(response) {
+          var charge_yyyymm = response.data.charge_yyyymm;
+
+          if ((charge_yyyymm || "") == "") {
+            if (_this.$store.state.user.dt_basic > _this.standardDt.getDate()) {
+              _this.standardDt.setMonth(_this.standardDt.getMonth() - 1);
+            }
+          } else {
+            _this.standardDt = _this.Common.formatDtObjFromStr(
+              charge_yyyymm + "01"
+            ); // 함수가 원하는 포맷은 yyyymmdd이다
+          }
+          _this.ym = _this.formatHead(_this.getYm(_this.standardDt));
+          _this.listConsumeShareInfo();
         });
     },
     // ---------------------//데이터 이동---------------------

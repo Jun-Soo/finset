@@ -238,6 +238,12 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	}
 	
 	@Override
+	public String chkExistPayment(String no_person) {
+		logger.debug("chkExistPayment");
+		return consumeMapper.chkExistPayment(no_person);
+	}
+	
+	@Override
 	public List<PaymentVO> listPayment(PaymentForm paymentForm) {
 		logger.debug("listPayment");
 		return consumeMapper.listPayment(paymentForm);

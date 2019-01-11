@@ -158,6 +158,13 @@ public interface ConsumeMapper {
 	List<ConsumeVO> listDetailCalendarConsumeData(ConsumeForm consumeForm);
 	
 	/**
+	 * 
+	 * @param paymentForm
+	 * @return
+	 */
+	String chkExistPayment(String no_person);
+	
+	/**
 	 * 청구내역 리스트 조회
 	 * @param paymentForm
 	 * @return

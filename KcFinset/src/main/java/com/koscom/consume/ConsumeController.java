@@ -217,6 +217,14 @@ public class ConsumeController {
     	return "jsonView";
     }
 
+    @RequestMapping("/chkExistPayment.json")
+    public String chkExistPayment(HttpSession session, Model model) {
+    	logger.debug("chkExistPayment");
+    	String no_person = (String) session.getAttribute("no_person");
+    	model.addAttribute("charge_yyyymm",consumeManager.chkExistPayment(no_person));
+    	return "jsonView";
+    }
+    
     /**
      * VUE
      * 청구내역 리스트 조회

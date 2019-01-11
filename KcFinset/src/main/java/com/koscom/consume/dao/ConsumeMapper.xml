@@ -750,6 +750,46 @@
 		ORDER BY
 			TYPE_IN_OUT ASC
     </select>
+    <select id="chkExistPayment" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT
+			TO_CHAR( MAX( TO_NUMBER( CHARGE_YYYYMM )))
+		FROM
+			SCR_CARD_CHARGE_DETAIL SCCD
+		WHERE
+			EXISTS(
+				SELECT
+					1
+				FROM
+					(
+						SELECT
+							NO_CARD_ACC AS NO_CARD
+						FROM
+							SHARE_INFO_DETAIL
+						WHERE
+							SEQ_SHARE IN(
+								SELECT
+									SEQ_SHARE
+								FROM
+									SHARE_INFO
+								WHERE
+										REQ_NO_PERSON	= #{no_person, jdbcType = VARCHAR}
+									AND SHARE_STATUS	= '02'
+									AND YN_CONSUME_INFO	= 'Y'
+									AND DT_END_OFFER	IS NULL
+							)
+							AND YN_SHARE	= 'Y'
+							AND CD_INFO		= '03'
+					UNION ALL SELECT
+							NO_CARD
+						FROM
+							SCR_CARD_INFO
+						WHERE
+							NO_PERSON = #{no_person, jdbcType = VARCHAR}
+					) A
+				WHERE
+					SUBSTR( SCCD.NO_CARD, INSTR( SCCD.NO_CARD, '*',- 1 )+ 1 )= SUBSTR( A.NO_CARD, INSTR( SCCD.NO_CARD, '*',- 1 )+ 1 )
+			)
+    </select>
     <select id="listPayment" parameterType="com.koscom.consume.model.PaymentForm" resultType="com.koscom.consume.model.PaymentVO">
 		SELECT
 			 SCCD.NO_PERSON
@@ -767,7 +807,7 @@
 					,BB.NM_FC
 					,AA.NO_CARD
 					,AA.DT_PAYMENT
-					,SUM( TO_NUMBER( AA.AMT_CHARGE )) AS MONTHLY_CHARGE
+					,SUM( TO_NUMBER( AA.AMT_CHARGE + AA.FEES )) AS MONTHLY_CHARGE
 				FROM
 					SCR_CARD_CHARGE_DETAIL AA
 				LEFT OUTER JOIN FC_INFO BB ON
@@ -829,7 +869,7 @@
 			 DT_USE
 			,NM_MEMBER
 			,MONTH_INSTALLMENT
-			,AMT_CHARGE
+			,TO_CHAR(TO_NUMBER(AMT_CHARGE) + TO_NUMBER(FEES)) AS AMT_CHARGE
 		FROM
 			SCR_CARD_CHARGE_DETAIL
 		WHERE
@@ -1895,7 +1935,7 @@
 			CONSUME_INFO
 		SET
 			 NM_CARD			= #{nm_card			, jdbcType = VARCHAR}
-			 <if test="@com.koscom.util.MybatisUtil@-">
+			 <if test="@com.koscom.util.MybatisUtil@contains('N',yn_pay_installment)">
 				,DT_TRD				= #{dt_trd			, jdbcType = VARCHAR}
 				,AMT_IN_OUT			= #{amt_in_out		, jdbcType = VARCHAR}
 			 </if>

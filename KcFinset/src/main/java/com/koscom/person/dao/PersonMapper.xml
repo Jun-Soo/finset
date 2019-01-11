@@ -944,7 +944,7 @@
 			#{no_manage_info, jdbcType=VARCHAR},
 			<choose>
 				<when test="'02'.equals(cd_info)">	<!-- 자산 -->
-					XX1.ENC_VARCHAR2_INS(#{no_card_acc, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SHARE_INFO_DETAIL', 'NO_CARD_ACC')
+					XX1.ENC_VARCHAR2_INS(#{no_card_acc, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'SHARE_INFO_DETAIL', 'NO_CARD_ACC'),
 				</when>
 				<otherwise>
 				    #{no_card_acc, jdbcType=VARCHAR},

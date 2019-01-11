@@ -174,7 +174,11 @@ export default {
       } else if (this.dataPeriod == "mon") {
         this.dp_minimumView = "day";
         this.dp_format = "yyyy.MM.dd";
-        this.dt_from = new Date(moment(today).add(-1, "month"));
+        this.dt_from = new Date(
+          moment(today)
+            .add(-1, "month")
+            .isoWeekday(1)
+        );
       } else if (this.dataPeriod == "week") {
         this.dp_minimumView = "day";
         this.dp_format = "yyyy.MM.dd";

@@ -1,7 +1,7 @@
 <template>
   <div id="wrapper">
     <!-- Content -->
-    <section id="content">
+    <section id="content" v-if="seen">
       <div class="container mt30">
         <div class="checks">
           <!-- <div v-bind:class="checked"> -->
@@ -110,7 +110,8 @@ export default {
       chkAll: false,
       chkBox1: false,
       chkBox2: false,
-      chkBox3: false
+      chkBox3: false,
+      seen: false
     };
   },
   components: {
@@ -144,6 +145,7 @@ export default {
       } else {
         //openAPI 못불러옴
       }
+      _this.seen=true;
     });
   },
   beforeMount() {},

@@ -1786,9 +1786,9 @@ router.beforeEach((to, from, next) => {
     const hp = localStorage.getItem('hp')
     if (to.meta.allowPath) {
       if (to.meta.requiresAuth) {
-        if (to.meta.backCasePath && !Store.state.header.fromPath) {
-          Store.state.header.fromPath = from.fullPath
-        }
+        // if (to.meta.backCasePath && !Store.state.header.fromPath) {
+        //   Store.state.header.fromPath = from.fullPath
+        // }
 
         const accessToken = localStorage.getItem('accessToken')
         if (!accessToken) {

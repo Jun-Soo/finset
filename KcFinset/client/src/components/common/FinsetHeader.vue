@@ -106,14 +106,15 @@ export default {
       this.clickBack();
     },
     clickBack: function() {
-      if (
-        this.$store.state.header.fromPath != "" &&
-        this.$store.state.header.backPath == ""
-      ) {
-        var from = this.$store.state.header.fromPath;
-        this.$store.state.header.fromPath = "";
-        this.$router.push(from);
-      } else if (this.$store.state.header.backPath == "") {
+      // if (
+      //   this.$store.state.header.fromPath != "" &&
+      //   this.$store.state.header.backPath == ""
+      // ) {
+      //   var from = this.$store.state.header.fromPath;
+      //   this.$store.state.header.fromPath = "";
+      //   this.$router.push(from);
+      // } else
+      if (this.$store.state.header.backPath == "") {
         this.$router.go(-1);
       } else {
         var back = this.$store.state.header.backPath;

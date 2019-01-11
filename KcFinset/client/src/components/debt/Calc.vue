@@ -230,7 +230,6 @@ export default {
   computed: {},
   watch: {
     loanList: function(newL, oldL) {
-      debugger;
       this.answer = "";
     }
     // whenever question changes, this function will run
@@ -274,7 +273,6 @@ export default {
     },
     delDebt: function(idx) {
       let _this = this;
-      debugger;
       if (_this.curTab == "00") {
         _this.dtiList.splice(idx, 1);
       } else if (_this.curTab == "01") {
@@ -305,9 +303,7 @@ export default {
         //   params: { no_person_list: [this.$store.state.user.noPerson] }
         // })
 
-        .then(function(response) {
-          debugger;
-        });
+        .then(function(response) {});
     }
   }
 };

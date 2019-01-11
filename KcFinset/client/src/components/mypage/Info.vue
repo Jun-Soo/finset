@@ -86,9 +86,9 @@ export default {
         this.$dialogs.alert("서비스 준비중 입니다.", Constant.options);
         return false;
       }
-      if (this.$store.state.header.type === "sub" && back) {
-        this.$store.state.header.fromPath = back;
-      }
+      // if (this.$store.state.header.type === "sub" && back) {
+      //   this.$store.state.header.fromPath = back;
+      // }
 
       this.$router.push(page);
     }

@@ -182,9 +182,9 @@ export default {
   },
   beforeMount() {},
   mounted() {
-    if (this.$store.state.header.fromPath) {
-      this.$store.state.header.backPath = this.$store.state.header.fromPath;
-    }
+    // if (this.$store.state.header.fromPath) {
+    //   this.$store.state.header.backPath = this.$store.state.header.fromPath;
+    // }
     this.page = 1;
     this.listGoods();
     Common.pagination(this.$refs.form.listBankGoods);

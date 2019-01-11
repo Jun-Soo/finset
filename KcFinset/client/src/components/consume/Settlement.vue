@@ -533,7 +533,7 @@ export default {
           days: [6, 0, 2, 3, 4, 5]
         };
         this.disabledDate2 = {
-          from: new Date(this.today), // Disable all dates after specific date
+          from: new Date(this.today), 
           days: [6, 1, 2, 3, 4, 5]
         };
       } else if (this.dataPeriod == "week") {
@@ -542,7 +542,7 @@ export default {
           from: new Date(this.dt_to)
         };
         this.disabledDate2 = {
-          from: new Date(moment(this.today).add(1, "days")) // Disable all dates after specific date
+          from: new Date(moment(this.today).add(1, "days"))
         };
       }
     },

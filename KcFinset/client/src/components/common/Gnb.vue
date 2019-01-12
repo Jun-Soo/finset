@@ -112,6 +112,7 @@ export default {
     clickButton: function(page, back) {
       // GNB Close Event
       if (
+        page === "/credit/raiseMain" ||
         page === "/debt/calc" ||
         page === "/credit/counselMain" ||
         page === "/assets/stockMain"

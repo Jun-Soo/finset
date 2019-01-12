@@ -23,7 +23,7 @@
     <div class="banner-wrap owl-carousel">
       <carousel :perPage=1 :autoplay=true :autoplayTimeout=4000 :speed=700 :loop=true>
         <slide class="item">
-          <a @click="$router.push('/credit/raiseMain')">
+          <a @click="goMenu('raise')">
             <div class="banner">
               <div class="left">
                 <p class="key">신용등급 올리기</p>
@@ -226,6 +226,10 @@ export default {
           name: "newsMain",
           query: { scKeyword: ["04"] }
         });
+      } else if ("raise" == menu) {
+        // this.$router.push('/credit/raiseMain');
+        this.$dialogs.alert("서비스 준비중 입니다.", Constant.options);
+        return false;
       }
     }
   }

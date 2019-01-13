@@ -321,4 +321,10 @@ export default {
 
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
+.list01 .item .number-wrap .left {
+  width: 60%;
+}
+.list01 .item .number-wrap .right {
+  width: 40%;
+}
 </style>

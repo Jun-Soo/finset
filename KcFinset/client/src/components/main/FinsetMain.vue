@@ -96,7 +96,7 @@
     </div>
     <div class="my-links">
       <div class="wrap">
-        <a @click="$router.push('/credit/raiseMain')">신용등급<br>올리기</a>
+        <a @click="goMenu('raise')">신용등급<br>올리기</a>
         <a @click="$router.push('/credit/smartReport')">신용<br>리포트</a>
         <a @click="goMenu('share');">정보<br>공유하기</a>
       </div>
@@ -207,6 +207,10 @@ export default {
           name: "shareMain",
           query: { cd_share: "02" }
         });
+      } else if ("raise" == menu) {
+        // this.$router.push('/credit/raiseMain');
+        this.$dialogs.alert("서비스 준비중 입니다.", Constant.options);
+        return false;
       }
     }
   }

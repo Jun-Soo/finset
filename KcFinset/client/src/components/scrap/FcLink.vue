@@ -8,8 +8,8 @@
       <a href="#" class="solid box blue">확인</a>
     </div> -->
     <div class="btn-wrap col2">
-      <a class="btn-solid" @click="clickNo()">아니요</a>
-      <a href="#" class="btn-stroke" @click="clickYes()">예</a>
+      <a class="btn-stroke" @click="clickNo()">아니요</a>
+      <a class="btn-solid" @click="clickYes()">예</a>
     </div>
   </section>
 </template>

@@ -137,37 +137,16 @@ export default {
       let _this = this;
       if (gubun == "Y") {
         _this.ynFingerprint = "Y";
-        if (Constant.userAgent == "Android") {
-          window.Android.initFingerPrint();
-        } else if (Constant.userAgent == "iOS") {
-          //지문인식 결과 콜백 이벤트
-          Jockey.on("resultFingerPrint", function(param) {
-            _this.resultFingerPrint(param.result);
-            Jockey.off("resultFingerPrint");
-          });
-          Jockey.send("initFingerPrint");
-        }
-      } else if (gubun == "N") {
-        _this.ynFingerprint = "N";
-        if (Constant.userAgent == "Android" || Constant.userAgent == "iOS") {
-          _this.$router.push("/scrap/fcLink");
-        } else {
-          setTimeout(function() {
-            _this.login();
-          }, 2000);
-        }
-      }
-    },
-    /***
-     * Native Call function
-     **/
-    resultFingerPrint: function(result) {
-      var _this = this;
-      if (result == true || result == 1) {
-        if (Constant.userAgent == "Android") {
-          window.Android.closeFingerPrint();
-        }
-        _this.fingerSVG.reset().play();
+        // if (Constant.userAgent == "Android") {
+        //   window.Android.initFingerPrint();
+        // } else if (Constant.userAgent == "iOS") {
+        //   //지문인식 결과 콜백 이벤트
+        //   Jockey.on("resultFingerPrint", function(param) {
+        //     _this.resultFingerPrint(param.result);
+        //     Jockey.off("resultFingerPrint");
+        //   });
+        //   Jockey.send("initFingerPrint");
+        // }
 
         var data = {
           no_person: _this.noPerson,
@@ -200,8 +179,61 @@ export default {
               return false;
             }
           });
+      } else if (gubun == "N") {
+        _this.ynFingerprint = "N";
+        if (Constant.userAgent == "Android" || Constant.userAgent == "iOS") {
+          _this.$router.push("/scrap/fcLink");
+        } else {
+          setTimeout(function() {
+            _this.login();
+          }, 2000);
+        }
       }
     }
+    /***
+     * Native Call function
+     **/
+    // resultFingerPrint: function(result) {
+    //   var _this = this;
+    //   if (result == true || result == 1) {
+    //     if (Constant.userAgent == "Android") {
+    //       window.Android.closeFingerPrint();
+    //     }
+    //     _this.fingerSVG.reset().play();
+
+    //     var data = {
+    //       no_person: _this.noPerson,
+    //       yn_fingerprint: _this.ynFingerprint
+    //     };
+    //     this.$http
+    //       .get("/m/person/modifyFingerPrint.json", {
+    //         params: data
+    //       })
+    //       .then(response => {
+    //         var result = response.data;
+    //         if (result.result == "00") {
+    //           this.$toast.center("지문 로그인 설정이 완료되었습니다.");
+    //           this.$store.state.user.ynFingerprint = _this.ynFingerprint;
+    //           if (
+    //             Constant.userAgent == "Android" ||
+    //             Constant.userAgent == "iOS"
+    //           ) {
+    //             //_this.checkExistCert();
+    //             setTimeout(function() {
+    //               _this.$router.push("/scrap/fcLink");
+    //             }, 1000);
+    //           } else {
+    //             setTimeout(function() {
+    //               _this.login();
+    //             }, 2000);
+    //           }
+    //         } else {
+    //           this.$toast.center(result.message);
+    //           return false;
+    //         }
+    //       });
+    //   }
+    // }
   }
 };
 </script>

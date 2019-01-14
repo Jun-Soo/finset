@@ -18,11 +18,11 @@
 
       <div v-if="personShareList.length!=0" class="filter-wrap">
         <div class="filter red">
-          <input type="checkbox" checked="checked" readonly="readonly"><label for="">{{this.$store.state.user.nmPerson}}</label>
+          <input type="checkbox" checked="checked" readonly="readonly"><label for="">나</label>
         </div>
         <div v-for="personShareInfo in personShareList" :key="personShareInfo.index" class="filter" :class="colorList[personShareInfo.rk]">
           <input type="checkbox" v-model="person_share_list" :value="personShareInfo.no_person" :id="'chk'+personShareInfo.rk" @change="searchAccountList();">
-          <label :for="'chk'+personShareInfo.rk">{{personShareInfo.nm_person}}</label>
+          <label :for="'chk'+personShareInfo.rk">{{personShareInfo.nm_person.substring(0, 3)}}</label>
         </div>
       </div>
 
@@ -30,12 +30,12 @@
         <div v-if="accountMyList.length == 0 && accountShareList.length == 0" class="nodata">계좌 내역이 없습니다</div>
         <draggable v-model="accountMyList" @start="drag=true" :options="draggableOptions" @update="changeSort()">
           <div v-for="accountMyInfo in accountMyList" :key="accountMyInfo.index" class="item sortClass">
-            <a @click="viewDetail('act', accountMyInfo.no_person, accountMyInfo.nm_person, accountMyInfo.no_account, accountMyInfo.cd_detail_class, accountMyInfo.rk)" class="block handle">
+            <a @click="viewDetail('act', accountMyInfo.no_person, '나', accountMyInfo.no_account, accountMyInfo.cd_detail_class, accountMyInfo.rk)" class="block handle">
               <div class="top">
                 <p class="symbol"><img :src="accountMyInfo.fcImg" alt="" />{{accountMyInfo.nm_fc}}</p>
                 <p class="text">
                   <em class="blue bold">{{getCodeName('cd_assets_bank',accountMyInfo.cd_detail_class)}}</em>
-                  <span v-if="personShareList.length!=0" class="circle" :class="colorList[accountMyInfo.rk]">{{accountMyInfo.nm_person}}</span>
+                  <span v-if="personShareList.length!=0" class="circle" :class="colorList[accountMyInfo.rk]">나</span>
                 </p>
               </div>
               <div class="text-wrap">
@@ -52,12 +52,12 @@
         </draggable>
 
         <div v-for="accountShareInfo in accountShareList" :key="accountShareInfo.index" class="item">
-          <a @click="viewDetail('act', accountShareInfo.no_person, accountShareInfo.nm_person, accountShareInfo.no_account, accountShareInfo.cd_detail_class, accountShareInfo.rk)" class="block">
+          <a @click="viewDetail('act', accountShareInfo.no_person, accountShareInfo.nm_person.substring(0, 3), accountShareInfo.no_account, accountShareInfo.cd_detail_class, accountShareInfo.rk)" class="block">
             <div class="top">
               <p class="symbol"><img :src="accountShareInfo.fcImg" alt="" />{{accountShareInfo.nm_fc}}</p>
               <p class="text">
                 <em class="blue bold">{{getCodeName('cd_assets_bank',accountShareInfo.cd_detail_class)}}</em>
-                <span class="circle" :class="colorList[accountShareInfo.rk]">{{accountShareInfo.nm_person}}</span>
+                <span class="circle" :class="colorList[accountShareInfo.rk]">{{accountShareInfo.nm_person.substring(0, 3)}}</span>
               </p>
             </div>
             <div class="text-wrap">
@@ -75,12 +75,12 @@
       <template v-else>
         <div v-if="accountList.length == 0" class="nodata">계좌 내역이 없습니다</div>
         <div v-for="accountInfo in accountList" :key="accountInfo.index" class="item">
-          <a @click="viewDetail('act', accountInfo.no_person, accountInfo.nm_person, accountInfo.no_account, accountInfo.cd_detail_class, accountInfo.rk)" class="block">
+          <a @click="viewDetail('act', accountInfo.no_person, ((accountInfo.rk == 0)? '나' : accountInfo.nm_person.substring(0, 3)), accountInfo.no_account, accountInfo.cd_detail_class, accountInfo.rk)" class="block">
             <div class="top">
               <p class="symbol"><img :src="accountInfo.fcImg" alt="" />{{accountInfo.nm_fc}}</p>
               <p class="text">
                 <em class="blue bold">{{getCodeName('cd_assets_bank',accountInfo.cd_detail_class)}}</em>
-                <span v-if="personShareList.length!=0" class="circle" :class="colorList[accountInfo.rk]">{{accountInfo.nm_person}}</span>
+                <span v-if="personShareList.length!=0" class="circle" :class="colorList[accountInfo.rk]">{{((accountInfo.rk == 0)? '나' : accountInfo.nm_person.substring(0, 3))}}</span>
               </p>
             </div>
             <div class="text-wrap">

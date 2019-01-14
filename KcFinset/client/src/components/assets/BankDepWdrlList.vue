@@ -65,7 +65,7 @@
             <p :key="depWdrlInfo.index" v-if="depWdrlInfo.dateCol" class="date">{{formatDateDot(depWdrlInfo.dt_trd)}}</p>
             <div :key="depWdrlInfo.index" @click="viewDetail(depWdrlInfo.seq_tran, depWdrlInfo.rk);" class="item">
               <div class="flex">
-                <p><em v-if="yn_share=='Y'" class="circle" :class="colorList[depWdrlInfo.rk]">{{depWdrlInfo.nm_person}}</em><em>{{depWdrlInfo.doc1}}</em></p>
+                <p><em v-if="yn_share=='Y'" class="circle" :class="colorList[depWdrlInfo.rk]">{{((depWdrlInfo.rk == 0)? '나' : depWdrlInfo.nm_person.substring(0, 3))}}</em><em>{{depWdrlInfo.doc1}}</em></p>
                 <p v-if="'0'!=depWdrlInfo.amt_dep"><em class="number blue">{{formatNumber(depWdrlInfo.amt_dep)}}</em>원</p>
                 <p v-else><em class="number red">{{('-'+formatNumber(depWdrlInfo.amt_wdrl))}}</em>원</p>
               </div>

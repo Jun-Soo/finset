@@ -8,11 +8,11 @@
     <div class="box-list list01 noMG pb90">
       <div v-if="personShareList.length!=0" class="filter-wrap">
         <div class="filter red">
-          <input type="checkbox" checked="checked" readonly="readonly"><label for="">{{this.$store.state.user.nmPerson}}</label>
+          <input type="checkbox" checked="checked" readonly="readonly"><label for="">나</label>
         </div>
         <div v-for="personShareInfo in personShareList" :key="personShareInfo.index" class="filter" :class="colorList[personShareInfo.rk]">
           <input type="checkbox" v-model="person_share_list" :value="personShareInfo.no_person" :id="'chk'+personShareInfo.rk" @change="searchAccountList();">
-          <label :for="'chk'+personShareInfo.rk">{{personShareInfo.nm_person}}</label>
+          <label :for="'chk'+personShareInfo.rk">{{personShareInfo.nm_person.substring(0, 3)}}</label>
         </div>
       </div>
 
@@ -28,7 +28,7 @@
             <a @click="viewDetail(accountMyInfo.no_person, accountMyInfo.no_account, accountMyInfo.nm_detail_class)" class="block handle">
               <div class="top">
                 <p class="symbol"><img :src="accountMyInfo.fcImg" alt="" />{{accountMyInfo.nm_fc}}</p>
-                <p v-if="personShareList.length!=0" class="text"><span class="circle" :class="colorList[accountMyInfo.rk]">{{accountMyInfo.nm_person}}</span></p>
+                <p v-if="personShareList.length!=0" class="text"><span class="circle" :class="colorList[accountMyInfo.rk]">나</span></p>
               </div>
               <div class="number-wrap bi">
                 <div class="left">
@@ -50,7 +50,7 @@
           <a @click="viewDetail(accountShareInfo.no_person, accountShareInfo.no_account, accountShareInfo.nm_detail_class)" class="block">
             <div class="top">
               <p class="symbol"><img :src="accountShareInfo.fcImg" alt="" />{{accountShareInfo.nm_fc}}</p>
-              <p class="text"><span class="circle" :class="colorList[accountShareInfo.rk]">{{accountShareInfo.nm_person}}</span></p>
+              <p class="text"><span class="circle" :class="colorList[accountShareInfo.rk]">{{accountShareInfo.nm_person.substring(0, 3)}}</span></p>
             </div>
             <div class="number-wrap bi">
               <div class="left">
@@ -73,7 +73,7 @@
           <a @click="viewDetail(accountInfo.no_person, accountInfo.no_account, accountInfo.nm_detail_class)" class="block">
             <div class="top">
               <p class="symbol"><img :src="accountInfo.fcImg" alt="" />{{accountInfo.nm_fc}}</p>
-              <p v-if="personShareList.length!=0" class="text"><span class="circle" :class="colorList[accountInfo.rk]">{{accountInfo.nm_person}}</span></p>
+              <p v-if="personShareList.length!=0" class="text"><span class="circle" :class="colorList[accountInfo.rk]">{{((accountInfo.rk == 0)? "나" : accountInfo.nm_person.substring(0, 3))}}</span></p>
             </div>
             <div class="number-wrap bi">
               <div class="left">

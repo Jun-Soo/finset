@@ -1018,8 +1018,9 @@
 				AND PCCI.CD_CLASS		= CI.CD_CLASS
 				AND PCCI.CD_TYPE		= CI.CD_TYPE
 			)
-		WHERE CI.SEQ_TRAN = #{seq_tran, jdbcType=NUMERIC}
-    </select>
+		WHERE CI.YN_DELETE = 'N'
+			AND CI.SEQ_TRAN = #{seq_tran, jdbcType=NUMERIC}
+	</select>
 
     <select id="listAssetsStockMainAccount" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
         /* com.koscom.assets.dao.AssetsMapper.listAssetsStockMainAccount - 자산관리(증권메인 - 계좌내역) */

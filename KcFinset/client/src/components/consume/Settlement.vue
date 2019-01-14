@@ -419,7 +419,9 @@ export default {
             if (list[idx].no_person == _this.$store.state.user.noPerson) {
               list[idx]["viewName"] = "나";
             } else if (list[idx].nm_person.length > 3) {
-              list[idx]["viewName"] = list[idx].nm_person.substring(1);
+              list[idx]["viewName"] = list[idx].nm_person.substring(
+                list[idx].nm_person.length - 3
+              ); //뒤 세자리만
             } else {
               list[idx]["viewName"] = list[idx].nm_person;
             }

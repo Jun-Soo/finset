@@ -148,11 +148,7 @@ export default {
         //test 필요
         return false;
       }
-      if (Constant.userAgent == "Android") {
-        window.Android.loading("Y");
-      } else if (Constant.userAgent == "iOS") {
-        Jockey.send("showLoading");
-      }
+      _this.$store.state.isLoading = true;
 
       _this.$http.post(url, data).then(response => {
         _this.totalPage = response.data.pagedList.pageCount;
@@ -166,11 +162,7 @@ export default {
         _this.page = response.data.pagedList.page;
 
         _this.seen = true;
-        if (Constant.userAgent == "Android") {
-          window.Android.loading("N");
-        } else if (Constant.userAgent == "iOS") {
-          Jockey.send("stopLoading");
-        }
+        _this.$store.state.isLoading = false;
       });
     }
   }

@@ -109,7 +109,6 @@ export default {
   created() {
     window.setCertNumber = this.setCertNumber;
     window.setRequestPhoneNumber = this.setRequestPhoneNumber;
-
     if (Constant.userAgent == "Android") {
       window.Android.reqSMSPermission();
     }

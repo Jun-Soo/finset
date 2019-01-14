@@ -206,11 +206,10 @@ export default {
       var url = "/m/person/createPersonAgreeHist.json";
       if (_this.chkBox1 && _this.chkBox2) {
         if (_this.$store.state.isLoggedIn) {
-          var tJson = {
-            no_person: _this.$store.state.user.noPerson,
-            marketingAgree: _this.chkBox3
-          };
-          _this.$http.get(url, { params: tJson }).then(response => {
+          var frm = new FormData();
+          frm.append("no_person", _this.$store.state.user.noPerson);
+          frm.append("marketingAgree", _this.chkBox3);
+          _this.$http.post(url, frm).then(response => {
             var result = response.data.result;
             _this.$router.push("/main");
             $(document).scrollTop(0);

@@ -148,14 +148,11 @@ export default {
         //   Jockey.send("initFingerPrint");
         // }
 
-        var data = {
-          no_person: _this.noPerson,
-          yn_fingerprint: _this.ynFingerprint
-        };
+        var frm = new FormData();
+        frm.append("no_person", _this.noPerson);
+        frm.append("yn_fingerprint", _this.ynFingerprint);
         this.$http
-          .get("/m/person/modifyFingerPrint.json", {
-            params: data
-          })
+          .post("/m/person/modifyFingerPrint.json", frm)
           .then(response => {
             var result = response.data;
             if (result.result == "00") {

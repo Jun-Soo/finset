@@ -180,14 +180,11 @@ export default {
         this.$router.push("/proxy");
         return;
       } else {
-        var data = {
-          no_person: _this.username,
-          pass_person: _this.password
-        };
+        var frm = new FormData();
+        frm.append("no_person", _this.username);
+        frm.append("pass_person", _this.password);
         this.$http
-          .get("/m/person/changePwd.json", {
-            params: data
-          })
+          .post("/m/person/changePwd.json", frm)
           .then(response => {
             var result = response.data;
             localStorage.removeItem("_tempPwd");

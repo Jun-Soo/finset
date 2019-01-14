@@ -179,19 +179,14 @@ export default {
     //비밀번호 틀린횟수 변경
     modifyPwdFailCnt: function(mode) {
       var _this = this;
-      var data = {
-        no_person: _this.username,
-        cnt_fail_mode: mode,
-        cnt_fail: _this.cntFailPwd
-      };
-      this.$http
-        .get("/m/person/modifyPwdFailCnt.json", {
-          params: data
-        })
-        .then(response => {
-          var result = response.data;
-          console.log("modifyPwdFailCnt :" + result);
-        });
+      var frm = new FormData();
+      frm.append("no_person", _this.username);
+      frm.append("cnt_fail_mode", mode);
+      frm.append("cnt_fail", _this.cntFailPwd);
+      this.$http.post("/m/person/modifyPwdFailCnt.json", frm).then(response => {
+        var result = response.data;
+        console.log("modifyPwdFailCnt :" + result);
+      });
     },
     login: function() {
       var _this = this;
@@ -395,11 +390,11 @@ export default {
             window.Android.closeFingerPrint();
           }
 
-          var data = { no_person: _this.username, yn_fingerprint: "N" };
+          var data = new FormData();
+          data.append("no_person", _this.username);
+          data.append("yn_fingerprint", "N");
           _this.$http
-            .get("/m/person/modifyFingerPrint.json", {
-              params: data
-            })
+            .post("/m/person/modifyFingerPrint.json", data)
             .then(response => {
               _this.$store.state.user.ynFingerprint = "N";
               _this.$router.push("/member/certCodeLogin");

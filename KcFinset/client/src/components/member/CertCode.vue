@@ -177,38 +177,33 @@ export default {
         this.$router.push("/proxy");
         return;
       } else {
-        var data = {
-          no_person: _this.noPerson,
-          pass_person: _this.password
-        };
-        this.$http
-          .get("/m/person/changePwd.json", {
-            params: data
-          })
-          .then(response => {
-            var result = response.data;
-            if (result.result == "00") {
-              if (_this.chkFingerPrint == "Y") {
-                setTimeout(function() {
-                  _this.$router.push("/member/certFinger");
-                }, 2000);
-              } else {
-                if (
-                  Constant.userAgent == "Android" ||
-                  Constant.userAgent == "iOS"
-                ) {
-                  //_this.checkExistCert();
-                  _this.$router.push("/scrap/fcLink");
-                } else {
-                  _this.login();
-                }
-              }
-              this.$toast.center("비밀번호설정이 완료 되었습니다.");
+        var frm = new FormData();
+        frm.append("no_person", _this.no_person);
+        frm.append("pass_person", _this.pass_person);
+        this.$http.post("/m/person/changePwd.json", frm).then(response => {
+          var result = response.data;
+          if (result.result == "00") {
+            if (_this.chkFingerPrint == "Y") {
+              setTimeout(function() {
+                _this.$router.push("/member/certFinger");
+              }, 2000);
             } else {
-              this.$toast.center(result.message);
-              return false;
+              if (
+                Constant.userAgent == "Android" ||
+                Constant.userAgent == "iOS"
+              ) {
+                //_this.checkExistCert();
+                _this.$router.push("/scrap/fcLink");
+              } else {
+                _this.login();
+              }
             }
-          });
+            this.$toast.center("비밀번호설정이 완료 되었습니다.");
+          } else {
+            this.$toast.center(result.message);
+            return false;
+          }
+        });
       }
     },
     login: function() {

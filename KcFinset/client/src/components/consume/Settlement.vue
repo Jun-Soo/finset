@@ -418,8 +418,10 @@ export default {
             list[idx]["viewName"] = "";
             if (list[idx].no_person == _this.$store.state.user.noPerson) {
               list[idx]["viewName"] = "나";
-            } else {
+            } else if (list[idx].nm_person.length > 3) {
               list[idx]["viewName"] = list[idx].nm_person.substring(1);
+            } else {
+              list[idx]["viewName"] = list[idx].nm_person;
             }
           }
           _this.shareList = list;
@@ -533,7 +535,7 @@ export default {
           days: [6, 0, 2, 3, 4, 5]
         };
         this.disabledDate2 = {
-          from: new Date(this.today), 
+          from: new Date(this.today),
           days: [6, 1, 2, 3, 4, 5]
         };
       } else if (this.dataPeriod == "week") {

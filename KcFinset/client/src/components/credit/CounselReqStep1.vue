@@ -136,6 +136,7 @@ export default {
     },
     sex: function() {
       if ((this.telCom == null || this.telCom == "") && this.sex.length > 0) {
+        $("#sex").blur();
         this.$refs.telCom.open();
       }
     }

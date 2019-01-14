@@ -49,7 +49,7 @@
 
       <div class="btn-wrap col2">
         <a v-on:click="chkFinger('N')" class="btn-stroke">아니오</a>
-        <a v-on:click="chkFinger('Y')" class="btn-solid">네</a>
+        <a v-on:click="chkFinger('Y')" class="btn-solid">예</a>
       </div>
 
     </section>

@@ -138,18 +138,22 @@ export default {
     frm.append("code_value", "1.0");
     frm.append("code_group", "OPENAPI_TERMS");
     _this.$http.post("/m/login/getAgreeTerm.json", frm).then(response => {
-      //정상, 에러 처리 필요
       if (response.data.result == "1") {
         _this.term_db = response.data.etc;
         _this.nm_code = response.data.nm_code;
       } else {
         //openAPI 못불러옴
+        console.log("cannot call OPEN_API_TERM");
       }
-      _this.seen=true;
+      _this.seen = true;
     });
   },
   beforeMount() {},
   mounted() {
+    $("body").removeClass("not-scroll");
+  },
+  beforeUpdate() {},
+  updated() {
     var _this = this;
     $(":checkbox").change(function() {
       if (_this.chkBox1 && _this.chkBox2 && _this.chkBox3) {
@@ -168,11 +172,7 @@ export default {
         _this.$store.state.user.isEventPush = true;
       }
     });
-    $("body").removeClass("not-scroll");
-  },
-  beforeUpdate() {},
-  updated() {
-    if (this.chkAll) window.scrollTo(0, window.innerHeight);
+    if (_this.checked == "check") window.scrollTo(0, window.innerHeight);
   },
   beforeDestroy() {},
   destroyed() {},
@@ -205,7 +205,6 @@ export default {
       var _this = this;
       var url = "/m/person/createPersonAgreeHist.json";
       if (_this.chkBox1 && _this.chkBox2) {
-        console.log(_this.$store.state.isLoggedIn);
         if (_this.$store.state.isLoggedIn) {
           var tJson = {
             no_person: _this.$store.state.user.noPerson,

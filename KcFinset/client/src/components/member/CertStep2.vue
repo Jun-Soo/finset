@@ -239,11 +239,12 @@ export default {
               _this.$router.push("/home?hp=" + _this.hp);
             }, 700);
           } else {
-            this.insertPerson();
+            _this.insertPerson();
           }
         } else {
           this.$toast.center(result.message);
           _this.smsCertNo = "";
+          if (!_this.timerObj) _this.stop();
           return false;
         }
       });

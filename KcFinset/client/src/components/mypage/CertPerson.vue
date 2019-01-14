@@ -142,6 +142,7 @@ export default {
     },
     sex: function() {
       if ((this.telCom == null || this.telCom == "") && this.sex.length > 0) {
+        $("#sex").blur();
         this.$refs.telCom.open();
       }
     },
@@ -358,7 +359,6 @@ export default {
       formData.append("smsCertNo", _this.smsCertNo);
       this.$http.post("/m/login/kcmCertify.json", formData).then(response => {
         var result = response.data;
-        console.log(result);
         if (result.result == "00") {
           _this.kcb_ci = result.kcb_ci;
           _this.kcb_di = result.kcb_di;
@@ -375,8 +375,6 @@ export default {
     start: function() {
       var _this = this;
       _this.time = _this.minutes * 60 + _this.secondes;
-      console.log(_this.time);
-      console.log(this.timerObj);
       if (!this.timerObj) {
         this.timerObj = setInterval(() => {
           if (_this.time > 0) {

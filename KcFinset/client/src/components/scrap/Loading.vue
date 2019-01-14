@@ -63,6 +63,7 @@ export default {
       this.$router.push({
         name: "scrapRegFcLink",
         params: {
+          isSignup: this.$route.params.isSignup, //초기 등록 여부
           cn: this.$route.params.cn,
           dn: this.$route.params.dn
         }

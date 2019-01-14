@@ -122,11 +122,21 @@ export default {
           }
         })
         .then(response => {
+          this.$store.state.isLoading = false;
           if (response.data.result == "10") {
             //정상
             localStorage.removeItem("tempPwd");
             _this.$store.commit("LOGIN", response.data);
-            _this.$router.push("/main");
+            if (
+              Constant.userAgent == "Android" ||
+              Constant.userAgent == "iOS"
+            ) {
+              //_this.checkExistCert();
+              _this.$router.push("/scrap/fcLink");
+            } else {
+              _this.$store.state.isLoading = true;
+              _this.$router.push("/main");
+            }
           } else {
             this.$toast.center(ko.messages.loginErr);
             return;
@@ -151,26 +161,18 @@ export default {
         var frm = new FormData();
         frm.append("no_person", _this.noPerson);
         frm.append("yn_fingerprint", _this.ynFingerprint);
+        this.$store.state.isLoading = true;
         this.$http
           .post("/m/person/modifyFingerPrint.json", frm)
           .then(response => {
             var result = response.data;
+            _this.$store.state.isLoading = false;
             if (result.result == "00") {
               this.$toast.center("지문 로그인 설정이 완료되었습니다.");
               this.$store.state.user.ynFingerprint = _this.ynFingerprint;
-              if (
-                Constant.userAgent == "Android" ||
-                Constant.userAgent == "iOS"
-              ) {
-                //_this.checkExistCert();
-                setTimeout(function() {
-                  _this.$router.push("/scrap/fcLink");
-                }, 1000);
-              } else {
-                setTimeout(function() {
-                  _this.login();
-                }, 2000);
-              }
+              setTimeout(function() {
+                _this.login();
+              }, 2000);
             } else {
               this.$toast.center(result.message);
               return false;
@@ -178,13 +180,7 @@ export default {
           });
       } else if (gubun == "N") {
         _this.ynFingerprint = "N";
-        if (Constant.userAgent == "Android" || Constant.userAgent == "iOS") {
-          _this.$router.push("/scrap/fcLink");
-        } else {
-          setTimeout(function() {
-            _this.login();
-          }, 2000);
-        }
+        _this.login();
       }
     }
     /***

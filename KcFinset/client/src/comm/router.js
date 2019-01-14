@@ -1446,7 +1446,8 @@ export const routes = [{
     name: 'scrapFcLink',
     component: ScrapFcLink,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1472,7 +1473,8 @@ export const routes = [{
     name: 'scrapLoading',
     component: ScrapLoading,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1480,7 +1482,8 @@ export const routes = [{
     name: 'scrapRegFcLink',
     component: ScrapRegFcLink,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {
@@ -1488,7 +1491,8 @@ export const routes = [{
     name: 'scrapSelFcLink',
     component: ScrapSelFcLink,
     meta: {
-      allowPath: true
+      allowPath: true,
+      requiresAuth: true
     }
   },
   {

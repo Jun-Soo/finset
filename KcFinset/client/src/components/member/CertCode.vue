@@ -178,8 +178,8 @@ export default {
         return;
       } else {
         var frm = new FormData();
-        frm.append("no_person", _this.no_person);
-        frm.append("pass_person", _this.pass_person);
+        frm.append("no_person", _this.noPerson);
+        frm.append("pass_person", _this.password);
         this.$http.post("/m/person/changePwd.json", frm).then(response => {
           var result = response.data;
           if (result.result == "00") {
@@ -188,15 +188,9 @@ export default {
                 _this.$router.push("/member/certFinger");
               }, 2000);
             } else {
-              if (
-                Constant.userAgent == "Android" ||
-                Constant.userAgent == "iOS"
-              ) {
-                //_this.checkExistCert();
-                _this.$router.push("/scrap/fcLink");
-              } else {
+              setTimeout(function() {
                 _this.login();
-              }
+              }, 2000);
             }
             this.$toast.center("비밀번호설정이 완료 되었습니다.");
           } else {
@@ -222,11 +216,22 @@ export default {
         })
         .then(response => {
           console.log("login result");
+          this.$store.state.isLoading = false;
           if (response.data.result == "10") {
             //정상
             localStorage.removeItem("tempPwd");
             _this.$store.commit("LOGIN", response.data);
-            _this.$router.push("/main");
+            // 핸드폰으로 접속시 공인인증서 등록 화면으로 이동
+            if (
+              Constant.userAgent == "Android" ||
+              Constant.userAgent == "iOS"
+            ) {
+              //_this.checkExistCert();
+              _this.$router.push("/scrap/fcLink");
+            } else {
+              this.$store.state.isLoading = true;
+              _this.$router.push("/main");
+            }
           } else {
             this.$toast.center(ko.messages.loginErr);
             return;

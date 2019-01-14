@@ -33,9 +33,9 @@ export default {
   data() {
     return {
       seen: false,
+      isSignup: this.$route.params.isSignup, //초기 등록 여부
       isData: false,
       noPerson: this.$store.state.user.noPerson,
-      password: localStorage.getItem("tempPwd"),
       cn: this.$route.params.cn,
       dn: this.$route.params.dn,
       normalMessage: this.$route.params.normalMessage,
@@ -93,36 +93,6 @@ export default {
           }
         }
       }
-    },
-    login: function() {
-      var _this = this;
-
-      var querystring = require("querystring");
-      var data = querystring.stringify({
-        j_username: _this.noPerson,
-        j_password: _this.password
-      });
-      this.$store.state.isLoading = true;
-      this.$http
-        .post(_this.$store.state.loginPath, data, {
-          headers: {
-            "Content-type": "application/x-www-form-urlencoded"
-          }
-        })
-        .then(response => {
-          if (response.data.result == "10") {
-            //정상
-            localStorage.removeItem("tempPwd");
-            _this.$store.commit("LOGIN", response.data);
-            _this.$router.push("/main");
-          } else {
-            _this.$toast.center(ko.messages.loginErr);
-            return;
-          }
-        })
-        .catch(e => {
-          _this.$toast.center(ko.messages.error);
-        });
     },
     //자동스크래핑 가능 금융사 조회
     getLinkedFcInfo: function() {
@@ -199,16 +169,17 @@ export default {
         }
       }
       if (cnt == 0) {
-        if (this.$store.state.isLoggedIn) {
+        if (this.isSignup) {
           //this.$router.push("/scrap/ctrlFcLink");
           this.$router.push({
             name: "scrapCtrlFcLink",
             query: {
-              isScrap: true
+              isScrap: true // 자동스크래핑 필요 여부
             }
           });
         } else {
-          this.login();
+          this.$store.state.isLoading = true;
+          this.$router.push("/main");
         }
         return;
       }
@@ -217,16 +188,17 @@ export default {
         .post("/m/scrap/updateFcLinkInfoList.json", data)
         .then(function(response) {
           var result = response.data.code;
-          if (_this.$store.state.isLoggedIn) {
+          if (_this.isSignup) {
             //_this.$router.push("/scrap/ctrlFcLink");
             _this.$router.push({
               name: "scrapCtrlFcLink",
               query: {
-                isScrap: true
+                isScrap: true // 자동스크래핑 필요 여부
               }
             });
           } else {
-            _this.login();
+            this.$store.state.isLoading = true;
+            _this.$router.push("/main");
           }
         })
         .catch(e => {

@@ -265,6 +265,7 @@ export default {
       this.$router.push({
         name: "scrapLoading",
         params: {
+          isSignup: this.$route.params.isSignup, //초기 등록 여부
           dn: this.$route.params.dn,
           cn: this.$route.params.cn,
           normalMessage: "연동 가능한 금융사를<br>확인 중 입니다.",

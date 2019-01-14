@@ -524,7 +524,7 @@ export default {
       // 금융정보제공동의서 확인여부 체크 필요
       this.$router.push({
         name: "scrapSelFcLink",
-        params: { isSingle: false, dn: dn, cn: cn }
+        params: { isSignup: true, isSingle: false, dn: dn, cn: cn }
       });
     },
     resultCheckPasswordCertForUpdate: function(dn, cn) {
@@ -534,6 +534,7 @@ export default {
         this.$router.push({
           name: "scrapSelFcLink",
           params: {
+            isSignup: true,
             isSingle: true,
             dn: dn,
             cn: cn,

@@ -45,41 +45,15 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
-    login: function() {
-      var _this = this;
-      var querystring = require("querystring");
-      var data = querystring.stringify({
-        j_username: _this.noPerson,
-        j_password: _this.password
-      });
-      this.$store.state.isLoading = true;
-      this.$http
-        .post(_this.$store.state.loginPath, data, {
-          headers: {
-            "Content-type": "application/x-www-form-urlencoded"
-          }
-        })
-        .then(response => {
-          //console.log("login result");
-          if (response.data.result == "10") {
-            //정상
-            localStorage.removeItem("tempPwd");
-            _this.$store.commit("LOGIN", response.data);
-            _this.$router.push("/main");
-          } else {
-            this.$toast.center(ko.messages.loginErr);
-            return;
-          }
-        })
-        .catch(e => {
-          this.$toast.center(ko.messages.error);
-        });
-    },
     clickYes: function() {
       this.checkExistCert();
     },
     clickNo: function() {
-      this.login();
+      var _this = this;
+      setTimeout(function() {
+        _this.$store.state.isLoading = true;
+        _this.$router.push("/main");
+      }, 1000);
     },
     // 공인인증서 유무 체크
     checkExistCert: function() {
@@ -100,14 +74,6 @@ export default {
     /***
      * Native Call function
      ***/
-    resultCheckFingerPrint: function(result) {
-      //console.log(result);
-      if (result == true || result == 1) {
-        this.chkFingerPrint = "Y";
-      } else {
-        this.chkFingerPrint = "N";
-      }
-    },
     //공인인증서 유무 결과 (모바일에서 호출)
     resultCheckCert: function(isCert) {
       //console.log("isCert : " + isCert);
@@ -123,7 +89,6 @@ export default {
             noPerson: this.$store.state.user.noPerson,
             nmPerson: this.$store.state.user.nmPerson
           });
-          //do nothing
         } else if (Constant.userAgent == "Android") {
           window.Android.checkPasswordCert(
             this.$store.state.user.noPerson,
@@ -133,19 +98,23 @@ export default {
       } else {
         // 공인인증서가 없을 경우
         this.$toast.center("공인인증서가 없습니다.");
-        this.login();
+        setTimeout(function() {
+          this.$store.state.isLoading = true;
+          _this.$router.push("/main");
+        }, 1000);
       }
     },
     resultCheckPasswordCert: function(dn, cn) {
-      // 금융정보제공동의서 확인여부 체크 필요
+      // 공인인증서 비밀번호 체크 후 연동 금융사 선택 화면으로 이동
       this.$router.push({
         name: "scrapSelFcLink",
-        params: { isSingle: false, dn: dn, cn: cn }
+        params: { isSignup: false, isSingle: false, dn: dn, cn: cn }
       });
     },
     // Native에서 건너뛰기 눌렀을 경우 호출
     resultCheckAvaliableScrapList: function() {
-      this.login();
+      this.$store.state.isLoading = true;
+      this.$router.push("/main");
     }
   }
 };

@@ -32,6 +32,16 @@ export default {
         legend: {
           display: false
         },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    // Include a dollar sign in the ticks
+                    callback: function(value, index, values) {
+                        return value.toString().substring(0, value.toString().length-4) +"만원";
+                    }
+                }
+            }]
+        },
         events: ["click"]
       },
       rangeDate: [] //차트에 뿌려지는 label 날짜값

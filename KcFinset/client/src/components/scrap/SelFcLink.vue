@@ -9,7 +9,7 @@
           <!-- <p class="mt10"><input type="checkbox" id="chk3" :checked="isCheckStock" @click="clickCheck('stock')"><label for="chk3">증권</label></p> -->
           <p class="mt10"><input type="checkbox" id="chk4" :checked="isCheckNts" @click="clickCheck('nts')"><label for="chk4">국세청</label></p>
         </div>
-        <!-- 
+
         <div class="pb90" v-if="isCheckStock">
           <p class="mt40">증권사 연계를 위하여 이메일입력과 정보제공 동의가 필요합니다.</p>
           <h3 class="mt15">이메일</h3>
@@ -22,7 +22,7 @@
             </div>
           </div>
         </div>
-         -->
+
       </div>
 
       <div class="btn-wrap float" v-if="showButton">
@@ -223,20 +223,22 @@ export default {
       this.$http
         .post("/m/scrap/getTermsContent.json", formData)
         .then(function(response) {
+          _this.$store.state.isLoading = false;
           if (response.data) {
             _this.isGetCertContent = true;
             _this.financeTerms = response.data.financeTerms;
             var financeTerms = JSON.parse(_this.financeTerms);
             _this.financeTermsText = financeTerms.text;
-            _this.$store.state.isLoading = false;
+
             if (isShow) {
               _this.openPop();
             }
           } else {
-            this.$toast.center(ko.messages.error);
+            this.$toast.center("금융정보제공동의서 조회를 실패하였습니다.");
           }
         })
         .catch(e => {
+          _this.$store.state.isLoading = false;
           this.$toast.center(ko.messages.error);
         });
     },
@@ -249,14 +251,16 @@ export default {
       formData.append("email", this.emailtext);
       formData.append("financeTerms", this.financeTerms);
       formData.append("jwsInfo", jwsInfo);
-
+      _this.$store.state.isLoading = true; // 시작시 Spinner 보여주기
       this.$http
         .post("/m/scrap/sendTermsContent.json", formData)
         .then(function(response) {
           //console.log(response.data);
+          _this.$store.state.isLoading = false;
           _this.nextStep();
         })
         .catch(e => {
+          _this.$store.state.isLoading = false;
           this.$toast.center(ko.messages.error);
         });
     },

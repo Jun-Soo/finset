@@ -167,10 +167,13 @@ export default {
     dataPeriod: function() {
       let today = new Date();
       this.isRangeList = false;
+      let dt_basic = this.dt_basic;
       if (this.dataPeriod == "yr") {
         this.dp_minimumView = "month";
         this.dp_format = "yyyy.MM";
-        this.dt_from = new Date(moment(this.dt_to).add(-3, "month"));
+        // this.dt_from = new Date(moment(this.dt_to).add(-3, "month"));
+        console.log(moment(this.dt_to).startOf('year'));
+        this.dt_from = new Date(moment(this.dt_to).startOf('year'));
       } else if (this.dataPeriod == "mon") {
         this.dp_minimumView = "day";
         this.dp_format = "yyyy.MM.dd";
@@ -178,11 +181,30 @@ export default {
           moment(today)
             .add(-1, "month")
             .isoWeekday(1)
-        );
+        ); //한달전
+          //  let yrmon = null;
+          //  if(dt_basic == "01"){
+          //    this.dt_from = new Date(moment(this.dt_to).startOf('month'));
+          //  }else{
+          //     if (Number(dt_basic) < this.today.getDate()) {
+          //       yrmon = moment().format("YYYYMM");
+          //     } else {
+          //       //(dt_basic >= today.getDate())
+          //       yrmon = moment()
+          //         .add(-1, "month")
+          //         .format("YYYYMM");
+          //     }
+          //   this.dt_from = new Date(moment(yrmon + dt_basic, "YYYYMMDD"));
+          //  }
+          // if (dt_basic == null || dt_basic == "") {
+          //   //기준일이 null일 경우
+          //   dt_basic = "01";
+          // }
       } else if (this.dataPeriod == "week") {
         this.dp_minimumView = "day";
         this.dp_format = "yyyy.MM.dd";
-        this.dt_from = new Date(moment(today).add(-7, "days")); //7일전
+        this.dt_from = new Date(moment(today).isoWeekday(1));
+        // this.dt_from = new Date(moment(today).add(-7, "days")); //7일전
       }
     },
     listType: function() {
@@ -255,11 +277,26 @@ export default {
       //datePicker setting
       this.dt_to = today;
       if (this.dataPeriod == "yr") {
-        this.dt_from = new Date(moment(this.dt_to).add(-3, "month"));
+        // this.dt_from = new Date(moment(this.dt_to).add(-3, "month"));
       } else if (this.dataPeriod == "mon") {
+        /* 기준일 base month*/
+        // let yrmon = null;
+        // if (Number(dt_basic) < today.getDate()) {
+        //   yrmon = moment().format("YYYYMM");
+        // } else {
+        //   //(dt_basic >= today.getDate())
+        //   yrmon = moment()
+        //     .add(-1, "month")
+        //     .format("YYYYMM");
+        // }
+        // if (dt_basic == null || dt_basic == "") {
+        //   //기준일이 null일 경우
+        //   dt_basic = "01";
+        // }
+        // this.dt_from = new Date(moment(yrmon + dt_basic, "YYYYMMDD"));
       } else if (this.dataPeriod == "week") {
         // console.log(this.$moment(today).isoWeekday(7));
-        this.dt_from = new Date(moment(today).add(-7, "days")); //7일전
+        // this.dt_from = new Date(moment(today).add(-7, "days")); //7일전
         // this.dt_from = new Date(this.$moment(today).isoWeekday(0)); //주 초 (일요일부터)
       }
     },
@@ -395,6 +432,9 @@ export default {
       //만원단위
       this.consumeSum = Math.round(this.consumeSum / 10000);
       this.incomeSum = Math.round(this.incomeSum / 10000);
+      //, 찍기
+      this.consumeSum = this.numberWithCommas(this.consumeSum.toString());
+      this.incomeSum = this.numberWithCommas(this.incomeSum.toString());
     },
     filterShareList: function() {
       var shareList = new Array();

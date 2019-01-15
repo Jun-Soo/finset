@@ -133,17 +133,29 @@ export default {
           }
           //회원가입 또는 본인 인증시 화면 나갔을때 toast처리
           if (response.data.rtnPath == "/member/certCode") {
-            _this.$toast("회원가입 진행 중입니다. 비밀번호를 설정해주세요.", {
-              type: "center",
-              duration: 3000
-            });
+            _this.$toast(
+              "회원가입 진행 중입니다. 비밀번호 설정 페이지로 이동합니다.",
+              {
+                type: "center",
+                duration: 3000
+              }
+            );
+            response.data.rtnPath = {
+              name: "memberCertCode",
+              query: {
+                noCode: true
+              }
+            };
             if (localStorage.getItem("tempPwd"))
               localStorage.removeItem("tempPwd");
           } else if (response.data.rtnPath == "/mypage/certPerson") {
-            _this.$toast("비밀번호를 5회 이상 실패하여 본인인증 페이지로 갑니다.", {
+            _this.$toast(
+              "비밀번호를 5회 이상 실패하여 본인인증 페이지로 갑니다.",
+              {
                 type: "center",
                 duration: 3000
-              });
+              }
+            );
           }
           _this.$store.state.user.ynFingerprint = response.data.yn_fingerprint;
           _this.$router.push(response.data.rtnPath);

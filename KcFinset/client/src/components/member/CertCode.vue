@@ -78,7 +78,7 @@ export default {
     } else if (Constant.userAgent == "iOS") {
       //지문인식 가능여부 체크 결과 콜백 이벤트
       Jockey.on("resultCheckFingerPrint", function(param) {
-        resultCheckFingerPrint(param);
+        _this.resultCheckFingerPrint(param);
         Jockey.off("resultCheckFingerPrint");
       });
       Jockey.send("checkFingerPrint");
@@ -88,7 +88,11 @@ export default {
   mounted() {
     if (!localStorage.getItem("tempPwd")) {
       this.$store.state.title = "비밀번호 설정";
-      this.certMessage = "비밀번호를 입력해주세요.";
+      if (this.$route.query.noCode) {
+        this.certMessage = "회원가입 진행 중 입니다. 비밀번호를 설정해주세요.";
+      } else {
+        this.certMessage = "비밀번호를 입력해주세요.";
+      }
     } else {
       this.$store.state.title = "비밀번호 확인";
       this.certMessage = "비밀번호를 다시 한번 입력해주세요.";
@@ -174,8 +178,14 @@ export default {
     nextPage: function(type) {
       var _this = this;
       for (var i = 0; i < _this.password.length; i++) {
-        if (i < _this.password.length - 2 &&_this.password.charCodeAt(i) == _this.password.charCodeAt(i + 1)) {
-          if (i < _this.password.length - 1 &&_this.password.charCodeAt(i) == _this.password.charCodeAt(i + 2)) {
+        if (
+          i < _this.password.length - 2 &&
+          _this.password.charCodeAt(i) == _this.password.charCodeAt(i + 1)
+        ) {
+          if (
+            i < _this.password.length - 1 &&
+            _this.password.charCodeAt(i) == _this.password.charCodeAt(i + 2)
+          ) {
             _this.errMsg = "비밀번호는 3자리 이상 연속될 수 없습니다.";
             _this.password = "";
             _this.initClassPass();

@@ -131,6 +131,7 @@ export default {
             //   Jockey.send("initFingerPrint");
             // }
           }
+          //회원가입 또는 본인 인증시 화면 나갔을때 toast처리
           if (response.data.rtnPath == "/member/certCode") {
             _this.$toast("회원가입 진행 중입니다. 비밀번호를 설정해주세요.", {
               type: "center",

@@ -4,9 +4,9 @@
     <section v-if="seen">
       <div class="certcode-wrap">
         <p class="text">
-          비밀번호를 입력해주세요.
+          {{certMessage}}
         </p>
-        <p class="textred" v-if="cntFailPwd > 0"> {{ errMsg }} </p>
+        <p class="textred" v-if="errMsg"> {{ errMsg }} </p>
 
         <div class="pass-wrap">
           <input type="password" v-bind:style="classPass1" v-model="pw1" id="pass_number1" maxlength="1" readonly />
@@ -146,8 +146,8 @@ export default {
             _this.password = "";
             _this.initClassPass();
             // _this.backClick();
-            this.$toast.center(ko.messages.notMatchPwd);
-            return;
+            this.$toast.center(ko.messages.notMatchPwd + " 다시 설정해주세요.");
+            localStorage.removeItem("_tempPwd");
           } else {
             type = "changePwd";
           }
@@ -175,6 +175,17 @@ export default {
     },
     nextPage: function(type) {
       var _this = this;
+      for (var i = 0; i < _this.password.length; i++) {
+        if (i < _this.password.length - 2 &&_this.password.charCodeAt(i) == _this.password.charCodeAt(i + 1)) {
+          if (i < _this.password.length - 1 &&_this.password.charCodeAt(i) == _this.password.charCodeAt(i + 2)) {
+            _this.errMsg = "비밀번호는 3자리 이상 연속될 수 없습니다.";
+            _this.password = "";
+            _this.initClassPass();
+            localStorage.removeItem("_tempPwd");
+            return;
+          }
+        }
+      }
       if (type == "confirmPage") {
         this.$store.state.proxyUrl = "/mypage/chgPwd";
         this.$router.push("/proxy");
@@ -189,6 +200,8 @@ export default {
             var result = response.data;
             localStorage.removeItem("_tempPwd");
             if (result.result == "00") {
+              _this.$store.state.user.cntFailPwd = 0;
+              _this.$store.state.user.cntFailFinger = 0;
               _this.$toast.center("비밀번호설정이 완료 되었습니다.");
               if (_this.$store.state.isLoggedIn) {
                 _this.$router.push("/mypage/cert");

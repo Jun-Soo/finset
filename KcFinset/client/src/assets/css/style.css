@@ -6996,7 +6996,7 @@ button.cal {
 }
 
 .certcode-wrap .text {
-  font-size: 12px;
+  font-size: 14px;
   color: #333;
   text-align: center;
 }
@@ -7004,6 +7004,7 @@ button.cal {
 .certcode-wrap .textred {
   color: #e52638;
   margin-top: 10px;
+  font-size: 13px;
   text-align: center;
 }
 

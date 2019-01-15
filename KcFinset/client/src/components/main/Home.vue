@@ -131,6 +131,19 @@ export default {
             //   Jockey.send("initFingerPrint");
             // }
           }
+          if (response.data.rtnPath == "/member/certCode") {
+            _this.$toast("회원가입 진행 중입니다. 비밀번호를 설정해주세요.", {
+              type: "center",
+              duration: 3000
+            });
+            if (localStorage.getItem("tempPwd"))
+              localStorage.removeItem("tempPwd");
+          } else if (response.data.rtnPath == "/mypage/certPerson") {
+            _this.$toast("비밀번호를 5회 이상 실패하여 본인인증 페이지로 갑니다.", {
+                type: "center",
+                duration: 3000
+              });
+          }
           _this.$store.state.user.ynFingerprint = response.data.yn_fingerprint;
           _this.$router.push(response.data.rtnPath);
         })

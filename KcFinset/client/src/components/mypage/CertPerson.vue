@@ -141,9 +141,12 @@ export default {
       }
     },
     sex: function() {
+      var _this = this;
       if ((this.telCom == null || this.telCom == "") && this.sex.length > 0) {
         $("#sex").blur();
-        this.$refs.telCom.open();
+        setTimeout(function() {
+          _this.$refs.telCom.open();
+        }, 500);
       }
     },
     telCom: function() {

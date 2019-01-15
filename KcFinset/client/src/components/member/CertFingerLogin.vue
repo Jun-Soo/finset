@@ -1,7 +1,5 @@
 <template>
   <section>
-    <!-- <div class="certcode-wrap">
-    </div> -->
     <div class="cert-finger" aria-readonly="true">
       <div class="wrap">
         <p class="text">지문을 입력해 주세요.</p>

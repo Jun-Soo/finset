@@ -30,7 +30,7 @@
         </div>
         <p class="warn" id="certNoWarning" name="certNoWarning" v-if="timer==='00:00'">인증번호를 재전송 해주세요.</p>
       </div>
-      <div class="btn-wrap" id="confirmed_div" v-if="smsCertNo&&timer!='00:00'">
+      <div class="btn-wrap float" id="confirmed_div" v-if="smsCertNo&&timer!='00:00'">
         <a id="confirmed_certify" class="btn-next" v-on:click="confirmedCertify()">다음</a>
       </div>
     </section>

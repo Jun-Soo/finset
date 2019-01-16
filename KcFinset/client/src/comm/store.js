@@ -50,7 +50,8 @@ const store = new Vuex.Store({
     linkUrl: '',
     ynReload: 'N',
     uuid: '',
-    ajaxState: true
+    ajaxState: true,
+    certAddCnt: 1
   },
   mutations: {
     INIT (state, data) {

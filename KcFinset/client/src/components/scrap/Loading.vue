@@ -27,7 +27,7 @@ export default {
   // computed () {
   // },
   beforeCreate() {
-    this.$store.state.header.type = "";
+    this.$store.state.header.type = "noHeader";
     this.$store.state.title = "금융사 연동";
   },
   created() {

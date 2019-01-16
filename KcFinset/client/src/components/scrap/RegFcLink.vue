@@ -60,6 +60,11 @@ export default {
     this.$store.state.title = "연동가능 금융사";
   },
   created() {
+    window.resultCheckCert = this.resultCheckCert;
+    window.resultCheckPasswordCert = this.resultCheckPasswordCert;
+    window.resultCheckAvaliableScrapList = this.resultCheckAvaliableScrapList;
+    window.resultIsMultipleCert = this.resultIsMultipleCert;
+
     this.getLinkedFcInfo();
   },
   beforeMount() {},
@@ -178,8 +183,23 @@ export default {
             }
           });
         } else {
-          this.$store.state.isLoading = true;
-          this.$router.push("/main");
+          // 공인인증서 추가 등록
+          if (this.$store.state.certAddCnt > 0) {
+            this.$store.state.certAddCnt--;
+            if (Constant.userAgent == "iOS") {
+              //공인인증서 여러개인지 확인 콜백 이벤트
+              Jockey.on("resultIsMultipleCert", function(param) {
+                _this.resultIsMultipleCert(param.isMultiple);
+                Jockey.off("resultIsMultipleCert");
+              });
+              Jockey.send("isMultipleCert");
+            } else if (Constant.userAgent == "Android") {
+              window.Android.isMultipleCert();
+            }
+          } else {
+            this.$store.state.isLoading = true;
+            this.$router.push("/main");
+          }
         }
         return;
       }
@@ -197,8 +217,23 @@ export default {
               }
             });
           } else {
-            this.$store.state.isLoading = true;
-            _this.$router.push("/main");
+            // 공인인증서 추가 등록
+            if (_this.$store.state.certAddCnt > 0) {
+              _this.$store.state.certAddCnt--;
+              if (Constant.userAgent == "iOS") {
+                //공인인증서 여러개인지 확인 콜백 이벤트
+                Jockey.on("resultIsMultipleCert", function(param) {
+                  _this.resultIsMultipleCert(param.isMultiple);
+                  Jockey.off("resultIsMultipleCert");
+                });
+                Jockey.send("isMultipleCert");
+              } else if (Constant.userAgent == "Android") {
+                window.Android.isMultipleCert();
+              }
+            } else {
+              _this.$store.state.isLoading = true;
+              _this.$router.push("/main");
+            }
           }
         })
         .catch(e => {
@@ -222,6 +257,86 @@ export default {
         value +
         "'/>"
       );
+    },
+    // 공인인증서 유무 체크
+    checkExistCert: function() {
+      var _this = this;
+      if (Constant.userAgent == "iOS") {
+        //공인인증서 유무 체크 결과 콜백 이벤트
+        Jockey.on("resultCheckCert", function(param) {
+          var iscert = "false";
+          if (param.isCert == 1) iscert = "true";
+          _this.resultCheckCert(iscert);
+          Jockey.off("resultCheckCert");
+        });
+        Jockey.send("checkExistCert");
+      } else if (Constant.userAgent == "Android") {
+        window.Android.checkExistCert();
+      }
+    },
+    /***
+     * Native Call function
+     ***/
+    //공인인증서 여러개인지 확인 (모바일에서 호출)
+    resultIsMultipleCert: function(isMultiple) {
+      var _this = this;
+      if (isMultiple == "true") {
+        this.$dialogs
+          .confirm("추가 공인인증서를\n등록하시겠습니까?", Constant.options)
+          .then(res => {
+            if (res.ok) {
+              _this.checkExistCert();
+            } else {
+              _this.$store.state.isLoading = true;
+              _this.$router.push("/main");
+            }
+          });
+      } else {
+        this.$store.state.isLoading = true;
+        this.$router.push("/main");
+      }
+    },
+    //공인인증서 유무 결과 (모바일에서 호출)
+    resultCheckCert: function(isCert) {
+      //console.log("isCert : " + isCert);
+      var _this = this;
+      if (isCert == "true") {
+        // 공인인증서가 있을 경우
+        if (Constant.userAgent == "iOS") {
+          Jockey.on("resultCheckPasswordCert", function(param) {
+            _this.resultCheckPasswordCert(param.dn, param.cn);
+            Jockey.off("resultCheckPasswordCert");
+          });
+          Jockey.send("checkPasswordCert", {
+            noPerson: this.$store.state.user.noPerson,
+            nmPerson: this.$store.state.user.nmPerson
+          });
+        } else if (Constant.userAgent == "Android") {
+          window.Android.checkPasswordCert(
+            this.$store.state.user.noPerson,
+            this.$store.state.user.nmPerson
+          );
+        }
+      } else {
+        // 공인인증서가 없을 경우
+        this.$toast.center("공인인증서가 없습니다.");
+        setTimeout(function() {
+          this.$store.state.isLoading = true;
+          _this.$router.push("/main");
+        }, 1000);
+      }
+    },
+    resultCheckPasswordCert: function(dn, cn) {
+      // 공인인증서 비밀번호 체크 후 연동 금융사 선택 화면으로 이동
+      this.$router.push({
+        name: "scrapSelFcLink",
+        params: { isSignup: false, isSingle: false, dn: dn, cn: cn }
+      });
+    },
+    // Native에서 건너뛰기 눌렀을 경우 호출
+    resultCheckAvaliableScrapList: function() {
+      this.$store.state.isLoading = true;
+      this.$router.push("/main");
     }
   }
 };

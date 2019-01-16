@@ -62,7 +62,7 @@ export default {
     window.resultHasCertPassword = this.resultHasCertPassword;
   },
   mounted() {
-    this.orderCssFile();
+    this.sortCssFile();
 
     var _this = this;
     if (Constant.userAgent == "iOS") {
@@ -121,6 +121,28 @@ export default {
             //   "스크래핑 완료로 인하여<br/>정보를 갱신하겠습니다."
             // );
             _this.$toast.center("데이터 업데이트를 완료하였습니다.");
+            //모달 해제
+            if (
+              this.$modals != undefined &&
+              this.$modals.shownModals != undefined &&
+              this.$modals.shownModals.length > 0
+            ) {
+              var shownModals = this.$modals.shownModals;
+              for (var idx in shownModals) {
+                this.$modals.hide(shownModals[idx]);
+              }
+            }
+            //alert, confirm 창 해제
+            if (
+              this.$dialogs != undefined &&
+              this.$dialogs.items != undefined &&
+              this.$dialogs.items.length > 0
+            ) {
+              var items = this.$dialogs.items;
+              for (var idx in items) {
+                this.$dialogs.remove(items[idx]);
+              }
+            }
             // 화면 갱신 처리
             setTimeout(function() {
               // proxy화면 이동 후 현재화면으로 이동 (화면 갱신하면 Store가 갱신되는 현상으로 인한 임시 방편)
@@ -233,7 +255,7 @@ export default {
       this.$router.push(linkUrl);
     },
     // 임시로 css파일을 하단으로 내리는 로직
-    orderCssFile: function() {
+    sortCssFile: function() {
       var head = document.head.childNodes;
       for (var i in head) {
         if (head[i].nodeName == "LINK") {

@@ -115,7 +115,7 @@
       <div class="list01 box-list pb90">
         <div class="filter-wrap" v-if="shareList.length != 1">
           <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
-            <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
+            <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{formatSharePerson(person)}}</label>
           </div>
         </div>
         <div v-if="!isNone">
@@ -254,6 +254,30 @@ export default {
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    // ---------------------데이터 포멧---------------------
+    // 이름 포맷 변경
+    formatSharePerson: function(person) {
+      if ((person || "") == "") {
+        return "";
+      } else if (
+        (person.no_person || "") == "" ||
+        (person.nm_person || "") == ""
+      ) {
+        return "";
+      }
+
+      var myNoPerson = this.$store.state.user.noPerson;
+      if (person.no_person == myNoPerson) {
+        return "나";
+      } else {
+        if (person.nm_person.length > 3) {
+          return person.nm_person.substring(0, 3);
+        } else {
+          return person.nm_person;
+        }
+      }
+    },
+    // ---------------------//데이터 포멧---------------------
     // ---------------------화면 이벤트---------------------
     // 공유된 사용자 버튼 클릭 시
     clickShare: function(params) {

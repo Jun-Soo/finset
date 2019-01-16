@@ -18,7 +18,7 @@
             <p class="value">{{Common.formatNumber(income)}}</p>
           </div>
         </div>
-        <Progress :max="progressOption.max" :text="progressOption.text" :click="clickProgress" />
+        <Progress :max="progressMax" :text="progressText" :click="clickProgress" />
       </div>
 
       <div class="banner-wrap owl-carousel">
@@ -77,7 +77,7 @@
         <div class="list-wrap" v-if="shareList.length != 1">
           <div class="filter-wrap">
             <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
-              <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
+              <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{formatSharePerson(person)}}</label>
             </div>
           </div>
         </div>
@@ -151,34 +151,34 @@ export default {
   },
   computed: {
     // 조건에 따른 progressbar 변형
-    progressOption: function() {
-      if (!this.isScrap) {
-        return {
-          text: "공인 인증서를 등록하여 소비내역을 관리하세요",
-          max: 0
-        };
-      } else if (!this.isGoal) {
-        if (
-          this.curDate.getFullYear() == this.standardDt.getFullYear() &&
-          this.curDate.getMonth() == this.standardDt.getMonth()
-        ) {
-          return {
-            text: "예산을 설정하여 목표를 이루세요",
-            max: 0
-          };
-        } else {
-          return {
-            text: "설정된 예산이 없습니다",
-            max: 0
-          };
-        }
-      } else {
-        return {
-          text: this.progressText,
-          max: this.progressMax
-        };
-      }
-    },
+    // progressOption: function() {
+    //   if (!this.isScrap) {
+    //     return {
+    //       text: "공인 인증서를 등록하여 소비내역을 관리하세요",
+    //       max: 0
+    //     };
+    //   } else if (!this.isGoal) {
+    //     if (
+    //       this.curDate.getFullYear() == this.standardDt.getFullYear() &&
+    //       this.curDate.getMonth() == this.standardDt.getMonth()
+    //     ) {
+    //       return {
+    //         text: "예산을 설정하여 목표를 이루세요",
+    //         max: 0
+    //       };
+    //     } else {
+    //       return {
+    //         text: "설정된 예산이 없습니다",
+    //         max: 0
+    //       };
+    //     }
+    //   } else {
+    //     return {
+    //       text: this.progressText,
+    //       max: this.progressMax
+    //     };
+    //   }
+    // },
     ymText: function() {
       return this.formatHead(this.getYm(this.standardDt));
     }
@@ -211,6 +211,28 @@ export default {
     // 상단에 표출될 년 월 텍스트
     formatHead: function(dateStr) {
       return dateStr.substr(0, 4) + "." + dateStr.substr(4, 6);
+    },
+    // 이름 포맷 변경
+    formatSharePerson: function(person) {
+      if ((person || "") == "") {
+        return "";
+      } else if (
+        (person.no_person || "") == "" ||
+        (person.nm_person || "") == ""
+      ) {
+        return "";
+      }
+
+      var myNoPerson = this.$store.state.user.noPerson;
+      if (person.no_person == myNoPerson) {
+        return "나";
+      } else {
+        if (person.nm_person.length > 3) {
+          return person.nm_person.substring(0, 3);
+        } else {
+          return person.nm_person;
+        }
+      }
     },
     // 소비수단코드에 따른 소비수단명
     formatMeansConsume: function(means_consume) {
@@ -355,6 +377,16 @@ export default {
           _this.consume = response.data.consume;
           var consumeGoal = response.data.consumeGoal;
           if ((consumeGoal || "") == "") {
+            if (
+              _this.curDate.getFullYear() == _this.standardDt.getFullYear() &&
+              _this.curDate.getMonth() == _this.standardDt.getMonth()
+            ) {
+              _this.progressText = "예산을 설정하여 목표를 이루세요";
+              _this.progressMax = 0;
+            } else {
+              _this.progressText = "설정된 예산이 없습니다";
+              _this.progressMax = 0;
+            }
             _this.isGoal = false;
           } else {
             _this.isGoal = true;

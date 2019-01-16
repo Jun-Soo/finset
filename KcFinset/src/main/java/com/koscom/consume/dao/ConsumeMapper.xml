@@ -2097,7 +2097,10 @@
 					,#{yn_auto				, jdbcType = VARCHAR}
 					,#{yn_budget_except		, jdbcType = VARCHAR}
 					,#{yn_person_regist		, jdbcType = VARCHAR}
-					,#{seq_tran				, jdbcType = VARCHAR}
+					,CASE
+						WHEN #{seq_tran, jdbcType = VARCHAR} = 0 THEN NULL
+						ELSE #{seq_tran, jdbcType = VARCHAR}
+					 END 
 					,#{no_person			, jdbcType = VARCHAR}
 					,SYSDATE
 					,#{no_person			, jdbcType = VARCHAR}
@@ -2138,9 +2141,7 @@
 					,YN_AUTO
 					,YN_BUDGET_EXCEPT
 					,YN_PERSON_REGIST
-					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(seq_tran)">
-						,SEQ_TRAN
-					</if>
+					,SEQ_TRAN
 					,ID_FRT
 					,DT_FRT
 					,ID_LST
@@ -2174,9 +2175,10 @@
 					,#{yn_auto				, jdbcType = VARCHAR}
 					,#{yn_budget_except		, jdbcType = VARCHAR}
 					,#{yn_person_regist		, jdbcType = VARCHAR}
-					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(seq_tran)">
-						,#{seq_tran			, jdbcType = VARCHAR}
-					</if>
+					,CASE
+						WHEN #{seq_tran, jdbcType = VARCHAR} = 0 THEN NULL
+						ELSE #{seq_tran, jdbcType = VARCHAR}
+					 END
 					,#{no_person			, jdbcType = VARCHAR}
 					,SYSDATE
 					,#{no_person			, jdbcType = VARCHAR}

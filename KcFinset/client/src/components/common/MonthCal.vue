@@ -76,13 +76,13 @@ export default {
       var dd = date.getDate();
 
       var weekdays = new Array(7);
-      weekdays[0] = "월요일";
-      weekdays[1] = "화요일";
-      weekdays[2] = "수요일";
-      weekdays[3] = "목요일";
-      weekdays[4] = "금요일";
-      weekdays[5] = "토요일";
-      weekdays[6] = "일요일";
+      weekdays[0] = "일요일";
+      weekdays[1] = "월요일";
+      weekdays[2] = "화요일";
+      weekdays[3] = "수요일";
+      weekdays[4] = "목요일";
+      weekdays[5] = "금요일";
+      weekdays[6] = "토요일";
 
       var weekday = weekdays[date.getDay()];
       return mm + "." + dd + ". " + weekday;

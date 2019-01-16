@@ -4,7 +4,7 @@
       {{modalDate}}
       <button class="modal-close" @click="hideDetail"></button>
     </div>
-    <div class="cal-con">
+    <div class="cal-con" style="max-height:80vh;overflow-y:auto">
       <div class="cal-top">
         <div>
           <em class="income">수입</em>
@@ -23,7 +23,7 @@
         <div v-for="(incomeVO, index) in incomeList" :key="'income-'+index" class="list">
           <div>
             <em :class="settingList[shareList.findIndex(person => person.no_person === incomeVO.no_person)].color">
-              {{shareList.filter(person => person.no_person === incomeVO.no_person)[0].nm_person}}
+              {{formatSharePerson(shareList.filter(person => person.no_person === incomeVO.no_person)[0])}}
             </em>
             <em class="income">수입</em>
             <em class="text">{{incomeVO.contents}}</em>
@@ -34,7 +34,7 @@
         <div v-for="(consumeVO, index) in consumeList" :key="'consume-'+index" class="list">
           <div>
             <em :class="settingList[shareList.findIndex(person => person.no_person === consumeVO.no_person)].color">
-              {{shareList.filter(person => person.no_person === consumeVO.no_person)[0].nm_person}}
+              {{formatSharePerson(shareList.filter(person => person.no_person === consumeVO.no_person)[0])}}
             </em>
             <em class="debt">지출</em>
             <em class="text">{{consumeVO.contents}}</em>
@@ -45,7 +45,7 @@
         <div v-for="(debtVO, index) in debtList" :key="'debt-'+index" class="list">
           <div>
             <em :class="settingList[shareList.findIndex(person => person.no_person === debtVO.no_person)].color">
-              {{shareList.filter(person => person.no_person === debtVO.no_person)[0].nm_person}}
+              {{formatSharePerson(shareList.filter(person => person.no_person === debtVO.no_person)[0])}}
             </em>
             <em class="loan">대출</em>
             <em class="text" v-text="(debtVO.nm_fc||'')==''?debtVO.creditor:debtVO.nm_fc"></em>
@@ -119,27 +119,44 @@ export default {
       var marginHeight = modal.offsetHeight / 2;
       modal.style.marginTop = "-" + marginHeight + "px";
     }
+
+    var body = document.getElementsByTagName("body")[0];
+    var newClassName = body.className + " not-scroll";
+    body.className = newClassName;
   },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
-  destroyed() {},
+  destroyed() {
+    var body = document.getElementsByTagName("body")[0];
+    var newClassName = body.className
+      .replace("not-scroll", "")
+      .replace(/(^\s*)|(\s*$)/gi, "");
+    console.log(newClassName);
+    body.className = newClassName;
+  },
   methods: {
-    formatModalDate: function(date) {
-      var mm = date.getMonth() + 1;
-      var dd = date.getDate();
+    // 이름 포맷 변경
+    formatSharePerson: function(person) {
+      if ((person || "") == "") {
+        return "";
+      } else if (
+        (person.no_person || "") == "" ||
+        (person.nm_person || "") == ""
+      ) {
+        return "";
+      }
 
-      var weekdays = new Array(7);
-      weekdays[0] = "월요일";
-      weekdays[1] = "화요일";
-      weekdays[2] = "수요일";
-      weekdays[3] = "목요일";
-      weekdays[4] = "금요일";
-      weekdays[5] = "토요일";
-      weekdays[6] = "일요일";
-
-      var weekday = weekdays[date.getDay()];
-      return mm + "." + dd + ". " + weekday;
+      var myNoPerson = this.$store.state.user.noPerson;
+      if (person.no_person == myNoPerson) {
+        return "나";
+      } else {
+        if (person.nm_person.length > 3) {
+          return person.nm_person.substring(0, 3);
+        } else {
+          return person.nm_person;
+        }
+      }
     },
     hideDetail: function() {
       this.$emit("hideDetail");

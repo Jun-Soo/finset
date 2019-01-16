@@ -24,7 +24,7 @@
     <div class="box-list list01">
       <div class="filter-wrap" v-if="shareList.length != 1">
         <div v-for="(person, index) in shareList" :key="index" class="filter" :class="settingList[index].color">
-          <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.nm_person}}</label>
+          <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{formatSharePerson(person)}}</label>
         </div>
       </div>
 
@@ -35,7 +35,7 @@
         <div class="top">
           <p class="symbol"><img :src="payment.imgSrc" alt="" />{{payment.nm_fc}}</p>
           <p class="text" v-if="shareList.length != 1">
-            <span class="circle" :class="settingList[shareList.findIndex(person => person.no_person === payment.no_person)].color">{{payment.nm_person}}</span>
+            <span class="circle" :class="settingList[shareList.findIndex(person => person.no_person === payment.no_person)].color">{{formatSharePerson(payment)}}</span>
           </p>
         </div>
         <div class="number-wrap">
@@ -196,6 +196,28 @@ export default {
         return nm_card;
       } else {
         return (nm_card + "").substring(0, 25) + "...";
+      }
+    },
+    // 이름 포맷 변경
+    formatSharePerson: function(person) {
+      if ((person || "") == "") {
+        return "";
+      } else if (
+        (person.no_person || "") == "" ||
+        (person.nm_person || "") == ""
+      ) {
+        return "";
+      }
+
+      var myNoPerson = this.$store.state.user.noPerson;
+      if (person.no_person == myNoPerson) {
+        return "나";
+      } else {
+        if (person.nm_person.length > 3) {
+          return person.nm_person.substring(0, 3);
+        } else {
+          return person.nm_person;
+        }
       }
     },
     // ---------------------//데이터 포멧---------------------

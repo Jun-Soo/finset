@@ -1,6 +1,8 @@
 package com.koscom.assets;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -15,10 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.koscom.assets.model.AssetsForm;
 import com.koscom.assets.model.AssetsInfoVO;
 import com.koscom.assets.service.AssetsManager;
-import com.koscom.counsel.model.CounselVO;
-import com.koscom.domain.PersonInfo;
 import com.koscom.main.service.MainManager;
 import com.koscom.person.service.PersonManager;
+import com.koscom.util.Constant;
 import com.koscom.util.DateUtil;
 import com.koscom.util.FinsetException;
 import com.koscom.util.Pagination;
@@ -388,9 +389,26 @@ public class AssetsController {
 	public String getAssetsStockInfo(
 	HttpServletRequest request,
 	AssetsForm assetsForm,
+	HttpSession session,
 	Model model) throws FinsetException, IOException{
-
-		model.addAttribute("stockInfo", assetsManager.getAssetsStockInfo(assetsForm));
+		
+		List<AssetsInfoVO> list = new ArrayList();
+		Boolean login = false;
+		if(!assetsForm.getNo_person().equals(session.getAttribute("no_person"))) {
+			list = assetsManager.listAssetsSharePerson(assetsForm); //공유자list
+			if(list.size() > 0) {
+				login = true;
+			}
+		} else {
+			login = true;
+		}
+		
+		if(login) {
+			model.addAttribute("stockInfo", assetsManager.getAssetsStockInfo(assetsForm));
+			model.addAttribute("result" , Constant.SUCCESS);
+		} else {
+			model.addAttribute("result" , Constant.FAILED);
+		}
 
 		return "jsonView";
 	}

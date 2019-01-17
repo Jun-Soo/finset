@@ -176,8 +176,14 @@ export default {
     nextPage: function(type) {
       var _this = this;
       for (var i = 0; i < _this.password.length; i++) {
-        if (i < _this.password.length - 2 &&_this.password.charCodeAt(i) == _this.password.charCodeAt(i + 1)) {
-          if (i < _this.password.length - 1 &&_this.password.charCodeAt(i) == _this.password.charCodeAt(i + 2)) {
+        if (
+          i < _this.password.length - 2 &&
+          _this.password.charCodeAt(i) == _this.password.charCodeAt(i + 1)
+        ) {
+          if (
+            i < _this.password.length - 1 &&
+            _this.password.charCodeAt(i) == _this.password.charCodeAt(i + 2)
+          ) {
             _this.errMsg = "비밀번호는 3자리 이상 연속될 수 없습니다.";
             _this.password = "";
             _this.initClassPass();
@@ -192,7 +198,6 @@ export default {
         return;
       } else {
         var frm = new FormData();
-        frm.append("no_person", _this.username);
         frm.append("pass_person", _this.password);
         this.$http
           .post("/m/person/changePwd.json", frm)

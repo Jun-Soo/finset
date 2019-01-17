@@ -184,7 +184,8 @@ public class PersonController {
 			Model model) {
 
 		String kcmCertValue = (String) session.getAttribute("cert_result_value");
-
+		String no_person = (String) session.getAttribute("no_person");
+		personVO.setNo_person(no_person);
 		logger.debug("★★★★★ cert_result_value : " + kcmCertValue);
 
 		if(!Constant.SUCCESS.equals(kcmCertValue)) {
@@ -195,7 +196,7 @@ public class PersonController {
 			return "jsonView";
 		} else {
 			logger.info("핀 코드 업데이트 : " + personVO.getPass_person());
-			ReturnClass returnClass = personManager.modifyPassPerson((PersonVO)SessionUtil.setUser(personVO, session));
+			ReturnClass returnClass = personManager.modifyPassPerson(personVO);
 			model.addAttribute("message", returnClass.getMessage());
 			model.addAttribute("result", returnClass.getCd_result());
 			model.addAttribute("no_person", personVO.getNo_person());

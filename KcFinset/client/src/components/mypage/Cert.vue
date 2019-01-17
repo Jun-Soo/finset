@@ -59,14 +59,6 @@ export default {
 
       Jockey.send("checkFingerPrint");
     }
-    // }
-
-    // if (Constant.userAgent == "Android") {
-    //   //물어보깅
-    //   window.Android.backKeySendUrl(
-    //     "/m/customercenter/getCustomerCenterMain.json"
-    //   );
-    // }
 
     this.$store.state.header.backPath = "/main";
   },
@@ -90,7 +82,7 @@ export default {
         _this.$store.state.user.ynFingerprint = "N";
         let form = new FormData();
         form.append("yn_fingerprint", _this.yn_fingerprint);
-        form.append("no_person", _this.$store.state.user.noPerson);
+        // form.append("no_person", _this.$store.state.user.noPerson);
         _this.$http
           .post("/m/person/modifyFingerPrint.json", form, {
             header: {

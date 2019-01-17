@@ -97,7 +97,9 @@ public class PersonController {
 			Model model) {
 
 		logger.info("modifyFingerPrint.json start");
-		personVO.setId_lst(personVO.getNo_person());
+		String no_person = (String) session.getAttribute("no_person");
+		personVO.setNo_person(no_person);
+		personVO.setId_lst(no_person);
 		ReturnClass returnClass = personManager.modifyFingerPrint(personVO);
 		logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
 		model.addAttribute("result" , returnClass.getCd_result());
@@ -217,10 +219,11 @@ public class PersonController {
 			HttpSession session,
 			PersonVO personVO,
 			Model model) {
-
+		String no_person = (String) session.getAttribute("no_person");
 		logger.info("modifyPwdFailCnt.json start");
-		logger.info("no_person : " + personVO.getNo_person());
-		personVO.setId_lst(personVO.getNo_person());
+		logger.info("no_person : " + no_person);
+		personVO.setNo_person(no_person);
+		personVO.setId_lst(no_person);
 		ReturnClass returnClass = personManager.modifyPwdFailCnt(personVO);
 		logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
 		model.addAttribute("result" , returnClass.getCd_result());
@@ -419,11 +422,10 @@ public class PersonController {
 	public String getPersonEmail(
 			HttpServletRequest request,
 			HttpSession session,
-			String no_person,
 			Model model) {
-
+		String no_person = (String) session.getAttribute("no_person");
 		logger.info("no_person : "+no_person);
-		//personVO.setNo_person(no_person);
+//		personVO.setNo_person(no_person);
 		String email = personManager.getPersonEmail(no_person);
 
 		logger.info("email     : "+email);
@@ -463,7 +465,7 @@ public class PersonController {
 	}
 
 	/**
-	 * 이메일 업데이트
+	 * 통신사코드 업데이트
 	 * @param model
 	 * @param request
 	 * @param fcmVO
@@ -506,6 +508,7 @@ public class PersonController {
 		String no_person = (String) session.getAttribute("no_person");
 		logger.info("no_person : "+no_person);
 		personVO.setNo_person(no_person);
+		personVO.setId_frt(no_person);
 		ReturnClass returnClass = personManager.modifyPushNoti((PersonVO)SessionUtil.setUser(personVO, session));
 		logger.info("cd_result : {},  message : {}", returnClass.getCd_result(), returnClass.getMessage());
 		model.addAttribute("result" , returnClass.getCd_result());
@@ -639,9 +642,11 @@ public class PersonController {
      * @throws FinsetException, IOException
 	 */
 	@RequestMapping("/createPersonAgreeHist.json")
-	public String createPersonAgreeHist(HttpServletRequest request,HttpSession session,Model model, String no_person, boolean marketingAgree) throws FinsetException, IOException{
+	public String createPersonAgreeHist(HttpServletRequest request,HttpSession session,Model model, boolean marketingAgree) throws FinsetException, IOException{
 		
 		int result = 0;
+		
+		String no_person = (String) session.getAttribute("no_person");
 		
 		if(marketingAgree) {
 			result = personManager.createPersonAgreeHist(no_person, "Y");
@@ -664,10 +669,11 @@ public class PersonController {
      * @throws FinsetException, IOException
 	 */
 	@RequestMapping("/createPersonAgreeHistGoods.json")
-	public String createPersonAgreeHistGoods(HttpServletRequest request,HttpSession session,Model model, String no_person) throws FinsetException, IOException{
+	public String createPersonAgreeHistGoods(HttpServletRequest request,HttpSession session,Model model) throws FinsetException, IOException{
 		
 		int result = 0;
 		
+		String no_person = (String) session.getAttribute("no_person");
 		result = personManager.createPersonAgreeHistGoods(no_person);
 		
 		model.addAttribute("result", result);

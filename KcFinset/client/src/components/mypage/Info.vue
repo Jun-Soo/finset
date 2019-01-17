@@ -55,8 +55,8 @@ export default {
     var _this = this;
     var frm = new FormData();
     var personInfo;
-    frm.append("no_person", _this.no_person);
-    frm.append("hp", _this.hp);
+    // frm.append("no_person", _this.no_person);
+    // frm.append("hp", _this.hp);
     _this.$http
       .post("/m/customercenter/getCustomerCenterMain.json", frm)
       .then(response => {

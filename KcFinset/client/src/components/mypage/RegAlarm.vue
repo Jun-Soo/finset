@@ -109,7 +109,7 @@ export default {
       form.append("type_push", _this.type_push);
       form.append("cd_push", obj.target.id);
       form.append("yn_push", _this.yn_push);
-      form.append("id_frt", _this.$store.state.user.noPerson);
+      // form.append("id_frt", _this.$store.state.user.noPerson);
 
       _this.$http
         .post("/m/person/modifyPushNoti.json", form, {

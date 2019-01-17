@@ -48,7 +48,6 @@ export default {
     modifyEmail: function() {
       let _this = this;
       var frm = new FormData();
-      frm.append("no_person", _this.no_person);
       frm.append("email", _this.email);
       _this.$http
         .post("/m/person/modifyPersonEmail.json", frm)

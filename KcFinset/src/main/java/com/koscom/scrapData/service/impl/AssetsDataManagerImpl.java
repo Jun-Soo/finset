@@ -48,6 +48,8 @@ public class AssetsDataManagerImpl implements AssetsDataManager {
 							assetsInfoDataVO.setCd_detail_class("06");
 						} else if(list.getNm_an().indexOf("퇴직") >= 0 || list.getNm_an().indexOf("IRP") >= 0){
 							assetsInfoDataVO.setCd_detail_class("07");
+						} else {
+							assetsInfoDataVO.setCd_detail_class("03");
 						}
 
 					}else{

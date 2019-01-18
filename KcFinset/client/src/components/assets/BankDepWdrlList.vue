@@ -321,7 +321,7 @@ export default {
 
       var formData = new FormData();
       formData.append("scTrnsType", _this.scTrnsType.value);
-      formData.append("no_person", this.$store.state.user.noPerson);
+      // formData.append("no_person", this.$store.state.user.noPerson);
       formData.append("person_share_list", _this.person_share_list);
 
       this.$http

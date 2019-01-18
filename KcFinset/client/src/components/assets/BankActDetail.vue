@@ -153,6 +153,11 @@ export default {
       this.$http
         .post("/m/assets/getAssetsBankActDetail.json", formData)
         .then(response => {
+          if ("00" != response.data.cdResult) {
+            _this.$toast.center("권한이 없습니다");
+            return false;
+          }
+
           var assetsInfo = response.data.assetsInfo;
           assetsInfo.fcImg =
             "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + assetsInfo.cd_fc;

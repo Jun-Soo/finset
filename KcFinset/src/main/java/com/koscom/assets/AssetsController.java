@@ -5,6 +5,7 @@ import java.io.IOException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -150,6 +151,7 @@ public class AssetsController {
 	 * VUE
      * 자산관리 - 은행 계좌상세
      * @param request
+     * @param session
      * @param AssetsForm
      * @param model
      * @return String
@@ -158,10 +160,16 @@ public class AssetsController {
 	@RequestMapping("/getAssetsBankActDetail.json")
 	public String getAssetsBankActDetail(
 	HttpServletRequest request,
+	HttpSession session,
 	AssetsForm assetsForm,
 	Model model) throws FinsetException, IOException{
+		String no_person = (String)session.getAttribute("no_person");
+		String cdResult = SessionUtil.chkNoPerson(no_person, assetsForm.getNo_person(), "02");
+		model.addAttribute("cdResult", cdResult);
 
-		model.addAttribute("assetsInfo", assetsManager.getAssetsInfo(assetsForm));
+		if("00".equals(cdResult)){
+			model.addAttribute("assetsInfo", assetsManager.getAssetsInfo(assetsForm));
+		}
 
 		return "jsonView";
 	}
@@ -170,6 +178,7 @@ public class AssetsController {
 	 * VUE
      * 자산관리 - 은행 계좌상세 검색키워드list(입출금)
      * @param request
+     * @param session
      * @param AssetsForm
      * @param model
      * @return String
@@ -178,10 +187,22 @@ public class AssetsController {
 	@RequestMapping("/getAssetsBankScKeywordList.json")
 	public String getAssetsBankScKeywordList(
 	HttpServletRequest request,
+	HttpSession session,
 	AssetsForm assetsForm,
 	Model model) throws FinsetException, IOException{
+		String no_person = (String)session.getAttribute("no_person");
+		String cdResult = "00";
 
-		model.addAttribute("scKeywordList", assetsManager.listAssetsSearchKeyword(assetsForm));
+		if(StringUtils.isEmpty(assetsForm.getNo_account())){
+			assetsForm.setNo_person(no_person);
+		}else{
+			cdResult = SessionUtil.chkNoPerson(no_person, assetsForm.getNo_person(), "02");
+		}
+		model.addAttribute("cdResult", cdResult);
+
+		if("00".equals(cdResult)){
+			model.addAttribute("scKeywordList", assetsManager.listAssetsSearchKeyword(assetsForm));
+		}
 
 		return "jsonView";
 	}

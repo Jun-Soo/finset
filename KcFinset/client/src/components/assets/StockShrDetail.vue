@@ -79,6 +79,11 @@ export default {
       this.$http
         .post("/m/assets/getAssetsStockShrInfo.json", formData)
         .then(function(response) {
+          if ("00" != response.data.cdResult) {
+            _this.$toast.center("권한이 없습니다");
+            return false;
+          }
+
           var shrInfo = response.data.shrInfo;
           if (shrInfo.proloss > 0) {
             shrInfo.proloss = "+" + shrInfo.proloss;

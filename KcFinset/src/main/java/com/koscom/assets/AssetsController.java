@@ -1,8 +1,6 @@
 package com.koscom.assets;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -18,8 +16,6 @@ import com.koscom.assets.model.AssetsForm;
 import com.koscom.assets.model.AssetsInfoVO;
 import com.koscom.assets.service.AssetsManager;
 import com.koscom.main.service.MainManager;
-import com.koscom.person.service.PersonManager;
-import com.koscom.util.Constant;
 import com.koscom.util.DateUtil;
 import com.koscom.util.FinsetException;
 import com.koscom.util.Pagination;
@@ -36,8 +32,6 @@ public class AssetsController {
 	private AssetsManager assetsManager;
 	@Autowired
 	private MainManager mainManager;
-	@Autowired
-	private PersonManager personManager;
 
 	/**
 	 * VUE
@@ -380,6 +374,7 @@ public class AssetsController {
 	 * VUE
      * 자산관리 - 증권 계좌상세
      * @param request
+     * @param session
      * @param AssetsForm
      * @param model
      * @return String
@@ -388,26 +383,15 @@ public class AssetsController {
 	@RequestMapping("/getAssetsStockInfo.json")
 	public String getAssetsStockInfo(
 	HttpServletRequest request,
-	AssetsForm assetsForm,
 	HttpSession session,
+	AssetsForm assetsForm,
 	Model model) throws FinsetException, IOException{
-		
-		List<AssetsInfoVO> list = new ArrayList();
-		Boolean login = false;
-		if(!assetsForm.getNo_person().equals(session.getAttribute("no_person"))) {
-			list = assetsManager.listAssetsSharePerson(assetsForm); //공유자list
-			if(list.size() > 0) {
-				login = true;
-			}
-		} else {
-			login = true;
-		}
-		
-		if(login) {
+		String no_person = (String)session.getAttribute("no_person");
+		String cdResult = SessionUtil.chkNoPerson(no_person, assetsForm.getNo_person(), "02");
+		model.addAttribute("cdResult", cdResult);
+
+		if("00".equals(cdResult)){
 			model.addAttribute("stockInfo", assetsManager.getAssetsStockInfo(assetsForm));
-			model.addAttribute("result" , Constant.SUCCESS);
-		} else {
-			model.addAttribute("result" , Constant.FAILED);
 		}
 
 		return "jsonView";
@@ -469,6 +453,7 @@ public class AssetsController {
 	 * VUE
      * 자산관리 - 증권 주식상세
      * @param request
+     * @param session
      * @param AssetsForm
      * @param model
      * @return String
@@ -477,10 +462,16 @@ public class AssetsController {
 	@RequestMapping("/getAssetsStockShrInfo.json")
 	public String getAssetsStockShrInfo(
 	HttpServletRequest request,
+	HttpSession session,
 	AssetsForm assetsForm,
 	Model model) throws FinsetException, IOException{
+		String no_person = (String)session.getAttribute("no_person");
+		String cdResult = SessionUtil.chkNoPerson(no_person, assetsForm.getNo_person(), "02");
+		model.addAttribute("cdResult", cdResult);
 
-		model.addAttribute("shrInfo", assetsManager.getAssetsStockShrInfo(assetsForm));
+		if("00".equals(cdResult)){
+			model.addAttribute("shrInfo", assetsManager.getAssetsStockShrInfo(assetsForm));
+		}
 
 		return "jsonView";
 	}
@@ -489,6 +480,7 @@ public class AssetsController {
 	 * VUE
      * 자산관리 - 증권 펀드상세
      * @param request
+     * @param session
      * @param AssetsForm
      * @param model
      * @return String
@@ -497,10 +489,16 @@ public class AssetsController {
 	@RequestMapping("/getAssetsStockFndInfo.json")
 	public String getAssetsStockFndInfo(
 	HttpServletRequest request,
+	HttpSession session,
 	AssetsForm assetsForm,
 	Model model) throws FinsetException, IOException{
+		String no_person = (String)session.getAttribute("no_person");
+		String cdResult = SessionUtil.chkNoPerson(no_person, assetsForm.getNo_person(), "02");
+		model.addAttribute("cdResult", cdResult);
 
-		model.addAttribute("fndInfo", assetsManager.getAssetsStockFndInfo(assetsForm));
+		if("00".equals(cdResult)){
+			model.addAttribute("fndInfo", assetsManager.getAssetsStockFndInfo(assetsForm));
+		}
 
 		return "jsonView";
 	}

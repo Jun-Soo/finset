@@ -174,6 +174,11 @@ export default {
       this.$http
         .post("/m/assets/getAssetsStockInfo.json", formData)
         .then(function(response) {
+          if ("00" != response.data.cdResult) {
+            _this.$toast.center("권한이 없습니다");
+            return false;
+          }
+
           var stockInfo = response.data.stockInfo;
           //증권사이미지 셋팅
           stockInfo.fcImg =

@@ -1176,6 +1176,31 @@
 			AND SI.OFFER_NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
 	</select>
 
+	<!-- 공유여부체크 -->
+	<select id="checkSharePerson" parameterType="com.koscom.domain.PersonShareInfo" resultType="int">
+        /* com.koscom.assets.dao.PersonMapper.checkSharePerson - 공유여부체크 */
+       	SELECT
+			COUNT(OFFER_NO_PERSON) AS CNT
+		FROM
+			SHARE_INFO
+		WHERE
+			SHARE_STATUS = '02'
+			<choose>
+			<when test="'01'.equals(cd_info)">	<!-- 부채 -->
+				AND YN_DEBT_INFO = 'Y'
+			</when>
+			<when test="'02'.equals(cd_info)">	<!-- 자산 -->
+				AND YN_ASSET_INFO = 'Y'
+			</when>
+			<when test="'03'.equals(cd_info)">	<!-- 소비 -->
+				AND YN_CONSUME_INFO = 'Y'
+			</when>
+			</choose>
+			AND (REQ_NO_PERSON = #{req_no_person, jdbcType=VARCHAR}
+				AND OFFER_NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
+				)
+	</select>
+
 	<select id="getPersonInfoDupCi" parameterType="com.koscom.person.model.PersonVO" resultType="java.lang.String">
 		SELECT NO_PERSON
 			FROM PERSON_INFO

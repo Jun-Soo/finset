@@ -104,7 +104,7 @@ public interface PersonManager {
 	 * @return	ReturnClass
 	 */
 	ReturnClass modifyFingerPrint(PersonVO personVO);
-	
+
 	/**
 	 * 이메일 조회
 	 * @param 	String
@@ -118,7 +118,7 @@ public interface PersonManager {
 	 * @return	ReturnClass
 	 */
 	ReturnClass modifyPersonEmail(PersonVO personVO);
-	
+
 	/**
 	 * 통신사 코드 업데이트
 	 * @param 	PersonVO personVO
@@ -291,6 +291,13 @@ public interface PersonManager {
 	List<PersonShareInfo> listPersonShareInfoReqUpdate(PersonShareInfo personShareInfo);
 
 	/**
+	 * 공유관리 공유여부체크
+	 * @param PersonShareInfo
+	 * @return ReturnClass
+	 */
+	ReturnClass checkSharePerson(PersonShareInfo personShareInfo);
+
+	/**
 	 * 고유 CI번호를 통해 번호가 바뀐 회언인지 확인
 	 * @param kcb_ci - kcb 에서 사용하는 고유 판별 번호
 	 * @return
@@ -345,27 +352,27 @@ public interface PersonManager {
 	 * @return
 	 */
 	boolean chkPersonSetExist(String no_person);
-	
+
 	/**
 	 * 개인설정 기본 값 설정
 	 * @param no_person
 	 */
 	void insertDefaultPersonSet(String no_person);
-	
+
 	/**
 	 * 약관 동의 이력 조회
 	 * @param String
 	 * @return PersonAgreeHistVO
 	 */
 	List<PersonAgreeHistVO> getPersonAgreeHist(String no_person);
-	
+
 	/**
 	 * 약관 동의 이력 저장
 	 * @param PersonAgreeHistVO
 	 * @return
 	 */
 	int createPersonAgreeHist(String no_person, String eventPush);
-	
+
 	/**
 	 * 약관 동의 이력 저장(상품조회)
 	 * @param String

@@ -161,7 +161,7 @@ public class PersonManagerImpl implements PersonManager {
 	public String getPersonEmail(String no_person) {
 		return personMapper.getPersonEmail(no_person);
 	}
-	
+
 	@Override
 	public ReturnClass modifyPersonEmail(PersonVO personVO) {
 
@@ -181,7 +181,7 @@ public class PersonManagerImpl implements PersonManager {
 
 		return new ReturnClass(Constant.SUCCESS, "정상 처리 하였습니다.");
 	}
-	
+
 	@Override
 	public ReturnClass modifyPersonCdTel(PersonVO personVO) {
 		if(1 != personMapper.modifyPersonCdTel(personVO)) {
@@ -458,6 +458,15 @@ public class PersonManagerImpl implements PersonManager {
 	}
 
 	@Override
+	public ReturnClass checkSharePerson(PersonShareInfo personShareInfo) {
+		if(personMapper.checkSharePerson(personShareInfo) < 1) {
+			return new ReturnClass(Constant.FAILED);
+		}
+
+		return new ReturnClass(Constant.SUCCESS);
+	}
+
+	@Override
 	public String getPersonInfoDupCi(PersonVO personVO){
 		return personMapper.getPersonInfoDupCi(personVO);
 	}
@@ -660,7 +669,7 @@ public class PersonManagerImpl implements PersonManager {
 	public void insertDefaultPersonSet(String no_person) {
 		personMapper.insertDefaultPersonSet(no_person);
 	}
-	
+
 	@Override
 	public List<PersonAgreeHistVO> getPersonAgreeHist(String no_person) {
 		return personMapper.getPersonAgreeHist(no_person);
@@ -693,7 +702,7 @@ public class PersonManagerImpl implements PersonManager {
 		agree.setId_frt(no_person);
 		agree.setCd_agree("05"); //01 서비스 이용동의(금투사포함), 02 휴대전화 본인인증 동의, 03 마케팅 정보 수신동의, 	04 금투사 정보제공동의 전자서명, 05 연계상품조회 관련
 		result = personMapper.createPersonAgreeHist(agree);
-		
+
 		return result;
 	}
 }

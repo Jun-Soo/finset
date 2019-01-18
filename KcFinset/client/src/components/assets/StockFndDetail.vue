@@ -75,6 +75,11 @@ export default {
       this.$http
         .post("/m/assets/getAssetsStockFndInfo.json", formData)
         .then(function(response) {
+          if ("00" != response.data.cdResult) {
+            _this.$toast.center("권한이 없습니다");
+            return false;
+          }
+
           var fndInfo = response.data.fndInfo;
           if (fndInfo.proloss > 0) {
             fndInfo.proloss = "+" + fndInfo.proloss;

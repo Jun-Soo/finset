@@ -27,7 +27,7 @@ public interface PersonMapper {
 	 * @return
 	 */
 	int createPersonAgreeHist(PersonAgreeHistVO personAgreeHistVO);
-	
+
 	/**
 	 * 약관 동의 이력 조회
 	 * @param String
@@ -137,14 +137,14 @@ public interface PersonMapper {
 	 * @return	String
 	 */
 	String getPersonEmail(String no_person);
-	
+
 	/**
 	 * 이메일 업데이트
 	 * @param 	personVO
 	 * @return	int
 	 */
 	int modifyPersonEmail(PersonVO personVO);
-	
+
 	/**
 	 * 통신사 코드 업데이트
 	 * @param 	personVO
@@ -343,6 +343,13 @@ public interface PersonMapper {
 	List<PersonShareInfo> listPersonShareInfoReqUpdate(PersonShareInfo personShareInfo);
 
 	/**
+	 * 공유관리 공유여부체크
+	 * @param PersonShareInfo
+	 * @return int
+	 */
+	int checkSharePerson(PersonShareInfo personShareInfo);
+
+	/**
 	 * 고유 CI번호를 통해 번호가 바뀐 회언인지 확인
 	 * @param kcb_ci - kcb 에서 사용하는 고유 판별 번호
 	 * @return
@@ -404,7 +411,7 @@ public interface PersonMapper {
 	 * @return
 	 */
 	Integer chkPersonSetExist(String no_person);
-	
+
 	/**
 	 * 개인설정 기본 값 설정
 	 * @param no_person

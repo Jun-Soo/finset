@@ -229,8 +229,8 @@ public class Kcb_600 extends AbstractKcbInfo {
 		//요청정보부(최초요청시)
 		this.reqSegmentID 			= "V3";					//Segment ID: Segment 식별자. 상수값 “V3”
 		this.req등록사유코드 		= info.getCd_regist();	//1: 발생 신규 고객ID 등록&업데이트, 5: 고객 ID 삭제
-		this.req등록번호구분코드 	= "1";					//1: 회원사 내부 고객번호 등록 시,2:KCB ID (KCB ID 발급 시)
-		this.req등록번호 			= info.getNoPerson();	
+		this.req등록번호구분코드 	= "2";					//1: 회원사 내부 고객번호 등록 시,2:KCB ID (KCB ID 발급 시)
+		this.req등록번호 			= "";	
 		this.req등록방식구분코드	= "4";					//1: 성명+생년월일+성별+휴대폰번호, 2: 성명+생년월일+성별+주소, 3: 성명+생년월일+성별+이메일, 4: DI, 5: 주민등록번호(외국인등록번호), 6: 성명+생년월일+성별+출생등록지
 		this.req성명 				= info.getNmCust();
 		this.req생년월일 			= StringUtil.splitBgn(info.getBgn(), "BOD"); //"199002171";
@@ -246,7 +246,7 @@ public class Kcb_600 extends AbstractKcbInfo {
 		}
 		this.req주소 			= "";
 		this.req이메일			= "";
-		this.req고유식별정보 	= info.getDi() + info.getCp();//"MC0GCCqGSIb3DQIJAyEADniMJwqIRNEVo00SLmKvQyxz3v6DrzRmzpRVpPbMrg8=P18760000000";			//(No.10)에서 ‘01’인 경우에만 입력 : DI값 (64byte) + CP코드(12byte)
+		this.req고유식별정보 	= "";//"MC0GCCqGSIb3DQIJAyEADniMJwqIRNEVo00SLmKvQyxz3v6DrzRmzpRVpPbMrg8=P18760000000";			//(No.10)에서 ‘01’인 경우에만 입력 : DI값 (64byte) + CP코드(12byte)
 		this.req기준일자 		= DateUtil.getCurrentYMD();
 		this.req출생등록지코드		= "";
 		this.reqFILLER 		= "";

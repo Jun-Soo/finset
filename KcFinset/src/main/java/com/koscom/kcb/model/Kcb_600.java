@@ -209,6 +209,7 @@ public class Kcb_600 extends AbstractKcbInfo {
 		recvMsg = response.toString().replaceAll("\0", "");
 		parseHeader(recvMsg);
 		
+		info.setKcbID(getRes고유식별정보());
 		info.setCdCbResponse(getResCode()); //조회정보 객체에 응답코드 셋
 		info.setMsgResponse(recvMsg); 		//조회정보 객체에 응답전문 셋
 	}

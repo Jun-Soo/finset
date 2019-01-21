@@ -38,6 +38,7 @@ public abstract class AbstractKcbInfo implements Serializable {
 	protected String filler;			// AN		42	FILLER	(300전문 : 42, 600전문 : 43)
 
 	protected String kcbURI;			// AN		16	kcbURI
+	protected String kcbID;				// AN		16	kcbID
 
 	public String getTcplength() {
 		return tcplength;
@@ -157,6 +158,14 @@ public abstract class AbstractKcbInfo implements Serializable {
 
 	public void setKcbURI(String kcbURI) {
 		this.kcbURI = kcbURI;
+	}
+
+	public String getKcbID() {
+		return kcbID;
+	}
+
+	public void setKcbID(String kcbID) {
+		this.kcbID = kcbID;
 	}
 
 

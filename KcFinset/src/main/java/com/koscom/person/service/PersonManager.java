@@ -7,6 +7,7 @@ import java.util.List;
 import com.koscom.domain.PersonLoginHistInfo;
 import com.koscom.domain.PersonShareInfo;
 import com.koscom.domain.PersonShareMessageInfo;
+import com.koscom.kcb.model.KcbCreditInfoVO;
 import com.koscom.person.model.PersonActiveHistVO;
 import com.koscom.person.model.PersonAgreeHistVO;
 import com.koscom.person.model.PersonCertificateInfoVO;
@@ -79,6 +80,12 @@ public interface PersonManager {
 	 */
 	void modifyLastLogin(String no_person);
 
+	/**
+	 * KCB ID 업데이트
+	 * @param info
+	 */
+	void modifyKcbId(KcbCreditInfoVO info);
+	
 	/**
 	 * 모바일 접속 이력
 	 * @param PersonLoginHistInfo personLoginHist

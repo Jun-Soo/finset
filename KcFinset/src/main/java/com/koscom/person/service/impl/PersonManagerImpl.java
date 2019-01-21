@@ -130,7 +130,12 @@ public class PersonManagerImpl implements PersonManager {
 	public void modifyLastLogin(String no_person) {
 		personMapper.modifyLastLogin(no_person);
 	}
-
+	
+	@Override
+	public void modifyKcbId(KcbCreditInfoVO info) {
+		personMapper.modifyKcbId(info);
+	}
+	
 	@Override
 	public void insertPersonLoginHist(PersonLoginHistInfo personLoginHist) {
 		personMapper.insertPersonLoginHist(personLoginHist);

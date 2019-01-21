@@ -24,6 +24,7 @@ public class CreditInfo implements Serializable {
 	private String idFrt;
 	private String dtFrt;
 	private String kcbURI;
+	private String kcbID;
 
 	//client_신용관리메인
 	private String req_yyyymm;
@@ -211,6 +212,14 @@ public class CreditInfo implements Serializable {
 
 	public void setKcbURI(String kcbURI) {
 		this.kcbURI = kcbURI;
+	}
+
+	public String getKcbID() {
+		return kcbID;
+	}
+
+	public void setKcbID(String kcbID) {
+		this.kcbID = kcbID;
 	}
 
 	public String getReq_yyyymm() {

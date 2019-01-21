@@ -5,6 +5,7 @@ import java.util.List;
 import com.koscom.domain.PersonLoginHistInfo;
 import com.koscom.domain.PersonShareInfo;
 import com.koscom.domain.PersonShareMessageInfo;
+import com.koscom.kcb.model.KcbCreditInfoVO;
 import com.koscom.person.model.PersonActiveHistVO;
 import com.koscom.person.model.PersonAgreeHistVO;
 import com.koscom.person.model.PersonAgreedtHistVO;
@@ -105,6 +106,12 @@ public interface PersonMapper {
 	 */
 	void modifyLastLogin(String no_person);
 
+	/**
+	 * KCB ID 업데이트
+	 * @param info
+	 */
+	void modifyKcbId(KcbCreditInfoVO info);
+	
 	/**
 	 * 모바일 접속 이력
 	 * @param PersonLoginHistInfo
@@ -417,4 +424,6 @@ public interface PersonMapper {
 	 * @param no_person
 	 */
 	void insertDefaultPersonSet(String no_person);
+
+	
 }

@@ -181,6 +181,13 @@
          WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
     </update>
 
+	<update id="modifyKcbId" parameterType="com.koscom.kcb.model.KcbCreditInfoVO">
+    	/* com.koscom.person.dao.PersonMapper.modifyLastLogin */
+        UPDATE PERSON_INFO
+           SET KCB_ID = #{kcbID, jdbcType=VARCHAR}
+         WHERE NO_PERSON = #{noPerson, jdbcType=VARCHAR}
+    </update>
+    
     <insert id="insertPersonLoginHist">
     	/* com.koscom.person.dao.PersonMapper.insertPersonLoginHist */
         INSERT INTO PERSON_LOGIN_HIST

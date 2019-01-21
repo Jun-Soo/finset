@@ -88,13 +88,15 @@ public class KcbController {
 			info.setHp(personVO.getHp());					// 회원 휴대폰번호
 			logger.info("info === " + info.toString());
 			
-			ReturnClass returnClas =kcbManager.procKcbCb(info);
-			//등록 실패
-			if (returnClas.getCd_result() == Constant.FAILED)	{
+			ReturnClass returnClas = kcbManager.procKcbCb(info);
+			// 등록 실패
+			if (returnClas.getCd_result() == Constant.FAILED) {
 				logger.error("600 전문 처리 실패");
 				model.addAttribute("result", Constant.FAILED);
 				return "jsonView";
 			}
+
+			personManager.modifyKcbId(info);
 			logger.info("600 전문 처리 완료");
 		}
 		

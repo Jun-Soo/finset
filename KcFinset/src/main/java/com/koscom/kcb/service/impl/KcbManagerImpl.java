@@ -244,6 +244,8 @@ public class KcbManagerImpl implements KcbManager {
 
 				//URI setting
 				if(!StringUtils.isEmpty(infoVO.getKcbURI())) kcbInfo.setKcbURI(infoVO.getKcbURI());
+				//개인식별정보
+				if(!StringUtils.isEmpty(infoVO.getKcbID())) kcbInfo.setKcbID(infoVO.getKcbID());
 
 				//5. 전문 정보 저장
 				CreditInfo info = getCreditInfoObj(infoVO);

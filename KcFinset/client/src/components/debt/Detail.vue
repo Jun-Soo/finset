@@ -179,16 +179,18 @@ export default {
         this.$router.push({
           path: "/debt/modify",
           query: {
-            no_person: _this.$route.query.no_person,
+            // no_person: _this.$route.query.no_person,
             no_manage_info: _this.$route.query.no_manage_info,
             interest: _this.debtVO.ever_interest
           }
         });
       } else if (key == "delete") {
+        var options = Constant.options;
+        options.size = "lg";
         this.$dialogs
           .confirm(
             "선택하신 부채 정보는 모두 삭제되어 이후 조회가 불가능합니다.\n\n해당 정보를 삭제할까요?",
-            Constant.options
+            options
           )
           .then(res => {
             // console.log(res); // {ok: true|false|undefined}
@@ -211,7 +213,7 @@ export default {
         this.$router.push({
           path: "/memo/list",
           query: {
-            no_person: _this.$route.query.no_person,
+            // no_person: _this.$route.query.no_person,
             no_manage_info: _this.$route.query.no_manage_info
           }
         });
@@ -244,7 +246,7 @@ export default {
       this.$router.push({
         path: "/debt/repayment",
         query: {
-          no_person: _this.$route.query.no_person,
+          // no_person: _this.$route.query.no_person,
           no_manage_info: _this.$route.query.no_manage_info
         }
       });
@@ -257,7 +259,7 @@ export default {
       this.$http
         .get("/m/debt/getDebtInfo.json", {
           params: {
-            no_person: this.$route.query.no_person,
+            // no_person: this.$route.query.no_person,
             no_manage_info: this.$route.query.no_manage_info
           }
         })

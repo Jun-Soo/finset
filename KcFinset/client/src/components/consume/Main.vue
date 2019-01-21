@@ -22,7 +22,7 @@
       </div>
 
       <div class="banner-wrap owl-carousel">
-        <carousel :perPage=1 :autoplay=true :autoplayTimeout=4000 :speed=700 :loop=true>
+        <carousel :perPage="1" :autoplay="true" :autoplayTimeout="4000" :speed="700" :loop="true">
           <slide class="item">
             <a @click="clickBanner('calendar')">
               <div class="banner">
@@ -150,35 +150,6 @@ export default {
     Progress
   },
   computed: {
-    // 조건에 따른 progressbar 변형
-    // progressOption: function() {
-    //   if (!this.isScrap) {
-    //     return {
-    //       text: "공인 인증서를 등록하여 소비내역을 관리하세요",
-    //       max: 0
-    //     };
-    //   } else if (!this.isGoal) {
-    //     if (
-    //       this.curDate.getFullYear() == this.standardDt.getFullYear() &&
-    //       this.curDate.getMonth() == this.standardDt.getMonth()
-    //     ) {
-    //       return {
-    //         text: "예산을 설정하여 목표를 이루세요",
-    //         max: 0
-    //       };
-    //     } else {
-    //       return {
-    //         text: "설정된 예산이 없습니다",
-    //         max: 0
-    //       };
-    //     }
-    //   } else {
-    //     return {
-    //       text: this.progressText,
-    //       max: this.progressMax
-    //     };
-    //   }
-    // },
     ymText: function() {
       return this.formatHead(this.getYm(this.standardDt));
     }
@@ -195,7 +166,6 @@ export default {
     if (this.$store.state.user.dtConsume) {
       this.standardDt = this.$store.state.user.dtConsume;
     }
-    // this.ym = this.formatHead(this.getYm(this.standardDt));
     this.listConsumeShareInfo();
   },
   beforeMount() {},

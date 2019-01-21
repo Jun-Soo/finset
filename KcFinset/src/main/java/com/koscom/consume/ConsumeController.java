@@ -28,6 +28,7 @@ import com.koscom.consume.model.PersonSetInfoVO;
 import com.koscom.consume.service.ConsumeManager;
 import com.koscom.util.FinsetException;
 import com.koscom.util.ReturnClass;
+import com.koscom.util.SessionUtil;
 
 @Controller
 @RequestMapping("/m/consume")
@@ -247,10 +248,23 @@ public class ConsumeController {
     	return "jsonView";
     }
     
+    /**
+     * VUE
+     * 청구 상세 내역 리스트 조회
+     * @param session
+     * @param model
+     * @param paymentForm
+     * @return
+     */
     @RequestMapping("/listPaymentDetail.json")
-    public String listPaymentDetail(Model model, PaymentForm paymentForm) {
+    public String listPaymentDetail(HttpSession session, Model model, PaymentForm paymentForm) {
     	logger.debug("listPaymentDetail");
-    	model.addAttribute("listPaymentDetail", consumeManager.listPaymentDetail(paymentForm));
+    	String no_person = (String) session.getAttribute("no_person");
+    	String cdResult = SessionUtil.chkNoPerson(no_person, paymentForm.getNo_person(), "03");
+    	model.addAttribute("cdResult", cdResult);
+		if("00".equals(cdResult)){
+			model.addAttribute("listPaymentDetail", consumeManager.listPaymentDetail(paymentForm));
+		}
     	return "jsonView";
     }
     
@@ -383,7 +397,11 @@ public class ConsumeController {
     		no_person = (String) session.getAttribute("no_person");
     		consumeForm.setNo_person(no_person);
     	}
-    	model.addAttribute("consumeVO", consumeManager.getConsumeInfo(consumeForm));
+    	String cdResult = SessionUtil.chkNoPerson(no_person, consumeForm.getNo_person(), "03");
+    	model.addAttribute("cdResult", cdResult);
+		if("00".equals(cdResult)){
+			model.addAttribute("consumeVO", consumeManager.getConsumeInfo(consumeForm));
+		}
     	return "jsonView";
     }
     
@@ -628,11 +646,11 @@ public class ConsumeController {
      * @return
      */
     @RequestMapping("/modifyConsumeInfo.json")
-    public String modifyConsumeInfo(HttpSession session, Model model, ConsumeVO consumeVO) {
+    public String modifyConsumeInfo(HttpSession session, Model model, ConsumeVO consumeVO, String yn_change_all) {
     	logger.debug("modifyConsumeInfo");
     	String no_person = (String) session.getAttribute("no_person");
     	consumeVO.setNo_person(no_person);
-    	consumeManager.modifyConsumeInfo(consumeVO);
+    	consumeManager.modifyConsumeInfo(consumeVO, yn_change_all);
     	return "jsonView";
     }
     

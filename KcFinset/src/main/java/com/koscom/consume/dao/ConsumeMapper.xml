@@ -615,6 +615,7 @@
 				</foreach>
 			AND SUBSTR(CI.DT_TRD, 0, 6)	= #{ym_trd, jdbcType = VARCHAR}
 			AND CI.YN_CANCEL			= 'N'
+			AND CI.YN_DELETE			= 'N'
 			AND CI.YN_BUDGET_EXCEPT		= 'N'
 		    AND 1 =
 				(
@@ -688,6 +689,7 @@
 				</foreach>
 			AND CI.DT_TRD				= #{ymd_trd, jdbcType = VARCHAR}
 			AND CI.YN_CANCEL			= 'N'
+			AND CI.YN_DELETE			= 'N'
 			AND CI.YN_BUDGET_EXCEPT		= 'N'
 			AND EXISTS (
 				SELECT
@@ -1955,6 +1957,41 @@
 				</otherwise>
 			</choose>
 	</update>
+	<update id="chageAllCdConsumeClass" parameterType="com.koscom.consume.model.ConsumeVO">
+		UPDATE
+			CONSUME_INFO
+		SET
+			 CD_CLASS	= #{cd_class, jdbcType=VARCHAR}
+			,CD_TYPE	= #{cd_type	, jdbcType=VARCHAR}
+		WHERE
+				NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND SEQ_CONSUME IN
+				(
+					SELECT
+						SEQ_CONSUME
+					FROM
+						 CONSUME_INFO A
+						,(
+							SELECT
+								 NO_PERSON
+								,TYPE_IN_OUT
+								,MEANS_CONSUME
+								,NO_CARD
+							FROM
+								CONSUME_INFO
+							WHERE
+									NO_PERSON	= #{no_person	, jdbcType=VARCHAR}
+								AND SEQ_CONSUME = #{seq_consume	, jdbcType=NUMERIC}
+						 ) B
+					WHERE
+							A.NO_PERSON				= #{no_person, jdbcType = VARCHAR}
+						AND A.CONTENTS				= #{contents, jdbcType = VARCHAR}
+						AND A.NO_PERSON				= B.NO_PERSON
+						AND A.TYPE_IN_OUT			= B.TYPE_IN_OUT
+						AND A.MEANS_CONSUME			= B.MEANS_CONSUME
+						AND NVL( A.NO_CARD, '-' )	= NVL( B.NO_CARD, '-' )
+				)
+	</update>
 	<update id="deleteConsumeInfo" parameterType="com.koscom.consume.model.ConsumeForm">
 		UPDATE
 			CONSUME_INFO
@@ -2217,7 +2254,11 @@
 			) PSI
 		WHERE
 				CI.NO_PERSON				 = #{no_person	, jdbcType = VARCHAR}
-			AND CI.CD_FC					 = #{cd_fc		, jdbcType = VARCHAR}
+			AND NVL( CI.CD_FC , '-')		 = 
+				CASE
+					WHEN #{cd_fc, jdbcType = VARCHAR} IS NULL OR #{cd_fc, jdbcType = VARCHAR} = 'null' THEN '-'
+					ELSE #{cd_fc, jdbcType = VARCHAR}
+				END
 			AND CI.TYPE_IN_OUT				 = #{type_in_out, jdbcType = VARCHAR}
 			AND CI.CONTENTS					 = #{contents	, jdbcType = VARCHAR}
 			AND 1 = (
@@ -2417,7 +2458,11 @@
 					) PSI
 				WHERE
 						CI.NO_PERSON					= #{no_person	, jdbcType = VARCHAR}
-					AND CI.CD_FC						= #{cd_fc		, jdbcType = VARCHAR}
+					AND NVL( CI.CD_FC , '-')			= 
+						CASE
+							WHEN #{cd_fc, jdbcType = VARCHAR} IS NULL OR #{cd_fc, jdbcType = VARCHAR} = 'null' THEN '-'
+							ELSE #{cd_fc, jdbcType = VARCHAR}
+						END
 					AND CI.TYPE_IN_OUT					= #{type_in_out	, jdbcType = VARCHAR}
 					AND TO_NUMBER( CI.DT_TRD ) <![CDATA[>=]]> TO_NUMBER( PSI.DT_FROM )
 					AND TO_NUMBER( CI.DT_TRD ) <![CDATA[<]]>TO_NUMBER( PSI.DT_TO )
@@ -2479,7 +2524,11 @@
 					) PSI
 				WHERE
 						CI.NO_PERSON					= #{no_person	, jdbcType = VARCHAR}
-					AND CI.CD_FC						= #{cd_fc		, jdbcType = VARCHAR}
+					AND NVL( CI.CD_FC , '-')			= 
+						CASE
+							WHEN #{cd_fc, jdbcType = VARCHAR} IS NULL OR #{cd_fc, jdbcType = VARCHAR} = 'null' THEN '-'
+							ELSE #{cd_fc, jdbcType = VARCHAR}
+						END
 					AND CI.TYPE_IN_OUT					= #{type_in_out	, jdbcType = VARCHAR}
 					AND TO_NUMBER( CI.DT_TRD ) <![CDATA[>=]]> TO_NUMBER( PSI.DT_FROM )
 					AND TO_NUMBER( CI.DT_TRD ) <![CDATA[<]]> TO_NUMBER( PSI.DT_TO )

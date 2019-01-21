@@ -355,6 +355,12 @@ public interface ConsumeMapper {
 	void modifyConsumeInfo(ConsumeVO consumeVO);
 	
 	/**
+	 * contents와 no_card가 동일한 소비지출의 분류, 항목 코드 일괄변경 
+	 * @param consumeVO
+	 */
+	void chageAllCdConsumeClass(ConsumeVO consumeVO);
+	
+	/**
 	 * 소비 삭제
 	 * @param consumeForm
 	 */
@@ -463,4 +469,5 @@ public interface ConsumeMapper {
 	 * @return
 	 */
 	List<ConsumeDetailGoalInfoVO> chkConsumeGoalInfoMeans(String no_person);
+	
 }

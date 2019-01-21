@@ -181,7 +181,8 @@ export default {
       ],
       isAuto: false, // 자동 등록 여부
       nmBanner: "", // 배너명
-      bannerData: "" // 이번 달에 contents에 해당하는 소비 지출 내역 수
+      bannerData: "", // 이번 달에 contents에 해당하는 소비 지출 내역 수
+      yn_change_all: "N" // 동일 항목 분류항목코드 전체 적용 여부
     };
   },
   components: {
@@ -329,13 +330,13 @@ export default {
         this.$set(
           this.consumeVO,
           "nm_class",
-          this.consumeCategory[this.orgClass].nm_class
+          this.consumeCategory[parseInt(this.orgClass)].nm_class
         );
         if (this.curTab == "02") {
           this.$set(
             this.consumeVO,
             "nm_type",
-            this.consumeCategory[this.orgClass].listCdType.filter(
+            this.consumeCategory[parseInt(this.orgClass)].listCdType.filter(
               eachType => eachType.cd_type == this.orgType
             )[0].nm_type
           );
@@ -350,13 +351,13 @@ export default {
         this.$set(
           this.consumeVO,
           "nm_class",
-          this.consumeCategory[this.orgClass].nm_class
+          this.consumeCategory[parseInt(this.orgClass)].nm_class
         );
         if (this.curTab == "02") {
           this.$set(
             this.consumeVO,
             "nm_type",
-            this.consumeCategory[this.orgClass].listCdType.filter(
+            this.consumeCategory[parseInt(this.orgClass)].listCdType.filter(
               eachType => eachType.cd_type == this.orgType
             )[0].nm_type
           );
@@ -365,18 +366,33 @@ export default {
     },
     // 카테고리 팝업 창 확인 버튼 클릭 시
     clickConfirm: function() {
+      var _this = this;
+      if (!this.isNew) {
+        this.$dialogs
+          .confirm("동일한 항목에 모두 적용하시겠습니까?", Constant.options)
+          .then(res => {
+            if (res.ok) {
+              _this.yn_change_all = "Y";
+            } else {
+              _this.yn_change_all = "N";
+            }
+          });
+      } else {
+        _this.yn_change_all = "N";
+      }
+
       if (this.curTab == "02") {
         this.$set(this.consumeVO, "cd_class", this.curClass);
         this.$set(
           this.consumeVO,
           "nm_class",
-          this.consumeCategory[this.curClass].nm_class
+          this.consumeCategory[parseInt(this.curClass)].nm_class
         );
         this.$set(this.consumeVO, "cd_type", this.curType);
         this.$set(
           this.consumeVO,
           "nm_type",
-          this.consumeCategory[this.curClass].listCdType.filter(
+          this.consumeCategory[parseInt(this.curClass)].listCdType.filter(
             eachType => eachType.cd_type == this.curType
           )[0].nm_type
         );
@@ -388,7 +404,7 @@ export default {
         this.$set(
           this.consumeVO,
           "nm_class",
-          this.consumeCategory[this.curClass].nm_class
+          this.consumeCategory[parseInt(this.curClass)].nm_class
         );
         this.orgClass = this.curClass;
         this.isShowCategory = false;
@@ -502,6 +518,10 @@ export default {
           }
         })
         .then(function(response) {
+          if ("00" != response.data.cdResult) {
+            _this.$toast.center("권한이 없습니다.");
+            return false;
+          }
           var consumeVO = response.data.consumeVO;
           _this.allocateConsume(consumeVO);
         });
@@ -561,7 +581,7 @@ export default {
           var list = response.data.listPersonIncomeClassInfo;
           var listCdClass = new Object();
           for (var eachClass of list) {
-            listCdClass[eachClass.cd_class] = eachClass;
+            listCdClass[parseInt(eachClass.cd_class)] = eachClass;
           }
           _this.consumeCategory = listCdClass;
           if (_this.isTran) {
@@ -665,6 +685,8 @@ export default {
       this.isPersonRegist
         ? formData.append("yn_person_regist", "Y")
         : formData.append("yn_person_regist", "N");
+
+      formData.append("yn_change_all", this.yn_change_all);
 
       this.$http
         .post("/m/consume/modifyConsumeInfo.json", formData)
@@ -804,6 +826,7 @@ export default {
       this.curType = "";
       this.listRegSeqTran = [];
       this.listTrans = {};
+      this.yn_change_all = "N";
       if (this.curTab == "01") {
         this.listPersonIncomeClassInfo();
       } else {

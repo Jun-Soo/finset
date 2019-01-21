@@ -217,154 +217,6 @@
 		ORDER BY
 		PRIORITY DESC
 	</select>
-	<select id="getDebtSummary_prev" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtSummaryVO">
-		SELECT MAX(DT_STD)							AS DT_STD
-		      ,SUM(CNT_LOAN)						AS CNT_LOAN
-		      ,FN_AMT_VIEW(SUM(CUR_MON_MID_RPY))	AS CUR_MON_MID_RPY
-		      ,FN_AMT_VIEW(SUM(CUR_MON_MID_RPY_P))	AS CUR_MON_MID_RPY_P
-		      ,FN_AMT_VIEW(SUM(CUR_MON_MID_RPY_I))	AS CUR_MON_MID_RPY_I
-		      ,FN_AMT_VIEW(SUM(AMT_REMAIN))			AS AMT_REMAIN
-		      ,ROUND((SUM(AMT_CONTRACT) - SUM(AMT_REMAIN)) / (CASE WHEN SUM(AMT_CONTRACT) = 0 THEN 1 ELSE SUM(AMT_CONTRACT) END),3)*100   AS RATE_AMT_CONTRACT    /* 상환비율(%)*/ ,MAX(ALL_REST_TERM)      AS ALL_REST_TERM
-		      ,MAX(REST_TIME)						AS REST_TIME
-		      ,ROUND(SUM(
-		                CASE
-		                   WHEN SUM_AMT_REMAIN2 != 0 AND CD_TYPE_DEAL NOT IN ('3','6') AND NVL(ETM_INTEREST,0) != 0 THEN
-		                       (SUNMAMT_REMAIN * ETM_INTEREST) / SUM_AMT_REMAIN2
-		                   ELSE 0
-		                END
-		            ),2)                         AS EVER_INTEREST     /*  금리(평균) (%)-->SUM((대출정보.대출잔액 x 상세.추정금리)/잔액합계) */
-		      ,TO_CHAR(ROUND(SUM(
-		               CASE
-		                    WHEN (CUR_MON_MID_RPY) != 0 AND CD_TYPE_DEAL NOT IN ('3','6') THEN
-		                       (CUR_MON_MID_RPY_I)/(CUR_MON_MID_RPY) * 100
-		                    ELSE 0
-		                END
-		            ),1),'990.9')                   AS RATE_REPAY        /* 이자상환비율(%) */
-		      ,MONTHS_BETWEEN(TO_DATE(SUBSTR(MAX(MAX_YMD_LOANEND),1,6),'YYYYMM'),TO_DATE(TO_CHAR(SYSDATE,'YYYYMM'),'YYYYMM'))
-		             + CASE WHEN MAX(CUR_MM_MAX_INR_YMD) > TO_CHAR(SYSDATE,'YYYYMMDD') THEN 1
-		               ELSE 0
-		               END                      AS REST_TERM        /* 만기상환까지 잔여기간(회차기준.오늘일자기준으로 이자납입일이 안지났으면 이번달도 포함한다.)*/
-		      ,MAX(LOAN_TERM)                  AS LOAN_TERM
-		      ,MIN(MIN_YMD_LOAN)               AS MIN_YMD_LOAN
-		      ,MAX(MAX_YMD_LOANEND)               AS MAX_YMD_LOANEND
-		      ,MAX(AMT_ETM_INCOME)               AS AMT_ETM_INCOME
-		      ,SUM(CNT)                        AS CNT
-		      ,SUM(REPAY_PNI_PER_INCOME)         AS REPAY_PNI_PER_INCOME
-		      ,CUR_MONTH
-		      ,NEXT_DAY
-		      ,SUM(DUTATION_NOW_RATE)            AS DUTATION_NOW_RATE
-		      ,SUM(AMT_CONTRACT)               AS AMT_CONTRACT
-		  FROM (
-		    SELECT    A.DT_STD                 /* 기준일자 */
-		             ,A.CNT_LOAN               /* 대출건수 */
-		             ,SUM(CASE WHEN A.CD_TYPE_DEAL IN ('3','6') THEN 0 ELSE B.CUR_MON_MID_RPY END)         AS CUR_MON_MID_RPY      /* 당월 상환금액(한도대출제외)*/
-		             ,SUM(CASE WHEN A.CD_TYPE_DEAL IN ('3','6') THEN 0 ELSE B.CUR_MON_MID_RPY_P END)       AS CUR_MON_MID_RPY_P    /* 당월 상환원금(한도대출제외)*/
-		             ,SUM(CASE WHEN A.CD_TYPE_DEAL IN ('3','6') THEN 0 ELSE B.CUR_MON_MID_RPY_I END)       AS CUR_MON_MID_RPY_I    /* 이자금액(당월)(한도대출제외)*/
-		             ,A.SUM_AMT_REMAIN                                  AS AMT_REMAIN         /* 대출잔액*/
-		             ,TO_DATE(A.MAX_YMD_LOANEND) - TO_DATE(A.MIN_YMD_LOAN)   AS ALL_REST_TERM   /* 상환기간*/
-		             ,SUBSTR (NUMTODSINTERVAL(TO_DATE(TO_CHAR(SYSDATE,'YYYYMMDD')||'235959','YYYYMMDDHH24MISS')-SYSDATE,'DAY'),12,8)   AS REST_TIME/* 잔여시간 */
-		             ,SUM(A.SUM_AMT_REMAIN2)    AS SUM_AMT_REMAIN2
-		             ,MAX(A.CD_TYPE_DEAL)      AS CD_TYPE_DEAL
-		             ,MAX(B.ETM_INTEREST)       AS ETM_INTEREST
-		             ,MAX(B.CUR_MM_MAX_INR_YMD) AS CUR_MM_MAX_INR_YMD
-		             ,MONTHS_BETWEEN(TO_DATE(SUBSTR(A.MAX_YMD_LOANEND,1,6),'YYYYMM'),TO_DATE(SUBSTR(A.MIN_YMD_LOAN,1,6),'YYYYMM')) AS LOAN_TERM /*대출기간*/
-		             ,MIN(A.MIN_YMD_LOAN)      AS MIN_YMD_LOAN       /* min 개설일*/
-		             ,MAX(A.MAX_YMD_LOANEND)    AS MAX_YMD_LOANEND    /* max 만기일*/
-		             ,FN_AMT_VIEW(FN_ETM_INCOME_AMT(A.NO_PERSON)/12)   AS AMT_ETM_INCOME    /* 소득(월평균) */
-		             ,A.CNT
-		             ,CASE
-		                WHEN FN_ETM_INCOME_AMT(A.NO_PERSON) = 0 THEN
-		                   0
-		                ELSE
-		                   ROUND(SUM(CASE WHEN A.CD_TYPE_DEAL IN ('3','6') THEN 0 ELSE B.CUR_MON_MID_RPY END)/(FN_ETM_INCOME_AMT(A.NO_PERSON)/12),3) * 100
-		              END                                              AS REPAY_PNI_PER_INCOME
-		             ,TO_CHAR(SYSDATE,'MM')                            AS CUR_MONTH
-		             ,TO_CHAR(SYSDATE+1,'YYYYMMDD')                    AS NEXT_DAY
-		             ,(100 -
-		               ROUND((TO_DATE(A.MAX_YMD_LOANEND) - TO_DATE(TO_CHAR(SYSDATE,'YYYYMMDD'),'YYYYMMDD') - 1) / (TO_DATE(A.MAX_YMD_LOANEND) - TO_DATE(A.MIN_YMD_LOAN)),2)
-		               *100)                                 AS DUTATION_NOW_RATE
-		             ,TO_NUMBER(A.SUM_AMT_CONTRACT)          AS AMT_CONTRACT
-		       FROM   (
-		                SELECT A.NO_PERSON
-		                      ,A.NO_MANAGE_INFO
-		                      ,A.CD_TYPE_DEAL
-		                      ,MAX(A.DT_STD)         OVER(PARTITION BY A.NO_PERSON)         AS DT_STD
-		                      ,SUM(A.AMT_REMAIN)      OVER(PARTITION BY A.NO_PERSON)         AS SUM_AMT_REMAIN
-		                      ,SUM(A.AMT_CONTRACT)   OVER(PARTITION BY A.NO_PERSON)         AS SUM_AMT_CONTRACT
-		                      ,MIN(A.YMD_LOAN)      OVER(PARTITION BY A.NO_PERSON)         AS MIN_YMD_LOAN
-		                      ,MAX(A.YMD_LOANEND)      OVER(PARTITION BY A.NO_PERSON)         AS MAX_YMD_LOANEND
-		                      ,C.CNT_LOAN
-		                      ,COUNT(A.NO_MANAGE_INFO)OVER(PARTITION BY A.NO_PERSON)         AS CNT
-		                      ,A.AMT_CONTRACT
-		                      ,A.AMT_REMAIN
-		                      ,SUM(CASE WHEN NVL(A.CD_TYPE_DEAL, '0') NOT IN ('3','6') THEN TO_NUMBER(A.AMT_CONTRACT) ELSE 0 END) OVER(PARTITION BY A.NO_PERSON)   AS SUM_AMT_CONTRACT2
-		                      ,SUM(CASE WHEN NVL(A.CD_TYPE_DEAL, '0') NOT IN ('3','6') THEN TO_NUMBER(A.AMT_REMAIN) ELSE 0 END)   OVER(PARTITION BY A.NO_PERSON)   AS SUM_AMT_REMAIN2
-		                FROM   DEBT_PERSONAL_INFO A
-		                      LEFT OUTER JOIN KCB_CREDIT_INFO C ON C.NO_PERSON   =   A.NO_PERSON
-		                      INNER JOIN (
-		                      			  SELECT
-		                      			  	 NO_PERSON
-		                      				,NO_MANAGE_INFO
-		                      			  FROM DEBT_PERSONAL_INFO
-		                      			  WHERE NO_PERSON = #{no_person, jdbcType = VARCHAR}
-			                      			  UNION ALL
-				                      			  SELECT
-				                      			  	 AA.OFFER_NO_PERSON
-				                      			  	,BB.NO_MANAGE_INFO
-				                      			  FROM SHARE_INFO AA INNER JOIN SHARE_INFO_DETAIL BB
-			                      			  ON AA.SEQ_SHARE = BB.SEQ_SHARE
-			                      			  WHERE
-			                      			  		AA.REQ_NO_PERSON = #{no_person, jdbcType = VARCHAR}
-			                      			  	AND AA.CD_SHARE = '02'
-			                      			  	AND AA.SHARE_STATUS = '02'
-			                      			  	AND AA.YN_DEBT_INFO = 'Y'
-		                      			  ) D
-		                      ON		A.NO_PERSON = D.NO_PERSON
-		                      		AND A.NO_MANAGE_INFO = D.NO_MANAGE_INFO
-		                WHERE   A.NO_PERSON   IN
-							<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
-								#{each_person}
-							</foreach>
-			                AND A.YMD_CANCEL IS NULL
-			                AND	TO_NUMBER(A.YMD_LOANEND) <![CDATA[>=]]> TO_NUMBER(TO_CHAR(SYSDATE, 'YYYYMMDD'))
-			                AND A.DISPLAY_YN = 'Y'
-		             ) A
-		             LEFT OUTER JOIN (
-		                SELECT    B.NO_PERSON
-		                      ,B.NO_MANAGE_INFO
-		                      ,SUM(CASE WHEN B.REQ_YYYYMM = TO_CHAR(SYSDATE,'YYYYMM') THEN TO_NUMBER(B.AMT_REPAY) ELSE 0 END)                    AS CUR_MON_MID_RPY
-		                      ,SUM(CASE WHEN B.REQ_YYYYMM = TO_CHAR(SYSDATE,'YYYYMM') THEN TO_NUMBER(B.AMT_REPAY_P) ELSE 0 END)                  AS CUR_MON_MID_RPY_P
-		                      ,SUM(CASE WHEN B.REQ_YYYYMM = TO_CHAR(SYSDATE,'YYYYMM') THEN TO_NUMBER(B.AMT_REPAY_I) ELSE 0 END)                  AS CUR_MON_MID_RPY_I
-		                      ,MAX(B.ETM_INTEREST) KEEP(DENSE_RANK FIRST
-		                                                ORDER BY CASE WHEN B.YN_KCB = 'Y' THEN 1 ELSE 2 END
-		                                                        ,CASE WHEN NVL(B.AMT_MID_REPAY,'0') = '0' THEN 1 ELSE 2 END
-		                                                        ,B.REQ_YYYYMM DESC) AS ETM_INTEREST
-		                      ,MAX(CASE WHEN B.REQ_YYYYMM = TO_CHAR(SYSDATE,'YYYYMM') THEN B.INTEREST_YMD ELSE '' END)  AS CUR_MM_MAX_INR_YMD
-		                FROM   DEBT_PERSONAL_REPAY_LIST B
-		                WHERE   B.NO_PERSON   IN
-		  					<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
-								#{each_person}
-							</foreach>
-		                GROUP BY B.NO_PERSON
-		                      ,B.NO_MANAGE_INFO
-		             ) B
-		             ON   (
-		                B.NO_PERSON         =   A.NO_PERSON
-		             AND B.NO_MANAGE_INFO   =   A.NO_MANAGE_INFO
-		             )
-		       GROUP BY A.NO_PERSON
-		             ,A.DT_STD
-		             ,A.CNT_LOAN
-		             ,A.MIN_YMD_LOAN
-		             ,A.MAX_YMD_LOANEND
-		             ,A.SUM_AMT_REMAIN
-		             ,A.SUM_AMT_CONTRACT
-		             ,A.CNT
-		     )
-		     GROUP BY CUR_MONTH
-		             ,NEXT_DAY
-	</select>
-
 	<select id="getDebtSummary" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtSummaryVO">
 		SELECT
 			MAX( DT_STD ) AS DT_STD,
@@ -839,8 +691,7 @@
 		                        END)            AS CUR_MM_AMT_REPAY
 		                    ,MAX(CASE WHEN B.REQ_YYYYMM = TO_CHAR(SYSDATE,'YYYYMM') THEN B.INTEREST_YMD ELSE '' END)  AS CUR_MM_MAX_INR_YMD
 		            FROM    DEBT_PERSONAL_REPAY_LIST B
-		            WHERE   B.NO_PERSON =   #{no_person , jdbcType=VARCHAR}
-		            AND     B.NO_MANAGE_INFO    =   #{no_manage_info , jdbcType=VARCHAR}
+		            WHERE   B.NO_MANAGE_INFO    =   #{no_manage_info , jdbcType=VARCHAR}
 		            GROUP BY B.NO_PERSON
 		                    ,B.NO_MANAGE_INFO
 		        ) B
@@ -852,8 +703,7 @@
 		        ON  (
 		            C.CD_FC     =   A.CD_FC
 		        )
-		WHERE   A.NO_PERSON         =   #{no_person , jdbcType=VARCHAR}
-		AND     A.NO_MANAGE_INFO    =   #{no_manage_info , jdbcType=VARCHAR}
+		WHERE   A.NO_MANAGE_INFO    =   #{no_manage_info , jdbcType=VARCHAR}
 	</select>
 
 	<select id="listDebtLast12BizDay" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtDetail12RepVO">
@@ -881,7 +731,6 @@
                       ,DEBT_PERSONAL_INFO       I /* KCB 회원 계좌별 대출정보(KCB+추정DATA)*/
                  WHERE I.NO_PERSON      = R.NO_PERSON
                    AND I.NO_MANAGE_INFO = R.NO_MANAGE_INFO
-                   AND I.NO_PERSON      = #{no_person, jdbcType=VARCHAR}
                    AND I.NO_MANAGE_INFO = #{no_manage_info, jdbcType=VARCHAR} /* 정보관리번호 */
                    AND I.YMD_CANCEL     IS NULL
                    AND R.PAYMENT_YMD IS NOT NULL

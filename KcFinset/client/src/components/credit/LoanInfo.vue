@@ -150,7 +150,6 @@ export default {
       this.$router.push({
         name: "debtDetail",
         query: {
-          no_person: this.$store.state.user.noPerson,
           no_manage_info: no_manage_info,
           isMine: true
         }

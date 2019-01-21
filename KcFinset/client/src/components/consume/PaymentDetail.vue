@@ -112,6 +112,10 @@ export default {
       this.$http
         .post("/m/consume/listPaymentDetail.json", formData)
         .then(function(response) {
+          if ("00" != response.data.cdResult) {
+            _this.$toast.center("권한이 없습니다.");
+            return false;
+          }
           var list = response.data.listPaymentDetail;
           if ((list || "") == "" || list.length == 0) {
             _this.isNone = true;

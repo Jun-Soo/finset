@@ -415,8 +415,13 @@ public class ConsumeManagerImpl implements ConsumeManager {
 	}
 	
 	@Override
-	public void modifyConsumeInfo(ConsumeVO consumeVO) {
+	public void modifyConsumeInfo(ConsumeVO consumeVO, String yn_change_all) {
 		logger.debug("modifyConsumeInfo");
+		logger.debug("hwi------------------>"+yn_change_all);
+		logger.debug("hwi------------------>"+consumeVO.toString());
+		if("Y".equals(yn_change_all)){
+			consumeMapper.chageAllCdConsumeClass(consumeVO);
+		}
 		consumeMapper.modifyConsumeInfo(consumeVO);
 	}
 	

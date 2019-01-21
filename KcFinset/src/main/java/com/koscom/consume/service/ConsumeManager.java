@@ -275,7 +275,7 @@ public interface ConsumeManager {
 	 * 소비 정보 업데이트
 	 * @param consumeVO
 	 */
-	void modifyConsumeInfo(ConsumeVO consumeVO);
+	void modifyConsumeInfo(ConsumeVO consumeVO, String yn_change_all);
 	
 	/**
 	 * 소비 삭제

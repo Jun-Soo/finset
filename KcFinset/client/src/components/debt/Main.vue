@@ -324,7 +324,6 @@ export default {
       this.$router.push({
         path: "/debt/detail",
         query: {
-          no_person: no_person,
           no_manage_info: no_manage_info,
           isMine:
             _this.shareList.findIndex(

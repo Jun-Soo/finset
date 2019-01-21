@@ -87,9 +87,9 @@ public class ScrapController {
 			HttpServletRequest request, 
 			HttpSession session, 
 			Model model,
-			String no_person,
 			String uuid) {
-		
+		String no_person = (String) session.getAttribute("no_person");
+
 		String result = scrapManager.startScrapFinance(no_person, uuid);
 		
 		model.addAttribute("result", result);
@@ -138,17 +138,18 @@ public class ScrapController {
 			HttpServletRequest request, 
 			HttpSession session, 
 			Model model,
-			String no_person,
 			String cd_fc,
 			String uuid,
 			String dn,
 			String email) {
+		
+		String no_person = (String) session.getAttribute("no_person");
+		
 		logger.debug("================= no_person : " + no_person);
 		logger.debug("================= uuid : " + uuid);
 		logger.debug("================= dn : " + dn);
 		logger.info("service.profile :" +environment.getProperty("service.profile"));
 		
-		no_person = (String) session.getAttribute("no_person");
 		//scrapManager.getDirectFinanceSearch();
 		
 		String financeTerms = scrapManager.getFinanceTerms(no_person, cd_fc, uuid, dn, email);
@@ -170,7 +171,6 @@ public class ScrapController {
 			HttpServletRequest request, 
 			HttpSession session, 
 			Model model,
-			String no_person,
 			String uuid,
 			String dn,
 			String email,
@@ -179,7 +179,7 @@ public class ScrapController {
 		
 		logger.info("service.profile :" +environment.getProperty("service.profile"));
 		
-		no_person = (String) session.getAttribute("no_person");
+		String no_person = (String) session.getAttribute("no_person");
 		//scrapManager.getDirectFinanceSearch();
 		
 		String result = scrapManager.sendFinanceTerms(no_person, uuid, dn, email, financeTerms, jwsInfo);
@@ -201,10 +201,10 @@ public class ScrapController {
 			HttpServletRequest request, 
 			HttpSession session, 
 			Model model,
-			String no_person,
 			String cd_fc,
 			String uuid,
 			String dn) {
+		String no_person = (String) session.getAttribute("no_person");
 		logger.info("no_person : " + no_person);
 		logger.info("dn : " + dn);
 		logger.info("service.profile :" +environment.getProperty("service.profile"));
@@ -239,10 +239,10 @@ public class ScrapController {
 			HttpServletRequest request, 
 			HttpSession session, 
 			Model model,
-			String no_person,
 			String cn,
 			String dn)	{ 
-		
+		String no_person = (String) session.getAttribute("no_person");
+
 		List<LinkedFcInfoVO> linkedFcInfoList = scrapManager.listFcLinkList(no_person, cn, dn);
 
 		model.addAttribute("linkedFcInfoList", linkedFcInfoList);
@@ -287,8 +287,11 @@ public class ScrapController {
 		HttpSession session, 
 		Model model,
 		FcLinkInfoVO linkedFcInfoList)	{ 
+		
 		logger.debug("updateFcLinkInfoAll.json");
-				
+		String no_person = (String) session.getAttribute("no_person");
+
+		linkedFcInfoList.setNo_person(no_person);
 		int result = scrapManager.updateFcLinkInfoAll(linkedFcInfoList);
 		if(result > 0)	{
 			model.addAttribute("result", Constant.SUCCESS);
@@ -384,8 +387,8 @@ public class ScrapController {
 			HttpServletResponse response,
 			HttpServletRequest request, 
 			HttpSession session, 
-			Model model,
-			String no_person)	{
+			Model model)	{
+		String no_person = (String) session.getAttribute("no_person");
 		int linkedFcCount = scrapManager.getLinkedFcCount(no_person);
     	logger.debug("linkedFcCount : " + linkedFcCount);
     	model.addAttribute("linkedFcCount", linkedFcCount);
@@ -405,11 +408,11 @@ public class ScrapController {
 			HttpServletResponse response,
 			HttpServletRequest request, 
 			HttpSession session, 
-			Model model,
-			String no_person)	{
+			Model model )	{
 		String smsStartDate = null;
     	String smsInclude = null;
     	String smsExclude = null;
+    	String no_person = (String) session.getAttribute("no_person");
     	//마지막 문자내역 시간 체크
     	smsStartDate = personManager.getLastPersonSmsDt(no_person);
     	//문자내역이 없을 경우 기본 3달 전으로 셋팅
@@ -465,8 +468,10 @@ public class ScrapController {
 	 * @return
 	 */
 	@RequestMapping("/sendPushMsg.json")
-	public String sendPushMsg(HttpServletRequest request, HttpServletResponse response, Model model, String no_person, String push_msg){
+	public String sendPushMsg(HttpServletRequest request, HttpServletResponse response, HttpSession session, Model model, String push_msg){
 		
+		String no_person = (String) session.getAttribute("no_person");
+
 		SessionUtil sessionUtil = new SessionUtil(request);
 		sessionUtil.getUserId();
 		
@@ -540,7 +545,9 @@ public class ScrapController {
 	 * @return
 	 */
 	@RequestMapping("/unlinkScrapFc.json")
-	public String unlinkScrapFc(HttpSession session, Model model, HttpServletRequest request, String no_person, String cd_fc) {
+	public String unlinkScrapFc(HttpSession session, Model model, HttpServletRequest request, String cd_fc) {
+		
+		String no_person = (String) session.getAttribute("no_person");
 		logger.debug("no_person :" + no_person + "cd_fc :" + cd_fc  );
 		ReturnClass returnClass = scrapManager.unlinkScrapFc(no_person, cd_fc);
 		

@@ -86,7 +86,7 @@ export default {
       }
 
       var formData = new FormData();
-      formData.append("no_person", this.$store.state.user.noPerson);
+      // formData.append("no_person", this.$store.state.user.noPerson);
       formData.append("push_msg", push_msg);
       this.$http
         .post("/m/scrap/sendPushMsg.json", formData)
@@ -226,7 +226,7 @@ export default {
     resultCheckDevicesUUID: function(uuid) {
       var _this = this;
       var formData = new FormData();
-      formData.append("no_person", this.$store.state.user.noPerson);
+      // formData.append("no_person", this.$store.state.user.noPerson);
       formData.append("uuid", uuid);
       this.$http
         .post("/m/scrap/startScrapSt.json", formData)
@@ -275,9 +275,10 @@ export default {
       // 스트크래핑 대상 금융사 건수 조회
       console.log("startAutoScrap");
       this.$http
-        .get("/m/scrap/getLinkedFcCount.json", {
-          params: { no_person: _this.$store.state.user.noPerson }
-        })
+        .get(
+          "/m/scrap/getLinkedFcCount.json"
+          // , {params: { no_person: _this.$store.state.user.noPerson }}
+        )
         .then(function(response) {
           var result = response.data;
           console.log("result.linkedFcCount : " + result.linkedFcCount);
@@ -306,9 +307,10 @@ export default {
       var _this = this;
       // 스크래핑 대상 내역 조회
       this.$http
-        .get("/m/scrap/getAutoScrapInfo.json", {
-          params: { no_person: _this.$store.state.user.noPerson }
-        })
+        .get(
+          "/m/scrap/getAutoScrapInfo.json"
+          // , {params: { no_person: _this.$store.state.user.noPerson }}
+        )
         .then(function(response) {
           var result = response.data;
           if (Constant.userAgent == "Android") {
@@ -351,7 +353,7 @@ export default {
       console.log("updateFcLinkInfoAll");
       var _this = this;
       var formData = new FormData();
-      formData.append("no_person", this.$store.state.user.noPerson);
+      // formData.append("no_person", this.$store.state.user.noPerson);
       formData.append("yn_link", "N");
       formData.append("cd_link_stat", "99");
       formData.append(

@@ -103,7 +103,7 @@ export default {
     getLinkedFcInfo: function() {
       var _this = this;
       var formData = new FormData();
-      formData.append("no_person", this.noPerson);
+      // formData.append("no_person", this.noPerson);
       formData.append("cn", this.cn);
       formData.append("dn", this.dn);
       this.$http
@@ -345,4 +345,3 @@ export default {
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style lang="scss">
 </style>
-

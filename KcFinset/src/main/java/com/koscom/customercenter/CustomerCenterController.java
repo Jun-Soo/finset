@@ -104,7 +104,7 @@ public class CustomerCenterController implements Constant {
 	 * @throws FinsetException, IOException
 	 */
 	@RequestMapping("/getCustomerCenterMain.json")
-	public String frameCustomerCenterMain(HttpServletRequest request, HttpSession session, Model model) throws FinsetException, IOException {
+	public String getCustomerCenterMain(HttpServletRequest request, HttpSession session, Model model) throws FinsetException, IOException {
 		String no_person = (String) session.getAttribute("no_person");
 		PersonVO personVO = personManager.getPersonInfo(no_person);
 		String hp = personVO.getHp();

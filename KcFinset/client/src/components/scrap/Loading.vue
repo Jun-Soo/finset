@@ -73,7 +73,7 @@ export default {
     checkFcCertList: function() {
       var _this = this;
       var formData = new FormData();
-      formData.append("no_person", this.noPerson);
+      // formData.append("no_person", this.noPerson);
       this.$http
         .post("/m/scrap/getScrapFcList.json", formData)
         .then(function(response) {
@@ -116,7 +116,7 @@ export default {
     checkStCertList: function() {
       var _this = this;
       var formData = new FormData();
-      formData.append("no_person", this.noPerson);
+      // formData.append("no_person", this.noPerson);
       formData.append("uuid", this.uuid);
       formData.append("dn", _this.dn);
       this.$http
@@ -158,7 +158,7 @@ export default {
       var _this = this;
       var isScrap = true;
       var formData = new FormData();
-      formData.append("no_person", this.noPerson);
+      // formData.append("no_person", this.noPerson);
       formData.append("uuid", this.uuid);
       formData.append("dn", _this.dn);
       formData.append("cd_fc", _this.$route.params.cd_coocon);

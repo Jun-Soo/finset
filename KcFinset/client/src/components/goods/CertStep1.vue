@@ -155,7 +155,6 @@ export default {
       if (_this.chkBox1 && _this.chkBox2 && _this.chkBox3) {
         // 상품조회 약관 승인 DB 저장
         var formData = new FormData();
-        formData.append("no_person", this.$store.state.user.noPerson);
         this.$http
           .post("/m/person/createPersonAgreeHistGoods.json", formData)
           .then(function(response) {

@@ -93,20 +93,14 @@ export default {
   methods: {
     getPersonEmail() {
       var _this = this;
-      this.$http
-        .get("/m/person/getPersonEmail.json", {
-          params: {
-            no_person: this.$store.state.user.noPerson
-          }
-        })
-        .then(function(response) {
-          //console.log("response.data.email : " + response.data.email);
-          _this.emailFromDB = response.data.email || "";
-          //console.log("_this.emailFromDB : " + _this.emailFromDB);
-          if (_this.emailFromDB != "") {
-            _this.emailtext = _this.emailFromDB;
-          }
-        });
+      this.$http.get("/m/person/getPersonEmail.json").then(function(response) {
+        //console.log("response.data.email : " + response.data.email);
+        _this.emailFromDB = response.data.email || "";
+        //console.log("_this.emailFromDB : " + _this.emailFromDB);
+        if (_this.emailFromDB != "") {
+          _this.emailtext = _this.emailFromDB;
+        }
+      });
     },
     clickCheck: function(type) {
       switch (type) {
@@ -198,7 +192,6 @@ export default {
       var _this = this;
       var formData = new FormData();
       //console.log("updateEmail call");
-      formData.append("no_person", this.$store.state.user.noPerson);
       formData.append("email", this.emailtext);
       this.$http
         .post("/m/person/modifyPersonEmail.json", formData)
@@ -211,7 +204,6 @@ export default {
     getTermsContent: function(isShow) {
       var _this = this;
       var formData = new FormData();
-      formData.append("no_person", this.$store.state.user.noPerson);
       formData.append("uuid", this.uuid);
       formData.append("dn", this.$route.params.dn);
       formData.append("email", this.emailtext);
@@ -245,7 +237,6 @@ export default {
     sendTermsContent: function(jwsInfo) {
       var _this = this;
       var formData = new FormData();
-      formData.append("no_person", this.$store.state.user.noPerson);
       formData.append("uuid", this.uuid);
       formData.append("dn", this.$route.params.dn);
       formData.append("email", this.emailtext);

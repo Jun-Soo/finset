@@ -127,8 +127,9 @@ public class LoanWorkerController implements Constant{
 	@RequestMapping("/getLoanAffiliatesDetail.json")
 	public String getLoanAffiliatesDetail(Model model, HttpServletRequest request, GoodsForm goodsForm, HttpSession session) {
      	String no_person = (String) session.getAttribute("no_person");
+     	goodsForm.setNo_person(no_person);
+     	
      	Boolean enable_button = false;
-		goodsForm.setNo_person(no_person);
 		GoodsVO goodsInfo = new GoodsVO();
 		GoodsVO goodsVO = new GoodsVO();
 		

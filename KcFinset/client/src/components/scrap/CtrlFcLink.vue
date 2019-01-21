@@ -309,7 +309,7 @@ export default {
       var _this = this;
       var formData = new FormData();
       //console.log(this.$store.state);
-      formData.append("no_person", this.$store.state.user.noPerson);
+      // formData.append("no_person", this.$store.state.user.noPerson);
       formData.append("cd_fc", bank.cd_fc);
       this.$http
         .post("/m/scrap/unlinkScrapFc.json", formData)
@@ -404,7 +404,7 @@ export default {
     listFcLinkInfo: function() {
       var _this = this;
       var formData = new FormData();
-      formData.append("no_person", this.$store.state.user.noPerson);
+      // formData.append("no_person", this.$store.state.user.noPerson);
       this.$http
         .post("/m/scrap/listFcLinkInfo.json", formData)
         .then(function(response) {

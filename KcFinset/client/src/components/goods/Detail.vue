@@ -152,7 +152,7 @@ export default {
         url = this.$route.query.urlPath + "getLoanNoAffiliatesDetail.json";
       }
       var formData = new FormData();
-      formData.append("no_person", this.$store.state.user.noPerson);
+      // formData.append("no_person", this.$store.state.user.noPerson);
       formData.append("cd_fc", this.cd_fc);
       formData.append("cd_goods", this.cd_goods);
       console.log("cd_fc : " + this.cd_fc + ",cd_goods : " + this.cd_goods);

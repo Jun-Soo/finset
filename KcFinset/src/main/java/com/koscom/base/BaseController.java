@@ -73,7 +73,9 @@ public class BaseController {
 		
 		// 1.전화번호 조회
 		personVO = personManager.getPersonInfoHp(personForm.getHp());
-		
+		session.setAttribute("no_person", personVO.getNo_person());
+		session.setAttribute("hp", personForm.getHp());
+		System.out.println(request.isUserInRole("ROLE_USER"));
 		if(personVO != null) {
 			
 			//사용여부 N:회원가입, Y:로그인화면

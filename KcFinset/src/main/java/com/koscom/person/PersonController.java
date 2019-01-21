@@ -157,6 +157,8 @@ public class PersonController {
 
 			ReturnClass returnClass = personManager.insertPerson(personVO);
 			String noPerson = personManager.getPersonInfoHp(personVO.getHp()).getNo_person();
+			session.setAttribute("no_person", noPerson);
+			session.setAttribute("hp", personVO.getHp());
 			int result = personManager.createPersonAgreeHist(noPerson, personVO.getYn_eventPush());
 			logger.debug("약관동의 DB insert result : " + result);
 			model.addAttribute("message", returnClass.getMessage());
@@ -186,8 +188,10 @@ public class PersonController {
 			Model model) {
 
 		String kcmCertValue = (String) session.getAttribute("cert_result_value");
-		String no_person = (String) session.getAttribute("no_person");
-		personVO.setNo_person(no_person);
+//		if((String)session.getAttribute("no_person") != null ){
+			String no_person = (String) session.getAttribute("no_person");
+			personVO.setNo_person(no_person);
+//		}
 		logger.debug("★★★★★ cert_result_value : " + kcmCertValue);
 
 		if(!Constant.SUCCESS.equals(kcmCertValue)) {

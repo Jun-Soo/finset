@@ -169,10 +169,10 @@ public final class SessionUtil {
 					.getBean("personManager");
 			if (personManager != null) {
 				personShareRtnClass = personManager.checkSharePerson(personShareInfo);
+				cdResult = personShareRtnClass.getCd_result();
 			}else{
 				cdResult = "01";
 			}
-			cdResult = personShareRtnClass.getCd_result();
 		}
 
 		return cdResult;

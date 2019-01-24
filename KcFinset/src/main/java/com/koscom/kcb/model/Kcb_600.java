@@ -271,7 +271,8 @@ public class Kcb_600 extends AbstractKcbInfo {
 		pos+=len; len=14;	setKcbTcpTranTime(StringUtil.getByte2String(bt,pos,len).trim());
 		pos+=len; len=7;	setComTcpMngNo(StringUtil.getByte2String(bt,pos,len).trim());
 		pos+=len; len=14;	setComTcpTranTime(StringUtil.getByte2String(bt,pos,len).trim());
-		pos+=len; len=1;	setKcbSysInfo(StringUtil.getByte2String(bt,pos,len).trim());
+		pos+=len; len=16;	setKcbSysInfo(StringUtil.getByte2String(bt,pos,len).trim());
+		pos+=len; len=1;	setRefAgreeCode(StringUtil.getByte2String(bt,pos,len).trim());
 		pos+=len; len=42;	setFiller(StringUtil.getByte2String(bt,pos,len).trim());
 
 		pos+=len; len=3  ;	setResSegmentID(StringUtil.getByte2String(bt,pos,len).trim());

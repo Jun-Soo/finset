@@ -106,7 +106,7 @@ public class Kcb_600 extends AbstractKcbInfo {
 	public void parseResponse(String recvMsg) throws UnsupportedEncodingException {
 		String noHeaderMsg = getStringByNoHeader(recvMsg); //공통 & 개별응답부 파싱후 나머지 응답정보부 리턴
 		//응답정보부 파싱처리
-		parseResponseInfo(noHeaderMsg);
+		if(noHeaderMsg.trim().length() > 0)	parseResponseInfo(noHeaderMsg);
 
 	}
 	/**

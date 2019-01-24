@@ -1893,6 +1893,7 @@ public class ScrapManagerImpl implements ScrapManager {
 		scrRsltScrapVO.setRslt_scraping(error_code);
 	
 		seq_scrap = scrapMapper.insertScrRsltScrap(scrRsltScrapVO);
+		seq_scrap = scrRsltScrapVO.getSeq_scraping_result();
 		logger.info("insertScrRsltScrap result :" + seq_scrap);
 
         if(appNHISInfo.getUSER_NHIS_OUTPUT() != null){
@@ -1970,6 +1971,7 @@ public class ScrapManagerImpl implements ScrapManager {
 		scrRsltScrapVO.setRslt_scraping(error_code);
 	
 		seq_scrap = scrapMapper.insertScrRsltScrap(scrRsltScrapVO);
+		seq_scrap = scrRsltScrapVO.getSeq_scraping_result();
 		logger.info("insertScrRsltScrap result :" + seq_scrap);
 
 		if(appNTSInfo.getUSER_NTS_OUTPUT() != null){
@@ -2069,6 +2071,8 @@ public class ScrapManagerImpl implements ScrapManager {
 		scrRsltScrapVO.setRslt_scraping(error_code);
 	
 		seq_scrap = scrapMapper.insertScrRsltScrap(scrRsltScrapVO);
+		
+		seq_scrap = scrRsltScrapVO.getSeq_scraping_result();
 		logger.info("insertScrRsltScrap result :" + seq_scrap);
 
         if(appNPSInfo.getUSER_NPS_OUTPUT() != null){
@@ -2282,9 +2286,10 @@ public class ScrapManagerImpl implements ScrapManager {
 			else if(cd_agency.equals(codeManager.getCodeId("cd_agency", "국세청")))	{
 				FcLinkInfoVO fcLinkInfo = fcLinkInfoList.get(0);
 				String startMonth = "";
-				//자동 스크래래핑 관련 은행사의 계좌 조회내역 조회(조회 시작일)				
+				//자동 스크래래핑 관련 국세청 현금영수증 사용 내역 조회				
 				ScrReqCertificationVO scrReqCertificationVO = new ScrReqCertificationVO();
 				scrReqCertificationVO.setNo_person(no_person);
+				scrReqCertificationVO.setCd_type("01"); //01 현금영수증 사용내역, 02 소득금액증명, 03 사업자등록증명, 04 사업자등록상태, 05 부가가치세 과세표준증명원, 06 표준재무제표증명, 07 납세사실증명
 				jsonRoot.put("CN", fcLinkInfo.getCn());
 				ScrReqCertificationVO scrReqCertificationResult = scrapMapper.getScrReqCertification(scrReqCertificationVO);
 				if(scrReqCertificationResult != null)	{

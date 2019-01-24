@@ -209,7 +209,7 @@ public class Kcb_600 extends AbstractKcbInfo {
 		recvMsg = response.toString().replaceAll("\0", "");
 		parseHeader(recvMsg);
 		
-		info.setKcbID(getRes고유식별정보());
+		info.setKcbID(getRes등록번호());
 		info.setCdCbResponse(getResCode()); //조회정보 객체에 응답코드 셋
 		info.setMsgResponse(recvMsg); 		//조회정보 객체에 응답전문 셋
 	}
@@ -246,7 +246,7 @@ public class Kcb_600 extends AbstractKcbInfo {
 		}
 		this.req주소 			= "";
 		this.req이메일			= "";
-		this.req고유식별정보 	= "";//"MC0GCCqGSIb3DQIJAyEADniMJwqIRNEVo00SLmKvQyxz3v6DrzRmzpRVpPbMrg8=P18760000000";			//(No.10)에서 ‘01’인 경우에만 입력 : DI값 (64byte) + CP코드(12byte)
+		this.req고유식별정보 	= info.getDi() + info.getCp();;//"MC0GCCqGSIb3DQIJAyEADniMJwqIRNEVo00SLmKvQyxz3v6DrzRmzpRVpPbMrg8=P18760000000";			//(No.10)에서 ‘01’인 경우에만 입력 : DI값 (64byte) + CP코드(12byte)
 		this.req기준일자 		= DateUtil.getCurrentYMD();
 		this.req출생등록지코드		= "";
 		this.reqFILLER 		= "";

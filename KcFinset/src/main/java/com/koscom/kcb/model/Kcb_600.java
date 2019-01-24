@@ -118,7 +118,8 @@ public class Kcb_600 extends AbstractKcbInfo {
 		String msg = pMsg;
 		HashMap<String, Object> map = new HashMap<String, Object>();
 		initSegment(); //응답정보부(비트맵) 리스트,맵 객체 초기화생성
-
+		
+		log.info("600 MSG :::: " + msg);
 		byte[] bt = msg.getBytes();
 		String gubn = StringUtil.getByte2String(bt, 0, 3).trim(); //정보구분 2자리 파싱
 		AbstractSegment info = segMentMap.get(gubn); //정보구분에 매핑되는 객체 맵에서 가져오기

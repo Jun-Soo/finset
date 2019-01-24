@@ -1,10 +1,19 @@
 package com.koscom.util;
 
+import java.security.Principal;
+import java.util.Collection;
+import java.util.Iterator;
+
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 public class AuthUtil {
     private static final Logger logger = LoggerFactory.getLogger(AuthUtil.class);
@@ -63,5 +72,29 @@ public class AuthUtil {
         }
         LogUtil.debugLn(logger,"SessionUtil.isHaveAuth:site="+site+",isHaveAuth="+isHaveAuth);
         return isHaveAuth;
+    }
+    
+    public void isSessionAuth(HttpSession session) {
+    	
+    	this.isSessionAuth((String)session.getAttribute("no_person"));
+    }
+    
+    public boolean isSessionAuth(String no_person) {
+    	
+    	// 시큐리티 컨텍스트 객체를 얻습니다. 
+    	SecurityContext context = SecurityContextHolder.getContext(); 
+    	// 인증 객체를 얻습니다. 
+    	Authentication authentication = context.getAuthentication(); 
+    	// 로그인한 사용자정보를 가진 객체를 얻습니다. 
+    	Principal principal = (Principal) authentication.getPrincipal(); 
+    	// 사용자가 가진 모든 롤 정보를 얻습니다. 
+    	Collection<? extends GrantedAuthority> authorities = authentication.getAuthorities(); 
+    	Iterator<? extends GrantedAuthority> iter = authorities.iterator(); 
+    	while (iter.hasNext()) { 
+    		GrantedAuthority auth = iter.next(); 
+    		System.out.println(auth.getAuthority()); 
+    	}
+    	
+    	return true;
     }
 }

@@ -221,6 +221,14 @@ import TemplateChartSingleLine from '@/components/template/ChartsingleLine'
 import TemplateChartSingleLine2 from '@/components/template/ChartSingleLine2'
 import TemplateChartMultipleBar from '@/components/template/ChartMultipleBar'
 
+import DiagsMain from '@/components/diags/DiagsMain'
+import DiagsStart from '@/components/diags/DiagsStart'
+import DiagsMyStock from '@/components/diags/DiagsMyStock'
+import StockGoal from '@/components/diags/StockGoal'
+import InvestSurvey from '@/components/diags/InvestSurvey'
+import DiagsReport from '@/components/diags/DiagsReport'
+import DiagsStockReport from '@/components/diags/DiagsStockReport'
+
 import Store from '@/comm/store'
 
 Vue.use(Router)
@@ -1048,6 +1056,69 @@ export const routes = [{
     meta: {
       allowPath: true
       // requiresAuth: true
+    }
+  },
+  {
+    path: 'diagsMain',
+    alias: '/diagsMain',
+    name: 'diagsMain',
+    component: DiagsMain,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'diagsStart',
+    alias: '/diagsStart',
+    name: 'diagsStart',
+    component: DiagsStart,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'diagsMyStock',
+    alias: '/diagsMyStock',
+    name: 'diagsMyStock',
+    component: DiagsMyStock,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'investSurvey',
+    alias: '/investSurvey',
+    name: 'investSurvey',
+    component: InvestSurvey,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'stockGoal',
+    alias: '/stockGoal',
+    name: 'stockGoal',
+    component: StockGoal,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'diagsStockReport',
+    alias: '/diagsStockReport',
+    name: 'diagsStockReport',
+    component: DiagsStockReport,
+    meta: {
+      allowPath: true
+    }
+  },
+  {
+    path: 'diagsReport',
+    alias: '/diagsReport',
+    name: 'diagsReport',
+    component: DiagsReport,
+    meta: {
+      allowPath: true
     }
   }
   ]

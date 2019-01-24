@@ -25,7 +25,7 @@ public class SecurityReqFilter extends OncePerRequestFilter {
 	
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
+		
 		UrlPathHelper urlPathHelper = new UrlPathHelper();
 		String requestUri = urlPathHelper.getRequestUri(request);
 		String queryString = StringUtil.NVL(urlPathHelper.getOriginatingQueryString(request), "");

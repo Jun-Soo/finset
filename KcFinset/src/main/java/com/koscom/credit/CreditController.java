@@ -90,7 +90,7 @@ public class CreditController {
     		HttpServletRequest request,
     		HttpSession session,
     		Model model) throws UnsupportedEncodingException, FinsetException, IOException {
-
+    	System.out.println(request.isUserInRole("ROLE_USER"));
         String      no_person   = (String)session.getAttribute("no_person");
 
         model.addAttribute("noPerson", no_person);

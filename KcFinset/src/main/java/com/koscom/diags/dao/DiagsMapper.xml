@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.diags.dao.DiagsMapper">
+
+    <select id="getDiagsResult" parameterType="String" resultType="com.koscom.diags.model.DiagsResult">		
+		SELECT NVL(s.stock_count,0) AS stocks, NVL(g.stock_goal_count,0) AS stockGoals, NVL(i.survey_count,0) AS surveys
+		FROM (
+			SELECT COUNT(DISTINCT isincode) AS stock_count FROM STOCK_EQUITYLIST sel WHERE NO_PERSON=#{value, jdbcType=VARCHAR}
+		) s
+		,(
+			SELECT COUNT(*) AS stock_goal_count FROM stock_goal WHERE NO_PERSON=#{value, jdbcType=VARCHAR}
+		) g
+		, (
+			SELECT COUNT(*) AS survey_count FROM invest_survey WHERE NO_PERSON=#{value, jdbcType=VARCHAR}
+		) i		
+	</select>
+	
+	<select id="factorAnalysis" parameterType="String" resultType="com.koscom.diags.model.analysis.FactorAnalysis">		
+		SELECT ROUND(AVG(se.VALUE)) AS value, ROUND(AVG(se.GROWTH)) AS growth
+			, ROUND(AVG(se.QUALITY)) AS quality, ROUND(AVG(se.PROFITABILITY)) AS profitability
+			, ROUND(AVG(se.MOMENTUM)) AS momentum
+		FROM (
+			SELECT DISTINCT isincode FROM STOCK_EQUITYLIST WHERE NO_PERSON=#{value, jdbcType=VARCHAR}
+		) s 
+		JOIN STOCK_EVALUATION se 
+		ON s.isincode = se.ISINCODE
+	</select>
+	<select id="stockFactorAnalysis" parameterType="String" resultType="com.koscom.diags.model.analysis.FactorAnalysis">		
+		SELECT s.isincode, se.VALUE AS value, se.GROWTH AS growth
+			, se.QUALITY AS quality, se.PROFITABILITY AS profitability
+			, se.MOMENTUM AS momentum
+		FROM (
+			SELECT DISTINCT isincode FROM STOCK_EQUITYLIST WHERE NO_PERSON=#{value, jdbcType=VARCHAR}
+		) s 
+		JOIN STOCK_EVALUATION se 
+		ON s.isincode = se.ISINCODE
+	</select>
+	
+	<select id="getStockRisks" parameterType="String" resultType="com.koscom.diags.model.analysis.StockRisk">		
+		SELECT s.ISINCODE, se.RISK_RATE AS riskRate, se.PROFIT_RATE AS profitRate, ms.ISU_KOR_NM AS isuKorNm
+		FROM (
+			SELECT DISTINCT isincode FROM STOCK_EQUITYLIST WHERE NO_PERSON=#{value, jdbcType=VARCHAR}
+		) s 
+		JOIN STOCK_RISK_EVALUATION se 
+		ON s.isincode = se.ISINCODE
+		JOIN market_stock ms
+		ON ms.ISINCODE=s.isincode
+	</select>
+	<select id="getKospi200Risk" resultType="com.koscom.diags.model.analysis.StockRisk">		
+		SELECT se.ISINCODE, se.RISK_RATE AS riskRate, se.PROFIT_RATE AS profitRate
+		FROM STOCK_RISK_EVALUATION se 
+		WHERE se.ISINCODE = 'kospi200'
+	</select>
+			
+</mapper>

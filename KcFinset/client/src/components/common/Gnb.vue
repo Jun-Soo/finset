@@ -51,6 +51,7 @@
           <dd><a @click="clickButton('/assets/bankMain', '/assets/main')">은행</a></dd>
           <dd><a @click="clickButton('/assets/stockMain', '/assets/main')">증권</a></dd>
           <dd><a @click="clickButton('/assets/etcMain', '/assets/main')">기타</a></dd>
+          <dd><a @click="clickButton('/assets/diagsMain', '/assets/main')">자산진단</a></dd>
         </dl>
       </div>
     </div>

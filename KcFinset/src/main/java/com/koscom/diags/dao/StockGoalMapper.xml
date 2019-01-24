@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.diags.dao.StockGoalMapper">
+	<insert id="insertStockGoals" parameterType="com.koscom.diags.model.StockGoal">
+		INSERT ALL
+		<foreach collection="list" item="item" separator="">
+		INTO STOCK_GOAL
+        (
+			 NO_PERSON
+			, ISINCODE, PROFIT_GOAL, HOLD_GOAL, REG_DATE
+		)
+		VALUES 
+		(
+			#{item.noPerson, jdbcType=VARCHAR}
+			, #{item.isincode, jdbcType=VARCHAR}
+			, #{item.profitGoal, jdbcType=NUMERIC}
+			, #{item.holdGoal, jdbcType=NUMERIC}
+			, SYSDATE
+		)		
+		</foreach>
+		SELECT * FROM DUAL
+	</insert>
+ 
+    <select id="getStockGoals" parameterType="String" resultType="com.koscom.diags.model.StockGoalExt">
+		SELECT S.NO_PERSON AS noPerson, S.ISINCODE AS isincode
+				,S.QTY AS qty, S.VALATTRADE AS valAtTrade, S.VALATCUR AS valAtCur
+				, S.PROLOSS AS proLoss, S.EARNINGRATE AS earningRate
+				, NVL(G.PROFIT_GOAL,-1) AS profitGoal, NVL(G.HOLD_GOAL,-1) AS holdGoal
+				, MS.ISU_KOR_NM AS isuKorNm
+		FROM (
+			SELECT S.NO_PERSON , S.ISINCODE 
+				, sum(qty) AS QTY, sum(S.VALATTRADE) AS VALATTRADE, sum(S.VALATCUR) AS VALATCUR
+				, sum(S.PROLOSS) AS PROLOSS, sum(S.EARNINGRATE) AS EARNINGRATE
+			FROM STOCK_EQUITYLIST S
+			WHERE S.NO_PERSON = #{value, jdbcType=VARCHAR}
+		    GROUP BY s.NO_PERSON, s.ISINCODE		
+		) S
+		LEFT JOIN STOCK_GOAL G
+		ON S.NO_PERSON = G.NO_PERSON AND S.ISINCODE = G.ISINCODE
+		LEFT JOIN MARKET_STOCK MS
+		ON MS.ISINCODE = S.ISINCODE
+	</select>
+	
+	<delete id="deleteStockGoals" parameterType="String">
+		DELETE FROM STOCK_GOAL G
+		WHERE G.NO_PERSON = #{item.noPerson, jdbcType=VARCHAR}
+	</delete>	
+
+    <select id="getStockGoalCount" parameterType="String" resultType="int">
+		SELECT S.NO_PERSON AS noPerson, S.ISINCODE AS isincode
+				, S.VALATTRADE AS valAtTrade, S.VALATCUR AS valAtCur, S.PROLOSS AS proLoss, S.EARNINGRATE AS earningRate
+				, NVL(G.PROFIT_GOAL,-1) AS profitGoal, NVL(G.HOLD_GOAL,-1) AS holdGoal
+				, MS.ISU_KOR_NM AS isuKorNm
+		FROM (
+			SELECT S.NO_PERSON , S.ISINCODE 
+				, sum(S.VALATTRADE) AS VALATTRADE, sum(S.VALATCUR) AS VALATCUR, sum(S.PROLOSS) AS PROLOSS, sum(S.EARNINGRATE) AS EARNINGRATE
+			FROM STOCK_EQUITYLIST S
+			WHERE S.NO_PERSON = #{value, jdbcType=VARCHAR}
+		    GROUP BY s.NO_PERSON, s.ISINCODE		
+		) S
+		LEFT JOIN STOCK_GOAL G
+		ON S.NO_PERSON = G.NO_PERSON AND S.ISINCODE = G.ISINCODE
+		LEFT JOIN MARKET_STOCK MS
+		ON MS.ISINCODE = S.ISINCODE
+	</select>
+	
+    <select id="getStockSectors" parameterType="String" resultType="com.koscom.diags.model.analysis.StockSector">
+		SELECT s.isincode, s.wics_cd1 AS sectorCd, w.wics_nm AS sectorNm
+		FROM (
+			SELECT s.isincode, w.WICS_CD1
+			FROM (
+				SELECT s.isincode, ms.ISU_SRT_CD
+				FROM (
+					SELECT DISTINCT isincode FROM STOCK_EQUITYLIST WHERE NO_PERSON = #{value, jdbcType=VARCHAR}
+				) s 
+				JOIN market_stock ms
+				ON s.isincode = ms.ISINCODE
+			) s
+			JOIN MARKET_STOCK_WISE_WICS w 
+			ON s.isu_srt_cd = w.ISU_SRT_CD
+		) s 
+		JOIN (
+			SELECT WICS_CD, WICS_NM FROM STOCK_WISE_WICS WHERE WICS_LEVEL=1 AND sector='Y'
+		) w 
+		ON s.wics_cd1 = w.wics_cd
+	</select>
+		
+</mapper>

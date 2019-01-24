@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.diags.dao.InvestSurveyMapper">
+	<insert id="insertInvestSurvey" parameterType="com.koscom.diags.model.InvestSurvey">
+		INSERT INTO INVEST_SURVEY
+        (
+			 NO_PERSON
+			, INVEST_YR, STOCK_SELECT, RISK_LIMIT, HOLD_PERIOD, STOCK_PROFIT
+			, YR_PROFIT, INVEST_TIME, LOSSCUT, REG_DATE
+		)
+		VALUES (
+			#{noPerson, jdbcType=VARCHAR}
+			, #{investYr, jdbcType=VARCHAR}
+			, #{stockSelect, jdbcType=VARCHAR}
+			, #{riskLimit, jdbcType=VARCHAR}
+			, #{holdPeriod, jdbcType=VARCHAR}
+			, #{stockProfit, jdbcType=NUMERIC}
+			, #{yrProfit, jdbcType=VARCHAR}
+			, #{investTime, jdbcType=VARCHAR}
+			, #{losscut, jdbcType=VARCHAR}, SYSDATE
+		)
+	</insert>
+ 
+    <select id="getInvestSurvey" parameterType="String" resultType="com.koscom.diags.model.InvestSurvey">
+		SELECT NO_PERSON AS noPerson, INVEST_YR AS investYr, STOCK_SELECT AS stockSelect
+			, RISK_LIMIT AS riskLimit, HOLD_PERIOD AS holdPeriod, STOCK_PROFIT AS stockProfit
+			, YR_PROFIT AS yrProfit, INVEST_TIME AS investTime, LOSSCUT AS losscut , REG_DATE AS regDate, MOD_DATE AS modDate
+		FROM INVEST_SURVEY
+		WHERE NO_PERSON = #{value, jdbcType=VARCHAR}
+	</select>
+		
+	<update id="updateInvestSurvey" parameterType="com.koscom.diags.model.InvestSurvey">
+		UPDATE INVEST_SURVEY
+		   SET MOD_DATE=SYSDATE
+		   	, INVEST_YR = #{investYr, jdbcType=VARCHAR}
+		   	, STOCK_SELECT = #{stockSelect, jdbcType=VARCHAR}
+		   	, RISK_LIMIT = #{riskLimit, jdbcType=VARCHAR}
+		   	, HOLD_PERIOD = #{holdPeriod, jdbcType=VARCHAR}		
+		   	, STOCK_PROFIT = #{stockProfit, jdbcType=NUMERIC}
+		   	, YR_PROFIT = #{yrProfit, jdbcType=VARCHAR}
+		   	, INVEST_TIME = #{investTime, jdbcType=VARCHAR}
+		   	, LOSSCUT = #{losscut, jdbcType=VARCHAR}		   	   	
+		 WHERE NO_PERSON = #{noPerson, jdbcType=VARCHAR}
+	</update>
+	
+
+</mapper>

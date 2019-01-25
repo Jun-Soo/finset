@@ -86,6 +86,8 @@ export default {
   component: {},
   beforeCreate() {},
   created() {
+    window.Android.setEndApp("Y");
+
     this.$store.state.title = "지문인증 설정";
 
     window.resultFingerPrint = this.resultFingerPrint;
@@ -109,6 +111,7 @@ export default {
   methods: {
     login: function() {
       var _this = this;
+      console.log(_this.password);
       var querystring = require("querystring");
       var data = querystring.stringify({
         j_username: _this.noPerson,

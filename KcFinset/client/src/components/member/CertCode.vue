@@ -67,8 +67,11 @@ export default {
   // },
   beforeCreate() {},
   created() {
+    window.Android.setEndApp("Y");
+
     var _this = this;
     window.resultCheckFingerPrint = this.resultCheckFingerPrint;
+    window.resultLoginKeypad = this.resultLoginKeypad;
     // window.resultCheckCert = this.resultCheckCert;
     // window.resultCheckPasswordCert = this.resultCheckPasswordCert;
     // window.resultCheckAvaliableScrapList = this.resultCheckAvaliableScrapList;
@@ -86,25 +89,109 @@ export default {
   },
   beforeMount() {},
   mounted() {
-    if (!localStorage.getItem("tempPwd")) {
-      this.$store.state.title = "비밀번호 설정";
-      if (this.$route.query.noCode) {
-        this.certMessage = "회원가입 진행 중 입니다. 비밀번호를 설정해주세요.";
-      } else {
-        this.certMessage = "비밀번호를 입력해주세요.";
-      }
+    if (Constant.userAgent == "iOS" || Constant.userAgent == "Android") {
+      this.showLoginKeypad();
     } else {
-      this.$store.state.title = "비밀번호 확인";
-      this.certMessage = "비밀번호를 다시 한번 입력해주세요.";
-      this.tempPwd = localStorage.getItem("tempPwd");
+      //do nothing
     }
-    this.seen = true;
   },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    showLoginKeypad: function() {
+      var _this = this;
+      if (!localStorage.getItem("tempPwd")) {
+        this.$store.state.title = "비밀번호 설정";
+        this.certMessage = "비밀번호를 입력해주세요.";
+      } else {
+        this.$store.state.title = "비밀번호 확인";
+        this.certMessage = "비밀번호를 다시 한번 입력해주세요.";
+        this.tempPwd = localStorage.getItem("tempPwd");
+      }
+
+      if (Constant.userAgent == "iOS") {
+        Jockey.send("showLoginKeypad", {
+          keypadType: "numeric",
+          minInputLength: 4,
+          maxInputLength: 4,
+          subTitle: _this.certMessage,
+          placeholderText: "숫자를 입력하세요.",
+          message: _this.errMsg,
+          exitOnBackPressed: "false",
+          showFingerprintButton: "false"
+        });
+        //보안키패드 결과값 수신 콜백 이벤
+        Jockey.on("resultLoginKeypad", function(param) {
+          _this.resultLoginKeypad(param.inputResult);
+          Jockey.off("resultLoginKeypad");
+        });
+      } else if (Constant.userAgent == "Android") {
+        window.Android.showLoginKeypad(
+          "numeric",
+          4,
+          4,
+          _this.certMessage,
+          _this.errMsg,
+          true,
+          false
+        );
+      }
+    },
+    //native call
+    resultLoginKeypad: function(inputResult) {
+      //비밀번호 체크
+      var _this = this;
+      var type = "confirmPage";
+      this.password = inputResult;
+
+      if (!localStorage.getItem("tempPwd")) {
+        //비밀번호 복잡도 체크
+        var frm = new FormData();
+        frm.append("password", this.password);
+        this.$http.post("/m/person/checkPassword.json", frm).then(response => {
+          var result = response.data;
+
+          if (result.result == "00") {
+            localStorage.setItem("tempPwd", this.password);
+          } else {
+            type = "reload";
+            _this.password = "";
+            _this.errMsg = result.message + "\n다시 설정해주세요.";
+          }
+          _this.nextPage(type); //confirmPage 일경우 redirect , 재확인일경우 changePwd
+        });
+        // if (Constant.userAgent == "iOS") {
+        //   Jockey.send("loginKeypadClose");
+        // } else if (Constant.userAgent == "Android") {
+        //   window.Android.loginKeypadClose();
+        // }
+      } else {
+        this.tempPwd = localStorage.getItem("tempPwd");
+
+        //비밀번호 체크
+        var frm = new FormData();
+        frm.append("password", this.tempPwd);
+        frm.append("confirm_password", this.password);
+        this.$http
+          .post("/m/person/confirmPassword.json", frm)
+          .then(response => {
+            var result = response.data;
+
+            if (result.result == "00") {
+              type = "changePwd";
+              _this.errMsg = "";
+            } else {
+              type = "reload";
+              _this.password = "";
+              _this.errMsg = ko.messages.notMatchPwd + "\n다시 설정해주세요.";
+            }
+            _this.nextPage(type); //confirmPage 일경우 redirect , 재확인일경우 changePwd
+          });
+        //localStorage.removeItem("tempPwd");
+      }
+    },
     initClassPass: function() {
       var _this = this;
       _this.classPass1 = "";
@@ -175,51 +262,101 @@ export default {
       }
       _this.password = _this.password.substr(0, _this.password.length - 1);
     },
+    // nextPage: function(type) {
+    //   var _this = this;
+    //   for (var i = 0; i < _this.password.length; i++) {
+    //     if (
+    //       i < _this.password.length - 2 &&
+    //       _this.password.charCodeAt(i) == _this.password.charCodeAt(i + 1)
+    //     ) {
+    //       if (
+    //         i < _this.password.length - 1 &&
+    //         _this.password.charCodeAt(i) == _this.password.charCodeAt(i + 2)
+    //       ) {
+    //         _this.errMsg = "비밀번호는 3자리 이상 연속될 수 없습니다.";
+    //         _this.password = "";
+    //         _this.initClassPass();
+    //         localStorage.removeItem("tempPwd");
+    //         return;
+    //       }
+    //     }
+    //   }
+    //   if (type == "confirmPage") {
+    //     this.$store.state.proxyUrl = "/member/certCode";
+    //     this.$router.push("/proxy");
+    //     return;
+    //   } else {
+    //     var frm = new FormData();
+    //     frm.append("no_person", _this.noPerson);
+    //     frm.append("pass_person", _this.password);
+    //     this.$http.post("/m/person/changePwd.json", frm).then(response => {
+    //       var result = response.data;
+    //       if (result.result == "00") {
+    //         if (_this.chkFingerPrint == "Y") {
+    //           setTimeout(function() {
+    //             _this.$router.push("/member/certFinger");
+    //           }, 2000);
+    //         } else {
+    //           setTimeout(function() {
+    //             _this.login();
+    //           }, 2000);
+    //         }
+    //         this.$toast.center("비밀번호설정이 완료 되었습니다.");
+    //       } else {
+    //         this.$toast.center(result.message);
+    //         return false;
+    //       }
+    //     });
+    //   }
+    // },
     nextPage: function(type) {
       var _this = this;
-      for (var i = 0; i < _this.password.length; i++) {
-        if (
-          i < _this.password.length - 2 &&
-          _this.password.charCodeAt(i) == _this.password.charCodeAt(i + 1)
-        ) {
-          if (
-            i < _this.password.length - 1 &&
-            _this.password.charCodeAt(i) == _this.password.charCodeAt(i + 2)
-          ) {
-            _this.errMsg = "비밀번호는 3자리 이상 연속될 수 없습니다.";
-            _this.password = "";
-            _this.initClassPass();
-            localStorage.removeItem("tempPwd");
-            return;
-          }
-        }
+      // 보안키보드 닫기
+      console.log("nextPage :: ", type);
+      if (Constant.userAgent == "iOS") {
+        Jockey.send("loginKeypadClose");
+      } else if (Constant.userAgent == "Android") {
+        window.Android.loginKeypadClose();
       }
       if (type == "confirmPage") {
-        this.$store.state.proxyUrl = "/member/certCode";
-        this.$router.push("/proxy");
-        return;
-      } else {
+        this.errMsg = "";
+        if (Constant.userAgent == "iOS" || Constant.userAgent == "Android") {
+          this.showLoginKeypad();
+        }
+      } else if (type == "reload") {
+        if (Constant.userAgent == "iOS" || Constant.userAgent == "Android") {
+          this.showLoginKeypad();
+        }
+      } else if (type == "changePwd") {
         var frm = new FormData();
-        frm.append("no_person", _this.noPerson);
         frm.append("pass_person", _this.password);
-        this.$http.post("/m/person/changePwd.json", frm).then(response => {
-          var result = response.data;
-          if (result.result == "00") {
-            if (_this.chkFingerPrint == "Y") {
-              setTimeout(function() {
-                _this.$router.push("/member/certFinger");
-              }, 2000);
+        this.$http
+          .post("/m/person/changePwd.json", frm)
+          .then(response => {
+            var result = response.data;
+            console.log("changePwd.json  : ", result.result);
+            if (result.result == "00") {
+              if (_this.chkFingerPrint == "Y") {
+                setTimeout(function() {
+                  _this.$router.push("/member/certFinger");
+                }, 2000);
+              } else {
+                setTimeout(function() {
+                  _this.login();
+                }, 2000);
+              }
+              this.$toast.center("비밀번호설정이 완료 되었습니다.");
             } else {
-              setTimeout(function() {
-                _this.login();
-              }, 2000);
+              this.$toast.center(result.message);
+
+              return false;
             }
-            this.$toast.center("비밀번호설정이 완료 되었습니다.");
-          } else {
-            this.$toast.center(result.message);
-            return false;
-          }
-        });
+          })
+          .catch(e => {
+            this.$toast.center(ko.messages.error);
+            _this.password = "";
+            _this.initClassPass();
+          });
       }
     },
     login: function() {

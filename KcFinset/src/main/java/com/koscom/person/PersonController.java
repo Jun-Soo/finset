@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.gson.Gson;
 import com.koscom.login.service.LoginManager;
+import com.koscom.login.service.SecureManager;
 import com.koscom.person.model.PersonActiveHistVO;
 import com.koscom.person.model.PersonAgreeHistVO;
 import com.koscom.person.model.PersonSmsListVO;
@@ -49,6 +50,9 @@ public class PersonController {
 
 	@Autowired
 	private LoginManager loginManager;
+	
+	@Autowired
+	private SecureManager secureManager;
 
 	@Resource
 	Environment environment;
@@ -201,6 +205,11 @@ public class PersonController {
 			session.removeAttribute("cert_result_value");
 			return "jsonView";
 		} else {
+			String encPass = personVO.getPass_person();
+			// 비밀번호 길이가 4자리가 넘을 경우 암호화 된 데이터여서 복호화 처리
+			if(encPass.length() > 4)	{
+				personVO.setPass_person(secureManager.getDecodedPassword(encPass));
+			}
 			logger.info("핀 코드 업데이트 : " + personVO.getPass_person());
 			ReturnClass returnClass = personManager.modifyPassPerson(personVO);
 			model.addAttribute("message", returnClass.getMessage());
@@ -399,7 +408,15 @@ public class PersonController {
 
 		String no_person = (String) session.getAttribute("no_person");
 		personVO.setNo_person(no_person);
-		personVO.setPass_person(pass_person);
+		
+		// 비밀번호 길이가 4자리가 넘을 경우 암호화 된 데이터여서 복호화 처리
+		if(pass_person.length() > 4)	{
+			personVO.setPass_person(secureManager.getDecodedPassword(pass_person));
+		}
+		else	{
+			personVO.setPass_person(pass_person);
+		}
+		
 		int pwdCheck = personManager.checkPersonPass(personVO);
 		
 		if(pwdCheck > 0) {	//암호화 비밀번호 체크
@@ -412,6 +429,104 @@ public class PersonController {
 			model.addAttribute("message", "비밀번호가 일치하지 않습니다.");
 			model.addAttribute("result", Constant.FAILED);
 		}
+		return "jsonView";
+	}
+	
+	/** VUE
+	 * 비밀번호 확인
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/checkPassword.json")
+	public String checkPassword(HttpSession session, Model model, HttpServletRequest request, String password) {
+		logger.info("checkPassword called");
+
+		String dec_password = secureManager.getDecodedPassword(password);
+		
+		
+		
+	    int SamePass_0 = 0; //동일문자 카운트
+
+		int SamePass_1_num = 0; //연속성(-) 카운드(숫자)
+		int SamePass_2_num = 0; //연속성(+) 카운드(숫자)
+
+		int chr_pass_0;
+		int chr_pass_1;
+
+	    for(int i=0; i < dec_password.length()-1; i++){
+	        chr_pass_0 = dec_password.charAt(i);
+
+	        chr_pass_1 = dec_password.charAt(i+1);
+
+	        //동일숫자 카운트
+	        if(chr_pass_0 == chr_pass_1){
+	        	SamePass_0++;
+	        }
+	        else	{
+	        	SamePass_0 = 0;
+	        }
+	        	
+	        
+	        //숫자
+			//연속성(-) 카운드
+			if(chr_pass_0 - chr_pass_1 == 1){
+				SamePass_1_num++;
+			}
+			else	{
+				SamePass_1_num = 0;
+			}
+
+			//연속성(+) 카운드
+			if(chr_pass_0 - chr_pass_1 == -1){
+				SamePass_2_num++;
+			}
+			else	{
+				SamePass_2_num = 0;
+			}
+			
+			if(SamePass_0 > 1){
+	        	model.addAttribute("message", "동일숫자를 3번 이상 사용할 수 없습니다.");
+				model.addAttribute("result", Constant.FAILED);
+				return "jsonView";
+		    	
+		    }
+			if(SamePass_1_num > 1 || SamePass_2_num > 1){
+		    	model.addAttribute("message", "연속된 숫자를 3자 이상 사용 할 수 없습니다.");
+				model.addAttribute("result", Constant.FAILED);
+				return "jsonView";
+		    	
+			}
+	         
+	    }
+	    model.addAttribute("result", Constant.SUCCESS);
+	    
+		return "jsonView";
+	}
+	
+	/** VUE
+	 * 비밀번호 확인
+	 * @param model
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/confirmPassword.json")
+	public String confirmPassword(HttpSession session, Model model, HttpServletRequest request, String password, String confirm_password) {
+		logger.info("confirmPassword called");
+		String dec_password = secureManager.getDecodedPassword(password);
+		
+		String dec_confirm_password = secureManager.getDecodedPassword(confirm_password);
+		
+//		logger.info("dec_password         : "+dec_password);
+//		logger.info("dec_confirm_password : "+dec_confirm_password);
+		
+		if(dec_password.equals(dec_confirm_password))	{
+			model.addAttribute("result", Constant.SUCCESS);
+		} else {
+			model.addAttribute("message", "비밀번호가 일치하지 않습니다.");
+			model.addAttribute("result", Constant.FAILED);
+		}
+		
 		return "jsonView";
 	}
 	

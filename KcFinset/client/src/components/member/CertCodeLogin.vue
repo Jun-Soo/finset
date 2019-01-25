@@ -62,6 +62,7 @@ export default {
       pw2: "",
       pw3: "",
       pw4: "",
+      showFingerprintButton: false,
       seen: false
     };
   },
@@ -70,36 +71,101 @@ export default {
   // },
   beforeCreate() {},
   created() {
-    var _this = this;
     window.resultFingerPrint = this.resultFingerPrint;
+    window.resultLoginKeypad = this.resultLoginKeypad;
+    window.goToFingerprint = this.goToFingerprint;
 
     this.$store.state.title = "비밀번호 확인";
+
+    if (this.$store.state.user.ynFingerprint == "Y") {
+      this.showFingerprintButton = true;
+    }
+
+    window.Android.setEndApp("Y");
   },
   beforeMount() {},
   mounted() {
     var _this = this;
-    this.errMsg =
-      "비밀번호를 " + this.cntFailPwd + "회 실패한 이력이 있습니다.";
-    if (this.$store.state.user.ynFingerprint == "Y") {
-      if (Constant.userAgent == "Android") {
-        window.Android.initFingerPrint();
-      } else if (Constant.userAgent == "iOS") {
-        Jockey.on("resultFingerPrint", function(param) {
-          var result = false;
-          if (param.result == 1) result = true;
-          _this.resultFingerPrint(param.result);
-          Jockey.off("resultFingerPrint");
-        });
-        Jockey.send("initFingerPrint");
+    if (Constant.userAgent == "iOS" || Constant.userAgent == "Android") {
+      this.errMsg = "";
+      if (this.cntFailPwd) {
+        this.errMsg =
+          "비밀번호를 " + this.cntFailPwd + "회 실패한 이력이 있습니다.";
       }
+      if (Constant.userAgent == "iOS") {
+        Jockey.on("goToFingerprint", function(param) {
+          _this.goToFingerprint();
+          Jockey.off("goToFingerprint");
+        });
+      }
+      this.showLoginKeypad();
+    } else {
+      if (this.$store.state.user.ynFingerprint == "Y") {
+        if (Constant.userAgent == "Android") {
+          window.Android.initFingerPrint();
+        } else if (Constant.userAgent == "iOS") {
+          Jockey.on("resultFingerPrint", function(param) {
+            var result = false;
+            if (param.result == 1) result = true;
+            _this.resultFingerPrint(param.result);
+            Jockey.off("resultFingerPrint");
+          });
+          Jockey.send("initFingerPrint");
+        }
+      }
+      this.seen = true;
     }
-    this.seen = true;
   },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    showLoginKeypad: function() {
+      var _this = this;
+      if (Constant.userAgent == "iOS") {
+        Jockey.send("showLoginKeypad", {
+          keypadType: "numeric",
+          minInputLength: 4,
+          maxInputLength: 4,
+          subTitle: "비밀번호 4자리를 입력해주세요.",
+          placeholderText: "숫자를 입력하세요.",
+          message: _this.errMsg,
+          exitOnBackPressed: "true",
+          showFingerprintButton: _this.showFingerprintButton
+        });
+        //보안키패드 결과값 수신 콜백 이벤
+        Jockey.on("resultLoginKeypad", function(param) {
+          _this.resultLoginKeypad(param.inputResult);
+          Jockey.off("resultLoginKeypad");
+        });
+      } else if (Constant.userAgent == "Android") {
+        window.Android.showLoginKeypad(
+          "numeric",
+          4,
+          4,
+          "비밀번호 4자리를 입력해주세요.",
+          _this.errMsg,
+          true,
+          _this.showFingerprintButton
+        );
+      }
+    },
+    //native call
+    resultLoginKeypad: function(inputResult) {
+      //비밀번호 체크
+      this.password = inputResult;
+
+      // 백그라운드에서 돌아온 경우에는 비밀번호만 체크
+      if (this.$store.state.ynReload == "Y") {
+        this.passCheck();
+      } else {
+        this.login();
+      }
+    },
+    goToFingerprint: function() {
+      this.gotoFingerPrint();
+    },
     goCertPerson: function() {
       let _this = this;
       if (Constant.userAgent == "Android") {
@@ -154,7 +220,12 @@ export default {
     },
     gotoFingerPrint: function() {
       var _this = this;
-      if (Constant.userAgent == "Android") {
+      console.log("gotoFingerPrint called");
+      if (Constant.userAgent == "iOS") {
+        Jockey.send("loginKeypadClose");
+        Jockey.send("closeFingerPrint");
+      } else if (Constant.userAgent == "Android") {
+        window.Android.loginKeypadClose();
         window.Android.closeFingerPrint();
       }
       _this.$router.push("/member/certFingerLogin");
@@ -219,9 +290,11 @@ export default {
               Jockey.send("loginFlag", {
                 flag: "Y"
               });
+              Jockey.send("loginKeypadClose");
             } else if (Constant.userAgent == "Android") {
               window.Android.setNoPerson(_this.username, _this.hp);
               window.Android.loginFlag("Y");
+              window.Android.loginKeypadClose();
             }
             _this.$store.state.user.authToken = null;
             _this.$store.state.user.cntFailPwd = 0;
@@ -241,10 +314,22 @@ export default {
             if (_this.cntFailPwd < 5) {
               _this.errMsg =
                 "비밀번호가 일치하지 않습니다. (" + _this.cntFailPwd + "/5)";
+              if (Constant.userAgent == "iOS") {
+                Jockey.send("loginKeypadFailure", {
+                  message: _this.errMsg
+                });
+              } else if (Constant.userAgent == "Android") {
+                window.Android.loginKeypadFailure(_this.errMsg);
+              }
             } else if (_this.cntFailPwd == 5) {
               //지문인식 5번 모두 틀린 경우
               _this.errMsg = "비밀번호 재설정 화면으로 이동합니다.";
               this.$toast.center(_this.errMsg);
+              if (Constant.userAgent == "iOS") {
+                Jockey.send("loginKeypadClose");
+              } else if (Constant.userAgent == "Android") {
+                window.Android.loginKeypadClose();
+              }
               setTimeout(function() {
                 _this.$router.push("/mypage/certPerson");
               }, 1000);
@@ -276,6 +361,7 @@ export default {
           // push 클릭후 들어왔을 경우
           _this.$router.push(_this.$store.state.linkUrl);
         } else {
+          _this.$store.state.isLoading = true;
           _this.$router.push("/main");
         }
       });
@@ -284,7 +370,6 @@ export default {
       var _this = this;
 
       var formData = new FormData();
-      formData.append("no_person", _this.username);
       formData.append("pass_person", _this.password);
 
       this.$http.post("/m/login/loginChkCode.json", formData).then(response => {
@@ -292,8 +377,10 @@ export default {
         if (response.data.result == "00") {
           //정상
           if (Constant.userAgent == "iOS") {
+            Jockey.send("loginKeypadClose");
             Jockey.send("closeWebView");
           } else if (Constant.userAgent == "Android") {
+            window.Android.loginKeypadClose();
             window.Android.closeWebView();
             return false;
           }
@@ -307,6 +394,13 @@ export default {
           if (_this.cntFailPwd < 5) {
             _this.errMsg =
               "비밀번호가 일치하지 않습니다. (" + _this.cntFailPwd + "/5)";
+            if (Constant.userAgent == "iOS") {
+              Jockey.send("loginKeypadFailure", {
+                message: _this.errMsg
+              });
+            } else if (Constant.userAgent == "Android") {
+              window.Android.loginKeypadFailure(_this.errMsg);
+            }
           } else if (_this.cntFailPwd >= 5) {
             //지문인식 5번 모두 틀린 경우
             // _this.errMsg = "비밀번호 재설정 화면으로 이동합니다.";

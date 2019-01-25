@@ -110,6 +110,8 @@ export default {
   computed: {},
   beforeCreate() {},
   created() {
+    window.Android.setEndApp("Y");
+
     window.setCertNumber = this.setCertNumber;
     window.setRequestPhoneNumber = this.setRequestPhoneNumber;
     if (Constant.userAgent == "Android") {

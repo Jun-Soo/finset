@@ -1892,7 +1892,7 @@ public class ScrapManagerImpl implements ScrapManager {
 		scrRsltScrapVO.setCd_scrap(cd_agency);
 		scrRsltScrapVO.setRslt_scraping(error_code);
 	
-		seq_scrap = scrapMapper.insertScrRsltScrap(scrRsltScrapVO);
+		scrapMapper.insertScrRsltScrap(scrRsltScrapVO);
 		seq_scrap = scrRsltScrapVO.getSeq_scraping_result();
 		logger.info("insertScrRsltScrap result :" + seq_scrap);
 
@@ -1970,7 +1970,7 @@ public class ScrapManagerImpl implements ScrapManager {
 		scrRsltScrapVO.setCd_scrap(cd_agency);
 		scrRsltScrapVO.setRslt_scraping(error_code);
 	
-		seq_scrap = scrapMapper.insertScrRsltScrap(scrRsltScrapVO);
+		scrapMapper.insertScrRsltScrap(scrRsltScrapVO);
 		seq_scrap = scrRsltScrapVO.getSeq_scraping_result();
 		logger.info("insertScrRsltScrap result :" + seq_scrap);
 
@@ -2070,8 +2070,7 @@ public class ScrapManagerImpl implements ScrapManager {
 		scrRsltScrapVO.setCd_scrap(cd_agency);
 		scrRsltScrapVO.setRslt_scraping(error_code);
 	
-		seq_scrap = scrapMapper.insertScrRsltScrap(scrRsltScrapVO);
-		
+		scrapMapper.insertScrRsltScrap(scrRsltScrapVO);
 		seq_scrap = scrRsltScrapVO.getSeq_scraping_result();
 		logger.info("insertScrRsltScrap result :" + seq_scrap);
 

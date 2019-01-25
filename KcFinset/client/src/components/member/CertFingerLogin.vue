@@ -76,6 +76,8 @@ export default {
   computed: {},
   beforeCreate() {},
   created() {
+    window.Android.setEndApp("Y");
+
     this.$store.state.title = "지문인증";
     window.resultFingerPrint = this.resultFingerPrint;
     console.log(this.$store.state.user.cntFailFinger);
@@ -188,11 +190,9 @@ export default {
       frm.append("no_person", this.username);
       frm.append("cnt_fail_mode", mode);
       frm.append("cnt_fail", cnt_fail);
-      this.$http
-        .post("/m/person/modifyPwdFailCnt.json", frm)
-        .then(response => {
-          var result = response.data;
-        });
+      this.$http.post("/m/person/modifyPwdFailCnt.json", frm).then(response => {
+        var result = response.data;
+      });
     },
     //로그인값 db 변경
     changeLoginDB: function() {

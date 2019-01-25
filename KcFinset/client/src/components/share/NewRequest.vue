@@ -113,7 +113,7 @@ export default {
         Jockey.send("getAddressList");
         Jockey.on("resultAddress", function(param) {
           _this.resultAddress(param.src_nm_person, param.src_hp);
-          Jockey.on("resultAddress");
+          Jockey.off("resultAddress");
         });
       } else if (Constant.userAgent == "Android") {
         window.Android.getAddressList();

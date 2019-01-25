@@ -65,6 +65,8 @@ export default {
   // },
   beforeCreate() {},
   created() {
+    window.resultLoginKeypad = this.resultLoginKeypad;
+
     this.$store.state.title = "비밀번호 확인";
     this.$store.state.header.type = "sub";
     // if (Constant.userAgent == "Android") {
@@ -73,14 +75,55 @@ export default {
   },
   beforeMount() {},
   mounted() {
-    this.errMsg = "입력값이 올바르지 않습니다.";
-    this.seen = true;
+    this.errMsg = "";
+    if (Constant.userAgent == "iOS" || Constant.userAgent == "Android") {
+      this.showLoginKeypad();
+    } else {
+      this.seen = true;
+    }
   },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},
   destroyed() {},
   methods: {
+    showLoginKeypad: function() {
+      var _this = this;
+      if (Constant.userAgent == "iOS") {
+        Jockey.send("showLoginKeypad", {
+          keypadType: "numeric",
+          minInputLength: 4,
+          maxInputLength: 4,
+          subTitle: "비밀번호 4자리를 입력해주세요.",
+          placeholderText: "숫자를 입력하세요.",
+          message: _this.errMsg,
+          exitOnBackPressed: "true",
+          showFingerprintButton: _this.showFingerprintButton
+        });
+        //보안키패드 결과값 수신 콜백 이벤
+        Jockey.on("resultLoginKeypad", function(param) {
+          _this.resultLoginKeypad(param.inputResult);
+          Jockey.off("resultKeypad");
+        });
+      } else if (Constant.userAgent == "Android") {
+        window.Android.showLoginKeypad(
+          "numeric",
+          4,
+          4,
+          "비밀번호 4자리를 입력해주세요.",
+          _this.errMsg,
+          true,
+          _this.showFingerprintButton
+        );
+      }
+    },
+    //native call
+    resultLoginKeypad: function(inputResult) {
+      //비밀번호 체크
+      this.password = inputResult;
+
+      this.successStep();
+    },
     initClassPass: function() {
       var _this = this;
       _this.password = "";
@@ -144,13 +187,27 @@ export default {
       this.$http.post(url, frm).then(response => {
         var result = response.data.result;
         if (result == "00") {
+          if (Constant.userAgent == "iOS") {
+            Jockey.send("loginKeypadClose");
+          } else if (Constant.userAgent == "Android") {
+            window.Android.loginKeypadClose();
+          }
           this.$toast.center("지문인증이 설정되었습니다.");
           _this.$store.state.user.ynFingerprint = "Y";
           _this.$router.go(-1);
           _this.cntFailPwd = 0;
         } else {
-          _this.cntFailPwd++;
-          _this.initClassPass();
+          this.errMsg = "입력값이 올바르지 않습니다.";
+          if (Constant.userAgent == "iOS") {
+            Jockey.send("loginKeypadFailure", {
+              message: _this.errMsg
+            });
+          } else if (Constant.userAgent == "Android") {
+            window.Android.loginKeypadFailure(_this.errMsg);
+          } else {
+            _this.cntFailPwd++;
+            _this.initClassPass();
+          }
         }
       });
     }

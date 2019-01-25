@@ -1460,9 +1460,9 @@ public class CreditController {
         logger.debug("no_person : " + no_person);
 
 		if(no_person != null && !no_person.equals("")){
-			PersonVO personVO = personManager.getPersonInfo(no_person);
-			personVO.setSsn_person(personVO.getBgn().substring(2, 8));
-			model.addAttribute("personVO", personVO);
+//			PersonVO personVO = personManager.getPersonInfo(no_person);
+//			personVO.setSsn_person(personVO.getBgn().substring(2, 8));
+//			model.addAttribute("personVO", personVO);
 
 			String currentDate = DateUtil.getCurrentDate();
 

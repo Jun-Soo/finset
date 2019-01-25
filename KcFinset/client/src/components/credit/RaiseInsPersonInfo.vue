@@ -3,15 +3,16 @@
     <div class="cert-check-wrap" v-if="scrap_code=='nhis' || scrap_code=='nps'">
       <p class="text">본인 확인을 위해<br>주민 등록 번호 뒷자리를 입력하여 주세요</p>
       <p class="title">이름</p>
-      <input type="text" :value="personVO.nm_person">
+      <input type="text" :value="nm_person">
       <p class="title">주민등록번호</p>
       <div class="grid">
-        <div class="number"><input type="number" :value="personVO.ssn_person"></div>
+        <div class="number"><input type="number" v-model="ssn_person1" placeholder="주민번호앞자리" maxlength="6" autocomplete="off" v-validate="'required|length:6|max:6'" data-vv-name='주민번호앞자리'></div>
         <div class="dash">-</div>
-        <div class="number last"><input type="password" name="ssn2" id="ssn2" @click="showSecureKeypad()" placeholder="주민번호뒷자리" maxlength="7" autocomplete="off" readonly="readonly" v-validate="'required|length:7|max:7'" data-vv-name='주민번호뒷자리'></div>
+        <div class="number last"><input type="password" id="ssn2" @click="showSecureKeypad()" placeholder="주민번호뒷자리" maxlength="7" autocomplete="off" readonly="readonly" v-validate="'required|length:7|max:7'" data-vv-name='주민번호뒷자리'></div>
       </div>
-      <p class="warn" v-if="errors.has('주민번호뒷자리')">{{errors.first('주민번호뒷자리')}}</p>
     </div>
+    <p class="warn" v-if="errors.has('주민번호앞자리')">{{errors.first('주민번호앞자리')}}</p>
+    <p class="warn" v-if="errors.has('주민번호뒷자리')">{{errors.first('주민번호뒷자리')}}</p>
     <div class="cert-check-wrap" v-if="scrap_code=='nts'">
       <p class="title">가입형태</p>
       <multiselect :title="'가입형태'" v-model="cert_division" label="text" :show-labels="false" :options="options_division" :searchable="false" :allow-empty="false" />
@@ -42,8 +43,10 @@ export default {
       seen: false,
       scrap_code: this.$route.params.scrap_code,
       isShowButton: false,
-      encPwd: "",
-      personVO: "",
+      no_person: this.$store.state.user.noPerson,
+      nm_person: this.$store.state.user.nmPerson,
+      ssn_person1: "",
+      ssn_person2: "", //주민번호 뒷자리 (보안키패드 암호화 데이터)
       nhis_start_ym: "",
       nhis_end_ym: "",
       nps_start_ym: "",
@@ -92,8 +95,6 @@ export default {
         .then(response => {
           var result = response.data;
           if (result != null) {
-            _this.personVO = result.personVO;
-
             _this.nhis_start_ym = result.nhis_start_ym;
             _this.nhis_end_ym = result.nhis_end_ym;
 
@@ -115,28 +116,7 @@ export default {
           }
         });
     },
-    frmSimpleDoc: function() {
-      var scrapCode = this.scrap_code;
-      var ssnPerson = "";
-
-      // 주민번호 뒷자리 복호화 :국세청이 아닌경우 호출
-      // TODO LoginController.getDecodedPassword에 사용자 본인만 접근할 수 있도록 제한해야함
-      var _this = this;
-      if (this.encPwd != "" && scrapCode != "nts") {
-        var formData = new FormData();
-        formData.append("encPwd", this.encPwd);
-        this.$http
-          .post("/m/login/getDecodedPassword.json", formData)
-          .then(function(response) {
-            var result = response.data;
-            ssnPerson = _this.personVO.ssn_person + result.message;
-            _this.creditRatingUpgrade(ssnPerson);
-          });
-      } else if (scrapCode == "nts") {
-        this.creditRatingUpgrade(ssnPerson);
-      }
-    },
-    creditRatingUpgrade: function(ssnPerson) {
+    creditRatingUpgrade: function() {
       var _this = this;
       if (Constant.userAgent == "iOS") {
         Jockey.on("resultCreditRatingUpgrade", function(param) {
@@ -145,9 +125,9 @@ export default {
         });
         Jockey.send("creditRatingUpgrade", {
           scrapCode: _this.scrap_code,
-          noPerson: _this.personVO.no_person,
-          nmPerson: _this.personVO.nm_person,
-          ssnPerson: ssnPerson,
+          noPerson: _this.no_person,
+          nmPerson: _this.nm_person,
+          ssnPerson: _this.ssn_person1,
           nhisStartYm: _this.nhis_start_ym,
           nhisEndYm: _this.nhis_end_ym,
           certDivision: _this.cert_division.value,
@@ -159,9 +139,9 @@ export default {
       } else if (Constant.userAgent == "Android") {
         window.Android.creditRatingUpgrade(
           _this.scrap_code,
-          _this.personVO.no_person,
-          _this.personVO.nm_person,
-          ssnPerson,
+          _this.no_person,
+          _this.nm_person,
+          _this.ssn_person1,
           _this.nhis_start_ym,
           _this.nhis_end_ym,
           _this.cert_division.value,
@@ -195,7 +175,7 @@ export default {
     showSecureKeypad: function() {
       var _this = this;
       if (Constant.userAgent == "iOS") {
-        Jockey.send("showSecureKeypad", {
+        Jockey.send("showSecureKeypadForSsn", {
           keypadType: "numeric",
           minInputLength: 7,
           maxInputLength: 7,
@@ -208,23 +188,28 @@ export default {
           Jockey.off("resultKeypad");
         });
       } else if (Constant.userAgent == "Android") {
-        window.Android.showSecureKeypad("numeric", 7, 7, "주민등록번호 뒷자리");
+        window.Android.showSecureKeypadForSsn(
+          "numeric",
+          7,
+          7,
+          "주민등록번호 뒷자리"
+        );
       }
     },
     resultKeypad: function(encPwd) {
       if (encPwd != null && encPwd != "") {
         $("#ssn2").val("1111111"); // 임의의 숫자 7자 입력
-        this.encPwd = encPwd;
+        this.ssn_person2 = encPwd;
       } else {
         $("#ssn2").val("");
-        this.encPwd = "";
+        this.ssn_person2 = "";
       }
       this.isShowButton = true;
     },
     resultCheckCert: function(isCert) {
       if (isCert == "true") {
         // 공인인증서가 있을 경우
-        this.frmSimpleDoc();
+        this.creditRatingUpgrade();
       } else {
         // 공인인증서가 없을 경우
         this.$dialogs

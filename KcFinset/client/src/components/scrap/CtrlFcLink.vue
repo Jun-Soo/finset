@@ -9,7 +9,7 @@
       <div class="wrap">
         <a :class="{'on':curTab === 'bank'}" @click="tabOnClick('bank', $event)">은행</a>
         <a :class="{'on':curTab === 'card'}" @click="tabOnClick('card', $event)">카드</a>
-        <!-- <a :class="{'on':curTab === 'stock'}" @click="tabOnClick('stock', $event)">증권</a> -->
+        <a v-if="showStock" :class="{'on':curTab === 'stock'}" @click="tabOnClick('stock', $event)">증권</a>
         <a :class="{'on':curTab === 'etc'}" @click="tabOnClick('etc', $event)">기타</a>
       </div>
     </div>
@@ -134,7 +134,8 @@ export default {
       dn: "",
       agency: "",
       cd_coocon: "",
-      isScrap: this.$route.query.isScrap
+      isScrap: this.$route.query.isScrap,
+      showStock: false
     };
   },
   components: {},
@@ -151,6 +152,11 @@ export default {
   },
   beforeMount() {},
   mounted() {
+    if (Constant.tester.indexOf(this.$store.state.user.hp) > -1) {
+      this.showStock = true;
+    } else {
+      this.showStock = false;
+    }
     if (this.$route.params.tab) {
       this.curTab = this.$route.params.tab;
     }

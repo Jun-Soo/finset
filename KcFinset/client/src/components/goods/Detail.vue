@@ -111,6 +111,7 @@
 
 <script>
 import Common from "./../../assets/js/common.js";
+import Constant from "./../../assets/js/constant.js";
 export default {
   name: "GoodsDetail",
   data() {
@@ -164,7 +165,11 @@ export default {
             "/m/fincorp/getFinCorpIcon.crz?cd_fc=" + _this.goodsInfo.cd_fc;
           _this.keyword_list = _this.goodsInfo.keyword_list.split(",");
           if (_this.isAffiliates) {
-            _this.enableButton = response.data.enableButton;
+            if (Constant.tester.indexOf(_this.$store.state.user.hp) > -1) {
+              _this.enableButton = true;
+            } else {
+              _this.enableButton = false;
+            }
           }
           _this.seen = true;
         }

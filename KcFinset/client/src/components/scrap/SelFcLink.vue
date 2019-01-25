@@ -6,7 +6,7 @@
         <div class="checks grid2 mt10" v-if="isSingle!=true">
           <p><input type="checkbox" id="chk1" :checked="isCheckBank" @click="clickCheck('bank')"><label for="chk1">은행</label></p>
           <p><input type="checkbox" id="chk2" :checked="isCheckCard" @click="clickCheck('card')"><label for="chk2">카드</label></p>
-          <!-- <p class="mt10"><input type="checkbox" id="chk3" :checked="isCheckStock" @click="clickCheck('stock')"><label for="chk3">증권</label></p> -->
+          <p v-if="showStock" class="mt10"><input type="checkbox" id="chk3" :checked="isCheckStock" @click="clickCheck('stock')"><label for="chk3">증권</label></p>
           <p class="mt10"><input type="checkbox" id="chk4" :checked="isCheckNts" @click="clickCheck('nts')"><label for="chk4">국세청</label></p>
         </div>
 
@@ -56,6 +56,7 @@ export default {
       uuid: "",
       financeTerms: "",
       financeTermsText: "",
+      showStock: false,
       //단일 금융사 관련
       isSingle: this.$route.params.isSingle,
       agency: this.$route.params.agency,
@@ -78,6 +79,12 @@ export default {
   },
   beforeMount() {},
   mounted() {
+    if (Constant.tester.indexOf(this.$store.state.user.hp) > -1) {
+      this.showStock = true;
+      this.isCheckStock = true;
+    } else {
+      this.showStock = false;
+    }
     if (this.isSingle) {
       this.isCheckBank = false;
       this.isCheckCard = false;

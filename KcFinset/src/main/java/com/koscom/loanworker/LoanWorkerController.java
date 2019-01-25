@@ -129,15 +129,18 @@ public class LoanWorkerController implements Constant{
      	String no_person = (String) session.getAttribute("no_person");
      	goodsForm.setNo_person(no_person);
      	
-     	Boolean enable_button = false;
+     	
 		GoodsVO goodsInfo = new GoodsVO();
 		GoodsVO goodsVO = new GoodsVO();
 		
 		//테스트 인원에 대해서만 금리 조회 버튼 활성화
-		PersonVO personVO = personManager.getPersonInfo(no_person);
-		if("01083532858".equals(personVO.getHp()) || "01026882453".equals(personVO.getHp()) || "01086385150".equals(personVO.getHp()))	{
-			enable_button = true;
-		}
+//		Boolean enable_button = false;
+//		PersonVO personVO = personManager.getPersonInfo(no_person);
+//		if("01083532858".equals(personVO.getHp()) || "01026882453".equals(personVO.getHp()) || "01086385150".equals(personVO.getHp()))	{
+//			enable_button = true;
+//		}
+//		model.addAttribute("enableButton", enable_button);
+		
 		if(goodsForm.getCd_fc() != null && goodsForm.getCd_goods() != null){
 			goodsVO.setCd_fc(goodsForm.getCd_fc());
 			goodsVO.setCd_goods(goodsForm.getCd_goods());
@@ -146,7 +149,7 @@ public class LoanWorkerController implements Constant{
 			logger.debug("goodsInfo.toString() : "+goodsInfo.toString());
 			model.addAttribute("goodsInfo", goodsInfo);
 		}
-		model.addAttribute("enableButton", enable_button);
+		
 		return "jsonView";
 	}
 

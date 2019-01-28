@@ -1,6 +1,6 @@
 package com.koscom.comm;
 
-import java.sql.SQLException;
+import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.koscom.env.model.CodeInfo;
 import com.koscom.env.service.CodeManager;
 import com.koscom.loanworker.LoanWorkerController;
+import com.koscom.login.service.SecureManager;
+import com.koscom.util.AES256Util;
 import com.koscom.util.Constant;
 
 @Controller
@@ -33,6 +35,9 @@ public class CommController implements Constant {
 
     @Autowired
 	CodeManager codeManager;
+    
+    @Autowired
+    SecureManager secureManager;
 
     public static boolean IS_LOCAL = false;
     public CommController() {
@@ -41,6 +46,38 @@ public class CommController implements Constant {
             IS_LOCAL = true;
         }
     }
+    
+    /** VUE
+   	 * 보안키보드의 결과값을 복호화 후 AES256 암호화
+   	 * @param group
+   	 * @param id
+   	 * @return String
+   	 */
+   	@RequestMapping("/getKeypadValue.json")
+   	public String getKeypadValue(Model model, HttpServletRequest request, HttpSession session, String value) {
+   		String no_person = (String) session.getAttribute("no_person");
+   		String hp = (String) session.getAttribute("hp");
+   		logger.debug("getKeypadValue.json  no_person : " + no_person + ", hp : " + hp + ", value : " + value);
+
+   		String decValue = secureManager.getDecodedPassword(value);
+   		
+   		logger.debug("decValue : "+ decValue);
+   		
+   		String encValue ="";
+   		try	{
+   			AES256Util aes256 = new AES256Util(no_person+"."+hp);
+   			encValue = aes256.aesEncode(decValue);
+   		}
+   		catch (Exception e) { 
+   			logger.error("암호화 처리 에러 : " + e.getMessage());
+    		e.printStackTrace();
+			model.addAttribute("result", "");
+   	   		return "jsonView";
+   		}
+   		logger.debug("result : "+ encValue);    		
+		model.addAttribute("result", encValue);
+   	   	return "jsonView";
+   	}
 
     /** VUE
 	 * 코드명을 반환합니다.

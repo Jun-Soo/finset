@@ -265,7 +265,7 @@ export default {
     modifyPwdFailCnt: function(mode) {
       var _this = this;
       var frm = new FormData();
-      frm.append("no_person", _this.username);
+      //frm.append("no_person", _this.username);
       frm.append("cnt_fail_mode", mode);
       frm.append("cnt_fail", _this.cntFailPwd);
       this.$http.post("/m/person/modifyPwdFailCnt.json", frm).then(response => {
@@ -330,7 +330,9 @@ export default {
               _this.password = "";
               //비밀번호 틀린 누적횟수 증가
               console.log("login failed : ");
-              _this.cntFailPwd += 1;
+              _this.cntFailPwd++;
+              _this.$store.state.user.cntFailPwd = _this.cntFailPwd;
+              _this.modifyPwdFailCnt("pwd"); //cnt값 db에 저장
               if (_this.cntFailPwd < 5) {
                 _this.errMsg =
                   "비밀번호가 일치하지 않습니다. (" + _this.cntFailPwd + "/5)";
@@ -361,12 +363,12 @@ export default {
                   _this.$router.push("/mypage/certPerson");
                 }, 1000);
               }
-              if (
-                response.data.result == "21" ||
-                response.data.result == "22"
-              ) {
-                _this.modifyPwdFailCnt("pwd"); //cnt값 db에 저장
-              }
+              // if (
+              //   response.data.result == "21" ||
+              //   response.data.result == "22"
+              // ) {
+              //   _this.modifyPwdFailCnt("pwd"); //cnt값 db에 저장
+              // }
             }
           } else {
             if (response.data.result == "10") {
@@ -397,7 +399,9 @@ export default {
               _this.password = "";
               //비밀번호 틀린 누적횟수 증가
               console.log("login failed : ");
-              _this.cntFailPwd += 1;
+              _this.cntFailPwd++;
+              _this.$store.state.user.cntFailPwd = _this.cntFailPwd;
+              _this.modifyPwdFailCnt("pwd"); //cnt값 db에 저장
               if (_this.cntFailPwd < 5) {
                 _this.errMsg =
                   "비밀번호가 일치하지 않습니다. (" + _this.cntFailPwd + "/5)";
@@ -409,12 +413,12 @@ export default {
                   _this.$router.push("/mypage/certPerson");
                 }, 1000);
               }
-              if (
-                response.data.result == "21" ||
-                response.data.result == "22"
-              ) {
-                _this.modifyPwdFailCnt("pwd"); //cnt값 db에 저장
-              }
+              // if (
+              //   response.data.result == "21" ||
+              //   response.data.result == "22"
+              // ) {
+              //   _this.modifyPwdFailCnt("pwd"); //cnt값 db에 저장
+              // }
             }
           }
         })

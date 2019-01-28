@@ -245,7 +245,7 @@ export default {
         }
       } else {
         //지문 틀린 누적횟수 증가
-        _this.cntFailFinger += 1;
+        _this.cntFailFinger++;
         _this.$store.state.user.cntFailFinger = _this.cntFailFinger;
         if (_this.cntFailFinger < 5) {
           _this.errMsg = "다시 시도해 주세요. (" + _this.cntFailFinger + "/5)";

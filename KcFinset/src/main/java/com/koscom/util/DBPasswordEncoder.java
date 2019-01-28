@@ -27,7 +27,10 @@ public class DBPasswordEncoder implements PasswordEncoder {
 		
 		try {
 			String decPwd = rawPassword.toString();
-			String type = decPwd.substring(0, 6); 
+			String type = "";
+			if(decPwd.length() > 6) {
+				type = decPwd.substring(0, 6);
+			}
 			
 			if(!"userNotFoundPassword".equals(decPwd)) {
 				

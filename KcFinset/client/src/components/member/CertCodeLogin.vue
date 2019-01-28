@@ -224,12 +224,23 @@ export default {
     gotoFingerPrint: function() {
       var _this = this;
       console.log("gotoFingerPrint called");
-      if (Constant.userAgent == "iOS") {
-        Jockey.send("loginKeypadClose");
-        Jockey.send("closeFingerPrint");
-      } else if (Constant.userAgent == "Android") {
-        window.Android.loginKeypadClose();
-        window.Android.closeFingerPrint();
+      if (
+        (Constant.userAgent == "iOS" && Constant.userAppVersion == "1.1.7") ||
+        (Constant.userAgent == "Android" && Constant.userAppVersion == "1.1.4")
+      ) {
+        if (Constant.userAgent == "iOS") {
+          Jockey.send("loginKeypadClose");
+          Jockey.send("closeFingerPrint");
+        } else if (Constant.userAgent == "Android") {
+          window.Android.loginKeypadClose();
+          window.Android.closeFingerPrint();
+        }
+      } else {
+        if (Constant.userAgent == "iOS") {
+          Jockey.send("closeFingerPrint");
+        } else if (Constant.userAgent == "Android") {
+          window.Android.closeFingerPrint();
+        }
       }
       _this.$router.push("/member/certFingerLogin");
     },
@@ -283,62 +294,141 @@ export default {
         })
         .then(response => {
           console.log("login: " + response.data);
-          if (response.data.result == "10") {
-            //정상
-            if (Constant.userAgent == "iOS") {
-              Jockey.send("setNoPerson", {
-                noPerson: _this.username,
-                phNum: _this.hp
-              });
-              Jockey.send("loginFlag", {
-                flag: "Y"
-              });
-              Jockey.send("loginKeypadClose");
-            } else if (Constant.userAgent == "Android") {
-              window.Android.setNoPerson(_this.username, _this.hp);
-              window.Android.loginFlag("Y");
-              window.Android.loginKeypadClose();
-            }
-            _this.$store.state.user.authToken = null;
-            _this.$store.state.user.cntFailPwd = 0;
-            _this.$store.state.user.cntFailFinger = 0;
-            // _this.$store.state.user.cntFailFinger = 0;
-            _this.$store.commit("LOGIN", response.data);
-
-            _this.changeLoginDB();
-            _this.chkYNagreement();
-          } else {
-            _this.$store.state.isLoading = false;
-            _this.initClassPass();
-            _this.password = "";
-            //비밀번호 틀린 누적횟수 증가
-            console.log("login failed : ");
-            _this.cntFailPwd += 1;
-            if (_this.cntFailPwd < 5) {
-              _this.errMsg =
-                "비밀번호가 일치하지 않습니다. (" + _this.cntFailPwd + "/5)";
+          if (
+            (Constant.userAgent == "iOS" &&
+              Constant.userAppVersion == "1.1.7") ||
+            (Constant.userAgent == "Android" &&
+              Constant.userAppVersion == "1.1.4")
+          ) {
+            if (response.data.result == "10") {
+              //정상
               if (Constant.userAgent == "iOS") {
-                Jockey.send("loginKeypadFailure", {
-                  message: _this.errMsg
+                Jockey.send("setNoPerson", {
+                  noPerson: _this.username,
+                  phNum: _this.hp
                 });
-              } else if (Constant.userAgent == "Android") {
-                window.Android.loginKeypadFailure(_this.errMsg);
-              }
-            } else if (_this.cntFailPwd == 5) {
-              //지문인식 5번 모두 틀린 경우
-              _this.errMsg = "비밀번호 재설정 화면으로 이동합니다.";
-              this.$toast.center(_this.errMsg);
-              if (Constant.userAgent == "iOS") {
+                Jockey.send("loginFlag", {
+                  flag: "Y"
+                });
                 Jockey.send("loginKeypadClose");
               } else if (Constant.userAgent == "Android") {
+                window.Android.setNoPerson(_this.username, _this.hp);
+                window.Android.loginFlag("Y");
                 window.Android.loginKeypadClose();
               }
-              setTimeout(function() {
-                _this.$router.push("/mypage/certPerson");
-              }, 1000);
+              _this.$store.state.user.authToken = null;
+              _this.$store.state.user.cntFailPwd = 0;
+              _this.$store.state.user.cntFailFinger = 0;
+              // _this.$store.state.user.cntFailFinger = 0;
+              _this.$store.commit("LOGIN", response.data);
+
+              _this.changeLoginDB();
+              _this.chkYNagreement();
+            } else {
+              _this.$store.state.isLoading = false;
+              _this.initClassPass();
+              _this.password = "";
+              //비밀번호 틀린 누적횟수 증가
+              console.log("login failed : ");
+              _this.cntFailPwd += 1;
+              if (_this.cntFailPwd < 5) {
+                _this.errMsg =
+                  "비밀번호가 일치하지 않습니다. (" + _this.cntFailPwd + "/5)";
+                if (Constant.userAgent == "iOS") {
+                  Jockey.send("loginKeypadFailure", {
+                    message: _this.errMsg
+                  });
+                } else if (Constant.userAgent == "Android") {
+                  if (
+                    (Constant.userAgent == "iOS" &&
+                      Constant.userAppVersion == "1.1.7") ||
+                    (Constant.userAgent == "Android" &&
+                      Constant.userAppVersion == "1.1.4")
+                  ) {
+                    window.Android.loginKeypadFailure(_this.errMsg);
+                  }
+                }
+              } else if (_this.cntFailPwd == 5) {
+                //지문인식 5번 모두 틀린 경우
+                _this.errMsg = "비밀번호 재설정 화면으로 이동합니다.";
+                this.$toast.center(_this.errMsg);
+                if (Constant.userAgent == "iOS") {
+                  Jockey.send("loginKeypadClose");
+                } else if (Constant.userAgent == "Android") {
+                  window.Android.loginKeypadClose();
+                }
+                setTimeout(function() {
+                  _this.$router.push("/mypage/certPerson");
+                }, 1000);
+              }
+              if (
+                response.data.result == "21" ||
+                response.data.result == "22"
+              ) {
+                _this.modifyPwdFailCnt("pwd"); //cnt값 db에 저장
+              }
             }
-            if (response.data.result == "21" || response.data.result == "22") {
-              _this.modifyPwdFailCnt("pwd"); //cnt값 db에 저장
+          } else {
+            if (response.data.result == "10") {
+              //정상
+              if (Constant.userAgent == "iOS") {
+                Jockey.send("setNoPerson", {
+                  noPerson: _this.username,
+                  phNum: _this.hp
+                });
+                Jockey.send("loginFlag", {
+                  flag: "Y"
+                });
+                Jockey.send("loginKeypadClose");
+              } else if (Constant.userAgent == "Android") {
+                window.Android.setNoPerson(_this.username, _this.hp);
+                window.Android.loginFlag("Y");
+                window.Android.loginKeypadClose();
+              }
+              _this.$store.state.user.authToken = null;
+              _this.$store.state.user.cntFailPwd = 0;
+              _this.$store.state.user.cntFailFinger = 0;
+              // _this.$store.state.user.cntFailFinger = 0;
+              _this.$store.commit("LOGIN", response.data);
+
+              _this.changeLoginDB();
+              _this.chkYNagreement();
+            } else {
+              _this.$store.state.isLoading = false;
+              _this.initClassPass();
+              _this.password = "";
+              //비밀번호 틀린 누적횟수 증가
+              console.log("login failed : ");
+              _this.cntFailPwd += 1;
+              if (_this.cntFailPwd < 5) {
+                _this.errMsg =
+                  "비밀번호가 일치하지 않습니다. (" + _this.cntFailPwd + "/5)";
+                if (Constant.userAgent == "iOS") {
+                  Jockey.send("loginKeypadFailure", {
+                    message: _this.errMsg
+                  });
+                } else if (Constant.userAgent == "Android") {
+                  window.Android.loginKeypadFailure(_this.errMsg);
+                }
+              } else if (_this.cntFailPwd == 5) {
+                //지문인식 5번 모두 틀린 경우
+                _this.errMsg = "비밀번호 재설정 화면으로 이동합니다.";
+                this.$toast.center(_this.errMsg);
+                if (Constant.userAgent == "iOS") {
+                  Jockey.send("loginKeypadClose");
+                } else if (Constant.userAgent == "Android") {
+                  window.Android.loginKeypadClose();
+                }
+                setTimeout(function() {
+                  _this.$router.push("/mypage/certPerson");
+                }, 1000);
+              }
+              if (
+                response.data.result == "21" ||
+                response.data.result == "22"
+              ) {
+                _this.modifyPwdFailCnt("pwd"); //cnt값 db에 저장
+              }
             }
           }
         })

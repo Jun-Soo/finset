@@ -81,8 +81,7 @@ export default {
       this.showFingerprintButton = true;
     }
 
-    if (Constant.userAgent == "iOS" || Constant.userAgent == "Android")
-      window.Android.setEndApp("Y");
+    if (Constant.userAgent == "Android") window.Android.setEndApp("Y");
   },
   beforeMount() {},
   mounted() {
@@ -464,7 +463,7 @@ export default {
           } else if (Constant.userAgent == "Android") {
             window.Android.loginFlag("Y");
           }
-          _this.password = _this.$store.state.user.authToken;
+          _this.password = "999999" + _this.$store.state.user.authToken;
           // setTimeout(function() {
           _this.login();
           // }, 500);

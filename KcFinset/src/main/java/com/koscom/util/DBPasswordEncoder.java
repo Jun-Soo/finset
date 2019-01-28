@@ -26,22 +26,21 @@ public class DBPasswordEncoder implements PasswordEncoder {
 		String strPwdDB = "";
 		
 		try {
-			String decPwd = ""; 
-			//받은 비밀번호가 4자리보다 클경우는 보안키보드 암호화가 된 케이스이 때문에 보안키보드 복호화 처리 -- 추후 조건처리 삭제
-			if(rawPassword.length() > 4){
-				decPwd = secureManager.getDecodedPassword(rawPassword.toString());
-			}
-			else	{
-				decPwd = rawPassword.toString();
-						
-			}
+			String decPwd = rawPassword.toString();
+			String type = decPwd.substring(0, 6); 
 			
-			if(!"userNotFoundPassword".equals(decPwd) && decPwd.length() < 5) {
-				strPwdDB = personManager.getPwdDB(decPwd);
-			} else {
-				strPwdDB = rawPassword.toString();
+			if(!"userNotFoundPassword".equals(decPwd)) {
+				
+				if("999999".equals(type)) { //지문인증
+					strPwdDB = decPwd.substring(6);
+				} else {
+					if(decPwd.length() < 5) { //Local
+						strPwdDB = personManager.getPwdDB(decPwd);
+					} else { //RSA암호화
+						strPwdDB = secureManager.getDecodedPassword(decPwd);
+					}
+				}
 			}
-		
 			
 		} catch (RuntimeException e) {
 			

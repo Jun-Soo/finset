@@ -67,8 +67,7 @@ export default {
   // },
   beforeCreate() {},
   created() {
-    if (Constant.userAgent == "iOS" || Constant.userAgent == "Android")
-      window.Android.setEndApp("Y");
+    if (Constant.userAgent == "Android") window.Android.setEndApp("Y");
 
     var _this = this;
     window.resultCheckFingerPrint = this.resultCheckFingerPrint;

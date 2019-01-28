@@ -101,6 +101,7 @@ export default {
           Jockey.off("goToFingerprint");
         });
       }
+      console.log("showLoginKeypad");
       this.showLoginKeypad();
     } else {
       if (this.$store.state.user.ynFingerprint == "Y") {

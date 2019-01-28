@@ -208,12 +208,12 @@ export default {
           query: { cd_share: "02" }
         });
       } else if ("raise" == menu) {
-        if (Constant.tester.indexOf(this.$store.state.user.hp) > -1) {
-          this.$router.push("/credit/raiseMain");
-        } else {
-          this.$dialogs.alert("서비스 준비중 입니다.", Constant.options);
-          return false;
-        }
+        // if (Constant.tester.indexOf(this.$store.state.user.hp) > -1) {
+        //   this.$router.push("/credit/raiseMain");
+        // } else {
+        this.$dialogs.alert("서비스 준비중 입니다.", Constant.options);
+        return false;
+        // }
       }
     }
   }

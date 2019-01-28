@@ -76,7 +76,7 @@ export default {
   computed: {},
   beforeCreate() {},
   created() {
-    window.Android.setEndApp("Y");
+    if (Constant.userAgent == "Android") window.Android.setEndApp("Y");
 
     this.$store.state.title = "지문인증";
     window.resultFingerPrint = this.resultFingerPrint;

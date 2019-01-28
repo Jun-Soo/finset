@@ -42,6 +42,10 @@ export default {
     //AppVersion 저장
     Constant.userAppVersion = chkVersion;
 
+    //userAgent, userAppVersion Store저장
+    this.$store.state.userAgent = Constant.userAgent;
+    if (chkVersion) this.$store.state.userAppVersion = chkVersion;
+
     var data = { app_version: chkVersion, user_agent: Constant.userAgent };
     this.$http
       .get("/m/login/appVersionCheck.json", {

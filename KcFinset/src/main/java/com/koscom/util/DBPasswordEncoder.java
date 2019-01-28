@@ -37,11 +37,10 @@ public class DBPasswordEncoder implements PasswordEncoder {
 				if("999999".equals(type)) { //지문인증
 					strPwdDB = decPwd.substring(6);
 				} else {
-					if(decPwd.length() < 5) { //Local
-						strPwdDB = personManager.getPwdDB(decPwd);
-					} else { //RSA암호화
-						strPwdDB = secureManager.getDecodedPassword(decPwd);
+					if(decPwd.length() > 5) { //Local
+						decPwd = secureManager.getDecodedPassword(rawPassword.toString());
 					}
+					strPwdDB = personManager.getPwdDB(decPwd);
 				}
 			}
 			

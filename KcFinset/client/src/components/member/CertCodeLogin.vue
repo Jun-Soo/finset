@@ -379,11 +379,9 @@ export default {
                 Jockey.send("loginFlag", {
                   flag: "Y"
                 });
-                Jockey.send("loginKeypadClose");
               } else if (Constant.userAgent == "Android") {
                 window.Android.setNoPerson(_this.username, _this.hp);
                 window.Android.loginFlag("Y");
-                window.Android.loginKeypadClose();
               }
               _this.$store.state.user.authToken = null;
               _this.$store.state.user.cntFailPwd = 0;
@@ -403,22 +401,10 @@ export default {
               if (_this.cntFailPwd < 5) {
                 _this.errMsg =
                   "비밀번호가 일치하지 않습니다. (" + _this.cntFailPwd + "/5)";
-                if (Constant.userAgent == "iOS") {
-                  Jockey.send("loginKeypadFailure", {
-                    message: _this.errMsg
-                  });
-                } else if (Constant.userAgent == "Android") {
-                  window.Android.loginKeypadFailure(_this.errMsg);
-                }
               } else if (_this.cntFailPwd == 5) {
                 //지문인식 5번 모두 틀린 경우
                 _this.errMsg = "비밀번호 재설정 화면으로 이동합니다.";
                 this.$toast.center(_this.errMsg);
-                if (Constant.userAgent == "iOS") {
-                  Jockey.send("loginKeypadClose");
-                } else if (Constant.userAgent == "Android") {
-                  window.Android.loginKeypadClose();
-                }
                 setTimeout(function() {
                   _this.$router.push("/mypage/certPerson");
                 }, 1000);

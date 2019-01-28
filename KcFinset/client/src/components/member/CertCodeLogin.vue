@@ -81,7 +81,8 @@ export default {
       this.showFingerprintButton = true;
     }
 
-    window.Android.setEndApp("Y");
+    if (Constant.userAgent == "iOS" || Constant.userAgent == "Android")
+      window.Android.setEndApp("Y");
   },
   beforeMount() {},
   mounted() {

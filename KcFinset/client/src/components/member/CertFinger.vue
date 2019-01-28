@@ -115,7 +115,7 @@ export default {
       var querystring = require("querystring");
       var data = querystring.stringify({
         j_username: _this.noPerson,
-        j_password: "999999" + _this.password
+        j_password: _this.password
       });
       this.$store.state.isLoading = true;
       this.$http

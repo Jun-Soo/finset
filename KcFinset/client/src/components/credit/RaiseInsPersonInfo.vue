@@ -6,9 +6,9 @@
       <input type="text" :value="nm_person">
       <p class="title">주민등록번호</p>
       <div class="grid">
-        <div class="number"><input type="number" v-model="ssn_person1" placeholder="주민번호앞자리" maxlength="6" autocomplete="off" v-validate="'required|length:6|max:6'" data-vv-name='주민번호앞자리'></div>
+        <div class="number"><input type="number" v-model="ssn_birth" placeholder="주민번호앞자리" maxlength="6" autocomplete="off" v-validate="'required|length:6|max:6'" data-vv-name='주민번호앞자리'></div>
         <div class="dash">-</div>
-        <div class="number last"><input type="password" id="ssn2" @click="showSecureKeypad()" placeholder="주민번호뒷자리" maxlength="7" autocomplete="off" readonly="readonly" v-validate="'required|length:7|max:7'" data-vv-name='주민번호뒷자리'></div>
+        <div class="number last"><input type="password" id="ssn_person" @click="showSecureKeypad()" placeholder="주민번호뒷자리" maxlength="7" autocomplete="off" readonly="readonly" v-validate="'required|length:7|max:7'" data-vv-name='주민번호뒷자리'></div>
       </div>
     </div>
     <p class="warn" v-if="errors.has('주민번호앞자리')">{{errors.first('주민번호앞자리')}}</p>
@@ -45,7 +45,7 @@ export default {
       isShowButton: false,
       no_person: this.$store.state.user.noPerson,
       nm_person: this.$store.state.user.nmPerson,
-      ssn_person1: "",
+      ssn_birth: "",
       ssn_person2: "", //주민번호 뒷자리 (보안키패드 암호화 데이터)
       nhis_start_ym: "",
       nhis_end_ym: "",
@@ -60,6 +60,14 @@ export default {
       ],
       options_year: []
     };
+  },
+  watch: {
+    ssn_birth: function() {
+      if ((this.sex == null || this.sex == "") && this.ssn_birth.length >= 6) {
+        $("#ssn_person").focus();
+        this.showSecureKeypad();
+      }
+    }
   },
   components: {},
   computed: {},
@@ -127,7 +135,7 @@ export default {
           scrapCode: _this.scrap_code,
           noPerson: _this.no_person,
           nmPerson: _this.nm_person,
-          ssnPerson: _this.ssn_person1,
+          ssnPerson: _this.ssn_birth,
           nhisStartYm: _this.nhis_start_ym,
           nhisEndYm: _this.nhis_end_ym,
           certDivision: _this.cert_division.value,
@@ -141,7 +149,7 @@ export default {
           _this.scrap_code,
           _this.no_person,
           _this.nm_person,
-          _this.ssn_person1,
+          _this.ssn_birth,
           _this.nhis_start_ym,
           _this.nhis_end_ym,
           _this.cert_division.value,
@@ -198,10 +206,10 @@ export default {
     },
     resultKeypad: function(encPwd) {
       if (encPwd != null && encPwd != "") {
-        $("#ssn2").val("1111111"); // 임의의 숫자 7자 입력
+        $("#ssn_person").val("1111111"); // 임의의 숫자 7자 입력
         this.ssn_person2 = encPwd;
       } else {
-        $("#ssn2").val("");
+        $("#ssn_person").val("");
         this.ssn_person2 = "";
       }
       this.isShowButton = true;

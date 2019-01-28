@@ -57,11 +57,9 @@ public class CommController implements Constant {
    	public String getKeypadValue(Model model, HttpServletRequest request, HttpSession session, String value) {
    		String no_person = (String) session.getAttribute("no_person");
    		String hp = (String) session.getAttribute("hp");
-   		logger.debug("getKeypadValue.json  no_person : " + no_person + ", hp : " + hp + ", value : " + value);
+   		//logger.debug("getKeypadValue.json  no_person : " + no_person + ", hp : " + hp + ", value : " + value);
 
    		String decValue = secureManager.getDecodedPassword(value);
-   		
-   		logger.debug("decValue : "+ decValue);
    		
    		String encValue ="";
    		try	{
@@ -74,7 +72,7 @@ public class CommController implements Constant {
 			model.addAttribute("result", "");
    	   		return "jsonView";
    		}
-   		logger.debug("result : "+ encValue);    		
+   		//logger.debug("result : "+ encValue);    		
 		model.addAttribute("result", encValue);
    	   	return "jsonView";
    	}

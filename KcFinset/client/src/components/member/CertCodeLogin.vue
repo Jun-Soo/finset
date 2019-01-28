@@ -86,7 +86,10 @@ export default {
   beforeMount() {},
   mounted() {
     var _this = this;
-    if (Constant.userAgent == "iOS" || Constant.userAgent == "Android") {
+    if (
+      (Constant.userAgent == "iOS" && Constant.userAppVersion == "1.1.7") ||
+      (Constant.userAgent == "Android" && Constant.userAppVersion == "1.1.4")
+    ) {
       this.errMsg = "";
       if (this.cntFailPwd) {
         this.errMsg =

@@ -3,6 +3,7 @@
  */
 export default {
   userAgent: '',
+  userAppVersion: '',
   params: {},
   options: {
     title: '안내',

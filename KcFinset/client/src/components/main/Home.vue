@@ -39,6 +39,9 @@ export default {
       Jockey.send("checkAppVersion");
     }
 
+    //AppVersion 저장
+    Constant.userAppVersion = chkVersion;
+
     var data = { app_version: chkVersion, user_agent: Constant.userAgent };
     this.$http
       .get("/m/login/appVersionCheck.json", {

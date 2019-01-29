@@ -63,14 +63,13 @@ export default {
   },
   mounted() {
     this.sortCssFile();
-
     var _this = this;
     if (Constant.userAgent == "iOS") {
       //스크래핑 완료 관련 iOS 함수 등록
+      Jockey.off("resultAutoScrap");
       Jockey.on("resultAutoScrap", function(param) {
         console.log("iOS resultAutoScrap called");
         _this.resultAutoScrap(param.isSuccess);
-        Jockey.off("resultAutoScrap");
       });
     }
   },

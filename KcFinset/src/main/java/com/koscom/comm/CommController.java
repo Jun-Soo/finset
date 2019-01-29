@@ -60,7 +60,7 @@ public class CommController implements Constant {
    		//logger.debug("getKeypadValue.json  no_person : " + no_person + ", hp : " + hp + ", value : " + value);
 
    		String decValue = secureManager.getDecodedPassword(value);
-   		
+   		//logger.debug("decValue : "+ decValue);
    		String encValue ="";
    		try	{
    			AES256Util aes256 = new AES256Util(no_person+"."+hp);

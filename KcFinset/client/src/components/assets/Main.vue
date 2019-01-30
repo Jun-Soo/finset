@@ -67,14 +67,14 @@
           <p class="number big">{{(assetsBankInfo.sum_amt_balance == null)? '-' : formatNumber(assetsBankInfo.sum_amt_balance)}}<em>원</em></p>
         </div>
       </div>
-      <!--
-      <div @click="goMenu('stock')" class="item">
+
+      <div v-if="showStock" @click="goMenu('stock')" class="item">
         <div class="flex">
           <p class="corp big">증권(주식/펀드/CMA)<em>{{assetsStockInfo.cnt_account}}건</em></p>
           <p class="number big">{{(assetsStockInfo.sum_amt_stock == null)? '-' : formatNumber(assetsStockInfo.sum_amt_stock)}}<em>원</em></p>
         </div>
       </div>
-      -->
+
       <!--
       <div class="item">
         <div class="flex">
@@ -110,7 +110,8 @@ export default {
       debtSumAmt: "", //부채총금액
       assetsBankInfo: "", //은행정보
       assetsStockInfo: "", //증권정보
-      assetsEtcInfo: "" //기타정보
+      assetsEtcInfo: "", //기타정보
+      showStock: false
     };
   },
   components: {},
@@ -123,7 +124,13 @@ export default {
     this.getAssetsMainInfo();
   },
   beforeMount() {},
-  mounted() {},
+  mounted() {
+    if (Constant.tester.indexOf(this.$store.state.user.hp) > -1) {
+      this.showStock = true;
+    } else {
+      this.showStock = false;
+    }
+  },
   beforeUpdate() {},
   updated() {},
   beforeDestroy() {},

@@ -7,7 +7,7 @@
           <p class="date"><em>{{newsCompany}}</em>{{pubDate}}</p>
         </li>
         <li>
-          <img :src="bodyImg" />
+          <!-- <img :src="bodyImg" /> -->
           <div class="mt10 mb30" v-html="contents" />
         </li>
       </ul>
@@ -34,8 +34,8 @@ export default {
       pubDate: "", //일자
       contents: "", //내용
       localLinkText: "", //연계링크메세지
-      localLink: "", //연계링크
-      bodyImg: "" //본문이미지
+      localLink: "" //연계링크
+      // bodyImg: "" //본문이미지
     };
   },
   component: {},
@@ -64,22 +64,30 @@ export default {
           _this.title = newsInfo.title;
           _this.newsCompany = newsInfo.news_company;
           _this.pubDate = newsInfo.pub_date;
-          _this.contents = newsInfo.contents;
+          //banker단의 이미지URL주소를 client주소로 변경
+          _this.contents = _this.replaceAll(
+            newsInfo.contents,
+            "/contents/getApiNewsImg.crz",
+            "/m/news/getApiNewsImg.json"
+          );
           _this.localLinkText = newsInfo.local_link_text;
           _this.localLink = newsInfo.local_link;
-          //본문이미지 셋팅
-          if (newsInfo.seq_body_file != null) {
-            _this.bodyImg =
-              "/m/news/getApiNewsImg.json?seq_news=" +
-              newsInfo.seq_news +
-              "&file_type=02";
-          }
+          // //본문이미지 셋팅
+          // if (newsInfo.seq_body_file != null) {
+          //   _this.bodyImg =
+          //     "/m/news/getApiNewsImg.json?seq_news=" +
+          //     newsInfo.seq_news +
+          //     "&file_type=02";
+          // }
 
           _this.seen = true;
         })
         .catch(e => {
           _this.$toast.center(ko.messages.error);
         });
+    },
+    replaceAll: function(str, searchStr, replaceStr) {
+      return str.split(searchStr).join(replaceStr);
     },
     //연계링크 이동
     goLocalLink: function(link) {

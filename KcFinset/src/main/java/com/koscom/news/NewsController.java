@@ -70,6 +70,10 @@ public class NewsController {
 
 		newsVO.setSeq_news(Integer.parseInt(request.getParameter("seq_news").toString()));
 		newsVO.setFile_type(request.getParameter("file_type").toString());
+		if("02".equals(newsVO.getFile_type())) {
+			String seq_file = request.getParameter("seq_file").toString();
+			newsVO.setSeq_file(Integer.parseInt(seq_file));
+		}
 		map = newsManager.getApiNewsImgInfo(newsVO);
 
 		if(map != null) {

@@ -98,11 +98,11 @@ export default {
         window.Android.initFingerPrint();
       } else if (Constant.userAgent == "iOS") {
         //지문인식 결과 콜백 이벤트
+        Jockey.off("resultFingerPrint");
         Jockey.on("resultFingerPrint", function(param) {
           var result = false;
           if (param.result == 1) result = true;
           _this.resultFingerPrint(param.result);
-          Jockey.off("resultFingerPrint");
         });
 
         Jockey.send("initFingerPrint");

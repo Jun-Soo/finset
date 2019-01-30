@@ -108,11 +108,11 @@ export default {
         if (Constant.userAgent == "Android") {
           window.Android.initFingerPrint();
         } else if (Constant.userAgent == "iOS") {
+          Jockey.off("resultFingerPrint");
           Jockey.on("resultFingerPrint", function(param) {
             var result = false;
             if (param.result == 1) result = true;
             _this.resultFingerPrint(param.result);
-            Jockey.off("resultFingerPrint");
           });
           Jockey.send("initFingerPrint");
         }
@@ -139,9 +139,9 @@ export default {
           showFingerprintButton: _this.showFingerprintButton
         });
         //보안키패드 결과값 수신 콜백 이벤
+        Jockey.off("resultLoginKeypad");
         Jockey.on("resultLoginKeypad", function(param) {
           _this.resultLoginKeypad(param.inputResult);
-          Jockey.off("resultLoginKeypad");
         });
       } else if (Constant.userAgent == "Android") {
         window.Android.showLoginKeypad(

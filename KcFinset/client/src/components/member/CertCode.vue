@@ -80,9 +80,9 @@ export default {
       window.Android.checkFingerPrint();
     } else if (Constant.userAgent == "iOS") {
       //지문인식 가능여부 체크 결과 콜백 이벤트
+      Jockey.off("resultCheckFingerPrint");
       Jockey.on("resultCheckFingerPrint", function(param) {
         _this.resultCheckFingerPrint(param);
-        Jockey.off("resultCheckFingerPrint");
       });
       Jockey.send("checkFingerPrint");
     }
@@ -139,9 +139,9 @@ export default {
           showFingerprintButton: "false"
         });
         //보안키패드 결과값 수신 콜백 이벤
+        Jockey.off("resultLoginKeypad");
         Jockey.on("resultLoginKeypad", function(param) {
           _this.resultLoginKeypad(param.inputResult);
-          Jockey.off("resultLoginKeypad");
         });
       } else if (Constant.userAgent == "Android") {
         window.Android.showLoginKeypad(

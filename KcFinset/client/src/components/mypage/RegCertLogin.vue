@@ -101,9 +101,9 @@ export default {
           showFingerprintButton: _this.showFingerprintButton
         });
         //보안키패드 결과값 수신 콜백 이벤
+        Jockey.off("resultLoginKeypad");
         Jockey.on("resultLoginKeypad", function(param) {
           _this.resultLoginKeypad(param.inputResult);
-          Jockey.off("resultKeypad");
         });
       } else if (Constant.userAgent == "Android") {
         window.Android.showLoginKeypad(

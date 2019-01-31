@@ -96,9 +96,9 @@ export default {
           "비밀번호를 " + this.cntFailPwd + "회 실패한 이력이 있습니다.";
       }
       if (Constant.userAgent == "iOS") {
+        Jockey.off("goToFingerprint");
         Jockey.on("goToFingerprint", function(param) {
           _this.goToFingerprint();
-          Jockey.off("goToFingerprint");
         });
       }
       console.log("showLoginKeypad");

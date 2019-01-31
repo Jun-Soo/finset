@@ -44,7 +44,7 @@
               </p>
             </div>
             <div class="list">
-              <p>Quility</p>
+              <p>Quality</p>
               <p>
                 <img src="./../../assets/images/common/star_list.png" width="11" alt="" v-for="i in stockAnalysis.factorAnalysis.quality" :key="i"/>
               </p>

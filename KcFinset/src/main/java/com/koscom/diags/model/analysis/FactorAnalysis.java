@@ -149,7 +149,7 @@ public class FactorAnalysis extends AnalysisBase implements Serializable{
 	 * factor 평균 
 	 */
 	public int getAvg() {
-		return (value+growth+quality+profitability+momentum)/5;
+		return Math.round((value+growth+quality+profitability+momentum)/5f);
 	}
 
 

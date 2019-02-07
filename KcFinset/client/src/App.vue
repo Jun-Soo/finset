@@ -376,9 +376,9 @@ export default {
       console.log("resultHasCertPassword : " + isExist);
       if (isExist == "true") {
         //IOS의 경우 상단스크래핑 상태 배너가 없어서 토스트로 대체
-        if (Constant.userAgent == "iOS") {
-          this.$toast.center("데이터 업데이트를 시작하겠습니다.");
-        }
+        // if (Constant.userAgent == "iOS") {
+        //   this.$toast.center("데이터 업데이트를 시작하겠습니다.");
+        // }
         this.getAutoScrapInfo();
         this.autoScrapCallback(true);
       } else {

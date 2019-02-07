@@ -1,0 +1,309 @@
+<template>
+  <div>
+    <highcharts :constructor-type="'chart'" :options="chartOptions" :scalesdisplay="false" :bind="true"></highcharts>
+  </div>
+</template>
+<script type="text/javascript">
+import Common from "@/assets/js/common.js";
+import moment from "moment";
+import Highcharts from "highcharts";
+
+export default {
+  name: "SettlementChart",
+  data() {
+    return {
+      mylabels: [],
+      mydatasets: [
+        {
+          //지출     // label: "My First dataset",
+          backgroundColor: "#e52638",
+          borderColor: "#e52638",
+          borderWidth: 1,
+          data: []
+        },
+        {
+          //수입
+          backgroundColor: "#62c1d0",
+          borderColor: "#62c1d0",
+          borderWidth: 2,
+          data: []
+        }
+      ],
+      options: {
+        legend: {
+          display: false
+        },
+        events: ["click"]
+      },
+      rangeDate: [], //차트에 뿌려지는 label 날짜값
+
+      /** high chart */
+      title: "",
+      // points: [10, 0, 8, 2, 6, 4, 5, 5],
+      chartType: "column",
+      seriesColor: "#62c1d0",
+      colorInputIsSupported: null,
+      chartOptions: {
+        chart: {
+          type: "column"
+        },
+        title: {
+          text: ""
+        },
+        xAxis: {
+          categories: []
+        },
+        yAxis: {
+          // min: 0,
+          title: {
+            text: ""
+          },
+          labels: {
+            formatter: function() {
+              this.value = Highcharts.numberFormat(this.value, 0);
+              return (
+                this.value
+                  .toString()
+                  .substring(0, this.value.toString().length - 5) + "만원"
+              );
+            }
+          },
+          stackLabels: {
+            enabled: true,
+            style: {
+              // fontWeight: "bold",
+              // color: (Highcharts.theme && Highcharts.theme.textColor) || "gray"
+            }
+          }
+        },
+        scrollbar: {
+          enabled: true
+        },
+        legend: {
+          enabled: false
+        },
+        events: ["click"],
+        series: [
+          {
+            data: [],
+            color: "#e52638"
+          },
+          {
+            data: [],
+            color: "#62c1d0"
+          }
+        ]
+      }
+    };
+  },
+  props: {
+    chartList: {
+      type: Array,
+      required: true
+    },
+    consumeForm: {
+      type: Object,
+      required: true
+    },
+    dt_from: {
+      type: Date,
+      required: true
+    },
+    dt_to: {
+      type: Date,
+      required: true
+    },
+    dataPeriod: {
+      type: String,
+      required: true
+    }
+  },
+  watch: {
+    chartList: function() {
+      // console.log("watched");
+      this.drawChart();
+    }
+  },
+  beforeCreate() {
+    this.$store.state.header.type = "sub";
+    this.$store.state.title = "수입·지출 보고서";
+  },
+  created() {
+    this.drawChart();
+  },
+  beforeMount() {},
+  mounted() {
+    //chart 클릭시 이벤트 발생하는 부분
+  },
+  beforeUpdate() {},
+  updated() {},
+  beforeDestroy() {},
+  destroyed() {},
+  methods: {
+    chgLabel: function(value) {
+      return (
+        value.toString().substring(0, value.toString().length - 4) + "만원"
+      );
+    },
+    /**
+     * 차트 그릴때,
+     * 1. 현재 type, dt_from , dt_to 날짜 가져옴
+     * 2. 라벨값 for문 돌려서 입력
+     * 3. 라벨값과 서버에서 가져온 데이터값이 같으면 dataList에 서버에서 가져온 값 push, 같지 않으면 빈값 push
+     * 4. rangeList는 각 날짜범위 : YYYYMMDD
+     * 4. dataList1 : 지출, dataList2 : 수입
+     * 5. year 일땐, 달별로 sum
+     * 6. mon 일땐, 월요일 기준으로 주별로
+     * 7. day 일땐, 일별로 chart를 그린다
+     */
+    drawChart: function() {
+      // console.log("drawchart!");
+      var _chartList = this.chartList;
+      var _dataList1 = [];
+      var _dataList2 = [];
+      this.mylabels = [];
+      this.rangeDate = [];
+
+      //연 클릭시
+      if (this.dataPeriod == "yr") {
+        var diffMon = "";
+        if (moment(this.dt_to, "DD") >= moment(this.dt_from, "DD")) {
+          diffMon = moment(this.dt_to, "YYYYMM").diff(this.dt_from, "month");
+        } else {
+          diffMon =
+            moment(this.dt_to, "YYYYMM").diff(this.dt_from, "month") + 1;
+        }
+        for (var k = 0; k <= diffMon; k++) {
+          this.rangeDate.push(
+            moment(this.dt_from)
+              .add(k, "month")
+              .format("YYYYMM")
+          );
+          this.mylabels.push(
+            moment(this.dt_from)
+              .add(k, "month")
+              .format("MM[월]")
+          );
+          for (var i in _chartList) {
+            if (this.rangeDate[k] == _chartList[i].dt_trd.substring(0, 6)) {
+              if (_chartList[i].type_in_out == "02") {
+                _dataList1.push(_chartList[i].amt_in_out);
+              } else {
+                _dataList2.push(_chartList[i].amt_in_out);
+              }
+            }
+          } //for
+          if (k + 1 != _dataList1.length) {
+            _dataList1.push("");
+          }
+          if (k + 1 != _dataList2.length) {
+            _dataList2.push("");
+          }
+        } //for
+        // }
+      } else if (this.dataPeriod == "mon") {
+        //월 클릭시
+        // console.log(moment(moment(this.dt_from).weekday(1)).diff(moment(this.dt_to).weekday(1), "days"));
+        // console.log(Math.abs(moment(moment(this.dt_from).weekday(1)).diff(moment(this.dt_to).weekday(1), "days")) + 2);
+        var range = Math.ceil(
+          (Math.abs(
+            moment(moment(this.dt_from).weekday(1)).diff(
+              moment(this.dt_to).weekday(1),
+              "days"
+            )
+          ) +
+            2) /
+            7
+        ); //기간
+        // var date = [];
+        for (var k = 0; k < range; k++) {
+          var dtFrom_Monday = moment(this.dt_from).weekday(1); //월요일계산
+          // console.log(dtFrom_Monday.add((7*k), "days").format("YYYYMMDD"));
+          // console.log(dtFrom_Monday.format('YYYYMMDD'));
+          this.rangeDate.push(
+            dtFrom_Monday.add(7 * k, "days").format("YYYYMMDD")
+          );
+          this.mylabels.push(dtFrom_Monday.format("MM[월]DD[일]"));
+          for (var j in _chartList) {
+            if (this.rangeDate[k] == _chartList[j].dt_trd) {
+              if (_chartList[j].type_in_out == "02") {
+                _dataList1.push(_chartList[j].amt_in_out);
+              } else {
+                _dataList2.push(_chartList[j].amt_in_out);
+              }
+            } else {
+              continue;
+            }
+          } //for
+
+          if (k + 1 != _dataList1.length) {
+            _dataList1.push("");
+          }
+          if (k + 1 != _dataList2.length) {
+            _dataList2.push("");
+          }
+        } //for
+      } else {
+        //주 클릭시
+        var range = Math.abs(moment(this.dt_to).diff(this.dt_from, "days")) + 2; //기간
+        for (var k = 0; k < range; k++) {
+          this.rangeDate.push(
+            moment(this.dt_from)
+              .add(k, "days")
+              .format("YYYYMMDD")
+          );
+          var day = moment(this.dt_from)
+            .add(k, "days")
+            .format("DD")
+            .toString();
+          if (day.startsWith("0")) {
+            day = day.substring(1);
+          }
+          this.mylabels.push(day + "일");
+
+          for (var j in _chartList) {
+            if (this.rangeDate[k] == _chartList[j].dt_trd) {
+              if (_chartList[j].type_in_out == "02") {
+                _dataList1.push(_chartList[j].amt_in_out);
+              } else {
+                _dataList2.push(_chartList[j].amt_in_out);
+              }
+            } else {
+              continue;
+            }
+          } //for
+
+          if (k + 1 != _dataList1.length) {
+            _dataList1.push("");
+          }
+          if (k + 1 != _dataList2.length) {
+            _dataList2.push("");
+          }
+        } //for
+      } //else
+
+      this.$set(this.mydatasets[0], "data", _dataList1);
+      this.$set(this.mydatasets[1], "data", _dataList2);
+
+      for (var i in _dataList1) {
+        _dataList1[i] = Number(_dataList1[i]);
+        _dataList2[i] = Number(_dataList2[i]);
+      }
+      this.$set(this.chartOptions.series[0], "data", _dataList1);
+      this.$set(this.chartOptions.series[1], "data", _dataList2);
+      this.$set(this.chartOptions.xAxis, "categories", this.mylabels);
+    },
+    _clickChart: function(event, el) {
+      //아무것도 없는 곳을 클릭하면 undefined 떨어짐
+      if (el[0] != undefined) {
+        var index = el[0]._index;
+        var label = el[0]._model.label;
+        this.$parent.clickChart(this.rangeDate[index], this.dataPeriod, el);
+      }
+    },
+    numberWithCommas: function(x) {
+      return x.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+  }
+};
+</script>

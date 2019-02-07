@@ -1,26 +1,28 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="inout-list">
       <ul class="flex noBD">
-        <li class="symbol"><img src="../../assets/images/common/bu_kb.png" alt="" />국민은행</li>
+        <li class="symbol"><img src="../../assets/images/common/bu_kb.png" alt="" />{{outVO.mbrNm}} / {{outVO.crdtIttNm}}</li>
         <li class="blue">가능</li>
+        <!-- <li class="blue">불가능</li>-->
       </ul>
-      <p class="name">하이스탁론</p>
+      <p class="name">{{outVO.prdtNm}}</p>
       <ul class="flex">
         <li>거래시각<br>
           금리<br>
           기간
         </li>
-        <li>2.7% ( 41만원)<br>
-          4,000 만원<br>
-          6개월<br>
+        <li>{{outVO.loanIntrstRt}}%<br>
+          {{outVO.loanMaxLmtAmt/10000}} 만원<br>
+          {{outVO.loanTerm}}개월<br>
         </li>
       </ul>
       <ul class="flex">
         <li>
           <p class="title">상환방식</p>
         </li>
-        <li>만기일시상환</li>
+        <li v-if="outVO.rfundMthd=='0'">만기일시</li>
+        <li v-else>만기</li>
       </ul>
       <ul class="flex">
         <li>
@@ -31,17 +33,17 @@
           만기연장비율
         </li>
         <li><br>
-          100 %<br>
-          125 %<br>
-          140 %<br>
-          127 %
+          {{outVO.isuInvstLmt}} %<br>
+          {{outVO.lscutSetRt}} %<br>
+          {{outVO.mnyOutAblRt}} %<br>
+          {{outVO.expExtndAblRt}} %
         </li>
       </ul>
       <ul class="flex">
         <li>
           <p class="title">연체이율</p>
         </li>
-        <li>취급금리 + 3%</li>
+        <li>취급금리 + {{outVO.ovdIntrstRt}}%</li>
       </ul>
     </div>
 
@@ -52,7 +54,13 @@
 export default {
   name: "GoodStock3",
   data() {
-    return {};
+    return {
+      inVO: null,
+      outVO: null,
+      errorMessage: null,
+      inFieldJson: null,
+      seen: false
+    };
   },
   components: {},
   computed: {},
@@ -60,7 +68,27 @@ export default {
     this.$store.state.header.type = "sub";
     this.$store.state.title = "신청 가능한 상품";
   },
-  created() {},
+  created() {
+    var _this = this;
+    var frm = new FormData();
+    frm.append("mbrCd", this.$route.query.mbrCd);
+    frm.append("crdtIttCd", this.$route.query.crdtIttCd);
+    frm.append("prdtCd", this.$route.query.prdtCd);
+
+    this.$http
+      .post("/m/loanstock/loanStock013View.json", frm)
+      .then(response => {
+        debugger;
+        _this.inVO = response.data.inVO;
+        _this.outVO = response.data.outVO;
+        _this.errorMessage = response.data.errorMessage;
+        _this.inFieldJson = response.data.inFieldJson;
+        if (_this.errorMessage != "") {
+          _this.$toast.center(_this.errorMessage);
+        }
+        _this.seen = true;
+      });
+  },
   beforeMount() {},
   mounted() {},
   beforeUpdate() {},

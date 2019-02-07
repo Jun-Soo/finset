@@ -33,10 +33,10 @@
       </div>
       <!-- <div class="banner-wrap" :style="{'display-none':curTab == 'loanStock'}" v-if="curTab == 'loanStock'"> -->
       <div v-show="curTab == 'loanStock'">
-        <div class="banner-wrap ">
+        <div class="banner-wrap">
           <div class="item">
             <a>
-              <div class="banner">
+              <div class="banner" @click="$router.push('/goods/stock1')">
                 <div class="left">
                   <p class="key">숨겨진 증권계좌를 한곳에</p>
                   <p class="value">클릭만으로 흩어져 있는<br>증권 계좌를 확인해 보세요</p>
@@ -284,6 +284,7 @@ export default {
         this.urlPath = "/m/loanhomemortgage/";
       } else if ("loanStock" == this.curTab) {
         //do nothing
+        //todo : Open API 로 증권계좌 여부 조회
       }
       //this.listGoods();
       Common.pagination(this.$refs.form.listBankGoods);

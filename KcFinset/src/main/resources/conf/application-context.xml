@@ -21,6 +21,7 @@
 				<value>classpath:prop/webservice.properties</value>
 				<value>classpath:prop/service.properties</value>
 				<value>classpath:prop/everspin.properties</value>
+				<value>classpath:prop/apiconfig.properties</value>
 			</list>
 		</property>
 	</bean>	

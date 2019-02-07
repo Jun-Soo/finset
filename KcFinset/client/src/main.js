@@ -16,6 +16,11 @@ import store from './comm/store'
 import toast from 'vue2-toast'
 import VueCarousel from 'vue-carousel'
 import VueModal from './components/plugins/modal/index'
+
+//import HighchartsVue from 'highcharts-vue'
+//import Highcharts from 'highcharts'
+//import exportingInit from 'highcharts/modules/exporting'
+
 // import MultiSelect from './components/plugins/vue-multiselect/src/index'
 import multiselect from '@/components/plugins/multiselect/MultiSelect.vue'
 import SlimDialog from 'v-slim-dialog'
@@ -61,6 +66,10 @@ Vue.use(toast, {
 })
 Vue.use(VueCarousel)
 Vue.use(VueModal)
+
+//Vue.use(HighchartsVue)
+//exportingInit(Highcharts)
+
 Vue.use(window.VueCharts)
 Vue.use(SlimDialog)
 Vue.component('multiselect', multiselect)

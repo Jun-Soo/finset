@@ -188,14 +188,20 @@ public class PersonController {
 	@RequestMapping("/changePwd.json")
 	public String changePwd(
 			HttpSession session,
-			PersonVO personVO,
+			HttpServletRequest request,
 			Model model) {
 
 		String kcmCertValue = (String) session.getAttribute("cert_result_value");
+		String pass_person 	= request.getParameter("pass_person");
+		
 //		if((String)session.getAttribute("no_person") != null ){
-			String no_person = (String) session.getAttribute("no_person");
-			personVO.setNo_person(no_person);
+//			String no_person = (String) session.getAttribute("no_person");
+//			personVO.setNo_person(no_person);
 //		}
+		PersonVO personVO = new PersonVO();
+		
+		String no_person = (String) session.getAttribute("no_person");
+		personVO.setNo_person(no_person);
 		logger.debug("★★★★★ cert_result_value : " + kcmCertValue);
 
 		if(!Constant.SUCCESS.equals(kcmCertValue)) {
@@ -205,10 +211,12 @@ public class PersonController {
 			session.removeAttribute("cert_result_value");
 			return "jsonView";
 		} else {
-			String encPass = personVO.getPass_person();
 			// 비밀번호 길이가 4자리가 넘을 경우 암호화 된 데이터여서 복호화 처리
-			if(encPass.length() > 4)	{
-				personVO.setPass_person(secureManager.getDecodedPassword(encPass));
+			if(pass_person.length() > 4)	{
+				personVO.setPass_person(secureManager.getDecodedPassword(pass_person));
+			}
+			else	{
+				personVO.setPass_person(pass_person);
 			}
 			logger.info("핀 코드 업데이트 : " + personVO.getPass_person());
 			ReturnClass returnClass = personManager.modifyPassPerson(personVO);

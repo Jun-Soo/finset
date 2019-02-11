@@ -521,12 +521,12 @@ public class LoginController {
 	 * @return
 	 */
 	@RequestMapping("/loginChkCode.json")
-	public String fingerChkCode(HttpSession session, Model model, HttpServletRequest request, PersonVO personVO) {
-		String pass_person 	= "";
-
-		pass_person = personVO.getPass_person();
-
+	public String fingerChkCode(HttpSession session, Model model, HttpServletRequest request) {
 		String no_person = (String) session.getAttribute("no_person");
+		
+		String pass_person 	= request.getParameter("pass_person");
+			
+		PersonVO personVO = new PersonVO();
 		personVO.setNo_person(no_person);
 		
 		// 비밀번호 길이가 4자리가 넘을 경우 암호화 된 데이터여서 복호화 처리

@@ -50,6 +50,7 @@ export default {
   methods: {
     fnShow: function() {
       setTimeout(function() {
+        document.scrollingElement.scrollTop = 0; //스크롤 상단고정
         $("#progress").remove();
       }, 3000);
     },

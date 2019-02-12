@@ -5,6 +5,7 @@ import java.security.InvalidKeyException;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
  
+
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
@@ -12,8 +13,9 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
  
+
 import org.apache.commons.codec.binary.Base64;
- 
+
 /*
 	Copyright 
 	
@@ -29,7 +31,6 @@ import org.apache.commons.codec.binary.Base64;
 	See the License for the specific language governing permissions and
 	limitations under the License.
 */
- 
 public class AES256Util {
     private String iv;
     private Key keySpec;
@@ -78,7 +79,7 @@ public class AES256Util {
         c.init(Cipher.DECRYPT_MODE, keySpec, new IvParameterSpec(iv.getBytes("UTF-8")));
  
         byte[] byteStr = Base64.decodeBase64(str.getBytes());
- 
+        
         return new String(c.doFinal(byteStr),"UTF-8");
     }
  

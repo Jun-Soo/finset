@@ -4087,7 +4087,7 @@ public class StringUtil {
 	 * @return
 	 */
 	public static String getByte2String(byte[] byteString) {
-		logger.info("getByte2String ======= " + new String(byteString));
+//		logger.info("getByte2String ======= " + new String(byteString));
 		return new String(byteString);
 	}
 

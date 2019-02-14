@@ -12,8 +12,9 @@
 	<global-method-security secured-annotations="enabled" jsr250-annotations="enabled"/>
 	
 	<!-- AUTHORITY 가 ADMIN 일 경우 접속가능한 IP 정의  -->
-	<beans:bean id="loginManager" class="com.koscom.login.service.LoginManager">
-	</beans:bean>
+	<beans:bean id="loginManager" class="com.koscom.login.service.LoginManager" />
+	<beans:bean id="customAuthenticationProvider" class="com.koscom.login.service.CustomAuthenticationProvider" />
+
 	<!-- 
 	<beans:bean id="securityReqFilter" class="com.koscom.util.SecurityReqFilter">
 	</beans:bean>
@@ -59,7 +60,7 @@
 					/>
 		<!-- 중복로그인 -->
 		<session-management>
-			<concurrency-control max-sessions="1" />
+			<concurrency-control max-sessions="1" error-if-maximum-exceeded="true" />
 		</session-management>
 		<logout invalidate-session="true" />
 		
@@ -77,9 +78,12 @@
 	<beans:bean id="passwordEncoder" class="com.koscom.util.DBPasswordEncoder"/>
 	
 	<authentication-manager alias="authenticationManager_Client">
+		<authentication-provider ref="customAuthenticationProvider"></authentication-provider>
+		<!-- 
 		<authentication-provider user-service-ref="loginManager">
 			<password-encoder ref="passwordEncoder"/>
-		</authentication-provider>
+		</authentication-provider> 
+		-->
 	</authentication-manager>	
 	
 </beans:beans>

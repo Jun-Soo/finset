@@ -1,11 +1,8 @@
 package com.koscom.util;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.koscom.login.LoginController;
 import com.koscom.login.service.SecureManager;
 import com.koscom.person.service.PersonManager;
 

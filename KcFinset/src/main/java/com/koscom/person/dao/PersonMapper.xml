@@ -61,7 +61,18 @@
 
 	<select id="getPersonInfoHp" parameterType="String" resultType="com.koscom.person.model.PersonVO">
 		/* com.koscom.person.dao.PersonMapper.getPersonInfoHp */
-		SELECT A.*, B.DT_BASIC, B.YN_INSTALLMENT
+		SELECT A.NO_PERSON
+			, A.NM_PERSON                                  AS nm_person       /* 회원명             */
+            , A.PASS_PERSON                                AS pass_person     /* 패스워드           */
+            , A.YN_USE                                     AS yn_use          /* 사용여부           */
+            , A.YN_FINGERPRINT                             AS yn_fingerprint  /* 지문사용여부       */
+            , A.CD_PUSH                                    AS cd_push         /* push msg여부       */
+            , A.YN_PUSH                                    AS yn_push         /* 푸쉬메세지사용여부 */
+            , A.YN_LOGOUT                                  AS yn_logout       /* 로그아웃여부       */
+            , NVL(A.SEQ_LOGIN, '0') 	                   AS seq_login       /* 로그인번호       */
+            , NVL(A.CNT_FAIL_PWD, '0')                     AS cnt_fail_pwd	  /* 비밀번호 실패건수  */
+            , NVL(A.CNT_FAIL_FINGER, '0')                  AS cnt_fail_finger /* 지문인증 실패건수  */
+			, B.DT_BASIC, B.YN_INSTALLMENT
 		  FROM PERSON_INFO A LEFT OUTER JOIN PERSON_SET_INFO B ON
 		       A.NO_PERSON = B.NO_PERSON
 		 WHERE HP = #{hp, jdbcType=VARCHAR}
@@ -93,7 +104,7 @@
                ,EMAIL                                      AS email           /* 이메일             */
                ,NICK                                       AS nick            /* 별명               */
                ,YN_LOGOUT                                  AS yn_logout       /* 로그아웃여부       */
-               ,SEQ_LOGIN		                           AS seq_login       /* 로그인번호       */
+               ,NVL(SEQ_LOGIN, '0') 	                   AS seq_login       /* 로그인번호       */
                ,PATH_FILE1                                 AS path_file1      /* 파일패스           */
                ,NM_FILE1                                   AS nm_file1        /* 파일명             */
                ,STOCK_TOKEN                                AS stock_token     /* 증권토큰           */
@@ -131,7 +142,7 @@
         </if>
         WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
     </update>
-
+    
     <select id="getPwdDB" parameterType="java.lang.String" resultType="java.lang.String">
     	/* com.koscom.person.dao.PersonMapper.getPwdDB */
 		SELECT XX1.ENC_VARCHAR2_INS(#{pwd, jdbcType=VARCHAR}, '11', 'FS_SHA', 'PERSON_INFO', 'PASS_PERSON') FROM DUAL
@@ -186,6 +197,13 @@
         UPDATE PERSON_INFO
            SET KCB_ID = #{kcbID, jdbcType=VARCHAR}
          WHERE NO_PERSON = #{noPerson, jdbcType=VARCHAR}
+    </update>
+    
+     <update id="modifySeqLogin" parameterType="java.lang.String">
+    	/* com.koscom.person.dao.PersonMapper.modifySeqLogin */
+        UPDATE PERSON_INFO
+        SET	  SEQ_LOGIN = (SELECT NVL(SEQ_LOGIN, 0)+1 FROM PERSON_INFO WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR})
+        WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
     </update>
     
     <insert id="insertPersonLoginHist">

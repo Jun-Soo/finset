@@ -25,7 +25,8 @@ const store = new Vuex.Store({
       dt_basic: '',
       isEventPush: false,
       authToken: '',
-      dtConsume: null
+      dtConsume: null,
+      seq_login: 0
     },
     scListParam: {
       query1: undefined,
@@ -59,6 +60,7 @@ const store = new Vuex.Store({
     INIT (state, data) {
       state.user.noPerson = data.no_person
       state.user.nmPerson = data.nm_person
+      state.user.seq_login = data.seq_login
       state.user.cntFailPwd = Number(data.cnt_fail_pwd)
       state.user.cntFailFinger = Number(data.cnt_fail_finger)
       state.user.ynFingerprint = Common.nvl(data.yn_fingerprint, 'N')

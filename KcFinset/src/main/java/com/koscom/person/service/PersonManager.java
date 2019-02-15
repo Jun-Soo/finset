@@ -87,6 +87,12 @@ public interface PersonManager {
 	void modifyKcbId(KcbCreditInfoVO info);
 	
 	/**
+	 * login sequence 업데이트
+	 * @param no_person
+	 */
+	void modifySeqLogin(String no_person);
+	
+	/**
 	 * 모바일 접속 이력
 	 * @param PersonLoginHistInfo personLoginHist
 	 */

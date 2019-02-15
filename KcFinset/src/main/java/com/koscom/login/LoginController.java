@@ -28,7 +28,6 @@ import com.koscom.env.service.CodeManager;
 import com.koscom.login.service.SecureManager;
 import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
-import com.koscom.util.AES256Util;
 import com.koscom.util.Constant;
 import com.koscom.util.LogUtil;
 import com.koscom.util.ReturnClass;
@@ -526,25 +525,6 @@ public class LoginController {
 		String no_person = (String) session.getAttribute("no_person");
 		
 		String pass_person 	= request.getParameter("pass_person");
-		
-		// AES 복호화 테스트
-//   		String hp = (String) session.getAttribute("hp");
-//   		logger.info("hp : " + hp);
-//   		String decValue = null;
-//   		  		
-//   		String enc_test 	= request.getParameter("enc_test");
-//		logger.info("enc_test : " + enc_test);
-//   		try	{
-//   			AES256Util aes256 = new AES256Util(no_person+"."+hp);
-//   			decValue = aes256.aesDecode(enc_test);
-//   		}
-//   		catch (Exception e) { 
-//   			logger.error("복호화 처리 에러 : " + e.getMessage());
-//    		e.printStackTrace();
-//			model.addAttribute("result", "");
-//   	   		return "jsonView";
-//   		}
-//   		logger.info("decValue : " + decValue);
 		
 		PersonVO personVO = new PersonVO();
 		personVO.setNo_person(no_person);

@@ -77,7 +77,7 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 	
 	private static final Logger logger = LoggerFactory.getLogger(LoginManager.class);
 
-	@Override
+	
 	public UserDetails loadUserByUsername(String no_person) throws UsernameNotFoundException {
 
 		logger.debug("loadUserByUsername no_person :" + no_person);
@@ -85,6 +85,7 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 		if(personVO == null) {
 			throw new UsernameNotFoundException("Wrong username");
 		}
+		
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         authorities.add(new SimpleGrantedAuthority("ROLE_USER"));
 
@@ -149,7 +150,8 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 			logger.debug("authority.toString():" + authority.toString());
 			authorities = authority.toString();
 		}
-
+		
+		
 		//사용자 정보 조회
 		PersonVO personVO = personManager.getPersonInfo(authentication.getName());
 
@@ -215,6 +217,9 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 				out.flush();
 				out.close();
 			}
+			
+			// 로그인 성공시 로그인 시퀀스 증가
+			personManager.modifySeqLogin(personVO.getNo_person());
 		}
 	}
 

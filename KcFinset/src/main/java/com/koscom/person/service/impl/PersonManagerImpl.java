@@ -137,6 +137,11 @@ public class PersonManagerImpl implements PersonManager {
 	}
 	
 	@Override
+	public void modifySeqLogin(String no_person) {
+		personMapper.modifySeqLogin(no_person);
+	}
+	
+	@Override
 	public void insertPersonLoginHist(PersonLoginHistInfo personLoginHist) {
 		personMapper.insertPersonLoginHist(personLoginHist);
 	}

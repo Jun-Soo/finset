@@ -76,6 +76,9 @@ public class BaseController {
 		if(personVO != null) {
 			session.setAttribute("no_person", personVO.getNo_person());
 			session.setAttribute("hp", personForm.getHp());
+			
+			
+			logger.debug("personVO.getSeq_login():::" + personVO.getSeq_login());
 			System.out.println(request.isUserInRole("ROLE_USER"));
 			
 			//사용여부 N:회원가입, Y:로그인화면
@@ -127,7 +130,8 @@ public class BaseController {
 			model.addAttribute("cnt_fail_pwd", 		personVO.getCnt_fail_pwd());
 			model.addAttribute("cnt_fail_finger", 	personVO.getCnt_fail_finger());
 			model.addAttribute("dt_basic", 			personVO.getDt_basic());
-			
+			model.addAttribute("seq_login",			personVO.getSeq_login().toString());
+						
 			logger.debug(request.getHeader("user-agent"));
 			logger.debug(personVO.toString());
 			logger.debug(request.getRemoteAddr());

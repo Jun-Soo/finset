@@ -279,6 +279,30 @@ export default {
       // var formData = new FormData();
       // formData.append("j_username", _this.username);
       // formData.append("j_password", _this.password);
+
+      // seq_login AES256 암호화 후 암호에 추가
+      var CryptoJS = require("crypto-js");
+      var encKey =
+        _this.$store.state.user.noPerson + "." + _this.$store.state.user.hp;
+      var iv = encKey.substring(0, 16);
+      iv = CryptoJS.enc.Utf8.parse(iv); // todo hello
+      encKey = CryptoJS.enc.Utf8.parse(encKey.substring(0, 16)); // todo hello
+      console.log("login seq : ", _this.$store.state.user.seq_login);
+      var ciphertext = CryptoJS.AES.encrypt(
+        _this.$store.state.user.seq_login,
+        iv,
+        {
+          mode: CryptoJS.mode.CBC,
+          padding: CryptoJS.pad.Pkcs7,
+          iv: iv
+        }
+      ).ciphertext.toString(CryptoJS.enc.Base64); // todo hello
+      console.log("login seq enc : ", ciphertext);
+
+      console.log("password : ", _this.password);
+      _this.password = ciphertext + _this.password;
+      console.log("password : ", _this.password);
+
       var querystring = require("querystring");
       var data = querystring.stringify({
         j_username: _this.username,
@@ -453,21 +477,6 @@ export default {
 
       var formData = new FormData();
       formData.append("pass_person", _this.password);
-
-      // AES256 테스트 소스
-      // var CryptoJS = require("crypto-js");
-      // var encKey =
-      //   _this.$store.state.user.noPerson + "." + _this.$store.state.user.hp;
-      // var iv = encKey.substring(0, 16);
-      // iv = CryptoJS.enc.Utf8.parse(iv); // todo hello
-      // encKey = CryptoJS.enc.Utf8.parse(encKey.substring(0, 16)); // todo hello
-      // var ciphertext = CryptoJS.AES.encrypt("my message", iv, {
-      //   mode: CryptoJS.mode.CBC,
-      //   padding: CryptoJS.pad.Pkcs7,
-      //   iv: iv
-      // }).ciphertext.toString(CryptoJS.enc.Base64); // todo hello
-
-      // formData.append("enc_test", ciphertext);
 
       this.$http.post("/m/login/loginChkCode.json", formData).then(response => {
         console.log("passCheck :" + response.data.result);

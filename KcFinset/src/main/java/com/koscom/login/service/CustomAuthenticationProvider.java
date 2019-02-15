@@ -15,7 +15,10 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
+import com.koscom.person.model.PersonVO;
 import com.koscom.person.service.PersonManager;
+
+import com.koscom.util.AES256Util;
 
 @Component
 public class CustomAuthenticationProvider implements AuthenticationProvider {
@@ -36,6 +39,31 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	
 		String username = authentication.getName();
 		String password = (String) authentication.getCredentials();
+		String seq_login = password.substring(0, 24);
+		password = password.substring(24);
+		logger.info("seq_login   : " + seq_login);
+		logger.info("password    : " + password);
+		
+		PersonVO personVO = personManager.getPersonInfo(username);
+		
+		// AES 복호화 
+		String hp = personVO.getHp();
+		logger.info("hp : " + hp);
+		String decValue = null;
+		try	{
+			AES256Util aes256 = new AES256Util(username+"."+hp);
+			decValue = aes256.aesDecode(seq_login);
+		}
+		catch (Exception e) { 
+			logger.error("복호화 처리 에러 : " + e.getMessage());
+			e.printStackTrace();
+			throw new BadCredentialsException("복호화 처리 에러");
+		}
+		
+		if(!decValue.equals(personVO.getSeq_login().toString()))	{
+			logger.error("로그인 시퀀스 에러  [ " + decValue + " : " + personVO.getSeq_login() + " ]");
+			throw new BadCredentialsException("로그인 시퀀스 에러");
+		}
 		
 		User user;
 		Collection<? extends GrantedAuthority> authorities;

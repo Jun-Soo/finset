@@ -93,7 +93,7 @@
                ,EMAIL                                      AS email           /* 이메일             */
                ,NICK                                       AS nick            /* 별명               */
                ,YN_LOGOUT                                  AS yn_logout       /* 로그아웃여부       */
-               ,SEQ_NEW_DEBT_REG                           AS seq_new_debt_reg/* 부채등록번호       */
+               ,SEQ_LOGIN		                           AS seq_login       /* 로그인번호       */
                ,PATH_FILE1                                 AS path_file1      /* 파일패스           */
                ,NM_FILE1                                   AS nm_file1        /* 파일명             */
                ,STOCK_TOKEN                                AS stock_token     /* 증권토큰           */

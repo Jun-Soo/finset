@@ -33,7 +33,7 @@ public class PersonInfo implements Serializable {
 	protected String email;			
 	protected String nick;			
 	protected String yn_logout;			
-	protected String seq_new_debt_reg;	
+	protected String seq_login;	
 	protected String path_file1;			
 	protected String nm_file1;			
 	protected String stock_token;			
@@ -313,11 +313,11 @@ public class PersonInfo implements Serializable {
 	public void setYn_logout(String yn_logout) {
 		this.yn_logout = yn_logout;
 	}
-	public String getSeq_new_debt_reg() {
-		return seq_new_debt_reg;
+	public String getSeq_login() {
+		return seq_login;
 	}
-	public void setSeq_new_debt_reg(String seq_new_debt_reg) {
-		this.seq_new_debt_reg = seq_new_debt_reg;
+	public void setSeq_login(String seq_login) {
+		this.seq_login = seq_login;
 	}
 	public String getPath_file1() {
 		return path_file1;

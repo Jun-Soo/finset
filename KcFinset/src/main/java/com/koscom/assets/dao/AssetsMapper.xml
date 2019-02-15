@@ -1373,20 +1373,20 @@
 										AND ACCNO = #{no_account, jdbcType=VARCHAR}
 									</if>
 							UNION ALL SELECT
-									NO_PERSON,
-									CD_FC,
+									SE.NO_PERSON,
+									SE.CD_FC,
 									'shr' AS ACC_TYPE,
-									ISINCODE AS ACC_CODE,
-									SUBSTR(ISINCODE, 4, 6) AS ACC_NM,
-									VALATTRADE AS VALATTRADE,
-									VALATCUR AS VALATCUR,
-									PROLOSS,
-									EARNINGRATE
+									SE.ISINCODE AS ACC_CODE,
+									( SELECT ISU_KOR_NM FROM MARKET_STOCK WHERE ISINCODE = SE.ISINCODE ) AS ACC_NM,
+									SE.VALATTRADE AS VALATTRADE,
+									SE.VALATCUR AS VALATCUR,
+									SE.PROLOSS,
+									SE.EARNINGRATE
 								FROM
-									STOCK_EQUITYLIST
+									STOCK_EQUITYLIST SE
 								WHERE 1=1
 									<if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_account)">
-										AND ACCNO = #{no_account, jdbcType=VARCHAR}
+										AND SE.ACCNO = #{no_account, jdbcType=VARCHAR}
 									</if>
 							UNION ALL SELECT
 									NO_PERSON,
@@ -1486,20 +1486,20 @@
 								AND ACCNO = #{no_account, jdbcType=VARCHAR}
 							</if>
 					UNION ALL SELECT
-							NO_PERSON,
-							CD_FC,
+							SE.NO_PERSON,
+							SE.CD_FC,
 							'shr' AS ACC_TYPE,
-							ISINCODE AS ACC_CODE,
-							SUBSTR(ISINCODE,4,6) AS ACC_NM,
-							VALATTRADE AS VALATTRADE,
-							VALATCUR AS VALATCUR,
-							PROLOSS,
-							EARNINGRATE
+							SE.ISINCODE AS ACC_CODE,
+							( SELECT ISU_KOR_NM FROM MARKET_STOCK WHERE ISINCODE = SE.ISINCODE ) AS ACC_NM,
+							SE.VALATTRADE AS VALATTRADE,
+							SE.VALATCUR AS VALATCUR,
+							SE.PROLOSS,
+							SE.EARNINGRATE
 						FROM
-							STOCK_EQUITYLIST
+							STOCK_EQUITYLIST SE
 						WHERE 1=1
 							<if test="@com.koscom.util.MybatisUtil@isNotEmpty(no_account)">
-								AND ACCNO = #{no_account, jdbcType=VARCHAR}
+								AND SE.ACCNO = #{no_account, jdbcType=VARCHAR}
 							</if>
 					UNION ALL SELECT
 							NO_PERSON,
@@ -1547,19 +1547,19 @@
     <select id="getAssetsStockShrInfo" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
 		/* com.koscom.assets.dao.AssetsMapper.getAssetsStockShrInfo - 자산관리(증권 - 주식정보) */
         SELECT
-			ISINCODE,
-			SUBSTR( ISINCODE, 4, 6 ) ISINCODE_NM,
-			VALATCUR,
-			PROLOSS,
-			EARNINGRATE,
-			QTY,
-			VALATTRADE,
-			( VALATTRADE / QTY ) AS AVG_VALATTRADE
+			SE.ISINCODE,
+			( SELECT ISU_KOR_NM FROM MARKET_STOCK WHERE ISINCODE = SE.ISINCODE ) ISINCODE_NM,
+			SE.VALATCUR,
+			SE.PROLOSS,
+			SE.EARNINGRATE,
+			SE.QTY,
+			SE.VALATTRADE,
+			( SE.VALATTRADE / SE.QTY ) AS AVG_VALATTRADE
 		FROM
-			STOCK_EQUITYLIST
-		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
-			AND ACCNO = #{no_account, jdbcType=VARCHAR}
-			AND ISINCODE = #{acc_code, jdbcType=VARCHAR}
+			STOCK_EQUITYLIST SE
+		WHERE SE.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND SE.ACCNO = #{no_account, jdbcType=VARCHAR}
+			AND SE.ISINCODE = #{acc_code, jdbcType=VARCHAR}
     </select>
 
     <select id="getAssetsStockFndInfo" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">

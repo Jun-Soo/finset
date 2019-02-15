@@ -101,7 +101,7 @@ export default {
           _this.goToFingerprint();
         });
       }
-      console.log("showLoginKeypad");
+      //console.log("showLoginKeypad");
       this.showLoginKeypad();
     } else {
       if (this.$store.state.user.ynFingerprint == "Y") {
@@ -224,7 +224,7 @@ export default {
     },
     gotoFingerPrint: function() {
       var _this = this;
-      console.log("gotoFingerPrint called");
+      //console.log("gotoFingerPrint called");
       if (
         (Constant.userAgent == "iOS" && Constant.userAppVersion == "1.1.7") ||
         (Constant.userAgent == "Android" && Constant.userAppVersion == "1.1.4")
@@ -271,7 +271,7 @@ export default {
       frm.append("cnt_fail", _this.cntFailPwd);
       this.$http.post("/m/person/modifyPwdFailCnt.json", frm).then(response => {
         var result = response.data;
-        console.log("modifyPwdFailCnt :" + result);
+        //console.log("modifyPwdFailCnt :" + result);
       });
     },
     login: function() {
@@ -287,7 +287,7 @@ export default {
       var iv = encKey.substring(0, 16);
       iv = CryptoJS.enc.Utf8.parse(iv); // todo hello
       encKey = CryptoJS.enc.Utf8.parse(encKey.substring(0, 16)); // todo hello
-      console.log("login seq : ", _this.$store.state.user.seq_login);
+      //console.log("login seq : ", _this.$store.state.user.seq_login);
       var ciphertext = CryptoJS.AES.encrypt(
         _this.$store.state.user.seq_login,
         iv,
@@ -297,11 +297,11 @@ export default {
           iv: iv
         }
       ).ciphertext.toString(CryptoJS.enc.Base64); // todo hello
-      console.log("login seq enc : ", ciphertext);
+      //console.log("login seq enc : ", ciphertext);
 
-      console.log("password : ", _this.password);
+      //console.log("password : ", _this.password);
       _this.password = ciphertext + _this.password;
-      console.log("password : ", _this.password);
+      //console.log("password : ", _this.password);
 
       var querystring = require("querystring");
       var data = querystring.stringify({
@@ -316,7 +316,7 @@ export default {
           }
         })
         .then(response => {
-          console.log("login: " + response.data);
+          //console.log("login: " + response.data);
           if (
             (Constant.userAgent == "iOS" &&
               Constant.userAppVersion == "1.1.7") ||
@@ -352,7 +352,7 @@ export default {
               _this.initClassPass();
               _this.password = "";
               //비밀번호 틀린 누적횟수 증가
-              console.log("login failed : ");
+              //console.log("login failed : ");
               _this.cntFailPwd++;
               _this.$store.state.user.cntFailPwd = _this.cntFailPwd;
               _this.modifyPwdFailCnt("pwd"); //cnt값 db에 저장
@@ -421,7 +421,7 @@ export default {
               _this.initClassPass();
               _this.password = "";
               //비밀번호 틀린 누적횟수 증가
-              console.log("login failed : ");
+              //console.log("login failed : ");
               _this.cntFailPwd++;
               _this.$store.state.user.cntFailPwd = _this.cntFailPwd;
               _this.modifyPwdFailCnt("pwd"); //cnt값 db에 저장
@@ -479,7 +479,7 @@ export default {
       formData.append("pass_person", _this.password);
 
       this.$http.post("/m/login/loginChkCode.json", formData).then(response => {
-        console.log("passCheck :" + response.data.result);
+        //console.log("passCheck :" + response.data.result);
         if (response.data.result == "00") {
           //정상
           if (Constant.userAgent == "iOS") {
@@ -495,7 +495,7 @@ export default {
           _this.initClassPass();
           _this.password = "";
           //비밀번호 틀린 누적횟수 증가
-          console.log("login failed : ");
+          //console.log("login failed : ");
           _this.cntFailPwd += 1;
           if (_this.cntFailPwd < 5) {
             _this.errMsg =

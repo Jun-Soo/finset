@@ -1363,7 +1363,7 @@ public class ScrapManagerImpl implements ScrapManager {
                                                  
                         //해당 고객의 입출금 계좌 중에 Insert된 계좌 상세내역의 날짜/시간 
                         max_date = scrapMapper.getMaxDateSrcTransactionDetail(scrBankApiAnInfo);
-                        
+                        String dt_end = anAllListVO.getDT_END();
                         logger.debug(scrBankApiAnInfo.getAn() + " : max_date   :" + max_date);
                         
                         List<AnAllListHistoryVO> anAllListVOHISTORY = anAllListVO.getHISTORY();
@@ -1387,6 +1387,15 @@ public class ScrapManagerImpl implements ScrapManager {
                             logger.debug("anAllVO.OUT_PAYMENT : "+ anAllListHistoryVO.getOUT_PAYMENT());
                             anAllListHistoryVO.setNO_PERSON(no_person);
                             anAllListHistoryVO.setID_FRT(no_person);
+                            
+                            // 거래 일자가 조회일자를 벗어나는 경우 에러로 간주 다른 no_person 으로 저장
+                            String dt_date = anAllListHistoryVO.getDATE();
+                            if(dt_end != null && dt_end != "" && dt_date != null && dt_date != "" 
+                            		&& Long.parseLong(dt_date) > Long.parseLong(dt_end))	{
+                            	anAllListHistoryVO.setNO_PERSON("SYSTEM_"+no_person);
+                            	scrapMapper.createScrTransactionDetail(anAllListHistoryVO);
+                           	 	continue;
+                            }
                             
                             // 계좌 상세 내역의 마지막 날짜/시간 이후의 데이터만 List에 추가
                             if(max_date != null && max_date != "" && date_time != null && date_time != ""
@@ -1453,6 +1462,7 @@ public class ScrapManagerImpl implements ScrapManager {
                         scrapMapper.createScrReqBank(scrReqBankVO);
 
                         max_date = scrapMapper.getMaxDateScrSvngSvninDetail(scrBankApiAnInfo);
+                        String dt_end = depositAnListVO.getDT_END();
                         logger.debug(scrBankApiAnInfo.getAn() + "   : max_date   :" + max_date);
                         List<DepositAnListHistoryVO> depositAnListVOHISTORY = depositAnListVO.getHISTORY();
                         for (DepositAnListHistoryVO depositAnListHistoryVO : depositAnListVOHISTORY) {
@@ -1475,6 +1485,15 @@ public class ScrapManagerImpl implements ScrapManager {
                             
                             depositAnListHistoryVO.setNO_PERSON(no_person);
                             depositAnListHistoryVO.setID_FRT(no_person);
+                            
+                            // 거래 일자가 조회일자를 벗어나는 경우 에러로 간주 다른 no_person 으로 저장
+                            String dt_date = depositAnListHistoryVO.getDATE();
+                            if(dt_end != null && dt_end != "" && dt_date != null && dt_date != "" 
+                            		&& Long.parseLong(dt_date) > Long.parseLong(dt_end))	{
+                            	depositAnListHistoryVO.setNO_PERSON("SYSTEM_"+no_person);
+                            	scrapMapper.createScrSvngSvninDetail(depositAnListHistoryVO);
+                           	 	continue;
+                            }
                             
                             // 계좌 상세 내역의 마지막 날짜/시간 이후의 데이터만 List에 추가
                             if(max_date != null && max_date != "" && date_time != null && date_time != ""
@@ -1686,6 +1705,8 @@ public class ScrapManagerImpl implements ScrapManager {
     	paramMap.put("no_person", no_person);
     	paramMap.put("cd_fc", cd_fc);
     	max_date = scrapMapper.getMaxDateScrCardApprovalInfo(paramMap);
+    	
+    	String dt_end = userCardOutputVO.getDT_APPROVAL_END();
     	//카드 승인내역 저장
     	List<ScrCardApprovalInfoVO> scrCardApprovalInfoList = userCardOutputVO.getCARD_APPROVAL();
     	if(scrCardApprovalInfoList != null){
@@ -1703,8 +1724,17 @@ public class ScrapManagerImpl implements ScrapManager {
                  if(time == null || time.length() == 0)	{
                 	 scrCardApprovalInfo.setTm_approval("000000");
                  }
-                 String date_time = scrCardApprovalInfo.getDt_approval()+scrCardApprovalInfo.getTm_approval();
                  
+                 // 승인 일자가 조회일자를 벗어나는 경우 에러로 간주 다른 no_person 으로 저장
+                 String dt_approval = scrCardApprovalInfo.getDt_approval();
+                 if(dt_end != null && dt_end != "" && dt_approval != null && dt_approval != "" 
+                	&& Long.parseLong(dt_approval) > Long.parseLong(dt_end))	{
+                	 scrCardApprovalInfo.setNo_person("SYSTEM_"+no_person);
+                	 scrapMapper.createScrCardApprovalInfo(scrCardApprovalInfo);
+                	 continue;
+                 }
+                 
+                 String date_time = scrCardApprovalInfo.getDt_approval()+scrCardApprovalInfo.getTm_approval();
                  // 카드 승인내역 조회 마지막 날짜 이후 마지막 날짜/시간 이후의 데이터만 List에 추가
                  if(max_date != null && max_date != "" && date_time != null && date_time != ""
                  	&& Long.parseLong(max_date) >= Long.parseLong(date_time))	{

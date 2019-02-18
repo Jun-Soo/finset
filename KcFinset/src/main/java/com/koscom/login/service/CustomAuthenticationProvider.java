@@ -75,8 +75,10 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 					"username : " + username + " / password : " + password + " / hash password : " + hashedPassword);
 			logger.info("username : " + user.getUsername() + " / password : " + user.getPassword());
 			
-			if (!hashedPassword.equals(user.getPassword()))
+			if (!hashedPassword.equals(user.getPassword()))	{	
+				logger.error("비밀번호 에러  [ " + hashedPassword + " : " + user.getPassword() + " ]");
 				throw new BadCredentialsException("비밀번호가 일치하지 않습니다.");
+			}
 			
 			authorities = user.getAuthorities();
 			

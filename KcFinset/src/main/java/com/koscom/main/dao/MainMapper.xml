@@ -98,7 +98,7 @@
 		WHERE
 			(DT_EXPIRE IS NULL OR DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
 			AND YN_DELETE = 'N'
-			AND CD_ASSETS_CLASS != '01' <!-- 증권제외 -->
+			AND CD_ASSETS_CLASS != '10' <!-- 증권제외 -->
 			AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
 	</select>
 

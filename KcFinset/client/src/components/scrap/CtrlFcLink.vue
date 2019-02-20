@@ -2,7 +2,7 @@
   <section @click="clickClear" v-if="seen">
     <div class="con-top cert-top">
       <p>공인인증서로<em> 한번에 등록하세요</em></p>
-      <a @click="checkExistCert(false, $event)">바로가기</a>
+      <!-- <a @click="checkExistCert(false, $event)">바로가기</a> -->
     </div>
 
     <div class="tab">

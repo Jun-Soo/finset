@@ -97,7 +97,7 @@ export default {
       this.$http
         .get("/m/debt/getDebtInfoForUpdate.json", {
           params: {
-            no_person: _this.$route.query.no_person,
+            //no_person: _this.$route.query.no_person,
             no_manage_info: _this.$route.query.no_manage_info
           }
         })
@@ -151,7 +151,7 @@ export default {
             "inter_pay_cycle",
             _this.debtVO.inter_pay_cycle.value
           );
-          formData.append("no_person", _this.$route.query.no_person);
+          //formData.append("no_person", _this.$route.query.no_person);
           formData.append("no_manage_info", _this.$route.query.no_manage_info);
           _this.$http
             .post("/m/debt/updateDebtInfo.json", formData)
@@ -159,7 +159,7 @@ export default {
               _this.$router.push({
                 path: "/debt/detail",
                 query: {
-                  no_person: _this.$route.query.no_person,
+                  //no_person: _this.$route.query.no_person,
                   no_manage_info: _this.$route.query.no_manage_info,
                   isMine: true
                 }

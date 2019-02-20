@@ -276,7 +276,8 @@ public class DebtController {
 	 */
 	@RequestMapping("/getDebtInfoForUpdate.json")
 	public String getDebtInfoForUpdate(HttpSession session, Model model, DebtForm debtForm) {
-//		String no_person = (String) session.getAttribute("no_person");
+		String no_person = (String) session.getAttribute("no_person");
+		debtForm.setNo_person(no_person);
 		model.addAttribute("debtVO", debtManager.getDebtInfoForUpdate(debtForm));
 		return "jsonView";
 	}

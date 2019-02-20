@@ -15,44 +15,44 @@
       <div class="body">
         <p class="key">2. 투자 종목 선정 방법을 선택하세요.</p>
         <p>
-          <multiselect :id="'stockSelect'" :title="'종목선정방법'" v-model="stockSelect" :options="stockSelects" :onClose="selectClose" v-validate="'required'" data-vv-name="종목선정방법" />          
+          <multiselect :id="'stockSelect'" :title="'종목선정방법'" v-model="stockSelect" :options="stockSelects" :onClose="selectClose" v-validate="'required'" data-vv-name="종목선정방법" />
         </p>
-      </div>    
+      </div>
       <div class="body">
         <p class="key">3. 감당할 수 있는 최대한의 손실은 얼마인가요?</p>
         <p>
-         <multiselect :id="'riskLimit'" :title="'리스크한계'" v-model="riskLimit" :options="riskLimits" :onClose="selectClose" v-validate="'required'" data-vv-name="리스크한계" />                    
+          <multiselect :id="'riskLimit'" :title="'리스크한계'" v-model="riskLimit" :options="riskLimits" :onClose="selectClose" v-validate="'required'" data-vv-name="리스크한계" />
         </p>
       </div>
       <div class="body">
         <p class="key">4. 보유 주식의 평균 보유 예정 기간은 얼마인가요?</p>
         <p>
-          <multiselect :id="'holdPeriod'" :title="'평균보유예정기간'" v-model="holdPeriod" :options="holdPeriods" :onClose="selectClose" v-validate="'required'" data-vv-name="평균보유예정기간" />                    
+          <multiselect :id="'holdPeriod'" :title="'평균보유예정기간'" v-model="holdPeriod" :options="holdPeriods" :onClose="selectClose" v-validate="'required'" data-vv-name="평균보유예정기간" />
         </p>
-      </div> 
+      </div>
       <div class="body">
         <p class="key">5. 목표 수익률은 얼마인가요? (1종목 당)
-        &nbsp;&nbsp;&nbsp;<input type="text" style="height:20px; width:30%;" v-model="stockProfit" >%
+          &nbsp;&nbsp;&nbsp;<input type="text" style="height:20px; width:30%;" v-model="stockProfit">%
         </p>
-      </div>       
+      </div>
       <div class="body">
         <p class="key">6. 목표 수익률은 얼마인가요? (연간)</p>
         <p>
-          <multiselect :id="'yrProfit'" :title="'연간목표수익률'" v-model="yrProfit" :options="yrProfits" :onClose="selectClose" v-validate="'required'" data-vv-name="연간목표수익률" />                   
+          <multiselect :id="'yrProfit'" :title="'연간목표수익률'" v-model="yrProfit" :options="yrProfits" :onClose="selectClose" v-validate="'required'" data-vv-name="연간목표수익률" />
         </p>
       </div>
       <div class="body">
         <p class="key">7. 주식 투자에 할애하는 시간은 얼마나 되나요? (1주일 당)</p>
         <p>
-          <multiselect :id="'investTime'" :title="'주당투자시간'" v-model="investTime" :options="investTimes" :onClose="selectClose" v-validate="'required'" data-vv-name="주당투자시간" />                    
+          <multiselect :id="'investTime'" :title="'주당투자시간'" v-model="investTime" :options="investTimes" :onClose="selectClose" v-validate="'required'" data-vv-name="주당투자시간" />
         </p>
-      </div>    
+      </div>
       <div class="body">
         <p class="key">8. 손절매를 실행하시나요?</p>
         <p>
-          <multiselect :id="'losscut'" :title="'로스컷'" v-model="losscut" :options="losscuts" :onClose="selectClose" v-validate="'required'" data-vv-name="로스컷" />                    
+          <multiselect :id="'losscut'" :title="'로스컷'" v-model="losscut" :options="losscuts" :onClose="selectClose" v-validate="'required'" data-vv-name="로스컷" />
         </p>
-      </div>                  
+      </div>
     </div>
 
     <div class="btn-wrap float">

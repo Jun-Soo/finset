@@ -2,6 +2,7 @@ package com.koscom.util;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
@@ -177,5 +178,23 @@ public final class SessionUtil {
 
 		return cdResult;
 	}
+	
+	 /**
+	    * 회원번호(공유자여부) 리스트 체크
+	    * @param ssNoPerson
+	    * @param frmNoPersonList
+	    * @param cd_info
+	    * @return
+	    */
+	   public static String chkNoPersonList(String ssNoPerson, List<String> frmNoPersonList, String cdInfo) {
+	      String cdResult = "00";
+	      for(String frmNoPerson: frmNoPersonList) {
+	         cdResult = chkNoPerson(ssNoPerson, frmNoPerson, cdInfo);
+	         if(!"00".equals(cdResult)){
+	            return cdResult;
+	         }
+	      }
+	      return cdResult;
+	   }
 
 }

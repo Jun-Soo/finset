@@ -96,8 +96,8 @@
     </div>
     <div class="my-links">
       <div class="wrap">
-        <a @click="goMenu('raise')">신용등급<br>올리기</a>
         <a @click="$router.push('/credit/smartReport')">신용<br>리포트</a>
+        <a @click="$router.push('/news/main')">금융<br>뉴스</a>
         <a @click="goMenu('share');">정보<br>공유하기</a>
       </div>
     </div>
@@ -165,14 +165,14 @@ export default {
     getMainInfo: function() {
       console.log("getMainInfo start");
       var _this = this;
-      var querystring = require("querystring");
-      var data = querystring.stringify({
-        test: "1111"
-      });
-      var formData = new FormData();
-      formData.append("noPerson", "11111");
+      // var querystring = require("querystring");
+      // var data = querystring.stringify({
+      //   test: "1111"
+      // });
+      // var formData = new FormData();
+      // formData.append("no_person", "P000000409");
       this.$http
-        .post("/m/main/getMainInfo.json", formData)
+        .get("/m/main/getMainInfo.json")
         .then(response => {
           var creditInfo = response.data.creditInfo;
           if (creditInfo != null) {

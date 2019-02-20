@@ -4,7 +4,7 @@ service.profile=REAL
 #### FSS #### 8101
 
 
-#### \uad6c\uae00 PUSH #### 8102 
+#### 구글 PUSH #### 8102 
 push.fcm=http://10.0.31.13:8102/fcm/send
 
 
@@ -23,7 +23,7 @@ token.apiUrl=http://10.0.31.13:8104/auth/oauth/v3/token?grant_type=client_creden
 #Account
 account.apiUrl=http://10.0.31.13:8104/integration/v1/%s/direct
 
-#### KISLINE #### 8105 (\uc784\uc2dc8103)
+#### KISLINE #### 8105 (임시8103)
 kisline.apiUrl=http://10.0.31.13:8103/nice/sb/api/companyOutlineIfo/
 kisline.clientId=554ea570-287f-46a8-a3b6-fc334e792be9
 kisline.clientSecret=kU4jP7cN6uO8oQ5nY6iB0wU2pP8aN6kH3vE7dN6gT5jY4bE8fC
@@ -34,7 +34,7 @@ kcbApi=10.0.31.13:8106
 kcbMaff=10.0.31.13:8107
 
 
-#### \ubcf8\uc778\uc778\uc99d #### 8108
+#### 본인인증 #### 8108
 okName.siteUrl=m.finset.io
 okName.endPointUrl=http://10.0.31.13:8108/KcbWebService/OkNameService
 
@@ -42,20 +42,20 @@ okName.endPointUrl=http://10.0.31.13:8108/KcbWebService/OkNameService
 #### COOCON #### 8109
 #Coocon Scrap
 coocon.apiUrl=http://10.0.31.13:8109/sol/gateway/
-#\ube44\uc81c\ud734 \uc0c1\ud488 Scrap
+#비제휴 상품 Scrap
 coocon.napiUrl=http://10.0.31.13:8109/sol/new_gateway/
 
-#### \uae08\uac10\uc6d0 ####
+#### 금감원 ####
 
 
-#### \uc54c\ub9bc\ud1a1 ####
+#### 알림톡 ####
 
 
 #### KCB TEST START ####
 webservice.cdRegist=09
 webservice.noPerson=P000000001
 webservice.bgn=197311291
-webservice.name=\uc774\ud604\uc911
+webservice.name=이현중
 webservice.di=MC0GCCqGSIb3DQIJAyEA70ZExFokd3gSeDUh8asSa5Z9w2Cmm4GthkkYP2cEADI=
 
 #webservice.menuCode=200

@@ -42,13 +42,27 @@
             </div>
           </a>
         </slide> -->
-        <!-- 준비중 -->
+        <!-- 준비중 
         <slide class="item">
           <a @click="goMenu('assetsAnalysis')">
             <div class="banner">
               <div class="left">
                 <p class="key">자산분석</p>
                 <p class="value">자산별 진단을 받아보세요</p>
+              </div>
+              <div class="right">
+                <img src="../../assets/images/assets/main_banner3.png" alt="" />
+              </div>
+            </div>
+          </a>
+        </slide>
+        -->
+        <slide class="item">
+          <a @click="goMenu('etc')">
+            <div class="banner">
+              <div class="left">
+                <p class="key">자산관리</p>
+                <p class="value">금융 자산 및 기타자산을 관리해보세요.</p>
               </div>
               <div class="right">
                 <img src="../../assets/images/assets/main_banner3.png" alt="" />

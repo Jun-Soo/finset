@@ -165,10 +165,14 @@ export default {
     getMainInfo: function() {
       console.log("getMainInfo start");
       var _this = this;
+      var querystring = require("querystring");
+      var data = querystring.stringify({
+        test: "1111"
+      });
+      var formData = new FormData();
+      formData.append("noPerson", "11111");
       this.$http
-        .get("/m/main/getMainInfo.json", {
-          params: {}
-        })
+        .post("/m/main/getMainInfo.json", formData)
         .then(response => {
           var creditInfo = response.data.creditInfo;
           if (creditInfo != null) {
@@ -208,12 +212,12 @@ export default {
           query: { cd_share: "02" }
         });
       } else if ("raise" == menu) {
-        if (Constant.tester.indexOf(this.$store.state.user.hp) > -1) {
-          this.$router.push("/credit/raiseMain");
-        } else {
-          this.$dialogs.alert("서비스 준비중 입니다.", Constant.options);
-          return false;
-        }
+        // if (Constant.tester.indexOf(this.$store.state.user.hp) > -1) {
+        this.$router.push("/credit/raiseMain");
+        // } else {
+        //   this.$dialogs.alert("서비스 준비중 입니다.", Constant.options);
+        //   return false;
+        // }
       }
     }
   }

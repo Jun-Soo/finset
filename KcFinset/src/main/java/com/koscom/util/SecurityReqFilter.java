@@ -28,13 +28,15 @@ public class SecurityReqFilter extends OncePerRequestFilter {
 		
 		UrlPathHelper urlPathHelper = new UrlPathHelper();
 		String requestUri = urlPathHelper.getRequestUri(request);
-		String queryString = StringUtil.NVL(urlPathHelper.getOriginatingQueryString(request), "");
-		if(requestUri.indexOf(".crz") > -1 && queryString.indexOf("hp") > -1) {
-			
-			final String hp = request.getParameter("hp");
-			request.getSession().setAttribute("linkUrl", requestUri + "?" + queryString);
-			request.getSession().setAttribute("hp", hp);
-		}
+//		String queryString = StringUtil.NVL(urlPathHelper.getOriginatingQueryString(request), "");
+//		if(requestUri.indexOf(".crz") > -1 && queryString.indexOf("hp") > -1) {
+//			
+//			final String hp = request.getParameter("hp");
+//			request.getSession().setAttribute("linkUrl", requestUri + "?" + queryString);
+//			request.getSession().setAttribute("hp", hp);
+//		}
+		
+		logger.info("FILTER ==== " + request.getParameter("noPerson"));
 		
 		filterChain.doFilter(request, response);
 	}

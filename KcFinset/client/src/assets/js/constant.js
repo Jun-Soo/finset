@@ -3,6 +3,7 @@
  */
 export default {
   userAgent: '',
+  isBrowser: false,
   userAppVersion: '',
   params: {},
   options: {

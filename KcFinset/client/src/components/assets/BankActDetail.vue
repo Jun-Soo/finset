@@ -19,6 +19,7 @@
               <p class="value noMG"><em class="number">{{formatNumber(assetsInfo.amt_balance)}}</em>원</p>
             </div>
           </div>
+
         </div>
       </div>
 

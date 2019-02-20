@@ -14,7 +14,7 @@ export default {
     Constant.params = this.getParams()
 
     // ios a, button 태그 이벤트
-    $('body *').on('touchstart', function () {})
+    $('body *').on('touchstart', function () { })
 
     // Tab
     $('.tabs a').click(function (e) {
@@ -99,6 +99,12 @@ export default {
 
   getMobileOperatingSystem: function () {
     var userAgent = navigator.userAgent || navigator.vendor || window.opera
+    if (userAgent.toUpperCase().match(/MOBILE/i)) {
+      Constant.isBrowser = false
+    } else {
+      Constant.isBrowser = true
+    }
+
     if (userAgent.match(/iPad/i) || userAgent.match(/iPhone/i) || userAgent.match(/iPod/i)) {
       return 'iOS'
     } else if (userAgent.match(/Android/i)) {
@@ -430,7 +436,7 @@ export default {
       Constant._el = document.getElementById(el)
     }
     Constant._this.addScroll()
-    Constant._callback(function () {})
+    Constant._callback(function () { })
   },
   handleScroll: function () {
     var html = document.documentElement

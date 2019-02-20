@@ -22,7 +22,7 @@
 
     <div class="banner-wrap owl-carousel">
       <carousel :perPage=1 :autoplay=true :autoplayTimeout=4000 :speed=700 :loop=true>
-        <slide class="item">
+        <!-- <slide class="item">
           <a @click="goMenu('raise')">
             <div class="banner">
               <div class="left">
@@ -34,7 +34,7 @@
               </div>
             </div>
           </a>
-        </slide>
+        </slide> -->
         <slide class="item">
           <a @click="$router.push('/credit/smartReport')">
             <div class="banner">

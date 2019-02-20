@@ -111,6 +111,9 @@ public class LoginController {
 		String userAgent = request.getParameter("user_agent");
 		String appVersion = request.getParameter("app_version");
 		
+		String[] new_version = null;
+		String[] app_version = null;
+		
 		CodeInfo codeInfo = new CodeInfo();
 		
 		if("iOS".equals(userAgent)) {
@@ -120,19 +123,22 @@ public class LoginController {
 			codeInfo = codeManager.getCodeInfo("_CONF_SYSTEM", "ANDROID_VERSION");
 		}
 		
-		String[] new_version = codeInfo.getNm_code().split("\\.");
-		String[] app_version = appVersion.split("\\.");
-		
 		try {
-			if("".equals(appVersion)) {
+			
+			if(StringUtil.isEmpty(appVersion)) {
 				model.addAttribute("result", "pass");
-			} else if(app_version.length == new_version.length) {
-				for(int i=0; i<new_version.length; i++) {
-					if(Integer.valueOf(new_version[i]) > Integer.valueOf(app_version[i]) && "1.1.1".equals(codeInfo.getNm_code())) {
-						model.addAttribute("result", "update");
-						break;
-					} else {
-						model.addAttribute("result", "pass");
+			} else {
+				new_version = codeInfo.getNm_code().split("\\.");
+				app_version = appVersion.split("\\.");
+				
+				if(app_version.length == new_version.length) {
+					for(int i=0; i<new_version.length; i++) {
+						if(Integer.valueOf(new_version[i]) > Integer.valueOf(app_version[i]) && "1.1.1".equals(codeInfo.getNm_code())) {
+							model.addAttribute("result", "update");
+							break;
+						} else {
+							model.addAttribute("result", "pass");
+						}
 					}
 				}
 			}
@@ -141,7 +147,6 @@ public class LoginController {
 			logger.error("app_version ::: " + app_version);
 			LogUtil.error(logger, e);
 		}
-		
 		
 		return "jsonView";
 	}

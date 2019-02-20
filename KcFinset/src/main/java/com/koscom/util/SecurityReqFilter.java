@@ -71,25 +71,35 @@ public class SecurityReqFilter extends OncePerRequestFilter {
          }
          
          // 위변조가 되지 않았는지 여부
-         boolean isSecure = true;
+         boolean isSecure1 = true;
+         boolean isSecure2 = true;
+         boolean isSecure3 = true;
          
          // 각 파라미터가 존재 하는지에 확인 후 각각 확인
-         if(param_no_person != null) {
+         if(param_no_person != null && !param_no_person.isEmpty()) {
             logger.debug("param_no_person: " + param_no_person);
-            isSecure = (Constant.SUCCESS == SessionUtil.chkNoPerson(ssNoPerson, param_no_person, cd_info));
-         } else if(param_no_person_list != null) {
+            isSecure1 = (Constant.SUCCESS == SessionUtil.chkNoPerson(ssNoPerson, param_no_person, cd_info));
+         } 
+         if(param_no_person_list != null) {
             for(String str: param_no_person_list) {
                logger.debug("param_no_person_list: "+ str);
             }
-            isSecure = (Constant.SUCCESS == SessionUtil.chkNoPersonList(ssNoPerson, Arrays.asList(param_no_person_list), cd_info));
-         } else if(param_person_share_list != null) {
+            if(!(param_no_person_list.length == 1 && param_no_person_list[0].isEmpty()))	{
+            	isSecure2 = (Constant.SUCCESS == SessionUtil.chkNoPersonList(ssNoPerson, Arrays.asList(param_no_person_list), cd_info));
+            }
+         } 
+         if(param_person_share_list != null) {
             for(String str:param_person_share_list) {
                logger.debug("param_person_share_list: "+ str);
             }
-            isSecure = (Constant.SUCCESS == SessionUtil.chkNoPersonList(ssNoPerson, Arrays.asList(param_person_share_list), cd_info));
+            if(!(param_person_share_list.length == 1 && param_person_share_list[0].isEmpty()))	{
+            	isSecure3 = (Constant.SUCCESS == SessionUtil.chkNoPersonList(ssNoPerson, Arrays.asList(param_person_share_list), cd_info));
+            }
          }
-         logger.debug("isSecure: "+isSecure);
-         if(!isSecure) {
+         logger.debug("isSecure1: "+isSecure1);
+         logger.debug("isSecure2: "+isSecure2);
+         logger.debug("isSecure3: "+isSecure3);
+         if(!isSecure1 || !isSecure2 || !isSecure3) {
             throw new ServletException("회원번호 변조가 감지되었습니다.");
          } else {
             filterChain.doFilter(request, response);

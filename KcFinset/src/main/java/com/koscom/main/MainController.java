@@ -47,7 +47,9 @@ public class MainController {
 	HttpServletRequest request,
 	HttpSession session,
 	Model model) throws FinsetException, IOException{
+		
 		String no_person = (String)session.getAttribute("no_person");
+		logger.info("CONTROLLER ==== " + request.getParameter("noPerson"));
 
         model.addAttribute("noPerson", no_person);
         model.addAttribute("creditInfo", creditManager.getCreditMainBaseInfo(no_person)); //신용정보

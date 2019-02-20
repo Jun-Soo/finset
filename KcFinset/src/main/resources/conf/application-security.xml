@@ -15,10 +15,10 @@
 	<beans:bean id="loginManager" class="com.koscom.login.service.LoginManager" />
 	<beans:bean id="customAuthenticationProvider" class="com.koscom.login.service.CustomAuthenticationProvider" />
 
-	<!-- 
+	
 	<beans:bean id="securityReqFilter" class="com.koscom.util.SecurityReqFilter">
 	</beans:bean>
-	 -->
+	
 	<!-- 패턴정의
 	<http pattern="/ckeditor/**" security="none"/>
 	<http pattern="/fonts/**" security="none"/>
@@ -53,7 +53,7 @@
 	
 	<http auto-config="true">
 		<access-denied-handler error-page="/error/403"/>
-		<!-- <custom-filter ref="securityReqFilter" before="FILTER_SECURITY_INTERCEPTOR"/> -->
+		<custom-filter ref="securityReqFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
 		<intercept-url pattern="/**" access="ROLE_USER, ROLE_ADMIN" />
 		<form-login authentication-success-handler-ref="loginManager"
 					authentication-failure-handler-ref="loginManager"

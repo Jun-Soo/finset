@@ -63,11 +63,21 @@ public class SecurityReqFilter extends OncePerRequestFilter {
          if(param_no_person_list == null) {
             // post 방식의 경우 [] 가 떨어져서 들어온다
             param_no_person_list = request.getParameterValues("no_person_list");
+            if(param_no_person_list != null && param_no_person_list.length == 1) {
+            	if(param_no_person_list[0].contains(",")) {
+            		param_no_person_list = param_no_person_list[0].split(",");
+            	}
+            }
          }
          // person_share_list[] 로 넘어온 조회 리스트
          String [] param_person_share_list = request.getParameterValues("person_share_list[]");
          if(param_person_share_list == null) {
             param_person_share_list = request.getParameterValues("person_share_list");
+            if(param_person_share_list != null && param_person_share_list.length == 1) {
+            	if(param_person_share_list[0].contains(",")) {
+            		param_person_share_list = param_person_share_list[0].split(","); 
+            	}
+            }
          }
          
          // 위변조가 되지 않았는지 여부

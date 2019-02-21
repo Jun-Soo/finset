@@ -8263,9 +8263,18 @@ span.cell.day.selected.today {
   font-size: 14px;
 }
 
-.basic-list dd select {
-  width: 100%;
+.basic-list dd {
   margin-top: 10px;
+}
+
+.basic-list dd .multiselect-basic {
+  height: 30px;
+  width: 100%;
+}
+
+.basic-list dd>input {
+  height: 30px;
+  width: 95%;
 }
 
 .finance-check {

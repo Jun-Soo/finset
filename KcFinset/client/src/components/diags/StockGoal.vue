@@ -3,7 +3,7 @@
 
     <div class="box-list list01 noMG pb90">
       <form name="frmStockGoals" id="frmStockGoals"></form>
-      <div class="item"  v-for="stockGoal in stockGoals" :key="stockGoal.index">
+      <div class="item" v-for="stockGoal in stockGoals" :key="stockGoal.index">
         <div class="top">
           <p class="corp">{{stockGoal.isuKorNm}}</p>
           <p class="number">{{formatNumber(stockGoal.valAtCur)}}<em>원</em></p>
@@ -14,34 +14,33 @@
             <em>{{formatNumber(stockGoal.earningRate)}}%</em>
           </p>
         </div>
-        
+
         <div class="hide-con show">
           <div class="list">
-            <p class="left">목표수익률 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" align="right" style="height:20px; width:30%;" v-model="stockGoal.profitGoal"/> %</p>
+            <p class="left">목표수익률 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type="text" align="right" style="height:20px; width:30%;" v-model="stockGoal.profitGoal" /> %</p>
             <p class="right">
-               ({{formatNumber(proLossGoal(stockGoal))}}원)
+              ({{formatNumber(proLossGoal(stockGoal))}}원)
             </p>
           </div>
         </div>
         <div class="hide-con show">
           <div class="list">
-            <p class="left">예상보유기간&nbsp;&nbsp; <input type="text" align="right" style="height:20px; width:30%;" v-model="stockGoal.holdGoal"/> 일</p>
+            <p class="left">예상보유기간&nbsp;&nbsp; <input type="text" align="right" style="height:20px; width:30%;" v-model="stockGoal.holdGoal" /> 일</p>
             <p class="right">
-               ({{holdEnd(stockGoal)}})
+              ({{holdEnd(stockGoal)}})
             </p>
           </div>
         </div>
       </div>
 
       <div class="btn-wrap">
-        <a @click="startSurvey()"  class="blue solid">나의 투자성향 알아보기</a>
-      </div> 
+        <a @click="startSurvey()" class="blue solid">나의 투자성향 알아보기</a>
+      </div>
     </div>
 
- 
     <div class="btn-wrap float">
-      <a @click="saveStockGoals()"  class="blue box solid">완료</a>
-    </div> 
+      <a @click="saveStockGoals()" class="blue box solid">완료</a>
+    </div>
 
   </section>
 </template>
@@ -135,7 +134,7 @@ export default {
       return Common.formatNumber(data);
     },
     proLossGoal: function(stockGoal) {
-      return stockGoal.profitGoal * stockGoal.valAtTrade / 100;
+      return (stockGoal.profitGoal * stockGoal.valAtTrade) / 100;
     },
     holdEnd: function(stockGoal) {
       var holdGoal = parseInt(stockGoal.holdGoal);

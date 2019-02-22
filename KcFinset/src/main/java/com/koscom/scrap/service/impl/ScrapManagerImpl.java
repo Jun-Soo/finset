@@ -272,6 +272,9 @@ public class ScrapManagerImpl implements ScrapManager {
 		
 		URLConnection url = new URLConnection();
 		logger.info("getDirectFinanceSearch  : URL[" + directUrl +"], APIkey : "+directKey);
+		logger.info("financeTerms  : [" + financeTerms +"]");
+		
+		
 		
 		JsonObject jsonSendRoot = new JsonObject();
 		

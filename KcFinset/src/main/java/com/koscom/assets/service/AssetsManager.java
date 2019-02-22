@@ -157,10 +157,31 @@ public interface AssetsManager {
 
 	/**
 	 * 자산 - 기타메인
-	 * @param String no_person
+	 * @param AssetsForm assetsForm
 	 * @return List<AssetsInfoVO>
 	 */
-	public List<AssetsInfoVO> listAssetsEtcMain(String no_person);
+	public List<AssetsInfoVO> listAssetsEtcMain(AssetsForm assetsForm);
+	public int listAssetsEtcMainCount(AssetsForm assetsForm);
 
+	/**
+	 * 자산 - 기타 개별 자산정보
+	 * @param AssetsInfoVO assetsInfoVO
+	 * @return AssetsInfoVO
+	 */
+	public AssetsInfoVO getAssetsEtcInfo(AssetsInfoVO assetsInfoVO);
+
+	/**
+	 * 자산 - 기타 자산정보 수정
+	 * @param AssetsInfoVO
+	 * @return ReturnClass
+	 */
+	public ReturnClass updateAssetsInfo(AssetsInfoVO assetsInfoVO);
+
+	/**
+	 * 자산 - 기타 자산정보 삭제
+	 * @param AssetsInfoVO
+	 * @return ReturnClass
+	 */
+	public ReturnClass deleteAssetsInfo(AssetsInfoVO assetsInfoVO);
 
 }

@@ -165,8 +165,33 @@ public class AssetsManagerImpl implements AssetsManager {
 	}
 
 	@Override
-	public List<AssetsInfoVO> listAssetsEtcMain(String no_person){
-		return assetsMapper.listAssetsEtcMain(no_person);
+	public List<AssetsInfoVO> listAssetsEtcMain(AssetsForm assetsForm){
+		return assetsMapper.listAssetsEtcMain(assetsForm);
+	}
+	@Override
+	public int listAssetsEtcMainCount(AssetsForm assetsForm){
+		return assetsMapper.listAssetsEtcMainCount(assetsForm);
+	}
+
+	@Override
+	public AssetsInfoVO getAssetsEtcInfo(AssetsInfoVO assetsInfoVO){
+		return assetsMapper.getAssetsEtcInfo(assetsInfoVO);
+	}
+
+	@Override
+	public ReturnClass updateAssetsInfo(AssetsInfoVO assetsInfoVO) {
+		if(1 != assetsMapper.updateAssetsInfo(assetsInfoVO)){
+			return new ReturnClass(Constant.FAILED, "수정 실패하였습니다.");
+		}
+		return new ReturnClass(Constant.SUCCESS, "수정 성공하였습니다.");
+	}
+
+	@Override
+	public ReturnClass deleteAssetsInfo(AssetsInfoVO assetsInfoVO) {
+		if(1 != assetsMapper.deleteAssetsInfo(assetsInfoVO)){
+			return new ReturnClass(Constant.FAILED, "삭제 실패하였습니다.");
+		}
+		return new ReturnClass(Constant.SUCCESS, "삭제 성공하였습니다.");
 	}
 
 }

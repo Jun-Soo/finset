@@ -304,7 +304,15 @@
 			DT_LST = SYSDATE
 		WHERE
 			NO_PERSON = #{no_person, jdbcType=VARCHAR}
-			AND NO_ACCOUNT = XX1.ENC_VARCHAR2_INS(#{no_account, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'ASSETS_INFO', 'NO_ACCOUNT')
+			AND CD_ASSETS_CLASS = #{cd_assets_class, jdbcType=VARCHAR}
+			<choose>
+				<when test="'00'.equals(cd_assets_class)">	<!-- 은행 -->
+					AND NO_ACCOUNT = XX1.ENC_VARCHAR2_INS(#{no_account, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'ASSETS_INFO', 'NO_ACCOUNT')
+				</when>
+				<when test="'10'.equals(cd_assets_class)">	<!-- 증권 -->
+					AND NO_ACCOUNT = #{no_account, jdbcType=VARCHAR}
+				</when>
+			</choose>
     </update>
 
     <select id="getAssetsInfo" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
@@ -1579,7 +1587,17 @@
 
     <insert id="createAssetsInfo" parameterType="com.koscom.assets.model.AssetsInfoVO">
 		/* com.koscom.assets.dao.AssetsMapper.createAssetsInfo - 자산관리(직접입력) */
+		<selectKey keyProperty="sort" resultType="string" order="BEFORE">
+			(
+				SELECT NVL(MAX(SORT),0)+1
+				FROM ASSETS_INFO
+				WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					AND CD_ASSETS_CLASS = #{cd_assets_class, jdbcType=VARCHAR}
+			)
+		</selectKey>
+
 		INSERT INTO ASSETS_INFO(
+			SORT,
 			NO_PERSON,
 			CD_ASSETS_CLASS,
 			CD_DETAIL_CLASS,
@@ -1597,6 +1615,7 @@
 			ID_LST,
 			DT_LST
 		) VALUES(
+			#{sort},
 			#{no_person, jdbcType=VARCHAR},
 			#{cd_assets_class, jdbcType=VARCHAR},
 			#{cd_detail_class, jdbcType=VARCHAR},
@@ -1618,27 +1637,129 @@
 
     <select id="listAssetsEtcMain" parameterType="com.koscom.assets.model.AssetsForm" resultType="com.koscom.assets.model.AssetsInfoVO">
         /* com.koscom.assets.dao.AssetsMapper.listAssetsEtcMain - 자산관리(기타메인) */
-		SELECT
-			AI.CD_ASSETS_CLASS,
-			CD.NM_CODE,
-			COUNT( AI.NO_PERSON ) AS CNT_ITEM,
-			SUM( AMT_EVALUATION ) AS SUM_AMT_EVALUATION
-		FROM
-			ASSETS_INFO AI
-		INNER JOIN (SELECT
-						CODE_VALUE, NM_CODE
-					FROM COMM_CD
-					WHERE CODE_GROUP = 'cd_assets_class'
-						AND (CODE_VALUE != '00' AND CODE_VALUE != '10' AND CODE_VALUE != '20')
-					) CD
-		ON CD.CODE_VALUE = AI.CD_ASSETS_CLASS
-		WHERE
-			(AI.DT_EXPIRE IS NULL OR AI.DT_EXPIRE <![CDATA[>=]]> TO_CHAR(SYSDATE,'YYYYMMDD'))
-			AND AI.YN_DELETE = 'N'
-			AND AI.YN_PERSON_REGIST = 'Y'
-			AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
-		GROUP BY AI.CD_ASSETS_CLASS, CD.NM_CODE
-		ORDER BY AI.CD_ASSETS_CLASS
+        SELECT
+    		SORT,
+			CD_ASSETS_CLASS,
+			CD_DETAIL_CLASS,
+			REAL_ESTATE_ADDR,
+			NM_MODEL,
+			AMOUNT_JEWELRY,
+			AMT_BALANCE,
+			ETC_ASSETS,
+			AMT_EVALUATION,
+			RNUM
+    	FROM (
+    		SELECT
+				LST.SORT,
+				LST.CD_ASSETS_CLASS,
+				LST.CD_DETAIL_CLASS,
+				LST.REAL_ESTATE_ADDR,
+				LST.NM_MODEL,
+				LST.AMOUNT_JEWELRY,
+				LST.AMT_BALANCE,
+				LST.ETC_ASSETS,
+				LST.AMT_EVALUATION,
+				ROWNUM RNUM
+    		FROM (
+				SELECT
+					AI.SORT,
+					AI.CD_ASSETS_CLASS,
+					AI.CD_DETAIL_CLASS,
+					AI.REAL_ESTATE_ADDR,
+					AI.NM_MODEL,
+					AI.AMOUNT_JEWELRY,
+					AI.AMT_BALANCE,
+					AI.ETC_ASSETS,
+					AI.AMT_EVALUATION
+				FROM
+					ASSETS_INFO AI
+				WHERE (AI.CD_ASSETS_CLASS != '00' AND AI.CD_ASSETS_CLASS != '10' AND AI.CD_ASSETS_CLASS != '20')
+					AND AI.YN_DELETE = 'N'
+					AND AI.YN_PERSON_REGIST = 'Y'
+					AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+				ORDER BY AI.CD_ASSETS_CLASS, AI.SORT
+			) LST
+	    	WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	    )
+	    WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
 	</select>
+
+    <select id="listAssetsEtcMainCount" parameterType="com.koscom.assets.model.AssetsForm" resultType="int">
+        /* com.koscom.assets.dao.AssetsMapper.listAssetsEtcMain - 자산관리(기타메인Count) */
+       	SELECT
+			COUNT(*) AS recordCount
+		FROM
+			(
+			SELECT
+				AI.SORT,
+				AI.CD_ASSETS_CLASS,
+				AI.CD_DETAIL_CLASS,
+				AI.REAL_ESTATE_ADDR,
+				AI.NM_MODEL,
+				AI.AMOUNT_JEWELRY,
+				AI.AMT_BALANCE,
+				AI.ETC_ASSETS,
+				AI.AMT_EVALUATION
+			FROM
+				ASSETS_INFO AI
+			WHERE (AI.CD_ASSETS_CLASS != '00' AND AI.CD_ASSETS_CLASS != '10' AND AI.CD_ASSETS_CLASS != '20')
+				AND AI.YN_DELETE = 'N'
+				AND AI.YN_PERSON_REGIST = 'Y'
+				AND AI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			) TB
+	</select>
+
+     <select id="getAssetsEtcInfo" parameterType="com.koscom.assets.model.AssetsInfoVO" resultType="com.koscom.assets.model.AssetsInfoVO">
+    	/* com.koscom.assets.dao.AssetsMapper.getAssetsEtcInfo - 자산관리(기타 - 개별 자산정보) */
+        SELECT
+			CD_ASSETS_CLASS,
+			SORT,
+			CD_DETAIL_CLASS,
+			REAL_ESTATE_ADDR,
+			NM_MODEL,
+			AMOUNT_JEWELRY,
+			AMT_BALANCE,
+			ETC_ASSETS,
+			AMT_EVALUATION,
+			MEMO
+		FROM
+			ASSETS_INFO
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_ASSETS_CLASS = #{cd_assets_class, jdbcType=VARCHAR}
+			AND SORT = #{sort, jdbcType=VARCHAR}
+	</select>
+
+     <update id="updateAssetsInfo" parameterType="com.koscom.assets.model.AssetsInfoVO">
+    	/* com.koscom.assets.dao.AssetsMapper.updateAssetsInfo - 자산관리(기타 - 자산정보 수정) */
+        UPDATE
+        	ASSETS_INFO
+        SET
+			CD_DETAIL_CLASS = #{cd_detail_class, jdbcType=VARCHAR},
+			REAL_ESTATE_ADDR = #{real_estate_addr, jdbcType=VARCHAR},
+			NM_MODEL = #{nm_model, jdbcType=VARCHAR},
+			AMOUNT_JEWELRY = #{amount_jewelry, jdbcType=VARCHAR},
+			AMT_BALANCE = #{amt_balance, jdbcType=VARCHAR},
+			ETC_ASSETS = #{etc_assets, jdbcType=VARCHAR},
+			AMT_EVALUATION = #{amt_evaluation, jdbcType=VARCHAR},
+			MEMO = #{memo, jdbcType=VARCHAR},
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_ASSETS_CLASS = #{cd_assets_class, jdbcType=VARCHAR}
+			AND SORT = #{sort, jdbcType=VARCHAR}
+	</update>
+
+     <update id="deleteAssetsInfo" parameterType="com.koscom.assets.model.AssetsInfoVO">
+    	/* com.koscom.assets.dao.AssetsMapper.deleteAssetsInfo - 자산관리(기타 - 자산정보 삭제) */
+        UPDATE
+        	ASSETS_INFO
+        SET
+        	YN_DELETE = 'Y',
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND CD_ASSETS_CLASS = #{cd_assets_class, jdbcType=VARCHAR}
+			AND SORT = #{sort, jdbcType=VARCHAR}
+	</update>
 
 </mapper>

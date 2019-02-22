@@ -263,6 +263,7 @@ export default {
       var accountMyList = _this.accountMyList;
       var formData = new FormData();
       for (var idx in accountMyList) {
+        formData.append("sortList[" + idx + "].cd_assets_class", "10");
         formData.append(
           "sortList[" + idx + "].no_account",
           accountMyList[idx].no_account

@@ -17,6 +17,7 @@ import com.koscom.assets.model.AssetsForm;
 import com.koscom.assets.model.AssetsInfoVO;
 import com.koscom.assets.service.AssetsManager;
 import com.koscom.main.service.MainManager;
+import com.koscom.news.model.NewsVO;
 import com.koscom.util.DateUtil;
 import com.koscom.util.FinsetException;
 import com.koscom.util.Pagination;
@@ -553,7 +554,7 @@ public class AssetsController {
 
 	/**
 	 * VUE
-     * 자산관리 - 기타메인
+     * 자산관리 - 기타메인 총금액
      * @param request
      * @param session
      * @param model
@@ -570,10 +571,110 @@ public class AssetsController {
 		AssetsForm assetsForm = new AssetsForm();
 		assetsForm.setNo_person(no_person);
 		assetsForm.setType_list("etc");
-		AssetsInfoVO sumAmt = assetsManager.getAssetsMainInfo(assetsForm);
+		model.addAttribute("sumAmt",assetsManager.getAssetsMainInfo(assetsForm));
 
-		model.addAttribute("sumAmt",sumAmt);
-		model.addAttribute("etcList", assetsManager.listAssetsEtcMain(no_person));
+		return "jsonView";
+	}
+
+	/**
+	 * VUE
+     * 자산관리 - 기타메인list
+     * @param request
+     * @param session
+     * @param assetsForm
+     * @param model
+     * @return String
+     * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/listAssetsEtcMain.json")
+	public String listAssetsEtcMain(
+	HttpServletRequest request,
+	HttpSession session,
+	AssetsForm assetsForm,
+	Model model) throws FinsetException, IOException{
+		String no_person = (String)session.getAttribute("no_person");
+
+		assetsForm.setNo_person(no_person);
+
+		Pagination pagedList = assetsForm.setPagedList(assetsManager.listAssetsEtcMain(assetsForm),assetsManager.listAssetsEtcMainCount(assetsForm));
+		model.addAttribute("pagedList", pagedList);
+
+		return "jsonView";
+	}
+	/**
+	 * VUE
+     * 자산 관리 - 기타 개별 자산정보
+     * @param request
+     * @param session
+     * @param AssetsInfoVO
+     * @param model
+     * @return String
+     * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/getAssetsEtcInfo.json")
+	public String getAssetsEtcInfo(
+	HttpServletRequest request,
+	HttpSession session,
+	AssetsInfoVO assetsInfoVO,
+	Model model) throws FinsetException, IOException{
+		String no_person = (String)session.getAttribute("no_person");
+		assetsInfoVO.setNo_person(no_person);
+
+		model.addAttribute("assetsInfo", assetsManager.getAssetsEtcInfo(assetsInfoVO));
+
+		return "jsonView";
+	}
+
+	/**
+	 * VUE
+     * 자산관리 - 기타 자산정보 수정
+     * @param request
+     * @param session
+     * @param AssetsInfoVO
+     * @param model
+     * @return String
+     * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/updateAssetsInfo.json")
+	public String updateAssetsInfo(
+	HttpServletRequest request,
+	HttpSession session,
+	AssetsInfoVO assetsInfoVO,
+	Model model) throws FinsetException, IOException{
+		String no_person = (String)session.getAttribute("no_person");
+
+		assetsInfoVO.setNo_person(no_person);
+
+		ReturnClass returnClass = assetsManager.updateAssetsInfo((AssetsInfoVO)SessionUtil.setUser(assetsInfoVO, session));
+		model.addAttribute("message", returnClass.getMessage());
+		model.addAttribute("result" , returnClass.getCd_result());
+
+		return "jsonView";
+	}
+
+	/**
+	 * VUE
+     * 자산관리 - 기타 자산정보 삭제
+     * @param request
+     * @param session
+     * @param AssetsInfoVO
+     * @param model
+     * @return String
+     * @throws FinsetException, IOException
+	 */
+	@RequestMapping("/deleteAssetsInfo.json")
+	public String deleteAssetsInfo(
+	HttpServletRequest request,
+	HttpSession session,
+	AssetsInfoVO assetsInfoVO,
+	Model model) throws FinsetException, IOException{
+		String no_person = (String)session.getAttribute("no_person");
+
+		assetsInfoVO.setNo_person(no_person);
+
+		ReturnClass returnClass = assetsManager.deleteAssetsInfo((AssetsInfoVO)SessionUtil.setUser(assetsInfoVO, session));
+		model.addAttribute("message", returnClass.getMessage());
+		model.addAttribute("result" , returnClass.getCd_result());
 
 		return "jsonView";
 	}

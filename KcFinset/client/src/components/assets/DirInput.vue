@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="seen">
     <div class="container">
       <div class="debt-regist">
         <p class="title"><em>자산을 직접 입력하여</em><br>관리하세요</p>
@@ -8,7 +8,7 @@
             <ul class="flex">
               <li class="key">분류</li>
               <li class="value">
-                <multiselect :id="'cd_assets_class'" v-model="cd_assets_class" ref="cd_assets_class" key="cd_assets_class" placeholder="분류선택" :title="'분류'" :options="assetsClassOptions" :onClose="selectAssetsClass" v-validate="'multi'" data-vv-name='분류'>
+                <multiselect :id="'cd_assets_class'" v-model="cd_assets_class" ref="cd_assets_class" key="cd_assets_class" placeholder="분류선택" :title="'분류'" :options="assetsClassOptions" :onClose="selectAssetsClass" :disabled="!isNew" v-validate="'multi'" data-vv-name='분류'>
                 </multiselect>
               </li>
             </ul>
@@ -140,8 +140,12 @@
         </div>
 
       </div>
-      <div v-if="isShowBtn" @click="createAssets()" class="btn-wrap float">
+      <div v-if="isShowBtn&&isNew" @click="createAssets()" class="btn-wrap float">
         <a class="solid blue box">등록하기</a>
+      </div>
+      <div v-else-if="isShowBtn&&!isNew" class="btn-wrap col2">
+        <a @click="delAssets()">삭제</a>
+        <a @click="modAssets()" class="btn-solid">저장</a>
       </div>
     </div>
 
@@ -168,9 +172,12 @@ export default {
   name: "assetsDirInput",
   data() {
     return {
+      seen: true,
       showKey: "",
       isShowModal: false,
       isShowBtn: false,
+      isNew: true,
+      sort: "",
       assetsClassOptions: [
         { text: "부동산", value: "30" },
         { text: "자동차", value: "40" },
@@ -215,6 +222,26 @@ export default {
     this.$store.state.title = "직접 입력";
   },
   created() {
+    //수정, 삭제 - cd_assets_class값 셋팅
+    if (
+      "" != this.$route.query.cd_assets_class &&
+      this.$route.query.cd_assets_class != null
+    ) {
+      for (var i = 0; i < this.assetsClassOptions.length; i++) {
+        if (
+          this.assetsClassOptions[i].value == this.$route.query.cd_assets_class
+        ) {
+          this.cd_assets_class = this.assetsClassOptions[i];
+          this.selectAssetsClass(this.cd_assets_class);
+        }
+      }
+    }
+    this.sort = this.$route.query.sort; //수정, 삭제 - sort(seq)값 셋팅
+    console.log(this.sort);
+    if ((this.sort || "") != "") {
+      this.isNew = false;
+      this.seen = false;
+    }
     this.option_class_prop = Common.makeOptions("cd_assets_prop", "");
     this.option_class_prop.unshift({ text: "선택", value: "" });
     this.option_class_nbmt = Common.makeOptions("cd_assets_nbmt", "");
@@ -224,6 +251,10 @@ export default {
     this.cd_class_prop = this.option_class_prop[0];
     this.cd_class_nbmt = this.option_class_nbmt[0];
     this.cd_class_frcr = this.option_class_frcr[0];
+
+    if ((this.sort || "") != "") {
+      this.getAssetsInfo();
+    }
   },
   beforeMount() {},
   mounted() {},
@@ -316,7 +347,7 @@ export default {
                   .then(response => {
                     this.$toast.center(response.data.message);
                     if ("00" == response.data.result) {
-                      _this.$router.push("/assets/main");
+                      _this.$router.push("/assets/etcMain");
                     }
                   })
                   .catch(e => {
@@ -326,6 +357,146 @@ export default {
             });
         }
       });
+    },
+    getAssetsInfo: function() {
+      var _this = this;
+      this.$http
+        .get("/m/assets/getAssetsEtcInfo.json", {
+          params: {
+            cd_assets_class: _this.cd_assets_class.value,
+            sort: _this.sort
+          }
+        })
+        .then(response => {
+          var assetsInfo = response.data.assetsInfo;
+          var cd_assets_class = assetsInfo.cd_assets_class;
+          if ("30" == cd_assets_class) {
+            //부동산
+            for (var i = 0; i < _this.option_class_prop.length; i++) {
+              if (
+                _this.option_class_prop[i].value == assetsInfo.cd_detail_class
+              ) {
+                _this.cd_class_prop = _this.option_class_prop[i];
+              }
+            }
+            _this.view_addr = assetsInfo.real_estate_addr; //주소
+            _this.real_estate_addr = assetsInfo.real_estate_addr; //주소
+          } else if ("40" == cd_assets_class) {
+            //자동차
+            _this.nm_model = assetsInfo.nm_model; //모델명
+          } else if ("50" == cd_assets_class) {
+            //귀금속
+            for (var i = 0; i < _this.option_class_nbmt.length; i++) {
+              if (
+                _this.option_class_nbmt[i].value == assetsInfo.cd_detail_class
+              ) {
+                _this.cd_class_nbmt = _this.option_class_nbmt[i];
+              }
+            }
+            _this.amount_jewelry = assetsInfo.amount_jewelry; //보유량
+          } else if ("60" == cd_assets_class) {
+            //외화
+            for (var i = 0; i < _this.option_class_frcr.length; i++) {
+              if (
+                _this.option_class_frcr[i].value == assetsInfo.cd_detail_class
+              ) {
+                _this.cd_class_frcr = _this.option_class_frcr[i];
+              }
+            }
+            _this.amt_balance = assetsInfo.amt_balance; //보유금액
+          } else if ("90" == cd_assets_class) {
+            //기타
+            _this.etc_assets = assetsInfo.etc_assets; //종류
+          }
+          if ("60" == cd_assets_class) {
+            //외화 - 환산금액
+            _this.amt_evaluation_frcr = assetsInfo.amt_evaluation;
+          } else {
+            //공통 - 금액
+            _this.amt_evaluation = assetsInfo.amt_evaluation;
+          }
+          //공통 - 메모
+          _this.memo = assetsInfo.memo;
+          _this.seen = true;
+        })
+        .catch(e => {
+          _this.$toast.center(ko.messages.error);
+        });
+    },
+    modAssets: function() {
+      var _this = this;
+
+      this.$validator.validateAll().then(res => {
+        if (res) {
+          Constant.options.title = "FINSET";
+          this.$dialogs
+            .confirm("자산정보를 수정하시겠습니까?", Constant.options)
+            .then(res => {
+              if (res.ok) {
+                var cd_assets_class = _this.cd_assets_class.value;
+                var formData = new FormData();
+                formData.append("sort", _this.sort);
+                formData.append("cd_assets_class", cd_assets_class);
+                if ("30" == cd_assets_class) {
+                  formData.append("cd_detail_class", _this.cd_class_prop.value);
+                } else if ("50" == cd_assets_class) {
+                  formData.append("cd_detail_class", _this.cd_class_nbmt.value);
+                } else if ("60" == cd_assets_class) {
+                  formData.append("cd_detail_class", _this.cd_class_frcr.value);
+                }
+                formData.append("real_estate_addr", _this.real_estate_addr);
+                formData.append("nm_model", _this.nm_model);
+                formData.append("amount_jewelry", _this.amount_jewelry);
+                formData.append("amt_balance", _this.amt_balance);
+                formData.append("etc_assets", _this.etc_assets);
+                if ("60" == cd_assets_class) {
+                  formData.append("amt_evaluation", _this.amt_evaluation_frcr);
+                } else {
+                  formData.append("amt_evaluation", _this.amt_evaluation);
+                }
+                formData.append("memo", _this.memo);
+
+                this.$http
+                  .post("/m/assets/updateAssetsInfo.json", formData)
+                  .then(response => {
+                    this.$toast.center(response.data.message);
+                    if ("00" == response.data.result) {
+                      _this.$router.push("/assets/etcMain");
+                    }
+                  })
+                  .catch(e => {
+                    this.$toast.center(ko.messages.error);
+                  });
+              }
+            });
+        }
+      });
+    },
+    delAssets: function() {
+      var _this = this;
+
+      Constant.options.title = "FINSET";
+      this.$dialogs
+        .confirm("자산정보를 삭제하시겠습니까?", Constant.options)
+        .then(res => {
+          if (res.ok) {
+            var formData = new FormData();
+            formData.append("sort", _this.sort);
+            formData.append("cd_assets_class", _this.cd_assets_class.value);
+
+            this.$http
+              .post("/m/assets/deleteAssetsInfo.json", formData)
+              .then(response => {
+                this.$toast.center(response.data.message);
+                if ("00" == response.data.result) {
+                  _this.$router.push("/assets/etcMain");
+                }
+              })
+              .catch(e => {
+                this.$toast.center(ko.messages.error);
+              });
+          }
+        });
     }
   }
 };

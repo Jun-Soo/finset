@@ -195,4 +195,9 @@ public class DebtManagerImpl implements DebtManager {
 		return debtMapper.getDebtListforCalc(debtForm);
 	}
 
+	@Override
+	public boolean verifyShareInfo(DebtForm debtForm) {
+		return debtMapper.verifyShareInfo(debtForm)==0;
+	}
+
 }

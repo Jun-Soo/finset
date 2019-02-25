@@ -365,4 +365,11 @@ public interface ConsumeManager {
 	 * @param no_person
 	 */
 	void autoRegisterGoal(String no_person);
+	
+	/**
+	 * no_person_list에 담긴 사람이 SHARE_INFO에 유저인지 확인
+	 * @param consumeForm
+	 * @return
+	 */
+	boolean verifyShareInfo(ConsumeForm consumeForm);
 }

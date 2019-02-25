@@ -470,4 +470,10 @@ public interface ConsumeMapper {
 	 */
 	List<ConsumeDetailGoalInfoVO> chkConsumeGoalInfoMeans(String no_person);
 	
+	/**
+	 * no_person_list에 담긴 사람이 SHARE_INFO에 유저인지 확인
+	 * @param consumeForm
+	 * @return
+	 */
+	Integer verifyShareInfo(ConsumeForm consumeForm);
 }

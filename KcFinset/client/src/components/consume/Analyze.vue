@@ -124,6 +124,8 @@ export default {
     // 차트에 있을 3개월 라벨 생성
     createDefaultLabel: function() {
       var labelDate = new Date();
+      // 월말 처리를 위해 1일로 세팅
+      labelDate.setDate(1);
       if (this.$store.state.user.dt_basic > labelDate.getDate()) {
         labelDate.setMonth(new Date().getMonth() - 4);
       } else {

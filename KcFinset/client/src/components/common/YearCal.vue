@@ -240,8 +240,7 @@ export default {
         .get("/m/debt/listCalendarDataYear.json", {
           params: {
             y_trd: _this.headDt,
-            no_person_list: _this.filterShareList(),
-            seq_consume: 0
+            no_person_list: _this.filterShareList()
           }
         })
         .then(function(response) {

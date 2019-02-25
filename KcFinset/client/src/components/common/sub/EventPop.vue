@@ -132,7 +132,6 @@ export default {
     var newClassName = body.className
       .replace("not-scroll", "")
       .replace(/(^\s*)|(\s*$)/gi, "");
-    console.log(newClassName);
     body.className = newClassName;
   },
   methods: {

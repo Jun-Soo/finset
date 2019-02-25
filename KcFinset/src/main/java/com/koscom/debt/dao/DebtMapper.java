@@ -229,4 +229,11 @@ public interface DebtMapper {
 	 * @return
 	 */
 	List<DebtVO> getDebtListforCalc(DebtForm debtForm);
+	
+	/**
+	 * no_person_list에 담긴 사람이 SHARE_INFO에 유저인지 확인
+	 * @param debtForm
+	 * @return
+	 */
+	Integer verifyShareInfo(DebtForm debtForm);
 }

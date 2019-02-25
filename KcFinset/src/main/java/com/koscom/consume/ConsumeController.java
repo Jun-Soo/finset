@@ -1,7 +1,8 @@
-package com.koscom.consume;
+﻿package com.koscom.consume;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.koscom.consume.model.ConsumeDetailGoalInfoVO;
 import com.koscom.consume.model.ConsumeForm;
@@ -102,6 +104,7 @@ public class ConsumeController {
     	consumeForm.setNo_person(no_person);
     	consumeForm.setNo_person_list(no_person_list);
     	consumeForm.setYm_trd(ym);
+    	
     	if(type_in_out.equals("00")) {
     		consumeForm.setType_in_out(null);
     	} else {
@@ -739,6 +742,8 @@ public class ConsumeController {
     @RequestMapping("/listConsumeforSettlement.json")
     public String listConsumeforSettlement(HttpSession session, Model model, ConsumeForm consumeForm) throws FinsetException, ParseException {
     	logger.debug("listConsumeforSettlement");
+    	String no_person = (String) session.getAttribute("no_person");
+    	consumeForm.setNo_person(no_person);
     	String type = consumeForm.getContents();
     	
     	SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
@@ -774,6 +779,11 @@ public class ConsumeController {
     @RequestMapping("/getRangeListforSettlement.json")
     public String getRangeListforSettlement(HttpSession session, Model model, ConsumeForm consumeForm) throws FinsetException {
     	logger.debug("getRangeListforSettlement");
+    	consumeForm.setNo_person((String)session.getAttribute("no_person"));
+    	if(!consumeManager.verifyShareInfo(consumeForm)) {
+    		model.addAttribute("result","99");
+    		return null;
+    	}
     	model.addAttribute("rangeList", consumeManager.getRangeListforSettlement(consumeForm));
     	return "jsonView";
     }
@@ -792,6 +802,14 @@ public class ConsumeController {
     	logger.debug("getSettlementDetail");
     	logger.debug(consumeForm.toString());
     	model.addAttribute("rangeList", consumeManager.getSettlementDetail(consumeForm));
+    	return "jsonView";
+    }
+    
+    @RequestMapping("/chkNoPersonList.json")
+    public String chkNoPersonList(HttpSession session, Model model, @RequestParam(value="no_person_list[]") List<String> no_person_list){
+    	logger.debug("chkNoPersonList");
+    	String no_person = (String)session.getAttribute("no_person");
+    	model.addAttribute("cdResult", SessionUtil.chkNoPersonList(no_person, no_person_list, "03"));
     	return "jsonView";
     }
 }

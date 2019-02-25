@@ -23,6 +23,7 @@ import com.koscom.consume.service.ConsumeManager;
 import com.koscom.debt.model.DebtCalendarVO;
 import com.koscom.debt.model.DebtDetail12RepVO;
 import com.koscom.debt.model.DebtForm;
+import com.koscom.debt.model.DebtSummaryVO;
 import com.koscom.debt.model.DebtVO;
 import com.koscom.debt.model.ReqIntrCutForm;
 import com.koscom.debt.service.DebtManager;
@@ -169,6 +170,14 @@ public class DebtController {
 		debtForm.setNo_person_list(no_person_list);
 		debtForm.setDisplay_yn("Y");
 
+		if(!debtManager.verifyShareInfo(debtForm)) {
+			model.addAttribute("debtSummary", new DebtSummaryVO());
+			model.addAttribute("dataList",new ArrayList<String>());
+			model.addAttribute("dateList",new ArrayList<String>());
+			model.addAttribute("debtList",new ArrayList<DebtVO>());
+			return "jsonView";
+		}
+		
 		model.addAttribute("debtSummary", debtManager.getDebtSummary(debtForm));
 		Map<String, List<String>> summaryMap = debtManager.listStatDebtSummary(debtForm);
 		model.addAttribute("dataList",summaryMap.get("dataList"));
@@ -458,6 +467,11 @@ public class DebtController {
 		consumeForm.setNo_person_list(no_person_list);
 		consumeForm.setYm_trd(ym);
 
+		DebtForm debtForm = new DebtForm();
+		debtForm.setNo_person(no_person);
+		debtForm.setNo_person_list(no_person_list);
+		debtForm.setReq_yyyymm(ym);
+		
 		List<ConsumeVO> incomeList = new ArrayList<ConsumeVO>();
 		List<ConsumeVO> consumeList = new ArrayList<ConsumeVO>();
 
@@ -474,11 +488,6 @@ public class DebtController {
 
 		model.addAttribute("incomeList", incomeList);
 		model.addAttribute("consumeList", consumeList);
-
-		DebtForm debtForm = new DebtForm();
-		debtForm.setNo_person(no_person);
-		debtForm.setNo_person_list(no_person_list);
-		debtForm.setReq_yyyymm(ym);
 
 		List<DebtCalendarVO> debtList = debtManager.listCalendarDebtData(debtForm);
 

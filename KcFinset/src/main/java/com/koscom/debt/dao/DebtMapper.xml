@@ -792,24 +792,61 @@
     <select id="listStatDebtSummary" parameterType="com.koscom.debt.model.DebtForm" resultType="com.koscom.debt.model.DebtSummaryVO">
 		SELECT
 			DPRL.REQ_YYYYMM,
-			SUM( NVL( DPRL.AMT_REMAIN, 0) ) AS AMT_REMAIN
+			SUM( NVL( DPRL.AMT_REMAIN, 0 )) AS AMT_REMAIN
 		FROM
-			DEBT_PERSONAL_INFO DPI, DEBT_PERSONAL_REPAY_LIST DPRL
+			DEBT_PERSONAL_REPAY_LIST DPRL
+		INNER JOIN(
+				SELECT
+					A.NO_MANAGE_INFO,
+					A.YMD_LOANEND,
+					A.YMD_CANCEL,
+					A.DISPLAY_YN
+				FROM
+					DEBT_PERSONAL_INFO A
+				INNER JOIN(
+						SELECT
+							NO_PERSON,
+							NO_MANAGE_INFO
+						FROM
+							DEBT_PERSONAL_INFO
+						WHERE
+							NO_PERSON = #{no_person, jdbcType = VARCHAR}
+					UNION ALL SELECT
+							AA.OFFER_NO_PERSON,
+							BB.NO_MANAGE_INFO
+						FROM
+							SHARE_INFO AA
+						INNER JOIN SHARE_INFO_DETAIL BB ON
+							AA.SEQ_SHARE = BB.SEQ_SHARE
+						WHERE
+							AA.REQ_NO_PERSON = #{no_person, jdbcType = VARCHAR}
+							AND AA.CD_SHARE = '02'
+							AND AA.SHARE_STATUS = '02'
+							AND AA.YN_DEBT_INFO = 'Y'
+					) B ON
+					A.NO_PERSON = B.NO_PERSON
+					AND A.NO_MANAGE_INFO = B.NO_MANAGE_INFO
+				WHERE
+					A.NO_PERSON IN
+					<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
+						#{each_person}
+					</foreach>
+			) DPI ON
+			DPRL.NO_MANAGE_INFO = DPI.NO_MANAGE_INFO
 		WHERE
 				DPRL.NO_PERSON			IN
 				<foreach item="each_person" collection="no_person_list" open="(" separator="," close=")">
 					#{each_person}
 				</foreach>
-			AND DPI.NO_MANAGE_INFO		 =		DPRL.NO_MANAGE_INFO
 			AND DPRL.REQ_YYYYMM	<![CDATA[>]]>	TO_CHAR( ADD_MONTHS( SYSDATE, -6), 'YYYYMM' )
 			AND DPRL.REQ_YYYYMM	<![CDATA[<=]]>	TO_CHAR( SYSDATE, 'YYYYMM' )
 			AND DPI.YMD_LOANEND	<![CDATA[>]]>	DPRL.REQ_YYYYMM
 			AND DPI.YMD_CANCEL			 IS		NULL
 			AND DPI.DISPLAY_YN			 =		'Y'
 		GROUP BY
-			REQ_YYYYMM
+			DPRL.REQ_YYYYMM
 		ORDER BY
-			REQ_YYYYMM ASC
+			DPRL.REQ_YYYYMM ASC
     </select>
     <insert id="createRepayment" parameterType="com.koscom.debt.model.DebtVO">
 		MERGE INTO DEBT_PERSONAL_REPAY_LIST
@@ -1236,5 +1273,43 @@
 		WHERE
 			a.no_person = #{no_person, jdbcType = VARCHAR}
 			AND a.YMD_CANCEL IS NULL
+	</select>
+	<select id="verifyShareInfo" parameterType="com.koscom.debt.model.DebtForm" resultType="java.lang.Integer">
+		SELECT
+			COUNT( 1 )
+		FROM
+			(
+				<foreach collection="no_person_list" item="each_person" index="index">
+					<if test="index != 0">
+						UNION
+					</if>
+					SELECT
+						#{each_person} AS NO_PERSON
+					FROM
+						DUAL
+				</foreach>
+			) A
+		WHERE
+			NOT EXISTS
+				(
+					SELECT
+						1
+					FROM
+						(
+							SELECT
+								OFFER_NO_PERSON AS NO_PERSON
+							FROM
+								SHARE_INFO
+							WHERE
+									REQ_NO_PERSON = #{no_person, jdbcType = VARCHAR}
+								AND CD_SHARE = '02'
+								AND SHARE_STATUS = '02'
+								AND YN_DEBT_INFO = 'Y'
+							UNION SELECT
+								#{no_person, jdbcType = VARCHAR} AS NO_PERSON
+							FROM DUAL
+						) B
+					WHERE B.NO_PERSON IN A.NO_PERSON
+				)
 	</select>
 </mapper>

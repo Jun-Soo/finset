@@ -573,4 +573,10 @@ public class ConsumeManagerImpl implements ConsumeManager {
 			}
 		}
 	}
+
+	@Override
+	public boolean verifyShareInfo(ConsumeForm consumeForm) {
+		logger.debug("verifyShareInfo");
+		return consumeMapper.verifyShareInfo(consumeForm) == 0;
+	}
 }

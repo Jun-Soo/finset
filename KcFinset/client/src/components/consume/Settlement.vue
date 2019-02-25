@@ -1,30 +1,85 @@
 <template>
   <section v-if="seen">
     <div class="report-top">
-      <div class="checks round" style="';display:grid;grid-template-columns: 70% 1fr;background: #efeeec;'">
+      <div
+        class="checks round"
+        style="';display:grid;grid-template-columns: 70% 1fr;background: #efeeec;'"
+      >
         <p style="';margin-top: 4px;'">
-          <input type="radio" id="rds1" :class="{'checked':dataPeriod === 'yr'}" v-model="dataPeriod" @click="clickPeriod" value="yr"><label for="rds1">년</label>
-          <input type="radio" id="rds2" :class="{'checked':dataPeriod === 'mon'}" v-model="dataPeriod" @click="clickPeriod" value="mon"><label for="rds2">월</label>
-          <input type="radio" id="rds3" :class="{'checked':dataPeriod === 'week'}" v-model="dataPeriod" @click="clickPeriod" value="week"><label for="rds3">주</label>
+          <input
+            type="radio"
+            id="rds1"
+            :class="{'checked':dataPeriod === 'yr'}"
+            v-model="dataPeriod"
+            @click="clickPeriod"
+            value="yr"
+          >
+          <label for="rds1">년</label>
+          <input
+            type="radio"
+            id="rds2"
+            :class="{'checked':dataPeriod === 'mon'}"
+            v-model="dataPeriod"
+            @click="clickPeriod"
+            value="mon"
+          >
+          <label for="rds2">월</label>
+          <input
+            type="radio"
+            id="rds3"
+            :class="{'checked':dataPeriod === 'week'}"
+            v-model="dataPeriod"
+            @click="clickPeriod"
+            value="week"
+          >
+          <label for="rds3">주</label>
         </p>
         <p>
-          <input type="label" v-bind:class="detailSelection?'on':''" @click="detailSelection?detailSelection=false:detailSelection=true" value="조건설정" readonly>
+          <input
+            type="label"
+            v-bind:class="detailSelection?'on':''"
+            @click="detailSelection?detailSelection=false:detailSelection=true"
+            value="조건설정"
+            readonly
+          >
         </p>
       </div>
       <div v-if="detailSelection">
         <div class="date">
           <p>
-            <datepicker :minimum-view="dp_minimumView" v-model="dt_from" ref="datepicker1" :disabledDates="disabledDate1" :format="dp_format" :language="ko" class="div-date"></datepicker>
+            <datepicker
+              :minimum-view="dp_minimumView"
+              v-model="dt_from"
+              ref="datepicker1"
+              :disabledDates="disabledDate1"
+              :format="dp_format"
+              :language="ko"
+              class="div-date"
+            ></datepicker>
             <button @click="openDatepicker1"></button>
           </p>
           <p>
-            <datepicker :minimum-view="dp_minimumView" v-model="dt_to" ref="datepicker2" :disabledDates="disabledDate2" :format="dp_format" :language="ko" class="div-date"></datepicker>
+            <datepicker
+              :minimum-view="dp_minimumView"
+              v-model="dt_to"
+              ref="datepicker2"
+              :disabledDates="disabledDate2"
+              :format="dp_format"
+              :language="ko"
+              class="div-date"
+            ></datepicker>
             <button @click="openDatepicker2"></button>
           </p>
         </div>
         <div v-if="shareList.length>1" class="filter-wrap mt10">
-          <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
-            <input type="checkbox" :checked="person.isShow" :id="settingList[index].id"><label @click="clickShare(index)">{{person.viewName}}</label>
+          <div
+            v-for="(person, index) in shareList"
+            :key="person.no_person"
+            class="filter"
+            :class="settingList[index].color"
+          >
+            <input type="checkbox" :checked="person.isShow" :id="settingList[index].id">
+            <label @click="clickShare(index)">{{person.viewName}}</label>
           </div>
         </div>
       </div>
@@ -33,20 +88,31 @@
       <div v-if="chartList.length!=0" class="report-con">
         <div class="flex">
           <div>
-            <p class="key"><strong>수입</strong>(만원)</p>
+            <p class="key">
+              <strong>수입</strong>(만원)
+            </p>
             <p class="value1">{{incomeSum}}</p>
           </div>
           <div>
-            <p class="key"><strong>지출</strong>(만원)</p>
+            <p class="key">
+              <strong>지출</strong>(만원)
+            </p>
             <p class="value2">{{consumeSum}}</p>
           </div>
         </div>
-        <Graph v-if="chartList" ref="graph" v-model="chartList" :chartList="chartList" :consumeForm="consumeForm" :dt_from="dt_from" :dt_to="dt_to" :dataPeriod="dataPeriod"></Graph>
+        <Graph
+          v-if="chartList"
+          ref="graph"
+          v-model="chartList"
+          :chartList="chartList"
+          :consumeForm="consumeForm"
+          :dt_from="dt_from"
+          :dt_to="dt_to"
+          :dataPeriod="dataPeriod"
+        ></Graph>
         <!-- <TEST v-if="chartList" ref="graph" v-model="chartList" :chartList="chartList" :consumeForm="consumeForm" :dt_from="dt_from" :dt_to="dt_to" :dataPeriod="dataPeriod"></TEST> -->
       </div>
-      <div class="nodata" v-else-if="chartList.length==0">
-        조회하신 범위에 수입, 지출 내역이 없습니다
-      </div>
+      <div class="nodata" v-else-if="chartList.length==0">조회하신 범위에 수입, 지출 내역이 없습니다</div>
     </div>
 
     <div class="tab">
@@ -57,24 +123,51 @@
     </div>
     <div class="in-box-list list02 noMG">
       <div class="select pb10">
-        <multiselect class="multiselect-basic" v-model="listType" label="text" :title="'종류별'" :preselect-first="true" :options="type1">
-        </multiselect>
+        <multiselect
+          class="multiselect-basic"
+          v-model="listType"
+          label="text"
+          :title="'종류별'"
+          :preselect-first="true"
+          :options="type1"
+        ></multiselect>
         <p></p>
-        <multiselect class="multiselect-basic" v-model="orderType" label="text" :title="'조회순'" :preselect-first="true" :options="type2">
-        </multiselect>
+        <multiselect
+          class="multiselect-basic"
+          v-model="orderType"
+          label="text"
+          :title="'조회순'"
+          :preselect-first="true"
+          :options="type2"
+        ></multiselect>
       </div>
 
-      <div class="nodata" v-if="seen2 && rangeList.length==0">
-        조회하신 범위에 수입 또는 지출 내역이 없습니다
-      </div>
+      <div class="nodata" v-if="seen2 && rangeList.length==0">조회하신 범위에 수입 또는 지출 내역이 없습니다</div>
       <div class="item" v-else v-for="(item, idx) in rangeList" :key="idx">
         <a @click="goDetail(item)" class="block">
           <div class="flex">
-
-            <p class="key" v-if="listType.value=='category'"><img :src="getConsumeIconSrc(item.type_in_out, item.cd_class)" width="15px" class="mr5" alt="" />{{item.nm_class}} <em>({{item.grade}})</em></p>
-            <p class="key" v-else-if="listType.value=='store'">{{item.contents}} <em>({{item.grade}})</em></p>
-            <p class="key" v-else-if="listType.value=='means'">{{item.nm_card}} <em>({{item.grade}})</em></p>
-            <p class="number">{{item.amt_in_out}}<em>원</em></p>
+            <p class="key" v-if="listType.value=='category'">
+              <img
+                :src="getConsumeIconSrc(item.type_in_out, item.cd_class)"
+                width="15px"
+                class="mr5"
+                alt
+              >
+              {{item.nm_class}}
+              <em>({{item.grade}})</em>
+            </p>
+            <p class="key" v-else-if="listType.value=='store'">
+              {{item.contents}}
+              <em>({{item.grade}})</em>
+            </p>
+            <p class="key" v-else-if="listType.value=='means'">
+              {{item.nm_card}}
+              <em>({{item.grade}})</em>
+            </p>
+            <p class="number">
+              {{item.amt_in_out}}
+              <em>원</em>
+            </p>
           </div>
           <div class="bar">
             <p v-bind:style="{width:item.percentage+'%'}"></p>
@@ -86,7 +179,6 @@
         </a>
       </div>
     </div>
-
   </section>
 </template>
 
@@ -172,8 +264,8 @@ export default {
         this.dp_minimumView = "month";
         this.dp_format = "yyyy.MM";
         // this.dt_from = new Date(moment(this.dt_to).add(-3, "month"));
-        console.log(moment(this.dt_to).startOf('year'));
-        this.dt_from = new Date(moment(this.dt_to).startOf('year'));
+        console.log(moment(this.dt_to).startOf("year"));
+        this.dt_from = new Date(moment(this.dt_to).startOf("year"));
       } else if (this.dataPeriod == "mon") {
         this.dp_minimumView = "day";
         this.dp_format = "yyyy.MM.dd";
@@ -182,24 +274,24 @@ export default {
             .add(-1, "month")
             .isoWeekday(1)
         ); //한달전
-          //  let yrmon = null;
-          //  if(dt_basic == "01"){
-          //    this.dt_from = new Date(moment(this.dt_to).startOf('month'));
-          //  }else{
-          //     if (Number(dt_basic) < this.today.getDate()) {
-          //       yrmon = moment().format("YYYYMM");
-          //     } else {
-          //       //(dt_basic >= today.getDate())
-          //       yrmon = moment()
-          //         .add(-1, "month")
-          //         .format("YYYYMM");
-          //     }
-          //   this.dt_from = new Date(moment(yrmon + dt_basic, "YYYYMMDD"));
-          //  }
-          // if (dt_basic == null || dt_basic == "") {
-          //   //기준일이 null일 경우
-          //   dt_basic = "01";
-          // }
+        //  let yrmon = null;
+        //  if(dt_basic == "01"){
+        //    this.dt_from = new Date(moment(this.dt_to).startOf('month'));
+        //  }else{
+        //     if (Number(dt_basic) < this.today.getDate()) {
+        //       yrmon = moment().format("YYYYMM");
+        //     } else {
+        //       //(dt_basic >= today.getDate())
+        //       yrmon = moment()
+        //         .add(-1, "month")
+        //         .format("YYYYMM");
+        //     }
+        //   this.dt_from = new Date(moment(yrmon + dt_basic, "YYYYMMDD"));
+        //  }
+        // if (dt_basic == null || dt_basic == "") {
+        //   //기준일이 null일 경우
+        //   dt_basic = "01";
+        // }
       } else if (this.dataPeriod == "week") {
         this.dp_minimumView = "day";
         this.dp_format = "yyyy.MM.dd";

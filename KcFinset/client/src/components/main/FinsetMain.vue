@@ -21,7 +21,7 @@
     </div>
 
     <div class="my-main-list">
-      <!--지출-->
+      <!--지출 // 금보원
       <div v-if="cardScrapCnt != 0" class="list">
         <div class="item">
           <div class="left">
@@ -44,6 +44,7 @@
           </div>
         </div>
       </div>
+      -->
       <!--자산-->
       <div v-if="bankScrapCnt != 0" class="list">
         <div class="item">
@@ -169,10 +170,10 @@ export default {
       // var data = querystring.stringify({
       //   test: "1111"
       // });
-      // var formData = new FormData();
-      // formData.append("no_person", "P000000409");
+      var formData = new FormData();
+      formData.append("no_person", "P000002985");
       this.$http
-        .get("/m/main/getMainInfo.json")
+        .post("/m/main/getMainInfo.json", formData)
         .then(response => {
           var creditInfo = response.data.creditInfo;
           if (creditInfo != null) {

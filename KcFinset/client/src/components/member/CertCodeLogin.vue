@@ -308,6 +308,10 @@ export default {
         j_username: _this.username,
         j_password: _this.password
       });
+      // var data = new FormData();
+      // data.append("j_username", _this.username);
+      // data.append("j_password", _this.password);
+
       this.$store.state.isLoading = true;
       this.$http
         .post(_this.$store.state.loginPath, data, {

@@ -40,17 +40,17 @@
           <!-- <dd><a @click="clickButton('/debt/calc', '/debt/main')">계산기</a></dd> -->
           <dd><a @click="clickButton('/debt/reqIntrCut', '/debt/main')">금리인하요구</a></dd>
           <dd><a @click="clickButton('/goods/list', '/debt/main')">추천상품</a></dd>
-
+          <!--           
           <dt>소비지출</dt>
           <dd><a @click="clickButton('/consume/main', '')">소비현황</a></dd>
           <dd><a @click="clickButton('/common/monthCal', '/consume/main')">지출캘린더</a></dd>
           <dd><a @click="clickButton('/consume/payment', '/consume/main')">카드대금조회</a></dd>
-
+ -->
           <dt>자산</dt>
           <dd><a @click="clickButton('/assets/main', '')">자산현황</a></dd>
-          <dd><a @click="clickButton('/assets/bankMain', '/assets/main')">은행</a></dd>
+          <!-- <dd><a @click="clickButton('/assets/bankMain', '/assets/main')">은행</a></dd> -->
           <!-- <dd><a @click="clickButton('/assets/stockMain', '/assets/main')">증권</a></dd> -->
-          <dd><a @click="clickButton('/assets/etcMain', '/assets/main')">기타</a></dd>
+          <!-- <dd><a @click="clickButton('/assets/etcMain', '/assets/main')">기타</a></dd> -->
           <!-- <dd><a @click="clickButton('/assets/diagsMain', '/assets/main')">자산진단</a></dd> -->
         </dl>
       </div>

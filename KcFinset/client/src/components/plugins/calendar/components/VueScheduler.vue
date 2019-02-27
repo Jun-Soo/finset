@@ -9,6 +9,8 @@
         <button class="today" @click="goToToday">TODAY</button>
       </div>
     </div>
+
+    <!-- // 금보원
     <div class="check-flex">
       <div class="income">
         <button :class="{ 'on':isActiveIncome }" @click="clickIncome">수입</button>
@@ -23,7 +25,7 @@
         <em>{{Common.formatNumber(sumData.sumDebt)}}</em>
       </div>
     </div>
-
+    
     <div class="container-wrap noMG">
       <div class="list-wrap" v-if="shareList.length != 1">
         <div class="filter-wrap">
@@ -33,7 +35,7 @@
         </div>
       </div>
     </div>
-
+    -->
     <component :is="activeView" :class="'v-cal-content--' + activeView" v-bind="activeViewProps"></component>
     <footer class="v-cal-footer"></footer>
   </div>

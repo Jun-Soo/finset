@@ -274,7 +274,12 @@ public class ScrapManagerImpl implements ScrapManager {
 		logger.info("getDirectFinanceSearch  : URL[" + directUrl +"], APIkey : "+directKey);
 		logger.info("financeTerms  : [" + financeTerms +"]");
 		
+		// 금보원 증권연동 특수문자 치환 - 임시적용
+		financeTerms = financeTerms.replaceAll("&quot;", "\"");
+		financeTerms = financeTerms.replaceAll("&middot;", "-");
 		
+		jwsInfo = financeTerms.replaceAll("&quot;", "\"");
+		jwsInfo = financeTerms.replaceAll("&middot;", "-");
 		
 		JsonObject jsonSendRoot = new JsonObject();
 		

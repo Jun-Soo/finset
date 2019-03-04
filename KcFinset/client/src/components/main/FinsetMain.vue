@@ -170,10 +170,10 @@ export default {
       // var data = querystring.stringify({
       //   test: "1111"
       // });
-      var formData = new FormData();
-      formData.append("no_person", "P000002985");
+      // var formData = new FormData();
+      // formData.append("no_person", "P000002985");
       this.$http
-        .post("/m/main/getMainInfo.json", formData)
+        .get("/m/main/getMainInfo.json")
         .then(response => {
           var creditInfo = response.data.creditInfo;
           if (creditInfo != null) {

@@ -46,7 +46,7 @@
       </div>
       -->
       <!--자산-->
-      <div v-if="bankScrapCnt != 0" class="list">
+      <div v-if="bankScrapCnt != 0 || stockScrapCnt != 0" class="list">
         <div class="item">
           <div class="left">
             <a @click="$router.push('/assets/main')">자산</a>
@@ -128,6 +128,7 @@ export default {
       cardScrapCnt: 0, //카드스크래핑건수
       consumeSumAmt: "", //지출총금액
       bankScrapCnt: 0, //은행스크래핑건수
+      stockScrapCnt: 0, //증권스크래핑건수
       assetsSumAmt: "", //자산총금액
       debtSumAmt: "", //부채총금액
       gaugeValue: 0,
@@ -184,6 +185,7 @@ export default {
           _this.cardScrapCnt = response.data.cardScrapCnt;
           _this.consumeSumAmt = response.data.consumeSumAmt;
           _this.bankScrapCnt = response.data.bankScrapCnt;
+          _this.stockScrapCnt = response.data.stockScrapCnt;
           _this.assetsSumAmt = response.data.assetsSumAmt;
           _this.debtSumAmt = response.data.debtSumAmt;
 

@@ -64,6 +64,9 @@ public class MainController {
 		mainForm.setCd_agency("04"); //은행
 		model.addAttribute("bankScrapCnt", mainManager.getMainScrapCnt(mainForm)); //은행스크래핑건수
 		model.addAttribute("assetsSumAmt", mainManager.getMainAssetsSumAmt(no_person)); //자산총금액
+		
+		mainForm.setCd_agency("06"); //증권
+		model.addAttribute("stockScrapCnt", mainManager.getMainScrapCnt(mainForm)); //은행스크래핑건수
 
 		model.addAttribute("debtSumAmt", mainManager.getMainDebtSumAmt(no_person)); //부채총금액
 

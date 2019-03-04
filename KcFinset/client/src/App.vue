@@ -190,7 +190,7 @@ export default {
         }
       }
     },
-    // 스크래핑 데이터 가공 및 저장
+    // 스크래핑 데이터 가공 및 저장 5t6
     saveScrapData: function() {
       var _this = this;
       this.$http
@@ -318,6 +318,10 @@ export default {
             var smsExclude = result.smsExclude;
             window.Android.getSmsList(smsStartDate, smsInclude, smsExclude);
           }
+          //금보원
+          _this.resultAutoScrap("true");
+          return;
+
           var bankInfo = "";
           var cardInfo = "";
           var ntsInfo = "";

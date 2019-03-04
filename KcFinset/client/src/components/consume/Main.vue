@@ -24,7 +24,7 @@
             <p class="value">{{Common.formatNumber(income)}}</p>
           </div>
         </div>
-        <Progress :max="progressMax" :text="progressText" :click="clickProgress"/>
+        <Progress :max="progressMax" :text="progressText" :click="clickProgress" />
       </div>
 
       <div class="banner-wrap owl-carousel">
@@ -88,12 +88,7 @@
       <div class="spend-list box-list noMG" :class="{'pt0':shareList.length == 1}">
         <div class="list-wrap" v-if="shareList.length != 1">
           <div class="filter-wrap">
-            <div
-              v-for="(person, index) in shareList"
-              :key="person.no_person"
-              class="filter"
-              :class="settingList[index].color"
-            >
+            <div v-for="(person, index) in shareList" :key="person.no_person" class="filter" :class="settingList[index].color">
               <input type="checkbox" :checked="person.isShow" :id="settingList[index].id">
               <label @click="clickShare(index)">{{formatSharePerson(person)}}</label>
             </div>
@@ -104,12 +99,7 @@
         </div>
         <div v-else v-for="(subList, index) in consumeList" :key="index" class="list-wrap">
           <p class="date">{{Common.formatDate(subList[0].dt_trd,"mmdd")}}</p>
-          <div
-            v-for="vo in subList"
-            :key="vo.index"
-            class="item"
-            @click="clickConsumeList(vo.seq_consume, vo.no_person, vo.type_in_out, vo.yn_person_regist)"
-          >
+          <div v-for="vo in subList" :key="vo.index" class="item" @click="clickConsumeList(vo.seq_consume, vo.no_person, vo.type_in_out, vo.yn_person_regist)">
             <div class="left">
               <p class="name">{{vo.contents}}</p>
               <p class="cate">
@@ -123,9 +113,7 @@
                 <em>원</em>
               </p>
               <p class="circle red" v-if="shareList.length != 1">
-                <span
-                  :class="settingList[shareList.findIndex(person => person.no_person === vo.no_person)].color"
-                ></span>
+                <span :class="settingList[shareList.findIndex(person => person.no_person === vo.no_person)].color"></span>
               </p>
               <p class="text">{{formatMeansConsume(vo.means_consume)}}</p>
             </div>
@@ -136,16 +124,7 @@
     </section>
     <div>
       <div>
-        <datepicker
-          v-model="standardDt"
-          @selected="selectDate"
-          :minimum-view="'month'"
-          :language="ko"
-          :format="Common.formatDateDot"
-          :hideInput="true"
-          class="div-date"
-          ref="datepicker"
-        />
+        <datepicker v-model="standardDt" @selected="selectDate" :minimum-view="'month'" :language="ko" :format="Common.formatDateDot" :hideInput="true" class="div-date" ref="datepicker" />
       </div>
     </div>
   </div>
@@ -337,7 +316,7 @@ export default {
     // progressbar 클릭 시
     clickProgress: function() {
       if (!this.isScrap) {
-        this.$router.push("/scrap/CtrlFcLink");
+        this.$router.push("/consume/CtrlFcLink");
       } else {
         if (
           this.curDate.getFullYear() == this.standardDt.getFullYear() &&

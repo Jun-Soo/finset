@@ -7,11 +7,10 @@
 
     <div class="tab">
       <div class="wrap">
-        <!-- 금보원 -->
-        <!-- <a :class="{'on':curTab === 'bank'}" @click="tabOnClick('bank', $event)">은행</a> -->
-        <!-- <a :class="{'on':curTab === 'card'}" @click="tabOnClick('card', $event)">카드</a> -->
-        <!-- <a v-if="showStock" :class="{'on':curTab === 'stock'}" @click="tabOnClick('stock', $event)">증권</a> -->
-        <!-- <a :class="{'on':curTab === 'etc'}" @click="tabOnClick('etc', $event)">기타</a> -->
+        <a :class="{'on':curTab === 'bank'}" @click="tabOnClick('bank', $event)">은행</a>
+        <a :class="{'on':curTab === 'card'}" @click="tabOnClick('card', $event)">카드</a>
+        <a v-if="showStock" :class="{'on':curTab === 'stock'}" @click="tabOnClick('stock', $event)">증권</a>
+        <a :class="{'on':curTab === 'etc'}" @click="tabOnClick('etc', $event)">기타</a>
       </div>
     </div>
 
@@ -125,9 +124,7 @@ export default {
   data() {
     return {
       seen: false,
-      //금보원
-      // curTab: "bank",
-      curTab: "stock",
+      curTab: "bank",
       bankList: [],
       cardList: [],
       stockList: [],

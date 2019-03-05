@@ -21,7 +21,7 @@
     </div>
 
     <div class="my-main-list">
-      <!--지출 // 금보원
+      <!-- 지출  -->
       <div v-if="cardScrapCnt != 0" class="list">
         <div class="item">
           <div class="left">
@@ -44,7 +44,7 @@
           </div>
         </div>
       </div>
-      -->
+
       <!--자산-->
       <div v-if="bankScrapCnt != 0 || stockScrapCnt != 0" class="list">
         <div class="item">

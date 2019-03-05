@@ -4,11 +4,10 @@
       <div class="container mt30">
         <h3 v-if="isSingle!=true">연동 금융사를 선택해주세요.</h3>
         <div class="checks grid2 mt10" v-if="isSingle!=true">
-          <!-- 금보원 -->
-          <!-- <p><input type="checkbox" id="chk1" :checked="isCheckBank" @click="clickCheck('bank')"><label for="chk1">은행</label></p> -->
-          <!-- <p><input type="checkbox" id="chk2" :checked="isCheckCard" @click="clickCheck('card')"><label for="chk2">카드</label></p> -->
+          <p><input type="checkbox" id="chk1" :checked="isCheckBank" @click="clickCheck('bank')"><label for="chk1">은행</label></p>
+          <p><input type="checkbox" id="chk2" :checked="isCheckCard" @click="clickCheck('card')"><label for="chk2">카드</label></p>
           <p v-if="showStock" class="mt10"><input type="checkbox" id="chk3" :checked="isCheckStock" @click="clickCheck('stock')"><label for="chk3">증권</label></p>
-          <!-- <p class="mt10"><input type="checkbox" id="chk4" :checked="isCheckNts" @click="clickCheck('nts')"><label for="chk4">국세청</label></p> -->
+          <p class="mt10"><input type="checkbox" id="chk4" :checked="isCheckNts" @click="clickCheck('nts')"><label for="chk4">국세청</label></p>
         </div>
 
         <div class="pb90" v-if="isCheckStock">
@@ -45,11 +44,10 @@ export default {
   name: "",
   data() {
     return {
-      //금보원
-      isCheckBank: false,
-      isCheckCard: false,
+      isCheckBank: true,
+      isCheckCard: true,
       isCheckStock: true, //증권은 추후 서비스 제공시에 true로 변경 필요
-      isCheckNts: false,
+      isCheckNts: true,
       isCheckCert: false,
       showButton: true,
       isGetCertContent: false,

@@ -148,15 +148,15 @@ export default {
           _this.sumData.sumIncome = 0;
           _this.sumData.sumConsume = 0;
           _this.sumData.sumDebt = 0;
-          // 금보원
-          // for (var idx in incomeList) {
-          //   _this.makeEvent(incomeList[idx], "income");
-          //   _this.sumData.sumIncome += parseInt(incomeList[idx].amt_in_out);
-          // }
-          // for (var idx in consumeList) {
-          //   _this.makeEvent(consumeList[idx], "consume");
-          //   _this.sumData.sumConsume += parseInt(consumeList[idx].amt_in_out);
-          // }
+
+          for (var idx in incomeList) {
+            _this.makeEvent(incomeList[idx], "income");
+            _this.sumData.sumIncome += parseInt(incomeList[idx].amt_in_out);
+          }
+          for (var idx in consumeList) {
+            _this.makeEvent(consumeList[idx], "consume");
+            _this.sumData.sumConsume += parseInt(consumeList[idx].amt_in_out);
+          }
 
           for (var idx in debtList) {
             _this.makeEvent(debtList[idx], "debt");

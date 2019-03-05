@@ -318,9 +318,6 @@ export default {
             var smsExclude = result.smsExclude;
             window.Android.getSmsList(smsStartDate, smsInclude, smsExclude);
           }
-          //금보원
-          _this.resultAutoScrap("true");
-          return;
 
           var bankInfo = "";
           var cardInfo = "";

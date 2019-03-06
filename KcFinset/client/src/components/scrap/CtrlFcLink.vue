@@ -17,8 +17,8 @@
     <div class="box-list list02 noMG" v-if="'bank'==this.curTab">
       <div class="item" v-for="bank in bankList" :key="bank.index">
         <div class="flex">
-          <p class="symbol"><img :src="bank.icon" alt="" />{{bank.nm_fc}}</p>
-          <div class="btn-menu-wrap" :class="{'on':bank.isClickMenu}" v-if="bank.yn_link==='Y'">
+          <p class="symbol wd70"><img :src="bank.icon" alt="" />{{bank.nm_fc}}</p>
+          <div class="btn-menu-wrap wd30" :class="{'on':bank.isClickMenu}" v-if="bank.yn_link==='Y'">
             <button class="btn-menu-pop" @click="clickMenu(bank.cd_fc, $event)"></button>
             <div class="menu" v-if="bank.isClickLink">
               <a @click="clickCert(bank, $event)">공인인증서</a>
@@ -29,7 +29,7 @@
               <a @click="clickLink(bank.cd_fc, $event)">연동정보 변경</a>
             </div>
           </div>
-          <div class="btn-menu-wrap" :class="{'on':bank.isClickLink}" v-else>
+          <div class="btn-menu-wrap wd30" :class="{'on':bank.isClickLink}" v-else>
             <a class="btn-interlock" @click="clickLink(bank.cd_fc, $event)">연동하기</a>
             <div class="menu">
               <a @click="clickCert(bank, $event)">공인인증서</a>

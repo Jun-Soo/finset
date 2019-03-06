@@ -256,6 +256,10 @@ textarea {
   border-radius: 20px;
 }
 
+.checks.search-check input[type="checkbox"]+label:nth-child(n+4) {
+  margin-top: 3px;
+}
+
 .checks.search-check input[type="checkbox"]+label:before {
   display: none;
 }

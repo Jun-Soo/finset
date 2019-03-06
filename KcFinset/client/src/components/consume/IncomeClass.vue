@@ -126,7 +126,6 @@ export default {
             formData.append("type_in_out", "01");
             formData.append("cd_class", this.curClass);
             formData.append("nm_class", this.nmCate);
-            var _this = this;
             this.$http
               .post("/m/consume/modifyPersonConsumeClassNmClass.json", formData)
               .then(function(response) {

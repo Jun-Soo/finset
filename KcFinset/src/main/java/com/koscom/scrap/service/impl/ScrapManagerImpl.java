@@ -11,6 +11,7 @@ import javax.annotation.Resource;
 
 import net.sf.json.JSONSerializer;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
@@ -274,12 +275,9 @@ public class ScrapManagerImpl implements ScrapManager {
 		logger.info("getDirectFinanceSearch  : URL[" + directUrl +"], APIkey : "+directKey);
 		logger.info("financeTerms  : [" + financeTerms +"]");
 		
-		// 금보원 증권연동 특수문자 치환 - 임시적용
-		financeTerms = financeTerms.replaceAll("&quot;", "\"");
-		financeTerms = financeTerms.replaceAll("&middot;", "-");
-		
-		jwsInfo = financeTerms.replaceAll("&quot;", "\"");
-		jwsInfo = financeTerms.replaceAll("&middot;", "-");
+		// 금보원 증권연동 html entity 치환
+		financeTerms = StringEscapeUtils.unescapeHtml(financeTerms);
+		jwsInfo = StringEscapeUtils.unescapeHtml(financeTerms);
 		
 		JsonObject jsonSendRoot = new JsonObject();
 		

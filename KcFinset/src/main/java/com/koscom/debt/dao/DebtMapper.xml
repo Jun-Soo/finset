@@ -1302,7 +1302,6 @@
 								SHARE_INFO
 							WHERE
 									REQ_NO_PERSON = #{no_person, jdbcType = VARCHAR}
-								AND CD_SHARE = '02'
 								AND SHARE_STATUS = '02'
 								AND YN_DEBT_INFO = 'Y'
 							UNION SELECT

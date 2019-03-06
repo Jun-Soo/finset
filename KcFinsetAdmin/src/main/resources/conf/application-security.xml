@@ -1,52 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans:beans xmlns="http://www.springframework.org/schema/security"
 			 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-			 xsi:schemaLocation="http://www.springframework.org/schema/beans 
-								 http://www.springframework.org/schema/beans/spring-beans-3.2.xsd 
-								 http://www.springframework.org/schema/security 
+			 xsi:schemaLocation="http://www.springframework.org/schema/beans
+								 http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+								 http://www.springframework.org/schema/security
 								 http://www.springframework.org/schema/security/spring-security-3.2.xsd"
 			 xmlns:beans="http://www.springframework.org/schema/beans"
 			 default-lazy-init="true">
-	
+
 	<!-- 어노테이션을 사용하기 위해 세팅한다. -->
 	<global-method-security secured-annotations="enabled" jsr250-annotations="enabled"/>
-	
+
 	<!-- AUTHORITY 가 ADMIN 일 경우 접속가능한 IP 정의  -->
 	<beans:bean id="loginManager" class="com.koscom.login.service.LoginManager">
 	</beans:bean>
-	
-	<beans:bean id="securityReqFilter" class="com.koscom.util.SecurityReqFilter">
-	</beans:bean>
+
 	
 	<!-- 패턴정의 -->
-	<http pattern="/apply/**" security="none"/>
-	<http pattern="/attach/getFile**" security="none"/>
-	<http pattern="/cache/**" security="none"/>
-	<http pattern="/counsel/**" security="none"/>
-	<http pattern="/edoc/**" security="none"/>
-
-	<http pattern="/fccode/**" security="none"/>
-	<http pattern="/finance/**" security="none"/>
-<!-- 	<http pattern="/fincorp/**" security="none"/> -->
-	<http pattern="/finset/**" security="none"/>
-	<http pattern="/stdcode/**" security="none"/>
-
 	<http pattern="/login/**" security="none"/>
-	<http pattern="/prepare/**" security="none"/>
+	<!-- 금융사 외부  -->
+	<http pattern="/finance/**" security="none"/>
 	<http pattern="/fonts/**" security="none"/>
 	<http pattern="/img/**" security="none"/>
 	<http pattern="/object/**" security="none"/>
 	<http pattern="/script/**" security="none"/>
 	<http pattern="/style/**" security="none"/>
-	<http pattern="/pds/**" security="none"/>
 	<http pattern="/servlet/**" security="none"/>
-	<http pattern="/pusheach/**" security="none"/>
-	<http pattern="/test/**" security="none"/>
-	
+	<http pattern="/attach/getFile**" security="none"/>
+	<http pattern="/monitor/**" security="none"/>
+
+	<!-- KCB CB 테스트를 위해서 임시로  설정 -->
+	<http pattern="/kcb/**" security="none"/>
+
 	<http auto-config="true">
 		<access-denied-handler error-page="/login/403.crz"/>
 		<custom-filter ref="securityReqFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
-		<intercept-url pattern="/**" access="ROLE_USER, ROLE_ADMIN"/>
+		<intercept-url pattern="/**" access="ROLE_USER,ROLE_ADMIN,ROLE_ANONYMOUS"/>
 		<form-login login-page="/login/login.crz"
 					always-use-default-target="true"
 					default-target-url="/"
@@ -55,20 +44,23 @@
 					/>
 		<!-- 중복로그인 -->
 		<session-management>
-			<concurrency-control max-sessions="1" expired-url="/login/login.crz?denied=92"/> 
+			<concurrency-control max-sessions="1" expired-url="/login/login.crz?denied=92"/>
 		</session-management>
 		<logout invalidate-session="true"/>
 	</http>
-	
+
 	<beans:bean id="loggerListener" class="org.springframework.security.authentication.event.LoggerListener"/>
-	
-	<!-- <beans:bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.Md5PasswordEncoder"/> -->
+	<!--
 	<beans:bean id="passwordEncoder" class="com.koscom.util.DBPasswordEncoder"/>
-	
-	<authentication-manager alias="authenticationManager">
-		<authentication-provider user-service-ref="loginManager">
-			<password-encoder ref="passwordEncoder"/>
+	 -->
+ 	<authentication-manager alias="authenticationManager">
+		<authentication-provider>
+			<!-- <password-encoder ref="passwordEncoder"/> -->
+			<jdbc-user-service data-source-ref="dataSource"
+							   role-prefix="ROLE_"
+							   users-by-username-query="SELECT id_emp as userid, pass_emp as password, 1 as enabled FROM worker_info WHERE id_emp = ? AND cd_status_emp = '01'"
+							   authorities-by-username-query="SELECT id_emp as userid, authority FROM worker_info WHERE id_emp = ?"
+			/>
 		</authentication-provider>
 	</authentication-manager>
-	
 </beans:beans>

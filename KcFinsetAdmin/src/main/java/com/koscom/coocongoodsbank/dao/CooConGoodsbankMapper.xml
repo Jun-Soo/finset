@@ -1,0 +1,776 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.coocongoodsbank.dao.CooConGoodsbankMapper">
+	
+	<insert id="createGoodsbank" parameterType="com.koscom.coocongoodsbank.model.GoodsbankInfoForm" >
+	/* com.koscom.coocongoodsbank.dao.coocongoodsbank.createGoodsbank */
+	INSERT INTO GOODSBANK_INFO
+		(
+			CD_NON_GOODS
+			,CD_FC
+			,NM_FC
+			,CD_GOODS_CLASS_L
+			,CD_GOODS_CLASS_M
+			,CD_GOODS_CLASS_S
+			,CD_GOODS_FC
+			,NM_GOODS
+			,YN_USE
+			,RTO_INTEREST_FROM
+			,RTO_INTEREST_TO
+			,DESC_MAX_LIMIT
+			,MIN_LOAN_TERM
+			,MAX_LOAN_TERM
+			,RENEW_MAX_TERM
+			,RTO_CANCEL
+			,YEAR_COMMISSION
+			,DESC_FEATURE
+			,KEYWORD
+			,CD_APPLY_TYPE
+			,CD_TYPE_PAY
+			,CD_TRADE_TYPE
+			,YN_SEND_DOCU
+			,CD_TARGET_CUST
+			,CD_RATIO_TYPE
+			,CD_COLLATERAL_HOUSE_TYPE
+			,CD_COLLATERAL_LOAN_USE
+			,CD_AREA
+			,CD_DEFER
+			,CD_OBJECT
+			,YN_POST_RANKING
+			,CD_TIME_EXEC
+			,DESC_GOODS
+			,DESC_LOAN
+			,DESC_LIMIT
+			,DESC_RATIO
+			,DESC_PREFER_YIELD
+			,DESC_TERM
+			,DESC_REPAYMETHOD
+			,DESC_LOAN_COST
+			,DESC_PAPERS
+			,DESC_OVERDUE_INTEREST
+			,DESC_REPAYMENT_FEE
+			,DESC_LOAN_PERIOD
+			,DESC_LOAN_PROVIDE
+			,DESC_CONTACT
+			,DESC_COLLATERAL
+			,DESC_ETC
+			,ID_FRT
+			,DT_FRT
+			,ID_LST
+			,DT_LST
+		) VALUES (
+			#{cd_non_goods, jdbcType=VARCHAR}
+			,#{cd_fc, jdbcType=VARCHAR}
+			,#{nm_fc, jdbcType=VARCHAR}
+			,#{cd_goods_class_l, jdbcType=VARCHAR}
+			,#{cd_goods_class_m, jdbcType=VARCHAR}
+			,#{cd_goods_class_s, jdbcType=VARCHAR}
+			,#{cd_goods_fc, jdbcType=VARCHAR}
+			,#{nm_goods, jdbcType=VARCHAR}
+			,#{yn_use, jdbcType=VARCHAR}
+			,#{rto_interest_from, jdbcType=VARCHAR}
+			,#{rto_interest_to, jdbcType=VARCHAR}
+			,#{min_loan_term, jdbcType=VARCHAR}
+			,#{desc_max_limit, jdbcType=VARCHAR}
+			,#{max_loan_term, jdbcType=VARCHAR}
+			,#{renew_max_term, jdbcType=VARCHAR}
+			,#{rto_cancel, jdbcType=VARCHAR}
+			,#{year_commission, jdbcType=VARCHAR}
+			,#{desc_feature, jdbcType=VARCHAR}
+			,#{keyword, jdbcType=VARCHAR}
+			,#{cd_apply_type, jdbcType=VARCHAR}
+			,#{cd_type_pay, jdbcType=VARCHAR}
+			,#{cd_trade_type, jdbcType=VARCHAR}
+			,#{yn_send_docu, jdbcType=VARCHAR}
+			,#{cd_target_cust, jdbcType=VARCHAR}
+			,#{cd_ratio_type, jdbcType=VARCHAR}
+			,#{cd_collateral_house_type, jdbcType=VARCHAR}
+			,#{cd_collateral_loan_use, jdbcType=VARCHAR}
+			,#{cd_area, jdbcType=VARCHAR}
+			,#{cd_defer, jdbcType=VARCHAR}
+			,#{cd_object, jdbcType=VARCHAR}
+			,#{yn_post_ranking, jdbcType=VARCHAR}
+			,#{cd_time_exec, jdbcType=VARCHAR}
+			,#{desc_goods, jdbcType=VARCHAR}
+			,#{desc_loan, jdbcType=VARCHAR}
+			,#{desc_limit, jdbcType=VARCHAR}
+			,#{desc_ratio, jdbcType=VARCHAR}
+			,#{desc_prefer_yield, jdbcType=VARCHAR}
+			,#{desc_term, jdbcType=VARCHAR}
+			,#{desc_repaymethod, jdbcType=VARCHAR}
+			,#{desc_loan_cost, jdbcType=VARCHAR}
+			,#{desc_papers, jdbcType=VARCHAR}
+			,#{desc_overdue_interest, jdbcType=VARCHAR}
+			,#{desc_repayment_fee, jdbcType=VARCHAR}
+			,#{desc_loan_period, jdbcType=VARCHAR}
+			,#{desc_loan_provide, jdbcType=VARCHAR}
+			,#{desc_contact, jdbcType=VARCHAR}
+			,#{desc_collateral, jdbcType=VARCHAR}
+			,#{desc_etc, jdbcType=VARCHAR}
+			,#{id_frt, jdbcType=VARCHAR}
+			,SYSDATE
+			,#{id_frt, jdbcType=VARCHAR}
+			,SYSDATE
+		)
+	</insert>
+
+	<update id="modifyGoodsbankDetails" parameterType="com.koscom.coocongoodsbank.model.GoodsbankInfoForm" >
+        /* com.koscom.coocongoodsbank.dao.coocongoodsbank.modifyGoodsbankDetails */
+		UPDATE GOODSBANK_INFO
+		   SET 	CD_FC = #{ cd_fc, jdbcType=VARCHAR}
+				,NM_FC = #{ nm_fc, jdbcType=VARCHAR}
+				,CD_GOODS_CLASS_L = #{ cd_goods_class_l, jdbcType=VARCHAR}
+				,CD_GOODS_CLASS_M = #{ cd_goods_class_m, jdbcType=VARCHAR}
+				,CD_GOODS_CLASS_S = #{ cd_goods_class_s, jdbcType=VARCHAR}
+				,CD_GOODS_FC = #{ cd_goods_fc, jdbcType=VARCHAR}
+				,NM_GOODS = #{ nm_goods, jdbcType=VARCHAR}
+				,YN_USE = #{ yn_use, jdbcType=VARCHAR}
+				,RTO_INTEREST_FROM = #{ rto_interest_from, jdbcType=VARCHAR}
+				,RTO_INTEREST_TO = #{ rto_interest_to, jdbcType=VARCHAR}
+				,DESC_MAX_LIMIT = #{ desc_max_limit, jdbcType=VARCHAR}
+				,MIN_LOAN_TERM = #{ min_loan_term, jdbcType=VARCHAR}
+				,MAX_LOAN_TERM = #{ max_loan_term, jdbcType=VARCHAR}
+				,RENEW_MAX_TERM = #{ renew_max_term, jdbcType=VARCHAR}
+				,RTO_CANCEL = #{ rto_cancel, jdbcType=VARCHAR}
+				,YEAR_COMMISSION = #{ year_commission, jdbcType=VARCHAR}
+				,DESC_FEATURE = #{ desc_feature, jdbcType=VARCHAR}
+				,KEYWORD = #{ keyword, jdbcType=VARCHAR}
+				,CD_APPLY_TYPE = #{ cd_apply_type, jdbcType=VARCHAR}
+				,CD_TYPE_PAY = #{ cd_type_pay, jdbcType=VARCHAR}
+				,CD_TRADE_TYPE = #{ cd_trade_type, jdbcType=VARCHAR}
+				,YN_SEND_DOCU = #{ yn_send_docu, jdbcType=VARCHAR}
+				,CD_TARGET_CUST = #{ cd_target_cust, jdbcType=VARCHAR}
+				,CD_RATIO_TYPE = #{ cd_ratio_type, jdbcType=VARCHAR}
+				,CD_COLLATERAL_HOUSE_TYPE = #{ cd_collateral_house_type, jdbcType=VARCHAR}
+				,CD_COLLATERAL_LOAN_USE = #{ cd_collateral_loan_use, jdbcType=VARCHAR}
+				,CD_AREA = #{ cd_area, jdbcType=VARCHAR}
+				,CD_DEFER = #{ cd_defer, jdbcType=VARCHAR}
+				,CD_OBJECT = #{ cd_object, jdbcType=VARCHAR}
+				,YN_POST_RANKING = #{ yn_post_ranking, jdbcType=VARCHAR}
+				,CD_TIME_EXEC = #{ cd_time_exec, jdbcType=VARCHAR}
+				,DESC_GOODS = #{ desc_goods, jdbcType=VARCHAR}
+				,DESC_LOAN = #{ desc_loan, jdbcType=VARCHAR}
+				,DESC_LIMIT = #{ desc_limit, jdbcType=VARCHAR}
+				,DESC_RATIO = #{ desc_ratio, jdbcType=VARCHAR}
+				,DESC_PREFER_YIELD = #{ desc_prefer_yield, jdbcType=VARCHAR}
+				,DESC_TERM = #{ desc_term, jdbcType=VARCHAR}
+				,DESC_REPAYMETHOD = #{ desc_repaymethod, jdbcType=VARCHAR}
+				,DESC_LOAN_COST = #{ desc_loan_cost, jdbcType=VARCHAR}
+				,DESC_PAPERS = #{ desc_papers, jdbcType=VARCHAR}
+				,DESC_OVERDUE_INTEREST = #{ desc_overdue_interest, jdbcType=VARCHAR}
+				,DESC_REPAYMENT_FEE = #{ desc_repayment_fee, jdbcType=VARCHAR}
+				,DESC_LOAN_PERIOD = #{ desc_loan_period, jdbcType=VARCHAR}
+				,DESC_LOAN_PROVIDE = #{ desc_loan_provide, jdbcType=VARCHAR}
+				,DESC_CONTACT = #{ desc_contact, jdbcType=VARCHAR}
+				,DESC_COLLATERAL = #{ desc_collateral, jdbcType=VARCHAR}
+				,DESC_ETC = #{ desc_etc, jdbcType=VARCHAR}
+				,ID_LST = #{ id_lst, jdbcType=VARCHAR}
+				,DT_LST = SYSDATE
+		 WHERE CD_NON_GOODS = #{ cd_non_goods }
+	</update>
+
+	<delete id="delGoodsbankDetails" parameterType="com.koscom.coocongoodsbank.model.GoodsbankInfoForm" >
+		DELETE from GOODSBANK_INFO
+		WHERE CD_NON_GOODS = #{cd_non_goods, jdbcType=VARCHAR}
+	</delete>
+	
+	<update id="updateCdnongoods" parameterType="com.koscom.coocongoodsbank.model.GoodsbankInfoForm" >
+		UPDATE COOCON_GOODS_INFO
+		SET CD_NON_GOODS = #{cd_non_goods, jdbcType=VARCHAR}
+			,ID_LST = #{id_lst, jdbcType=VARCHAR}
+			,DT_LST = SYSDATE
+		WHERE
+			CD_COOCON_GOODS = #{cd_coocon_goods, jdbcType=VARCHAR}
+			AND SEQ = #{seq, jdbcType=VARCHAR}
+	</update>
+	
+	<update id="updateYnuse" parameterType="com.koscom.coocongoodsbank.model.GoodsbankInfoForm" >
+		UPDATE COOCON_GOODS_CHANGE_INFO
+		SET YN_REG = #{yn_use, jdbcType=VARCHAR}
+			,ID_LST = #{id_lst, jdbcType=VARCHAR}
+			,DT_LST = SYSDATE
+		WHERE
+			CD_COOCON_GOODS = #{cd_coocon_goods, jdbcType=VARCHAR}
+			AND NM_COOCON_GOODS = #{nm_coocon_goods, jdbcType=VARCHAR}
+	</update>
+
+	<select id="getGoodsbankCnt" parameterType="String" resultType="int">
+	     SELECT count(*) FROM GOODSBANK_INFO
+	     WHERE cd_non_goods = #{cd_non_goods, jdbcType=VARCHAR}
+	</select>
+	
+	<!--제휴사상품 GOODS_INFO  -->
+	<select id="listGoodsNoAllianceBiz" parameterType="com.koscom.coocongoodsbank.model.GoodsbankForm" resultType="com.koscom.coocongoodsbank.model.GoodsbankVO">
+        /* com.koscom.coocongoodsbank.dao.coocongoodsbank.listGoodsNoAllianceBiz */
+		SELECT
+	        *
+	    FROM
+	        (SELECT
+	            LST.*,
+	            ROWNUM RNUM
+	         FROM
+	            (select GI.*
+			     	, (CASE WHEN (
+			     					SELECT COUNT(*)
+			     					FROM COOCON_GOODS_FAVORITE_INFO CGFI
+			     					WHERE CGFI.CD_FC = GI.CD_FC
+			     						AND CGFI.CD_NON_GOODS = GI.CD_NON_GOODS
+			     						AND CGFI.YN_ALLIANCE = 'Y'
+			     						AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			     				 ) <![CDATA[>]]> 0 THEN 'Y'
+			     		ELSE 'N'
+			     		END
+			     		) AS YN_FAVORITE
+			     		, FI.PATH_FILE AS PATH_FILE1
+				 	FROM GOODSBANK_INFO GI
+				 	LEFT OUTER JOIN FC_INFO FI
+				 	ON GI.CD_FC = FI.CD_FC
+					WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+					AND GI.CD_GOODS_CLASS_M = #{cd_goods_class_m, jdbcType=VARCHAR}
+					AND FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
+	             ) LST
+	        WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	        )
+	    WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+		ORDER BY
+			YN_FAVORITE DESC
+			, RTO_INTEREST_FROM ASC
+	</select>
+
+	<!--상품 GOODS_INFO  -->
+	<select id="listGoodsNoAllianceBizCount" parameterType="com.koscom.coocongoodsbank.model.GoodsbankForm" resultType="int">
+        /* com.koscom.coocongoodsbank.dao.coocongoodsbank.listGoodsNoAllianceBizCount */
+		SELECT
+               COUNT(*) AS recordCount
+        FROM GOODSBANK_INFO GI
+        LEFT OUTER JOIN FC_INFO FI
+		ON GI.CD_FC = FI.CD_FC
+	 	WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+			AND GI.CD_GOODS_CLASS_M = #{cd_goods_class_m, jdbcType=VARCHAR}
+			AND FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
+	</select>
+
+	<!--제휴사상품 GOODS_INFO  -->
+	<select id="listGoodsNoAllianceHouse" parameterType="com.koscom.coocongoodsbank.model.GoodsbankForm" resultType="com.koscom.coocongoodsbank.model.GoodsbankVO">
+        /* com.koscom.coocongoodsbank.dao.coocongoodsbank.listGoodsNoAllianceHouse */
+		SELECT
+	        *
+	    FROM
+	        (SELECT
+	            LST.*,
+	            ROWNUM RNUM
+	         FROM
+	            (select GI.*
+			     	, (CASE WHEN (
+			     					SELECT COUNT(*)
+			     					FROM COOCON_GOODS_FAVORITE_INFO CGFI
+			     					WHERE CGFI.CD_FC = GI.CD_FC
+			     						AND CGFI.CD_NON_GOODS = GI.CD_NON_GOODS
+			     						AND CGFI.YN_ALLIANCE = 'Y'
+			     						AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			     				 ) <![CDATA[>]]> 0 THEN 'Y'
+			     		ELSE 'N'
+			     		END
+			     		) AS YN_FAVORITE
+			     		, FI.PATH_FILE AS PATH_FILE1
+				 	FROM GOODSBANK_INFO GI
+				 	LEFT OUTER JOIN FC_INFO FI
+				 	ON GI.CD_FC = FI.CD_FC
+					WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+					AND GI.CD_GOODS_CLASS_M = #{cd_goods_class_m, jdbcType=VARCHAR}
+					AND FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
+	             ) LST
+	        WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	        )
+	    WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+		ORDER BY
+			YN_FAVORITE DESC
+			, RTO_INTEREST_FROM ASC
+	</select>
+
+	<!--상품 GOODS_INFO  -->
+	<select id="listGoodsNoAllianceHouseCount" parameterType="com.koscom.coocongoodsbank.model.GoodsbankForm" resultType="int">
+        /* com.koscom.coocongoodsbank.dao.coocongoodsbank.listGoodsNoAllianceHouseCount */
+		SELECT
+               COUNT(*) AS recordCount
+            FROM GOODSBANK_INFO GI
+            LEFT OUTER JOIN FC_INFO FI
+			ON GI.CD_FC = FI.CD_FC
+	 	WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+		AND GI.CD_GOODS_CLASS_M = #{cd_goods_class_m, jdbcType=VARCHAR}
+		AND FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
+	</select>
+
+	<!-- 상품 GOODS_INFO -->
+	<select id="getGoodsBankFavorite" parameterType="com.koscom.coocongoodsbank.model.GoodsbankVO" resultType="com.koscom.coocongoodsbank.model.GoodsbankVO">
+        /* com.koscom.coocongoodsbank.dao.coocongoodsbank.getGoodsBankFavorite */
+	     select
+	    	 GI.*,
+			(CASE WHEN (
+						SELECT COUNT(*)
+						FROM COOCON_GOODS_FAVORITE_INFO CGFI
+						WHERE CGFI.CD_FC = GI.CD_FC
+							AND CGFI.CD_NON_GOODS = GI.CD_NON_GOODS
+							AND CGFI.YN_ALLIANCE = 'Y'
+							AND CGFI.no_person = #{no_person, jdbcType=VARCHAR}
+						) <![CDATA[>]]> 0 THEN 'Y'
+			ELSE 'N'
+			END
+			) AS YN_FAVORITE
+			, FI.PATH_FILE AS PATH_FILE1
+		 FROM GOODSBANK_INFO GI
+		 LEFT OUTER JOIN FC_INFO FI
+		 ON GI.CD_FC = FI.CD_FC
+	     <where>
+	     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+				GI.CD_FC = #{cd_fc}
+			</if>
+	     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods)'>
+				AND GI.CD_NON_GOODS = #{cd_goods}
+			</if>
+	     </where>
+	</select>
+	
+	<!-- 상품별 현황 -->
+	<select id="listcooconChangeInfo" parameterType="com.koscom.coocongoodsbank.model.CooconChangeInfoFormVO" resultType="com.koscom.coocongoodsbank.model.CooconChangeInfoVO">
+        /* com.koscom.coocongoodsbank.dao.coocongoodsbank.listcooconChangeInfo */
+		SELECT
+				ROWNUM RNUM
+				,CD_COOCON_GOODS
+				,NM_COOCON_GOODS
+				,CD_NON_GOODS      
+				,NM_GOODS          
+				,CD_TYPE_REQ       
+				,SEQ               
+				,YN_REG            
+				,STATUS            
+				,YN_GOODS          
+				,YN_TARGET_CUST    
+				,YN_COLLATERAL     
+				,YN_LIMIT          
+				,YN_YIELD_RATE     
+				,YN_PREFER_YIELD   
+				,YN_TERM           
+				,YN_REPAYMETHOD    
+				,YN_CONTRACTFEE    
+				,YN_PAPER          
+				,YN_OVERDUE        
+				,YN_REPAYMENT_FEE  
+				,YN_LOAN_COST      
+				,YN_LOAN_PERIOD    
+				,YN_LOAN_PROVIDE   
+				,YN_GOODS_INQUIRY  
+				,YN_ETC            
+				,CD_FC             
+				FROM 
+				(SELECT
+					ROWNUM RNUM
+					,LST.CD_COOCON_GOODS
+					,LST.NM_COOCON_GOODS
+					,LST.CD_NON_GOODS      
+					,LST.NM_GOODS          
+					,LST.CD_TYPE_REQ       
+					,LST.SEQ               
+					,LST.YN_REG            
+					,LST.STATUS            
+					,LST.YN_GOODS          
+					,LST.YN_TARGET_CUST    
+					,LST.YN_COLLATERAL     
+					,LST.YN_LIMIT          
+					,LST.YN_YIELD_RATE     
+					,LST.YN_PREFER_YIELD   
+					,LST.YN_TERM           
+					,LST.YN_REPAYMETHOD    
+					,LST.YN_CONTRACTFEE    
+					,LST.YN_PAPER          
+					,LST.YN_OVERDUE        
+					,LST.YN_REPAYMENT_FEE  
+					,LST.YN_LOAN_COST      
+					,LST.YN_LOAN_PERIOD    
+					,LST.YN_LOAN_PROVIDE   
+					,LST.YN_GOODS_INQUIRY  
+					,LST.YN_ETC            
+					,LST.CD_FC             
+					FROM
+						(SELECT 
+							A.CD_COOCON_GOODS
+							,A.NM_COOCON_GOODS
+							,A.CD_NON_GOODS
+							,A.NM_GOODS
+							,A.CD_TYPE_REQ
+							,A.SEQ
+							,B.YN_REG
+							,B.STATUS
+							,B.YN_GOODS
+							,B.YN_TARGET_CUST
+							,B.YN_COLLATERAL
+							,B.YN_LIMIT
+							,B.YN_YIELD_RATE
+							,B.YN_PREFER_YIELD
+							,B.YN_TERM
+							,B.YN_REPAYMETHOD
+							,B.YN_CONTRACTFEE
+							,B.YN_PAPER
+							,B.YN_OVERDUE
+							,B.YN_REPAYMENT_FEE
+							,B.YN_LOAN_COST
+							,B.YN_LOAN_PERIOD
+							,B.YN_LOAN_PROVIDE
+							,B.YN_GOODS_INQUIRY
+							,B.YN_ETC
+							,C.CD_FC
+							FROM 
+								COOCON_GOODS_INFO A
+								,COOCON_GOODS_CHANGE_INFO B
+								,COOCON_API_INFO C
+							WHERE 
+								A.CD_COOCON_GOODS = B.CD_COOCON_GOODS
+								AND A.NM_COOCON_GOODS = B.NM_COOCON_GOODS
+								AND A.CD_ORG = C.CD_ORG
+								AND A.CD_TYPE_REQ = C.GUBUN
+								AND A.SEQ = (SELECT MAX(SEQ) FROM COOCON_GOODS_INFO
+										WHERE CD_COOCON_GOODS = A.CD_COOCON_GOODS
+										AND NM_COOCON_GOODS = A.NM_COOCON_GOODS)
+								AND C.CD_FC = DECODE(#{cd_fc, jdbcType=VARCHAR},NULL,C.CD_FC,#{cd_fc, jdbcType=VARCHAR})
+								AND C.GUBUN = DECODE(#{gubun, jdbcType=VARCHAR},NULL,C.CD_FC,#{gubun, jdbcType=VARCHAR})
+								AND C.YN_USE = 'Y'
+								ORDER BY A.CD_COOCON_GOODS
+						) LST
+						
+				)
+		WHERE RNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC} 
+		AND RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+	</select>
+	
+	<!-- 상품별 현황 -->
+	<select id="listcooconChangeInfoCount" parameterType="com.koscom.coocongoodsbank.model.CooconChangeInfoFormVO" resultType="int">
+        /* com.koscom.coocongoodsbank.dao.coocongoodsbank.listcooconChangeInfoCount */
+		SELECT
+			COUNT(*) AS recordCount
+			FROM (
+			SELECT
+					ROWNUM AS RNUM
+					,LST.CD_COOCON_GOODS
+					,LST.NM_COOCON_GOODS
+					,LST.CD_NON_GOODS      
+					,LST.NM_GOODS          
+					,LST.CD_TYPE_REQ       
+					,LST.SEQ               
+					,LST.YN_REG            
+					,LST.STATUS            
+					,LST.YN_GOODS          
+					,LST.YN_TARGET_CUST    
+					,LST.YN_COLLATERAL     
+					,LST.YN_LIMIT          
+					,LST.YN_YIELD_RATE     
+					,LST.YN_PREFER_YIELD   
+					,LST.YN_TERM           
+					,LST.YN_REPAYMETHOD    
+					,LST.YN_CONTRACTFEE    
+					,LST.YN_PAPER          
+					,LST.YN_OVERDUE        
+					,LST.YN_REPAYMENT_FEE  
+					,LST.YN_LOAN_COST      
+					,LST.YN_LOAN_PERIOD    
+					,LST.YN_LOAN_PROVIDE   
+					,LST.YN_GOODS_INQUIRY  
+					,LST.YN_ETC            
+					,LST.CD_FC    
+					FROM
+						(SELECT 
+							A.CD_COOCON_GOODS
+							,A.NM_COOCON_GOODS
+							,A.NM_GOODS
+							,A.CD_NON_GOODS
+							,A.SEQ
+							,A.CD_TYPE_REQ  
+							,B.YN_REG
+							,B.STATUS
+							,B.YN_GOODS
+							,B.YN_TARGET_CUST
+							,B.YN_COLLATERAL
+							,B.YN_LIMIT
+							,B.YN_YIELD_RATE
+							,B.YN_PREFER_YIELD
+							,B.YN_TERM
+							,B.YN_REPAYMETHOD
+							,B.YN_CONTRACTFEE
+							,B.YN_PAPER
+							,B.YN_OVERDUE
+							,B.YN_REPAYMENT_FEE
+							,B.YN_LOAN_COST
+							,B.YN_LOAN_PERIOD
+							,B.YN_LOAN_PROVIDE
+							,B.YN_GOODS_INQUIRY
+							,B.YN_ETC
+							,C.CD_FC
+							FROM 
+								COOCON_GOODS_INFO A
+								,COOCON_GOODS_CHANGE_INFO B
+								,COOCON_API_INFO C
+							WHERE 
+								A.CD_COOCON_GOODS = B.CD_COOCON_GOODS
+								AND A.NM_COOCON_GOODS = B.NM_COOCON_GOODS
+								AND A.CD_ORG = C.CD_ORG
+								AND A.CD_TYPE_REQ = C.GUBUN
+								AND A.SEQ = (SELECT MAX(SEQ) FROM COOCON_GOODS_INFO
+										WHERE CD_COOCON_GOODS = A.CD_COOCON_GOODS
+										AND NM_COOCON_GOODS = A.NM_COOCON_GOODS)
+								AND C.CD_FC = DECODE(#{cd_fc, jdbcType=VARCHAR},NULL,C.CD_FC,#{cd_fc, jdbcType=VARCHAR})
+								AND C.GUBUN = DECODE(#{gubun, jdbcType=VARCHAR},NULL,C.CD_FC,#{gubun, jdbcType=VARCHAR})
+								AND C.YN_USE = 'Y'
+								ORDER BY A.CD_COOCON_GOODS
+						  ) LST
+					) 
+	</select>
+	
+	<select id="listGoodsStats" parameterType="com.koscom.coocongoodsbank.model.GoodsStatsFormVO" resultType="com.koscom.coocongoodsbank.model.GoodsStatsVO">
+        /* com.koscom.coocongoodsbank.dao.coocongoodsbank.listGoodsStats */
+		SELECT 
+				RNUM
+				,CD_FC
+				,GUBUN
+				,CNT_GOODS
+				,NEW_GOODS
+				,CHANGE_GOODS
+				,DELETE_GOODS
+				,NOCHANGE_GOODS
+				FROM(
+					SELECT 
+							ROWNUM AS RNUM
+							,GOODS.CD_FC
+							,GOODS.GUBUN
+							,GOODS.CNT_GOODS
+							,GOODS.NEW_GOODS
+							,GOODS.CHANGE_GOODS
+							,GOODS.DELETE_GOODS
+							,GOODS.NOCHANGE_GOODS
+							FROM 
+							(
+								SELECT
+									  B.CD_FC
+									  ,B.GUBUN
+									  ,COUNT(A.CD_COOCON_GOODS) AS CNT_GOODS
+								      ,SUM(CASE STATUS WHEN '1' THEN 1 ELSE  0 END) AS NEW_GOODS 
+								      ,SUM(CASE STATUS WHEN '2' THEN 1 ELSE  0 END) AS CHANGE_GOODS
+								      ,SUM(CASE STATUS WHEN '3' THEN 1 ELSE  0 END) AS DELETE_GOODS
+								      ,SUM(CASE STATUS WHEN '4' THEN 1 ELSE  0 END) AS NOCHANGE_GOODS
+								  FROM COOCON_GOODS_CHANGE_INFO A,
+								  	   (SELECT A.CD_COOCON_GOODS, B.GUBUN, B.CD_FC 
+								  	   		   FROM COOCON_GOODS_INFO A, COOCON_API_INFO B
+								  	   		   WHERE A.CD_ORG = B.CD_ORG
+								  	   		   AND A.CD_TYPE_REQ = B.GUBUN
+								  	   		   GROUP BY B.CD_FC,B.GUBUN, A.CD_COOCON_GOODS ORDER BY CD_FC ASC) B	
+								  WHERE A.CD_COOCON_GOODS = B.CD_COOCON_GOODS
+								  AND B.CD_FC = DECODE(#{cd_fc, jdbcType=VARCHAR},NULL,B.CD_FC,#{cd_fc, jdbcType=VARCHAR})
+								 GROUP BY B.CD_FC,B.GUBUN
+								 ORDER BY B.GUBUN
+							 ) GOODS
+					)
+		WHERE RNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC} 
+		AND RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+	</select>
+	
+	<select id="listGoodsStatsCount" parameterType="com.koscom.coocongoodsbank.model.GoodsStatsFormVO" resultType="int">
+        /* com.koscom.coocongoodsbank.dao.coocongoodsbank.listGoodsStatsCount */
+		SELECT
+			COUNT(RNUM) AS recordCount
+			FROM (
+					SELECT
+							ROWNUM AS RNUM
+							,CNT.CD_FC
+							,CNT.GUBUN
+							,CNT.CNT_GOODS
+							,CNT.NEW_GOODS
+							,CNT.CHANGE_GOODS
+							,CNT.DELETE_GOODS
+							FROM
+							(
+							SELECT
+								  B.CD_FC
+								  ,B.GUBUN
+								  ,COUNT(A.CD_COOCON_GOODS) AS CNT_GOODS
+							      ,SUM(CASE STATUS WHEN '1' THEN 1 ELSE  0 END) AS NEW_GOODS 
+							      ,SUM(CASE STATUS WHEN '2' THEN 1 ELSE  0 END) AS CHANGE_GOODS
+							      ,SUM(CASE STATUS WHEN '3' THEN 1 ELSE  0 END) AS DELETE_GOODS
+									  FROM COOCON_GOODS_CHANGE_INFO A,
+								  	   (SELECT A.CD_COOCON_GOODS, B.GUBUN, B.CD_FC 
+								  	   		   FROM COOCON_GOODS_INFO A, COOCON_API_INFO B
+								  	   		   WHERE A.CD_ORG = B.CD_ORG
+								  	   		   AND A.CD_TYPE_REQ = B.GUBUN
+								  	   		   GROUP BY B.CD_FC,B.GUBUN, A.CD_COOCON_GOODS ORDER BY CD_FC ASC) B	
+									  WHERE A.CD_COOCON_GOODS = B.CD_COOCON_GOODS
+									  AND B.CD_FC = DECODE(#{cd_fc, jdbcType=VARCHAR},NULL,B.CD_FC,#{cd_fc, jdbcType=VARCHAR})
+									 GROUP BY B.CD_FC,B.GUBUN
+									 ORDER BY B.GUBUN
+							) CNT
+					)
+	</select>
+	
+	<select id="pastChangeData" parameterType="com.koscom.coocongoodsbank.model.CooconChangeInfoFormVO" resultType="com.koscom.coocongoodsbank.model.CooconChangeInfoVO">
+        /* com.koscom.coocongoodsbank.dao.coocongoodsbank.pastChangeData */
+		SELECT
+			A.${column_name} AS COLUMN_NAME
+			FROM 
+				COOCON_GOODS_INFO A
+				,COOCON_GOODS_CHANGE_INFO B
+				,COOCON_API_INFO C
+			WHERE 
+				A.CD_COOCON_GOODS = B.CD_COOCON_GOODS
+				AND A.NM_COOCON_GOODS = B.NM_COOCON_GOODS
+				AND A.CD_ORG = C.CD_ORG
+				AND A.CD_TYPE_REQ = C.GUBUN
+				AND C.CD_FC = #{cd_fc, jdbcType=VARCHAR}
+				AND C.GUBUN = #{gubun, jdbcType=VARCHAR}
+				AND A.CD_COOCON_GOODS = #{cd_coocon_goods, jdbcType=VARCHAR} 
+				AND A.SEQ = (SELECT MAX(SEQ)-1 FROM COOCON_GOODS_INFO
+								WHERE CD_COOCON_GOODS = #{cd_coocon_goods, jdbcType=VARCHAR}
+								AND NM_COOCON_GOODS = #{nm_coocon_goods, jdbcType=VARCHAR})
+	</select>
+	
+	<select id="currentChangeData" parameterType="com.koscom.coocongoodsbank.model.CooconChangeInfoFormVO" resultType="com.koscom.coocongoodsbank.model.CooconChangeInfoVO">
+        /* com.koscom.coocongoodsbank.dao.coocongoodsbank.currentChangeData */
+		SELECT
+			A.${column_name} AS COLUMN_NAME
+			FROM 
+				COOCON_GOODS_INFO A
+				,COOCON_GOODS_CHANGE_INFO B
+				,COOCON_API_INFO C
+			WHERE 
+				A.CD_COOCON_GOODS = B.CD_COOCON_GOODS
+				AND A.NM_COOCON_GOODS = B.NM_COOCON_GOODS
+				AND A.CD_ORG = C.CD_ORG
+				AND A.CD_TYPE_REQ = C.GUBUN
+				AND C.CD_FC = #{cd_fc, jdbcType=VARCHAR}
+				AND C.GUBUN = #{gubun, jdbcType=VARCHAR}
+				AND A.CD_COOCON_GOODS = #{cd_coocon_goods, jdbcType=VARCHAR}
+				AND A.NM_COOCON_GOODS = #{nm_coocon_goods, jdbcType=VARCHAR} 
+				AND A.SEQ = (SELECT MAX(SEQ) FROM COOCON_GOODS_INFO
+								WHERE CD_COOCON_GOODS = #{cd_coocon_goods, jdbcType=VARCHAR}
+								AND NM_COOCON_GOODS = #{nm_coocon_goods, jdbcType=VARCHAR})
+	</select>
+	
+	<select id="chkcdNongoods" parameterType="com.koscom.coocongoodsbank.model.CooconGoodsBankInfoForm" resultType="int">
+        /* com.koscom.coocongoodsbank.dao.coocongoodsbank.chkcdNongoods */
+		SELECT
+				COUNT(CD_NON_GOODS)
+			FROM COOCON_GOODS_INFO
+			WHERE 
+			CD_COOCON_GOODS = DECODE(#{cd_coocon_goods, jdbcType=VARCHAR},NULL,CD_COOCON_GOODS,#{cd_coocon_goods, jdbcType=VARCHAR})
+			AND SEQ = DECODE(#{seq, jdbcType=VARCHAR},NULL,SEQ,#{seq, jdbcType=VARCHAR})
+	</select>
+	
+	<select id="getCoocongoodsinfo" parameterType="com.koscom.coocongoodsbank.model.CooconGoodsBankInfoForm" resultType="com.koscom.coocongoodsbank.model.CooconGoodsBankInfoVO">
+        /* com.koscom.coocongoodsbank.dao.coocongoodsbank.getCoocongoodsinfo */
+	      SELECT
+			A.CD_COOCON_GOODS
+			,A.SEQ
+			,A.CD_NON_GOODS
+			,A.CD_TYPE_FC
+			,A.CD_ORG
+			,A.CD_TYPE_GOODS
+			,A.CD_TYPE_REQ AS CD_GOODS_CLASS_L
+			,A.NM_GOODS
+			,A.DESC_GOODS
+			,A.DESC_TARGET_CUST AS DESC_LOAN
+			,A.DESC_COLLATERAL
+			,A.DESC_LIMIT
+			,A.DESC_YIELD_RATE AS DESC_RATIO
+			,A.DESC_PREFER_YIELD
+			,A.DESC_TERM
+			,A.DESC_REPAYMETHOD
+			,A.DESC_CONTRACTFEE
+			,A.DESC_PAPERS
+			,A.DESC_OVERDUE_INTEREST
+			,A.DESC_REPAYMENT_FEE
+			,A.DESC_LOAN_COST
+			,A.DESC_LOAN_PERIOD
+			,A.DESC_LOAN_PROVIDE
+			,A.DESC_GOODS_INQUIRY
+			,A.DESC_ETC
+			,(SELECT CD_FIN
+			    FROM FC_INFO
+			   WHERE CD_FC = (SELECT DISTINCT CD_FC FROM COOCON_API_INFO WHERE GUBUN = A.CD_TYPE_REQ AND CD_ORG = A.CD_ORG)) AS CD_FIN
+			,(SELECT CD_FC
+			    FROM FC_INFO
+			   WHERE CD_FC = (SELECT DISTINCT CD_FC FROM COOCON_API_INFO WHERE GUBUN = A.CD_TYPE_REQ AND CD_ORG = A.CD_ORG)) AS CD_FC
+			FROM 
+			COOCON_GOODS_INFO A
+			WHERE 1=1
+			AND CD_COOCON_GOODS = #{cd_coocon_goods, jdbcType=VARCHAR}
+			AND NM_COOCON_GOODS = #{nm_coocon_goods, jdbcType=VARCHAR}
+			AND A.SEQ = (SELECT MAX(SEQ) FROM COOCON_GOODS_INFO 
+													WHERE 1=1 
+														AND CD_COOCON_GOODS = #{cd_coocon_goods, jdbcType=VARCHAR}
+														AND NM_COOCON_GOODS = #{nm_coocon_goods, jdbcType=VARCHAR})
+			ORDER BY A.SEQ
+	</select>
+	
+	<select id="getGoodsbankinfo" parameterType="com.koscom.coocongoodsbank.model.CooconGoodsBankInfoForm" resultType="com.koscom.coocongoodsbank.model.CooconGoodsBankInfoVO">
+        /* com.koscom.coocongoodsbank.dao.coocongoodsbank.getGoodsbankinfo */
+	     SELECT
+      		A.CD_COOCON_GOODS
+      		,A.SEQ
+			,B.CD_NON_GOODS
+			,B.CD_FC
+			,B.NM_FC
+			,B.CD_GOODS_CLASS_L
+			,B.CD_GOODS_CLASS_M
+			,B.CD_GOODS_CLASS_S
+			,B.CD_GOODS_FC
+			,B.NM_GOODS
+			,B.YN_USE
+			,B.RTO_INTEREST_FROM
+			,B.RTO_INTEREST_TO
+			,B.DESC_MAX_LIMIT
+			,B.MIN_LOAN_TERM
+			,B.MAX_LOAN_TERM
+			,B.RENEW_MAX_TERM
+			,B.RTO_CANCEL
+			,B.YEAR_COMMISSION
+			,B.DESC_FEATURE
+			,B.KEYWORD
+			,B.CD_APPLY_TYPE
+			,B.CD_TYPE_PAY
+			,B.CD_TRADE_TYPE
+			,B.YN_SEND_DOCU
+			,B.CD_TARGET_CUST
+			,B.CD_RATIO_TYPE
+			,B.CD_COLLATERAL_HOUSE_TYPE
+			,B.CD_COLLATERAL_LOAN_USE
+			,B.CD_AREA
+			,B.CD_DEFER
+			,B.CD_OBJECT
+			,B.YN_POST_RANKING
+			,B.CD_TIME_EXEC
+			,B.DESC_GOODS
+			,B.DESC_LOAN
+			,B.DESC_LIMIT
+			,B.DESC_RATIO
+			,B.DESC_PREFER_YIELD
+			,B.DESC_TERM
+			,B.DESC_REPAYMETHOD
+			,B.DESC_LOAN_COST
+			,B.DESC_PAPERS
+			,B.DESC_OVERDUE_INTEREST
+			,B.DESC_REPAYMENT_FEE
+			,B.DESC_LOAN_PERIOD
+			,B.DESC_LOAN_PROVIDE
+			,B.DESC_CONTACT
+			,B.DESC_COLLATERAL
+			,B.DESC_ETC
+			,(SELECT CD_FIN
+			    FROM FC_INFO
+			   WHERE CD_FC = (SELECT DISTINCT CD_FC FROM COOCON_API_INFO WHERE GUBUN = A.CD_TYPE_REQ AND CD_ORG = A.CD_ORG)) AS CD_FIN
+			FROM 
+			COOCON_GOODS_INFO A INNER JOIN GOODSBANK_INFO B ON
+			A.CD_NON_GOODS = B.CD_NON_GOODS
+			WHERE 1=1
+			AND A.CD_COOCON_GOODS = #{cd_coocon_goods, jdbcType=VARCHAR}
+			AND A.NM_COOCON_GOODS = #{nm_coocon_goods, jdbcType=VARCHAR}
+			ORDER BY A.SEQ
+	</select>
+	
+</mapper>

@@ -1,0 +1,126 @@
+/* ---------------------------------------------------------------------- */
+/*  BLUE-STYLE
+/* ---------------------------------------------------------------------- */
+
+/* ---------------------------- /
+	table
+/ ---------------------------- */
+.table.table-bordered{border: 1px solid #357ebd;}
+.table.table-bordered > thead > tr > th{background-color:#428bca;border: 1px solid #357ebd;color:#fff;text-align:center;
+	background: -moz-linear-gradient(top, #55A2E5 0%, #428bca 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#55A2E5), color-stop(100%,#428bca)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #55A2E5 0%,#428bca 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #55A2E5 0%,#428bca 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #55A2E5 0%,#428bca 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #55A2E5 0%,#428bca 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#55A2E5', endColorstr='#428bca',GradientType=0 ); /* IE6-9 */
+	}
+/* ---------------------------- /
+	button
+/ ---------------------------- */
+.btn-default {
+	color: #fff;
+	background-color: #47ADE2;
+	border-color: #47ADE2;
+	}
+.btn-default:hover, 
+.btn-default:focus, 
+.btn-default.focus, 
+.btn-default:active, 
+.btn-default.active, 
+.open > .dropdown-toggle.btn-default {
+	color: #fff;
+	background-color: #47ADE2;
+	border-color: #47ADE2;
+	}
+
+.btn-primary {
+	background-color: #3889CF;
+	border-color: #3889CF;
+	}
+.btn-primary:hover, 
+.btn-primary:focus, 
+.btn-primary.focus, 
+.btn-primary:active, 
+.btn-primary.active, 
+.open > .dropdown-toggle.btn-primary {
+	color: #fff;
+	background-color: #286090;
+	border-color: #204d74;
+	}
+
+.bootstrap-select .btn-primary,
+.bootstrap-select .btn-primary:hover, 
+.bootstrap-select .btn-primary:focus, 
+.bootstrap-select .btn-primary.focus, 
+.bootstrap-select .btn-primary:active, 
+.bootstrap-select .btn-primary.active, 
+.bootstrap-select.open > .dropdown-toggle.btn-primary {
+	background-color: #FFFFFF;
+	border-color: #3889CF;
+	}
+
+/* ---------------------------- /
+	color-bar
+/ ---------------------------- */
+.navbar-default.color-bar{
+	border-bottom:1px solid #47ADE2;
+	background-color:#f4f4f4;
+	background: -moz-linear-gradient(top, #ffffff 0%, #e3e5ea 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e3e5ea)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #ffffff 0%,#e3e5ea 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #ffffff 0%,#e3e5ea 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #ffffff 0%,#e3e5ea 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #ffffff 0%,#e3e5ea 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e3e5ea',GradientType=0 ); /* IE6-9 */
+	box-shadow:0 1px 5px rgba(0,0,0,.2);
+	}
+.navbar-default.color-bar .navbar-nav > li > a{color: #333;}
+.navbar-default.color-bar .caret{color:#C0C0C0;}
+
+/* ---------------------------- /
+	nav-pills, nav-progress
+/ ---------------------------- */
+.nav-pills{background:#428bca;}
+.login-btn{background: #256993;}
+.nav-pills > li.active > a, 
+.nav-pills > li.active > a:hover, 
+.nav-pills > li.active > a:focus,
+.nav-pills > li.active > a .glyphicon,
+.nav-progress > li.active > a .glyphicon,
+.nav-progress > li.active > a, 
+.nav-progress > li.active > a:hover, 
+.nav-progress > li.active > a:focus {
+	color: #337ab7 !important;
+	}
+.nav-pills > li > a:hover, 
+.nav-pills > li > a:focus {
+	background-color: #256993 !important;
+	}
+
+/* ---------------------------- /
+	nav-tabs
+/ ---------------------------- */
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover, 
+.nav-tabs > li.active > a:focus{
+	color: #EA6358;
+	}
+
+/* ---------------------------- /
+	switcher
+/ ---------------------------- */
+#switcher.btn.circle .glyphicon{color:#428bca;}
+#switcher.btn.circle.on .glyphicon{color:#fff;}
+#switcher.btn.circle.on{background:#428bca;}
+
+/* ---------------------------- /
+	popup
+/ ---------------------------- */
+.modal-header{border-color:#47ADE2;}
+.panel-primary.panel-field > .panel-heading{
+	background: -webkit-linear-gradient(top, #55A2E5 0%,#428bca 100%);
+	background:linear-gradient(to bottom, #55A2E5 0%,#428bca 100%);
+	}
+.panel-primary.panel-field,
+.panel-primary.panel-field > .panel-heading{border-color:#337ab7;}

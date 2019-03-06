@@ -1,0 +1,3503 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.person.dao.PersonMapper">
+    <select id="getYnAgreeUsingInfo" parameterType="java.lang.String" resultType="java.lang.String">
+        SELECT YN_AGREE_USING FROM PERSON_INFO WHERE no_person = #{no_person, jdbcType=VARCHAR}
+    </select>
+    <update id="modifyAgreeUsing" parameterType="com.koscom.domain.PersonInfo">
+        UPDATE PERSON_INFO
+        SET   YN_AGREE_USING = #{yn_agree_using, jdbcType=VARCHAR}
+        	, DT_AGREE_USING = SYSDATE
+        	, ID_LST = #{id_lst, jdbcType=VARCHAR}
+        	, DT_LST = SYSDATE
+        WHERE NO_PERSON = #{no_person}
+    </update>
+    <select id="getPersonInfo" parameterType="java.lang.String" resultType="com.koscom.person.model.PersonVO">
+        /* com.koscom.person.dao.PersonMapper.getPersonInfo: 회원정보 */
+        SELECT  NO_PERSON                                  AS no_person       /* 회원관리번호       */
+               ,NM_PERSON                                  AS nm_person       /* 회원명             */
+               ,XX1.DEC_VARCHAR2_SEL(SSN_PERSON, '10', 'FS_ARIA', 'PERSON_INFO', 'SSN_PERSON')   AS ssn_person      /* 주민번호           */
+               ,PASS_PERSON                                AS pass_person     /* 패스워드           */
+               ,BGN                                        AS bgn             /* 생년월일           */
+               ,HP                                         AS hp              /* 휴대폰             */
+               ,CD_TEL                               	   AS cd_tel    	  /* 통신사구분 	    */
+               ,KCB_CI                                     AS kcb_ci          /* KCBCI              */
+               ,KCB_DI                                     AS kcb_di          /* KCBDI              */
+               ,KCB_CP                                     AS kcb_cp          /* KCBCP              */
+               ,KCB_ID                                     AS kcb_id          /* KCB아이디          */
+               ,PBL_CERT_CI                                AS pbl_cert_ci     /* 공인인증CI         */
+               ,PBL_CERT_DI                                AS pbl_cert_di     /* 공인인증DI         */
+               ,YN_USE                                     AS yn_use          /* 사용여부           */
+               ,YN_AGREE_USING                             AS yn_agree_using  /* 약관동의           */
+               ,DT_AGREE_USING                             AS dt_agree_using  /* 약관동의일자       */
+               ,DT_INSTALL                                 AS dt_install      /* 설치일자           */
+               ,YN_FINGERPRINT                             AS yn_fingerprint  /* 지문사용여부       */
+               ,YN_OS                                      AS yn_os           /* 운영체제여부       */
+               ,FCM_TOKEN                                  AS fcm_token       /* 푸쉬메세지토큰     */
+               ,CD_PUSH                                    AS cd_push         /* push msg여부       */
+               ,YN_PUSH                                    AS yn_push         /* 푸쉬메세지사용여부 */
+               ,EMAIL                                      AS email           /* 이메일             */
+               ,NICK                                       AS nick            /* 별명               */
+               ,YN_LOGOUT                                  AS yn_logout       /* 로그아웃여부       */
+               ,SEQ_NEW_DEBT_REG                           AS seq_new_debt_reg/* 부채등록번호       */
+               ,PATH_FILE1                                 AS path_file1      /* 파일패스           */
+               ,NM_FILE1                                   AS nm_file1        /* 파일명             */
+               ,STOCK_TOKEN                                AS stock_token     /* 증권토큰           */
+               ,ETC_MEMO                                   AS etc_memo        /* 비고               */
+               ,AMT_ETM_INCOME                             AS amt_etm_income  /* 추정소득금액       */
+               ,NVL(CNT_FAIL_PWD, '0')					   AS cnt_fail_pwd	  /* 비밀번호 실패건수  */
+               ,NVL(CNT_FAIL_FINGER, '0')				   AS cnt_fail_finger /* 지문인증 실패건수  */
+               ,ID_FRT                                     AS id_frt          /* 최초입력아이디     */
+               ,DT_FRT                                     AS dt_frt          /* 최초입력시간       */
+               ,ID_LST                                     AS id_lst          /* 최종수정아이디     */
+               ,DT_LST                                     AS dt_lst          /* 최종수정시간       */
+          FROM PERSON_INFO /* 회원관리 */
+         WHERE no_person = #{no_person, jdbcType=VARCHAR}
+    </select>
+
+    <select id="checkPersonPass" parameterType="com.koscom.person.model.PersonVO" resultType="int">
+		SELECT COUNT(*)
+		  FROM PERSON_INFO
+		 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		   AND PASS_PERSON = XX1.ENC_VARCHAR2_INS(#{pass_person, jdbcType=VARCHAR}, '10', 'FS_SHA', 'PERSON_INFO', 'PASS_PERSON')
+    </select>
+
+    <select id="getPersonInfoAgency" parameterType="java.lang.String" resultType="com.koscom.person.model.PersonVO">
+        SELECT    no_person
+                , nm_person
+                , hp
+                , cd_hp_co
+                , cd_status_hp
+                , nm_hp_owner
+                , rel_hp_owner
+                , cd_marry
+                , email
+                , yn_recv_email
+                , c3_bank
+                , account_bank
+                , yn_secret
+                , yn_vehicle_own
+                , etc_vehicles
+                , cd_army
+                , nm_specialty
+                , cd30_hobby
+                , ph_home
+                , cd_ph_co_home
+                , cd_status_ph_home
+                , nm_ph_owner
+                , rel_ph_owner
+                , cd_addr_home
+                , post_home
+                , addr1_home
+                , addr2_home
+                , cd_status_addr_home
+                , cd_house_type_home
+                , ym_house_home
+                , cd_live_type_home
+                , amt_rent_deposit_home
+                , amt_rent_monthly_home
+                , nm_owner_home
+                , rel_owner_home
+                , yn_addr_equal
+                , cd_addr_reg
+                , post_reg
+                , addr1_reg
+                , addr2_reg
+                , cd_status_addr_reg
+                , cd_house_type_reg
+                , ym_house_reg
+                , cd_live_type_reg
+                , amt_rent_deposit_reg
+                , amt_rent_monthly_reg
+                , nm_owner_reg
+                , rel_owner_reg
+                , cd50_live_together
+                , cd_job_class
+                , nm_comp
+                , cd_job_term
+                , cd_duty_comp
+                , cd_job_comp
+                , cd_industry
+                , nm_industry_detail
+                , cd_addr_comp
+                , post_comp
+                , addr1_comp
+                , addr2_comp
+                , cd_status_addr_comp
+                , ph_comp
+                , cd_status_ph_comp
+                , ph_comp_direct
+                , fax_comp
+                , nm_duty_comp
+                , nm_part_comp
+                , ym_start_comp
+                , yn_medi_insu_comp
+                , cd_scale_comp
+                , cnt_worker
+                , no_biz_licence
+                , cd_employ_type
+                , cd_dd_income
+                , amt_monthly_income
+                , amt_year_income
+                , etc_job
+                , nm_univ
+                , cd_attend_univ
+                , cd_grade_univ
+                , no_univ
+                , yyyy_enter_univ
+                , nm_part_univ
+                , cd_addr_univ
+                , ph_univ
+                , cd_status_ph_univ
+                , post_univ
+                , addr1_univ
+                , addr2_univ
+                , cd_status_addr_univ
+                , cd_addr_etc
+                , post_etc
+                , addr1_etc
+                , addr2_etc
+                , hp_etc
+                , cd_hp_co_etc
+                , cd_status_hp_etc
+                , cd50_agree_item
+                , nice_safekey
+                , kcb_di
+                , kcb_ci
+                , kcb_cp
+                , etc_memo
+                , id_agency
+                , id_frt
+                , dt_frt
+                , id_lst
+                , dt_lst
+          FROM agency_person_info
+         WHERE no_person = #{no_person, jdbcType=VARCHAR}
+    </select>
+
+    <insert id="createPerson">
+        <selectKey keyProperty="no_person" resultType="string" order="BEFORE">
+            (SELECT 'P'||LPAD(NVL(SUBSTR(max(no_person),2,10),0)+1,9,'0') FROM person_info)
+        </selectKey>
+
+        INSERT INTO person_info
+            (     no_person
+                , nm_person
+                , ssn_person
+                , bgn
+                , hp
+                , cd_hp_co
+                , cd_status_hp
+                , nm_hp_owner
+                , rel_hp_owner
+                , cd_marry
+                , email
+                , yn_recv_email
+                , c3_bank
+                , account_bank
+                , yn_secret
+                , yn_vehicle_own
+                , etc_vehicles
+                , cd_army
+                , nm_specialty
+                , cd30_hobby
+                , ph_home
+                , cd_ph_co_home
+                , cd_status_ph_home
+                , nm_ph_owner
+                , rel_ph_owner
+                , cd_addr_home
+                , post_home
+                , addr1_home
+                , addr2_home
+                , cd_status_addr_home
+                , cd_house_type_home
+                , ym_house_home
+                , cd_live_type_home
+                , amt_rent_deposit_home
+                , amt_rent_monthly_home
+                , nm_owner_home
+                , rel_owner_home
+                , yn_addr_equal
+                , cd_addr_reg
+                , post_reg
+                , addr1_reg
+                , addr2_reg
+                , cd_status_addr_reg
+                , cd_house_type_reg
+                , ym_house_reg
+                , cd_live_type_reg
+                , amt_rent_deposit_reg
+                , amt_rent_monthly_reg
+                , nm_owner_reg
+                , rel_owner_reg
+                , cd50_live_together
+                , cd_job_class
+                , nm_comp
+                , cd_job_term
+                , cd_duty_comp
+                , cd_job_comp
+                , cd_industry
+                , nm_industry_detail
+                , cd_addr_comp
+                , post_comp
+                , addr1_comp
+                , addr2_comp
+                , cd_status_addr_comp
+                , ph_comp
+                , cd_status_ph_comp
+                , ph_comp_direct
+                , fax_comp
+                , nm_duty_comp
+                , nm_part_comp
+                , ym_start_comp
+                , yn_medi_insu_comp
+                , cd_scale_comp
+                , cnt_worker
+                , no_biz_licence
+                , cd_employ_type
+                , cd_dd_income
+                , amt_monthly_income
+                , amt_year_income
+                , etc_job
+                , nm_univ
+                , cd_attend_univ
+                , cd_grade_univ
+                , no_univ
+                , yyyy_enter_univ
+                , nm_part_univ
+                , cd_addr_univ
+                , ph_univ
+                , cd_status_ph_univ
+                , post_univ
+                , addr1_univ
+                , addr2_univ
+                , cd_status_addr_univ
+                , cd_addr_etc
+                , post_etc
+                , addr1_etc
+                , addr2_etc
+                , hp_etc
+                , cd_hp_co_etc
+                , cd_status_hp_etc
+                , cd50_agree_item
+                , kcb_di
+                , etc_memo
+                ,PROOF_INCOME
+                ,YN_4INSU
+                ,AMT_MIN_LIVING_COST
+                ,CNT_LIVE_TOGETHER
+                ,CD_CNT_CHILD
+                ,YN_AGREE_USING
+                , ID_FRT
+                , DT_FRT
+                , ID_LST
+                , DT_LST
+            ) VALUES (
+                  #{no_person}
+                , #{nm_person, jdbcType=VARCHAR}
+                , XX1.ENC_VARCHAR2_INS(#{ssn_person, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'PERSON_INFO', 'SSN_PERSON')
+                , #{bgn, jdbcType=VARCHAR}
+                , #{hp, jdbcType=VARCHAR}
+                , #{cd_hp_co, jdbcType=VARCHAR}
+                , #{cd_status_hp, jdbcType=VARCHAR}
+                , #{nm_hp_owner, jdbcType=VARCHAR}
+                , #{rel_hp_owner, jdbcType=VARCHAR}
+                , #{cd_marry, jdbcType=VARCHAR}
+                , #{email, jdbcType=VARCHAR}
+                , #{yn_recv_email, jdbcType=VARCHAR}
+                , #{c3_bank, jdbcType=VARCHAR}
+                , #{account_bank, jdbcType=VARCHAR}
+                , #{yn_secret, jdbcType=VARCHAR}
+                , #{yn_vehicle_own, jdbcType=VARCHAR}
+                , #{etc_vehicles, jdbcType=VARCHAR}
+                , #{cd_army, jdbcType=VARCHAR}
+                , #{nm_specialty, jdbcType=VARCHAR}
+                , #{cd30_hobby, jdbcType=VARCHAR}
+                , #{ph_home, jdbcType=VARCHAR}
+                , #{cd_ph_co_home, jdbcType=VARCHAR}
+                , #{cd_status_ph_home, jdbcType=VARCHAR}
+                , #{nm_ph_owner, jdbcType=VARCHAR}
+                , #{rel_ph_owner, jdbcType=VARCHAR}
+                , #{cd_addr_home, jdbcType=VARCHAR}
+                , #{post_home, jdbcType=VARCHAR}
+                , #{addr1_home, jdbcType=VARCHAR}
+                , #{addr2_home, jdbcType=VARCHAR}
+                , #{cd_status_addr_home, jdbcType=VARCHAR}
+                , #{cd_house_type_home, jdbcType=VARCHAR}
+                , #{ym_house_home, jdbcType=VARCHAR}
+                , #{cd_live_type_home, jdbcType=VARCHAR}
+                , #{amt_rent_deposit_home, jdbcType=VARCHAR}
+                , #{amt_rent_monthly_home, jdbcType=VARCHAR}
+                , #{nm_owner_home, jdbcType=VARCHAR}
+                , #{rel_owner_home, jdbcType=VARCHAR}
+                , #{yn_addr_equal, jdbcType=VARCHAR}
+                , #{cd_addr_reg, jdbcType=VARCHAR}
+                , #{post_reg, jdbcType=VARCHAR}
+                , #{addr1_reg, jdbcType=VARCHAR}
+                , #{addr2_reg, jdbcType=VARCHAR}
+                , #{cd_status_addr_reg, jdbcType=VARCHAR}
+                , #{cd_house_type_reg, jdbcType=VARCHAR}
+                , #{ym_house_reg, jdbcType=VARCHAR}
+                , #{cd_live_type_reg, jdbcType=VARCHAR}
+                , #{amt_rent_deposit_reg, jdbcType=VARCHAR}
+                , #{amt_rent_monthly_reg, jdbcType=VARCHAR}
+                , #{nm_owner_reg, jdbcType=VARCHAR}
+                , #{rel_owner_reg, jdbcType=VARCHAR}
+                , #{cd50_live_together, jdbcType=VARCHAR}
+                , #{cd_job_class, jdbcType=VARCHAR}
+                , #{nm_comp, jdbcType=VARCHAR}
+                , #{cd_job_term, jdbcType=VARCHAR}
+                , #{cd_duty_comp, jdbcType=VARCHAR}
+                , #{cd_job_comp, jdbcType=VARCHAR}
+                , #{cd_industry, jdbcType=VARCHAR}
+                , #{nm_industry_detail, jdbcType=VARCHAR}
+                , #{cd_addr_comp, jdbcType=VARCHAR}
+                , #{post_comp, jdbcType=VARCHAR}
+                , #{addr1_comp, jdbcType=VARCHAR}
+                , #{addr2_comp, jdbcType=VARCHAR}
+                , #{cd_status_addr_comp, jdbcType=VARCHAR}
+                , #{ph_comp, jdbcType=VARCHAR}
+                , #{cd_status_ph_comp, jdbcType=VARCHAR}
+                , #{ph_comp_direct, jdbcType=VARCHAR}
+                , #{fax_comp, jdbcType=VARCHAR}
+                , #{nm_duty_comp, jdbcType=VARCHAR}
+                , #{nm_part_comp, jdbcType=VARCHAR}
+                , #{ym_start_comp, jdbcType=VARCHAR}
+                , #{yn_medi_insu_comp, jdbcType=VARCHAR}
+                , #{cd_scale_comp, jdbcType=VARCHAR}
+                , #{cnt_worker, jdbcType=VARCHAR}
+                , #{no_biz_licence, jdbcType=VARCHAR}
+                , #{cd_employ_type, jdbcType=VARCHAR}
+                , #{cd_dd_income, jdbcType=VARCHAR}
+                , #{amt_monthly_income, jdbcType=VARCHAR}
+                , #{amt_year_income, jdbcType=VARCHAR}
+                , #{etc_job, jdbcType=VARCHAR}
+                , #{nm_univ, jdbcType=VARCHAR}
+                , #{cd_attend_univ, jdbcType=VARCHAR}
+                , #{cd_grade_univ, jdbcType=VARCHAR}
+                , #{no_univ, jdbcType=VARCHAR}
+                , #{yyyy_enter_univ, jdbcType=VARCHAR}
+                , #{nm_part_univ, jdbcType=VARCHAR}
+                , #{cd_addr_univ, jdbcType=VARCHAR}
+                , #{ph_univ, jdbcType=VARCHAR}
+                , #{cd_status_ph_univ, jdbcType=VARCHAR}
+                , #{post_univ, jdbcType=VARCHAR}
+                , #{addr1_univ, jdbcType=VARCHAR}
+                , #{addr2_univ, jdbcType=VARCHAR}
+                , #{cd_status_addr_univ, jdbcType=VARCHAR}
+                , #{cd_addr_etc, jdbcType=VARCHAR}
+                , #{post_etc, jdbcType=VARCHAR}
+                , #{addr1_etc, jdbcType=VARCHAR}
+                , #{addr2_etc, jdbcType=VARCHAR}
+                , #{hp_etc, jdbcType=VARCHAR}
+                , #{cd_hp_co_etc, jdbcType=VARCHAR}
+                , #{cd_status_hp_etc, jdbcType=VARCHAR}
+                , #{cd50_agree_item, jdbcType=VARCHAR}
+                , #{kcb_di, jdbcType=VARCHAR}
+                , #{etc_memo, jdbcType=VARCHAR}
+                , #{proof_income, jdbcType=VARCHAR}
+                , #{yn_4insu, jdbcType=VARCHAR}
+                , #{amt_min_living_cost, jdbcType=VARCHAR}
+                , #{cnt_live_together, jdbcType=VARCHAR}
+                , #{cd_cnt_child, jdbcType=VARCHAR}
+                , #{yn_agree_using, 'N'}
+                , #{id_frt, jdbcType=VARCHAR}
+                , SYSDATE
+                , #{id_lst, jdbcType=VARCHAR}
+                , SYSDATE
+            )
+    </insert>
+    <insert id="createPersonAgency">
+        <selectKey keyProperty="no_person" resultType="string" order="BEFORE">
+            (SELECT 'P'||LPAD(NVL(SUBSTR(max(no_person),2,10),0)+1,9,'0') FROM person_info)
+        </selectKey>
+
+        INSERT INTO agency_person_info
+            (     no_person
+                , nm_person
+                , hp
+                , cd_hp_co
+                , cd_status_hp
+                , nm_hp_owner
+                , rel_hp_owner
+                , cd_marry
+                , email
+                , yn_recv_email
+                , c3_bank
+                , account_bank
+                , yn_secret
+                , yn_vehicle_own
+                , etc_vehicles
+                , cd_army
+                , nm_specialty
+                , cd30_hobby
+                , ph_home
+                , cd_ph_co_home
+                , cd_status_ph_home
+                , nm_ph_owner
+                , rel_ph_owner
+                , cd_addr_home
+                , post_home
+                , addr1_home
+                , addr2_home
+                , cd_status_addr_home
+                , cd_house_type_home
+                , ym_house_home
+                , cd_live_type_home
+                , amt_rent_deposit_home
+                , amt_rent_monthly_home
+                , nm_owner_home
+                , rel_owner_home
+                , yn_addr_equal
+                , cd_addr_reg
+                , post_reg
+                , addr1_reg
+                , addr2_reg
+                , cd_status_addr_reg
+                , cd_house_type_reg
+                , ym_house_reg
+                , cd_live_type_reg
+                , amt_rent_deposit_reg
+                , amt_rent_monthly_reg
+                , nm_owner_reg
+                , rel_owner_reg
+                , cd50_live_together
+                , cd_job_class
+                , nm_comp
+                , cd_job_term
+                , cd_duty_comp
+                , cd_job_comp
+                , cd_industry
+                , nm_industry_detail
+                , cd_addr_comp
+                , post_comp
+                , addr1_comp
+                , addr2_comp
+                , cd_status_addr_comp
+                , ph_comp
+                , cd_status_ph_comp
+                , ph_comp_direct
+                , fax_comp
+                , nm_duty_comp
+                , nm_part_comp
+                , ym_start_comp
+                , yn_medi_insu_comp
+                , cd_scale_comp
+                , cnt_worker
+                , no_biz_licence
+                , cd_employ_type
+                , cd_dd_income
+                , amt_monthly_income
+                , amt_year_income
+                , etc_job
+                , nm_univ
+                , cd_attend_univ
+                , cd_grade_univ
+                , no_univ
+                , yyyy_enter_univ
+                , nm_part_univ
+                , cd_addr_univ
+                , ph_univ
+                , cd_status_ph_univ
+                , post_univ
+                , addr1_univ
+                , addr2_univ
+                , cd_status_addr_univ
+                , cd_addr_etc
+                , post_etc
+                , addr1_etc
+                , addr2_etc
+                , hp_etc
+                , cd_hp_co_etc
+                , cd_status_hp_etc
+                , cd50_agree_item
+                , nice_safekey
+                , kcb_di
+                , etc_memo
+                , id_agency
+                , id_frt
+                , dt_frt
+                , id_lst
+                , dt_lst
+            ) VALUES (
+                  #{no_person}
+                , #{nm_person, jdbcType=VARCHAR}
+                , #{hp, jdbcType=VARCHAR}
+                , #{cd_hp_co, jdbcType=VARCHAR}
+                , #{cd_status_hp, jdbcType=VARCHAR}
+                , #{nm_hp_owner, jdbcType=VARCHAR}
+                , #{rel_hp_owner, jdbcType=VARCHAR}
+                , #{cd_marry, jdbcType=VARCHAR}
+                , #{email, jdbcType=VARCHAR}
+                , #{yn_recv_email, jdbcType=VARCHAR}
+                , #{c3_bank, jdbcType=VARCHAR}
+                , #{account_bank, jdbcType=VARCHAR}
+                , #{yn_secret, jdbcType=VARCHAR}
+                , #{yn_vehicle_own, jdbcType=VARCHAR}
+                , #{etc_vehicles, jdbcType=VARCHAR}
+                , #{cd_army, jdbcType=VARCHAR}
+                , #{nm_specialty, jdbcType=VARCHAR}
+                , #{cd30_hobby, jdbcType=VARCHAR}
+                , #{ph_home, jdbcType=VARCHAR}
+                , #{cd_ph_co_home, jdbcType=VARCHAR}
+                , #{cd_status_ph_home, jdbcType=VARCHAR}
+                , #{nm_ph_owner, jdbcType=VARCHAR}
+                , #{rel_ph_owner, jdbcType=VARCHAR}
+                , #{cd_addr_home, jdbcType=VARCHAR}
+                , #{post_home, jdbcType=VARCHAR}
+                , #{addr1_home, jdbcType=VARCHAR}
+                , #{addr2_home, jdbcType=VARCHAR}
+                , #{cd_status_addr_home, jdbcType=VARCHAR}
+                , #{cd_house_type_home, jdbcType=VARCHAR}
+                , #{ym_house_home, jdbcType=VARCHAR}
+                , #{cd_live_type_home, jdbcType=VARCHAR}
+                , #{amt_rent_deposit_home, jdbcType=VARCHAR}
+                , #{amt_rent_monthly_home, jdbcType=VARCHAR}
+                , #{nm_owner_home, jdbcType=VARCHAR}
+                , #{rel_owner_home, jdbcType=VARCHAR}
+                , #{yn_addr_equal, jdbcType=VARCHAR}
+                , #{cd_addr_reg, jdbcType=VARCHAR}
+                , #{post_reg, jdbcType=VARCHAR}
+                , #{addr1_reg, jdbcType=VARCHAR}
+                , #{addr2_reg, jdbcType=VARCHAR}
+                , #{cd_status_addr_reg, jdbcType=VARCHAR}
+                , #{cd_house_type_reg, jdbcType=VARCHAR}
+                , #{ym_house_reg, jdbcType=VARCHAR}
+                , #{cd_live_type_reg, jdbcType=VARCHAR}
+                , #{amt_rent_deposit_reg, jdbcType=VARCHAR}
+                , #{amt_rent_monthly_reg, jdbcType=VARCHAR}
+                , #{nm_owner_reg, jdbcType=VARCHAR}
+                , #{rel_owner_reg, jdbcType=VARCHAR}
+                , #{cd50_live_together, jdbcType=VARCHAR}
+                , #{cd_job_class, jdbcType=VARCHAR}
+                , #{nm_comp, jdbcType=VARCHAR}
+                , #{cd_job_term, jdbcType=VARCHAR}
+                , #{cd_duty_comp, jdbcType=VARCHAR}
+                , #{cd_job_comp, jdbcType=VARCHAR}
+                , #{cd_industry, jdbcType=VARCHAR}
+                , #{nm_industry_detail, jdbcType=VARCHAR}
+                , #{cd_addr_comp, jdbcType=VARCHAR}
+                , #{post_comp, jdbcType=VARCHAR}
+                , #{addr1_comp, jdbcType=VARCHAR}
+                , #{addr2_comp, jdbcType=VARCHAR}
+                , #{cd_status_addr_comp, jdbcType=VARCHAR}
+                , #{ph_comp, jdbcType=VARCHAR}
+                , #{cd_status_ph_comp, jdbcType=VARCHAR}
+                , #{ph_comp_direct, jdbcType=VARCHAR}
+                , #{fax_comp, jdbcType=VARCHAR}
+                , #{nm_duty_comp, jdbcType=VARCHAR}
+                , #{nm_part_comp, jdbcType=VARCHAR}
+                , #{ym_start_comp, jdbcType=VARCHAR}
+                , #{yn_medi_insu_comp, jdbcType=VARCHAR}
+                , #{cd_scale_comp, jdbcType=VARCHAR}
+                , #{cnt_worker, jdbcType=VARCHAR}
+                , #{no_biz_licence, jdbcType=VARCHAR}
+                , #{cd_employ_type, jdbcType=VARCHAR}
+                , #{cd_dd_income, jdbcType=VARCHAR}
+                , #{amt_monthly_income, jdbcType=VARCHAR}
+                , #{amt_year_income, jdbcType=VARCHAR}
+                , #{etc_job, jdbcType=VARCHAR}
+                , #{nm_univ, jdbcType=VARCHAR}
+                , #{cd_attend_univ, jdbcType=VARCHAR}
+                , #{cd_grade_univ, jdbcType=VARCHAR}
+                , #{no_univ, jdbcType=VARCHAR}
+                , #{yyyy_enter_univ, jdbcType=VARCHAR}
+                , #{nm_part_univ, jdbcType=VARCHAR}
+                , #{cd_addr_univ, jdbcType=VARCHAR}
+                , #{ph_univ, jdbcType=VARCHAR}
+                , #{cd_status_ph_univ, jdbcType=VARCHAR}
+                , #{post_univ, jdbcType=VARCHAR}
+                , #{addr1_univ, jdbcType=VARCHAR}
+                , #{addr2_univ, jdbcType=VARCHAR}
+                , #{cd_status_addr_univ, jdbcType=VARCHAR}
+                , #{cd_addr_etc, jdbcType=VARCHAR}
+                , #{post_etc, jdbcType=VARCHAR}
+                , #{addr1_etc, jdbcType=VARCHAR}
+                , #{addr2_etc, jdbcType=VARCHAR}
+                , #{hp_etc, jdbcType=VARCHAR}
+                , #{cd_hp_co_etc, jdbcType=VARCHAR}
+                , #{cd_status_hp_etc, jdbcType=VARCHAR}
+                , #{cd50_agree_item, jdbcType=VARCHAR}
+                , #{nice_safekey, jdbcType=VARCHAR}
+                , #{kcb_di, jdbcType=VARCHAR}
+                , #{etc_memo, jdbcType=VARCHAR}
+                , #{id_agency, jdbcType=VARCHAR}
+                , #{id_frt, jdbcType=VARCHAR}
+                , SYSDATE
+                , #{id_lst, jdbcType=VARCHAR}
+                , SYSDATE
+            )
+    </insert>
+
+    <update id="modifyPerson" parameterType="com.koscom.person.model.PersonVO">
+                UPDATE person_info
+           SET    cd_hp_co = #{cd_hp_co, jdbcType=VARCHAR}
+                , id_lst = #{id_lst, jdbcType=VARCHAR}
+                , dt_lst = SYSDATE
+                <if test='@com.koscom.util.MybatisUtil@isNotEmpty(nm_person)'>
+                , nm_person = #{nm_person, jdbcType=VARCHAR}
+                </if>
+                <if test='@com.koscom.util.MybatisUtil@isNotEmpty(ssn_person)'>
+                , ssn_person = XX1.ENC_VARCHAR2_INS(#{ssn_person, jdbcType=VARCHAR}, '12', 'FS_ARIA', 'PERSON_INFO', 'SSN_PERSON')
+                </if>
+                <if test='@com.koscom.util.MybatisUtil@isNotEmpty(bgn)'>
+                , bgn = #{bgn, jdbcType=VARCHAR}
+                </if>
+                <if test='@com.koscom.util.MybatisUtil@isNotEmpty(hp)'>
+                , hp = #{hp, jdbcType=VARCHAR}
+                </if>
+                , nm_hp_owner = #{nm_hp_owner, jdbcType=VARCHAR}
+                , rel_hp_owner = #{rel_hp_owner, jdbcType=VARCHAR}
+                , cd_status_hp = #{cd_status_hp, jdbcType=VARCHAR}
+                , cd_marry = #{cd_marry, jdbcType=VARCHAR}
+                , email = #{email, jdbcType=VARCHAR}
+                , yn_recv_email  = #{yn_recv_email, jdbcType=VARCHAR}
+                , c3_bank = #{c3_bank, jdbcType=VARCHAR}
+                , account_bank = #{account_bank, jdbcType=VARCHAR}
+                , yn_secret = #{yn_secret, jdbcType=VARCHAR}
+                , yn_vehicle_own = #{yn_vehicle_own, jdbcType=VARCHAR}
+                , etc_vehicles  = #{etc_vehicles, jdbcType=VARCHAR}
+                , cd_army = #{cd_army, jdbcType=VARCHAR}
+                , nm_specialty = #{nm_specialty, jdbcType=VARCHAR}
+                <!-- cd30_hobby -->
+                , ph_home = #{ph_home, jdbcType=VARCHAR}
+                , cd_ph_co_home = #{cd_ph_co_home, jdbcType=VARCHAR}
+                , cd_status_ph_home = #{cd_status_ph_home, jdbcType=VARCHAR}
+                , nm_ph_owner = #{nm_ph_owner, jdbcType=VARCHAR}
+                , rel_ph_owner = #{rel_ph_owner, jdbcType=VARCHAR}
+                , cd_addr_home = #{cd_addr_home, jdbcType=VARCHAR}
+                , post_home = #{post_home, jdbcType=VARCHAR}
+                , addr1_home = #{addr1_home, jdbcType=VARCHAR}
+                , addr2_home = #{addr2_home, jdbcType=VARCHAR}
+                , cd_status_addr_home = #{cd_status_addr_home, jdbcType=VARCHAR}
+                , cd_house_type_home = #{cd_house_type_home, jdbcType=VARCHAR}
+                , ym_house_home = #{ym_house_home, jdbcType=VARCHAR}
+                , cd_live_type_home = #{cd_live_type_home, jdbcType=VARCHAR}
+                , amt_rent_deposit_home = #{amt_rent_deposit_home, jdbcType=VARCHAR}
+                , amt_rent_monthly_home = #{amt_rent_monthly_home, jdbcType=VARCHAR}
+                , nm_owner_home = #{nm_owner_home, jdbcType=VARCHAR}
+                , rel_owner_home = #{rel_owner_home, jdbcType=VARCHAR}
+                , yn_addr_equal  = #{yn_addr_equal, jdbcType=VARCHAR}
+                , cd_addr_reg = #{cd_addr_reg, jdbcType=VARCHAR}
+                , post_reg = #{post_reg, jdbcType=VARCHAR}
+                , addr1_reg = #{addr1_reg, jdbcType=VARCHAR}
+                , addr2_reg = #{addr2_reg, jdbcType=VARCHAR}
+                , cd_status_addr_reg = #{cd_status_addr_reg, jdbcType=VARCHAR}
+                , cd_house_type_reg = #{cd_house_type_reg, jdbcType=VARCHAR}
+                , ym_house_reg = #{ym_house_reg, jdbcType=VARCHAR}
+                , cd_live_type_reg = #{cd_live_type_reg, jdbcType=VARCHAR}
+                , amt_rent_deposit_reg = #{amt_rent_deposit_reg, jdbcType=VARCHAR}
+                , amt_rent_monthly_reg = #{amt_rent_monthly_reg, jdbcType=VARCHAR}
+                , nm_owner_reg = #{nm_owner_reg, jdbcType=VARCHAR}
+                , rel_owner_reg = #{rel_owner_reg, jdbcType=VARCHAR}
+                , cd50_live_together = #{cd50_live_together, jdbcType=VARCHAR}
+                , cd_job_class = #{cd_job_class, jdbcType=VARCHAR}
+                , nm_comp = #{nm_comp, jdbcType=VARCHAR}
+                , cd_job_term = #{cd_job_term, jdbcType=VARCHAR}
+                , cd_duty_comp = #{cd_duty_comp, jdbcType=VARCHAR}
+                , cd_job_comp = #{cd_job_comp, jdbcType=VARCHAR}
+                , cd_industry = #{cd_industry, jdbcType=VARCHAR}
+                , nm_industry_detail = #{nm_industry_detail, jdbcType=VARCHAR}
+                , cd_addr_comp = #{cd_addr_comp, jdbcType=VARCHAR}
+                , post_comp = #{post_comp, jdbcType=VARCHAR}
+                , addr1_comp = #{addr1_comp, jdbcType=VARCHAR}
+                , addr2_comp = #{addr2_comp, jdbcType=VARCHAR}
+                , cd_status_addr_comp = #{cd_status_addr_comp, jdbcType=VARCHAR}
+                , ph_comp = #{ph_comp, jdbcType=VARCHAR}
+                , cd_status_ph_comp = #{cd_status_ph_comp, jdbcType=VARCHAR}
+                , ph_comp_direct = #{ph_comp_direct, jdbcType=VARCHAR}
+                , fax_comp = #{fax_comp, jdbcType=VARCHAR}
+                , nm_duty_comp = #{nm_duty_comp, jdbcType=VARCHAR}
+                , nm_part_comp = #{nm_part_comp, jdbcType=VARCHAR}
+                , ym_start_comp = #{ym_start_comp, jdbcType=VARCHAR}
+                , yn_medi_insu_comp = #{yn_medi_insu_comp, jdbcType=VARCHAR}
+                , cd_scale_comp = #{cd_scale_comp, jdbcType=VARCHAR}
+                , cnt_worker = #{cnt_worker, jdbcType=VARCHAR}
+                , no_biz_licence = #{no_biz_licence, jdbcType=VARCHAR}
+                , cd_employ_type = #{cd_employ_type, jdbcType=VARCHAR}
+                , cd_dd_income = #{cd_dd_income, jdbcType=VARCHAR}
+                , amt_monthly_income = #{amt_monthly_income, jdbcType=VARCHAR}
+                , amt_year_income = #{amt_year_income, jdbcType=VARCHAR}
+                , etc_job = #{etc_job, jdbcType=VARCHAR}
+                , nm_univ = #{nm_univ, jdbcType=VARCHAR}
+                , cd_attend_univ = #{cd_attend_univ, jdbcType=VARCHAR}
+                , cd_grade_univ = #{cd_grade_univ, jdbcType=VARCHAR}
+                , no_univ = #{no_univ, jdbcType=VARCHAR}
+                , yyyy_enter_univ = #{yyyy_enter_univ, jdbcType=VARCHAR}
+                , nm_part_univ = #{nm_part_univ, jdbcType=VARCHAR}
+                , cd_addr_univ = #{cd_addr_univ, jdbcType=VARCHAR}
+                , ph_univ = #{ph_univ, jdbcType=VARCHAR}
+                , cd_status_ph_univ = #{cd_status_ph_univ, jdbcType=VARCHAR}
+                , post_univ = #{post_univ, jdbcType=VARCHAR}
+                , addr1_univ = #{addr1_univ, jdbcType=VARCHAR}
+                , addr2_univ = #{addr2_univ, jdbcType=VARCHAR}
+                , cd_status_addr_univ = #{cd_status_addr_univ, jdbcType=VARCHAR}
+                , cd_addr_etc = #{cd_addr_etc, jdbcType=VARCHAR}
+                , post_etc = #{post_etc, jdbcType=VARCHAR}
+                , addr1_etc = #{addr1_etc, jdbcType=VARCHAR}
+                , addr2_etc = #{addr2_etc, jdbcType=VARCHAR}
+                , hp_etc = #{hp_etc, jdbcType=VARCHAR}
+                , cd_hp_co_etc = #{cd_hp_co_etc, jdbcType=VARCHAR}
+                , cd_status_hp_etc = #{cd_status_hp_etc, jdbcType=VARCHAR}
+                , etc_memo = #{etc_memo, jdbcType=VARCHAR}
+                , YN_AGREE_USING = #{yn_agree_using, jdbcType=VARCHAR}
+        <choose>
+            <when test='@com.koscom.util.MybatisUtil@isEmpty(yn_agency)'>
+                , proof_income = #{proof_income, jdbcType=VARCHAR}
+                , yn_4insu = #{yn_4insu, jdbcType=VARCHAR}
+                , amt_min_living_cost = #{amt_min_living_cost, jdbcType=VARCHAR}
+                , cnt_live_together = #{cnt_live_together, jdbcType=VARCHAR}
+                , cd_cnt_child = #{cd_cnt_child, jdbcType=VARCHAR}
+
+<!--                , comp_social = #{comp_social, jdbcType=VARCHAR} -->
+                , id_social = #{id_social, jdbcType=VARCHAR}
+                , token_social = #{token_social, jdbcType=VARCHAR}
+                , nm_social = #{nm_social, jdbcType=VARCHAR}
+            </when>
+            <otherwise>
+            </otherwise>
+        </choose>
+
+         WHERE no_person = #{no_person, jdbcType=VARCHAR}
+    </update>
+
+    <select id="listPersonInfo" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonVO">
+        <!-- 핸드폰 번호가 바뀌었을 수 있기 때문에 핸드폰은 UNION 으로 별도 조회 한다. 핸드폰만 입력된 경우 앞에 쿼리가 조회 될 필요가 없다. -->
+        <if test="@com.koscom.util.MybatisUtil@isNotEmpty(nm_person) or @com.koscom.util.MybatisUtil@isNotEmpty(ymd_birth) or @com.koscom.util.MybatisUtil@isNotEmpty(c1_gender)">
+            SELECT * FROM person_info
+            <where>
+                <if test='@com.koscom.util.MybatisUtil@isNotEmpty(nm_person)'>
+                    nm_person LIKE '%'||#{nm_person}||'%'
+                </if>
+                <choose>
+                    <when test="@com.koscom.util.MybatisUtil@isNotEmpty(ymd_birth) and @com.koscom.util.MybatisUtil@isNotEmpty(c1_gender)">
+                        AND bgn = #{ymd_birth}||#{c1_gender}
+                    </when>
+                    <otherwise>
+                        <if test='@com.koscom.util.MybatisUtil@isNotEmpty(ymd_birth)'>
+                            AND bgn LIKE #{ymd_birth}||'%'
+                        </if>
+                        <if test='@com.koscom.util.MybatisUtil@isNotEmpty(c1_gender)'>
+                            AND bgn LIKE '%'||#{c1_gender}
+                        </if>
+                    </otherwise>
+                </choose>
+            </where>
+            UNION
+        </if>
+        SELECT * FROM person_info
+        <where>
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(nm_person)'>
+                nm_person LIKE '%'||#{nm_person}||'%'
+            </if>
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(hp)'>
+                AND hp LIKE '%'||#{hp}||'%'
+            </if>
+        </where>
+    </select>
+
+    <sql id="listPersonInfoPg_WHERE">
+        <where>
+            <!-- 상세검색 -->
+            <if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_detail)">
+                 <if test='"hp".equals(sel_detail)'>
+				   AND HP LIKE '%'||#{txt_detail}||'%'
+				</if>
+				<if test='"nm_person".equals(sel_detail)'>
+				   AND NM_PERSON LIKE '%'||#{txt_detail}||'%'
+				</if>
+				<if test='"bgn".equals(sel_detail)'>
+				   AND BGN LIKE '%'||#{txt_detail}||'%'
+				</if>
+            </if>
+
+            <choose>
+                <when test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_dt_kind)">
+	                <choose>
+	                    <when test="@com.koscom.util.MybatisUtil@contains('dt_',sel_dt_kind)">
+	                        <if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
+	                        	<if test='"P.dt_lst".equals(sel_dt_kind)'>
+	                            	AND TO_CHAR(P.DT_LST,'yyyyMMdd') <![CDATA[>=]]> #{txt_dt_from}
+	                            </if>
+	                        </if>
+	                        <if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_to)">
+	                        	<if test='"P.dt_lst".equals(sel_dt_kind)'>
+	                            	AND TO_CHAR(P.DT_LST,'yyyyMMdd') <![CDATA[<=]]> #{txt_dt_to}
+	                            </if>
+	                        </if>
+	                    </when>
+	                    <otherwise>
+	                        <if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
+	                            	AND P.DT_LST <![CDATA[>=]]> #{txt_dt_from}
+	                        </if>
+	                        <if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_to)">
+	                            	AND P.DT_LST <![CDATA[<=]]> #{txt_dt_to}
+	                        </if>
+	                    </otherwise>
+	                </choose>
+	            </when>
+	            <otherwise>
+	                <if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
+	                    	AND P.DT_FRT <![CDATA[>=]]> #{txt_dt_from}
+	                </if>
+	                <if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_to)">
+	                    	AND P.DT_FRT <![CDATA[<=]]> #{txt_dt_to}
+	                </if>
+	            </otherwise>
+            </choose>
+
+        </where>
+    </sql>
+
+    <select id="listPersonInfoPg" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonVO">
+       SELECT
+            *
+        FROM
+            (SELECT
+                LST.*,
+                ROWNUM RNUM
+             FROM
+                (SELECT
+                      P.no_person
+                    , P.nm_person
+                    , XX1.DEC_VARCHAR2_SEL(P.ssn_person, '10', 'FS_ARIA', 'PERSON_INFO', 'SSN_PERSON') AS ssn_person
+                    , P.bgn
+                    , P.hp
+                    , P.etc_memo
+                    , P.yn_agree_using
+                    , P.dt_agree_using
+                    , P.dt_frt
+                    , P.dt_lst
+                 FROM person_info P
+                 <include refid="listPersonInfoPg_WHERE"/>
+                 ORDER BY P.no_person DESC
+                 ) LST
+            WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+            )
+        WHERE RNUM >= #{startPosition, jdbcType=NUMERIC}
+    </select>
+
+    <select id="listPersonCount"  parameterType="com.koscom.person.model.PersonForm" resultType="int">
+        SELECT
+               COUNT(*) AS recordCount
+            FROM person_info P
+         <include refid="listPersonInfoPg_WHERE"/>
+    </select>
+
+    <select id="listPersonRel" parameterType="com.koscom.person.model.PersonVO" resultType="com.koscom.person.model.PersonVO">
+        SELECT *
+              FROM (SELECT
+                          PI.no_person
+                        , PI.nm_person
+                        , PI.bgn
+                        , PI.hp
+                        , PP.no_prepare
+                        , PP.cd_prepare_doc_box
+                        , PP.cd_prepare_class
+                        , TO_CHAR(PP.dt_frt, 'yyyyMMdd') as ymd_frt
+                        , PP.amt_apply
+                        , PP.amt_approval
+                        , PP.cnt_apply
+                        , PP.cnt_approval
+                        , PP.id_prepare
+                        , PP.cd_reject_cause
+                        , TO_CHAR(PI.DT_AGREE_USING, 'yyyyMMdd') as DT_AGREE_USING
+                    FROM person_info PI
+                    INNER JOIN prepare_info PP on PP.no_person = PI.no_person
+                    WHERE PP.cd_prepare_doc_box != '99'
+                     AND PI.bgn LIKE '%' || #{field_value, jdbcType=VARCHAR} || '%'
+            ) TMP
+    </select>
+
+    <update id="modifyHp" parameterType="com.koscom.domain.PersonInfo">
+        UPDATE person_info
+           SET   hp = #{hp, jdbcType=VARCHAR}
+				,id_lst = #{id_lst, jdbcType=VARCHAR}
+				,dt_lst = SYSDATE
+         WHERE no_person = #{no_person}
+    </update>
+
+    <update id="modifyBgnNmAndHp" parameterType="com.koscom.domain.PersonInfo">
+        UPDATE person_info
+           SET
+              nm_person = #{nm_person, jdbcType=VARCHAR}
+            , ssn_person = XX1.ENC_VARCHAR2_INS(#{ssn_person, jdbcType=VARCHAR}, '12', 'FS_ARIA', 'PERSON_INFO', 'SSN_PERSON')
+            , bgn = #{bgn, jdbcType=VARCHAR}
+            , hp = #{hp, jdbcType=VARCHAR}
+			, id_lst = #{id_lst, jdbcType=VARCHAR}
+			, dt_lst = SYSDATE
+         WHERE no_person = #{no_person}
+    </update>
+
+    <insert id="insertPersonalViewHist" parameterType="com.koscom.domain.PersonalViewHist">
+        INSERT INTO personal_view_hist(
+              no_person
+            , cd_personal
+            , id_frt
+            , dt_frt
+            , id_lst
+            , dt_lst
+            )
+        VALUES (
+              #{no_person, jdbcType=VARCHAR}
+            , #{cd_personal, jdbcType=VARCHAR}
+            , #{id_frt, jdbcType=VARCHAR}
+            , SYSDATE
+            , #{id_lst, jdbcType=VARCHAR}
+            , SYSDATE
+            )
+    </insert>
+
+    <select id="getPersonInfoMap"  parameterType="com.koscom.person.model.PersonVO" resultType="hashmap">
+        SELECT
+            yn_use
+<!--         <foreach collection="fields" item="codeInfo" separator=","> -->
+<!--            ${codeInfo.nm_code} -->
+<!--        </foreach> -->
+            FROM person_info
+            WHERE no_person = #{no_person, jdbcType=VARCHAR}
+    </select>
+
+    <insert id="insertPersonInfoHist" parameterType="com.koscom.person.model.PersonInfoHistVO">
+        INSERT INTO person_info_hist(
+             NO_PERSON
+			, SEQ
+			, NM_PERSON
+			, SSN_PERSON
+			, PASS_PERSON
+			, BGN
+			, HP
+			, NICE_SAFEKEY
+			, KCB_CI
+			, KCB_DI
+			, KCB_CP
+			, PBL_CERT_CI
+			, PBL_CERT_DI
+			, YN_USE
+			, YN_AGREE_USING
+			, DT_AGREE_USING
+			, DT_INSTALL
+			, YN_FINGERPRINT
+			, YN_OS
+			, FCM_TOKEN
+			, CD_PUSH
+			, YN_PUSH
+			, EMAIL
+			, NICK
+			, YN_LOGOUT
+			, SEQ_NEW_DEBT_REG
+			, PATH_FILE1
+			, NM_FILE1
+			, STOCK_TOKEN
+			, ETC_MEMO
+			, AMT_ETM_INCOME
+			, ID_FRT
+			, DT_FRT
+			, ID_LST
+			, DT_LST
+            )
+        VALUES (
+            #{no_person, jdbcType=VARCHAR}
+			,(SELECT NVL(MAX(SEQ),0)+1 FROM PERSON_INFO_HIST WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR})
+			,#{nm_person, jdbcType=VARCHAR}
+			,#{ssn_person, jdbcType=VARCHAR}
+			,#{pass_person, jdbcType=VARCHAR}
+			,#{bgn, jdbcType=VARCHAR}
+			,#{hp, jdbcType=VARCHAR}
+			,#{nice_safekey, jdbcType=VARCHAR}
+			,#{kcb_ci, jdbcType=VARCHAR}
+			,#{kcb_di, jdbcType=VARCHAR}
+			,#{kcb_cp, jdbcType=VARCHAR}
+			,#{pbl_cert_ci, jdbcType=VARCHAR}
+			,#{pbl_cert_di, jdbcType=VARCHAR}
+			,#{yn_use, jdbcType=VARCHAR}
+			,#{yn_agree_using, jdbcType=VARCHAR}
+			,#{dt_agree_using, jdbcType=VARCHAR}
+			,#{dt_install, jdbcType=VARCHAR}
+			,#{yn_fingerprint, jdbcType=VARCHAR}
+			,#{yn_os, jdbcType=VARCHAR}
+			,#{fcm_token, jdbcType=VARCHAR}
+			,#{cd_push, jdbcType=VARCHAR}
+			,#{yn_push, jdbcType=VARCHAR}
+			,#{email, jdbcType=VARCHAR}
+			,#{nick, jdbcType=VARCHAR}
+			,#{yn_logout, jdbcType=VARCHAR}
+			,#{seq_new_debt_reg, jdbcType=VARCHAR}
+			,#{path_file1, jdbcType=VARCHAR}
+			,#{nm_file1, jdbcType=VARCHAR}
+			,#{stock_token, jdbcType=VARCHAR}
+			,#{etc_memo, jdbcType=VARCHAR}
+			,#{amt_etm_income, jdbcType=VARCHAR}
+			,#{id_frt, jdbcType=VARCHAR}
+			,SYSDATE
+			,#{id_lst, jdbcType=VARCHAR}
+			,SYSDATE
+            )
+    </insert>
+
+    <select id="listExistPersonCount"  parameterType="com.koscom.person.model.PersonForm" resultType="int">
+        SELECT
+            count(*)
+        FROM person_info PI
+        INNER JOIN prepare_info PP on PP.no_person = PI.no_person
+        WHERE PP.cd_prepare_doc_box != '99'
+        <choose>
+            <when test="@com.koscom.util.MybatisUtil@isNotEmpty(no_person)">
+                AND PI.no_person = #{no_person}
+            </when>
+            <otherwise>
+                AND PI.hp = #{hp}
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getSamePersonCount"  parameterType="com.koscom.person.model.PersonVO" resultType="int">
+        SELECT
+               count(distinct PI.no_person) AS personCount
+            FROM person_info PI
+            INNER JOIN prepare_info PP on PP.no_person = PI.no_person
+            WHERE hp = #{hp, jdbcType=VARCHAR}
+              AND PP.cd_prepare_doc_box != '99'
+    </select>
+
+    <select id="getIdPrepare"  parameterType="com.koscom.person.model.PersonForm" resultType="String">
+        SELECT
+            id_prepare
+        FROM (
+            SELECT PP.*, row_number() over(order by PP.dt_frt desc) as rn
+            FROM person_info PI
+            INNER JOIN prepare_info PP on PP.no_person = PI.no_person
+            WHERE PP.cd_prepare_doc_box != '99'
+            <choose>
+                <when test="@com.koscom.util.MybatisUtil@isNotEmpty(no_person)">
+                    AND PI.no_person = #{no_person}
+                </when>
+                <otherwise>
+                    AND PI.nm_person = #{nm_person} AND PI.hp = #{hp}
+                </otherwise>
+            </choose>
+            ) LST
+            WHERE LST.rn = 1
+    </select>
+
+    <select id="getExistPersonInfo"  parameterType="com.koscom.person.model.PersonVO" resultType="com.koscom.person.model.PersonVO">
+        SELECT
+            *
+        FROM (
+            SELECT PI.*, row_number() over(order by PI.dt_frt desc) as rn
+            FROM person_info PI
+            WHERE PI.nm_person = #{nm_person, jdbcType=VARCHAR}
+              AND PI.hp = #{hp, jdbcType=VARCHAR}
+            ) LST
+            WHERE LST.rn = 1
+    </select>
+
+    <select id="getPersonInfoHp"  parameterType="String" resultType="com.koscom.person.model.PersonVO">
+        SELECT
+            *
+        FROM
+            person_info
+        WHERE hp = #{hp, jdbcType=VARCHAR}
+    </select>
+
+    <update id="procPersonNice" parameterType="com.koscom.person.model.PersonNiceVO">
+        MERGE INTO PERSON_NICE_INFO
+        USING DUAL
+        ON (no_person = #{no_person, jdbcType=VARCHAR} )
+        WHEN MATCHED THEN
+        UPDATE
+         SET
+          score_cb            = #{score_cb      ,jdbcType=VARCHAR}
+        , avg_credit          = #{avg_credit    ,jdbcType=VARCHAR}
+        , score_subprime      = #{score_subprime,jdbcType=VARCHAR}
+        , avg_subprime        = #{avg_subprime  ,jdbcType=VARCHAR}
+        , score_bankrupt      = #{score_bankrupt,jdbcType=VARCHAR}
+        , avg_bankrupt        = #{avg_bankrupt  ,jdbcType=VARCHAR}
+        , avg_12month         = #{avg_12month   ,jdbcType=VARCHAR}
+        , grade_12month       = #{grade_12month ,jdbcType=VARCHAR}
+        , default_bank        = #{default_bank  ,jdbcType=VARCHAR}
+        , info_public         = #{info_public   ,jdbcType=VARCHAR}
+        , disorder_fin        = #{disorder_fin  ,jdbcType=VARCHAR}
+        , default_credit      = #{default_credit,jdbcType=VARCHAR}
+		, grade_health          = #{grade_health    ,jdbcType=VARCHAR}
+		, avg_health            = #{avg_health      ,jdbcType=VARCHAR}
+		, cnt_all_loan          = #{cnt_all_loan    ,jdbcType=VARCHAR}
+		, amt_loan              = #{amt_loan        ,jdbcType=VARCHAR}
+		, cnt_cash_service      = #{cnt_cash_service,jdbcType=VARCHAR}
+		, amt_cash_service      = #{amt_cash_service,jdbcType=VARCHAR}
+		, cnt_guarantee         = #{cnt_guarantee   ,jdbcType=VARCHAR}
+		, amt_guarantee         = #{amt_guarantee   ,jdbcType=VARCHAR}
+		, cnt_creditcard        = #{cnt_creditcard  ,jdbcType=VARCHAR}
+		, cnt_delay             = #{cnt_delay       ,jdbcType=VARCHAR}
+		, cnt_lend              = #{cnt_lend,jdbcType=VARCHAR}
+		, amt_lend              = #{amt_lend,jdbcType=VARCHAR}
+        , ID_LST                = #{id_lst        ,jdbcType=VARCHAR}
+        , DT_LST                = SYSDATE
+        WHEN NOT MATCHED THEN
+        INSERT
+        (
+         no_person
+        ,score_cb
+        ,avg_credit
+        ,score_subprime
+        ,avg_subprime
+        ,score_bankrupt
+        ,avg_bankrupt
+        ,avg_12month
+        ,grade_12month
+        ,default_bank
+        ,info_public
+        ,disorder_fin
+        ,default_credit
+		, grade_health
+		, avg_health
+		, cnt_all_loan
+		, amt_loan
+		, cnt_cash_service
+		, amt_cash_service
+		, cnt_guarantee
+		, amt_guarantee
+		, cnt_creditcard
+		, cnt_delay
+		, cnt_lend
+		, amt_lend
+        , id_frt
+        , dt_frt
+        , id_lst
+        , dt_lst
+        )
+        VALUES(
+          #{no_person     ,jdbcType=VARCHAR}
+        , #{score_cb      ,jdbcType=VARCHAR}
+        , #{avg_credit    ,jdbcType=VARCHAR}
+        , #{score_subprime,jdbcType=VARCHAR}
+        , #{avg_subprime  ,jdbcType=VARCHAR}
+        , #{score_bankrupt,jdbcType=VARCHAR}
+        , #{avg_bankrupt  ,jdbcType=VARCHAR}
+        , #{avg_12month   ,jdbcType=VARCHAR}
+        , #{grade_12month ,jdbcType=VARCHAR}
+        , #{default_bank  ,jdbcType=VARCHAR}
+        , #{info_public   ,jdbcType=VARCHAR}
+        , #{disorder_fin  ,jdbcType=VARCHAR}
+        , #{default_credit,jdbcType=VARCHAR}
+		, #{grade_health    ,jdbcType=VARCHAR}
+		, #{avg_health      ,jdbcType=VARCHAR}
+		, #{cnt_all_loan    ,jdbcType=VARCHAR}
+		, #{amt_loan        ,jdbcType=VARCHAR}
+		, #{cnt_cash_service,jdbcType=VARCHAR}
+		, #{amt_cash_service,jdbcType=VARCHAR}
+		, #{cnt_guarantee   ,jdbcType=VARCHAR}
+		, #{amt_guarantee   ,jdbcType=VARCHAR}
+		, #{cnt_creditcard  ,jdbcType=VARCHAR}
+		, #{cnt_delay       ,jdbcType=VARCHAR}
+		, #{cnt_lend,jdbcType=VARCHAR}
+		, #{amt_lend,jdbcType=VARCHAR}
+        , #{id_frt        ,jdbcType=VARCHAR}
+        , SYSDATE
+        , #{id_lst        ,jdbcType=VARCHAR}
+        , SYSDATE
+        )
+    </update>
+
+    <update id="procPersonKcb" parameterType="com.koscom.person.model.PersonKcbVO">
+        MERGE INTO PERSON_KCB_INFO
+        USING DUAL
+        ON (no_person = #{no_person, jdbcType=VARCHAR} )
+        WHEN MATCHED THEN
+        UPDATE
+         SET
+          score_cb            = #{score_cb      ,jdbcType=VARCHAR}
+        , avg_credit          = #{avg_credit    ,jdbcType=VARCHAR}
+        , avg_avg          = #{avg_avg    ,jdbcType=VARCHAR}
+        , grade_avg          = #{grade_avg    ,jdbcType=VARCHAR}
+        , ID_LST              = #{id_lst        ,jdbcType=VARCHAR}
+        , DT_LST = SYSDATE
+        WHEN NOT MATCHED THEN
+        INSERT
+        (
+         no_person
+        ,score_cb
+        ,avg_credit
+        ,avg_avg
+        ,grade_avg
+        ,id_frt
+        ,dt_frt
+        ,id_lst
+        ,dt_lst
+        )
+        VALUES(
+          #{no_person     ,jdbcType=VARCHAR}
+        , #{score_cb      ,jdbcType=VARCHAR}
+        , #{avg_credit    ,jdbcType=VARCHAR}
+        , #{avg_avg       ,jdbcType=VARCHAR}
+        , #{grade_avg     ,jdbcType=VARCHAR}
+        , #{id_frt        ,jdbcType=VARCHAR}
+        , SYSDATE
+        , #{id_lst        ,jdbcType=VARCHAR}
+        , SYSDATE
+        )
+    </update>
+
+    <select id="getPersonNiceInfo" parameterType="java.lang.String" resultType="com.koscom.person.model.PersonNiceVO">
+        SELECT NO_PERSON,SCORE_CB,AVG_CREDIT,SCORE_SUBPRIME,AVG_SUBPRIME
+        ,SCORE_BANKRUPT,AVG_BANKRUPT,AVG_12MONTH,GRADE_12MONTH
+        ,DEFAULT_BANK,INFO_PUBLIC,DISORDER_FIN,DEFAULT_CREDIT
+        ,ID_FRT, TO_CHAR(DT_FRT,'YYYY-MM-DD') DT_FRT
+        ,ID_LST, TO_CHAR(DT_LST,'YYYY-MM-DD') DT_LST
+        ,GRADE_HEALTH,AVG_HEALTH,CNT_ALL_LOAN
+        ,AMT_LOAN,CNT_CASH_SERVICE,AMT_CASH_SERVICE,CNT_GUARANTEE
+        ,AMT_GUARANTEE,CNT_CREDITCARD,CNT_DELAY
+        ,CNT_LEND,AMT_LEND
+        FROM PERSON_NICE_INFO
+        WHERE no_person = #{no_person, jdbcType=VARCHAR}
+    </select>
+    <select id="getPersonKcbInfo" parameterType="java.lang.String" resultType="com.koscom.person.model.PersonKcbVO">
+        SELECT * FROM PERSON_KCB_INFO
+         WHERE no_person = #{no_person, jdbcType=VARCHAR}
+    </select>
+    <select id="listPersonNiceLoanAmtSumByCdFin" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonNiceLoanVO">
+        SELECT CD_FIN, DIV_LOAN, SUM(AMT_LOAN) AS AMT_LOAN FROM NICE_LOAN_INFO
+        WHERE no_person = #{no_person, jdbcType=VARCHAR}
+        GROUP BY CD_FIN, DIV_LOAN
+        ORDER BY CD_FIN, DIV_LOAN
+    </select>
+    <select id="getPersonNiceLoanAnalysis" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonNiceLoanAnalysisVO">
+        SELECT
+         SUM((CASE WHEN (div_loan = '5500')              AND (cd_fin = '01' OR cd_fin = '02' )   THEN amt_loan ELSE 0 END)) AS H_1 <!-- '주택담보대출 1금융 ' -->
+        ,SUM((CASE WHEN (div_loan = '5500')              AND (cd_fin != '01' AND cd_fin != '02') THEN amt_loan ELSE 0 END)) AS H_N1 <!-- '주택담보대출 1금융 외' -->
+        ,SUM((CASE WHEN (div_loan = '2510' OR div_loan = '2520' OR div_loan = '2530' OR div_loan = '2540' OR div_loan = '2550' OR div_loan = '2560' OR div_loan = '2570') AND (cd_fin = '01' OR cd_fin = '02' )   THEN amt_loan ELSE 0 END)) AS NH_1 <!-- '주택담보대출외 담보 1금융 ' -->
+        ,SUM((CASE WHEN (div_loan = '2510' OR div_loan = '2520' OR div_loan = '2530' OR div_loan = '2540' OR div_loan = '2550' OR div_loan = '2560' OR div_loan = '2570') AND (cd_fin != '01' AND cd_fin != '02' ) THEN amt_loan ELSE 0 END)) AS NH_N1 <!-- '주택담보대출외 담보 1금융 외' -->
+        ,SUM((CASE WHEN (div_loan = '1010' OR div_loan = '1020'OR div_loan = '1550' OR div_loan = '1560' OR div_loan = '1570' OR div_loan = '1800' OR div_loan = '1850' OR div_loan = '1500') AND (cd_fin = '01' OR cd_fin = '02' )   THEN amt_loan ELSE 0 END)) AS C_1 <!-- '신용 1금융' -->
+        ,SUM((CASE WHEN (div_loan = '1010' OR div_loan = '1020'OR div_loan = '1550' OR div_loan = '1560' OR div_loan = '1570' OR div_loan = '1800' OR div_loan = '1850' OR div_loan = '1500') AND (cd_fin != '01' AND cd_fin != '02' ) THEN amt_loan ELSE 0 END)) AS C_N1 <!-- '신용 1금융 외' -->
+        ,SUM((CASE WHEN (div_loan = '' OR div_loan = '') AND (cd_fin != '01' AND cd_fin = '02' ) THEN amt_loan ELSE 0 END)) AS EC <!-- '신용 기타' -->
+        ,SUM((CASE WHEN (div_loan = '' OR div_loan = '') AND (cd_fin != '01' AND cd_fin = '02' ) THEN amt_loan ELSE 0 END)) AS D_D <!-- '대부업 담보' -->
+        ,SUM((CASE WHEN (div_loan = '' OR div_loan = '') AND (cd_fin != '01' AND cd_fin = '02' ) THEN amt_loan ELSE 0 END)) AS D_C <!-- '대부업 신용' -->
+        ,SUM((CASE WHEN (div_loan = '5500')              AND (cd_fin = '01' OR cd_fin = '02' )   THEN 1 ELSE 0 END)) AS CNT_H_1 <!-- '주택담보대출 1금융 ' -->
+        ,SUM((CASE WHEN (div_loan = '5500')              AND (cd_fin != '01' AND cd_fin != '02') THEN 1 ELSE 0 END)) AS CNT_H_N1 <!-- '주택담보대출 1금융 외' -->
+        ,SUM((CASE WHEN (div_loan = '2510' OR div_loan = '2520' OR div_loan = '2530' OR div_loan = '2540' OR div_loan = '2550' OR div_loan = '2560' OR div_loan = '2570') AND (cd_fin = '01' OR cd_fin = '02' )   THEN 1 ELSE 0 END)) AS CNT_NH_1 <!-- '주택담보대출외 담보 1금융 ' -->
+        ,SUM((CASE WHEN (div_loan = '2510' OR div_loan = '2520' OR div_loan = '2530' OR div_loan = '2540' OR div_loan = '2550' OR div_loan = '2560' OR div_loan = '2570') AND (cd_fin != '01' AND cd_fin != '02' ) THEN 1 ELSE 0 END)) AS CNT_NH_N1 <!-- '주택담보대출외 담보 1금융 외' -->
+        ,SUM((CASE WHEN (div_loan = '1010' OR div_loan = '1020'OR div_loan = '1550' OR div_loan = '1560' OR div_loan = '1570' OR div_loan = '1800' OR div_loan = '1850' OR div_loan = '1500') AND (cd_fin = '01' OR cd_fin = '02' )   THEN 1 ELSE 0 END)) AS CNT_C_1 <!-- '신용 1금융' -->
+        ,SUM((CASE WHEN (div_loan = '1010' OR div_loan = '1020'OR div_loan = '1550' OR div_loan = '1560' OR div_loan = '1570' OR div_loan = '1800' OR div_loan = '1850' OR div_loan = '1500') AND (cd_fin != '01' AND cd_fin != '02' ) THEN 1 ELSE 0 END)) AS CNT_C_N1 <!-- '신용 1금융 외' -->
+        ,SUM((CASE WHEN (div_loan = '' OR div_loan = '') AND (cd_fin != '01' AND cd_fin = '02' ) THEN 1 ELSE 0 END)) AS CNT_EC <!-- '신용 기타' -->
+        ,SUM((CASE WHEN (div_loan = '' OR div_loan = '') AND (cd_fin != '01' AND cd_fin = '02' ) THEN 1 ELSE 0 END)) AS CNT_D_D <!-- '대부업 담보' -->
+        ,SUM((CASE WHEN (div_loan = '' OR div_loan = '') AND (cd_fin != '01' AND cd_fin = '02' ) THEN 1 ELSE 0 END)) AS CNT_D_C <!-- '대부업 신용' -->
+        from NICE_LOAN_INFO
+        WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+        ORDER BY CD_FIN, DIV_LOAN
+    </select>
+    <select id="getPersonNiceLoanAmtSum" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonNiceLoanVO">
+        SELECT SUM(TEMP) AS AMT_LOAN FROM(
+            SELECT SUM(AMT_LOAN) AS TEMP FROM NICE_LOAN_INFO
+            WHERE no_person = #{no_person, jdbcType=VARCHAR}
+            UNION ALL
+            SELECT AMT_CASH_SERVICE AS TEMP FROM PERSON_NICE_INFO
+            WHERE no_person = #{no_person, jdbcType=VARCHAR}
+            UNION ALL
+            SELECT AMT_GUARANTEE AS TEMP FROM PERSON_NICE_INFO
+            WHERE no_person = #{no_person, jdbcType=VARCHAR}
+        )
+    </select>
+    <select id="getPersonNiceAmtPayMonthSum" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonNiceLoanVO">
+        SELECT SUM(AMT_PAY_MONTH) AMT_PAY_MONTH FROM NICE_LOAN_INFO
+        WHERE no_person = #{no_person, jdbcType=VARCHAR}
+    </select>
+    <update id="procPersonNiceLoan" parameterType="com.koscom.person.model.PersonNiceLoanVO">
+        MERGE INTO NICE_LOAN_INFO
+        USING DUAL
+        ON (no_niceloan = #{no_niceloan, jdbcType=VARCHAR} )
+        WHEN MATCHED THEN
+        UPDATE
+         SET
+         no_person                 = #{no_person                      ,jdbcType=VARCHAR}
+        ,cd_fin                    = #{cd_fin                         ,jdbcType=VARCHAR}
+        ,occur_institution         = #{occur_institution              ,jdbcType=VARCHAR}
+        ,dt_start                  = #{dt_start                       ,jdbcType=VARCHAR}
+        ,amt_loan                  = #{amt_loan                       ,jdbcType=VARCHAR}
+        ,div_loan                  = #{div_loan                       ,jdbcType=VARCHAR}
+        ,dt_change                 = #{dt_change                      ,jdbcType=VARCHAR}
+        ,dt_max                    = #{dt_max                         ,jdbcType=VARCHAR}
+        ,type_loan                 = #{type_loan                      ,jdbcType=VARCHAR}
+        ,amt_frt                   = #{amt_frt                        ,jdbcType=VARCHAR}
+        ,rto_avg_interest          = #{rto_avg_interest               ,jdbcType=VARCHAR}
+        ,represent_fin             = #{represent_fin                  ,jdbcType=VARCHAR}
+        ,div_loan2                 = #{div_loan2                      ,jdbcType=VARCHAR}
+        ,est_remain                = #{est_remain                     ,jdbcType=VARCHAR}
+        ,cnt_use_month             = #{cnt_use_month                  ,jdbcType=VARCHAR}
+        ,total_predict_loan_month  = #{total_predict_loan_month       ,jdbcType=VARCHAR}
+        ,amt_pay_month             = #{amt_pay_month                  ,jdbcType=VARCHAR}
+        ,ID_LST                    = #{id_lst                         ,jdbcType=VARCHAR}
+        ,DT_LST = SYSDATE
+        WHEN NOT MATCHED THEN
+        INSERT
+        (
+         no_niceloan
+        ,no_person
+        ,cd_fin
+        ,occur_institution
+        ,dt_start
+        ,amt_loan
+        ,div_loan
+        ,dt_change
+        ,dt_max
+        ,type_loan
+        ,amt_frt
+        ,rto_avg_interest
+        ,represent_fin
+        ,div_loan2
+        ,est_remain
+        ,cnt_use_month
+        ,total_predict_loan_month
+        ,amt_pay_month
+        , id_frt
+        , dt_frt
+        , id_lst
+        , dt_lst
+        )
+        VALUES(
+         NICELOAN_SEQUENCE.NEXTVAL
+        ,#{no_person                      ,jdbcType=VARCHAR}
+        ,#{cd_fin                         ,jdbcType=VARCHAR}
+        ,#{occur_institution              ,jdbcType=VARCHAR}
+        ,#{dt_start                       ,jdbcType=VARCHAR}
+        ,#{amt_loan                       ,jdbcType=VARCHAR}
+        ,#{div_loan                       ,jdbcType=VARCHAR}
+        ,#{dt_change                      ,jdbcType=VARCHAR}
+        ,#{dt_max                         ,jdbcType=VARCHAR}
+        ,#{type_loan                      ,jdbcType=VARCHAR}
+        ,#{amt_frt                        ,jdbcType=VARCHAR}
+        ,#{rto_avg_interest               ,jdbcType=VARCHAR}
+        ,#{represent_fin                  ,jdbcType=VARCHAR}
+        ,#{div_loan2                      ,jdbcType=VARCHAR}
+        ,#{est_remain                     ,jdbcType=VARCHAR}
+        ,#{cnt_use_month                  ,jdbcType=VARCHAR}
+        ,#{total_predict_loan_month       ,jdbcType=VARCHAR}
+        ,#{amt_pay_month                  ,jdbcType=VARCHAR}
+        , #{id_frt                        ,jdbcType=VARCHAR}
+        , SYSDATE
+        , #{id_lst                        ,jdbcType=VARCHAR}
+        , SYSDATE
+        )
+    </update>
+
+
+    <update id="procPersonNice12Month" parameterType="com.koscom.person.model.PersonNice12MonthCbScoreVO">
+        MERGE INTO NICE_12MONTH_CB_SCORE_INFO
+        USING DUAL
+        ON (no_person = #{no_person , jdbcType=VARCHAR} AND STD_MONTH = #{std_month, jdbcType=VARCHAR})
+        WHEN MATCHED THEN
+        UPDATE
+         SET
+          avg_point      = #{avg_point    ,jdbcType=VARCHAR}
+        , grade          = #{grade        ,jdbcType=VARCHAR}
+        , ID_LST         = #{id_lst       ,jdbcType=VARCHAR}
+        , DT_LST = SYSDATE
+        WHEN NOT MATCHED THEN
+        INSERT
+        (
+         no_person
+        ,std_month
+        ,avg_point
+        ,grade
+        ,id_frt
+        ,dt_frt
+        ,id_lst
+        ,dt_lst
+        )
+        VALUES(
+          #{no_person      ,jdbcType=VARCHAR}
+        , #{std_month      ,jdbcType=VARCHAR}
+        , #{avg_point      ,jdbcType=VARCHAR}
+        , #{grade          ,jdbcType=VARCHAR}
+        , #{id_frt         ,jdbcType=VARCHAR}
+        , SYSDATE
+        , #{id_lst         ,jdbcType=VARCHAR}
+        , SYSDATE
+        )
+    </update>
+    <select id="getPersonNice12Month" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonNice12MonthCbScoreVO">
+        SELECT *
+          FROM NICE_12MONTH_CB_SCORE_INFO
+         WHERE no_person = #{no_person, jdbcType=VARCHAR}
+         ORDER BY STD_MONTH DESC
+    </select>
+    <update id="procPersonKcb12Month" parameterType="com.koscom.person.model.PersonKcb12MonthCbScoreVO">
+        MERGE INTO KCB_12MONTH_CB_SCORE_INFO
+        USING DUAL
+        ON (no_person = #{no_person , jdbcType=VARCHAR} AND STD_MONTH = #{std_month, jdbcType=VARCHAR})
+        WHEN MATCHED THEN
+        UPDATE
+         SET
+          avg_point      = #{avg_point    ,jdbcType=VARCHAR}
+        , grade          = #{grade        ,jdbcType=VARCHAR}
+        , ID_LST         = #{id_lst       ,jdbcType=VARCHAR}
+        , DT_LST = SYSDATE
+        WHEN NOT MATCHED THEN
+        INSERT
+        (
+         no_person
+        ,std_month
+        ,avg_point
+        ,grade
+        ,ID_FRT
+        ,DT_FRT
+        )
+        VALUES(
+          #{no_person      ,jdbcType=VARCHAR}
+        , #{std_month      ,jdbcType=VARCHAR}
+        , #{avg_point      ,jdbcType=VARCHAR}
+        , #{grade          ,jdbcType=VARCHAR}
+        , #{id_frt         ,jdbcType=VARCHAR}
+        , SYSDATE
+        )
+    </update>
+    <select id="getPersonKcb12Month" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonKcb12MonthCbScoreVO">
+        SELECT *
+          FROM KCB_12MONTH_CB_SCORE_INFO
+         WHERE no_person = #{no_person, jdbcType=VARCHAR}
+         ORDER BY STD_MONTH DESC
+    </select>
+    <select id="listPersonQuitInfoPg" parameterType="com.koscom.person.model.PersonForm"
+        resultType="com.koscom.person.model.PersonQuitVO">
+        SELECT
+        *
+        FROM
+        (SELECT
+        LST.no_person
+        , LST.nm_person
+        , LST.dt_quit
+        , LST.hp
+        , ROWNUM RNUM
+        FROM
+        (SELECT
+        PQ.no_person
+        , PQ.nm_person
+        , PQ.dt_quit
+        , PQ.hp
+        FROM person_quit_hist PQ
+        <include refid="listPersonQuitInfoPg_WHERE" />
+        ORDER BY PQ.dt_quit DESC
+        ) LST
+        WHERE ROWNUM <![CDATA[<=]]>
+        #{endPosition, jdbcType=NUMERIC}
+        )
+        WHERE RNUM >= #{startPosition, jdbcType=NUMERIC}
+    </select>
+    <select id="listPersonQuitCount" parameterType="com.koscom.person.model.PersonForm"
+        resultType="int">
+        SELECT
+        COUNT(*)
+        FROM person_quit_hist PQ
+        <include refid="listPersonQuitInfoPg_WHERE" />
+    </select>
+    <sql id="listPersonQuitInfoPg_WHERE">
+        <where>
+            <!-- 상세검색 -->
+            <if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_detail)">
+                <if test='"PQ.no_person".equals(sel_detail)'>
+				   AND PQ.NO_PERSON = #{txt_detail}
+				</if>
+				<if test='"PQ.nm_person".equals(sel_detail)'>
+				   AND PQ.NM_PERSON = #{txt_detail}
+				</if>
+            </if>
+        </where>
+    </sql>
+    <insert id="createPersonQuit">
+        INSERT INTO person_quit_hist
+            (
+                    no_person
+                    , nm_person
+                    , bgn
+                    , hp
+                    , dt_quit
+                    , id_frt
+                    , dt_frt
+            )
+            VALUES (
+                    #{no_person, jdbcType=VARCHAR}
+                    , #{nm_person, jdbcType=VARCHAR}
+                    , #{bgn, jdbcType=VARCHAR}
+                    , #{hp, jdbcType=VARCHAR}
+                    , SYSDATE
+                    , #{id_frt, jdbcType=VARCHAR}
+                    , SYSDATE
+            )
+    </insert>
+    <update id="procPersonQuit" parameterType="String">
+        UPDATE person_info
+            SET yn_use = 'N'
+              , yn_logout = 'Y'
+              , id_lst = #{id_lst}
+              , dt_lst = SYSDATE
+        WHERE no_person = #{no_person}
+    </update>
+    <update id="procPersonReUse" parameterType="String">
+        UPDATE person_info
+            SET yn_use = 'Y'
+              , id_lst = #{id_lst}
+              , dt_lst = SYSDATE
+        WHERE no_person = #{no_person}
+    </update>
+    <select id="getExistNiceLast6MonthGrade" parameterType="com.koscom.domain.PersonNice12MonthCbScoreInfo" resultType="java.lang.String">
+        SELECT * FROM (
+            SELECT
+                CASE
+                  WHEN SUM(GRADE) > 0 THEN 'Y'
+                  WHEN SUM(GRADE) = 0 THEN 'N'
+                END YN
+            FROM (
+                SELECT
+                    CASE
+                       WHEN A.GRADE <![CDATA[>=]]> #{grade, jdbcType=VARCHAR} THEN 1
+                       ELSE 0
+                    END GRADE
+                FROM (
+                    SELECT ROWNUM CNT, GRADE FROM NICE_12MONTH_CB_SCORE_INFO
+                    WHERE no_person = #{no_person, jdbcType=VARCHAR}
+                    AND STD_MONTH BETWEEN (SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-6), 'YYYYMM') FROM DUAL) AND (SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-1), 'YYYYMM') FROM DUAL)
+                    ) A
+            ) WHERE EXISTS(
+                SELECT * FROM (
+                    SELECT COUNT(*) CNT FROM NICE_12MONTH_CB_SCORE_INFO
+                    WHERE no_person = #{no_person, jdbcType=VARCHAR}
+                    AND STD_MONTH BETWEEN (SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-6), 'YYYYMM') FROM DUAL) AND (SELECT TO_CHAR(ADD_MONTHS(SYSDATE,-1), 'YYYYMM') FROM DUAL)
+                )
+                WHERE CNT >=6
+            )
+        )
+    </select>
+    <update id="modifyPersonSafeKey" parameterType="com.koscom.person.model.PersonVO">
+        UPDATE person_info
+        SET
+            nice_safekey = #{nice_safekey, jdbcType=VARCHAR}
+          , id_lst = #{id_lst, jdbcType=VARCHAR}
+          , dt_lst = SYSDATE
+        WHERE no_person = #{no_person, jdbcType=VARCHAR}
+    </update>
+    <select id="listPersonNiceLoan" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonNiceLoanVO">
+        SELECT
+        NO_NICELOAN,NO_PERSON,CD_FIN,OCCUR_INSTITUTION
+        ,TO_CHAR(DT_START, 'YYYY-MM-DD') DT_START, AMT_LOAN,DIV_LOAN
+        ,TO_CHAR(DT_CHANGE, 'YYYY-MM-DD') DT_CHANGE, TO_CHAR(DT_MAX, 'YYYY-MM-DD') DT_MAX
+        ,TYPE_LOAN,AMT_FRT,RTO_AVG_INTEREST,REPRESENT_FIN,DIV_LOAN2
+        ,EST_REMAIN,CNT_USE_MONTH,TOTAL_PREDICT_LOAN_MONTH,AMT_PAY_MONTH
+        ,ID_FRT,TO_CHAR(DT_FRT, 'YYYY-MM-DD') DT_FRT
+        ,ID_LST,TO_CHAR(DT_LST, 'YYYY-MM-DD') DT_LST
+        FROM NICE_LOAN_INFO
+        WHERE no_person = #{no_person, jdbcType=VARCHAR}
+        ORDER BY TO_NUMBER(NO_NICELOAN)
+    </select>
+    <select id="listPersonNiceCashService" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonNiceCashServiceVO">
+        SELECT
+         NO_NICE_CASH_SERVICE,NO_PERSON,OCCUR_INSTITUTION,OCCUR_TEAM
+        ,TO_CHAR(DT_OCCUR, 'YYYY-MM-DD') DT_OCCUR
+        ,AMT_CASH_SERVICE
+        ,TO_CHAR(DT_CHANGE, 'YYYY-MM-DD') DT_CHANGE
+        ,ID_FRT,TO_CHAR(DT_FRT, 'YYYY-MM-DD') DT_FRT
+        ,ID_LST,TO_CHAR(DT_LST, 'YYYY-MM-DD') DT_LST
+        FROM NICE_CASH_SERVICE_INFO
+        WHERE no_person = #{no_person, jdbcType=VARCHAR}
+        ORDER BY TO_NUMBER(NO_NICE_CASH_SERVICE)
+    </select>
+    <select id="listPersonNiceDebtGuarantee" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonNiceDebtGuaranteeVO">
+        SELECT
+        NO_NICE_DEBT_GUARANTEE,NO_PERSON,OCCUR_INSTITUTION
+        ,TO_CHAR(DT_OCCUR, 'YYYY-MM-DD') DT_OCCUR
+        ,AMT_GUARANTEE
+        ,TO_CHAR(DT_CHANGE, 'YYYY-MM-DD') DT_CHANGE
+        ,ID_FRT,TO_CHAR(DT_FRT, 'YYYY-MM-DD') DT_FRT
+        ,ID_LST,TO_CHAR(DT_LST, 'YYYY-MM-DD') DT_LST
+        FROM NICE_DEBT_GUARANTEE_INFO
+        WHERE no_person = #{no_person, jdbcType=VARCHAR}
+        ORDER BY TO_NUMBER(NO_NICE_DEBT_GUARANTEE)
+    </select>
+    <select id="listPersonNiceDebtAdjustment" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonNiceDebtAdjustmentVO">
+        SELECT
+        NO_NICE_DEBT_ADJUSTMENT,NO_PERSON,OCCUR_INSTITUTION,STATUS_ACCOUNT
+        ,TO_CHAR(DT_START, 'YYYY-MM-DD') DT_START
+        ,AMT_ALL_FRT,AMT_REMAIN
+        ,TO_CHAR(DT_FRT_DELAY, 'YYYY-MM-DD') DT_FRT_DELAY
+        ,CNT_OCCUR_DELAY_DT
+        ,CNT_ALL_PAY,CNT_REAL_PAY,CNT_DELAY,AMT_DELAY,YN_REDUCE_DEBT
+        ,ID_FRT,TO_CHAR(DT_FRT, 'YYYY-MM-DD') DT_FRT
+        ,ID_LST,TO_CHAR(DT_LST, 'YYYY-MM-DD') DT_LST
+        FROM NICE_DEBT_ADJUSTMENT_INFO
+        WHERE no_person = #{no_person, jdbcType=VARCHAR}
+        ORDER BY TO_NUMBER(NO_NICE_DEBT_ADJUSTMENT)
+    </select>
+    <select id="listPersonNiceDefaultBank" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonNiceDefaultBankVO">
+        SELECT
+        NO_NICE_DEFAULT_BANK,NO_PERSON,DIV_DATA,CD_REASON,DIV_REASON,OCCUR_INSTITUTION
+        ,TO_CHAR(DT_OCCUR, 'YYYY-MM-DD') DT_OCCUR
+        ,TO_CHAR(DT_REGIST, 'YYYY-MM-DD') DT_REGIST
+        ,TO_CHAR(DT_LIFT, 'YYYY-MM-DD') DT_LIFT
+        ,DIV_LIFT,OCCUR_TEAM,AMT_REGIST,AMT_DELAY
+        ,ID_FRT,TO_CHAR(DT_FRT, 'YYYY-MM-DD') DT_FRT
+        ,ID_LST,TO_CHAR(DT_LST, 'YYYY-MM-DD') DT_LST
+        FROM NICE_DEFAULT_BANK_INFO
+        WHERE no_person = #{no_person, jdbcType=VARCHAR}
+        ORDER BY TO_NUMBER(NO_NICE_DEFAULT_BANK)
+    </select>
+    <select id="listPersonNiceDefaultNice" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonNiceDefaultNiceVO">
+        SELECT
+         NO_NICE_DEFAULT_NICE,NO_PERSON,REGIST_REASON,OCCUR_INSTITUTION,OCCUR_TEAM
+        ,TO_CHAR(DT_OCCUR, 'YYYY-MM-DD') DT_OCCUR
+        ,TO_CHAR(DT_OFFER, 'YYYY-MM-DD') DT_OFFER
+        ,AMT_DELAY
+        ,ID_FRT,TO_CHAR(DT_FRT, 'YYYY-MM-DD') DT_FRT
+        ,ID_LST,TO_CHAR(DT_LST, 'YYYY-MM-DD') DT_LST
+        FROM NICE_DEFAULT_NICE_INFO
+        WHERE no_person = #{no_person, jdbcType=VARCHAR}
+        ORDER BY TO_NUMBER(NO_NICE_DEFAULT_NICE)
+    </select>
+    <select id="listPersonNiceDelayNice" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonNiceDelayNiceVO">
+        SELECT
+         NO_NICE_DELAY_NICE, NO_PERSON,DIV_GOODS,DIV_DELAY,OCCUR_INSTITUTION,OCCUR_TEAM
+        ,TO_CHAR(DT_FRT_DELAY, 'YYYY-MM-DD') DT_FRT_DELAY
+        ,CNT_OCCUR_DELAY_DT
+        ,DIV_REGIST,AMT_FRT_DELAY,AMT_DELAY,AMT_REMAIN,AMT_LIMIT_LOAN
+        ,ID_FRT,TO_CHAR(DT_FRT, 'YYYY-MM-DD') DT_FRT
+        ,ID_LST,TO_CHAR(DT_LST, 'YYYY-MM-DD') DT_LST
+        FROM NICE_DELAY_NICE_INFO
+        WHERE no_person = #{no_person, jdbcType=VARCHAR}
+        ORDER BY TO_NUMBER(NO_NICE_DELAY_NICE)
+    </select>
+
+    <select id="getPersonNiceLoanInfo" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonNiceLoanVO">
+        SELECT
+        NO_NICELOAN,NO_PERSON,CD_FIN,OCCUR_INSTITUTION
+        ,TO_CHAR(DT_START, 'YYYY-MM-DD') DT_START, AMT_LOAN,DIV_LOAN
+        ,TO_CHAR(DT_CHANGE, 'YYYY-MM-DD') DT_CHANGE, TO_CHAR(DT_MAX, 'YYYY-MM-DD') DT_MAX
+        ,TYPE_LOAN,AMT_FRT,RTO_AVG_INTEREST,REPRESENT_FIN,DIV_LOAN2
+        ,EST_REMAIN,CNT_USE_MONTH,TOTAL_PREDICT_LOAN_MONTH,AMT_PAY_MONTH
+        ,ID_FRT,TO_CHAR(DT_FRT, 'YYYY-MM-DD') DT_FRT
+        ,ID_LST,TO_CHAR(DT_LST, 'YYYY-MM-DD') DT_LST
+        FROM nice_loan_info
+        WHERE no_niceloan = #{no_niceloan, jdbcType=VARCHAR}
+        AND no_person = #{no_person, jdbcType=VARCHAR}
+    </select>
+<select id="getPersonNiceCashServiceInfo" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonNiceCashServiceVO">
+        SELECT
+         NO_NICE_CASH_SERVICE,NO_PERSON,OCCUR_INSTITUTION,OCCUR_TEAM
+        ,TO_CHAR(DT_OCCUR, 'YYYY-MM-DD') DT_OCCUR
+        ,AMT_CASH_SERVICE
+        ,TO_CHAR(DT_CHANGE, 'YYYY-MM-DD') DT_CHANGE
+        ,ID_FRT,TO_CHAR(DT_FRT, 'YYYY-MM-DD') DT_FRT
+        ,ID_LST,TO_CHAR(DT_LST, 'YYYY-MM-DD') DT_LST
+        FROM NICE_CASH_SERVICE_INFO
+        WHERE no_nice_cash_service = #{no_nice_cash_service, jdbcType=VARCHAR}
+        AND  no_person = #{no_person, jdbcType=VARCHAR}
+        ORDER BY TO_NUMBER(NO_NICE_CASH_SERVICE)
+    </select>
+    <select id="getPersonNiceDebtGuaranteeInfo" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonNiceDebtGuaranteeVO">
+        SELECT
+        NO_NICE_DEBT_GUARANTEE,NO_PERSON,OCCUR_INSTITUTION
+        ,TO_CHAR(DT_OCCUR, 'YYYY-MM-DD') DT_OCCUR
+        ,AMT_GUARANTEE
+        ,TO_CHAR(DT_CHANGE, 'YYYY-MM-DD') DT_CHANGE
+        ,ID_FRT,TO_CHAR(DT_FRT, 'YYYY-MM-DD') DT_FRT
+        ,ID_LST,TO_CHAR(DT_LST, 'YYYY-MM-DD') DT_LST
+        FROM NICE_DEBT_GUARANTEE_INFO
+        WHERE no_nice_debt_guarantee = #{no_nice_debt_guarantee, jdbcType=VARCHAR}
+        AND  no_person = #{no_person, jdbcType=VARCHAR}
+        ORDER BY TO_NUMBER(NO_NICE_DEBT_GUARANTEE)
+    </select>
+    <select id="getPersonNiceDebtAdjustmentInfo" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonNiceDebtAdjustmentVO">
+        SELECT
+        NO_NICE_DEBT_ADJUSTMENT,NO_PERSON,OCCUR_INSTITUTION,STATUS_ACCOUNT
+        ,TO_CHAR(DT_START, 'YYYY-MM-DD') DT_START
+        ,AMT_ALL_FRT,AMT_REMAIN
+        ,TO_CHAR(DT_FRT_DELAY, 'YYYY-MM-DD') DT_FRT_DELAY
+        ,CNT_OCCUR_DELAY_DT
+        ,CNT_ALL_PAY,CNT_REAL_PAY,CNT_DELAY,AMT_DELAY,YN_REDUCE_DEBT
+        ,ID_FRT,TO_CHAR(DT_FRT, 'YYYY-MM-DD') DT_FRT
+        ,ID_LST,TO_CHAR(DT_LST, 'YYYY-MM-DD') DT_LST
+        FROM NICE_DEBT_ADJUSTMENT_INFO
+        WHERE no_nice_debt_adjustment = #{no_nice_debt_adjustment, jdbcType=VARCHAR}
+        AND  no_person = #{no_person, jdbcType=VARCHAR}
+        ORDER BY TO_NUMBER(NO_NICE_DEBT_ADJUSTMENT)
+    </select>
+    <select id="getPersonNiceDefaultBankInfo" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonNiceDefaultBankVO">
+        SELECT
+        NO_NICE_DEFAULT_BANK,NO_PERSON,DIV_DATA,CD_REASON,DIV_REASON,OCCUR_INSTITUTION
+        ,TO_CHAR(DT_OCCUR, 'YYYY-MM-DD') DT_OCCUR
+        ,TO_CHAR(DT_REGIST, 'YYYY-MM-DD') DT_REGIST
+        ,TO_CHAR(DT_LIFT, 'YYYY-MM-DD') DT_LIFT
+        ,DIV_LIFT,OCCUR_TEAM,AMT_REGIST,AMT_DELAY
+        ,ID_FRT,TO_CHAR(DT_FRT, 'YYYY-MM-DD') DT_FRT
+        ,ID_LST,TO_CHAR(DT_LST, 'YYYY-MM-DD') DT_LST
+        FROM NICE_DEFAULT_BANK_INFO
+        WHERE no_nice_default_bank = #{no_nice_default_bank, jdbcType=VARCHAR}
+        AND  no_person = #{no_person, jdbcType=VARCHAR}
+        ORDER BY TO_NUMBER(NO_NICE_DEFAULT_BANK)
+    </select>
+    <select id="getPersonNiceDefaultNiceInfo" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonNiceDefaultNiceVO">
+        SELECT
+         NO_NICE_DEFAULT_NICE,NO_PERSON,REGIST_REASON,OCCUR_INSTITUTION,OCCUR_TEAM
+        ,TO_CHAR(DT_OCCUR, 'YYYY-MM-DD') DT_OCCUR
+        ,TO_CHAR(DT_OFFER, 'YYYY-MM-DD') DT_OFFER
+        ,AMT_DELAY
+        ,ID_FRT,TO_CHAR(DT_FRT, 'YYYY-MM-DD') DT_FRT
+        ,ID_LST,TO_CHAR(DT_LST, 'YYYY-MM-DD') DT_LST
+        FROM NICE_DEFAULT_NICE_INFO
+        WHERE no_nice_default_nice = #{no_nice_default_nice, jdbcType=VARCHAR}
+        AND  no_person = #{no_person, jdbcType=VARCHAR}
+        ORDER BY TO_NUMBER(NO_NICE_DEFAULT_NICE)
+    </select>
+    <select id="getPersonNiceDelayNiceInfo" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonNiceDelayNiceVO">
+        SELECT
+         NO_NICE_DELAY_NICE, NO_PERSON,DIV_GOODS,DIV_DELAY,OCCUR_INSTITUTION,OCCUR_TEAM
+        ,TO_CHAR(DT_FRT_DELAY, 'YYYY-MM-DD') DT_FRT_DELAY
+        ,CNT_OCCUR_DELAY_DT
+        ,DIV_REGIST,AMT_FRT_DELAY,AMT_DELAY,AMT_REMAIN,AMT_LIMIT_LOAN
+        ,ID_FRT,TO_CHAR(DT_FRT, 'YYYY-MM-DD') DT_FRT
+        ,ID_LST,TO_CHAR(DT_LST, 'YYYY-MM-DD') DT_LST
+        FROM NICE_DELAY_NICE_INFO
+        WHERE no_nice_delay_nice = #{no_nice_delay_nice, jdbcType=VARCHAR}
+        AND  no_person = #{no_person, jdbcType=VARCHAR}
+        ORDER BY TO_NUMBER(NO_NICE_DELAY_NICE)
+    </select>
+    <update id="procPersonNiceCashService" parameterType="com.koscom.person.model.PersonNiceCashServiceVO">
+            MERGE INTO NICE_CASH_SERVICE_INFO
+            USING DUAL
+            ON (no_nice_cash_service = #{no_nice_cash_service, jdbcType=VARCHAR} )
+            WHEN MATCHED THEN
+            UPDATE
+             SET
+		     no_person           = #{ no_person                ,jdbcType=VARCHAR}
+		    ,occur_institution   = #{ occur_institution        ,jdbcType=VARCHAR}
+		    ,occur_team          = #{ occur_team               ,jdbcType=VARCHAR}
+		    ,dt_occur            = #{ dt_occur                 ,jdbcType=VARCHAR}
+		    ,amt_cash_service    = #{ amt_cash_service         ,jdbcType=VARCHAR}
+		    ,dt_change           = #{ dt_change                ,jdbcType=VARCHAR}
+            ,ID_LST              = #{id_lst                    ,jdbcType=VARCHAR}
+            ,DT_LST              = SYSDATE
+            WHEN NOT MATCHED THEN
+            INSERT
+            (
+		     no_nice_cash_service
+		    ,no_person
+		    ,occur_institution
+		    ,occur_team
+		    ,dt_occur
+		    ,amt_cash_service
+		    ,dt_change
+            , id_frt
+            , dt_frt
+            )
+            VALUES(
+             NICECASHSERVICE_SEQUENCE.NEXTVAL
+            ,#{no_person        ,jdbcType=VARCHAR}
+            ,#{occur_institution,jdbcType=VARCHAR}
+            ,#{occur_team       ,jdbcType=VARCHAR}
+            ,#{dt_occur         ,jdbcType=VARCHAR}
+            ,#{amt_cash_service ,jdbcType=VARCHAR}
+            ,#{dt_change        ,jdbcType=VARCHAR}
+            , #{id_frt                        ,jdbcType=VARCHAR}
+            , SYSDATE
+            )
+    </update>
+    <update id="procPersonNiceDebtGuarantee" parameterType="com.koscom.person.model.PersonNiceDebtGuaranteeVO">
+            MERGE INTO NICE_DEBT_GUARANTEE_INFO
+            USING DUAL
+            ON (no_nice_debt_guarantee = #{no_nice_debt_guarantee, jdbcType=VARCHAR} )
+            WHEN MATCHED THEN
+            UPDATE
+             SET
+		     no_person                = #{no_person        ,jdbcType=VARCHAR}
+		    ,occur_institution        = #{occur_institution,jdbcType=VARCHAR}
+		    ,dt_occur                 = #{dt_occur         ,jdbcType=VARCHAR}
+		    ,amt_guarantee            = #{amt_guarantee    ,jdbcType=VARCHAR}
+		    ,dt_change                = #{dt_change        ,jdbcType=VARCHAR}
+            ,ID_LST                    = #{id_lst                         ,jdbcType=VARCHAR}
+            ,DT_LST = SYSDATE
+            WHEN NOT MATCHED THEN
+            INSERT
+            (
+		     no_nice_debt_guarantee
+		    ,no_person
+		    ,occur_institution
+		    ,dt_occur
+		    ,amt_guarantee
+		    ,dt_change
+            , id_frt
+            , dt_frt
+            )
+            VALUES(
+             NICEDEBTGUARANTEE_SEQUENCE.NEXTVAL
+            ,#{no_person        ,jdbcType=VARCHAR}
+            ,#{occur_institution,jdbcType=VARCHAR}
+            ,#{dt_occur         ,jdbcType=VARCHAR}
+            ,#{amt_guarantee    ,jdbcType=VARCHAR}
+            ,#{dt_change        ,jdbcType=VARCHAR}
+            , #{id_frt                        ,jdbcType=VARCHAR}
+            , SYSDATE
+            )
+    </update>
+    <update id="procPersonNiceDebtAdjustment" parameterType="com.koscom.person.model.PersonNiceDebtAdjustmentVO">
+            MERGE INTO NICE_DEBT_ADJUSTMENT_INFO
+            USING DUAL
+            ON (no_nice_debt_adjustment = #{no_nice_debt_adjustment, jdbcType=VARCHAR} )
+            WHEN MATCHED THEN
+            UPDATE
+             SET
+		     no_person             = #{no_person        ,jdbcType=VARCHAR}
+		    ,occur_institution     = #{occur_institution,jdbcType=VARCHAR}
+		    ,status_account        = #{status_account   ,jdbcType=VARCHAR}
+		    ,dt_start              = #{dt_start         ,jdbcType=VARCHAR}
+		    ,amt_all_frt           = #{amt_all_frt      ,jdbcType=VARCHAR}
+		    ,amt_remain            = #{amt_remain       ,jdbcType=VARCHAR}
+		    ,dt_frt_delay          = #{dt_frt_delay     ,jdbcType=VARCHAR}
+		    ,cnt_occur_delay_dt        = #{cnt_occur_delay_dt   ,jdbcType=VARCHAR}
+		    ,cnt_all_pay           = #{cnt_all_pay      ,jdbcType=VARCHAR}
+		    ,cnt_real_pay          = #{cnt_real_pay     ,jdbcType=VARCHAR}
+		    ,cnt_delay             = #{cnt_delay        ,jdbcType=VARCHAR}
+		    ,amt_delay             = #{amt_delay        ,jdbcType=VARCHAR}
+		    ,yn_reduce_debt        = #{yn_reduce_debt   ,jdbcType=VARCHAR}
+            ,ID_LST                    = #{id_lst                         ,jdbcType=VARCHAR}
+            ,DT_LST = SYSDATE
+            WHEN NOT MATCHED THEN
+            INSERT
+            (
+		    no_nice_debt_adjustment
+		    ,no_person
+		    ,occur_institution
+		    ,status_account
+		    ,dt_start
+		    ,amt_all_frt
+		    ,amt_remain
+		    ,dt_frt_delay
+		    ,cnt_occur_delay_dt
+		    ,cnt_all_pay
+		    ,cnt_real_pay
+		    ,cnt_delay
+		    ,amt_delay
+		    ,yn_reduce_debt
+            , id_frt
+            , dt_frt
+            )
+            VALUES(
+             NICEDEBTADJUSTMENT_SEQUENCE.NEXTVAL
+            ,#{no_person        ,jdbcType=VARCHAR}
+            ,#{occur_institution,jdbcType=VARCHAR}
+            ,#{status_account   ,jdbcType=VARCHAR}
+            ,#{dt_start         ,jdbcType=VARCHAR}
+            ,#{amt_all_frt      ,jdbcType=VARCHAR}
+            ,#{amt_remain       ,jdbcType=VARCHAR}
+            ,#{dt_frt_delay     ,jdbcType=VARCHAR}
+            ,#{cnt_occur_delay_dt   ,jdbcType=VARCHAR}
+            ,#{cnt_all_pay      ,jdbcType=VARCHAR}
+            ,#{cnt_real_pay     ,jdbcType=VARCHAR}
+            ,#{cnt_delay        ,jdbcType=VARCHAR}
+            ,#{amt_delay        ,jdbcType=VARCHAR}
+            ,#{yn_reduce_debt   ,jdbcType=VARCHAR}
+            , #{id_frt                        ,jdbcType=VARCHAR}
+            , SYSDATE
+            )
+    </update>
+    <update id="procPersonNiceDefaultBank" parameterType="com.koscom.person.model.PersonNiceDefaultBankVO">
+            MERGE INTO NICE_DEFAULT_BANK_INFO
+            USING DUAL
+            ON (no_nice_default_bank = #{no_nice_default_bank, jdbcType=VARCHAR} )
+            WHEN MATCHED THEN
+            UPDATE
+             SET
+		     no_person                       = #{no_person                   ,jdbcType=VARCHAR}
+		    ,div_data                        = #{div_data                    ,jdbcType=VARCHAR}
+		    ,cd_reason                       = #{cd_reason                   ,jdbcType=VARCHAR}
+		    ,div_reason                      = #{div_reason                  ,jdbcType=VARCHAR}
+		    ,occur_institution               = #{occur_institution           ,jdbcType=VARCHAR}
+		    ,dt_occur                        = #{dt_occur                    ,jdbcType=VARCHAR}
+		    ,dt_regist                       = #{dt_regist                   ,jdbcType=VARCHAR}
+		    ,dt_lift                         = #{dt_lift                     ,jdbcType=VARCHAR}
+		    ,div_lift                        = #{div_lift                    ,jdbcType=VARCHAR}
+		    ,occur_team                      = #{occur_team                  ,jdbcType=VARCHAR}
+		    ,amt_regist                      = #{amt_regist                  ,jdbcType=VARCHAR}
+		    ,amt_delay                       = #{amt_delay                   ,jdbcType=VARCHAR}
+            ,ID_LST                    = #{id_lst                         ,jdbcType=VARCHAR}
+            ,DT_LST = SYSDATE
+            WHEN NOT MATCHED THEN
+            INSERT
+            (
+		    no_nice_default_bank
+		    ,no_person
+		    ,div_data
+		    ,cd_reason
+		    ,div_reason
+		    ,occur_institution
+		    ,dt_occur
+		    ,dt_regist
+		    ,dt_lift
+		    ,div_lift
+		    ,occur_team
+		    ,amt_regist
+		    ,amt_delay
+            , id_frt
+            , dt_frt
+            )
+            VALUES(
+             NICEDEFAULTBANK_SEQUENCE.NEXTVAL
+            ,#{no_person        ,jdbcType=VARCHAR}
+            ,#{div_data         ,jdbcType=VARCHAR}
+            ,#{cd_reason        ,jdbcType=VARCHAR}
+            ,#{div_reason       ,jdbcType=VARCHAR}
+            ,#{occur_institution,jdbcType=VARCHAR}
+            ,#{dt_occur         ,jdbcType=VARCHAR}
+            ,#{dt_regist        ,jdbcType=VARCHAR}
+            ,#{dt_lift          ,jdbcType=VARCHAR}
+            ,#{div_lift         ,jdbcType=VARCHAR}
+            ,#{occur_team       ,jdbcType=VARCHAR}
+            ,#{amt_regist       ,jdbcType=VARCHAR}
+            ,#{amt_delay        ,jdbcType=VARCHAR}
+            , #{id_frt                        ,jdbcType=VARCHAR}
+            , SYSDATE
+            )
+    </update>
+    <update id="procPersonNiceDefaultNice" parameterType="com.koscom.person.model.PersonNiceDefaultNiceVO">
+            MERGE INTO NICE_DEFAULT_NICE_INFO
+            USING DUAL
+            ON (no_nice_default_nice = #{no_nice_default_nice, jdbcType=VARCHAR} )
+            WHEN MATCHED THEN
+            UPDATE
+             SET
+		     no_person                 = #{no_person           ,jdbcType=VARCHAR}
+		    ,regist_reason             = #{regist_reason       ,jdbcType=VARCHAR}
+		    ,occur_institution         = #{occur_institution   ,jdbcType=VARCHAR}
+		    ,occur_team                = #{occur_team          ,jdbcType=VARCHAR}
+		    ,dt_occur                  = #{dt_occur            ,jdbcType=VARCHAR}
+		    ,dt_offer                  = #{dt_offer            ,jdbcType=VARCHAR}
+		    ,amt_delay                 = #{amt_delay           ,jdbcType=VARCHAR}
+            ,ID_LST                    = #{id_lst                         ,jdbcType=VARCHAR}
+            ,DT_LST = SYSDATE
+            WHEN NOT MATCHED THEN
+            INSERT
+            (
+		     no_nice_default_nice
+		    ,no_person
+		    ,regist_reason
+		    ,occur_institution
+		    ,occur_team
+		    ,dt_occur
+		    ,dt_offer
+		    ,amt_delay
+            , id_frt
+            , dt_frt
+            )
+            VALUES(
+             NICEDEFAULTNICE_SEQUENCE.NEXTVAL
+            ,#{no_person        ,jdbcType=VARCHAR}
+            ,#{regist_reason    ,jdbcType=VARCHAR}
+            ,#{occur_institution,jdbcType=VARCHAR}
+            ,#{occur_team       ,jdbcType=VARCHAR}
+            ,#{dt_occur         ,jdbcType=VARCHAR}
+            ,#{dt_offer         ,jdbcType=VARCHAR}
+            ,#{amt_delay        ,jdbcType=VARCHAR}
+            , #{id_frt                        ,jdbcType=VARCHAR}
+            , SYSDATE
+            )
+    </update>
+    <update id="procPersonNiceDelayNice" parameterType="com.koscom.person.model.PersonNiceDelayNiceVO">
+            MERGE INTO NICE_DELAY_NICE_INFO
+            USING DUAL
+            ON (no_nice_delay_nice = #{no_nice_delay_nice, jdbcType=VARCHAR} )
+            WHEN MATCHED THEN
+            UPDATE
+             SET
+		     no_person                 = #{no_person        ,jdbcType=VARCHAR}
+		    ,div_goods                 = #{div_goods        ,jdbcType=VARCHAR}
+		    ,div_delay                 = #{div_delay        ,jdbcType=VARCHAR}
+		    ,occur_institution         = #{occur_institution,jdbcType=VARCHAR}
+		    ,occur_team                = #{occur_team       ,jdbcType=VARCHAR}
+		    ,dt_frt_delay              = #{dt_frt_delay     ,jdbcType=VARCHAR}
+		    ,cnt_occur_delay_dt            = #{cnt_occur_delay_dt   ,jdbcType=VARCHAR}
+		    ,div_regist                = #{div_regist       ,jdbcType=VARCHAR}
+		    ,amt_frt_delay             = #{amt_frt_delay    ,jdbcType=VARCHAR}
+		    ,amt_delay                 = #{amt_delay        ,jdbcType=VARCHAR}
+		    ,amt_remain                = #{amt_remain       ,jdbcType=VARCHAR}
+		    ,amt_limit_loan            = #{amt_limit_loan   ,jdbcType=VARCHAR}
+            ,ID_LST                    = #{id_lst           ,jdbcType=VARCHAR}
+            ,DT_LST = SYSDATE
+            WHEN NOT MATCHED THEN
+            INSERT
+            (
+		     no_nice_delay_nice
+		    ,no_person
+		    ,div_goods
+		    ,div_delay
+		    ,occur_institution
+		    ,occur_team
+		    ,dt_frt_delay
+		    ,cnt_occur_delay_dt
+		    ,div_regist
+		    ,amt_frt_delay
+		    ,amt_delay
+		    ,amt_remain
+		    ,amt_limit_loan
+            , id_frt
+            , dt_frt
+            )
+            VALUES(
+             NICEDELAYNICE_SEQUENCE.NEXTVAL
+            ,#{no_person        ,jdbcType=VARCHAR}
+            ,#{div_goods        ,jdbcType=VARCHAR}
+            ,#{div_delay        ,jdbcType=VARCHAR}
+            ,#{occur_institution,jdbcType=VARCHAR}
+            ,#{occur_team       ,jdbcType=VARCHAR}
+            ,#{dt_frt_delay     ,jdbcType=VARCHAR}
+            ,#{cnt_occur_delay_dt   ,jdbcType=VARCHAR}
+            ,#{div_regist       ,jdbcType=VARCHAR}
+            ,#{amt_frt_delay    ,jdbcType=VARCHAR}
+            ,#{amt_delay        ,jdbcType=VARCHAR}
+            ,#{amt_remain       ,jdbcType=VARCHAR}
+            ,#{amt_limit_loan   ,jdbcType=VARCHAR}
+            , #{id_frt          ,jdbcType=VARCHAR}
+            , SYSDATE
+            )
+    </update>
+
+    <delete id="delNiceLoan" parameterType="java.lang.String">
+        DELETE from nice_loan_info
+        WHERE no_niceloan = #{no_niceloan, jdbcType=VARCHAR}
+    </delete>
+    <delete id="delNiceCashService" parameterType="java.lang.String">
+        DELETE FROM NICE_CASH_SERVICE_INFO
+        WHERE no_nice_cash_service    = #{no_nice_cash_service   , jdbcType=VARCHAR}
+    </delete>
+    <delete id="delNiceDebtGuarantee" parameterType="java.lang.String">
+        DELETE FROM NICE_DEBT_GUARANTEE_INFO
+        WHERE no_nice_debt_guarantee  = #{no_nice_debt_guarantee , jdbcType=VARCHAR}
+    </delete>
+    <delete id="delNiceDebtAdjustment" parameterType="java.lang.String">
+        DELETE FROM NICE_DEBT_ADJUSTMENT_INFO
+        WHERE no_nice_debt_adjustment = #{no_nice_debt_adjustment, jdbcType=VARCHAR}
+    </delete>
+    <delete id="delNiceDefaultBank" parameterType="java.lang.String">
+        DELETE FROM NICE_DEFAULT_BANK_INFO
+        WHERE no_nice_default_bank    = #{no_nice_default_bank   , jdbcType=VARCHAR}
+    </delete>
+    <delete id="delNiceDefaultNice" parameterType="java.lang.String">
+        DELETE FROM NICE_DEFAULT_NICE_INFO
+        WHERE no_nice_default_nice    = #{no_nice_default_nice   , jdbcType=VARCHAR}
+    </delete>
+    <delete id="delNiceDelayNice" parameterType="java.lang.String">
+        DELETE FROM NICE_DELAY_NICE_INFO
+        WHERE no_nice_delay_nice      = #{no_nice_delay_nice     , jdbcType=VARCHAR}
+    </delete>
+    <insert id="createPersonAgreeHist">
+        INSERT INTO PERSON_AGREE_HIST (NO_PERSON , YN_PROVIDE, YN_COLLECT, YN_SEARCH , YN_OPTION , DT_AGREE)
+            VALUES(
+             #{no_person ,jdbcType=VARCHAR}
+            ,#{yn_provide,jdbcType=VARCHAR}
+            ,#{yn_collect,jdbcType=VARCHAR}
+            ,#{yn_search ,jdbcType=VARCHAR}
+            ,#{yn_option ,jdbcType=VARCHAR}
+            , SYSDATE
+            )
+    </insert>
+
+    <insert id="insertPersonNice12MonthByQuartz">
+        INSERT INTO NICE_12MONTH_CB_SCORE_INFO(STD_MONTH, NO_PERSON, AVG_POINT, GRADE , ID_FRT)
+        SELECT TO_CHAR(ADD_MONTHS(TO_CHAR(SYSDATE, 'YYYYMMDD') , -1), 'YYYYMM') STD_MONTH, NO_PERSON, AVG_POINT, GRADE , 'SYSTEM'
+        FROM(
+            SELECT A.STD_MONTH, A.NO_PERSON, A.AVG_POINT, A.GRADE
+            FROM NICE_12MONTH_CB_SCORE_INFO A,
+                (SELECT NO_PERSON ,MAX(STD_MONTH) STD_MONTH
+                FROM NICE_12MONTH_CB_SCORE_INFO
+                GROUP BY NO_PERSON) B
+        WHERE A.STD_MONTH = B.STD_MONTH
+        AND A.NO_PERSON = B.NO_PERSON
+        )
+    </insert>
+
+    <update id="modifyYnUse" parameterType="com.koscom.domain.PersonInfo">
+        UPDATE PERSON_INFO
+        SET  YN_USE = #{yn_use, jdbcType=VARCHAR}
+			,ID_LST = #{id_lst, jdbcType=VARCHAR}
+			,DT_LST = SYSDATE
+        WHERE NO_PERSON = #{no_person}
+    </update>
+
+    <select id="listPersonInfoJson" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonVO">
+            SELECT ('[' || NO_PERSON || '][' || NM_PERSON || ']' ) AS NO_PERSON FROM PERSON_INFO
+            WHERE NO_PERSON LIKE '%' || #{txt_detail} || '%'
+            ORDER BY NO_PERSON ASC
+    </select>
+
+    <insert id="insertPerson">
+        <selectKey keyProperty="no_person" resultType="string" order="BEFORE">
+            (SELECT 'P'||LPAD(SEQ_PERSON_NO.NEXTVAL,9,'0') FROM DUAL)
+        </selectKey>
+        INSERT INTO person_info
+            (     no_person
+                , nm_person
+                , bgn
+                , cd_tel
+                , hp
+                , yn_use
+                , yn_agree_using
+                , dt_agree_using
+                , yn_push
+                , kcb_ci
+                , kcb_di
+                , kcb_cp
+                , cnt_fail_pwd
+                , cnt_fail_finger
+                , id_frt
+                , dt_frt
+                , id_lst
+                , dt_lst
+            ) VALUES (
+                  #{no_person}
+                , #{nm_person, jdbcType=VARCHAR}
+                , #{bgn, jdbcType=VARCHAR}
+                , #{telComCd, jdbcType=VARCHAR}
+                , #{hp, jdbcType=VARCHAR}
+                , 'Y'
+                , 'Y'
+                , SYSDATE
+                , 'Y'
+                , #{kcb_ci, jdbcType=VARCHAR}
+                , #{kcb_di, jdbcType=VARCHAR}
+                , #{kcb_cp, jdbcType=VARCHAR}
+                , 0
+                , 0
+                , #{no_person}
+                , SYSDATE
+                , #{no_person}
+                , SYSDATE
+            )
+    </insert>
+
+    <select id="getPersonInfoDup" parameterType="com.koscom.person.model.PersonVO" resultType="com.koscom.person.model.PersonVO">
+        SELECT
+            no_person, yn_use
+        FROM person_info
+<!--         WHERE nm_person = #{nm_person, jdbcType=VARCHAR} AND bgn = #{bgn, jdbcType=VARCHAR} AND hp = #{hp, jdbcType=VARCHAR} -->
+         WHERE nm_person = #{nm_person, jdbcType=VARCHAR} AND hp = #{hp, jdbcType=VARCHAR}
+    </select>
+
+    <update id="modifyPassPerson" parameterType="com.koscom.domain.PersonInfo">
+        UPDATE PERSON_INFO
+        SET
+          PASS_PERSON = XX1.ENC_VARCHAR2_INS(#{pass_person, jdbcType=VARCHAR}, '12', 'FS_SHA', 'PERSON_INFO', 'PASS_PERSON')
+        , CNT_FAIL_PWD = 0
+        , ID_LST        = #{no_person}
+        , DT_LST        = SYSDATE
+        WHERE NO_PERSON = #{no_person}
+    </update>
+
+    <update id="modifyFcmToken" parameterType="com.koscom.person.model.PersonVO">
+        UPDATE PERSON_INFO
+        SET
+          fcm_token = #{fcm_token, jdbcType=VARCHAR}
+          , yn_os = #{yn_os, jdbcType=VARCHAR}
+          , cd_push = '1'
+          , yn_push = 'Y'
+          , ID_LST  = #{id_lst, jdbcType=VARCHAR}
+          , DT_LST  = SYSDATE
+        WHERE NO_PERSON = #{no_person}
+    </update>
+
+    <update id="modifyLastLogin" parameterType="java.lang.String">
+        UPDATE PERSON_INFO
+        SET
+          dt_lst = SYSDATE
+        WHERE NO_PERSON = #{no_person}
+    </update>
+    <update id="procActiveHist" parameterType="com.koscom.person.model.PersonNiceDelayNiceVO">
+            MERGE INTO PERSON_ACTIVE_HIST
+            USING DUAL
+            ON (no_person = #{no_person, jdbcType=VARCHAR} )
+            WHEN MATCHED THEN
+            UPDATE
+             SET
+             nm_dir= #{nm_dir        ,jdbcType=VARCHAR}
+            ,nm_page = #{nm_page        ,jdbcType=VARCHAR}
+            ,id_lst = #{id_lst        ,jdbcType=VARCHAR}
+            ,dt_lst = SYSDATE
+            WHEN NOT MATCHED THEN
+            INSERT
+            (no_person,nm_dir,nm_page,id_frt,dt_frt)
+            VALUES(
+             #{no_person,jdbcType=VARCHAR}
+            ,#{nm_dir,jdbcType=VARCHAR}
+            ,#{nm_page,jdbcType=VARCHAR}
+            ,#{id_frt,jdbcType=VARCHAR}
+            , TO_CHAR(SYSDATE, 'YYYYMMDD')
+            )
+    </update>
+    <select id="listPersonActiveHistCount" parameterType="com.koscom.person.model.PersonForm" resultType="int">
+        SELECT
+        COUNT(*)
+        FROM PERSON_ACTIVE_HIST
+        WHERE no_person = #{no_person, jdbcType=VARCHAR}
+<!--        <include refid="listPersonActiveHistInfoPg_WHERE" /> -->
+    </select>
+
+    <select id="listPersonActiveHistInfoPg" parameterType="com.koscom.person.model.PersonForm" resultType="com.koscom.person.model.PersonActiveHistVO">
+        SELECT
+        *
+        FROM
+        (SELECT
+        LST.*,
+        ROWNUM RNUM
+        FROM
+        (SELECT
+        NO_PERSON, NM_DIR, NM_PAGE, DT_FRT
+        FROM PERSON_ACTIVE_HIST
+        WHERE no_person = #{no_person, jdbcType=VARCHAR}
+        ORDER BY dt_frt DESC
+        ) LST
+        WHERE ROWNUM <![CDATA[<=]]>
+        #{endPosition, jdbcType=NUMERIC}
+        )
+        WHERE RNUM >= #{startPosition, jdbcType=NUMERIC}
+    </select>
+
+    <select id="getPersonQuitInfo" parameterType="java.lang.String" resultType="com.koscom.person.model.PersonQuitVO">
+    SELECT
+        *
+    FROM
+        (SELECT
+            no_person
+            , TO_CHAR(dt_quit, 'yyyyMMdd') AS dt_quit
+        FROM
+        person_quit_hist
+        WHERE no_person = #{no_person, jdbcType=VARCHAR}
+        order by dt_quit desc)
+    WHERE rownum = 1
+
+    </select>
+    <insert id="insertActiveHist">
+        INSERT INTO PERSON_ACTIVE_HIST
+            (     no_person
+                , nm_dir
+                , nm_page
+                , id_frt
+                , dt_frt
+                , id_lst
+                , dt_lst
+            ) VALUES (
+                  #{no_person, 	jdbcType=VARCHAR}
+                , #{nm_dir, 	jdbcType=VARCHAR}
+                , #{nm_page, 	jdbcType=VARCHAR}
+                , #{id_frt, 	jdbcType=VARCHAR}
+                , SYSDATE
+                , #{id_lst, 	jdbcType=VARCHAR}
+                , SYSDATE
+            )
+    </insert>
+
+    <insert id="insertPersonLoginHist">
+        INSERT INTO PERSON_LOGIN_HIST
+            (     no_person
+                , cd_system
+                , ip_client
+                , user_agent
+                , id_frt
+                , dt_frt
+            ) VALUES (
+                  #{no_person, jdbcType=VARCHAR}
+                , #{cd_system, jdbcType=VARCHAR}
+                , #{ip_client, jdbcType=VARCHAR}
+                , #{user_agent, jdbcType=VARCHAR}
+                , #{no_person, jdbcType=VARCHAR}
+                , SYSDATE
+            )
+    </insert>
+
+    <select id="listPersonLoginHist" parameterType="com.koscom.person.model.PersonLoginHistForm" resultType="com.koscom.person.model.PersonLoginHistVO">
+        SELECT
+        *
+        FROM
+        (SELECT
+        LST.*,
+        ROWNUM RNUM
+        FROM
+        (SELECT
+            PH.NO_PERSON
+            , PI.NM_PERSON
+            , PH.CD_SYSTEM
+            , PH.IP_CLIENT
+            , PH.DT_FRT
+        FROM PERSON_LOGIN_HIST PH
+        inner join person_info PI
+        on PH.no_person = PI.no_person
+        <include refid="listPersonLoginHist_WHERE"/>
+        ORDER BY dt_frt DESC
+        ) LST
+        WHERE ROWNUM <![CDATA[<=]]>
+        #{endPosition, jdbcType=NUMERIC}
+        )
+        WHERE RNUM >= #{startPosition, jdbcType=NUMERIC}
+
+    </select>
+
+    <select id="listPersonLoginHistCount"  parameterType="com.koscom.person.model.PersonLoginHistForm" resultType="int">
+        SELECT
+               COUNT(*) AS recordCount
+            FROM PERSON_LOGIN_HIST PH
+            inner join person_info PI
+            on PH.no_person = PI.no_person
+         <include refid="listPersonLoginHist_WHERE"/>
+    </select>
+
+    <sql id="listPersonLoginHist_WHERE">
+        <where>
+            <!-- 상세검색 -->
+            <if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_detail)">
+                <if test='"PH.no_person".equals(sel_detail)'>
+				   AND PH.NO_PERSON = #{txt_detail}
+				</if>
+				<if test='"PI.nm_person".equals(sel_detail)'>
+				   AND PI.NM_PERSON = #{txt_detail}
+				</if>
+            </if>
+
+            <if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_dt_kind)">
+                <if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
+                	<if test='"PH.dt_frt".equals(sel_dt_kind)'>
+                    	AND TO_CHAR(PH.DT_FRT,'yyyyMMdd') <![CDATA[>=]]> #{txt_dt_from}
+                   	</if>
+                </if>
+                <if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_to)">
+                	<if test='"PH.dt_frt".equals(sel_dt_kind)'>
+                    	AND TO_CHAR(PH.DT_FRT,'yyyyMMdd') <![CDATA[<=]]> #{txt_dt_to}
+                    </if>
+                </if>
+            </if>
+
+        </where>
+    </sql>
+
+    <update id="modifyPwdFailCnt" parameterType="com.koscom.person.model.PersonVO">
+        UPDATE PERSON_INFO
+        SET
+				  id_lst  		= #{id_lst, jdbcType=VARCHAR}
+				, dt_lst  		= SYSDATE
+        <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cnt_fail_mode)'>
+			<choose>
+				<when test='"pwd"   .equals(cnt_fail_mode)'>
+					,CNT_FAIL_PWD = #{cnt_fail, jdbcType=NUMERIC}
+			    </when>
+			    <when test='"finger"   .equals(cnt_fail_mode)'>
+					,CNT_FAIL_FINGER = #{cnt_fail, jdbcType=NUMERIC}
+			    </when>
+          		<otherwise>
+          			, CNT_FAIL_PWD = #{cnt_fail, jdbcType=NUMERIC}
+          			, CNT_FAIL_FINGER = #{cnt_fail, jdbcType=NUMERIC}
+            	</otherwise>
+            </choose>
+        </if>
+        WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+    </update>
+
+    <update id="modifyFingerPrint" parameterType="com.koscom.person.model.PersonVO">
+        UPDATE PERSON_INFO
+        SET
+          yn_fingerprint = #{yn_fingerprint, jdbcType=VARCHAR}
+		, id_lst  		= #{id_lst, jdbcType=VARCHAR}
+		, dt_lst  		= SYSDATE
+        WHERE NO_PERSON = #{no_person}
+    </update>
+
+    <select id="procPersonInfoDelQuit" parameterType="String" resultType="int">
+        SELECT FN_PERSON_QUIT( #{no_person, jdbcType=VARCHAR} ) FROM DUAL
+    </select>
+
+    <update id="profileImg" parameterType="com.koscom.person.model.PersonVO">
+        MERGE INTO PERSON_INFO
+        USING DUAL
+        ON (no_person = #{no_person, jdbcType=VARCHAR} )
+        WHEN MATCHED THEN
+        UPDATE
+         SET
+           path_file1        = #{path_file1      ,jdbcType=VARCHAR}
+         , nm_file1          = #{nm_file1      ,jdbcType=VARCHAR}
+		 , id_lst  		= #{id_lst, jdbcType=VARCHAR}
+		 , dt_lst  		= SYSDATE
+        WHEN NOT MATCHED THEN
+        INSERT
+        (
+         path_file1
+        ,nm_file1
+		, id_frt
+		, dt_frt
+        )
+        VALUES(
+          #{path_file1     ,jdbcType=VARCHAR}
+        , #{nm_file1      ,jdbcType=VARCHAR}
+		, #{id_frt, jdbcType=VARCHAR}
+		,  SYSDATE
+        )
+    </update>
+
+    <update id="modifyPersonEmail" parameterType="com.koscom.person.model.PersonVO">
+        UPDATE PERSON_INFO
+        SET
+          email = #{email, jdbcType=VARCHAR}
+		 , id_lst  		= #{id_lst, jdbcType=VARCHAR}
+		 , dt_lst  		= SYSDATE
+        WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+    </update>
+
+    <update id="modifyPersonLogout" parameterType="com.koscom.person.model.PersonVO">
+        UPDATE PERSON_INFO
+        SET
+          yn_logout = #{yn_logout, jdbcType=VARCHAR}
+		 , id_lst  		= #{id_lst, jdbcType=VARCHAR}
+		 , dt_lst  		= SYSDATE
+        WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+    </update>
+
+    <update id="modifyPushNoti" parameterType="com.koscom.person.model.PersonVO">
+        UPDATE PERSON_INFO
+        SET
+        	  id_lst  		= #{id_lst, jdbcType=VARCHAR}
+        	, dt_lst  		= SYSDATE
+        	<if test="@com.koscom.util.MybatisUtil@isNotEmpty(type_push)">
+        	    <if test='"default".equals(type_push)'>
+				   , cd_push = '1'
+				   , yn_push = 'Y'
+				</if>
+        	    <if test='"all".equals(type_push)'>
+          			, cd_push = #{cd_push, jdbcType=VARCHAR}
+          		</if>
+                 <if test='"each".equals(type_push)'>
+				   , yn_push = #{yn_push, jdbcType=VARCHAR}
+				</if>
+          	</if>
+        WHERE NO_PERSON = #{no_person}
+    </update>
+
+    <insert id="insertCdPush" parameterType="com.koscom.person.model.PersonVO">
+        INSERT INTO PUSH_SETTING_INFO
+        	(
+            	NO_PERSON
+            	, CD_PUSH
+            	, YN_PUSH
+            	, ID_FRT
+            	, DT_FRT
+        	) VALUES (
+            	#{no_person,jdbcType=VARCHAR}
+            	, #{item_push,jdbcType=VARCHAR}
+            	, #{stat_push,jdbcType=VARCHAR}
+            	, #{id_frt,jdbcType=VARCHAR}
+            	, SYSDATE
+        	)
+    </insert>
+
+    <update id="modifyCdPush" parameterType="com.koscom.person.model.PersonVO">
+        MERGE INTO PUSH_SETTING_INFO
+        USING DUAL
+        ON (no_person = #{no_person, jdbcType=VARCHAR} AND CD_PUSH = #{item_push, jdbcType=VARCHAR})
+        WHEN MATCHED THEN
+        UPDATE
+        SET
+            YN_PUSH = #{stat_push}
+        WHEN NOT MATCHED THEN
+        INSERT(
+            NO_PERSON
+            , CD_PUSH
+            , YN_PUSH
+            , ID_FRT
+            , DT_FRT
+        ) VALUES (
+            #{no_person,jdbcType=VARCHAR}
+            , #{item_push,jdbcType=VARCHAR}
+            , #{stat_push,jdbcType=VARCHAR}
+            , #{no_person,jdbcType=VARCHAR}
+            , SYSDATE
+        )
+    </update>
+
+    <insert id="insertCdPushHist" parameterType="com.koscom.person.model.PersonVO">
+    <selectKey keyProperty="seq" resultType="string" order="BEFORE">
+        (SELECT NVL(MAX(seq),0)+1 FROM PUSH_SETTING_INFO_HIST)
+    </selectKey>
+
+    INSERT INTO PUSH_SETTING_INFO_HIST(
+        SEQ
+        , NO_PERSON
+        , CD_PUSH
+        , YN_PUSH
+        , ID_FRT
+        , DT_FRT
+    ) VALUES (
+        #{seq}
+        , #{no_person,jdbcType=VARCHAR}
+        , #{item_push,jdbcType=VARCHAR}
+        , #{stat_push,jdbcType=VARCHAR}
+        , #{id_frt,jdbcType=VARCHAR}
+        , SYSDATE
+    )
+    </insert>
+
+    <update id="modifyYnUseAndLogout" parameterType="com.koscom.person.model.PersonVO">
+        UPDATE PERSON_INFO
+        SET
+          yn_logout = #{yn_logout, jdbcType=VARCHAR}
+         , yn_use = #{yn_use, jdbcType=VARCHAR}
+		 , id_lst  		= #{id_lst, jdbcType=VARCHAR}
+		 , dt_lst  		= SYSDATE
+        WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+    </update>
+    <update id="modifyStockToken" parameterType="com.koscom.person.model.PersonVO">
+        UPDATE PERSON_INFO
+        SET stock_token = #{stock_token, jdbcType=VARCHAR}
+		 , id_lst  		= #{id_lst, jdbcType=VARCHAR}
+		 , dt_lst  		= SYSDATE
+        WHERE NO_PERSON = #{no_person}
+    </update>
+
+    <select id="getPersonQuitChk" parameterType="com.koscom.person.model.PersonVO" resultType="com.koscom.person.model.PersonQuitVO">
+    SELECT
+        *
+    FROM
+        (SELECT
+            no_person
+            , TO_CHAR(dt_quit, 'yyyyMMdd') AS dt_quit
+            , nm_person
+            , bgn
+            , hp
+        FROM
+        person_quit_hist
+        WHERE nm_person = #{nm_person, jdbcType=VARCHAR} AND hp = #{hp, jdbcType=VARCHAR}
+        order by dt_quit desc)
+    WHERE rownum = 1
+
+    </select>
+
+    <select id="getPushSettingInfo" parameterType="java.lang.String" resultType="com.koscom.person.model.PersonVO">
+        SELECT
+            CD_PUSH AS ITEM_PUSH
+            , YN_PUSH
+        FROM PUSH_SETTING_INFO
+        WHERE
+            NO_PERSON = #{no_person, jdbcType=VARCHAR}
+    </select>
+
+    <select id="getAllPersonInfo" resultType="com.koscom.person.model.PersonVO">
+    	/* com.koscom.person.dao.PersonMapper.getAllPersonInfo: 전체회원정보(전체푸쉬위한정보) */
+        SELECT  NO_PERSON                                  AS no_person       /* 회원관리번호       */
+               ,NM_PERSON                                  AS nm_person       /* 회원명             */
+               ,XX1.DEC_VARCHAR2_SEL(SSN_PERSON, '10', 'FS_ARIA', 'PERSON_INFO', 'SSN_PERSON')   AS ssn_person      /* 주민번호           */
+               ,PASS_PERSON                                AS pass_person     /* 패스워드           */
+               ,BGN                                        AS bgn             /* 생년월일           */
+               ,HP                                         AS hp              /* 휴대폰             */
+               ,CD_TEL                               	   AS cd_tel    	  /* 통신사구분 	    */
+               ,KCB_CI                                     AS kcb_ci          /* KCBCI              */
+               ,KCB_DI                                     AS kcb_di          /* KCBDI              */
+               ,KCB_CP                                     AS kcb_cp          /* KCBCP              */
+               ,PBL_CERT_CI                                AS pbl_cert_ci     /* 공인인증CI         */
+               ,PBL_CERT_DI                                AS pbl_cert_di     /* 공인인증DI         */
+               ,YN_USE                                     AS yn_use          /* 사용여부           */
+               ,YN_AGREE_USING                             AS yn_agree_using  /* 약관동의           */
+               ,DT_AGREE_USING                             AS dt_agree_using  /* 약관동의일자       */
+               ,DT_INSTALL                                 AS dt_install      /* 설치일자           */
+               ,YN_FINGERPRINT                             AS yn_fingerprint  /* 지문사용여부       */
+               ,YN_OS                                      AS yn_os           /* 운영체제여부       */
+               ,FCM_TOKEN                                  AS fcm_token       /* 푸쉬메세지토큰     */
+               ,CD_PUSH                                    AS cd_push         /* push msg여부       */
+               ,YN_PUSH                                    AS yn_push         /* 푸쉬메세지사용여부 */
+               ,EMAIL                                      AS email           /* 이메일             */
+               ,NICK                                       AS nick            /* 별명               */
+               ,YN_LOGOUT                                  AS yn_logout       /* 로그아웃여부       */
+               ,SEQ_NEW_DEBT_REG                           AS seq_new_debt_reg/* 부채등록번호       */
+               ,PATH_FILE1                                 AS path_file1      /* 파일패스           */
+               ,NM_FILE1                                   AS nm_file1        /* 파일명             */
+               ,STOCK_TOKEN                                AS stock_token     /* 증권토큰           */
+               ,ETC_MEMO                                   AS etc_memo        /* 비고               */
+               ,AMT_ETM_INCOME                             AS amt_etm_income  /* 추정소득금액       */
+               ,CNT_FAIL_PWD							   AS cnt_fail_pwd	  /* 비밀번호 실패건수 */
+               ,CNT_FAIL_FINGER							   AS cnt_fail_finger /* 지문인증 실패건수 */
+               ,ID_FRT                                     AS id_frt          /* 최초입력아이디     */
+               ,DT_FRT                                     AS dt_frt          /* 최초입력시간       */
+               ,ID_LST                                     AS id_lst          /* 최종수정아이디     */
+               ,DT_LST                                     AS dt_lst          /* 최종수정시간       */
+          FROM PERSON_INFO /* 회원관리 */
+          WHERE YN_PUSH = 'Y'
+    </select>
+
+    <select id="getPersonInfoHist" parameterType="String" resultType="com.koscom.person.model.PersonInfoHistVO">
+		SELECT
+				NO_PERSON
+				, NM_PERSON
+				, SSN_PERSON
+				, PASS_PERSON
+				, BGN
+				, HP
+				, KCB_CI
+				, KCB_DI
+				, KCB_CP
+				, PBL_CERT_CI
+				, PBL_CERT_DI
+				, YN_USE
+				, YN_AGREE_USING
+				, DT_AGREE_USING
+				, DT_INSTALL
+				, YN_FINGERPRINT
+				, YN_OS
+				, FCM_TOKEN
+				, CD_PUSH
+				, YN_PUSH
+				, EMAIL
+				, NICK
+				, YN_LOGOUT
+				, SEQ_NEW_DEBT_REG
+				, PATH_FILE1
+				, NM_FILE1
+				, STOCK_TOKEN
+				, ETC_MEMO
+				, AMT_ETM_INCOME
+			FROM PERSON_INFO
+				WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+    </select>
+
+    <select id="getPwdDB" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT XX1.ENC_VARCHAR2_INS(#{pwd, jdbcType=VARCHAR}, '11', 'FS_SHA', 'PERSON_INFO', 'PASS_PERSON') FROM DUAL
+	</select>
+
+    <select id="getPersonCounselInfo"  parameterType="java.lang.String" resultType="com.koscom.person.model.PersonCounselVO">
+		SELECT
+			P.NO_PERSON,
+			P.NM_PERSON,
+			FLOOR(MONTHS_BETWEEN(SYSDATE,TO_DATE(SUBSTR(P.BGN,1,8),'YYYYMMDD'))/12) AS AGE,
+			DECODE(SUBSTR(P.BGN,9,10),'1','남','여') AS SEX,
+			KCL.GRADE_CREDIT,
+			KCL.RATING_CREDIT,
+			FN_AMT_VIEW(KCI.BAL_OVERDUE) AS BAL_OVERDUE,
+			FN_AMT_VIEW(DEBT.AMT_CONTRACT) AS AMT_CONTRACT,
+			FN_AMT_VIEW(DEBT.AMT_REMAIN) AS AMT_REMAIN,
+			FN_AMT_VIEW(DEBT.CUR_MM_AMT_REPAY) AS CUR_MM_AMT_REPAY,
+			KCI.CNT_CARD_USE,
+			FN_AMT_VIEW(KCI.AMT_CARD_TOTAL) AS AMT_CARD_TOTAL
+		FROM
+			PERSON_INFO P
+		LEFT OUTER JOIN KCB_CREDIT_LIST KCL
+		ON (
+				P.NO_PERSON = KCL.NO_PERSON
+				AND KCL.REQ_YYYYMM = TO_CHAR( SYSDATE, 'YYYYMM' )
+			)
+		LEFT OUTER JOIN KCB_CREDIT_INFO KCI
+		ON P.NO_PERSON = KCI.NO_PERSON
+		LEFT OUTER JOIN(
+				SELECT
+					DPI.NO_PERSON,
+					SUM( DPI.AMT_CONTRACT ) AS AMT_CONTRACT,
+					SUM( DPI.AMT_REMAIN ) AS AMT_REMAIN,
+					SUM( CASE WHEN DPI.CD_TYPE_DEAL IN( '3', '6' ) THEN 0 ELSE TO_NUMBER( DPRL.AMT_REPAY ) END ) AS CUR_MM_AMT_REPAY
+				FROM
+					DEBT_PERSONAL_INFO DPI
+				INNER JOIN DEBT_PERSONAL_REPAY_LIST DPRL
+				ON (
+						DPI.NO_PERSON = DPRL.NO_PERSON
+						AND DPI.NO_MANAGE_INFO = DPRL.NO_MANAGE_INFO
+						AND DPRL.REQ_YYYYMM = TO_CHAR( SYSDATE, 'YYYYMM' )
+					)
+				GROUP BY
+					DPI.NO_PERSON
+			) DEBT
+		ON P.NO_PERSON = DEBT.NO_PERSON
+		WHERE P.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+    </select>
+
+    <insert id="createPersonCounsel">
+        <selectKey keyProperty="counsel_seq" resultType="string" order="BEFORE">
+            (SELECT NVL(MAX(counsel_seq),0)+1 FROM PERSON_COUNSEL_LIST WHERE no_person = #{no_person, jdbcType=VARCHAR})
+        </selectKey>
+
+        INSERT INTO PERSON_COUNSEL_LIST
+            (     NO_PERSON
+				, COUNSEL_SEQ
+				, CD_COUNSEL_STATUS
+				, DT_APPLY
+				, YN_WEDDING
+				, CD_FAMILY_CNT
+				, CD_JOB
+				, CD_LIVING
+				, AMT_MM_INCOME
+				, AMT_MM_EXPENSE
+				, LIST_CARD_USE
+				, LIST_OVERDUE_INFO
+				, LIST_OVERDUE_ETC
+				, ID_FRT
+				, DT_FRT
+				, ID_LST
+				, DT_LST
+            ) VALUES (
+                  #{no_person, jdbcType=VARCHAR}
+				, #{counsel_seq}
+				, '1'
+				, SYSDATE
+				, #{yn_wedding, jdbcType=VARCHAR}
+				, #{cd_family_cnt, jdbcType=VARCHAR}
+				, #{cd_job, jdbcType=VARCHAR}
+				, #{cd_living, jdbcType=VARCHAR}
+				, #{amt_mm_income, jdbcType=NUMERIC}
+				, #{amt_mm_expense, jdbcType=NUMERIC}
+				, #{list_card_use, jdbcType=VARCHAR}
+				, #{list_overdue_info, jdbcType=VARCHAR}
+				, #{list_overdue_etc, jdbcType=VARCHAR}
+                , #{id_frt, jdbcType=VARCHAR}
+                , SYSDATE
+                , #{id_lst, jdbcType=VARCHAR}
+                , SYSDATE
+            )
+    </insert>
+
+    <select id="getPersonCounselList"  parameterType="com.koscom.person.model.PersonCounselForm" resultType="com.koscom.person.model.PersonCounselVO">
+		SELECT
+	        *
+	    FROM
+	        (SELECT
+	              LST.no_person
+	              , LST.counsel_seq
+	              , LST.cd_counsel_status
+	              , LST.dt_apply
+	           	  , LST.dt_pre_counsel
+	              , LST.dt_counsel
+	              , LST.yn_wedding
+				  , LST.cd_family_cnt
+				  , LST.cd_job
+				  , LST.cd_living
+				  , LST.amt_mm_income
+				  , LST.amt_mm_expense
+				  , LST.id_emp_counsel
+				  , LST.id_frt
+				  , LST.dt_frt
+				  , LST.id_lst
+				  , LST.dt_lst
+	              , LST.nm_person
+				  , ROWNUM RNUM
+	         FROM
+	            (SELECT
+	            	  PCL.no_person
+	            	, PCL.counsel_seq
+	            	, PCL.cd_counsel_status
+	            	, TO_CHAR(PCL.dt_apply,'YYYY-MM-DD') AS dt_apply
+	            	, TO_CHAR(PCL.dt_pre_counsel,'YYYY-MM-DD') AS dt_pre_counsel
+	            	, TO_CHAR(PCL.dt_counsel,'YYYY-MM-DD') AS dt_counsel
+	            	, PCL.yn_wedding
+					, PCL.cd_family_cnt
+					, PCL.cd_job
+					, PCL.cd_living
+					, PCL.amt_mm_income
+					, PCL.amt_mm_expense
+					, PCL.id_emp_counsel
+					, PCL.id_frt
+					, PCL.dt_frt
+					, PCL.id_lst
+					, PCL.dt_lst
+	                , PI.nm_person
+	             FROM PERSON_COUNSEL_LIST PCL LEFT OUTER JOIN PERSON_INFO PI ON PCL.no_person = PI.no_person
+	             WHERE 1=1
+	             	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(no_person)'>
+				 		AND PCL.no_person = #{no_person, jdbcType=VARCHAR}
+				 	</if>
+				 ORDER BY PCL.counsel_seq DESC
+	             ) LST
+	        WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	        )
+	    WHERE RNUM >= #{startPosition, jdbcType=NUMERIC}
+	</select>
+
+	<select id="getPersonCounselListCount"  parameterType="com.koscom.person.model.PersonCounselForm" resultType="int">
+		SELECT
+            COUNT(*) AS recordCount
+         FROM PERSON_COUNSEL_LIST PCL
+         WHERE 1=1
+	     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(no_person)'>
+				AND PCL.no_person = #{no_person, jdbcType=VARCHAR}
+			</if>
+	</select>
+
+	<resultMap id="result_personCounselInfo_map" type="java.util.HashMap">
+		<result property="list_card_use" column="LIST_CARD_USE" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="list_overdue_info" column="LIST_OVERDUE_INFO" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="list_overdue_etc" column="LIST_OVERDUE_ETC" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="counsel_contents" column="COUNSEL_CONTENTS" jdbcType="CLOB" javaType="java.lang.String" />
+ 	</resultMap>
+
+	<select id="getPersonCounselMapInfo" parameterType="com.koscom.person.model.PersonCounselVO" resultMap="result_personCounselInfo_map">
+		SELECT LIST_CARD_USE
+				, LIST_OVERDUE_INFO
+				, LIST_OVERDUE_ETC
+				, COUNSEL_CONTENTS
+		FROM PERSON_COUNSEL_LIST
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND COUNSEL_SEQ = #{counsel_seq, jdbcType=VARCHAR}
+	</select>
+
+	<insert id="createPersonCertificateInfo" parameterType="com.koscom.person.model.PersonCertificateInfoVO">
+		MERGE INTO PERSON_CERTIFICATE_INFO
+        USING DUAL
+        ON (no_person = #{no_person, jdbcType=VARCHAR}
+        	AND CN = #{cn, jdbcType=VARCHAR})
+        WHEN MATCHED THEN
+        UPDATE
+         SET
+          CERTIFICATE_AGENCY  = #{certificate_agency,jdbcType=VARCHAR}
+        , DT_EXPIRE           = #{dt_expire         ,jdbcType=VARCHAR}
+        , YN_USE              = #{yn_use            ,jdbcType=VARCHAR}
+        , ID_FRT              = #{id_frt            ,jdbcType=VARCHAR}
+        , DT_FRT              = SYSDATE
+        WHEN NOT MATCHED THEN
+        INSERT
+        (
+         NO_PERSON
+        ,SEQ
+        ,CN
+        ,CERTIFICATE_AGENCY
+        ,DT_EXPIRE
+        ,YN_USE
+        ,ID_FRT
+        ,DT_FRT
+        )
+        VALUES(
+          #{no_person     ,jdbcType=VARCHAR}
+        , (SELECT NVL(MAX(SEQ),0)+1 FROM PERSON_CERTIFICATE_INFO
+			WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR})
+        , #{cn                ,jdbcType=VARCHAR}
+        , #{certificate_agency,jdbcType=VARCHAR}
+        , #{dt_expire         ,jdbcType=VARCHAR}
+        , #{yn_use            ,jdbcType=VARCHAR}
+        , #{id_frt            ,jdbcType=VARCHAR}
+        , SYSDATE
+        )
+	</insert>
+	<insert id="createPersonSmsList" parameterType="com.koscom.person.model.PersonSmsListVO">
+		INSERT INTO PERSON_SMS_LIST
+            (     NO_PERSON
+				, SEQ
+				, MSG_INFO
+				, DT_MSG
+				, ID_FRT
+				, DT_FRT
+            ) VALUES (
+                  #{no_person, jdbcType=VARCHAR}
+				, (SELECT NVL(MAX(SEQ),0)+1 FROM PERSON_SMS_LIST WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR})
+				, #{msg_info, jdbcType=VARCHAR}
+				, TO_DATE(#{dt_msg, jdbcType=VARCHAR},'YYYYMMDDHH24MISS')
+                , #{id_frt, jdbcType=VARCHAR}
+                , SYSDATE
+            )
+	</insert>
+
+	<select id="getLastPersonSmsDt" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT TO_CHAR(MAX(DT_MSG), 'YYYYMMDDHH24MISS') MAX_DATE
+		FROM PERSON_SMS_LIST
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</select>
+
+<!-- 	20180717 VITCOM KHK -->
+	<select id="getPersonInfoDupCi" parameterType="com.koscom.person.model.PersonVO" resultType="java.lang.String">
+		SELECT NO_PERSON
+			FROM PERSON_INFO
+		WHERE
+				KCB_CI = #{kcb_ci, jdbcType=VARCHAR}
+		  AND	YN_USE = 'Y'
+	</select>
+	<update id="modifyPersonHp" parameterType="com.koscom.person.model.PersonVO">
+		UPDATE PERSON_INFO SET
+			HP = #{hp, jdbcType=VARCHAR}
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</update>
+<!-- 	//20180717 VITCOM KHK -->
+
+	<!-- 공유관리 -->
+	<select id="listPersonShareInfoSummary" parameterType="com.koscom.person.model.PersonShareInfoForm" resultType="com.koscom.person.model.PersonShareInfoVO">
+		<!-- personMapper.listPersonShareInfoSummary 공유관리 요약list -->
+	    SELECT
+			SI.SEQ_SHARE,
+			SI.REQ_NO_PERSON,
+			SI.REQ_NM_PERSON,
+			SI.REQ_HP,
+			SI.OFFER_NO_PERSON,
+			SI.OFFER_NM_PERSON,
+			SI.OFFER_HP,
+			SI.SHARE_STATUS,
+			SI.YN_CREDIT_OFFER,
+			SI.YN_DEBT_OFFER,
+			SI.YN_INCOME_OFFER,
+			SI.YN_ACCOUNT_OFFER,
+			SI.YN_CARD_OFFER,
+			SI.YN_DEBT_ITGT_MNGM,
+			SI.YN_ASSET_ITGT_MNGM,
+			SI.YN_CONSUME_ITGT_MNGM,
+			SI.DT_STT_OFFER,
+			SI.DT_END_OFFER,
+			SI.YN_OFFER,
+			SI.YN_ITGT_MNGM,
+			SI.ID_FRT,
+			SI.DT_FRT,
+			SI.ID_LST,
+			SI.DT_LST
+		FROM
+			(
+				SELECT
+					SEQ_SHARE,
+					REQ_NO_PERSON,
+					REQ_NM_PERSON,
+					REQ_HP,
+					OFFER_NO_PERSON,
+					OFFER_NM_PERSON,
+					OFFER_HP,
+					SHARE_STATUS,
+					YN_CREDIT_OFFER,
+					YN_DEBT_OFFER,
+					YN_INCOME_OFFER,
+					YN_ACCOUNT_OFFER,
+					YN_CARD_OFFER,
+					YN_DEBT_ITGT_MNGM,
+					YN_ASSET_ITGT_MNGM,
+					YN_CONSUME_ITGT_MNGM,
+					DT_STT_OFFER,
+					DT_END_OFFER,
+					(
+						CASE
+						WHEN YN_CREDIT_OFFER = 'Y'
+							OR YN_DEBT_OFFER = 'Y'
+							OR YN_INCOME_OFFER = 'Y'
+							OR YN_ACCOUNT_OFFER = 'Y'
+							OR YN_CARD_OFFER = 'Y'
+						THEN 'Y'
+						ELSE 'N'
+						END
+					) AS YN_OFFER,
+					(
+						CASE
+						WHEN YN_DEBT_ITGT_MNGM = 'Y'
+							OR YN_ASSET_ITGT_MNGM = 'Y'
+							OR YN_CONSUME_ITGT_MNGM = 'Y'
+						THEN 'Y'
+						ELSE 'N'
+						END
+					) AS YN_ITGT_MNGM,
+					ID_FRT,
+					TO_CHAR(DT_FRT, 'YYYYMMDD') AS DT_FRT,
+					ID_LST,
+					TO_CHAR(DT_LST, 'YYYYMMDD') AS DT_LST
+				FROM
+					SHARE_INFO
+				WHERE
+					(SHARE_STATUS != '03' AND SHARE_STATUS != '04')
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(type_list)">
+						<if test='"offer".equals(type_list)'>
+							AND REQ_NO_PERSON = #{no_person, jdbcType=NUMERIC}
+						</if>
+						<if test='"req".equals(type_list)'>
+					   		AND OFFER_NO_PERSON = #{no_person, jdbcType=NUMERIC}
+						</if>
+					</if>
+				ORDER BY
+					DT_FRT DESC
+			) SI
+		WHERE
+			ROWNUM <![CDATA[<=]]> 3
+	</select>
+
+	<sql id="listPersonShareInfoMain_WHERE">
+		<where>
+		    SHARE_STATUS != '04'
+		    <if test="@com.koscom.util.MybatisUtil@isNotEmpty(type_list)">
+				<if test='"offer".equals(type_list)'>
+					AND REQ_NO_PERSON = #{no_person, jdbcType=NUMERIC}
+				</if>
+				<if test='"req".equals(type_list)'>
+			   		AND OFFER_NO_PERSON = #{no_person, jdbcType=NUMERIC}
+			  	</if>
+			</if>
+		</where>
+	</sql>
+
+	<select id="listPersonShareInfoMain" parameterType="com.koscom.person.model.PersonShareInfoForm" resultType="com.koscom.person.model.PersonShareInfoVO">
+		<!-- personMapper.listPersonShareInfoMain 공유관리 메인list -->
+	    SELECT
+	        SEQ_SHARE,
+			REQ_NO_PERSON,
+			REQ_NM_PERSON,
+			REQ_HP,
+			OFFER_NO_PERSON,
+			OFFER_NM_PERSON,
+			OFFER_HP,
+			SHARE_STATUS,
+			YN_CREDIT_OFFER,
+			YN_DEBT_OFFER,
+			YN_INCOME_OFFER,
+			YN_ACCOUNT_OFFER,
+			YN_CARD_OFFER,
+			YN_DEBT_ITGT_MNGM,
+			YN_ASSET_ITGT_MNGM,
+			YN_CONSUME_ITGT_MNGM,
+			DT_STT_OFFER,
+			DT_END_OFFER,
+			YN_OFFER,
+			YN_ITGT_MNGM,
+			ID_FRT,
+			DT_FRT,
+			ID_LST,
+			DT_LST,
+		    RNUM
+	    FROM
+	        (SELECT
+	            LST.SEQ_SHARE,
+				LST.REQ_NO_PERSON,
+				LST.REQ_NM_PERSON,
+				LST.REQ_HP,
+				LST.OFFER_NO_PERSON,
+				LST.OFFER_NM_PERSON,
+				LST.OFFER_HP,
+				LST.SHARE_STATUS,
+				LST.YN_CREDIT_OFFER,
+				LST.YN_DEBT_OFFER,
+				LST.YN_INCOME_OFFER,
+				LST.YN_ACCOUNT_OFFER,
+				LST.YN_CARD_OFFER,
+				LST.YN_DEBT_ITGT_MNGM,
+				LST.YN_ASSET_ITGT_MNGM,
+				LST.YN_CONSUME_ITGT_MNGM,
+				LST.DT_STT_OFFER,
+				LST.DT_END_OFFER,
+				LST.YN_OFFER,
+				LST.YN_ITGT_MNGM,
+				LST.ID_FRT,
+				LST.DT_FRT,
+				LST.ID_LST,
+				LST.DT_LST,
+	            ROWNUM RNUM
+	         FROM
+	            (
+	    		SELECT
+					SEQ_SHARE,
+					REQ_NO_PERSON,
+					REQ_NM_PERSON,
+					REQ_HP,
+					OFFER_NO_PERSON,
+					OFFER_NM_PERSON,
+					OFFER_HP,
+					SHARE_STATUS,
+					YN_CREDIT_OFFER,
+					YN_DEBT_OFFER,
+					YN_INCOME_OFFER,
+					YN_ACCOUNT_OFFER,
+					YN_CARD_OFFER,
+					YN_DEBT_ITGT_MNGM,
+					YN_ASSET_ITGT_MNGM,
+					YN_CONSUME_ITGT_MNGM,
+					DT_STT_OFFER,
+					DT_END_OFFER,
+					(CASE WHEN YN_CREDIT_OFFER = 'Y'
+							OR YN_DEBT_OFFER = 'Y'
+							OR YN_INCOME_OFFER = 'Y'
+							OR YN_ACCOUNT_OFFER = 'Y'
+							OR YN_CARD_OFFER = 'Y'
+					THEN 'Y'
+					ELSE 'N'
+					END
+					) AS YN_OFFER,
+					(CASE WHEN YN_DEBT_ITGT_MNGM = 'Y'
+							OR YN_ASSET_ITGT_MNGM = 'Y'
+							OR YN_CONSUME_ITGT_MNGM = 'Y'
+					THEN 'Y'
+					ELSE 'N'
+					END
+					) AS YN_ITGT_MNGM,
+					ID_FRT,
+					TO_CHAR(DT_FRT, 'YYYYMMDD') AS DT_FRT,
+					ID_LST,
+					TO_CHAR(DT_LST, 'YYYYMMDD') AS DT_LST
+				FROM
+					SHARE_INFO
+				<include refid="listPersonShareInfoMain_WHERE"/>
+				ORDER BY DT_FRT DESC
+			) LST
+	        WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	    )
+	    WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+	</select>
+
+	<select id="listPersonShareInfoMainCount"  parameterType="com.koscom.person.model.PersonShareInfoForm" resultType="int">
+	    SELECT
+            COUNT(*) AS recordCount
+         FROM
+         	SHARE_INFO
+         <include refid="listPersonShareInfoMain_WHERE"/>
+	</select>
+
+	<select id="listShareInfoAllCancel" parameterType="com.koscom.person.model.PersonShareInfoVO" resultType="com.koscom.person.model.PersonShareInfoVO">
+		<!-- personMapper.listShareInfoAllCancel 공유관리 모두해지하기list -->
+	    SELECT
+			SEQ_SHARE,
+			REQ_NO_PERSON,
+			REQ_NM_PERSON,
+			REQ_HP,
+			OFFER_NO_PERSON,
+			OFFER_NM_PERSON,
+			OFFER_HP,
+			SHARE_STATUS,
+			YN_CREDIT_OFFER,
+			YN_DEBT_OFFER,
+			YN_INCOME_OFFER,
+			YN_ACCOUNT_OFFER,
+			YN_CARD_OFFER,
+			YN_DEBT_ITGT_MNGM,
+			YN_ASSET_ITGT_MNGM,
+			YN_CONSUME_ITGT_MNGM,
+			DT_STT_OFFER,
+			DT_END_OFFER,
+			ID_FRT,
+			TO_CHAR(DT_FRT, 'YYYYMMDD') AS DT_FRT,
+			ID_LST,
+			TO_CHAR(DT_LST, 'YYYYMMDD') AS DT_LST
+		FROM
+			SHARE_INFO
+		WHERE
+			SHARE_STATUS = '02'
+			AND OFFER_NO_PERSON = #{offer_no_person, jdbcType=NUMERIC}
+	</select>
+
+	<select id="getPersonShareInfo" parameterType="com.koscom.person.model.PersonShareInfoVO" resultType="com.koscom.person.model.PersonShareInfoVO">
+		<!-- personMapper.getPersonShareInfo 공유관리 상세정보 -->
+	    SELECT
+			SEQ_SHARE,
+			REQ_NO_PERSON,
+			REQ_NM_PERSON,
+			REQ_HP,
+			OFFER_NO_PERSON,
+			OFFER_NM_PERSON,
+			OFFER_HP,
+			SHARE_STATUS,
+			YN_CREDIT_OFFER,
+			YN_DEBT_OFFER,
+			YN_INCOME_OFFER,
+			YN_ACCOUNT_OFFER,
+			YN_CARD_OFFER,
+			YN_DEBT_ITGT_MNGM,
+			YN_ASSET_ITGT_MNGM,
+			YN_CONSUME_ITGT_MNGM,
+			DT_STT_OFFER,
+			DT_END_OFFER,
+			(CASE WHEN YN_CREDIT_OFFER = 'Y'
+					OR YN_DEBT_OFFER = 'Y'
+					OR YN_INCOME_OFFER = 'Y'
+					OR YN_ACCOUNT_OFFER = 'Y'
+					OR YN_CARD_OFFER = 'Y'
+			THEN 'Y'
+			ELSE 'N'
+			END
+			) AS YN_OFFER,
+			(CASE WHEN YN_DEBT_ITGT_MNGM = 'Y'
+					OR YN_ASSET_ITGT_MNGM = 'Y'
+					OR YN_CONSUME_ITGT_MNGM = 'Y'
+			THEN 'Y'
+			ELSE 'N'
+			END
+			) AS YN_ITGT_MNGM,
+			ID_FRT,
+			TO_CHAR(DT_FRT, 'YYYYMMDD') AS DT_FRT,
+			ID_LST,
+			TO_CHAR(DT_LST, 'YYYYMMDD') AS DT_LST
+		FROM
+			SHARE_INFO
+		WHERE
+			SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+	</select>
+
+	<select id="getPersonShareEtmInfo" parameterType="com.koscom.person.model.PersonShareInfoVO" resultType="com.koscom.person.model.PersonShareInfoVO">
+		<!-- personMapper.getPersonShareEtmInfo 공유관리 소득정보 -->
+	    SELECT
+			PEII.CD_ETM_BASIC,
+			PEII.NM_ETM_BASIC,
+			PEII.STD_YEAR,
+			PEII.AMT_ETM_INCOME
+		FROM
+			(
+				SELECT
+					CD_ETM_BASIC,
+					DECODE(CD_ETM_BASIC, '10','건강보험','20','국민연급','30','KCB','40','국세청') AS NM_ETM_BASIC,
+					STD_YEAR,
+					FN_AMT_VIEW(AMT_ETM_INCOME) AS AMT_ETM_INCOME
+				FROM
+					PERSON_ETM_INCOME_INFO
+				WHERE
+					NO_PERSON = #{offer_no_person, jdbcType=NUMERIC}
+				ORDER BY
+					STD_YEAR DESC,
+					AMT_ETM_INCOME DESC
+			) PEII
+		WHERE
+			ROWNUM = 1
+	</select>
+
+	<select id="getPersonShareInfoSeq" resultType="String">
+		SELECT
+			SEQ_SHARE_INFO.NEXTVAL
+		FROM
+			DUAL
+	</select>
+
+	<insert id="createPersonShareInfo" parameterType="com.koscom.domain.PersonShareInfo">
+	    <!-- personMapper.createPersonShareInfo 공유관리 요청 -->
+		INSERT INTO SHARE_INFO(
+			SEQ_SHARE,
+			REQ_NO_PERSON,
+			REQ_NM_PERSON,
+			REQ_HP,
+			OFFER_NO_PERSON,
+			OFFER_NM_PERSON,
+			OFFER_HP,
+			SHARE_STATUS,
+			YN_CREDIT_OFFER,
+			YN_DEBT_OFFER,
+			YN_INCOME_OFFER,
+			YN_ACCOUNT_OFFER,
+			YN_CARD_OFFER,
+			YN_DEBT_ITGT_MNGM,
+			YN_ASSET_ITGT_MNGM,
+			YN_CONSUME_ITGT_MNGM,
+			ID_FRT,
+			DT_FRT,
+			ID_LST,
+			DT_LST
+		) VALUES (
+			#{seq_share, jdbcType=NUMERIC},
+			#{req_no_person, jdbcType=VARCHAR},
+			#{req_nm_person, jdbcType=VARCHAR},
+			#{req_hp, jdbcType=VARCHAR},
+			#{offer_no_person, jdbcType=VARCHAR},
+			#{offer_nm_person, jdbcType=VARCHAR},
+			#{offer_hp, jdbcType=VARCHAR},
+			#{share_status, jdbcType=VARCHAR},
+			#{yn_credit_offer, jdbcType=VARCHAR},
+			#{yn_debt_offer, jdbcType=VARCHAR},
+			#{yn_income_offer, jdbcType=VARCHAR},
+			#{yn_account_offer, jdbcType=VARCHAR},
+			#{yn_card_offer, jdbcType=VARCHAR},
+			#{yn_debt_itgt_mngm, jdbcType=VARCHAR},
+			#{yn_asset_itgt_mngm, jdbcType=VARCHAR},
+			#{yn_consume_itgt_mngm, jdbcType=VARCHAR},
+			#{id_frt, jdbcType=VARCHAR},
+			SYSDATE,
+			#{id_lst, jdbcType=VARCHAR},
+			SYSDATE
+		)
+	</insert>
+
+	<select id="duplChkPersonShareInfo" parameterType="com.koscom.domain.PersonShareInfo" resultType="int">
+	    <!-- personMapper.duplChkPersonShareInfo 공유관리 동일정보여부 체크 -->
+		SELECT
+			CASE
+				WHEN YN_CREDIT_OFFER = #{yn_credit_offer, jdbcType=VARCHAR}
+				AND YN_DEBT_OFFER = #{yn_debt_offer, jdbcType=VARCHAR}
+				AND YN_INCOME_OFFER = #{yn_income_offer, jdbcType=VARCHAR}
+				AND YN_DEBT_ITGT_MNGM = #{yn_debt_itgt_mngm, jdbcType=VARCHAR}
+				AND YN_ASSET_ITGT_MNGM = #{yn_asset_itgt_mngm, jdbcType=VARCHAR}
+				AND YN_CONSUME_ITGT_MNGM = #{yn_consume_itgt_mngm, jdbcType=VARCHAR}
+				THEN 1
+				ELSE 0
+			END DUPL_CHK
+		FROM
+			SHARE_INFO
+		WHERE
+			SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+	</select>
+
+	<update id="updatePersonShareInfoSet01" parameterType="com.koscom.domain.PersonShareInfo">
+	     <!-- personMapper.updatePersonShareInfoSet01 공유관리 공유설정(공유재요청) -->
+		UPDATE
+			SHARE_INFO
+		SET
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(offer_no_person)">
+				OFFER_NO_PERSON = #{offer_no_person, jdbcType=VARCHAR},
+			</if>
+			YN_CREDIT_OFFER = #{yn_credit_offer, jdbcType=VARCHAR},
+			YN_DEBT_OFFER = #{yn_debt_offer, jdbcType=VARCHAR},
+			YN_INCOME_OFFER = #{yn_income_offer, jdbcType=VARCHAR},
+			YN_ACCOUNT_OFFER = #{yn_account_offer, jdbcType=VARCHAR},
+			YN_CARD_OFFER = #{yn_card_offer, jdbcType=VARCHAR},
+			YN_DEBT_ITGT_MNGM = #{yn_debt_itgt_mngm, jdbcType=VARCHAR},
+			YN_ASSET_ITGT_MNGM = #{yn_asset_itgt_mngm, jdbcType=VARCHAR},
+			YN_CONSUME_ITGT_MNGM = #{yn_consume_itgt_mngm, jdbcType=VARCHAR},
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHERE
+			SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+	</update>
+
+	<update id="updatePersonShareInfoSet02" parameterType="com.koscom.domain.PersonShareInfo">
+	    <!-- personMapper.updatePersonShareInfoSet02 공유관리 공유설정(허용/거절) -->
+		UPDATE
+			SHARE_INFO
+		SET
+			SHARE_STATUS = #{share_status, jdbcType=VARCHAR},
+			<if test='"02".equals(share_status)'> <!-- 허용시 정보제공시작일 입력 -->
+				DT_STT_OFFER = TO_CHAR(SYSDATE, 'YYYYMMDD'),
+				<if test="@com.koscom.util.MybatisUtil@isNotEmpty(yn_offer)"> <!-- 허용시, 정보제공항목이있는경우에만 정보제공종료일 입력 -->
+					<if test='"Y".equals(yn_offer)'>
+						DT_END_OFFER = TO_CHAR(SYSDATE, 'YYYYMMDD'),
+					</if>
+				</if>
+			</if>
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHERE
+			SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+	</update>
+
+	<update id="updatePersonShareInfoSet03" parameterType="com.koscom.domain.PersonShareInfo">
+	    <!-- personMapper.updatePersonShareInfoSet03 공유관리 공유설정(변경/해지) -->
+		UPDATE
+			SHARE_INFO
+		SET
+			SHARE_STATUS = #{share_status, jdbcType=VARCHAR},
+			<if test='"02".equals(share_status)'> <!-- 변경시 항목변경됨 -->
+			YN_CREDIT_OFFER = #{yn_credit_offer, jdbcType=VARCHAR},
+			YN_DEBT_OFFER = #{yn_debt_offer, jdbcType=VARCHAR},
+			YN_INCOME_OFFER = #{yn_income_offer, jdbcType=VARCHAR},
+			YN_ACCOUNT_OFFER = #{yn_account_offer, jdbcType=VARCHAR},
+			YN_CARD_OFFER = #{yn_card_offer, jdbcType=VARCHAR},
+			YN_DEBT_ITGT_MNGM = #{yn_debt_itgt_mngm, jdbcType=VARCHAR},
+			YN_ASSET_ITGT_MNGM = #{yn_asset_itgt_mngm, jdbcType=VARCHAR},
+			YN_CONSUME_ITGT_MNGM = #{yn_consume_itgt_mngm, jdbcType=VARCHAR},
+			</if>
+			ID_LST = #{id_lst, jdbcType=VARCHAR},
+			DT_LST = SYSDATE
+		WHERE
+			SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+	</update>
+
+	<insert id="createPersonShareInfoHist" parameterType="com.koscom.domain.PersonShareInfo">
+	    <!-- personMapper.createPersonShareInfoHist 공유관리 이력생성 -->
+		INSERT INTO SHARE_INFO_HIST(
+			SEQ_SHARE,
+			REQ_NO_PERSON,
+			REQ_HP,
+			OFFER_NO_PERSON,
+			OFFER_HP,
+			SHARE_STATUS,
+			YN_CREDIT_OFFER,
+			YN_DEBT_OFFER,
+			YN_INCOME_OFFER,
+			YN_ACCOUNT_OFFER,
+			YN_CARD_OFFER,
+			YN_DEBT_ITGT_MNGM,
+			YN_ASSET_ITGT_MNGM,
+			YN_CONSUME_ITGT_MNGM,
+			DT_STT_OFFER,
+			DT_END_OFFER,
+			ID_FRT,
+			DT_FRT
+		) VALUES (
+			#{seq_share, jdbcType=NUMERIC},
+			#{req_no_person, jdbcType=VARCHAR},
+			#{req_hp, jdbcType=VARCHAR},
+			#{offer_no_person, jdbcType=VARCHAR},
+			#{offer_hp, jdbcType=VARCHAR},
+			#{share_status, jdbcType=VARCHAR},
+			#{yn_credit_offer, jdbcType=VARCHAR},
+			#{yn_debt_offer, jdbcType=VARCHAR},
+			#{yn_income_offer, jdbcType=VARCHAR},
+			#{yn_account_offer, jdbcType=VARCHAR},
+			#{yn_card_offer, jdbcType=VARCHAR},
+			#{yn_debt_itgt_mngm, jdbcType=VARCHAR},
+			#{yn_asset_itgt_mngm, jdbcType=VARCHAR},
+			#{yn_consume_itgt_mngm, jdbcType=VARCHAR},
+			#{dt_stt_offer, jdbcType=VARCHAR},
+			#{dt_end_offer, jdbcType=VARCHAR},
+			#{id_frt, jdbcType=VARCHAR},
+			SYSDATE
+		)
+	</insert>
+
+	<select id="chkPersonShareInfoMessageTerm" parameterType="com.koscom.domain.PersonShareMessageInfo" resultType="int">
+	    <!-- personMapper.chkPersonShareInfoMessageTerm 공유관리 메세지발송 기간체크 -->
+	    SELECT
+			COUNT(*) AS CHK_CNT
+		FROM
+			SHARE_MESSAGE_INFO
+		WHERE
+			DT_REQ = TO_CHAR( SYSDATE, 'YYYYMMDD' )
+			AND SEQ_SHARE = #{seq_share, jdbcType=NUMERIC}
+			AND CD_MESSAGE = #{cd_message, jdbcType=VARCHAR}
+	</select>
+
+	<update id="mergePersonShareInfoMessage" parameterType="com.koscom.domain.PersonShareMessageInfo">
+		<!-- personMapper.createPersonShareInfoHist 공유관리 메세지merge -->
+			MERGE INTO SHARE_MESSAGE_INFO
+			USING DUAL
+			ON ( SEQ_SHARE = #{seq_share, jdbcType=NUMERIC} )
+			WHEN MATCHED THEN
+			UPDATE SET
+				REQ_STATUS = #{req_status, jdbcType=VARCHAR},
+				<choose>
+				<when test='"03".equals(req_status)'>
+					RES_MESSAGE = #{res_message, jdbcType=VARCHAR},
+				</when>
+				<otherwise>
+				    DT_REQ = TO_CHAR(SYSDATE, 'YYYYMMDD'),
+					TYPE_MESSAGE = #{type_message, jdbcType=VARCHAR},
+					CD_MESSAGE = #{cd_message, jdbcType=VARCHAR},
+					REQ_MESSAGE = #{req_message, jdbcType=VARCHAR},
+					RES_MESSAGE = ' ',
+				</otherwise>
+				</choose>
+				ID_LST = #{id_lst, jdbcType=VARCHAR},
+				DT_LST = SYSDATE
+			WHEN NOT MATCHED THEN
+				INSERT
+					(
+						SEQ_SHARE,
+						TYPE_MESSAGE,
+						CD_MESSAGE,
+						REQ_STATUS,
+						DT_REQ,
+						REQ_MESSAGE,
+						ID_FRT,
+						DT_FRT,
+						ID_LST,
+						DT_LST
+					)
+				VALUES(
+					#{seq_share, jdbcType=NUMERIC},
+					#{type_message, jdbcType=VARCHAR},
+					#{cd_message, jdbcType=VARCHAR},
+					#{req_status, jdbcType=VARCHAR},
+					TO_CHAR(SYSDATE, 'YYYYMMDD'),
+					#{req_message, jdbcType=VARCHAR},
+					#{id_frt, jdbcType=VARCHAR},
+					SYSDATE,
+					#{id_lst, jdbcType=VARCHAR},
+					SYSDATE
+				)
+	</update>
+
+	<select id="listPersonShareInfoReqUpdate" parameterType="com.koscom.person.model.PersonShareInfoVO" resultType="com.koscom.person.model.PersonShareInfoVO">
+		<!-- personMapper.listPersonShareInfoReqUpdate 업데이트요청List -->
+	    SELECT
+			SI.SEQ_SHARE,
+			SI.REQ_NO_PERSON,
+			SI.REQ_NM_PERSON,
+			SI.OFFER_NM_PERSON,
+			SI.OFFER_NO_PERSON
+		FROM
+			SHARE_MESSAGE_INFO SMI
+		INNER JOIN SHARE_INFO SI ON
+			SMI.SEQ_SHARE = SI.SEQ_SHARE
+		WHERE
+			SMI.CD_MESSAGE = '02'
+			AND SMI.REQ_STATUS = '01'
+			AND SI.OFFER_NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
+	</select>
+
+	<update id="updatePersonKcbID" parameterType="com.koscom.kcb.model.KcbCreditInfoVO">
+        UPDATE PERSON_INFO
+           SET KCB_ID = #{kcb_id, jdbcType=VARCHAR}
+			  ,ID_LST = #{noPerson, jdbcType=VARCHAR}
+			  ,DT_LST = SYSDATE
+         WHERE NO_PERSON = #{noPerson}
+    </update>
+</mapper>

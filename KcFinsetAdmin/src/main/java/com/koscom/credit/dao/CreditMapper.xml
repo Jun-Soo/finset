@@ -1,0 +1,1444 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.credit.dao.CreditMapper">
+
+	<!-- NpacHist 등록 -->
+	<insert id="createNpacHist" parameterType="com.koscom.credit.model.NpacVO">
+		<selectKey keyProperty="seq" resultType="string" order="BEFORE">
+			(SELECT NVL(MAX(seq),0)+1 FROM npac_hist)
+		</selectKey>
+
+		INSERT INTO npac_hist
+			(
+				seq
+				,  no_apply
+				,  no_person
+				,  nm_person
+				,  ssn_person
+				,  bgn
+				,  hp
+				,  id_frt
+				, no_cert
+				, agree1_map
+				, agree2_map
+				, agree3_map
+				, agree4_map
+				, auth_type
+			) VALUES (
+				  #{seq}
+				, #{no_apply, jdbcType=VARCHAR}
+				, #{no_person, jdbcType=VARCHAR}
+				, #{nm_person, jdbcType=VARCHAR}
+				, XX1.ENC_VARCHAR2_INS(#{ssn_person, jdbcType=VARCHAR}, '11', 'FS_ARIA', 'NPAC_HIST', 'SSN_PERSON')
+				, #{bgn, jdbcType=VARCHAR}
+				, #{hp, jdbcType=VARCHAR}
+				, #{id_frt, jdbcType=VARCHAR}
+				, #{no_cert, jdbcType=VARCHAR}
+				, #{agree1_map, jdbcType=VARCHAR}
+				, #{agree2_map, jdbcType=VARCHAR}
+				, #{agree3_map, jdbcType=VARCHAR}
+				, #{agree4_map, jdbcType=VARCHAR}
+				, #{auth_type, jdbcType=VARCHAR}
+			)
+	</insert>
+
+	<select id="getNpacHistBySeq" parameterType="java.lang.String" resultType="com.koscom.credit.model.NpacVO">
+		SELECT	  seq
+				, no_apply
+				, XX1.DEC_VARCHAR2_SEL(ssn_person, '10', 'FS_ARIA', 'npac_hist', 'ssn_person')
+				, (SELECT nm_person FROM person_info WHERE no_person = nh.no_person) as nm_person
+				, no_person
+				, bgn
+				, hp
+				, nice_safekey
+				, cd_npac_response
+				, unique_key
+				, agree1_map
+				, agree2_map
+				, agree3_map
+				, agree4_map
+				, ci
+				, auth_type
+				, auth_hp
+				, no_cert
+				, id_frt
+				, dt_frt
+				, id_lst
+				, dt_lst
+		FROM npac_hist nh
+		WHERE seq = #{seq}
+	</select>
+
+	<select id="getCreditInfoByNmIf" parameterType="com.koscom.domain.CreditInfo" resultType="com.koscom.domain.CreditInfo">
+		SELECT	SEQ
+				,NO_PERSON
+				,CD_AGREE_CAUSE
+				,CD_CB_CAUSE
+				,CD_CB_COMP
+				,CD_CB_RESPONSE
+				,MSG_REQUEST
+				,MSG_RESPONSE
+				,NM_CUST
+				,NM_IF
+				,NM_IF_SUB
+				,NO_INQ_KEY
+				,SEQ_GROUP
+				,ID_FRT
+				,DT_FRT
+		FROM CREDIT_INFO
+		WHERE NO_PERSON = #{noPerson}
+			AND  NM_IF = #{nmIf}
+	</select>
+
+	<select id="findBySeqOrderBySeqDesc" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+		select seq, no_person as noPerson, msg_Request as msgRequest, msg_Response as msgResponse from CREDIT_INFO where seq = #{seq}
+	</select>
+
+	<insert id="saveCredit" parameterType="com.koscom.domain.CreditInfo">
+		INSERT INTO CREDIT_INFO
+			(seq, no_Person, nm_Cust, cd_Cb_Comp, nm_If, nm_If_Sub
+			, cd_Cb_Cause, cd_Agree_Cause, cd_Cb_Response, msg_Request, msg_Response
+			, no_Inq_Key, id_Frt, dt_Frt) VALUES (
+				  SEQ_CREDIT_INFO.NEXTVAL
+				, #{noPerson, 		jdbcType=VARCHAR}
+				, #{nmCust, 		jdbcType=VARCHAR}
+				, #{cdCbComp,		jdbcType=VARCHAR}
+				, #{nmIf,			jdbcType=VARCHAR}
+				, #{nmIfSub,		jdbcType=VARCHAR}
+				, #{cdCbCause,		jdbcType=VARCHAR}
+				, #{cdAgreeCause,	jdbcType=VARCHAR}
+				, #{cdCbResponse,	jdbcType=VARCHAR}
+				, #{msgRequest,		jdbcType=VARCHAR}
+				, #{msgResponse,	jdbcType=VARCHAR}
+				, #{noInqKey,		jdbcType=VARCHAR}
+				, #{idFrt,			jdbcType=VARCHAR}
+				, SYSDATE
+			)
+	</insert>
+
+	<resultMap id="result_lob_map" type="java.util.HashMap">
+		<result property="seq" column="seq" javaType="java.lang.String" />
+		<result property="dt_frt" column="dt_frt" javaType="java.lang.String" />
+		<result property="msg_response" column="msg_response" jdbcType="CLOB" javaType="java.lang.String" />
+ 	</resultMap>
+
+	<select id="getKcbInfoCLOB" resultMap="result_lob_map" parameterType="map">
+		/* com.koscom.credit.dao.CreditMapper.getKcbInfoCLOB */
+	    SELECT SEQ, DT_FRT, MSG_RESPONSE FROM (
+			SELECT SEQ, DT_FRT, MSG_RESPONSE, CD_CB_RESPONSE, NM_IF
+			  FROM CREDIT_INFO
+			 WHERE NO_PERSON = #{sch_no_person, jdbcType=VARCHAR}
+			   AND MSG_RESPONSE IS NOT NULL
+			   AND (CD_CB_RESPONSE = '0000' OR CD_CB_RESPONSE = '0012')
+			   AND NM_IF = #{nm_if, jdbcType=VARCHAR}
+			  <if test="nm_if_sub == '210' or nm_if_sub == '230'">
+			      AND NM_IF_SUB = #{nm_if_sub, jdbcType=VARCHAR}
+			      AND TO_CHAR(dt_frt,'YYYYMMDD') <![CDATA[ > ]]> TO_CHAR(SYSDATE-#{sch_time, jdbcType=VARCHAR},'YYYYMMDD')
+			  </if>
+			ORDER BY SEQ DESC
+		) RESULT
+		WHERE ROWNUM = 1
+	</select>
+
+	<select id="getKcbJoinInfo" resultMap="result_lob_map" parameterType="map">
+		/* com.koscom.credit.dao.CreditMapper.getKcbInfoCLOB */
+	    SELECT SEQ, DT_FRT, MSG_RESPONSE FROM (
+			SELECT SEQ, DT_FRT, MSG_RESPONSE, CD_CB_RESPONSE, NM_IF
+			  FROM CREDIT_INFO
+			 WHERE NO_PERSON = #{sch_no_person, jdbcType=VARCHAR}
+			   AND MSG_RESPONSE IS NOT NULL
+			   AND (CD_CB_RESPONSE = '0000' OR CD_CB_RESPONSE = '0012')
+			   AND NM_IF = #{nm_if, jdbcType=VARCHAR}
+		       AND NM_IF_SUB IS NULL
+			ORDER BY SEQ DESC
+		) RESULT
+		WHERE ROWNUM = 1
+	</select>
+	
+	<select id="getCreditInfoNextSeq" resultType="java.lang.String">
+		SELECT SEQ_CREDIT_INFO.NEXTVAL AS SEQ_ FROM DUAL
+	</select>
+
+	<insert id="insetKcb030Info" parameterType="com.koscom.kcb.model.seg.Kcb_Segment030">
+
+		<selectKey keyProperty="seq_segment" resultType="integer" order="BEFORE">
+			(SELECT NVL(MAX(seq_segment),0)+1 FROM KCB_030_INFO where SEQ_CREDIT_INFO = #{seq_credit_info} )
+		</selectKey>
+
+
+		INSERT INTO KCB_030_INFO
+			(SEQ_CREDIT_INFO,
+			SEQ_SEGMENT,
+			NO_PERSON,
+			NO_MANAGE_INFO,
+			NM_BIZ_TYPE,
+			CD_TYPE_DEAL,
+			CD_USE_FUND,
+			YN_CREDIT,
+			YN_LOAN,
+			YN_GUARANTOR,
+			AMT_CONTRACT,
+			YMD_LOAN,
+			YMD_CANCEL,
+			CD_CANCEL,
+			CD_GROUP_LOANS_PROXY,
+			YN_DELAY_TURN_LOAN,
+			YN_RECOVERY,
+			AMT_REMAIN,
+			AMT_MONTH_BEFORE1,
+			AMT_MONTH_BEFORE2,
+			AMT_MONTH_BEFORE3,
+			AMT_MONTH_BEFORE4,
+			AMT_MONTH_BEFORE5,
+			AMT_MONTH_BEFORE6,
+			AMT_MONTH_BEFORE7,
+			AMT_MONTH_BEFORE8,
+			AMT_MONTH_BEFORE9,
+			AMT_MONTH_BEFORE10,
+			AMT_MONTH_BEFORE11,
+			AMT_MONTH_BEFORE12,
+			CD_ACCOUNT_BEFORE1,
+			CD_ACCOUNT_BEFORE2,
+			CD_ACCOUNT_BEFORE3,
+			CD_ACCOUNT_BEFORE4,
+			CD_ACCOUNT_BEFORE5,
+			CD_ACCOUNT_BEFORE6,
+			CD_ACCOUNT_BEFORE7,
+			CD_ACCOUNT_BEFORE8,
+			CD_ACCOUNT_BEFORE9,
+			CD_ACCOUNT_BEFORE10,
+			CD_ACCOUNT_BEFORE11,
+			CD_ACCOUNT_BEFORE12,
+			FILLER)
+		VALUES (
+			#{seq_credit_info, jdbcType=NUMERIC}
+			,#{seq_segment, jdbcType=NUMERIC}
+			,#{no_person , jdbcType=VARCHAR}
+			,#{no_manage_info , jdbcType=VARCHAR}
+			,#{nm_biz_type , jdbcType=VARCHAR}
+			,#{cd_type_deal , jdbcType=VARCHAR}
+			,#{cd_use_fund , jdbcType=VARCHAR}
+			,#{yn_credit , jdbcType=VARCHAR}
+			,#{yn_loan , jdbcType=VARCHAR}
+			,#{yn_guarantor , jdbcType=VARCHAR}
+			,#{amt_contract , jdbcType=VARCHAR}
+			,#{ymd_loan , jdbcType=VARCHAR}
+			,#{ymd_cancel , jdbcType=VARCHAR}
+			,#{cd_cancel , jdbcType=VARCHAR}
+			,#{cd_group_loans_proxy , jdbcType=VARCHAR}
+			,#{yn_delay_turn_loan , jdbcType=VARCHAR}
+			,#{yn_recovery , jdbcType=VARCHAR}
+			,#{amt_remain , jdbcType=VARCHAR}
+			,#{amt_month_before1 , jdbcType=VARCHAR}
+			,#{amt_month_before2 , jdbcType=VARCHAR}
+			,#{amt_month_before3 , jdbcType=VARCHAR}
+			,#{amt_month_before4 , jdbcType=VARCHAR}
+			,#{amt_month_before5 , jdbcType=VARCHAR}
+			,#{amt_month_before6 , jdbcType=VARCHAR}
+			,#{amt_month_before7 , jdbcType=VARCHAR}
+			,#{amt_month_before8 , jdbcType=VARCHAR}
+			,#{amt_month_before9 , jdbcType=VARCHAR}
+			,#{amt_month_before10 , jdbcType=VARCHAR}
+			,#{amt_month_before11 , jdbcType=VARCHAR}
+			,#{amt_month_before12 , jdbcType=VARCHAR}
+			,#{cd_account_before1 , jdbcType=VARCHAR}
+			,#{cd_account_before2 , jdbcType=VARCHAR}
+			,#{cd_account_before3 , jdbcType=VARCHAR}
+			,#{cd_account_before4 , jdbcType=VARCHAR}
+			,#{cd_account_before5 , jdbcType=VARCHAR}
+			,#{cd_account_before6 , jdbcType=VARCHAR}
+			,#{cd_account_before7 , jdbcType=VARCHAR}
+			,#{cd_account_before8 , jdbcType=VARCHAR}
+			,#{cd_account_before9 , jdbcType=VARCHAR}
+			,#{cd_account_before10 , jdbcType=VARCHAR}
+			,#{cd_account_before11 , jdbcType=VARCHAR}
+			,#{cd_account_before12 , jdbcType=VARCHAR}
+			,#{filler , jdbcType=VARCHAR}
+			)
+	</insert>
+
+
+	<update id="insertPersonEtmIncomeInfo" parameterType="com.koscom.person.model.PersonEtmIncomeInfo">
+		/* com.koscom.credit.dao.CreditMapper.insertPersonEtmIncomeInfo */
+	    MERGE INTO PERSON_ETM_INCOME_INFO
+		  USING DUAL
+		  ON (		NO_PERSON 		= #{no_person, jdbcType=VARCHAR}
+		  		AND YMD_ETM_BASIC 	= #{ymd_etm_basic, jdbcType=VARCHAR}
+		  		AND CD_ETM_BASIC 	= #{cd_etm_basic,	jdbcType=VARCHAR}
+		  	 )
+			WHEN MATCHED THEN
+		     UPDATE
+			    SET AMT_ETM_INCOME 	= #{amt_etm_income,	jdbcType=VARCHAR}
+				   ,ID_LST 			= #{no_person, 		jdbcType=VARCHAR}
+				   ,DT_LST 			= SYSDATE
+			WHEN NOT MATCHED THEN
+			INSERT
+			(
+				SEQ,
+				NO_PERSON,
+				CD_ETM_BASIC,
+				AMT_ETM_INCOME,
+				YMD_ETM_BASIC,
+				STD_YEAR,
+				ID_FRT,
+				DT_FRT,
+				ID_LST,
+				DT_LST
+			)
+			VALUES(
+				 (SELECT NVL(MAX(SEQ),0)+1
+			        FROM PERSON_ETM_INCOME_INFO
+			       WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			         AND CD_ETM_BASIC = #{cd_etm_basic, jdbcType=VARCHAR}
+			         AND STD_YEAR = #{std_year , jdbcType=VARCHAR} ),
+			     #{no_person, 		jdbcType=VARCHAR},
+			     #{cd_etm_basic,	jdbcType=VARCHAR},
+			     #{amt_etm_income,	jdbcType=VARCHAR},
+			     #{ymd_etm_basic,	jdbcType=VARCHAR},
+			     #{std_year,		jdbcType=VARCHAR},
+			     #{no_person,		jdbcType=VARCHAR},
+			     SYSDATE,
+			     #{no_person,		jdbcType=VARCHAR},
+			     SYSDATE
+			)
+	</update>
+
+	<update id="updatePersonIncome" parameterType="com.koscom.person.model.PersonEtmIncomeInfo">
+		update person_info set amt_etm_income = #{amt_etm_income , jdbcType=VARCHAR}
+		where no_person = #{no_person, jdbcType=VARCHAR}
+	</update>
+
+
+	<update id="saveEmptyRepayList" parameterType="com.koscom.debt.model.DebtPersonalInfoVO">
+
+		insert into DEBT_PERSONAL_REPAY_LIST
+		(
+			no_person,
+			NO_MANAGE_INFO,
+			req_yyyymm,
+			ID_FRT,
+			DT_FRT,
+			ID_LST,
+			DT_LST
+		)
+		select
+				no_person,
+				NO_MANAGE_INFO,
+				seq_yyyymm,
+				#{no_person, jdbcType=VARCHAR},
+				SYSDATE,
+				#{no_person, jdbcType=VARCHAR},
+				SYSDATE
+		from (
+		    select X.no_person, X.NO_MANAGE_INFO,  Y.lev, ymd_loan, ymd_loanend, (to_char(ADD_MONTHS(to_date(X.ymd_loan,'YYYYMMDD'),+lev),'YYYYMM')) as seq_yyyymm, substr(ymd_loanend,0,6) as ymd_loanend_yyyymm   from debt_personal_info X,
+		    (select level as lev, '1' from dual connect by level <![CDATA[<=]]> 480) Y
+		    where no_person = #{no_person, jdbcType=VARCHAR} and no_manage_info = #{no_manage_info}
+		) X
+		where seq_yyyymm <![CDATA[<=]]> ymd_loanend_yyyymm
+		and not exists (select '' from DEBT_PERSONAL_REPAY_LIST Y  where X.no_person = Y.no_person and X.NO_MANAGE_INFO = Y.NO_MANAGE_INFO and  X.seq_yyyymm = Y.req_yyyymm)
+	</update>
+
+	<update id="saveKcbCreditList" parameterType="com.koscom.kcb.model.CrawlingVO">
+	    /* com.koscom.credit.dao.CreditMapper.saveKcbCreditList */
+		MERGE INTO KCB_CREDIT_LIST
+		  USING DUAL
+		  ON (		NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		  		AND REQ_YYYYMM = TO_CHAR(SYSDATE, 'YYYYMM'))
+			WHEN MATCHED THEN
+		     UPDATE
+			    SET CD_SCORE 		= #{cd_score, 		jdbcType=VARCHAR}
+				   ,RATING_CREDIT 	= #{rating_credit,  jdbcType=VARCHAR}
+				   ,GRADE_CREDIT 	= #{grade_credit,   jdbcType=VARCHAR}
+				   ,PERCENTAGE 		= #{percentage,    	jdbcType=VARCHAR}
+				   ,ID_LST 			= #{no_person, 		jdbcType=VARCHAR}
+				   ,DT_LST 			= SYSDATE
+			WHEN NOT MATCHED THEN
+			INSERT
+			(
+				NO_PERSON,
+				REQ_YYYYMM,
+				CD_SCORE,
+				RATING_CREDIT,
+				GRADE_CREDIT,
+				PERCENTAGE,
+				ID_FRT,
+				DT_FRT,
+				ID_LST,
+				DT_LST
+			)
+			VALUES(
+				 #{no_person,    	jdbcType=VARCHAR}
+				,TO_CHAR(SYSDATE, 'YYYYMM')
+				,#{cd_score,        jdbcType=VARCHAR}
+				,#{rating_credit,   jdbcType=VARCHAR}
+				,#{grade_credit,    jdbcType=VARCHAR}
+				,#{percentage,    	jdbcType=VARCHAR}
+				,#{no_person,    	jdbcType=VARCHAR}
+				,SYSDATE
+				,#{no_person,    	jdbcType=VARCHAR}
+				,SYSDATE
+			)
+	</update>
+	
+	<update id="saveKcbCreditHistList" parameterType="com.koscom.kcb.model.CrawlingVO">
+	    /* com.koscom.credit.dao.CreditMapper.saveKcbCreditHistList */
+		MERGE INTO KCB_CREDIT_LIST_HIST
+		  USING DUAL
+		  ON (		NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		  		AND REQ_YYYYMMDD = TO_CHAR(SYSDATE, 'YYYYMMDD'))
+			WHEN MATCHED THEN
+		     UPDATE
+			    SET RATING_CREDIT 	= #{rating_credit,  jdbcType=VARCHAR}
+				   ,GRADE_CREDIT 	= #{grade_credit,   jdbcType=VARCHAR}
+				   ,PERCENTAGE 		= #{percentage,    	jdbcType=VARCHAR}
+				   ,ID_LST 			= #{no_person, 		jdbcType=VARCHAR}
+				   ,DT_LST 			= SYSDATE
+			WHEN NOT MATCHED THEN
+			INSERT
+			(
+				NO_PERSON,
+				REQ_YYYYMMDD,
+				RATING_CREDIT,
+				GRADE_CREDIT,
+				PERCENTAGE,
+				ID_FRT,
+				DT_FRT,
+				ID_LST,
+				DT_LST
+			)
+			VALUES(
+				 #{no_person,    	jdbcType=VARCHAR}
+				,TO_CHAR(SYSDATE, 'YYYYMMDD')
+				,#{rating_credit,   jdbcType=VARCHAR}
+				,#{grade_credit,    jdbcType=VARCHAR}
+				,#{percentage,    	jdbcType=VARCHAR}
+				,#{no_person,    	jdbcType=VARCHAR}
+				,SYSDATE
+				,#{no_person,    	jdbcType=VARCHAR}
+				,SYSDATE
+			)
+	</update>
+
+	<select id="selectKcbCreditInfo" parameterType="java.lang.String" resultType="int">
+	    /* com.koscom.credit.dao.CreditMapper.selectKcbCreditInfo */
+		SELECT COUNT(NO_PERSON) FROM KCB_CREDIT_INFO WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</select>
+
+	<update id="updateKcbCreditInfo" parameterType="com.koscom.kcb.model.CrawlingVO">
+	    /* com.koscom.credit.dao.CreditMapper.updateKcbCreditInfo */
+		     UPDATE KCB_CREDIT_INFO
+			    SET CNT_CREDIT_CHANGE = #{cnt_credit_change, jdbcType=VARCHAR}
+			       ,CNT_NORMAL_INFO   = #{cnt_normal_info,   jdbcType=VARCHAR}
+			       ,CNT_OVERDUE_INFO  = #{cnt_overdue_info,  jdbcType=VARCHAR}
+			       ,CNT_CREDIT_REF_1Y = #{cnt_credit_ref_1y, jdbcType=VARCHAR}
+			       ,CNT_CREDIT_REF_3Y = #{cnt_credit_ref_3y, jdbcType=VARCHAR}
+			       ,CNT_CARD          = #{cnt_card,          jdbcType=VARCHAR}
+			       ,CNT_LOAN          = #{cnt_loan,          jdbcType=VARCHAR}
+			       ,CNT_OVERDUE       = #{cnt_overdue,       jdbcType=VARCHAR}
+			       ,CNT_GUARANTEE     = #{cnt_guarantee,     jdbcType=VARCHAR}
+			       ,CNT_CARD_OPEN     = #{cnt_card_open,     jdbcType=VARCHAR}
+			       ,CNT_CARD_USE      = #{cnt_card_use,      jdbcType=VARCHAR}
+                   ,AMT_CARD_TOTAL    = #{amt_card_total,    jdbcType=VARCHAR}
+			       ,LIST_CARD_OPEN    = #{list_card_open,    jdbcType=VARCHAR}
+			       ,LIST_CARD_USE     = #{list_card_use,     jdbcType=VARCHAR}
+			       ,CNT_DEBT_OPEN     = #{cnt_debt_open,     jdbcType=VARCHAR}
+			       ,AMT_DEBT          = #{amt_debt,          jdbcType=VARCHAR}
+			       ,LIST_DEBT_OPEN    = #{list_debt_open,    jdbcType=VARCHAR}
+			       ,LIST_DEBT_USE     = #{list_debt_use,     jdbcType=VARCHAR}
+			       ,BAL_OVERDUE       = #{bal_overdue,       jdbcType=VARCHAR}
+			       ,BAL_PAY           = #{bal_pay,           jdbcType=VARCHAR}
+			       ,LIST_OVERDUE_INFO = #{list_overdue_info, jdbcType=VARCHAR}
+			       ,CNT_DEFAULT       = #{cnt_default,       jdbcType=VARCHAR}
+			       ,CNT_PUBLIC        = #{cnt_public,        jdbcType=VARCHAR}
+			       ,CNT_FIN_DISORDER  = #{cnt_fin_disorder,  jdbcType=VARCHAR}
+			       ,LIST_OVERDUE_ETC  = #{list_overdue_etc,  jdbcType=VARCHAR}
+			       ,AMT_GUARANTEE     = #{amt_guarantee,     jdbcType=VARCHAR}
+			       ,LIST_GUARANTEE    = #{list_guarantee,    jdbcType=VARCHAR}
+			       ,ID_LST            = #{no_person,         jdbcType=VARCHAR}
+			       ,DT_LST            = SYSDATE
+			WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</update>
+
+	<insert id="insertKcbCreditInfo" parameterType="com.koscom.kcb.model.CrawlingVO">
+	    /* com.koscom.credit.dao.CreditMapper.insertKcbCreditInfo */
+	    INSERT INTO KCB_CREDIT_INFO
+			(
+				NO_PERSON
+				,CNT_CREDIT_CHANGE
+				,CNT_NORMAL_INFO
+				,CNT_OVERDUE_INFO
+				,CNT_CREDIT_REF_1Y
+				,CNT_CREDIT_REF_3Y
+				,CNT_CARD
+				,CNT_LOAN
+				,CNT_OVERDUE
+				,CNT_GUARANTEE
+				,CNT_CARD_OPEN
+				,CNT_CARD_USE
+				,AMT_CARD_TOTAL
+				,LIST_CARD_OPEN
+				,LIST_CARD_USE
+				,CNT_DEBT_OPEN
+				,AMT_DEBT
+				,LIST_DEBT_OPEN
+				,LIST_DEBT_USE
+				,BAL_OVERDUE
+				,BAL_PAY
+				,LIST_OVERDUE_INFO
+				,CNT_DEFAULT
+				,CNT_PUBLIC
+				,CNT_FIN_DISORDER
+				,LIST_OVERDUE_ETC
+				,AMT_GUARANTEE
+				,LIST_GUARANTEE
+				,ID_FRT
+				,DT_FRT
+				,ID_LST
+				,DT_LST
+			)
+			VALUES(
+				 #{no_person, 		  jdbcType=VARCHAR}
+				,#{cnt_credit_change, jdbcType=VARCHAR}
+				,#{cnt_normal_info,   jdbcType=VARCHAR}
+				,#{cnt_overdue_info,  jdbcType=VARCHAR}
+				,#{cnt_credit_ref_1y, jdbcType=VARCHAR}
+				,#{cnt_credit_ref_3y, jdbcType=VARCHAR}
+				,#{cnt_card,          jdbcType=VARCHAR}
+			    ,#{cnt_loan,          jdbcType=VARCHAR}
+                ,#{cnt_overdue,       jdbcType=VARCHAR}
+                ,#{cnt_guarantee,     jdbcType=VARCHAR}
+                ,#{cnt_card_open,     jdbcType=VARCHAR}
+                ,#{cnt_card_use,      jdbcType=VARCHAR}
+                ,#{amt_card_total,    jdbcType=VARCHAR}
+                ,#{list_card_open,    jdbcType=VARCHAR}
+                ,#{list_card_use,     jdbcType=VARCHAR}
+                ,#{cnt_debt_open,     jdbcType=VARCHAR}
+                ,#{amt_debt,          jdbcType=VARCHAR}
+                ,#{list_debt_open,    jdbcType=VARCHAR}
+                ,#{list_debt_use,     jdbcType=VARCHAR}
+                ,#{bal_overdue,       jdbcType=VARCHAR}
+                ,#{bal_pay,           jdbcType=VARCHAR}
+                ,#{list_overdue_info, jdbcType=VARCHAR}
+                ,#{cnt_default,       jdbcType=VARCHAR}
+                ,#{cnt_public,        jdbcType=VARCHAR}
+                ,#{cnt_fin_disorder,  jdbcType=VARCHAR}
+                ,#{list_overdue_etc,  jdbcType=VARCHAR}
+                ,#{amt_guarantee,     jdbcType=VARCHAR}
+                ,#{list_guarantee,    jdbcType=VARCHAR}
+                ,#{no_person,         jdbcType=VARCHAR}
+                ,SYSDATE
+                ,#{no_person,         jdbcType=VARCHAR}
+                ,SYSDATE
+               )
+	</insert>
+
+	<select id="selectMaxCreditChange" parameterType="java.lang.String" resultType="java.lang.String">
+	    /* com.koscom.credit.dao.CreditMapper.selectMaxCreditChange */
+		SELECT TO_CHAR(MAX(DT_INFO), 'YYYYMMDD') FROM CREDIT_CHANGE_LIST WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</select>
+
+	<update id="saveKcbCreditChangeInfo" parameterType="com.koscom.credit.model.CreditDtlVO">
+		/* com.koscom.credit.dao.CreditMapper.saveKcbCreditChangeInfo */
+		INSERT
+			INTO
+				CREDIT_CHANGE_LIST(
+					NO_PERSON,
+					SEQ,
+					CD_CHANGE_INFO,
+					CD_FC,
+					NM_FC,
+					DT_INFO,
+					CHANGE_CONTENTS,
+					COLLECTOR,
+					DT_FRT,
+					ID_FRT
+				)
+			VALUES(
+				#{no_person,    	jdbcType=VARCHAR}
+				,(SELECT NVL(MAX(SEQ), 0) + 1 FROM CREDIT_CHANGE_LIST WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR})
+				,#{cd_change_info,  jdbcType=VARCHAR}
+				,#{cd_fc,   		jdbcType=VARCHAR}
+				,#{nm_fc,   		jdbcType=VARCHAR}
+				,#{dt_info,   		jdbcType=VARCHAR}
+				,#{change_contents, jdbcType=VARCHAR}
+				,#{collector,    	jdbcType=VARCHAR}
+				,SYSDATE
+				,#{no_person,    	jdbcType=VARCHAR}
+			)
+	</update>
+
+	<select id="selectMaxCreditInquiry" parameterType="java.lang.String" resultType="java.lang.String">
+	    /* com.koscom.credit.dao.CreditMapper.selectMaxCreditInquiry */
+		SELECT TO_CHAR(MAX(DT_INFO), 'YYYYMMDD') FROM CREDIT_INQUIRY_LIST WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</select>
+
+	<update id="saveKcbCreditInquiryInfo" parameterType="com.koscom.credit.model.CreditDtlVO">
+		/* com.koscom.credit.dao.CreditMapper.saveKcbCreditInquiryInfo */
+		INSERT
+			INTO
+				CREDIT_INQUIRY_LIST(
+					NO_PERSON,
+					SEQ,
+					CD_FC,
+					NM_FC,
+					DT_INFO,
+					CHANGE_CONTENTS,
+					DT_FRT,
+					ID_FRT
+				)
+			VALUES(
+				#{no_person,    	jdbcType=VARCHAR}
+				,(SELECT NVL(MAX(SEQ), 0) + 1 FROM CREDIT_INQUIRY_LIST WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR})
+				,(SELECT CD_FC FROM FC_NM_INFO WHERE NM_FC = REGEXP_REPLACE(#{nm_fc, jdbcType=VARCHAR}, '( ){1,}', '') AND YN_USE = 'Y' AND ROWNUM = 1)
+				,#{nm_fc,   		jdbcType=VARCHAR}
+				,#{dt_info,   		jdbcType=VARCHAR}
+				,#{change_contents, jdbcType=VARCHAR}
+				,SYSDATE
+				,#{no_person,    	jdbcType=VARCHAR}
+			)
+	</update>
+<!-- 20180628 김휘경 - 회원의 전체 카드 내역 중 해지 일자를 업데이트 -->
+	<update id="updateKcbCardInfoToday" parameterType="com.koscom.kcb.model.KcbCardInfo">
+		UPDATE KCB_CARD_INFO 
+			SET YMD_CANCEL = #{ymd_cancel, jdbcType=VARCHAR}
+		WHERE
+			NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</update>
+
+
+	<update id="saveKcbCardInfo" parameterType="com.koscom.kcb.model.KcbCardInfo">
+	    /* com.koscom.credit.dao.CreditMapper.saveKcbCardInfo */
+	    /* 수정 - 20180626 김휘경 - 300 전문을 사용하지 못한다는 가정 하에 600420전문 기준으로 변경 */
+		MERGE INTO KCB_CARD_INFO
+		  USING DUAL
+		  ON (		NO_PERSON 	= #{no_person,	jdbcType=VARCHAR}
+		  		AND CD_FC 		= #{cd_fc,		jdbcType=VARCHAR}
+		  		AND TYPE_CARD	= #{type_card,	jdbcType=VARCHAR}
+		  		AND YMD_OPEN	= #{ymd_open,	jdbcType=VARCHAR})
+			WHEN MATCHED THEN
+		     UPDATE
+			    SET AMT_LIMIT			= #{amt_limit,			jdbcType=VARCHAR}
+			       ,AMT_CA_LIMIT		= #{amt_ca_limit,		jdbcType=VARCHAR}
+			       ,YMD_CANCEL			= #{ymd_cancel,			jdbcType=VARCHAR}
+			       ,CD_CANCEL			= #{cd_cancel,			jdbcType=VARCHAR}
+			       ,YN_STOP				= #{yn_stop,			jdbcType=VARCHAR}
+			       ,CD_STATUS_MEMBER	= #{cd_status_member,	jdbcType=VARCHAR}
+			       ,YN_FAMILY_CARD		= #{yn_family_card,		jdbcType=VARCHAR}
+			       ,YN_RECOVERY			= #{yn_recovery,		jdbcType=VARCHAR}
+			       ,ID_LST				= #{no_person,			jdbcType=VARCHAR}
+			       ,DT_LST				= SYSDATE
+			WHEN NOT MATCHED THEN
+			INSERT
+			(
+				 NO_PERSON
+				,CD_FC
+				,TYPE_CARD
+				,YMD_OPEN
+				,AMT_LIMIT
+				,AMT_CA_LIMIT
+				,YMD_CANCEL
+				,CD_CANCEL
+				,YN_STOP
+				,CD_STATUS_MEMBER
+				,YN_FAMILY_CARD
+				,YN_RECOVERY
+				,ID_FRT
+				,DT_FRT
+				,ID_LST
+				,DT_LST
+			)
+			VALUES(
+				 #{no_person,			jdbcType=VARCHAR}
+				,#{cd_fc,				jdbcType=VARCHAR}
+				,#{type_card,			jdbcType=VARCHAR}
+				,#{ymd_open,			jdbcType=VARCHAR}
+				,#{amt_limit,			jdbcType=VARCHAR}
+				,#{amt_ca_limit,		jdbcType=VARCHAR}
+				,#{ymd_cancel,			jdbcType=VARCHAR}
+				,#{cd_cancel,			jdbcType=VARCHAR}
+				,#{yn_stop,				jdbcType=VARCHAR}
+				,#{cd_status_member,	jdbcType=VARCHAR}
+				,#{yn_family_card,		jdbcType=VARCHAR}
+				,#{yn_recovery,			jdbcType=VARCHAR}
+				,#{no_person,			jdbcType=VARCHAR}
+				,SYSDATE
+				,#{no_person,			jdbcType=VARCHAR}
+				,SYSDATE
+			)
+	</update>
+
+	<update id="saveKcbCardDtlList" parameterType="com.koscom.kcb.model.KcbCardDtlList">
+	    /* com.koscom.credit.dao.CreditMapper.saveKcbCardDtlList */
+   	    /* 수정 - 20180626~27 김휘경 - 300 전문을 사용하지 못한다는 가정 하에 600420전문 기준으로 변경 */
+		MERGE INTO KCB_CARD_DTL_LIST
+		  USING DUAL
+		  ON (		NO_PERSON 		= #{no_person, 	jdbcType=VARCHAR}
+		  		AND CD_FC		 	= #{cd_fc, 		jdbcType=VARCHAR}
+		  		AND TYPE_CARD		= #{type_card,	jdbcType=VARCHAR})
+			WHEN MATCHED THEN
+		     UPDATE
+			    SET REQ_YYYYMM			 = #{req_yyyymm,			jdbcType=VARCHAR}
+			       ,AMT_TOTAL          	 = #{amt_total,           	jdbcType=VARCHAR}
+			       ,AMT_LUMP_SUM         = #{amt_lump_sum,          jdbcType=VARCHAR}
+			       ,AMT_INSTALLMENT      = #{amt_installment,       jdbcType=VARCHAR}
+			       ,AMT_SHORT_CARD_LOAN  = #{amt_short_card_loan,   jdbcType=VARCHAR}
+			       ,AMT_DELAY            = #{amt_delay,             jdbcType=VARCHAR}
+			       ,CD_TRADE             = #{cd_trade,              jdbcType=VARCHAR}
+			       ,ID_LST               = #{no_person, 		 	jdbcType=VARCHAR}
+			       ,DT_LST      		 = SYSDATE
+			WHEN NOT MATCHED THEN
+			INSERT
+			(
+				 NO_PERSON
+				,CD_FC
+				,TYPE_CARD
+				,REQ_YYYYMM
+				,AMT_TOTAL
+				,AMT_LUMP_SUM
+				,AMT_INSTALLMENT
+				,AMT_SHORT_CARD_LOAN
+				,AMT_CHECK
+				,AMT_DELAY
+				,CD_TRADE
+				,ID_FRT
+				,DT_FRT
+				,ID_LST
+				,DT_LST
+			)
+			VALUES(
+				 #{no_person,           jdbcType=VARCHAR}
+				,#{cd_fc,  			    jdbcType=VARCHAR}
+				,#{type_card,			jdbcType=VARCHAR}
+				,#{req_yyyymm,          jdbcType=VARCHAR}
+				,#{amt_total,           jdbcType=VARCHAR}
+				,#{amt_lump_sum,        jdbcType=VARCHAR}
+				,#{amt_installment,     jdbcType=VARCHAR}
+				,#{amt_short_card_loan, jdbcType=VARCHAR}
+				,#{amt_check,           jdbcType=VARCHAR}
+				,#{amt_delay,           jdbcType=VARCHAR}
+				,#{cd_trade,            jdbcType=VARCHAR}
+				,#{no_person,    		jdbcType=VARCHAR}
+				,SYSDATE
+				,#{no_person,    		jdbcType=VARCHAR}
+				,SYSDATE
+			)
+	</update>
+
+	<update id="saveKcbCardListInfo" parameterType="com.koscom.kcb.model.KcbCardListInfo">
+	    /* com.koscom.credit.dao.CreditMapper.saveKcbCardListInfo */
+		MERGE INTO KCB_CARD_LIST_INFO
+		  USING DUAL
+		  ON (		NO_PERSON 		= #{no_person, jdbcType=VARCHAR}
+		  		AND REQ_YYYYMM		= #{req_yyyymm, jdbcType=VARCHAR})
+			WHEN MATCHED THEN
+		     UPDATE
+			    SET CNT_CARD			 = #{cnt_card,			 	jdbcType=VARCHAR}
+			       ,AMT_LIMIT_SUM		 = #{amt_limit_sum,		   	jdbcType=VARCHAR}
+			       ,AMT_CA_SUM			 = #{amt_ca_sum,			jdbcType=VARCHAR}
+			       ,CNT_USE_CARD		 = #{cnt_use_card,		   	jdbcType=VARCHAR}
+			       ,AMT_ALL_SUM			 = #{amt_all_sum,			jdbcType=VARCHAR}
+			       ,CNT_CA_USE_CARD		 = #{cnt_ca_use_card,		jdbcType=VARCHAR}
+			       ,AMT_CA_USE_CARD		 = #{amt_ca_use_card,		jdbcType=VARCHAR}
+			       ,CNT_INSTALL_USE_CARD = #{cnt_install_use_card,	jdbcType=VARCHAR}
+			       ,AMT_INSTALL_USE		 = #{amt_install_use,		jdbcType=VARCHAR}
+			       ,CNT_OVERDUE			 = #{cnt_overdue,			jdbcType=VARCHAR}
+			       ,AMT_OVERDUE			 = #{amt_overdue,			jdbcType=VARCHAR}
+			       ,DAYS_DUE			 = #{days_due,				jdbcType=VARCHAR}
+			       ,ID_LST				 = #{no_person, 			jdbcType=VARCHAR}
+			       ,DT_LST      		 = SYSDATE
+			WHEN NOT MATCHED THEN
+			INSERT
+			(
+				 NO_PERSON
+				,REQ_YYYYMM
+				,CNT_CARD
+				,AMT_LIMIT_SUM
+				,AMT_CA_SUM
+				,CNT_USE_CARD
+				,AMT_ALL_SUM
+				,CNT_CA_USE_CARD
+				,AMT_CA_USE_CARD
+				,CNT_INSTALL_USE_CARD
+				,AMT_INSTALL_USE
+				,CNT_OVERDUE
+				,AMT_OVERDUE
+				,DAYS_DUE
+				,ID_FRT
+				,DT_FRT
+				,ID_LST
+				,DT_LST
+			)
+			VALUES(
+				 #{no_person,           jdbcType=VARCHAR}
+				,#{req_yyyymm,          jdbcType=VARCHAR}
+				,#{cnt_card,			jdbcType=VARCHAR}
+				,#{amt_limit_sum,		jdbcType=VARCHAR}
+				,#{amt_ca_sum,			jdbcType=VARCHAR}
+				,#{cnt_use_card,		jdbcType=VARCHAR}
+				,#{amt_all_sum,			jdbcType=VARCHAR}
+				,#{cnt_ca_use_card,		jdbcType=VARCHAR}
+				,#{amt_ca_use_card,		jdbcType=VARCHAR}
+				,#{cnt_install_use_card,jdbcType=VARCHAR}
+				,#{amt_install_use,		jdbcType=VARCHAR}
+				,#{cnt_overdue,			jdbcType=VARCHAR}
+				,#{amt_overdue,			jdbcType=VARCHAR}
+				,#{days_due,			jdbcType=VARCHAR}
+				,#{no_person,    		jdbcType=VARCHAR}
+				,SYSDATE
+				,#{no_person,    		jdbcType=VARCHAR}
+				,SYSDATE
+			)
+	</update>
+
+	<update id="updateDtDeleteOverdueInfo" parameterType="java.lang.String">
+		/* com.koscom.credit.dao.CreditMapper.updateDtDeleteOverdueInfo */
+		UPDATE
+			KCB_OVERDUE_INFO
+		SET
+			DT_DELETE = TO_CHAR( SYSDATE, 'yyyyMMdd' )
+		WHERE
+			NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</update>
+
+	<update id="saveKcbOverdueInfo" parameterType="com.koscom.kcb.model.KcbOverdueInfo">
+	    /* com.koscom.credit.dao.CreditMapper.saveKcbOverdueInfo */
+		MERGE INTO KCB_OVERDUE_INFO
+		  USING DUAL
+		  ON (		NO_PERSON 		= #{no_person,			jdbcType=VARCHAR}
+		  		AND CD_FC			= #{cd_fc,				jdbcType=VARCHAR}
+		  		AND YMD_FRT_DELAY	= #{ymd_frt_delay,		jdbcType=VARCHAR}
+		  		AND AMT_FRT_DELAY	= #{amt_frt_delay,		jdbcType=VARCHAR})
+			WHEN MATCHED THEN
+		     UPDATE
+			    SET AMT_REMAIN 		= #{amt_remain,			jdbcType=VARCHAR}
+			       ,AMT_REPAY		= #{amt_repay,			jdbcType=VARCHAR}
+			       ,DT_DELETE		= (null)
+			       ,ID_FRT			= #{no_person, 			jdbcType=VARCHAR}
+			       ,DT_FRT      	= SYSDATE
+			WHEN NOT MATCHED THEN
+			INSERT
+			(
+				 NO_PERSON
+				,CD_FC
+				,YMD_FRT_DELAY
+				,AMT_FRT_DELAY
+				,AMT_REMAIN
+				,AMT_REPAY
+				,DT_DELETE
+				,ID_FRT
+				,DT_FRT
+			)
+			VALUES(
+				 #{no_person,           jdbcType=VARCHAR}
+				,#{cd_fc,				jdbcType=VARCHAR}
+				,#{ymd_frt_delay,		jdbcType=VARCHAR}
+				,#{amt_frt_delay,		jdbcType=VARCHAR}
+				,#{amt_remain,			jdbcType=VARCHAR}
+				,#{amt_repay,			jdbcType=VARCHAR}
+				,(null)
+				,#{no_person,    		jdbcType=VARCHAR}
+				,SYSDATE
+			)
+	</update>
+
+	<update id="updateDtDeleteOverdueSteadpayInfo" parameterType="java.lang.String">
+		/* com.koscom.credit.dao.CreditMapper.updateDtDeleteOverdueInfo */
+		UPDATE
+			KCB_OVERDUE_STEADPAY_INFO
+		SET
+			DT_DELETE = TO_CHAR( SYSDATE, 'yyyyMMdd' )
+		WHERE
+			NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</update>
+
+	<update id="saveKcbOverdueSteadpayInfo" parameterType="com.koscom.kcb.model.KcbOverdueSteadpayInfo">
+	    /* com.koscom.credit.dao.CreditMapper.saveKcbOverdueSteadpayInfo */
+		MERGE INTO KCB_OVERDUE_STEADPAY_INFO
+		  USING DUAL
+		  ON (		NO_PERSON 			= #{no_person,			jdbcType=VARCHAR}
+		  		AND CD_FC				= #{cd_fc,				jdbcType=VARCHAR}
+		  		AND YMD_FRT_STEAD_PAY	= #{ymd_frt_stead_pay,	jdbcType=VARCHAR}
+		  		AND AMT_STEAD_PAY		= #{amt_stead_pay,		jdbcType=VARCHAR})
+			WHEN MATCHED THEN
+		     UPDATE
+			    SET YMD_STEAD_REPAY		= #{ymd_stead_repay,	jdbcType=VARCHAR}
+			       ,AMT_REPAY			= #{amt_repay,			jdbcType=VARCHAR}
+			       ,DT_DELETE			= (null)
+			       ,ID_FRT				= #{no_person, 			jdbcType=VARCHAR}
+			       ,DT_FRT				= SYSDATE
+			WHEN NOT MATCHED THEN
+			INSERT
+			(
+				 NO_PERSON
+				,CD_FC
+				,YMD_FRT_STEAD_PAY
+				,AMT_STEAD_PAY
+				,YMD_STEAD_REPAY
+				,AMT_REPAY
+				,DT_DELETE
+				,ID_FRT
+				,DT_FRT
+			)
+			VALUES(
+				 #{no_person,           jdbcType=VARCHAR}
+				,#{cd_fc,				jdbcType=VARCHAR}
+				,#{ymd_frt_stead_pay,	jdbcType=VARCHAR}
+				,#{amt_stead_pay,		jdbcType=VARCHAR}
+				,#{ymd_stead_repay,		jdbcType=VARCHAR}
+				,#{amt_repay,			jdbcType=VARCHAR}
+				,(null)
+				,#{no_person,    		jdbcType=VARCHAR}
+				,SYSDATE
+			)
+	</update>
+
+	<update id="updateDtDeleteOverdueDefaultInfo" parameterType="java.lang.String">
+		/* com.koscom.credit.dao.CreditMapper.updateDtDeleteOverdueInfo */
+		UPDATE
+			KCB_OVERDUE_DEFAULT_INFO
+		SET
+			DT_DELETE = TO_CHAR( SYSDATE, 'yyyyMMdd' )
+		WHERE
+			NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</update>
+
+	<update id="saveKcbOverdueDefaultInfo" parameterType="com.koscom.kcb.model.KcbOverdueDefaultInfo">
+	    /* com.koscom.credit.dao.CreditMapper.saveKcbOverdueDefaultInfo */
+		MERGE INTO KCB_OVERDUE_DEFAULT_INFO
+		  USING DUAL
+		  ON (		NO_PERSON 		= #{no_person,		jdbcType=VARCHAR}
+		  		AND CD_FC			= #{cd_fc,			jdbcType=VARCHAR}
+		  		AND YMD_DEFAULT		= #{ymd_default,	jdbcType=VARCHAR}
+		  		AND AMT_REGIST		= #{amt_regist,		jdbcType=VARCHAR})
+			WHEN MATCHED THEN
+		     UPDATE
+			    SET CD_DEFAULT      = #{cd_default,	 jdbcType=VARCHAR}
+			       ,AMT_DELAY       = #{amt_delay,	 jdbcType=VARCHAR}
+			       ,YMD_REPAY       = #{ymd_repay,	 jdbcType=VARCHAR}
+			       ,AMT_REPAY       = #{amt_repay,	 jdbcType=VARCHAR}
+			       ,DT_DELETE		= (null)
+			       ,ID_FRT			= #{no_person, 	 jdbcType=VARCHAR}
+			       ,DT_FRT      	= SYSDATE
+			WHEN NOT MATCHED THEN
+			INSERT
+			(
+				 NO_PERSON
+				,CD_FC
+				,CD_DEFAULT
+				,YMD_DEFAULT
+				,AMT_REGIST
+				,AMT_DELAY
+				,YMD_REPAY
+				,AMT_REPAY
+				,DT_DELETE
+				,ID_FRT
+				,DT_FRT
+			)
+			VALUES(
+				 #{no_person,           jdbcType=VARCHAR}
+				,#{cd_fc,			   	jdbcType=VARCHAR}
+				,#{cd_default,			jdbcType=VARCHAR}
+				,#{ymd_default,			jdbcType=VARCHAR}
+				,#{amt_regist,			jdbcType=VARCHAR}
+				,#{amt_delay,			jdbcType=VARCHAR}
+				,#{ymd_repay,			jdbcType=VARCHAR}
+				,#{amt_repay,			jdbcType=VARCHAR}
+				,(null)
+				,#{no_person,			jdbcType=VARCHAR}
+				,SYSDATE
+			)
+	</update>
+
+	<update id="updateDtDeleteOverduePublicInfo" parameterType="java.lang.String">
+		/* com.koscom.credit.dao.CreditMapper.updateDtDeleteOverdueInfo */
+		UPDATE
+			KCB_OVERDUE_PUBLIC_INFO
+		SET
+			DT_DELETE = TO_CHAR( SYSDATE, 'yyyyMMdd' )
+		WHERE
+			NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</update>
+
+	<update id="saveKcbOverduePublicInfo" parameterType="com.koscom.kcb.model.KcbOverduePublicInfo">
+	    /* com.koscom.credit.dao.CreditMapper.saveKcbOverduePublicInfo */
+		MERGE INTO KCB_OVERDUE_PUBLIC_INFO
+		  USING DUAL
+		  ON (		NO_PERSON 		= #{no_person,		jdbcType=VARCHAR}
+		  		AND CD_FC			= #{cd_fc,			jdbcType=VARCHAR}
+		  		AND YMD_DEFAULT		= #{ymd_default,	jdbcType=VARCHAR}
+		  		AND AMT_REGIST		= #{amt_regist,		jdbcType=VARCHAR})
+			WHEN MATCHED THEN
+		     UPDATE
+			    SET NM_AGENCY       = #{nm_agency,	 jdbcType=VARCHAR}
+			       ,CD_DEFAULT      = #{cd_default,	 jdbcType=VARCHAR}
+			       ,NO_CASE       	= #{no_case,	 jdbcType=VARCHAR}
+			       ,DT_DELETE		= (null)
+			       ,ID_FRT			= #{no_person, 	 jdbcType=VARCHAR}
+			       ,DT_FRT      	= SYSDATE
+			WHEN NOT MATCHED THEN
+			INSERT
+			(
+				 NO_PERSON
+				,CD_FC
+				,NM_AGENCY
+				,CD_DEFAULT
+				,YMD_DEFAULT
+				,AMT_REGIST
+				,NO_CASE
+				,DT_DELETE
+				,ID_FRT
+				,DT_FRT
+			)
+			VALUES(
+				 #{no_person,           jdbcType=VARCHAR}
+				,#{cd_fc,			   	jdbcType=VARCHAR}
+				,#{nm_agency,			jdbcType=VARCHAR}
+				,#{cd_default,			jdbcType=VARCHAR}
+				,#{ymd_default,			jdbcType=VARCHAR}
+				,#{amt_regist,			jdbcType=VARCHAR}
+				,#{no_case,				jdbcType=VARCHAR}
+				,(null)
+				,#{no_person,			jdbcType=VARCHAR}
+				,SYSDATE
+			)
+	</update>
+
+	<update id="updateDtDeleteGuaranteeInfo" parameterType="java.lang.String">
+		/* com.koscom.credit.dao.CreditMapper.updateDtDeleteOverdueInfo */
+		UPDATE
+			KCB_GUARANTEE_INFO
+		SET
+			DT_DELETE = TO_CHAR( SYSDATE, 'yyyyMMdd' )
+		WHERE
+			NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</update>
+
+	<update id="saveKcbGuaranteeInfo" parameterType="com.koscom.kcb.model.KcbGuaranteeInfo">
+	    /* com.koscom.credit.dao.CreditMapper.saveKcbGuaranteeInfo */
+		MERGE INTO KCB_GUARANTEE_INFO
+		  USING DUAL
+		  ON (		NO_PERSON 		= #{no_person,			jdbcType=VARCHAR}
+		  		AND CD_FC			= #{cd_fc,				jdbcType=VARCHAR}
+		  		AND CD_GUARANTEE	= #{cd_guarantee,		jdbcType=VARCHAR} 
+		  		AND DT_GUAR_AGREE	= #{dt_guar_agree,		jdbcType=VARCHAR})
+			WHEN MATCHED THEN
+		     UPDATE
+			    SET AMT_GUAR_LIMIT  = #{amt_guar_limit,		jdbcType=VARCHAR}
+			       ,AMT_GUAR_OBJECT	= #{amt_guar_object,	jdbcType=VARCHAR}
+			       ,DT_DELETE		= (null)
+			       ,ID_FRT			= #{no_person, 	 jdbcType=VARCHAR}
+			       ,DT_FRT      	= SYSDATE
+			WHEN NOT MATCHED THEN
+			INSERT
+			(
+				 NO_PERSON
+				,CD_FC
+				,CD_GUARANTEE
+				,DT_GUAR_AGREE
+				,AMT_GUAR_LIMIT
+				,AMT_GUAR_OBJECT
+				,DT_DELETE
+				,ID_FRT
+				,DT_FRT
+			)
+			VALUES(
+				 #{no_person,           jdbcType=VARCHAR}
+				,#{cd_fc,			   	jdbcType=VARCHAR}
+				,#{cd_guarantee,		jdbcType=VARCHAR}
+				,#{dt_guar_agree,		jdbcType=VARCHAR}
+				,#{amt_guar_limit,		jdbcType=VARCHAR}
+				,#{amt_guar_object,		jdbcType=VARCHAR}
+				,(null)
+				,#{no_person,			jdbcType=VARCHAR}
+				,SYSDATE
+			)
+	</update>
+
+	<select id="selectResDt" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT TO_CHAR(MAX(DT_FRT), 'YYYYMMDD')
+		  FROM CREDIT_INFO
+		 WHERE NO_PERSON = #{noPerson}
+		   AND NM_IF = '300'
+	</select>
+
+	<select id="getCreditMainBaseInfo" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+	    /* com.koscom.credit.dao.CreditMapper.getCreditMainBaseInfo */
+	    SELECT
+			TB.REQ_YYYYMM,
+			TB.RATING_CREDIT,
+			TB.GRADE_CREDIT,
+			TB.PERCENTAGE,
+			(
+				TB.RATING_CREDIT - TB.RATING_LAST_CREDIT
+			) AS RATING_DIFF
+		FROM
+			(
+				SELECT
+					A.NO_PERSON,
+					A.REQ_YYYYMM,
+					A.RATING_CREDIT,
+					A.GRADE_CREDIT,
+					A.PERCENTAGE,
+					(
+						SELECT
+							B.RATING_CREDIT
+						FROM
+							KCB_CREDIT_LIST B
+						WHERE
+							A.NO_PERSON = B.NO_PERSON
+							AND B.REQ_YYYYMM = TO_CHAR(ADD_MONTHS(SYSDATE,-1), 'YYYYMM')
+					) AS RATING_LAST_CREDIT
+				FROM
+					KCB_CREDIT_LIST A
+				WHERE
+					A.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					AND A.REQ_YYYYMM =  TO_CHAR(SYSDATE,'YYYYMM')
+			) TB
+	</select>
+
+	<select id="getCreditMainCntInfo" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+	    /* com.koscom.credit.dao.CreditMapper.getCreditMainCntInfo */
+	    SELECT
+			A.CNT_CREDIT_REF_1Y,
+			A.CNT_CREDIT_CHANGE,
+			A.CNT_NORMAL_INFO,
+			A.CNT_OVERDUE_INFO,
+			(SELECT COUNT(DEBT.NO_MANAGE_INFO)
+			   FROM DEBT_PERSONAL_INFO DEBT
+			  WHERE DEBT.NO_PERSON = A.NO_PERSON
+			    AND DEBT.YMD_CANCEL IS NULL
+			    AND DEBT.DISPLAY_YN = 'Y' /*부채 삭제 처리 추가 20180619 김휘경*/) AS CNT_LOAN,
+			A.CNT_CARD,
+			A.CNT_OVERDUE,
+			A.CNT_GUARANTEE
+		FROM
+			KCB_CREDIT_INFO A
+		WHERE
+			A.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</select>
+
+	<select id="getCreditDetailGradeChartList" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+	<![CDATA[
+	    SELECT
+			A.YYYYMM AS REQ_YYYYMM,
+			DECODE(SUBSTR(A.YYYYMM,5,5),'01',SUBSTR(A.YYYYMM,1,4) || '년 ','')
+			|| DECODE(SUBSTR(A.YYYYMM,5,5),'01','1','02','2','03','3','04','4','05','5'
+						,'06','6','07','7','08','8','09','9',SUBSTR(A.YYYYMM,5,5)) || '월' AS CHART_TITLE,
+			SUBSTR(A.YYYYMM,1,4) || '-' || SUBSTR(A.YYYYMM,5,5) AS CHART_LIST_PARAM,
+			NVL( B.RATING_CREDIT, '0' ) AS RATING_CREDIT,
+			NVL( B.GRADE_CREDIT, '0' ) AS GRADE_CREDIT
+		FROM
+			(
+				WITH BASE_TABLE AS(
+					SELECT
+						TO_CHAR( SYSDATE, 'YYYYMM' ) AS SYS_YYYYMM,
+						TO_CHAR( ADD_MONTHS( SYSDATE,- 14 ), 'YYYYMM' ) AS START_YYYYMM,
+						TO_CHAR( ADD_MONTHS( SYSDATE, 2 ), 'YYYYMM' ) AS LAST_YYYYMM
+					FROM
+						DUAL
+				) SELECT
+					LEVEL,
+					TO_CHAR( ADD_MONTHS( TO_DATE( A.START_YYYYMM, 'YYYYMM' ), LEVEL - 1 ), 'YYYYMM' ) AS YYYYMM
+				FROM
+					BASE_TABLE A
+				CONNECT BY
+					TO_CHAR( ADD_MONTHS( TO_DATE( A.START_YYYYMM, 'YYYYMM' ), LEVEL - 1 ), 'YYYYMM' ) <= A.LAST_YYYYMM
+			) A
+		LEFT JOIN (
+				SELECT
+					REQ_YYYYMM,
+					RATING_CREDIT,
+					GRADE_CREDIT
+				FROM
+					KCB_CREDIT_LIST
+				WHERE
+					NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			) B
+		ON A.YYYYMM = B.REQ_YYYYMM
+		ORDER BY
+			A.YYYYMM
+	]]>
+	</select>
+
+	<select id="getCreditDetailGradeInquiryList" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+		SELECT
+			TO_CHAR(DT_INFO,'YYYY-MM-DD') AS DT_INFO,
+			CD_FC,
+			NM_FC,
+			CHANGE_CONTENTS,
+			SUM(
+				CASE WHEN TO_CHAR(DT_INFO,'YYYY-MM') >= TO_CHAR(ADD_MONTHS(SYSDATE,-1), 'YYYY-MM')
+				THEN 1 ELSE 0 END
+				)
+			OVER(PARTITION BY NO_PERSON) AS MM_CNT,
+			COUNT(*) OVER(PARTITION BY NO_PERSON) AS YEAR_CNT
+		FROM
+			CREDIT_INQUIRY_LIST
+		WHERE
+        	TO_CHAR(dt_info,'YYYY-MM') >= TO_CHAR(ADD_MONTHS(SYSDATE,-12), 'YYYY-MM')
+			AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		ORDER BY
+			DT_INFO DESC
+	</select>
+
+	<select id="getCreditDetailGradeChangeList" parameterType="com.koscom.domain.CreditInfo" resultType="com.koscom.domain.CreditInfo">
+		SELECT
+			TO_CHAR(DT_INFO,'YYYY-MM-DD') AS DT_INFO,
+			CD_FC,
+			NM_FC,
+			CHANGE_CONTENTS,
+			COLLECTOR,
+			SUM(
+				CASE WHEN TO_CHAR(DT_INFO,'YYYY-MM') >= TO_CHAR(ADD_MONTHS(SYSDATE,-1), 'YYYY-MM')
+				THEN 1 ELSE 0 END
+				)
+			OVER(PARTITION BY NO_PERSON, CD_CHANGE_INFO) AS MM_CNT,
+			COUNT(*) OVER(PARTITION BY NO_PERSON, CD_CHANGE_INFO) AS YEAR_CNT
+		FROM
+			CREDIT_CHANGE_LIST
+		WHERE
+			TO_CHAR(DT_INFO,'YYYY-MM') >= TO_CHAR(ADD_MONTHS(SYSDATE,-12), 'YYYY-MM')
+			AND NO_PERSON = #{noPerson, jdbcType=VARCHAR}
+			AND CD_CHANGE_INFO = #{cdChangeInfo, jdbcType=VARCHAR} <!-- 01대출/카드 02연체 -->
+		ORDER BY
+			DT_INFO DESC
+	</select>
+
+	<resultMap id="result_creditInfo_map" type="java.util.HashMap">
+		<result property="cnt_card_open" column="CNT_CARD_OPEN" javaType="java.lang.String" />
+		<result property="list_card_open" column="LIST_CARD_OPEN" jdbcType="CLOB" javaType="java.lang.String" />
+		<result property="list_card_use" column="LIST_CARD_USE" jdbcType="CLOB" javaType="java.lang.String" />
+
+		<result property="list_overdue_info" column="LIST_OVERDUE_INFO" jdbcType="CLOB" javaType="java.lang.String" />
+
+		<result property="cnt_default" column="CNT_DEFAULT" javaType="java.lang.String" />
+		<result property="cnt_public" column="CNT_PUBLIC" javaType="java.lang.String" />
+		<result property="cnt_fin_disorder" column="CNT_FIN_DISORDER" javaType="java.lang.String" />
+		<result property="list_overdue_etc" column="LIST_OVERDUE_ETC" jdbcType="CLOB" javaType="java.lang.String" />
+
+		<result property="amt_guarantee" column="AMT_GUARANTEE" javaType="java.lang.Integer" />
+		<result property="list_guarantee" column="LIST_GUARANTEE" jdbcType="CLOB" javaType="java.lang.String" />
+ 	</resultMap>
+
+	<select id="getCreditDetailJsonInfo" parameterType="java.lang.String" resultMap="result_creditInfo_map">
+		SELECT CNT_CARD_OPEN, LIST_CARD_OPEN, LIST_CARD_USE <!-- 카드현황 -->
+				, LIST_OVERDUE_INFO <!-- 연체현황_연체,대지급 -->
+				, CNT_DEFAULT, CNT_PUBLIC, CNT_FIN_DISORDER, LIST_OVERDUE_ETC <!-- 연체현황_기타 -->
+				, AMT_GUARANTEE, LIST_GUARANTEE <!-- 연대보증현황 -->
+		FROM KCB_CREDIT_INFO
+		WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+	</select>
+
+	<select id="getCreditDetailDEBTCreditSum" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+		SELECT
+			COUNT( NO_MANAGE_INFO ) AS DEBT_CNT,
+			SUM( AMT_REMAIN ) AS SUM_AMT_REMAIN,
+			SUM( AMT_CONTRACT ) AS SUM_AMT_CONTRACT
+		FROM
+			DEBT_PERSONAL_INFO
+		WHERE
+			YN_CREDIT = 'Y'
+			AND YMD_CANCEL IS NULL
+			AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND DISPLAY_YN = 'Y' /*부채 삭제 처리 추가 20180619 김휘경*/
+	</select>
+
+	<select id="getCreditDetailDEBTCreditList" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+		SELECT
+			CD_FC,
+			(SELECT nm_fc FROM fc_info WHERE CD_FC = A.CD_FC) AS NM_FC,
+			TO_CHAR(TO_DATE(A.YMD_LOAN), 'YYYY.MM.DD') AS YMD_LOAN,
+			A.AMT_REMAIN,
+			A.AMT_CONTRACT
+		FROM
+			DEBT_PERSONAL_INFO A
+		WHERE
+			A.YN_CREDIT = 'Y'
+			AND A.YMD_CANCEL IS NULL
+			AND A.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND A.DISPLAY_YN = 'Y' /*부채 삭제 처리 추가 20180619 김휘경*/
+		ORDER BY
+			TO_NUMBER(A.AMT_CONTRACT) DESC, A.YMD_LOAN DESC
+	</select>
+
+	<select id="getCreditDetailDEBTLoanSum" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+		SELECT
+			COUNT( NO_MANAGE_INFO ) AS DEBT_CNT,
+			SUM( AMT_REMAIN ) AS SUM_AMT_REMAIN,
+			SUM( AMT_CONTRACT ) AS SUM_AMT_CONTRACT
+		FROM
+			DEBT_PERSONAL_INFO
+		WHERE
+			YN_LOAN = 'Y'
+			AND YMD_CANCEL IS NULL
+			AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND DISPLAY_YN = 'Y' /*부채 삭제 처리 추가 20180619 김휘경*/
+	</select>
+
+	<select id="getCreditDetailDEBTLoanList" parameterType="java.lang.String" resultType="com.koscom.domain.CreditInfo">
+		SELECT
+			CD_FC,
+			(SELECT nm_fc FROM fc_info WHERE CD_FC = A.CD_FC) AS NM_FC,
+			TO_CHAR(TO_DATE(A.YMD_LOAN), 'YYYY.MM.DD') AS YMD_LOAN,
+			A.AMT_REMAIN,
+			A.AMT_CONTRACT
+		FROM
+			DEBT_PERSONAL_INFO A
+		WHERE
+			A.YN_LOAN = 'Y'
+			AND A.YMD_CANCEL IS NULL
+			AND A.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			AND A.DISPLAY_YN = 'Y' /*부채 삭제 처리 추가 20180619 김휘경*/
+		ORDER BY
+			TO_NUMBER(A.AMT_CONTRACT) DESC, A.YMD_LOAN DESC
+	</select>
+
+	<update id="deleteKcbCb" parameterType="java.lang.String">
+	    /* com.koscom.credit.dao.CreditMapper */
+	    DELETE FROM CREDIT_INFO
+		 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+		   AND TO_CHAR(dt_frt,'YYYYMMDD') = TO_CHAR(SYSDATE,'YYYYMMDD')
+		   AND NM_IF = '600420' AND (NM_IF_SUB = '210' OR NM_IF_SUB = '230')
+	</update>
+	
+	<update id="insertCrawlingLog" parameterType="java.util.HashMap">
+		INSERT INTO CREDIT_CRAWLING_LOG
+		(
+			 NO_PERSON 
+			,PROC_YMD 
+			,CRAWLING_STEP 
+			,LOG_CONTENT 
+			,LOG_HTML
+			,ID_FRT
+			,DT_FRT
+		)VALUES(
+			 #{no_person, jdbcType=VARCHAR} 
+			,TO_CHAR(SYSDATE,'YYYYMMDD')
+			,#{step, jdbcType=VARCHAR}
+			,#{log, jdbcType=VARCHAR}
+			,#{log_html, jdbcType=VARCHAR}
+			,'SYS'
+			,SYSDATE
+		)
+	</update>
+	
+<!-- 	고객 주소 정보 저장 -->
+	<update id="saveKcbAddrInfo" parameterType="com.koscom.kcb.model.KcbAddrInfo">
+	    /* com.koscom.credit.dao.CreditMapper.saveKcbAddrInfo */
+		MERGE INTO KCB_ADDR_INFO
+		  USING DUAL
+		  ON (		NO_PERSON 		= #{no_person,			jdbcType=VARCHAR}
+		  		AND CD_ADDR			= #{cd_addr,			jdbcType=VARCHAR}
+		  		AND DT_REGIST		= #{dt_regist,			jdbcType=VARCHAR})
+			WHEN MATCHED THEN
+		     UPDATE
+			    SET POST_HOME		= #{post_home,			jdbcType=VARCHAR}
+			       ,ADDR1_HOME		= #{addr1_home,			jdbcType=VARCHAR}
+			       ,ADDR2_HOME		= #{addr2_home,			jdbcType=VARCHAR}
+			       ,TEL_HOME		= #{tel_home,			jdbcType=VARCHAR}
+			       ,TYPE_ADDR		= #{type_addr,			jdbcType=VARCHAR}
+			       ,ID_FRT			= #{no_person, 			jdbcType=VARCHAR}
+			       ,DT_FRT      	= SYSDATE
+			WHEN NOT MATCHED THEN
+			INSERT
+			(
+				 NO_PERSON
+				,CD_ADDR
+				,DT_REGIST
+				,POST_HOME
+				,ADDR1_HOME
+				,ADDR2_HOME
+				,TEL_HOME
+				,TYPE_ADDR
+				,ID_FRT
+				,DT_FRT
+			)
+			VALUES(
+				 #{no_person,           jdbcType=VARCHAR}
+				,#{cd_addr,				jdbcType=VARCHAR}
+				,#{dt_regist,			jdbcType=VARCHAR}
+				,#{post_home,			jdbcType=VARCHAR}
+				,#{addr1_home,			jdbcType=VARCHAR}
+				,#{addr2_home,			jdbcType=VARCHAR}
+				,#{tel_home,			jdbcType=VARCHAR}
+				,#{type_addr,			jdbcType=VARCHAR}
+				,#{no_person,    		jdbcType=VARCHAR}
+				,SYSDATE
+			)
+	</update>
+
+<!-- 	고객 직장 정보 저장 -->
+	<update id="saveKcbJobInfo" parameterType="com.koscom.kcb.model.KcbJobInfo">
+	    /* com.koscom.credit.dao.CreditMapper.saveKcbJobInfo */
+		MERGE INTO KCB_JOB_INFO
+		  USING DUAL
+		  ON (		NO_PERSON 		= #{no_person,			jdbcType=VARCHAR}
+		  		AND NM_COMP			= #{nm_comp,			jdbcType=VARCHAR}
+		  		AND NM_DEPT			= #{nm_dept,			jdbcType=VARCHAR})
+			WHEN MATCHED THEN
+		     UPDATE
+			    SET YM_START_COMP	= #{ym_start_comp,		jdbcType=VARCHAR}
+			       ,TEL_DEPT		= #{tel_dept,			jdbcType=VARCHAR}
+			       ,ID_FRT			= #{no_person, 			jdbcType=VARCHAR}
+			       ,DT_FRT      	= SYSDATE
+			WHEN NOT MATCHED THEN
+			INSERT
+			(
+				 NO_PERSON
+				,NM_COMP
+				,YM_START_COMP
+				,NM_DEPT
+				,TEL_DEPT
+				,ID_FRT
+				,DT_FRT
+			)
+			VALUES(
+				 #{no_person,           jdbcType=VARCHAR}
+				,#{nm_comp,				jdbcType=VARCHAR}
+				,#{ym_start_comp,		jdbcType=VARCHAR}
+				,#{nm_dept,				jdbcType=VARCHAR}
+				,#{tel_dept,			jdbcType=VARCHAR}
+				,#{no_person,    		jdbcType=VARCHAR}
+				,SYSDATE
+			)
+	</update>
+	
+
+<!-- 	고객 직장 정보 저장 -->
+	<update id="saveKcbContactInfo" parameterType="com.koscom.kcb.model.KcbContactInfo">
+	    /* com.koscom.credit.dao.CreditMapper.saveKcbContactInfo */
+		MERGE INTO KCB_CONTACT_INFO
+		  USING DUAL
+		  ON (		NO_PERSON 		= #{no_person,			jdbcType=VARCHAR}
+		  		AND CD_INFO			= #{cd_info,			jdbcType=VARCHAR}
+		  		AND DT_REGIST		= #{dt_regist,			jdbcType=VARCHAR})
+			WHEN MATCHED THEN
+		     UPDATE
+			    SET HP				= #{hp,					jdbcType=VARCHAR}
+			       ,EMAIL			= #{email,				jdbcType=VARCHAR}
+			       ,ID_FRT			= #{no_person, 			jdbcType=VARCHAR}
+			       ,DT_FRT      	= SYSDATE
+			WHEN NOT MATCHED THEN
+			INSERT
+			(
+				 NO_PERSON
+				,CD_INFO
+				,DT_REGIST
+				,HP
+				,EMAIL
+				,ID_FRT
+				,DT_FRT
+			)
+			VALUES(
+				 #{no_person,           jdbcType=VARCHAR}
+				,#{cd_info,				jdbcType=VARCHAR}
+				,#{dt_regist,			jdbcType=VARCHAR}
+				,#{hp,					jdbcType=VARCHAR}
+				,#{email,				jdbcType=VARCHAR}
+				,#{no_person,    		jdbcType=VARCHAR}
+				,SYSDATE
+			)
+	</update>
+</mapper>

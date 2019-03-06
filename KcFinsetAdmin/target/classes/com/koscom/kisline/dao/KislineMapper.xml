@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.kisline.dao.KislineMapper">
+	<delete id="delKisSrchByNameInfo">
+		DELETE FROM KIS_SRCH_BY_NAME_INFO
+	</delete>
+	<delete id="delKisCompanyOutlineInfo" parameterType="String">
+		DELETE FROM KIS_COMP_OUTLINE_INFO
+		where building_type = #{building_type}
+	</delete>
+	<insert id="createKisSrchByNameInfo" parameterType="com.koscom.kisline.model.KisSrchByNameVO">
+		INSERT INTO KIS_SRCH_BY_NAME_INFO(
+		no_bunch,no_person,kiscode,business,crpno,stockcode,korentrnm,korreprnm,sanup
+		,sanupcode,aa22_inmul_nm_cd,epr_cnu_yn,eprdatastsdivcd,eprmdydivcd,scaledivcd,etl_ipc_yn,ltgmktdivcd,amnisuyn,obz_date
+		,empnum,fadivcd,koraddr,nolt_koraddr,tel,nolt_engaddr,engaddr,engentrnm,engreprnm) VALUES (
+		 #{no_bunch, jdbcType=VARCHAR},#{no_person , jdbcType=VARCHAR},#{kiscode , jdbcType=VARCHAR},#{business , jdbcType=VARCHAR},#{crpno , jdbcType=VARCHAR}
+		,#{stockcd , jdbcType=VARCHAR},#{stockcode , jdbcType=VARCHAR},#{korentrnm , jdbcType=VARCHAR},#{korreprnm , jdbcType=VARCHAR},#{sanup , jdbcType=VARCHAR}
+		,#{sanupcode , jdbcType=VARCHAR},#{aa22_inmul_nm_cd , jdbcType=VARCHAR},#{epr_cnu_yn , jdbcType=VARCHAR},#{eprdatastsdivcd , jdbcType=VARCHAR},#{eprmdydivcd , jdbcType=VARCHAR}
+		,#{scaledivcd , jdbcType=VARCHAR},#{etl_ipc_yn , jdbcType=VARCHAR},#{ltgmktdivcd , jdbcType=VARCHAR},#{amnisuyn , jdbcType=VARCHAR},#{obz_date , jdbcType=VARCHAR}
+		 ,#{empnum , jdbcType=VARCHAR},#{fadivcd , jdbcType=VARCHAR},#{koraddr , jdbcType=VARCHAR},#{nolt_koraddr , jdbcType=VARCHAR},#{tel , jdbcType=VARCHAR}
+		,#{nolt_engaddr , jdbcType=VARCHAR},#{engaddr , jdbcType=VARCHAR},#{engentrnm , jdbcType=VARCHAR},#{engreprnm , jdbcType=VARCHAR}
+		)
+	</insert>
+	<insert id="createKisCompanyOutline" parameterType="com.koscom.kisline.model.KisCompanyOutlineVO">
+		INSERT INTO KIS_COMP_OUTLINE_INFO(
+		no_bunch,no_person,amnisuyn,bizno,bnk_brnm,bnknm,btpnm,bzdnm,bzdnm2,bzdnm3,chulja
+		,crpno,crprgrnstscd,dtlcont,eml,empnum,empnum_bse_date,eng_bnknm,eng_btpnm,eng_grpnm,eng_idscdnm,eng_itemnm
+		,eng_mainpdtpcl,eng_scl,engaddr,engaddr2,engaddr3,engentrnm,engreprnm,epr_cnu_yn,eprdatastsdivcd,eprdtldivcd,eprmdydivcd
+		,etbDate,etl_ipc_yn,faBseDate,fadivcd,fax,fax2,fax3,gicd,grpnm,homepurl,hupegbn
+		,idscd,idscdid,kiscode,kisreporturl,korIdscdnm,kor_itemnm,koraddr,koraddr2,koraddr3,korentrnm,korreprcd
+		,korreprnm,logo,ltg_date,ltgmktdivcd,mainpdtpcl,mainupche,nolt_engaddr,nolt_engaddr2,nolt_engaddr3,nolt_koraddr,nolt_koraddr2
+		,nolt_koraddr3,nts_sbqcdivcd,obz_date,opt_entrnm,rbtpnm,rbtpnm2,rbtpnm3,repr_regno,sbn_date,sbqc_date,scl
+		,sforeign,sido,slandc,smanda,stacmm,stkcd,sventure,tel,tel2,tel3,upt_date
+		,upt_dtm,x,x2,x3,y,y2,y3,zarcd,zarcd2,zarcd3,zcd
+		,zcd2,zcd3,zipareacdseq,zipareacdseq2,zipareacdseq3
+		) VALUES (
+		#{no_bunch, jdbcType=VARCHAR},#{no_person, jdbcType=VARCHAR},#{amnisuyn, jdbcType=VARCHAR},#{bizno, jdbcType=VARCHAR},#{bnk_brnm, jdbcType=VARCHAR}
+		,#{bnknm, jdbcType=VARCHAR},#{btpnm, jdbcType=VARCHAR},#{bzdnm, jdbcType=VARCHAR},#{bzdnm2, jdbcType=VARCHAR},#{bzdnm3, jdbcType=VARCHAR}
+		,#{chulja, jdbcType=VARCHAR},#{crpno, jdbcType=VARCHAR},#{crprgrnstscd, jdbcType=VARCHAR},#{dtlcont, jdbcType=VARCHAR},#{eml, jdbcType=VARCHAR}
+		,#{empnum, jdbcType=VARCHAR},#{empnum_bse_date, jdbcType=VARCHAR},#{eng_bnknm, jdbcType=VARCHAR},#{eng_btpnm, jdbcType=VARCHAR},#{eng_grpnm, jdbcType=VARCHAR}
+		,#{eng_idscdnm, jdbcType=VARCHAR},#{eng_itemnm, jdbcType=VARCHAR},#{eng_mainpdtpcl, jdbcType=VARCHAR},#{eng_scl, jdbcType=VARCHAR},#{engaddr, jdbcType=VARCHAR}
+		,#{engaddr2, jdbcType=VARCHAR},#{engaddr3, jdbcType=VARCHAR},#{engentrnm, jdbcType=VARCHAR},#{engreprnm, jdbcType=VARCHAR},#{epr_cnu_yn, jdbcType=VARCHAR}
+		,#{eprdatastsdivcd, jdbcType=VARCHAR},#{eprdtldivcd, jdbcType=VARCHAR},#{eprmdydivcd, jdbcType=VARCHAR},#{etbDate, jdbcType=VARCHAR},#{etl_ipc_yn, jdbcType=VARCHAR}
+		,#{faBseDate, jdbcType=VARCHAR},#{fadivcd, jdbcType=VARCHAR},#{fax, jdbcType=VARCHAR},#{fax2, jdbcType=VARCHAR},#{fax3, jdbcType=VARCHAR}
+		,#{gicd, jdbcType=VARCHAR},#{grpnm, jdbcType=VARCHAR},#{homepurl, jdbcType=VARCHAR},#{hupegbn, jdbcType=VARCHAR},#{idscd, jdbcType=VARCHAR}
+		,#{idscdid, jdbcType=VARCHAR},#{kiscode, jdbcType=VARCHAR},#{kisreporturl, jdbcType=VARCHAR},#{korIdscdnm, jdbcType=VARCHAR},#{kor_itemnm, jdbcType=VARCHAR}
+		,#{koraddr, jdbcType=VARCHAR},#{koraddr2, jdbcType=VARCHAR},#{koraddr3, jdbcType=VARCHAR},#{korentrnm, jdbcType=VARCHAR},#{korreprcd, jdbcType=VARCHAR}
+		,#{korreprnm, jdbcType=VARCHAR},#{logo, jdbcType=VARCHAR},#{ltg_date, jdbcType=VARCHAR},#{ltgmktdivcd, jdbcType=VARCHAR},#{mainpdtpcl, jdbcType=VARCHAR}
+		,#{mainupche, jdbcType=VARCHAR},#{nolt_engaddr, jdbcType=VARCHAR},#{nolt_engaddr2, jdbcType=VARCHAR},#{nolt_engaddr3, jdbcType=VARCHAR},#{nolt_koraddr, jdbcType=VARCHAR}
+		,#{nolt_koraddr2, jdbcType=VARCHAR},#{nolt_koraddr3, jdbcType=VARCHAR},#{nts_sbqcdivcd, jdbcType=VARCHAR},#{obz_date, jdbcType=VARCHAR},#{opt_entrnm, jdbcType=VARCHAR}
+		,#{rbtpnm, jdbcType=VARCHAR},#{rbtpnm2, jdbcType=VARCHAR},#{rbtpnm3, jdbcType=VARCHAR},#{repr_regno, jdbcType=VARCHAR},#{sbn_date, jdbcType=VARCHAR},#{sbqc_date, jdbcType=VARCHAR}
+		,#{scl, jdbcType=VARCHAR},#{sforeign, jdbcType=VARCHAR},#{sido, jdbcType=VARCHAR},#{slandc, jdbcType=VARCHAR},#{smanda, jdbcType=VARCHAR},#{stacmm, jdbcType=VARCHAR}
+		,#{stkcd, jdbcType=VARCHAR},#{sventure, jdbcType=VARCHAR},#{tel, jdbcType=VARCHAR},#{tel2, jdbcType=VARCHAR},#{tel3, jdbcType=VARCHAR}
+		,#{upt_date, jdbcType=VARCHAR},#{upt_dtm, jdbcType=VARCHAR},#{x, jdbcType=VARCHAR},#{x2, jdbcType=VARCHAR},#{x3, jdbcType=VARCHAR}
+		,#{y, jdbcType=VARCHAR},#{y2, jdbcType=VARCHAR},#{y3, jdbcType=VARCHAR},#{zarcd, jdbcType=VARCHAR},#{zarcd2, jdbcType=VARCHAR},#{zarcd3, jdbcType=VARCHAR}
+		,#{zcd, jdbcType=VARCHAR},#{zcd2, jdbcType=VARCHAR},#{zcd3, jdbcType=VARCHAR},#{zipareacdseq, jdbcType=VARCHAR},#{zipareacdseq2, jdbcType=VARCHAR},#{zipareacdseq3, jdbcType=VARCHAR}
+		)
+	</insert>
+	<select id="listKisSrchByNameInfo" resultType="com.koscom.kisline.model.KisSrchByNameVO">
+		SELECT * FROM ADDR_SIGUNGU_INFO
+	</select>
+	<select id="listSrchApartmentInfoJson" parameterType="com.koscom.kisline.model.KislineForm" resultType="com.koscom.kisline.model.KisCompanyOutlineVO">       
+		SELECT ( APARTMENT_NAME ) as auto_com_txt , APARTMENT, APARTMENT_NAME
+		FROM ADDR_DONG_INFO
+		WHERE (APARTMENT_NAME LIKE '%' || #{APARTMENT} || '%' )
+		AND REGION1_CODE = #{REGION1_CODE}
+		AND REGION2_CODE = #{REGION2_CODE}
+		AND REGION3_CODE = #{REGION3_CODE}
+		ORDER BY APARTMENT_NAME ASC
+	</select>
+	<select id="listAddrRegion1" parameterType="com.koscom.kisline.model.KislineForm" resultType="com.koscom.env.model.CodeInfo">
+		SELECT DISTINCT REGION1_CODE  as code_value ,REGION1_NAME as nm_code 
+		FROM ADDR_DONG_INFO  
+		WHERE BUILDING_TYPE = #{BUILDING_TYPE}	
+	</select>
+	<select id="listAddrRegion2" parameterType="com.koscom.kisline.model.KislineForm" resultType="com.koscom.env.model.CodeInfo">
+		SELECT DISTINCT REGION2_CODE  as code_value ,REGION2_NAME as nm_code 
+		FROM ADDR_DONG_INFO  
+		WHERE REGION1_CODE = #{REGION1_CODE}	
+	</select>
+	<select id="listAddrRegion3" parameterType="com.koscom.kisline.model.KislineForm" resultType="com.koscom.env.model.CodeInfo">
+		SELECT DISTINCT REGION3_CODE  as code_value ,REGION3_NAME as nm_code 
+		FROM ADDR_DONG_INFO  
+		WHERE REGION2_CODE = #{REGION2_CODE}	
+	</select>
+	
+	<delete id="deleteKisCompanyOutline" parameterType="java.lang.String">
+		DELETE from KIS_COMP_OUTLINE_INFO
+		WHERE no_bunch = #{no_bunch, jdbcType=VARCHAR}
+	</delete>
+	<select id="getKisCompanyOutline" parameterType="java.lang.String" resultType="com.koscom.kisline.model.KisCompanyOutlineVO">       
+	     SELECT * FROM KIS_COMP_OUTLINE_INFO
+	     WHERE no_bunch = #{no_bunch, jdbcType=VARCHAR}
+	</select>
+</mapper>

@@ -1,0 +1,551 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.board.dao.BoardMapper">
+	<resultMap id="boardImgMap" type="hashMap">
+	    <result column="img_files" property="img_files" jdbcType="BLOB" javaType="[B"></result>
+	    <result column="nm_img_files" property="nm_img_files" jdbcType="VARCHAR" javaType="String"></result>
+	</resultMap>
+
+	<select id="listBoardManage" parameterType="com.koscom.board.model.BoardForm" resultType="com.koscom.domain.BoardManage">
+		SELECT * FROM board_manage
+		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(id_agency)">
+			WHERE id_open_agency = #{id_agency}
+			   OR id_open_agency IS NULL
+		</if>
+		ORDER BY dt_frt ASC
+	</select>
+
+	<update id="procBoardManage" parameterType="com.koscom.domain.BoardManage">
+		MERGE INTO board_manage
+		   USING DUAL
+		   ON (id_board = #{id_board} )
+		   WHEN MATCHED THEN
+		      UPDATE
+		         SET  nm_board = #{nm_board, jdbcType=VARCHAR}
+					, etc_board = #{etc_board, jdbcType=VARCHAR}
+					, cd50_board_type = #{cd50_board_type, jdbcType=VARCHAR}
+					, yn_use = #{yn_use, jdbcType=VARCHAR}
+					, id_open_agency = #{id_open_agency, jdbcType=VARCHAR}
+					, id_lst = #{id_lst, jdbcType=VARCHAR}
+					, dt_lst = SYSDATE
+			WHEN NOT MATCHED THEN
+			  INSERT ( 	  id_board
+						, nm_board
+						, etc_board
+						, cd50_board_type
+						, yn_use
+						, id_open_agency
+						, id_frt
+						, dt_frt)
+				VALUES(	  #{id_board, jdbcType=VARCHAR}
+					    , #{nm_board, jdbcType=VARCHAR}
+					    , #{etc_board, jdbcType=VARCHAR}
+					    , #{cd50_board_type, jdbcType=VARCHAR}
+					    , #{yn_use, jdbcType=VARCHAR}
+					    , #{id_open_agency, jdbcType=VARCHAR}
+					    , #{id_frt, jdbcType=VARCHAR}
+					    , SYSDATE)
+	</update>
+
+	<select id="getBoardManage"  parameterType="com.koscom.domain.BoardManage" resultType="com.koscom.domain.BoardManage">
+		SELECT
+	         *
+	     FROM board_manage
+	     WHERE id_board = #{id_board}
+	</select>
+
+	<sql id="listBoardInfo_WHERE">
+		<where>
+			<!-- 상세검색 -->
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_detail)">
+				<choose>
+					<when test="'yn_popup'.equals(sel_detail)">
+						BO.yn_popup = 'Y'
+					</when>
+					<otherwise>
+						<if test='"title"   .equals(sel_detail)'>AND title    LIKE '%'||#{txt_detail}||'%'</if>
+						<if test='"content" .equals(sel_detail)'>AND content  LIKE '%'||#{txt_detail}||'%'</if>
+						<if test='"seq"     .equals(sel_detail)'>AND seq      LIKE '%'||#{txt_detail}||'%'</if>
+						<if test='"yn_popup".equals(sel_detail)'>AND yn_popup LIKE '%'||#{txt_detail}||'%'</if>
+					</otherwise>
+				</choose>
+			</if>
+
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_dt_kind)">
+				<choose>
+					<when test="@com.koscom.util.MybatisUtil@contains('dt_',sel_dt_kind)">
+						<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
+							<if test='"dt_frt".equals(sel_dt_kind)'>AND TO_CHAR(dt_frt,'yyyyMMdd') <![CDATA[>=]]> #{txt_dt_from}</if>
+							<if test='"dt_lst".equals(sel_dt_kind)'>AND TO_CHAR(dt_lst,'yyyyMMdd') <![CDATA[>=]]> #{txt_dt_from}</if>
+						</if>
+						<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_to)">
+							<if test='"dt_frt".equals(sel_dt_kind)'>AND TO_CHAR(dt_frt,'yyyyMMdd') <![CDATA[<=]]> #{txt_dt_to}</if>
+							<if test='"dt_lst".equals(sel_dt_kind)'>AND TO_CHAR(dt_lst,'yyyyMMdd') <![CDATA[<=]]> #{txt_dt_to}</if>
+						</if>
+					</when>
+					<otherwise>
+						<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
+							<if test='"dt_frt".equals(sel_dt_kind)'>AND dt_frt <![CDATA[>=]]> #{txt_dt_from}</if>
+							<if test='"dt_lst".equals(sel_dt_kind)'>AND dt_lst <![CDATA[>=]]> #{txt_dt_from}</if>
+						</if>
+						<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_to)">
+							<if test='"dt_frt".equals(sel_dt_kind)'>AND dt_frt <![CDATA[<=]]> #{txt_dt_to}</if>
+							<if test='"dt_lst".equals(sel_dt_kind)'>AND dt_lst <![CDATA[<=]]> #{txt_dt_to}</if>
+						</if>
+					</otherwise>
+				</choose>
+			</if>
+
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(id_board)">
+				AND BO.id_board = #{id_board}
+			</if>
+				AND BO.yn_use = 'Y'
+		</where>
+	</sql>
+
+	<select id="listBoardInfo"  parameterType="com.koscom.board.model.BoardForm" resultType="com.koscom.board.model.BoardInfoVO">
+		SELECT
+	        *
+	    FROM
+	        (SELECT
+	              LST.seq
+	          	  , LST.seq_group
+	          	  , LST.seq_level
+		          , LST.seq_order
+		          , LST.id_board
+		          , LST.title
+		          , LST.hit
+		          , LST.pass_board
+		          , LST.content
+		          , LST.url_files1
+		          , LST.url_files2
+		          , LST.yn_use
+		          , LST.yn_popup
+		          , LST.id_frt
+		          , LST.dt_frt
+		          , LST.id_lst
+		          , LST.dt_lst
+		          , LST.nm_person
+		          , ROWNUM RNUM
+		          , ROWNUM || LST.seq || LST.id_board AS BOARD_IDX
+		          , LST.cd_event_proc
+		          , LST.ymd_post_strt
+                  , LST.ymd_post_end
+	         FROM
+	            (SELECT
+	                  BO.seq
+	                , BO.seq_group
+	                , BO.seq_level
+	                , BO.seq_order
+	                , BO.id_board
+	                , BO.title
+	                , BO.hit
+	                , BO.pass_board
+	                , BO.content
+	                , BO.url_files1
+	                , BO.url_files2
+	                , BO.yn_use
+	                , BO.yn_popup
+	                , BO.id_frt
+<!-- 	                , BO.dt_frt -->
+	                ,TO_CHAR(BO.DT_FRT,'YYYYMMDD') AS dt_frt
+	                , BO.id_lst
+	                , BO.dt_lst
+	                , PE.nm_person
+	                , BO.cd_event_proc
+	                , BO.ymd_post_strt
+	                , BO.ymd_post_end
+	             FROM board_info BO LEFT OUTER JOIN person_info PE ON BO.id_frt = PE.no_person
+				 <include refid="listBoardInfo_WHERE"/>
+				 ORDER BY BO.seq DESC
+	             ) LST
+	        WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	        )
+	    WHERE RNUM >= #{startPosition, jdbcType=NUMERIC}
+	</select>
+
+	<select id="listBoardInfoCount"  parameterType="com.koscom.board.model.BoardForm" resultType="int">
+		SELECT
+            COUNT(*) AS recordCount
+         FROM board_info BO
+         <include refid="listBoardInfo_WHERE"/>
+	</select>
+	<select id="getOrgFileName"  parameterType="com.koscom.domain.BoardInfo" resultType="java.lang.String">
+		SELECT distict org_file_name
+		  FROM(
+				SELECT bi.ORG_FILES1 org_file_name
+				 FROM board_info bi
+				WHERE url_files1 = {url_files1}
+				UNION ALL
+				SELECT bi.ORG_FILES2 org_file_name
+				 FROM board_info bi
+				WHERE url_files1 = {url_files1}
+				UNION ALL
+				SELECT bi.ORG_FILES1 org_file_name
+				 FROM board_info bi
+				WHERE url_files2 = {url_files2}
+				UNION ALL
+				SELECT bi.ORG_FILES2 org_file_name
+				 FROM board_info bi
+				WHERE url_files2 = {url_files2}
+		     )
+	</select>
+
+	<insert id="createBoardInfo">
+		<selectKey keyProperty="seq" resultType="string" order="BEFORE">
+			(SELECT NVL(MAX(seq),0)+1 FROM board_info)
+		</selectKey>
+
+		INSERT INTO board_info
+			(	  seq
+				, seq_group
+				, seq_level
+				, seq_order
+				, id_board
+				, title
+				, pass_board
+				, content
+				, url_files1
+				, url_files2
+				, org_files1
+				, org_files2
+				, yn_use
+				, yn_popup
+				, id_frt
+				, dt_frt
+				, hit
+				, id_lst
+				, dt_lst
+				, ymd_post_strt
+				, ymd_post_end
+				, cd_event_proc
+			) VALUES (
+				  #{seq}
+				, #{seq_group, jdbcType=VARCHAR}
+				, #{seq_level, jdbcType=VARCHAR}
+				, #{seq_order, jdbcType=VARCHAR}
+				, #{id_board, jdbcType=VARCHAR}
+				, #{title, jdbcType=VARCHAR}
+				, #{pass_board, jdbcType=VARCHAR}
+				, #{content, jdbcType=VARCHAR}
+				, #{url_files1, jdbcType=VARCHAR}
+				, #{url_files2, jdbcType=VARCHAR}
+				, #{org_files1, jdbcType=VARCHAR}
+				, #{org_files2, jdbcType=VARCHAR}
+				, 'Y'
+				, #{yn_popup, jdbcType=VARCHAR}
+				, #{id_frt, jdbcType=VARCHAR}
+				, SYSDATE
+				, 0
+				, #{id_frt, jdbcType=VARCHAR}
+				, SYSDATE
+				, REPLACE(#{ymd_post_strt, jdbcType=VARCHAR},'-','')
+		        , REPLACE(#{ymd_post_end, jdbcType=VARCHAR},'-','')
+				, #{cd_event_proc, jdbcType=VARCHAR}
+			)
+	</insert>
+
+	<select id="getBoardInfo"  parameterType="com.koscom.board.model.BoardInfoVO" resultType="com.koscom.board.model.BoardInfoVO">
+		SELECT
+	           seq
+	          ,seq_group
+	          ,seq_level
+	          ,seq_order
+	          ,id_board
+	          ,title
+	          ,hit
+	          ,pass_board
+	          ,content
+	          ,url_files1
+	          ,url_files2
+	          ,yn_use
+	          ,yn_popup
+	          ,id_frt
+	          ,TO_CHAR(DT_FRT,'YYYYMMDD') AS dt_frt
+	          ,id_lst
+	          ,dt_lst
+	          , ymd_post_strt
+	          , ymd_post_end
+	          , cd_event_proc
+	     FROM board_info
+	     WHERE seq = #{seq}
+	       AND yn_use = 'Y'
+	</select>
+
+	<update id="modifyBoardInfo" parameterType="com.koscom.board.model.BoardInfoVO">
+		UPDATE board_info
+		   SET   id_board = #{id_board, jdbcType=VARCHAR}
+		       , title = #{title, jdbcType=VARCHAR}
+		       , pass_board = #{pass_board, jdbcType=VARCHAR}
+		       , content = #{content, jdbcType=VARCHAR}
+		       <if test="@com.koscom.util.MybatisUtil@isNotEmpty(url_files1)">
+		       	, url_files1 = #{url_files1, jdbcType=VARCHAR}
+		       </if>
+		       <if test="@com.koscom.util.MybatisUtil@isNotEmpty(url_files2)">
+		      	, url_files2 = #{url_files2, jdbcType=VARCHAR}
+		       </if>
+		       , yn_popup = #{yn_popup, jdbcType=VARCHAR}
+		       , id_lst = #{id_lst, jdbcType=VARCHAR}
+		       , dt_lst = SYSDATE
+		       , ymd_post_strt = REPLACE(#{ymd_post_strt, jdbcType=VARCHAR},'-','')
+		       , ymd_post_end = REPLACE(#{ymd_post_end, jdbcType=VARCHAR},'-','')
+		       , cd_event_proc = #{cd_event_proc, jdbcType=VARCHAR}
+		 WHERE seq = #{seq, jdbcType=VARCHAR}
+	</update>
+
+	<update id="delBoardInfo" parameterType="com.koscom.board.model.BoardInfoVO">
+		UPDATE board_info
+		   SET   yn_use = 'N'
+		       , id_lst = #{id_lst, jdbcType=VARCHAR}
+		       , dt_lst = SYSDATE
+		 WHERE seq = #{seq}
+	</update>
+
+	<insert id="createBoardComment">
+		<selectKey keyProperty="seq" resultType="string" order="BEFORE">
+			(SELECT NVL(MAX(seq),0)+1 FROM board_comment)
+		</selectKey>
+		INSERT INTO board_comment
+			(	  seq
+				, seq_board
+				, content_comment
+				, id_frt
+				, dt_frt
+				, id_lst
+				, dt_lst
+			) VALUES (
+				  #{seq}
+				, #{seq_board, jdbcType=VARCHAR}
+				, #{content_comment, jdbcType=VARCHAR}
+				, #{id_frt, jdbcType=VARCHAR}
+				, SYSDATE
+				, #{id_lst, jdbcType=VARCHAR}
+				, SYSDATE
+			)
+	</insert>
+
+	<select id="listBoardComment"  parameterType="java.lang.String" resultType="com.koscom.domain.BoardComment">
+		SELECT
+	          BC.seq
+			, BC.seq_board
+			, BC.content_comment
+			, BC.id_frt
+			, BC.dt_frt
+			, PE.nm_person
+	     FROM board_comment BC LEFT OUTER JOIN person_info PE ON BC.id_frt = PE.no_person
+	     WHERE seq_board = #{seq_board}
+	     ORDER BY BC.seq ASC
+	</select>
+
+	<select id="getBoardComment"  parameterType="java.lang.String" resultType="com.koscom.domain.BoardComment">
+		SELECT
+	         *
+	     FROM board_comment
+	     WHERE seq = #{seq}
+	</select>
+
+	<update id="modifyBoardComment" parameterType="com.koscom.domain.BoardComment">
+		UPDATE board_comment
+		   SET   content_comment = #{content_comment, jdbcType=VARCHAR}
+		       , id_lst = #{id_lst, jdbcType=VARCHAR}
+		       , dt_lst = SYSDATE
+		 WHERE seq = #{seq}
+	</update>
+
+	<delete id="delBoardComment" parameterType="java.lang.String">
+		DELETE from board_comment
+		 WHERE seq = #{seq}
+	</delete>
+
+	<update id="updateBoardInfoHit" parameterType="java.lang.String">
+		UPDATE board_info
+		   SET hit = hit + 1
+		 WHERE seq = #{seq}
+	</update>
+
+	<select id="listPopupBoard" parameterType="com.koscom.board.model.BoardForm" resultType="com.koscom.domain.BoardInfo">
+		SELECT
+			 BI.seq
+		   , BI.title
+		   , BI.content
+		 FROM board_info BI
+		 INNER JOIN board_manage BM ON BM.id_board = BI.id_board
+		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(id_agency)">
+			WHERE BM.id_open_agency = #{id_agency}
+			   OR BM.id_open_agency IS NULL
+		</if>
+			  AND BM.yn_use = 'Y'
+			  AND BI.yn_use = 'Y'
+			  AND BI.yn_popup = 'Y'
+	</select>
+
+	<select id="listBoardInfoSummary"  parameterType="com.koscom.board.model.BoardForm" resultType="com.koscom.board.model.BoardInfoVO">
+		SELECT
+ 			*
+	  	  FROM (
+	 		SELECT BI.*, row_number() over(order by BI.dt_frt desc) as rn
+	 		  FROM board_info BI
+	 		  INNER JOIN board_manage BM ON BM.id_board = BI.id_board
+	 		  WHERE BI.yn_use = 'Y'
+	 		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(id_board)">
+				AND BI.id_board = #{id_board}
+			</if>
+				AND BM.yn_use = 'Y'
+	 		) LST
+	 		WHERE LST.rn <![CDATA[<=]]> 5
+	</select>
+
+	<select id="getBoardNm"  parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT
+		 	NM_BOARD
+ 		FROM BOARD_MANAGE
+
+		 WHERE ID_BOARD = #{ID_BOARD}
+	</select>
+
+	<select id="SearchBoard"  parameterType="com.koscom.board.model.BoardForm" resultType="com.koscom.board.model.BoardInfoVO">
+		SELECT
+	        *
+	    FROM
+	        (SELECT
+	            LST.*,
+	            ROWNUM RNUM
+	          , ROWNUM || LST.seq || LST.id_board AS BOARD_IDX
+	         FROM
+	            (SELECT
+	                  BO.seq
+	                , BO.seq_group
+	                , BO.seq_level
+	                , BO.seq_order
+	                , BO.id_board
+ 	                , Replace(BO.title, #{txt_detail, jdbcType=VARCHAR}, '&lt;em style="color:#15689f;font-weight:bold;"&gt;'|| #{txt_detail, jdbcType=VARCHAR} || '&lt;/em&gt;') AS title
+<!--  	                BO.title -->
+	                , BO.hit
+	                , BO.pass_board
+	                , BO.content
+	                , BO.url_files1
+	                , BO.url_files2
+	                , BO.yn_use
+	                , BO.yn_popup
+	                , BO.id_frt
+	                ,TO_CHAR(BO.DT_FRT,'YYYYMMDD') AS dt_frt
+	                , BO.id_lst
+	                , BO.dt_lst
+	                , PE.nm_person
+	             FROM board_info BO LEFT OUTER JOIN person_info PE ON BO.id_frt = PE.no_person
+	             WHERE BO.YN_USE = 'Y'
+				  AND BO.ID_BOARD <![CDATA[<>]]> 'notice'
+				  AND (BO.TITLE LIKE '%' || #{txt_detail, jdbcType=VARCHAR} || '%' OR BO.CONTENT LIKE '%' || #{txt_detail, jdbcType=VARCHAR}  || '%' )
+				 ORDER BY BO.seq DESC
+	             ) LST
+	        WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	        )
+	    WHERE RNUM >= #{startPosition, jdbcType=NUMERIC}
+	</select>
+
+		<select id="SearchBoardCount"  parameterType="com.koscom.board.model.BoardForm" resultType="int">
+		SELECT
+            COUNT(*) AS recordCount
+         FROM board_info BO
+		  WHERE BO.YN_USE = 'Y'
+ 			 AND BO.ID_BOARD <![CDATA[<>]]> 'notice'
+			  AND (BO.TITLE LIKE '%' || #{txt_detail, jdbcType=VARCHAR} || '%' OR BO.CONTENT LIKE '%' || #{txt_detail, jdbcType=VARCHAR}  || '%' )
+	</select>
+
+	<insert id="createBoardFileInfo" parameterType="com.koscom.board.model.BoardInfoVO">
+	    <selectKey keyProperty="seq_file" resultType="Integer" order="BEFORE">
+            (SELECT NVL(MAX(seq_file),0)+1 FROM BOARD_FILE_INFO WHERE ID_BOARD = #{id_board, jdbcType=VARCHAR} AND SEQ = #{seq})
+        </selectKey>
+
+		  INSERT INTO BOARD_FILE_INFO(
+		  			ID_BOARD
+					,SEQ
+					,SEQ_FILE
+					,FILE_TYPE
+					,IMG_FILES
+					,NM_IMG_FILES
+					,ID_FRT
+					,DT_FRT
+					,ID_LST
+					,DT_LST	)
+			VALUES(	 #{id_board, jdbcType=VARCHAR}
+					,#{seq}
+					,#{seq_file}
+					,#{file_type, jdbcType=VARCHAR}
+					,#{img_files, jdbcType=BLOB}
+					,#{nm_img_files, jdbcType=VARCHAR}
+					,#{id_frt, jdbcType=VARCHAR}
+					,SYSDATE
+					,#{id_frt, jdbcType=VARCHAR}
+					,SYSDATE	)
+	</insert>
+
+	<update id="modifyBoardFileInfo" parameterType="com.koscom.board.model.BoardInfoVO">
+		 UPDATE BOARD_FILE_INFO
+		 	SET
+			IMG_FILES = #{img_files, jdbcType=BLOB}
+			,NM_IMG_FILES = #{nm_img_files, jdbcType=VARCHAR}
+			,ID_LST = #{id_lst, jdbcType=VARCHAR}
+			,DT_LST = SYSDATE
+		WHERE
+			ID_BOARD = #{id_board, jdbcType=VARCHAR}
+			AND SEQ = #{seq}
+			AND FILE_TYPE = #{file_type, jdbcType=VARCHAR}
+	</update>
+
+	<select id="getBoardFileList" parameterType="com.koscom.board.model.BoardInfoVO" resultType="com.koscom.board.model.BoardInfoVO">
+		SELECT
+			ID_BOARD
+			, SEQ
+			, SEQ_FILE
+			, FILE_TYPE
+			, IMG_FILES
+			, NM_IMG_FILES
+		FROM BOARD_FILE_INFO
+		WHERE ID_BOARD = #{id_board, jdbcType=VARCHAR}
+			AND SEQ = #{seq}
+	</select>
+
+	<select id="getBoardFileInfo" parameterType="com.koscom.board.model.BoardInfoVO" resultType="com.koscom.board.model.BoardInfoVO">
+		SELECT
+			ID_BOARD
+			, SEQ
+			, SEQ_FILE
+			, FILE_TYPE
+			, IMG_FILES
+			, NM_IMG_FILES
+		FROM BOARD_FILE_INFO
+		WHERE ID_BOARD = #{id_board, jdbcType=VARCHAR}
+			AND SEQ = #{seq}
+			AND FILE_TYPE = #{file_type, jdbcType=VARCHAR}
+	</select>
+
+
+	<select id="dupliBoardFileInfo" parameterType="com.koscom.board.model.BoardInfoVO" resultType="int">
+		SELECT COUNT(NM_IMG_FILES) AS RESULT FROM BOARD_FILE_INFO
+			WHERE  ID_BOARD = #{id_board, jdbcType=VARCHAR}
+			AND SEQ = #{seq}
+			AND FILE_TYPE = #{file_type, jdbcType=VARCHAR}
+	</select>
+
+	<select id="getBoardImg" parameterType="com.koscom.board.model.BoardInfoVO" resultMap="boardImgMap">
+		SELECT tb.img_files, tb.nm_img_files
+		FROM (
+	    	SELECT
+				img_files, nm_img_files
+				, ROW_NUMBER() OVER(ORDER BY dt_frt DESC) AS rnum
+			FROM BOARD_FILE_INFO
+			WHERE ID_BOARD = #{id_board, jdbcType=VARCHAR}
+				AND SEQ = #{seq}
+				AND FILE_TYPE = #{file_type, jdbcType=VARCHAR}
+			) tb
+		WHERE tb.rnum = 1
+	</select>
+
+	<select id="getBoardSeq" resultType="string" >
+			SELECT NVL(MAX(seq),0)+1 FROM board_info
+	</select>
+
+</mapper>

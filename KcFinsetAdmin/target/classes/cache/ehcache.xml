@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="ehcache.xsd" updateCheck="false"
+	monitoring="autodetect" dynamicConfig="true">
+	
+	<!-- 코드 -->
+	<cache name="CacheCode" maxEntriesLocalHeap="10000" eternal="false"
+		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
+		timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU">		
+	</cache>
+	<cache name="CacheListCode" maxEntriesLocalHeap="10000" eternal="false"
+		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
+		timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU">		
+	</cache>
+	<!-- 코드 -->
+	<cache name="CacheStdCode" maxEntriesLocalHeap="10000" eternal="false"
+		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
+		timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU">		
+	</cache>
+	<cache name="CacheListStdCode" maxEntriesLocalHeap="10000" eternal="false"
+		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
+		timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU">		
+	</cache>
+	<!-- 코드 -->
+	<cache name="CacheFcCode" maxEntriesLocalHeap="10000" eternal="false"
+		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
+		timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU">		
+	</cache>
+	<cache name="CacheListFcCode" maxEntriesLocalHeap="10000" eternal="false"
+		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
+		timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU">		
+	</cache>
+	
+	<!-- 영업일 -->
+	<cache name="CacheBusiness" maxEntriesLocalHeap="5000" eternal="false"
+		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
+		timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU">		
+	</cache>
+	
+	<!-- IP 필터 -->
+	<cache name="CacheIp" maxEntriesLocalHeap="1000" eternal="false"
+		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
+		timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU">		
+	</cache>
+	
+	<!-- 사용자 -->
+	<cache name="CacheWorker" maxEntriesLocalHeap="5000" eternal="false"
+		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
+		timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU">		
+	</cache>
+	<cache name="CacheWorkerProgramAuth" maxEntriesLocalHeap="10000" eternal="false"
+		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
+		timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU">		
+	</cache>
+	<cache name="CacheWorkerApprovalAuth" maxEntriesLocalHeap="10000" eternal="false"
+		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
+		timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU">		
+	</cache>
+	<cache name="CacheApprovalAuth" maxEntriesLocalHeap="10000" eternal="false"
+		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
+		timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU">		
+	</cache>
+	
+	<!-- 상품정보 -->
+	<cache name="CacheGoods" maxEntriesLocalHeap="10000" eternal="false"
+		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
+		timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU">		
+	</cache>
+	<cache name="CacheGoodsType" maxEntriesLocalHeap="10000" eternal="false"
+		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
+		timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU">		
+	</cache>
+	<cache name="CacheGoodsComp" maxEntriesLocalHeap="10000" eternal="false"
+		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
+		timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU">		
+	</cache>
+	
+	<!-- 매체사정보 -->
+	<cache name="CacheAgency" maxEntriesLocalHeap="10000" eternal="false"
+		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
+		timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU">		
+	</cache>
+	<!-- 매체사정보 -->
+	<cache name="CacheFincorp" maxEntriesLocalHeap="10000" eternal="false"
+		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
+		timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU">		
+	</cache>
+	
+	<!-- 사용자 -->
+	<cache name="CachePerson" maxEntriesLocalHeap="5000" eternal="false"
+		overflowToDisk="false" diskPersistent="false" timeToIdleSeconds="0"
+		timeToLiveSeconds="600" memoryStoreEvictionPolicy="LRU">		
+	</cache>
+</ehcache>

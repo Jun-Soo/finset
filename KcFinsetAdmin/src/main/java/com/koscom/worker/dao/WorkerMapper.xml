@@ -1,0 +1,459 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.worker.dao.WorkerMapper">
+
+<select id="getWorkerInfo" parameterType="java.lang.String" resultType="com.koscom.worker.model.WorkerVO">
+     SELECT * FROM worker_info WHERE id_emp = #{id_emp}
+</select>
+
+
+<select id="listWorkerInfo" parameterType="com.koscom.worker.model.WorkerForm" resultType="com.koscom.domain.WorkerInfo">
+	SELECT * FROM worker_info
+ 	<if test="@com.koscom.util.MybatisUtil@isNotEmpty(cd_template_group)">
+		WHERE cd_template_group = #{cd_template_group}
+	</if>
+</select>
+
+<select id="listWorkerInfoStatus" resultType="com.koscom.domain.WorkerInfo">
+	SELECT * FROM worker_info
+	 WHERE cd_status_emp = '01'
+	 ORDER BY id_emp
+</select>
+
+<select id="listWorkerProgramAuth" parameterType="java.lang.String" resultType="com.koscom.env.model.ProgramManageVO">
+	SELECT
+		  WPA.id_emp
+		, WPA.id_program
+		, WI.c3_branch
+		, WI.nm_emp
+	  FROM worker_program_auth WPA
+	 INNER JOIN worker_info WI ON WI.id_emp = WPA.id_emp
+	 WHERE WPA.id_emp = #{id_emp}
+	   AND WI.cd_status_emp = '01'
+	 ORDER BY WPA.id_program
+</select>
+
+<select id="listWorkerApprovalAuth" parameterType="java.lang.String" resultType="com.koscom.env.model.ApprovalManageVO">
+	SELECT
+		  WAA.id_emp
+		, WAA.id_appr
+		, WI.c3_branch
+		, WI.nm_emp
+	  FROM worker_approval_auth WAA
+	 INNER JOIN worker_info WI ON WI.id_emp = WAA.id_emp
+	 WHERE WAA.id_emp = #{id_emp}
+	 ORDER BY WAA.id_appr
+</select>
+
+<select id="listProgramTemplate" parameterType="java.lang.String" resultType="com.koscom.env.model.ProgramManageVO">
+	SELECT
+		  cd_template_group
+		, id_program
+		, id_frt
+		, dt_frt
+	  FROM program_manage_template
+	 WHERE cd_template_group = #{code_value}
+	 ORDER BY id_program
+</select>
+
+<select id="listApprovalTemplate" parameterType="java.lang.String" resultType="com.koscom.env.model.ApprovalManageVO">
+	SELECT
+		  cd_template_group
+		, id_appr
+		, id_frt
+		, dt_frt
+	  FROM approval_manage_template
+	 WHERE cd_template_group = #{code_value}
+	 ORDER BY id_appr
+</select>
+
+<insert id="createWorker" parameterType="com.koscom.domain.WorkerInfo">
+	INSERT INTO worker_info
+		(	  id_emp
+			,cd_fc
+			,nm_fc
+			,cd_fin
+			, nm_emp
+			, pass_emp
+			, c3_branch
+			, ext_emp
+			, ext_emp_direct
+			, hp
+			, cd_dept_emp
+			, cd_status_emp
+			, cd_template_group
+			, authority
+			, id_frt
+			, dt_frt
+			, id_lst
+			, dt_lst )
+	VALUES(
+			#{id_emp, jdbcType=VARCHAR}
+			, #{cd_fc, jdbcType=VARCHAR}
+			, (select nm_fc from fc_info where cd_fc = #{cd_fc, jdbcType=VARCHAR})
+			, #{cd_fin, jdbcType=VARCHAR}
+			, #{nm_emp, jdbcType=VARCHAR}
+			, XX1.ENC_VARCHAR2_INS(#{pass_emp, jdbcType=VARCHAR}, '11', 'FS_SHA', 'WORKER_INFO', 'PASS_EMP')
+			, #{c3_branch, jdbcType=VARCHAR}
+			, #{ext_emp, jdbcType=VARCHAR}
+			, #{ext_emp_direct, jdbcType=VARCHAR}
+			, #{hp, jdbcType=VARCHAR}
+			, #{cd_dept_emp, jdbcType=VARCHAR}
+			, #{cd_status_emp, jdbcType=VARCHAR}
+			, #{cd_template_group, jdbcType=VARCHAR}
+			, 'USER'
+			, #{id_frt, jdbcType=VARCHAR}
+			, SYSDATE
+			, #{id_frt, jdbcType=VARCHAR}
+			, SYSDATE
+		 )
+</insert>
+
+<update id="modifyWorker" parameterType="com.koscom.domain.WorkerInfo">
+	UPDATE worker_info
+       SET
+		   nm_emp = #{nm_emp, jdbcType=VARCHAR}
+		 , c3_branch = #{c3_branch, jdbcType=VARCHAR}
+		 , ext_emp = #{ext_emp, jdbcType=VARCHAR}
+		 , ext_emp_direct = #{ext_emp_direct, jdbcType=VARCHAR}
+		 , hp = #{hp, jdbcType=VARCHAR}
+		 , cd_dept_emp = #{cd_dept_emp, jdbcType=VARCHAR}
+		 , cd_status_emp = #{cd_status_emp, jdbcType=VARCHAR}
+		 , cd_template_group = #{cd_template_group, jdbcType=VARCHAR}
+		 , id_lst = #{id_lst, jdbcType=VARCHAR}
+		 , dt_lst = SYSDATE
+		 , cd_fc = #{cd_fc, jdbcType=VARCHAR}
+		 , nm_fc = (select nm_fc from fc_info where cd_fc = #{cd_fc, jdbcType=VARCHAR})
+		 , cd_fin = #{cd_fin, jdbcType=VARCHAR}
+	 WHERE id_emp = #{id_emp, jdbcType=VARCHAR}
+</update>
+
+	<delete id="deleteWorker" parameterType="com.koscom.worker.model.WorkerVO">
+		DELETE from worker_info
+		WHERE id_emp = #{id_emp, jdbcType=VARCHAR}
+	</delete>
+
+<update id="createWorkerProgramAuth" parameterType="com.koscom.env.model.ProgramManageForm">
+	MERGE INTO worker_program_auth WPA
+    	USING DUAL
+    	ON (WPA.id_emp = #{id_emp, jdbcType=VARCHAR} AND WPA.id_program = #{id_program, jdbcType=VARCHAR})
+    	WHEN NOT MATCHED THEN
+            INSERT (id_emp, id_program, id_frt, dt_frt, id_lst, dt_lst)
+            VALUES (#{id_emp, jdbcType=VARCHAR}, #{id_program, jdbcType=VARCHAR}, #{id_frt, jdbcType=VARCHAR}, SYSDATE, #{id_frt, jdbcType=VARCHAR}, SYSDATE)
+</update>
+
+<delete id="deleteWorkerProgramAuth" parameterType="com.koscom.env.model.ProgramManageForm">
+	DELETE worker_program_auth
+	 WHERE id_emp = #{id_emp, jdbcType=VARCHAR}
+	   AND id_program = #{id_program, jdbcType=VARCHAR}
+</delete>
+
+<update id="createWorkerApprovalAuth" parameterType="com.koscom.env.model.ApprovalManageForm">
+	MERGE INTO worker_approval_auth WAA
+    	USING DUAL
+    	ON (WAA.id_emp = #{id_emp, jdbcType=VARCHAR} AND WAA.id_appr = #{id_appr, jdbcType=VARCHAR})
+    	WHEN NOT MATCHED THEN
+            INSERT (id_emp, id_appr, id_frt, dt_frt, id_lst, dt_lst)
+            VALUES (#{id_emp, jdbcType=VARCHAR}, #{id_appr, jdbcType=VARCHAR}, #{id_frt, jdbcType=VARCHAR}, SYSDATE, #{id_frt, jdbcType=VARCHAR}, SYSDATE)
+</update>
+
+<delete id="deleteWorkerApprovalAuth" parameterType="com.koscom.env.model.ApprovalManageForm">
+	DELETE worker_approval_auth
+	 WHERE id_emp = #{id_emp, jdbcType=VARCHAR}
+	   AND id_appr = #{id_appr, jdbcType=VARCHAR}
+</delete>
+
+<update id="createProgramTemplate" parameterType="com.koscom.env.model.ProgramManageForm">
+	MERGE INTO program_manage_template PMT
+    	USING DUAL
+    	ON (PMT.cd_template_group = #{cd_template_group, jdbcType=VARCHAR} AND PMT.id_program = #{id_program, jdbcType=VARCHAR})
+    	WHEN NOT MATCHED THEN
+            INSERT (cd_template_group, id_program, id_frt, dt_frt, id_lst, dt_lst)
+            VALUES (#{cd_template_group, jdbcType=VARCHAR}, #{id_program, jdbcType=VARCHAR}, #{id_frt, jdbcType=VARCHAR}, SYSDATE, #{id_frt, jdbcType=VARCHAR}, SYSDATE)
+</update>
+
+<delete id="deleteProgramTemplate" parameterType="com.koscom.env.model.ProgramManageForm">
+	DELETE program_manage_template
+	 WHERE cd_template_group = #{cd_template_group, jdbcType=VARCHAR}
+	   AND id_program = #{id_program, jdbcType=VARCHAR}
+</delete>
+
+<update id="createApprovalTemplate" parameterType="com.koscom.env.model.ApprovalManageForm">
+	MERGE INTO approval_manage_template AMP
+    	USING DUAL
+    	ON (AMP.cd_template_group = #{cd_template_group, jdbcType=VARCHAR} AND AMP.id_appr = #{id_appr, jdbcType=VARCHAR})
+    	WHEN NOT MATCHED THEN
+            INSERT (cd_template_group, id_appr, id_frt, dt_frt)
+            VALUES (#{cd_template_group, jdbcType=VARCHAR}, #{id_appr, jdbcType=VARCHAR}, #{id_frt, jdbcType=VARCHAR}, SYSDATE)
+</update>
+
+<delete id="deleteApprovalTemplate" parameterType="com.koscom.env.model.ApprovalManageForm">
+	DELETE approval_manage_template
+	 WHERE cd_template_group = #{cd_template_group, jdbcType=VARCHAR}
+	   AND id_appr = #{id_appr, jdbcType=VARCHAR}
+</delete>
+
+<insert id="insertWorkerLoginHist" parameterType="com.koscom.domain.WorkerLoginHist">
+	INSERT INTO worker_login_hist
+		(	  cd_system
+			, id_emp
+			, cd_result
+			, authority
+			, ip_server
+			, ip_client
+			, id_frt
+			, dt_frt )
+	VALUES(   #{cd_system, jdbcType=VARCHAR}
+			, #{id_emp, jdbcType=VARCHAR}
+			, #{cd_result, jdbcType=VARCHAR}
+			, #{authority, jdbcType=VARCHAR}
+			, #{ip_server, jdbcType=VARCHAR}
+			, #{ip_client, jdbcType=VARCHAR}
+			, #{id_emp, jdbcType=VARCHAR}
+			, SYSDATE )
+</insert>
+
+<select id="listCacheApprovalAuth" parameterType="java.lang.String" resultType="com.koscom.env.model.ApprovalManageVO">
+	SELECT
+		  WAA.id_emp
+		, WAA.id_appr
+		, WI.c3_branch
+		, WI.nm_emp
+	  FROM worker_approval_auth WAA
+	 INNER JOIN worker_info WI ON WI.id_emp = WAA.id_emp
+	 WHERE WAA.id_appr = #{id_appr}
+	   AND WI.cd_status_emp = '01'
+	 ORDER BY WAA.id_emp
+</select>
+
+<select id="getCachWorkerApprovalAuth" parameterType="com.koscom.env.model.ApprovalManageForm" resultType="java.lang.String">
+	SELECT
+		 id_emp
+	  FROM worker_approval_auth
+	 WHERE id_emp = #{id_emp} AND id_appr = #{id_appr}
+</select>
+
+<update id="modifyWorkerUser" parameterType="com.koscom.domain.WorkerInfo">
+	UPDATE worker_info
+       SET
+		   ext_emp = #{ext_emp, jdbcType=VARCHAR}
+		 , ext_emp_direct = #{ext_emp_direct, jdbcType=VARCHAR}
+		 , hp = #{hp, jdbcType=VARCHAR}
+		 <if test="@com.koscom.util.MybatisUtil@isNotEmpty(pass_emp)">
+		 , pass_emp = XX1.ENC_VARCHAR2_INS(#{pass_emp, jdbcType=VARCHAR}, '11', 'FS_SHA', 'WORKER_INFO', 'PASS_EMP')
+		 </if>
+		 , id_lst = #{id_lst, jdbcType=VARCHAR}
+		 , dt_lst = SYSDATE
+	 WHERE id_emp = #{id_emp, jdbcType=VARCHAR}
+</update>
+
+<update id="initWorkerPass" parameterType="com.koscom.domain.WorkerInfo">
+	UPDATE worker_info
+       SET
+		   pass_emp = XX1.ENC_VARCHAR2_INS(#{pass_emp, jdbcType=VARCHAR}, '11', 'FS_SHA', 'WORKER_INFO', 'PASS_EMP')
+		 , id_lst = #{id_lst, jdbcType=VARCHAR}
+		 , dt_lst = SYSDATE
+	 WHERE id_emp = #{id_emp, jdbcType=VARCHAR}
+</update>
+
+<sql id="listWorkerLoginHist_WHERE">
+	<where>
+		<!-- 상세검색 -->
+		<!--
+		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_detail)">
+			 AND ${sel_detail} LIKE '%'||#{txt_detail}||'%'
+		</if>
+		-->
+		<!-- 로그인결과 -->
+		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(cd_login_result)">
+			 AND WLH.cd_result = #{cd_login_result}
+		</if>
+
+		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_dt_kind)">
+			<choose>
+				<when test="@com.koscom.util.MybatisUtil@contains('dt_',sel_dt_kind)">
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
+						AND TO_CHAR(WLH.dt_frt,'yyyyMMdd') <![CDATA[>=]]> #{txt_dt_from}
+					</if>
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_to)">
+						AND TO_CHAR(WLH.dt_frt,'yyyyMMdd') <![CDATA[<=]]> #{txt_dt_to}
+					</if>
+				</when>
+				<otherwise>
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
+						AND WLH.dt_frt <![CDATA[>=]]> #{txt_dt_from}
+					</if>
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_to)">
+						AND WLH.dt_frt <![CDATA[<=]]> #{txt_dt_to}
+					</if>
+				</otherwise>
+			</choose>
+		</if>
+		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(cd_system)">
+			AND WLH.cd_system = #{cd_system}
+		</if>
+	</where>
+</sql>
+
+<select id="listWorkerLoginHist" parameterType="com.koscom.worker.model.WorkerForm" resultType="com.koscom.domain.WorkerLoginHist">
+	SELECT
+	        *
+	    FROM
+	        (SELECT
+	            LST.*,
+	            ROWNUM RNUM
+	         FROM
+	            (SELECT
+	                   WLH.cd_system
+					,  WLH.id_emp
+					,  WLH.cd_result
+					,  WLH.authority
+					,  WLH.ip_server
+					,  WLH.ip_client
+					,  WLH.dt_frt
+	             FROM worker_login_hist WLH
+	             	 left outer join worker_info WI ON WLH.id_emp = WI.id_emp
+				 <include refid="listWorkerLoginHist_WHERE"/>
+				 ORDER BY dt_frt DESC
+	             ) LST
+	        WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	        )
+	    WHERE RNUM >= #{startPosition, jdbcType=NUMERIC}
+</select>
+
+<select id="listWorkerLoginHistCount" parameterType="com.koscom.worker.model.WorkerForm" resultType="int">
+	SELECT
+		   COUNT(*) AS recordCount
+	  FROM worker_login_hist WLH
+	  	 left outer join worker_info WI ON WLH.id_emp = WI.id_emp
+	  <include refid="listWorkerLoginHist_WHERE"/>
+</select>
+
+<insert id="createWorkerAuthHist" parameterType="com.koscom.domain.WorkerAuthHist" >
+	INSERT INTO worker_auth_hist
+		   (	id_emp
+		   	,	cd_auth
+			,  	id_auth
+			,	cd_proc
+			,	id_frt
+			,	dt_frt
+			,	cd_detail
+			,   id_lst
+			,   dt_lst
+		   )
+	VALUES (
+		        #{id_emp}
+		    ,   #{cd_auth}
+		    ,   #{id_auth}
+		    ,   #{cd_proc}
+			,   #{id_frt, jdbcType=VARCHAR}
+			,   SYSDATE
+			,	#{cd_detail}
+			,   #{id_frt, jdbcType=VARCHAR}
+			,   SYSDATE
+	       )
+</insert>
+
+<select id="listWorkerAuthHist" parameterType="com.koscom.worker.model.WorkerForm" resultType="com.koscom.domain.WorkerAuthHist">
+	SELECT
+	        *
+	    FROM
+	        (SELECT
+	            LST.*,
+	            ROWNUM RNUM
+	         FROM
+	            (SELECT
+	                   WAH.id_emp
+					,  WAH.cd_auth
+					,  WAH.id_auth
+					,  WAH.cd_proc
+					,  WAH.id_frt
+					,  WAH.dt_frt
+					,  WAH.cd_detail
+	             FROM worker_auth_hist WAH
+				 <include refid="listWorkerAuthHist_WHERE"/>
+				 ORDER BY dt_frt DESC
+	             ) LST
+	        WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	        )
+	    WHERE RNUM >= #{startPosition, jdbcType=NUMERIC}
+</select>
+
+<select id="listWorkerAuthHistCount" parameterType="com.koscom.worker.model.WorkerForm" resultType="int">
+	SELECT
+		   COUNT(*) AS recordCount
+	  FROM worker_auth_hist WAH
+	  <include refid="listWorkerAuthHist_WHERE"/>
+</select>
+
+<sql id="listWorkerAuthHist_WHERE">
+	<where>
+		<!-- 상세검색 -->
+		<!--
+		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_detail)">
+			 AND ${sel_detail} LIKE '%'||#{txt_detail}||'%'
+		</if>
+		 -->
+		<!-- 권한구분 -->
+		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(cd_auth)">
+			 AND WAH.cd_auth = #{cd_auth}
+		</if>
+
+		<!-- 처리구분 -->
+		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(cd_auth_proc)">
+			 AND WAH.cd_proc = #{cd_auth_proc}
+		</if>
+
+		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_dt_kind)">
+			<choose>
+				<when test="@com.koscom.util.MybatisUtil@contains('dt_',sel_dt_kind)">
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
+						AND TO_CHAR(WLH.dt_frt,'yyyyMMdd') <![CDATA[>=]]> #{txt_dt_from}
+					</if>
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_to)">
+						AND TO_CHAR(WLH.dt_frt,'yyyyMMdd') <![CDATA[<=]]> #{txt_dt_to}
+					</if>
+				</when>
+				<otherwise>
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
+						AND WLH.dt_frt <![CDATA[>=]]> #{txt_dt_from}
+					</if>
+					<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_to)">
+						AND WLH.dt_frt <![CDATA[<=]]> #{txt_dt_to}
+					</if>
+				</otherwise>
+			</choose>
+		</if>
+	</where>
+</sql>
+
+<select id="listWorkerLoginRecent" parameterType="java.lang.String" resultType="com.koscom.domain.WorkerLoginHist">
+	SELECT
+	        *
+	    FROM
+	        (SELECT
+	            LST.*,
+	            ROWNUM RNUM
+	         FROM
+	            (SELECT
+					   WLH.dt_frt
+					,  WLH.cd_result
+
+	             FROM worker_login_hist WLH
+	             WHERE id_emp = #{id_emp}
+				 ORDER BY dt_frt DESC
+	             ) LST
+	        )
+	    WHERE RNUM BETWEEN 1 AND 5
+</select>
+
+<select id="getWorkerInfoDirect" parameterType="java.lang.String" resultType="com.koscom.worker.model.WorkerVO">
+	SELECT * FROM worker_info WHERE ext_emp_direct = #{direct_number}
+</select>
+
+	<select id="getPwdDB" parameterType="java.lang.String" resultType="java.lang.String">
+		SELECT XX1.ENC_VARCHAR2_INS(#{pwd, jdbcType=VARCHAR}, '11', 'FS_SHA', 'WORKER_INFO', 'PASS_EMP') FROM DUAL
+	</select>
+</mapper>

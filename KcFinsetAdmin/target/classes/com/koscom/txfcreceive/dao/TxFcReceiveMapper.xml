@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.txfcreceive.dao.TxFcReceiveMapper">
+ 	<select id="listTxFcReceiveDetail" parameterType="com.koscom.txfcreceive.model.TxFcReceiveVO" resultType="com.koscom.txfcreceive.model.TxFcReceiveVO">
+		SELECT NO_BUNCH,NO_PERSON,NO_PREPARE,CD_FC
+		,NO_FC_REQ,NO_EDOC,CD_GOODS,YN_LOAN
+		,YEAR_TERM,RTO_LOAN,AMT_LIMIT,ETC_FIELD
+		,DT_RECEIVE,YN_RECEIVE,HD_CD_PARTNER_CODE,REASON
+		,ID_FRT,DT_FRT,ID_LST,DT_LST
+		FROM TX_FC_RECEIVE
+		WHERE NO_PERSON = #{no_person  , jdbcType=VARCHAR}
+       	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+			AND cd_fc = #{cd_fc , jdbcType=VARCHAR}
+		</if>
+     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods)'>
+			AND cd_goods = #{cd_goods , jdbcType=VARCHAR}
+		</if>
+     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(no_bunch)'>
+			AND no_bunch = #{no_bunch , jdbcType=VARCHAR}
+		</if>
+		ORDER BY NO_BUNCH, CD_FC, CD_GOODS, YEAR_TERM
+	</select>
+ 	<select id="listTxFcReceiveForCdGoods" parameterType="java.lang.String" resultType="com.koscom.txfcreceive.model.TxFcReceiveVO">
+		SELECT NO_BUNCH,NO_PERSON,CD_FC,NO_FC_REQ,NO_EDOC,CD_GOODS
+		FROM TX_FC_RECEIVE
+		WHERE  no_bunch = #{no_bunch , jdbcType=VARCHAR}
+		GROUP BY NO_BUNCH,NO_PERSON,CD_FC,NO_FC_REQ,NO_EDOC,CD_GOODS
+		ORDER BY NO_BUNCH, CD_FC, CD_GOODS
+	</select>
+
+	<select id="listTxFcReceiveDetailPg" parameterType="com.koscom.txfcreceive.model.TxFcReceiveForm" resultType="com.koscom.txfcreceive.model.TxFcReceiveVO">
+	   SELECT
+	        *
+	    FROM
+	        (SELECT
+	            LST.*,
+	            ROWNUM RNUM
+	         FROM
+	            (
+		SELECT NO_BUNCH, NO_PERSON, TO_CHAR(MIN(DT_FRT), 'YYYY-MM-DD HH24:MI:SS') MIN_DT_FRT
+		FROM TX_FC_RECEIVE
+		WHERE NO_PERSON = #{no_person  , jdbcType=VARCHAR}
+		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_dt_kind)">
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
+				AND TO_CHAR(DT_FRT, 'yyyyMMdd') <![CDATA[>=]]> #{txt_dt_from}
+			</if>
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_to)">
+				AND TO_CHAR(DT_FRT, 'yyyyMMdd') <![CDATA[<=]]> #{txt_dt_to}
+			</if>
+		</if>
+<!--      	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+			AND cd_fc = #{cd_fc , jdbcType=VARCHAR}
+		</if>
+     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods)'>
+			AND cd_goods = #{cd_goods , jdbcType=VARCHAR}
+		</if>	 -->
+			GROUP BY NO_BUNCH, NO_PERSON
+			ORDER BY NO_BUNCH DESC
+	             ) LST
+	        WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	        )
+	    WHERE RNUM >= #{startPosition, jdbcType=NUMERIC}
+	</select>
+	<select id="listTxFcReceiveDetailCount"  parameterType="com.koscom.txfcreceive.model.TxFcReceiveForm" resultType="int">
+		SELECT COUNT(*) AS recordCount
+		FROM (
+			SELECT COUNT(*)
+			FROM TX_FC_RECEIVE
+			WHERE NO_PERSON = #{no_person  , jdbcType=VARCHAR}
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_dt_kind)">
+				<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
+					AND TO_CHAR(DT_FRT, 'yyyyMMdd') <![CDATA[>=]]> #{txt_dt_from}
+				</if>
+				<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_to)">
+					AND TO_CHAR(DT_FRT, 'yyyyMMdd') <![CDATA[<=]]> #{txt_dt_to}
+				</if>
+			</if>
+<!-- 	     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+				AND cd_fc = #{cd_fc , jdbcType=VARCHAR}
+			</if>
+	     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods)'>
+				AND cd_goods = #{cd_goods , jdbcType=VARCHAR}
+			</if> -->
+			GROUP BY NO_BUNCH
+		)
+	</select>
+</mapper>

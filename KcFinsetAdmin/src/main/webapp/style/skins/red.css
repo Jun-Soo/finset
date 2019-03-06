@@ -1,0 +1,146 @@
+/* ---------------------------------------------------------------------- */
+/*  RED-STYLE
+/* ---------------------------------------------------------------------- */
+
+/* ---------------------------- /
+	table
+/ ---------------------------- */
+.table.table-bordered{border: 1px solid #C54743;}
+.table.table-bordered > thead > tr > th{background-color:#d9534f;border: 1px solid #C54743;color:#fff;text-align:center;
+	background: -moz-linear-gradient(top, #EA6358 0%, #d9534f 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#EA6358), color-stop(100%,#d9534f)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #EA6358 0%,#d9534f 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #EA6358 0%,#d9534f 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #EA6358 0%,#d9534f 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #EA6358 0%,#d9534f 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#EA6358', endColorstr='#d9534f',GradientType=0 ); /* IE6-9 */
+	}
+	
+.panel-primary > .panel-heading {
+    color: #fff;
+    background-color: #FF747F;
+    border-color: #FF747F;
+}
+
+.panel-primary {
+    border-color: #FF747F;
+}
+/* ---------------------------- /
+	button
+/ ---------------------------- */
+.btn-default {
+	color: #fff;
+	background-color: #687581;
+	border-color: #5A6C7E;
+	}
+.btn-default:hover, 
+.btn-default:focus, 
+.btn-default.focus, 
+.btn-default:active, 
+.btn-default.active, 
+.open > .dropdown-toggle.btn-default {
+	color: #fff;
+	background-color: #687581;
+	border-color: #5A6C7E;
+	}
+	
+.btn-primary {
+	background-color: #EA6358;
+	border-color: #EA6358;
+	}
+.btn-primary:hover, 
+.btn-primary:focus, 
+.btn-primary.focus, 
+.btn-primary:active, 
+.btn-primary.active, 
+.open > .dropdown-toggle.btn-primary {
+	color: #fff;
+	background-color: #EA6358;
+	border-color: #EA6358;
+	}
+
+.bootstrap-select .btn-primary,
+.bootstrap-select .btn-primary:hover, 
+.bootstrap-select .btn-primary:focus, 
+.bootstrap-select .btn-primary.focus, 
+.bootstrap-select .btn-primary:active, 
+.bootstrap-select .btn-primary.active, 
+.bootstrap-select.open > .dropdown-toggle.btn-primary {
+	background-color: #FFFFFF;
+	border-color: #EA6358;
+	}
+
+.btn-danger {
+    color: #fff;
+    background-color: #286090;
+    border-color: #204d74;
+}
+/* ---------------------------- /
+	color-bar
+/ ---------------------------- */
+.navbar-default.color-bar{
+	border-bottom:1px solid #FF747F;
+	background-color:#f4f4f4;
+	background: -moz-linear-gradient(top, #ffffff 0%, #e3e5ea 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ffffff), color-stop(100%,#e3e5ea)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top, #ffffff 0%,#e3e5ea 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top, #ffffff 0%,#e3e5ea 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top, #ffffff 0%,#e3e5ea 100%); /* IE10+ */
+	background: linear-gradient(to bottom, #ffffff 0%,#e3e5ea 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#e3e5ea',GradientType=0 ); /* IE6-9 */
+	box-shadow:0 1px 5px rgba(0,0,0,.2);
+	}
+.navbar-default.color-bar .navbar-nav > li > a{color: #333;}
+.navbar-default.color-bar .caret{color:#C0C0C0;}
+
+/* ---------------------------- /
+	nav-pills, nav-progress
+/ ---------------------------- */
+.nav-pills{background:#d9534f;}
+.login-btn{background: #B83B2B;}
+.nav-pills > li.active > a, 
+.nav-pills > li.active > a:hover, 
+.nav-pills > li.active > a:focus,
+.nav-pills > li.active > a .glyphicon,
+.nav-progress > li.active > a .glyphicon,
+.nav-progress > li.active > a, 
+.nav-progress > li.active > a:hover, 
+.nav-progress > li.active > a:focus {
+	color: #B83B2B !important;
+	}
+.nav-pills > li > a:hover, 
+.nav-pills > li > a:focus {
+	background-color: #B83B2B !important;
+	}
+
+/* ---------------------------- /
+	nav-tabs
+/ ---------------------------- */
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover, 
+.nav-tabs > li.active > a:focus{
+	color: #EA6358;
+	}
+
+/* ---------------------------- /
+	switcher
+/ ---------------------------- */
+#switcher.btn.circle .glyphicon{color:#d9534f;}
+#switcher.btn.circle.on .glyphicon{color:#fff;}
+#switcher.btn.circle.on{background:#d9534f;}
+
+input[type="checkbox"]:checked + label:before,
+input[type="radio"]:checked + label:before {
+	background-color: #FF6561;
+}
+
+/* ---------------------------- /
+	popup
+/ ---------------------------- */
+.modal-header{border-color:#FF747F;}
+.panel-primary.panel-field > .panel-heading{
+	background: -webkit-linear-gradient(top, #EA6358 0%,#d9534f 100%);
+	background:linear-gradient(to bottom, #EA6358 0%,#d9534f 100%);
+	}
+.panel-primary.panel-field,
+.panel-primary.panel-field > .panel-heading{border-color:#C54743;}

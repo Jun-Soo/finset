@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.pusheach.dao.PushEachMapper">
+    <!-- 푸시 AD01 UPDATE-->
+	<update id="modifyYnPushAD01" parameterType="com.koscom.pusheach.model.PushEachVO">
+		/* com.koscom.pusheach.dao.PushEachMapper.modifyYnPushAD01 : 푸시 목록 조회 */
+		UPDATE PUSH_AD01_INFO
+		SET    YN_PROCESS = 'Y'
+			  ,ID_LST = #{id_lst, jdbcType=VARCHAR}
+			  ,DT_LST = SYSDATE
+		WHERE seq_push = #{seq_push}
+	</update>
+    <!-- 푸시 AD01 등록-->
+	<insert id="createPushAD01Info" parameterType="com.koscom.pusheach.model.PushEachVO">
+		
+		<selectKey keyProperty="seq_push" resultType="int" order="BEFORE">
+			(SELECT NVL(MAX(seq_push),0)+1 FROM push_AD01_info)
+		</selectKey>
+	
+		INSERT INTO PUSH_AD01_INFO (
+			seq_push
+			, no_person
+            , push_divcd
+			, title
+			, body
+			, link_addr
+			, dt_reserv
+			, yn_send
+			, yn_process
+			, yn_display
+			, id_frt
+		    , dt_frt
+		    , id_lst
+			, dt_lst
+			)
+		VALUES (
+			  #{seq_push}
+			, #{no_person, jdbcType=VARCHAR}
+			, #{push_divcd, jdbcType=VARCHAR}
+			, #{title, jdbcType=VARCHAR}
+			, #{body, jdbcType=VARCHAR}
+			, #{link_addr, jdbcType=VARCHAR}
+			, SYSDATE
+			, #{yn_send, jdbcType=VARCHAR}
+			, 'N'
+			, #{yn_display, jdbcType=VARCHAR}
+            , #{id_frt, jdbcType=VARCHAR}
+			, SYSDATE  /*dt_reserv*/
+            , #{id_frt, jdbcType=VARCHAR}
+			, SYSDATE  /*dt_reserv*/
+			)
+	</insert>
+	
+	 <!-- 푸시 목록-->
+    <select id="listPushAD01Info"  parameterType="com.koscom.pusheach.model.PushEachForm" resultType="com.koscom.pusheach.model.PushEachVO">
+	    /* com.koscom.pusheach.dao.PushEachMapper.listPushAD01Info : 푸시 목록 조회 */
+	    /* 부채, 신용*/
+	    SELECT  AI.SEQ_PUSH
+              , AI.PUSH_DIVCD /* 푸쉬구분 */
+              , AI.NO_PERSON
+              , AI.TITLE
+			  , AI.BODY
+			  , AI.LINK_ADDR
+			  , AI.DT_RESERV
+			  , AI.YN_PROCESS
+			  , AI.YN_DISPLAY
+			  , AI.YN_SEND
+			  , AI.ID_FRT
+			  , AI.DT_FRT
+			  , AI.ID_LST
+			  , AI.DT_LST
+			  , PI.FCM_TOKEN
+			  , PI.YN_OS
+              ,NVL((SELECT MAX(PSI.YN_PUSH) FROM PUSH_SETTING_INFO PSI WHERE no_person = AI.no_person AND PSI.CD_PUSH = '02'),'N') AS yn_push2 /* 푸쉬메세지사용여부(신용) */
+              ,NVL((SELECT MAX(PSI.YN_PUSH) FROM PUSH_SETTING_INFO PSI WHERE no_person = AI.no_person AND PSI.CD_PUSH = '03'),'N') AS yn_push3 /* 푸쉬메세지사용여부(부채) */
+		  FROM PUSH_AD01_INFO AI /* 개인별 푸쉬 메시지 */
+		      ,PERSON_INFO    PI
+	     WHERE AI.YN_PROCESS = 'N'
+	       AND AI.NO_PERSON = PI.NO_PERSON
+    </select>
+    <!-- 푸시 등록-->
+	<insert id="createPushEachInfo" parameterType="com.koscom.pusheach.model.PushEachVO">
+		
+		<selectKey keyProperty="seq_push" resultType="int" order="BEFORE">
+			(SELECT NVL(MAX(seq_push),0)+1 FROM push_each_info)
+		</selectKey>
+		/* com.koscom.pusheach.dao.PushEachMapper.createPushEachInfo : 푸시 등록 */
+		INSERT INTO PUSH_EACH_INFO (
+			seq_push
+			, no_person
+			, title
+			, body
+			, push_divcd
+			, link_addr
+			, yn_send
+            , yn_display
+			, dt_reserv
+			, id_frt
+			, dt_frt
+			, id_lst
+			, dt_lst			
+			)
+		VALUES (
+			  #{seq_push}
+			, #{no_person, jdbcType=VARCHAR}
+			, #{title, jdbcType=VARCHAR}
+			, #{body, jdbcType=VARCHAR}
+			, #{push_divcd, jdbcType=VARCHAR}
+			, #{link_addr, jdbcType=VARCHAR}
+			, NVL(#{yn_send   , jdbcType=VARCHAR},'Y')
+		    , NVL(#{yn_display, jdbcType=VARCHAR},'Y')
+			, SYSDATE
+			, #{id_frt, jdbcType=VARCHAR}
+			, SYSDATE
+			, #{id_frt, jdbcType=VARCHAR}
+			, SYSDATE
+			)
+	</insert>
+	
+	 <!-- 푸시 목록-->
+    <select id="listPushEachInfo"  parameterType="com.koscom.pusheach.model.PushEachForm" resultType="com.koscom.pusheach.model.PushEachVO">  
+	    SELECT SEQ_PUSH
+            , NO_PERSON
+            , TITLE
+			, BODY
+			, LINK_ADDR
+			, DT_RESERV
+			, ID_FRT
+			, DT_FRT
+			, ID_LST
+			, DT_LST
+		    FROM 
+				(SELECT ROWNUM RNUM  
+					, LTS.SEQ_PUSH
+		            , LTS.NO_PERSON
+		            , LTS.TITLE
+					, LTS.BODY
+					, LTS.LINK_ADDR
+					, LTS.DT_RESERV
+					, LTS.ID_FRT
+					, LTS.DT_FRT
+					, LTS.ID_LST
+					, LTS.DT_LST
+					FROM (SELECT SEQ_PUSH
+				            , NO_PERSON
+				            , TITLE
+							, BODY
+							, LINK_ADDR
+							, DT_RESERV
+							, ID_FRT
+							, DT_FRT
+							, ID_LST
+							, DT_LST
+							FROM push_each_info 
+							<include refid="listPushEachInfo_WHERE"/>
+							ORDER BY seq_push desc 
+						) LTS 
+						WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+				) 
+			WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+    </select>
+    
+    <select id="listPushEachInfoCount" parameterType="com.koscom.pusheach.model.PushEachForm" resultType="int">
+		SELECT
+            COUNT(*) AS recordCount
+         FROM push_each_info 
+         <include refid="listPushEachInfo_WHERE"/>
+	</select>
+	
+	<sql id="listPushEachInfo_WHERE">
+		<where>
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_detail)">
+				 AND ${sel_detail} LIKE '%'||#{txt_detail}||'%'
+			</if>
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
+				AND TO_CHAR(dt_frt,'yyyyMMdd') <![CDATA[>=]]> #{txt_dt_from}
+			</if>
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_to)">
+				AND TO_CHAR(dt_frt,'yyyyMMdd') <![CDATA[<=]]> #{txt_dt_to}
+			</if>
+		</where>
+	</sql>
+    
+    <select id="viewPushEachInfo" parameterType="com.koscom.pusheach.model.PushEachVO" resultType="com.koscom.pusheach.model.PushEachVO">
+		SELECT
+			SEQ_PUSH
+            , NO_PERSON
+            , TITLE
+			, BODY
+			, LINK_ADDR
+			, DT_RESERV
+			, ID_FRT
+			, DT_FRT
+			, ID_LST
+			, DT_LST
+         FROM push_each_info 
+         WHERE SEQ_PUSH = ${seq_push}
+	</select>
+	
+	<!-- 프론트 마이페이지 알림푸시 목록-->
+    <select id="listPushNotification"  parameterType="com.koscom.pusheach.model.PushEachForm" resultType="com.koscom.pusheach.model.PushEachVO">
+	     SELECT
+	        *
+	    FROM
+	        (SELECT
+	            LST.*,
+	            ROWNUM RNUM
+	         FROM
+	            (
+				SELECT TITLE
+					, BODY
+					, LINK_ADDR
+					, TO_CHAR(DT_FRT,'YYYYMMDD') AS DT_FRT
+				FROM PUSH_EACH_INFO
+				WHERE YN_DISPLAY = 'Y'
+					AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					AND PUSH_DIVCD = #{push_divcd, jdbcType=VARCHAR}
+		 		ORDER BY DT_FRT DESC
+			 		) LST
+				WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	        )
+	    WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+
+    </select>
+    
+    <!-- 프론트 마이페이지 알림푸시 목록 카운트-->
+     <select id="listPushNotificationCount" parameterType="com.koscom.pusheach.model.PushEachForm" resultType="int">
+	     SELECT
+	            COUNT(*)
+	         FROM
+	            (
+				SELECT TITLE
+					, BODY
+					, LINK_ADDR
+					, TO_CHAR(DT_FRT,'YYYYMMDD') AS DT_FRT
+				FROM PUSH_EACH_INFO
+				WHERE YN_DISPLAY = 'Y'
+					AND NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					AND PUSH_DIVCD = #{push_divcd, jdbcType=VARCHAR}
+			 	)
+    </select>
+
+</mapper>

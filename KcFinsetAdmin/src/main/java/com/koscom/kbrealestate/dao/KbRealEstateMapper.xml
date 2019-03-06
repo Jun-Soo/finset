@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.kbrealestate.dao.KbRealEstateMapper">
+	<delete id="delKbSiGunGuInfo">
+		DELETE FROM ADDR_SIGUNGU_INFO
+	</delete>
+	<delete id="delKbDongAptInfo" parameterType="String">
+		DELETE FROM ADDR_DONG_INFO
+		where building_type = #{building_type}
+	</delete>
+	<insert id="createKbSiGunGuInfo" parameterType="com.koscom.kbrealestate.model.KbSiGunGuVO">
+		INSERT INTO ADDR_SIGUNGU_INFO(REGION1_CODE,REGION1_NAME,REGION2_CODE,REGION2_NAME) VALUES (
+		#{REGION1_CODE, jdbcType=VARCHAR}
+		,#{REGION1_NAME, jdbcType=VARCHAR}
+		,#{REGION2_CODE, jdbcType=VARCHAR}
+		,#{REGION2_NAME, jdbcType=VARCHAR})
+	</insert>
+	<insert id="createKbDongAptInfo" parameterType="com.koscom.kbrealestate.model.KbDongAptVO">
+		INSERT INTO ADDR_DONG_INFO(BUILDING_TYPE, REGION1_CODE,REGION1_NAME,REGION2_CODE,REGION2_NAME,REGION3_CODE,REGION3_NAME,LDONG_CODE,APARTMENT,APARTMENT_NAME) VALUES (
+		#{BUILDING_TYPE   , jdbcType=VARCHAR}
+		,#{REGION1_CODE   , jdbcType=VARCHAR}
+		,#{REGION1_NAME   , jdbcType=VARCHAR}
+		,#{REGION2_CODE   , jdbcType=VARCHAR}
+		,#{REGION2_NAME   , jdbcType=VARCHAR}
+		,#{REGION3_CODE   , jdbcType=VARCHAR}
+		,#{REGION3_NAME   , jdbcType=VARCHAR}
+		,#{LDONG_CODE     , jdbcType=VARCHAR}
+		,#{APARTMENT      , jdbcType=VARCHAR}
+		,#{APARTMENT_NAME , jdbcType=VARCHAR})
+	</insert>
+	<select id="listKbSiGunGuInfo" resultType="com.koscom.kbrealestate.model.KbSiGunGuVO">
+		SELECT * FROM ADDR_SIGUNGU_INFO
+	</select>
+	<select id="listSrchApartmentInfoJson" parameterType="com.koscom.kbrealestate.model.KbRealEstateForm" resultType="com.koscom.kbrealestate.model.KbDongAptVO">       
+		SELECT ( APARTMENT_NAME ) as auto_com_txt , APARTMENT, APARTMENT_NAME, REGION3_CODE
+		FROM ADDR_DONG_INFO
+		WHERE (APARTMENT_NAME LIKE '%' || #{APARTMENT} || '%' )
+		AND REGION1_CODE = #{REGION1_CODE}
+		AND REGION2_CODE = #{REGION2_CODE}
+		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(REGION3_CODE)">
+			AND REGION3_CODE = #{REGION3_CODE}
+		</if>
+		AND BUILDING_TYPE = #{BUILDING_TYPE}
+		ORDER BY APARTMENT_NAME ASC
+	</select>
+	<select id="listAddrRegion1" parameterType="com.koscom.kbrealestate.model.KbRealEstateForm" resultType="com.koscom.env.model.CodeInfo">
+        /* com.koscom.kbrealestate.dao.KbRealEstateMapper.listAddrRegion1*/
+		SELECT *
+		  FROM (
+				SELECT DISTINCT REGION1_CODE  as code_value ,REGION1_NAME as NM_CODE
+							 , (CASE WHEN REGION1_NAME LIKE '%특별시%' THEN 0
+							 WHEN REGION1_NAME LIKE '%광역시%' THEN 1
+							 WHEN REGION1_NAME LIKE '%특별자치%' THEN 2
+							ELSE 3 END) ORD
+			      FROM ADDR_DONG_INFO
+		         WHERE BUILDING_TYPE = #{BUILDING_TYPE}
+		       )
+		  ORDER BY ORD, NM_CODE
+	</select>
+	<select id="listAddrRegion2" parameterType="com.koscom.kbrealestate.model.KbRealEstateForm" resultType="com.koscom.env.model.CodeInfo">
+        /* com.koscom.kbrealestate.dao.KbRealEstateMapper.listAddrRegion2*/
+		SELECT DISTINCT REGION2_CODE  as code_value ,REGION2_NAME as nm_code 
+		FROM ADDR_DONG_INFO
+		WHERE REGION1_CODE = #{REGION1_CODE}	
+		ORDER BY REGION2_NAME
+	</select>
+	<select id="listAddrRegion3" parameterType="com.koscom.kbrealestate.model.KbRealEstateForm" resultType="com.koscom.env.model.CodeInfo">
+        /* com.koscom.kbrealestate.dao.KbRealEstateMapper.listAddrRegion3*/
+		SELECT DISTINCT REGION3_CODE  as code_value ,REGION3_NAME as nm_code
+		FROM ADDR_DONG_INFO  
+		WHERE REGION2_CODE = #{REGION2_CODE}
+		ORDER BY REGION3_NAME
+
+	</select>
+</mapper>

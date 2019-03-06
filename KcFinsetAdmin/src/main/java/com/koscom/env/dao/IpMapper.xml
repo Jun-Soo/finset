@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.env.dao.IpMapper">
+
+	<select id="getAllowIpInfo" parameterType="com.koscom.domain.AllowIpInfo" resultType="com.koscom.env.model.AllowIpInfoVO">       
+	     SELECT * FROM allow_ip_info WHERE cd_system = #{cd_system} AND ip = #{ip}
+	</select>
+	
+	<select id="listAllowIpInfo" parameterType="com.koscom.domain.AllowIpInfo" resultType="com.koscom.env.model.AllowIpInfoVO">
+		SELECT * 
+		FROM allow_ip_info
+		<where>
+			<if test="cd_system != null and cd_system != ''">
+				AND cd_system = #{cd_system}
+			</if> 
+			<if test="ip != null and ip != ''">
+				AND ip LIKE '%' || #{ip} || '%'
+			</if> 
+			<if test="memo != null and memo != ''">
+				AND memo LIKE '%' || #{memo} || '%'
+			</if> 
+		</where>
+		ORDER BY DT_FRT DESC
+	</select>
+	
+	<update id="procIpInfo" parameterType="com.koscom.domain.AllowIpInfo">
+		MERGE INTO allow_ip_info
+		   USING DUAL
+		   ON (cd_system = #{cd_system, jdbcType=VARCHAR} AND ip = #{ip, jdbcType=VARCHAR})
+		   WHEN MATCHED THEN
+		      UPDATE 
+		         SET  reg_exp_ip = #{reg_exp_ip, jdbcType=VARCHAR}
+					, memo = #{memo, jdbcType=VARCHAR}
+					, id_lst = #{id_lst, jdbcType=VARCHAR}
+					, dt_lst = SYSDATE
+			WHEN NOT MATCHED THEN
+			  INSERT (
+						cd_system
+					,	ip
+					,	reg_exp_ip
+					,	memo
+					,	id_frt
+					,	dt_frt
+					,   id_lst
+					,   dt_lst
+					)
+			 VALUES
+					(
+						#{cd_system, jdbcType=VARCHAR}
+					,	#{ip, jdbcType=VARCHAR}
+					,	#{reg_exp_ip, jdbcType=VARCHAR}
+					,	#{memo, jdbcType=VARCHAR}
+					,	#{id_frt, jdbcType=VARCHAR}
+					,	SYSDATE
+					,	#{id_frt, jdbcType=VARCHAR}
+					,	SYSDATE
+					)
+	</update>
+	
+	<select id="getIpInfo" parameterType="com.koscom.domain.AllowIpInfo" resultType="com.koscom.env.model.AllowIpInfoVO">
+		SELECT 
+					cd_system
+				,	ip
+				,	reg_exp_ip
+				,	memo
+				,	id_frt
+				,	dt_frt
+				,	id_lst
+				,	dt_lst
+		FROM	allow_ip_info
+		WHERE	cd_system = #{cd_system} and ip = #{ip}
+	</select>
+	
+	<delete id="delIpInfo" parameterType="com.koscom.domain.AllowIpInfo">
+		DELETE FROM allow_ip_info
+		WHERE cd_system = #{cd_system} and ip = #{ip}
+	</delete>
+</mapper>

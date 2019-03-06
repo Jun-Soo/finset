@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.env.dao.BusinessMapper">
+
+<!-- 영업일 목록 조회 -->
+<select id="listBusinessDay" resultType="com.koscom.env.model.BusinessDayVO">
+	SELECT ymd, yn_holiday FROM BUSINESS_DAY 
+</select>
+
+<select id="listFcBusinessDay" parameterType="com.koscom.env.model.BusinessDayForm" resultType="com.koscom.env.model.BusinessDayVO">
+	SELECT ymd
+	     , yn_holiday 
+	  FROM FC_BUSINESS_DAY
+	 WHERE 1=1
+	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+	  	AND cd_fc = #{cd_fc, jdbcType=VARCHAR}
+	</if>
+	   
+</select>
+
+<select id="getBusinessDay" resultType="com.koscom.env.model.BusinessDayVO">
+	SELECT ymd, yn_holiday FROM BUSINESS_DAY WHERE ymd = #{ymd, jdbcType=VARCHAR}
+</select>
+
+<!-- 영업일관리 휴일저장 -->
+<insert id="createBusinessDay" parameterType="com.koscom.env.model.BusinessDayForm">
+	INSERT INTO business_day 
+			(
+			  ymd
+			, yn_holiday
+			, id_frt
+			, dt_frt
+			, id_lst
+			, dt_lst
+			)
+	VALUES (
+			#{ymd, jdbcType=VARCHAR}
+			, 'Y'
+			, #{id_frt, jdbcType=VARCHAR}
+			, SYSDATE
+			, #{id_frt, jdbcType=VARCHAR}
+			, SYSDATE
+			)
+			
+</insert>
+
+<!-- 영업일관리 휴일 삭제 -->
+<delete id="deleteBusinessDay" parameterType="com.koscom.env.model.BusinessDayForm">
+	DELETE business_day
+	 WHERE ymd = #{ymd, jdbcType=VARCHAR}
+</delete>
+
+
+<select id="getFcBusinessDay" resultType="com.koscom.env.model.BusinessDayVO">
+	SELECT cd_fc, ymd, yn_cutoff,yn_holiday FROM FC_BUSINESS_DAY 
+		WHERE cd_fc = #{cd_fc, jdbcType=VARCHAR}
+</select>
+
+<!-- 금융사 영업일관리 휴일저장 -->
+<insert id="createFcBusinessDay" parameterType="com.koscom.env.model.BusinessDayForm">
+	MERGE INTO fc_business_day
+	   USING DUAL
+	   ON (cd_fc = #{cd_fc} AND ymd = #{ymd} )
+	   WHEN MATCHED THEN
+	      UPDATE 
+	         SET  time_start = #{time_start, jdbcType=VARCHAR}
+				, time_end = #{time_end, jdbcType=VARCHAR}
+				, yn_cutoff = #{yn_cutoff, jdbcType=VARCHAR}
+				, cd_reason = #{cd_reason, jdbcType=VARCHAR}
+				, memo = #{memo, jdbcType=VARCHAR}
+				, yn_holiday = #{yn_holiday, jdbcType=VARCHAR}
+				, id_lst = #{id_lst, jdbcType=VARCHAR}
+				, dt_lst = SYSDATE
+		WHEN NOT MATCHED THEN
+			INSERT 
+				(
+				cd_fc
+				,  ymd
+				, time_start
+				, time_end
+				, yn_cutoff
+				, cd_reason
+				, memo
+				, yn_holiday
+				, id_frt
+				, dt_frt 
+				, id_lst
+				, dt_lst
+				)
+		VALUES (
+				#{cd_fc, jdbcType=VARCHAR}
+				,#{ymd, jdbcType=VARCHAR}
+				,#{time_start, jdbcType=VARCHAR}
+				,#{time_end, jdbcType=VARCHAR}
+				,#{yn_cutoff, jdbcType=VARCHAR}
+				,#{cd_reason, jdbcType=VARCHAR}
+				,#{memo, jdbcType=VARCHAR}
+				, 'Y'
+				, #{id_frt, jdbcType=VARCHAR}
+				, SYSDATE
+				, #{id_frt, jdbcType=VARCHAR}
+				, SYSDATE
+				)
+		
+</insert>
+
+<!-- 금융사 영업일관리 휴일 삭제 -->
+<delete id="deleteFcBusinessDay" parameterType="com.koscom.env.model.BusinessDayForm">
+	DELETE fc_business_day
+	 WHERE cd_fc = #{cd_fc, jdbcType=VARCHAR} 
+	 	AND ymd = #{ymd, jdbcType=VARCHAR}
+</delete>
+
+<!-- 금융사 영업일 상세정보 -->
+<select id="getFcBusinessDayInfo" parameterType="com.koscom.domain.BusinessDay" resultType="com.koscom.env.model.BusinessDayVO">       
+     SELECT *
+       FROM fc_business_day
+      WHERE 1=1
+	 <if test="@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)">
+		 AND cd_fc = #{cd_fc, jdbcType=VARCHAR}
+	</if> 
+	<if test="@com.koscom.util.MybatisUtil@isNotEmpty(ymd)">
+		 AND ymd = #{ymd, jdbcType=VARCHAR}
+	</if>
+</select>
+
+
+</mapper>      

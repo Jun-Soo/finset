@@ -1,0 +1,13 @@
+[ERROR] Fail to read ip port :Socket[addr=/10.20.100.45,port=36433,localport=9880]
+[INFO] Socket close : Socket[addr=/10.20.100.45,port=36433,localport=9880]
+[INFO] connect! Socket[addr=/10.20.100.45,port=36434,localport=9880]
+POST /finance/status
+Socket[addr=/10.20.100.45,port=36434,localport=9880]) Noti.crz?loanRqsNo=20180219000014&loanApprStatus=3&loanApprAmt=0&loanApprInrt=0&loanApprDt=0&rsltMsg=%C1%A4%BA%B8%C8%B0%BF%EB%B5%BF%C0%C7%BC%BA%B0%F8&cdFc=0010471 HTTP/1.1
+Socket[addr=/10.20.100.45,port=36434,localport=9880]) User-Agent: Java/1.6.0_24
+Socket[addr=/10.20.100.45,port=36434,localport=9880]) Host: 10.30.50.11:9880
+Socket[addr=/10.20.100.45,port=36434,localport=9880]) Accept: text/html, image/gif, image/jpeg, *; q=.2, */*; q=.2
+Socket[addr=/10.20.100.45,port=36434,localport=9880]) Connection: keep-alive
+Socket[addr=/10.20.100.45,port=36434,localport=9880]) Content-type: application/x-www-form-urlencoded
+Socket[addr=/10.20.100.45,port=36434,localport=9880]) Content-Length: 153
+[ERROR] Fail to read ip port :Socket[addr=/10.20.100.45,port=36434,localport=9880]
+[INFO] Socket close : Socket[addr=/10.20.100.45,port=36434,localport=9880]

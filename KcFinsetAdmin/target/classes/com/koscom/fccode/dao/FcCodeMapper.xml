@@ -1,0 +1,430 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.fccode.dao.FcCodeMapper">
+
+	<select id="getFcCodeInfo" parameterType="com.koscom.fccode.model.FcCodeInfo" resultType="com.koscom.fccode.model.FcCodeInfo">
+	     SELECT FC.*
+	       	,   (	select parent_code_group
+	       			FROM FC_EDOC_REPEAT FCRT
+	       			WHERE FCRT.CD_FC = FC.CD_FC
+	       			AND FCRT.NO_EDOC = FC.NO_EDOC
+	       			AND FCRT.TYPE_TXRX = FC.TYPE_TXRX
+	       			AND FCRT.REAL_CODE_GROUP = FC.CODE_GROUP
+	       			GROUP BY FCRT.PARENT_CODE_GROUP ) as parent_code_group
+	     FROM FC_EDOC_CD FC
+	     WHERE 1=1
+	     and FC.cd_fc = #{cd_fc, jdbcType=VARCHAR}
+	     and FC.no_edoc = #{no_edoc, jdbcType=VARCHAR}
+	     and FC.code_group = #{code_group, jdbcType=VARCHAR}
+	     and FC.code_value = #{code_value, jdbcType=VARCHAR}
+	     <if test='@com.koscom.util.MybatisUtil@isNotEmpty(type_txrx)'>
+	     and FC.type_txrx = #{type_txrx, jdbcType=VARCHAR}
+	     </if>
+	</select>
+
+	<select id="listFcCodeInfo" parameterType="com.koscom.fccode.model.FcCodeInfo" resultType="com.koscom.fccode.model.FcCodeInfo">
+		SELECT *
+		FROM FC_EDOC_CD
+		WHERE cd_fc = #{cd_fc}
+	    AND no_edoc = #{no_edoc}
+	    AND code_group = #{code_group}
+		AND code_value != ' '
+		<if test="nm_code != null and nm_code != ''">
+		AND nm_code LIKE '%' || #{nm_code} || '%'
+		</if>
+		ORDER BY seq_order
+	</select>
+
+	<select id="listFcCode" parameterType="com.koscom.fccode.model.FcCodeForm" resultType="com.koscom.fccode.model.FcCodeVO">
+	<!-- 	SELECT * FROM FC_EDOC_CD -->
+		SELECT FC.*
+	       	,   (	select parent_code_group
+	       			FROM FC_EDOC_REPEAT FCRT
+					WHERE FCRT.CD_FC = FC.CD_FC
+					AND FCRT.NO_EDOC = FC.NO_EDOC
+					AND FCRT.TYPE_TXRX = FC.TYPE_TXRX
+					AND FCRT.REAL_CODE_GROUP = FC.CODE_GROUP
+					GROUP BY FCRT.PARENT_CODE_GROUP ) as parent_code_group
+	    FROM FC_EDOC_CD FC
+		<where>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+				AND FC.cd_fc = #{cd_fc}
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(no_edoc)'>
+				AND FC.no_edoc = #{no_edoc}
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(code_group)'>
+				AND FC.code_group = #{code_group}
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(code_value)'>
+				AND FC.code_value = #{code_value}
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(nm_code)'>
+				AND FC.nm_code = #{nm_code}
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(yn_code_group)'>
+				<choose>
+					<when test='"Y".equals(yn_code_group)'>
+						AND FC.code_value = ' '
+					</when>
+					<otherwise>
+						AND FC.code_value != ' '
+						<if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_detail)">
+						   <if test="sel_detail.equals('cd_fc')">
+						      AND FC.cd_fc = #{txt_detail}
+						   </if>
+						   <if test="sel_detail.equals('no_edoc')">
+						      AND FC.no_edoc = #{txt_detail}
+						   </if>
+						   <if test="sel_detail.equals('code_group')">
+						      AND FC.code_group = #{txt_detail}
+						   </if>
+						   <if test="sel_detail.equals('code_value')">
+						      AND FC.code_value = #{txt_detail}
+						   </if>
+						   <if test="sel_detail.equals('nm_code')">
+						      AND FC.nm_code = #{txt_detail}
+						   </if>
+						   <if test="sel_detail.equals('etc')">
+						      AND FC.etc = #{txt_detail}
+						   </if>
+						</if>
+					</otherwise>
+				</choose>
+
+				<if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_detail)">
+					<if test="sel_detail.equals('cd_fc')">
+				      AND FC.cd_fc LIKE '%'||#{txt_detail}||'%'
+				   </if>
+				   <if test="sel_detail.equals('no_edoc')">
+				      AND FC.no_edoc LIKE '%'||#{txt_detail}||'%'
+				   </if>
+				   <if test="sel_detail.equals('code_group')">
+				      AND FC.code_group LIKE '%'||#{txt_detail}||'%'
+				   </if>
+				   <if test="sel_detail.equals('code_value')">
+				      AND FC.code_value LIKE '%'||#{txt_detail}||'%'
+				   </if>
+				   <if test="sel_detail.equals('nm_code')">
+				      AND FC.nm_code LIKE '%'||#{txt_detail}||'%'
+				   </if>
+				   <if test="sel_detail.equals('etc')">
+				      AND FC.etc LIKE '%'||#{txt_detail}||'%'
+				   </if>
+				</if>
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(type_txrx)'>
+				AND FC.type_txrx = #{type_txrx}
+			</if>
+		</where>
+		ORDER BY FC.seq_order asc
+	<!-- 	ORDER BY cd_fc, no_edoc, code_group, seq_order asc -->
+	</select>
+
+	<select id="listNmFcEdoc" parameterType="com.koscom.fccode.model.FcCodeForm" resultType="String">
+		SELECT DISTINCT no_edoc
+		FROM FC_EDOC_CD
+		<where>
+			1=1
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+				AND cd_fc = #{cd_fc}
+			</if>
+		</where>
+	</select>
+
+	<update id="updateFcItemTagCodeInfo" parameterType="com.koscom.fccode.model.FcCodeInfo">
+		UPDATE  FC_EDOC_CD
+		SET     item_tag = #{item_tag, jdbcType=VARCHAR}
+				, id_lst = #{id_lst, jdbcType=VARCHAR}
+				, dt_lst = SYSDATE
+		WHERE   cd_fc = #{cd_fc}
+	    AND     no_edoc = #{no_edoc}
+	    AND     code_group = #{code_group}
+	</update>
+
+	<update id="procFcCodeInfo" parameterType="com.koscom.fccode.model.FcCodeInfo">
+		MERGE INTO FC_EDOC_CD
+		   USING DUAL
+		   ON
+		   (   cd_fc = #{cd_fc, jdbcType=VARCHAR}
+		   AND no_edoc = #{no_edoc, jdbcType=VARCHAR}
+		   AND code_group = #{code_group, jdbcType=VARCHAR}
+		   AND code_value = #{code_value, jdbcType=VARCHAR}
+		   AND type_txrx = #{type_txrx, jdbcType=VARCHAR}
+		   )
+		   WHEN MATCHED THEN
+		      UPDATE
+		         SET  nm_code = #{nm_code, jdbcType=VARCHAR}
+					, etc = #{etc, jdbcType=VARCHAR}
+					, seq_order = #{seq_order, jdbcType=INTEGER}
+					, yn_system_code = #{yn_system_code, jdbcType=VARCHAR}
+					, yn_use = #{yn_use, jdbcType=VARCHAR}
+					, type_data = #{type_data, jdbcType=VARCHAR}
+					, nm_col = #{nm_col, jdbcType=VARCHAR}
+					, item_tag = #{item_tag, jdbcType=VARCHAR}
+					, item_tag_value = #{item_tag_value, jdbcType=VARCHAR}
+					, field_length = #{field_length, jdbcType=INTEGER}
+					, type_attr = #{type_attr, jdbcType=VARCHAR}
+					, id_lst = #{id_lst, jdbcType=VARCHAR}
+					, dt_lst = SYSDATE
+			WHEN NOT MATCHED THEN
+			  INSERT (
+			    	 cd_fc
+			    	 , no_edoc
+			    	 , code_group
+			    	 , code_value
+			    	 , nm_code
+					 , etc
+					 , seq_order
+					 , yn_system_code
+					 , yn_use
+					 , type_txrx
+					 , type_data
+					 , nm_col
+					 , item_tag
+					 , item_tag_value
+					 , field_length
+					 , type_attr
+					 , id_frt
+					 , dt_frt
+					 , id_lst
+					 , dt_lst
+				)
+				VALUES(
+				 #{cd_fc, jdbcType=VARCHAR}
+			    ,#{no_edoc, jdbcType=VARCHAR}
+				,#{code_group, jdbcType=VARCHAR}
+			    ,#{code_value, jdbcType=VARCHAR}
+			    ,#{nm_code, jdbcType=VARCHAR}
+			    ,#{etc, jdbcType=VARCHAR}
+			    ,#{seq_order, jdbcType=INTEGER}
+			    ,#{yn_system_code, jdbcType=VARCHAR}
+			    ,#{yn_use, jdbcType=VARCHAR}
+				,#{type_txrx, jdbcType=VARCHAR}
+				,#{type_data, jdbcType=VARCHAR}
+				,#{nm_col, jdbcType=VARCHAR}
+				,#{item_tag, jdbcType=VARCHAR}
+			    ,#{item_tag_value, jdbcType=VARCHAR}
+			    ,#{field_length, jdbcType=INTEGER}
+			    ,#{type_attr, jdbcType=VARCHAR}
+			    ,#{id_frt, jdbcType=VARCHAR}
+			    , SYSDATE
+			    ,#{id_frt, jdbcType=VARCHAR}
+			    , SYSDATE
+			     )
+	</update>
+
+
+	<delete id="delFcCodeInfo" parameterType="com.koscom.fccode.model.FcCodeInfo">
+		DELETE from FC_EDOC_CD
+		WHERE cd_fc = #{cd_fc}
+		AND no_edoc = #{no_edoc}
+		AND code_group = #{code_group}
+		<if test='@com.koscom.util.MybatisUtil@isNotEmpty(code_value)'>
+			AND code_value = #{code_value}
+		</if>
+	</delete>
+
+	<!-- 코드그룹의 seq_order,code_value 의 최대값을 가져온다  -->
+	<select id="getMaxFcCodeInfo" parameterType="com.koscom.fccode.model.FcCodeInfo" resultType="com.koscom.fccode.model.FcCodeVO">
+		SELECT cd_fc, no_edoc
+				, code_group
+				, MAX(seq_order) AS seq_order
+				, MAX(code_value) AS code_value
+		FROM FC_EDOC_CD
+		WHERE code_group=#{code_group}
+		GROUP BY code_group
+	</select>
+
+	<!-- 코드그룹의 seq_order를 바꾼다. -->
+	<update id="modifyListSeq" parameterType="com.koscom.fccode.model.FcCodeInfo">
+		UPDATE  FC_EDOC_CD
+		SET       seq_order = #{seq_order}
+				, id_lst = #{id_lst, jdbcType=VARCHAR}
+				, dt_lst = SYSDATE
+		WHERE   code_group = #{code_group}
+		AND     code_value = #{code_value}
+	</update>
+	<select id="listSrchFcCodeInfoJson" parameterType="com.koscom.fccode.model.FcCodeForm" resultType="com.koscom.fccode.model.FcCodeVO">
+		SELECT ( CODE_GROUP || '.' || NM_CODE ) as auto_com_txt , CODE_GROUP, NM_CODE
+		FROM STD_CD
+		WHERE (CODE_GROUP LIKE '%' || #{item_tag} || '%' OR CODE_VALUE LIKE '%' || #{item_tag} || '%' OR NM_CODE LIKE '%' || #{item_tag} || '%')
+		AND CODE_VALUE = ' '
+		ORDER BY CODE_GROUP ASC
+	</select>
+
+
+	<update id="updateFcCodeSeq" parameterType="com.koscom.fccode.model.FcCodeInfo">
+	 	UPDATE    FC_EDOC_CD
+	    SET       seq_order = #{seq_order, jdbcType=INTEGER}
+				, id_lst = #{id_lst, jdbcType=VARCHAR}
+				, dt_lst = SYSDATE
+	 	WHERE     1=1
+		AND       cd_fc = #{cd_fc, jdbcType=VARCHAR}
+		AND       no_edoc = #{no_edoc, jdbcType=VARCHAR}
+		AND       type_txrx = #{type_txrx, jdbcType=VARCHAR}
+		AND       code_group = #{code_group, jdbcType=VARCHAR}
+	</update>
+
+	<!-- 해당 전문의 리스트를 가져온다. -->
+	<!-- 직업직위관련된 내용 협의 후 INNER JOIN으로 변경예정 -->
+	<select id="listFcEdocInfo" parameterType="com.koscom.fccode.model.FcCodeForm" resultType="com.koscom.finance.model.FcEdocForm">
+		SELECT FC.CODE_GROUP   AS FIELD_CD
+	         , FC.NM_CODE      AS FIELD_NM
+	         , FC.FIELD_LENGTH AS FIELD_LEN
+	         , FC.ITEM_TAG     AS FIELD_TAG
+	         , SD.TYPE_DATA    AS FIELD_TYPE
+	         , SD.NM_COL       AS FIELD_DB_NM
+	         , FC.TYPE_ATTR    AS FIELD_TYPE_ATTR
+			 , (CASE WHEN (SELECT COUNT(*) FROM FC_EDOC_REPEAT FCRT WHERE FCRT.CD_FC = FC.CD_FC AND FCRT.NO_EDOC = FC.NO_EDOC AND FCRT.TYPE_TXRX = FC.TYPE_TXRX AND FCRT.PARENT_CODE_GROUP = FC.CODE_GROUP GROUP BY FCRT.PARENT_CODE_GROUP ) > 0 THEN 'Y' ELSE 'N' END ) AS REPEAT_YN
+	      FROM FC_EDOC_CD FC INNER JOIN STD_CD SD ON FC.ITEM_TAG = SD.CODE_GROUP AND SD.CODE_VALUE = ' '
+		<where>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+				AND FC.cd_fc = #{cd_fc}
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(no_edoc)'>
+				AND FC.no_edoc = #{no_edoc}
+			</if>
+	<!-- 		<if test='@com.koscom.util.MybatisUtil@isNotEmpty(code_value)'> -->
+	<!-- 			AND FC.code_value = #{code_value} -->
+	<!-- 		</if> -->
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(type_txrx)'>
+				AND FC.type_txrx = #{type_txrx}
+			</if>
+			AND FC.code_value = ' '
+			AND FC.YN_USE = 'Y'
+			AND NOT EXISTS (SELECT FCR.REAL_CODE_GROUP FROM FC_EDOC_REPEAT FCR WHERE FC.CD_FC = FCR.CD_FC AND FC.NO_EDOC = FCR.NO_EDOC AND FC.TYPE_TXRX = FCR.TYPE_TXRX AND FC.CODE_GROUP = FCR.REAL_CODE_GROUP)
+		</where>
+		ORDER BY FC.SEQ_ORDER ASC
+	</select>
+
+	<!-- 금웅사전문코드 <- 전문공통코드 값 매핑 결과 조회 -->
+	<select id="getFcCommCdToFcCd" parameterType="com.koscom.fccode.model.FcCodeForm" resultType="String">
+		SELECT CODE_VALUE
+		  FROM FC_EDOC_CD
+		 <where>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+				AND cd_fc = #{cd_fc}
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(no_edoc)'>
+				AND no_edoc = #{no_edoc}
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(item_tag)'>
+				AND item_tag = #{item_tag}
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(item_tag_value)'>
+				AND item_tag_value = #{item_tag_value}
+			</if>
+	    	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(type_txrx)'>
+				AND type_txrx = #{type_txrx}
+			</if>
+			AND yn_use = 'Y'
+		</where>
+	</select>
+
+	<!-- 금웅사전문코드 -> 전문공통코드 값 매핑 결과 조회 -->
+	<select id="getFcCdToFcCommCd" parameterType="com.koscom.fccode.model.FcCodeForm" resultType="String">
+		SELECT ITEM_TAG_VALUE
+		  FROM FC_EDOC_CD
+		 <where>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+				AND cd_fc = #{cd_fc}
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(no_edoc)'>
+				AND no_edoc = #{no_edoc}
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(item_tag)'>
+				AND item_tag = #{item_tag}
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(code_value)'>
+				AND code_value = #{code_value}
+			</if>
+	        <if test='@com.koscom.util.MybatisUtil@isNotEmpty(type_txrx)'>
+				AND type_txrx = #{type_txrx}
+			</if>
+			AND yn_use = 'Y'
+		</where>
+	</select>
+
+	<!-- 전문 반복 코드 list 조회 -->
+	<select id="listFcEdocRepeatInfo" parameterType="com.koscom.fccode.model.FcCodeForm" resultType="com.koscom.finance.model.FcEdocForm">
+		SELECT FC.CODE_GROUP       AS FIELD_CD
+	         , FC.NM_CODE          AS FIELD_NM
+	         , FC.FIELD_LENGTH     AS FIELD_LEN
+	         , FC.ITEM_TAG         AS FIELD_TAG
+	         , SD.TYPE_DATA        AS FIELD_TYPE
+	         , SD.NM_COL           AS FIELD_DB_NM
+	         , FC.TYPE_ATTR        AS FIELD_TYPE_ATTR
+	  FROM FC_EDOC_REPEAT FCR INNER JOIN STD_CD SD     ON SD.CODE_VALUE = ' '
+	                          INNER JOIN FC_EDOC_CD FC ON FCR.CD_FC = FC.CD_FC AND FCR.NO_EDOC = FC.NO_EDOC AND FCR.TYPE_TXRX = FC.TYPE_TXRX AND FCR.REAL_CODE_GROUP = FC.CODE_GROUP AND FC.CODE_VALUE = ' '
+		WHERE 1=1
+		  AND FC.item_tag = SD.code_group
+		  AND FCR.cd_fc = #{cd_fc}
+	      AND FCR.no_edoc = #{no_edoc}
+	      AND FCR.type_txrx = #{type_txrx}
+		ORDER BY FCR.SEQ_ORDER ASC
+	</select>
+	<!--반복 부모코드 검색  -->
+	<select id="listSrchFcRepeatJson" parameterType="com.koscom.fccode.model.FcCodeForm" resultType="com.koscom.fccode.model.FcCodeVO">
+		SELECT ( CODE_GROUP || '.' || NM_CODE ) as auto_com_txt , CODE_GROUP, NM_CODE
+		FROM FC_EDOC_CD
+		WHERE (CODE_GROUP LIKE '%' || #{item_repeat_tag} || '%' OR CODE_VALUE LIKE '%' || #{item_repeat_tag} || '%' OR NM_CODE LIKE '%' || #{item_repeat_tag} || '%')
+		AND CODE_VALUE = ' '
+	    AND cd_fc = #{cd_fc, jdbcType=VARCHAR}
+	    AND no_edoc = #{no_edoc, jdbcType=VARCHAR}
+	    AND type_txrx = #{type_txrx, jdbcType=VARCHAR}
+		ORDER BY CODE_GROUP ASC
+	</select>
+
+	<!-- 부모코드반목명 저장 -->
+	<insert id="createFcRepeat" parameterType="com.koscom.domain.FcEdocRepeatInfo">
+		INSERT INTO fc_edoc_repeat
+			(
+				 cd_fc
+				 , no_edoc
+				 , seq_order
+				 , type_txrx
+				 , parent_code_group
+				 , real_code_group
+				 , id_frt
+				 , dt_frt
+				 , id_lst
+				 , dt_lst
+			)
+		VALUES (
+				 #{cd_fc, jdbcType=VARCHAR}
+			    ,#{no_edoc, jdbcType=VARCHAR}
+			    ,#{seq_order, jdbcType=INTEGER}
+				,#{type_txrx, jdbcType=VARCHAR}
+				,#{parent_code_group, jdbcType=VARCHAR}
+				,#{real_code_group, jdbcType=VARCHAR}
+				,#{id_frt, jdbcType=VARCHAR}
+				, SYSDATE
+				,#{id_frt, jdbcType=VARCHAR}
+				, SYSDATE
+			)
+
+	</insert>
+
+	<!-- 부모코드반목명 삭제 -->
+	<delete id="deleteFcRepeat" parameterType="com.koscom.domain.FcEdocRepeatInfo">
+		DELETE fc_edoc_repeat
+		 WHERE cd_fc = #{cd_fc, jdbcType=VARCHAR}
+			AND no_edoc = #{no_edoc, jdbcType=VARCHAR}
+			AND	type_txrx = #{type_txrx, jdbcType=VARCHAR}
+	<!-- 		AND	seq_order = #{seq_order, jdbcType=VARCHAR} -->
+			AND	real_code_group = #{real_code_group, jdbcType=VARCHAR}
+	</delete>
+
+	<select id="selectCdFc" parameterType="String" resultType="String">
+		SELECT NVL(B.CD_FC, A.CD_FC) AS CD_FC 
+		  FROM FC_INFO A LEFT OUTER JOIN FC_NM_INFO B
+		       ON A.CD_FC = B.CD_FC
+		 WHERE (B.NM_FC = REGEXP_REPLACE(#{nm_fc, jdbcType=VARCHAR}, '( ){1,}', '') OR A.NM_FC = REGEXP_REPLACE(#{nm_fc, jdbcType=VARCHAR}, '( ){1,}', ''))  
+		   AND B.YN_USE = 'Y' 
+		   AND ROWNUM = 1
+	</select>
+
+</mapper>

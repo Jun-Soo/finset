@@ -1,0 +1,676 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd" version="2.0">
+
+	<description>JSTL 1.1 functions library</description>
+	<display-name>JSTL User functions</display-name>
+	<tlib-version>1.1</tlib-version>
+	<short-name>ufn</short-name>
+	<uri>http://java.sun.com/jsp/jstl/function</uri>
+
+	<function>
+		<description>
+			Get Code's Name by Code's Value
+		</description>
+		<name>getCodeName</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String getCodeName(java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:getCodeName('code_group', 'code_value')}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			Get Code's Etc by Code's Value
+		</description>
+		<name>getCodeEtc</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String getCodeEtc(java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:getCodeEtc('code_group', 'code_value')}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			Get Code's Name by Code's Value , return data is null then defalut string
+		</description>
+		<name>getNvlCodeName</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String getNvlCodeName(java.lang.String, java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:getNvlCodeName('code_group', 'code_value', 'defaultStr')}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			Get Code List
+		</description>
+		<name>getCodeList</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String getCodeList(java.lang.String)</function-signature>
+		<example>
+			 ${ufn:getCodeList('code_group')}
+		</example>
+	</function>
+	<function>
+		<description>
+			Get Code List
+		</description>
+		<name>getFcCodeList</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String getFcCodeList(java.lang.String)</function-signature>
+		<example>
+			 ${ufn:getFcCodeList('code_group')}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			makeIdOptions
+		</description>
+		<name>makeIdOptions</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String makeIdOptions(java.lang.String, java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:makeIdOptions(idAppr, defaultText, selectValue)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			makeAllIdOptions
+		</description>
+		<name>makeAllIdOptions</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String makeAllIdOptions(java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:makeAllIdOptions(defaultText, selectValue)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			makeIdOptionsByBranch
+		</description>
+		<name>makeIdOptionsByBranch</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String makeIdOptionsByBranch(java.lang.String, java.lang.String, java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:makeIdOptionsByBranch(idAppr, defaultText, selectValue, c3_branch)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			makeAllIdOptionsByBranch
+		</description>
+		<name>makeAllIdOptionsByBranch</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String makeAllIdOptionsByBranch(java.lang.String, java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:makeAllIdOptionsByBranch(defaultText, selectValue, c3_branch)}
+		</example>
+	</function>
+
+	<function>
+	    <description>
+	      make options for selectBox
+	    </description>
+	    <name>makeOptions</name>
+	    <function-class>com.koscom.util.JSTLFunction</function-class>
+	    <function-signature>java.lang.String makeOptions(java.lang.String, java.lang.String, java.lang.String)</function-signature>
+	    <example>
+	       ${ufn:makeOptions('code_group','default_text', 'code_value')}
+	    </example>
+	</function>
+
+	<function>
+	    <description>
+	      make options for selectBox
+	    </description>
+	    <name>makeOptionsName</name>
+	    <function-class>com.koscom.util.JSTLFunction</function-class>
+	    <function-signature>java.lang.String makeOptionsName(java.lang.String, java.lang.String, java.lang.String, java.lang.String)</function-signature>
+	    <example>
+	       ${ufn:makeOptionsName('code_group','default_text', 'nm_code', "type")}
+	    </example>
+	</function>
+
+	<function>
+	    <description>
+	      make options for selectBox
+	    </description>
+	    <name>makeOptionsEtc</name>
+	    <function-class>com.koscom.util.JSTLFunction</function-class>
+	    <function-signature>java.lang.String makeOptionsEtc(java.lang.String, java.lang.String, java.lang.String, java.lang.String)</function-signature>
+	    <example>
+	       ${ufn:makeOptionsEtc('code_group','default_text', 'nm_code', "type")}
+	    </example>
+	</function>
+
+	<function>
+	    <description>
+	      make Goods options for selectBox
+	    </description>
+	    <name>makeGoodsOptions</name>
+	    <function-class>com.koscom.util.JSTLFunction</function-class>
+	    <function-signature>java.lang.String makeGoodsOptions(java.lang.String, java.lang.String, java.lang.String)</function-signature>
+	    <example>
+	       ${ufn:makeGoodsOptions('default_text', 'code_value', 'type')}
+	    </example>
+	</function>
+
+	<function>
+		<description>
+			make options for selectBox
+		</description>
+		<name>makeOptionsType</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String makeOptions(java.lang.String, java.lang.String, java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:makeOptionsType('code_group','default_text', 'code_value','type')}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			makeBoardOptions
+		</description>
+		<name>makeBoardOptions</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String makeBoardOptions(java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:makeBoardOptions(defaultText, selectValue)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			makeAgencyOptions
+		</description>
+		<name>makeAgencyOptions</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String makeAgencyOptions(java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:makeAgencyOptions(defaultText, selectValue)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			makeRadioAndCheckBoxs
+		</description>
+		<name>makeRadioAndCheckBoxs</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String makeRadioAndCheckBoxs(java.lang.String, java.lang.String, java.lang.String, java.lang.String, int)</function-signature>
+		<example>
+			 ${ufn:makeRadioAndCheckBoxs('code_group', 'name', 'type','checkValues', number)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			makeRadioAndCheckBoxsEvent
+		</description>
+		<name>makeRadioAndCheckBoxsEvent</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String makeRadioAndCheckBoxs(java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:makeRadioAndCheckBoxsEvent('code_group', 'name', 'type','checkValues', number, 'function')}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			makeGoodsTypeRadioAndCheckBoxs Event
+		</description>
+		<name>makeGoodsTypeRadioAndCheckBoxs</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String makeGoodsTypeRadioAndCheckBoxs(java.lang.String, java.lang.String, java.lang.String, java.lang.String, java.lang.String, int, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:makeGoodsTypeRadioAndCheckBoxs('cd_goods_tab','goods_type_comp', 'name', 'type','checkValues', number, 'function')}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			makeAgencyRadioAndCheckBoxs Event
+		</description>
+		<name>makeAgencyRadioAndCheckBoxs</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String makeAgencyRadioAndCheckBoxs(java.lang.String, java.lang.String, java.lang.String, int, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:makeAgencyRadioAndCheckBoxs('name', 'type','checkValues', number, 'function')}
+		</example>
+	</function>
+
+	<function>
+	    <description>
+	      get Program Manager
+	    </description>
+	    <name>getProgram</name>
+	    <function-class>com.koscom.util.JSTLFunction</function-class>
+	    <function-signature>java.lang.String getProgram(java.lang.String, java.lang.String)</function-signature>
+	    <example>
+	       ${ufn:getProgram('id_program','type')}
+	    </example>
+	</function>
+
+	<function>
+	    <description>
+	      target isProgram
+	    </description>
+	    <name>isProgram</name>
+	    <function-class>com.koscom.util.JSTLFunction</function-class>
+	    <function-signature>java.lang.String isProgram(java.lang.String, java.lang.String, java.lang.String, java.lang.String)</function-signature>
+	    <example>
+	       ${ufn:isProgram('id_program_target','cd_system','cd_work','cd_program_group')}
+	    </example>
+	</function>
+
+	<function>
+	    <description>
+	      get Approval Manager
+	    </description>
+	    <name>getApproval</name>
+	    <function-class>com.koscom.util.JSTLFunction</function-class>
+	    <function-signature>java.lang.String getApproval(java.lang.String, java.lang.String)</function-signature>
+	    <example>
+	       ${ufn:getApproval('id_appr','type')}
+	    </example>
+	</function>
+
+	<function>
+	    <description>
+	      target isApproval
+	    </description>
+	    <name>isApproval</name>
+	    <function-class>com.koscom.util.JSTLFunction</function-class>
+	    <function-signature>java.lang.String isApproval(java.lang.String, java.lang.String, java.lang.String)</function-signature>
+	    <example>
+	       ${ufn:isApproval('id_appr_target','cd_work','cd_approval_group')}
+	    </example>
+	</function>
+
+	<function>
+		<description>
+			getWorkerInfo
+		</description>
+		<name>getWorkerInfo</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String getWorkerInfo(java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:getWorkerInfo(id_emp, type)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			getPersonInfo
+		</description>
+		<name>getPersonInfo</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String getPersonInfo(java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:getPersonInfo(no_person, type)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			Get CurrentDate
+		</description>
+		<name>getCurrentDate</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String getCurrentDate()</function-signature>
+		<example>
+			 ${ufn:getCurrentDate()}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			getDayOfWeek
+		</description>
+		<name>getDayOfWeek</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String getDayOfWeek()</function-signature>
+		<example>
+			 ${ufn:getDayOfWeek()}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			formatNumber
+		</description>
+		<name>formatNumber</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String formatNumber(java.lang.String)</function-signature>
+		<example>
+			 ${ufn:formatNumber(value)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			formatTelNo
+		</description>
+		<name>formatTelNo</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String formatTelNo(java.lang.String)</function-signature>
+		<example>
+			 ${ufn:formatTelNo(value)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			getTelNo
+		</description>
+		<name>getTelNo</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String getTelNo(java.lang.String, int)</function-signature>
+		<example>
+			 ${getTelNo('ph', number)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			formatDate
+		</description>
+		<name>formatDate</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String formatDate(java.lang.String)</function-signature>
+		<example>
+			 ${ufn:formatDate(ymd)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			formatShortDate
+		</description>
+		<name>formatShortDate</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String formatShortDate(java.lang.String)</function-signature>
+		<example>
+			 ${ufn:formatShortDate(ymd)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			getFormattedTime
+		</description>
+		<name>getFormattedTime</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String getFormattedTime(java.lang.String,java.lang.String,java.lang.String)</function-signature>
+		<example>
+			 ${getFormattedTime(frForm, toForm, thisDate)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			formatTime
+		</description>
+		<name>formatTime</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String formatTime(java.lang.String)</function-signature>
+		<example>
+			 ${ufn:formatTime(time)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			isApprAuth
+		</description>
+		<name>isApprAuth</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String isApprAuth(java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:isApprAuth(aa,bb)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			getGoodsDetail
+		</description>
+		<name>getGoodsDetail</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String getGoodsDetail(java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:getGoodsDetail(cd_goods, type)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			getApplyPath
+		</description>
+		<name>getApplyPath</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String getApplyPath(java.lang.String)</function-signature>
+		<example>
+			 ${ufn:getApplyPath(path)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			make options for selectBox
+		</description>
+		<name>makeOptionsTypeEmp</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String makeOptionsEmp(java.lang.String, java.lang.String, java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:makeOptionsTypeEmp('code_group','default_text', 'code_value','i')}
+		</example>
+	</function>
+	<function>
+ 		<description>
+ 			quickYmdFromTo
+ 		</description>
+ 		<name>quickYmdFromTo</name>
+ 		<function-class>com.koscom.util.JSTLFunction</function-class>
+ 		<function-signature>java.lang.String quickYmdFromTo(java.lang.String, java.lang.String, java.lang.String)</function-signature>
+ 		<example>
+ 			 ${ufn:quickYmdFromTo(date, from, to)}
+ 		</example>
+ 	</function>
+
+	<function>
+		<description>
+			getUserInfo
+		</description>
+		<name>getUserInfo</name>
+		<function-class>com.hdsb.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String getUserInfo(java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:getUserInfo(id_user, type)}
+		</example>
+	</function>
+
+ 	<function>
+ 		<description>
+ 			quickYmd
+ 		</description>
+ 		<name>quickYmd</name>
+ 		<function-class>com.koscom.util.JSTLFunction</function-class>
+ 		<function-signature>java.lang.String quickYmd(java.lang.String, java.lang.String)</function-signature>
+ 		<example>
+ 			 ${ufn:quickYmd(date, ymd)}
+ 		</example>
+ 	</function>
+
+ 	<function>
+		<description>
+			formatMaskHp
+		</description>
+		<name>formatMaskHp</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String formatMaskHp(java.lang.String)</function-signature>
+		<example>
+			 ${ufn:formatMaskHp(value)}
+		</example>
+	</function>
+
+ 	<function>
+		<description>
+			formatMaskHpType
+		</description>
+		<name>formatMaskHpType</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String formatMaskHpType(java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:formatMaskHpType(type, value)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			getAgencyInfo
+		</description>
+		<name>getAgencyInfo</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String getAgencyInfo(java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:getWorkerInfo(id_agency, type)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			getFincorpInfo
+		</description>
+		<name>getFincorpInfo</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String getFincorpInfo(java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:getWorkerInfo(id_agency, type)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			getSummaryContent
+		</description>
+		<name>getSummaryContent</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String getSummaryContent(java.lang.String, int)</function-signature>
+		<example>
+			 ${ufn:getSummaryContent(content, size)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			getBoardList
+		</description>
+		<name>getBoardList</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String getBoardList()</function-signature>
+		<example>
+			 ${ufn:getBoardList()}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			getBoardInfo
+		</description>
+		<name>getBoardInfo</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String getBoardInfo(java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:getBoardInfo(id_board, type)}
+		</example>
+	</function>
+
+	<function>
+		<description>
+			showOpenGoodsAgency
+		</description>
+		<name>showOpenGoodsAgency</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String showOpenGoodsAgency(java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:showOpenGoodsAgency(type, cd_goods)}
+		</example>
+	</function>
+
+	<function>
+	    <description>
+	      make Fincorp options for selectBox
+	    </description>
+	    <name>makeFincorpOptions</name>
+	    <function-class>com.koscom.util.JSTLFunction</function-class>
+	    <function-signature>java.lang.String makeFincorpOptions(java.lang.String, java.lang.String, java.lang.String, java.lang.String)</function-signature>
+	    <example>
+	       ${ufn:makeFincorpOptions('default_text', 'code_value', 'type', 'yn_alliance')}
+	    </example>
+	</function>
+	<function>
+	    <description>
+	      make Edoc options for selectBox
+	    </description>
+	    <name>makeEdocOptions</name>
+	    <function-class>com.koscom.util.JSTLFunction</function-class>
+	    <function-signature>java.lang.String makeEdocOptions(java.lang.String, java.lang.String, java.lang.String)</function-signature>
+	    <example>
+	       ${ufn:makeEdocOptions('default_text', 'code_value', 'type')}
+	    </example>
+	</function>
+	<function>
+	    <description>
+	      make StdCode options for selectBox
+	    </description>
+	    <name>makeStdCodeOptions</name>
+	    <function-class>com.koscom.util.JSTLFunction</function-class>
+	    <function-signature>java.lang.String makeStdCodeOptions(java.lang.String, java.lang.String, java.lang.String, java.lang.String)</function-signature>
+	    <example>
+	       ${ufn:makeStdCodeOptions('default_text', 'code_value', 'selected_value', 'type')}
+	    </example>
+	</function>
+	<function>
+	    <description>
+	      getNmFc
+	    </description>
+	    <name>getNmFc</name>
+	    <function-class>com.koscom.util.JSTLFunction</function-class>
+	    <function-signature>java.lang.String getNmFc(java.lang.String)</function-signature>
+	    <example>
+	       ${ufn:getNmFc(cd_fc)}
+	    </example>
+	</function>
+	<function>
+	    <description>
+	      getNmEdoc
+	    </description>
+	    <name>getNmEdoc</name>
+	    <function-class>com.koscom.util.JSTLFunction</function-class>
+	    <function-signature>java.lang.String getNmEdoc(java.lang.String, java.lang.String)</function-signature>
+	    <example>
+	       ${ufn:getNmFc(cd_fc, no_edoc)}
+	    </example>
+	</function>
+	<function>
+		<description>
+			Get StdCode's Name by Code's Value
+		</description>
+		<name>getStdCodeName</name>
+		<function-class>com.koscom.util.JSTLFunction</function-class>
+		<function-signature>java.lang.String getStdCodeName(java.lang.String, java.lang.String)</function-signature>
+		<example>
+			 ${ufn:getStdCodeName('code_group', 'code_value')}
+		</example>
+	</function>
+</taglib>

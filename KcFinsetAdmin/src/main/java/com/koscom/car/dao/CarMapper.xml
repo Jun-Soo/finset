@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.car.dao.CarMapper">
+
+	<select id="getCarInfo" parameterType="java.lang.String" resultType="com.koscom.car.model.CarVO">
+		SELECT
+			  *
+	     FROM car_info
+	     WHERE no_prepare = #{no_prepare}
+	</select>
+	
+	<update id="procCarInfo" parameterType="com.koscom.domain.CarInfo">
+		MERGE INTO car_info
+		   USING DUAL
+		   ON (no_prepare = #{no_prepare} )
+		   WHEN MATCHED THEN
+		      UPDATE 
+		         SET  
+					  no_reg_car = #{no_reg_car, jdbcType=VARCHAR}
+					, no_id_car = #{no_id_car, jdbcType=VARCHAR}
+					, nm_kind_car = #{nm_kind_car, jdbcType=VARCHAR}
+					, nm_car = #{nm_car, jdbcType=VARCHAR}
+					, nm_used_car = #{nm_used_car, jdbcType=VARCHAR}
+					, year_car = #{year_car, jdbcType=VARCHAR}
+					, nm_comp_car = #{nm_comp_car, jdbcType=VARCHAR}
+					, nm_model_car = #{nm_model_car, jdbcType=VARCHAR}
+					, cd_fuel = #{cd_fuel, jdbcType=VARCHAR}
+					, cc_car = #{cc_car, jdbcType=VARCHAR}
+			        , mile_car = #{mile_car, jdbcType=VARCHAR}
+			        , cd_gear = #{cd_gear, jdbcType=VARCHAR}
+			        , nm_color_car = #{nm_color_car, jdbcType=VARCHAR}
+			        , amt_new_car = #{amt_new_car, jdbcType=VARCHAR}
+			        , amt_now_car = #{amt_now_car, jdbcType=VARCHAR}
+			        , yn_accident = #{yn_accident, jdbcType=VARCHAR}
+			        , memo_car = #{memo_car, jdbcType=VARCHAR}
+			        , nm_insu_car = #{nm_insu_car, jdbcType=VARCHAR}
+			        , nm_sort_insu_car = #{nm_sort_insu_car, jdbcType=VARCHAR}
+			        , cnt_term_insu_car = #{cnt_term_insu_car, jdbcType=VARCHAR}
+			        , cnt_rcpt_insu_car = #{cnt_rcpt_insu_car, jdbcType=VARCHAR}
+			        , cd_bank_insu_car = #{cd_bank_insu_car, jdbcType=VARCHAR}
+			        , amt_loan_car = #{amt_loan_car, jdbcType=VARCHAR}
+			        , cnt_total_loan_car = #{cnt_total_loan_car, jdbcType=VARCHAR}
+			        , cnt_rcpt_loan_car = #{cnt_rcpt_loan_car, jdbcType=VARCHAR}
+			        , amt_bal_loan_car = #{amt_bal_loan_car, jdbcType=VARCHAR}
+			        , amt_delay_loan_car = #{amt_delay_loan_car, jdbcType=VARCHAR}
+			WHEN NOT MATCHED THEN
+			  INSERT ( 	  no_prepare
+						, no_reg_car
+						, no_id_car
+						, nm_kind_car
+						, nm_car
+						, nm_used_car
+						, year_car
+						, nm_comp_car
+						, nm_model_car
+						, cd_fuel
+						, cc_car
+						, mile_car
+						, cd_gear
+						, nm_color_car
+						, amt_new_car
+						, amt_now_car
+						, yn_accident
+						, memo_car
+						, nm_insu_car
+						, nm_sort_insu_car
+						, cnt_term_insu_car
+						, cnt_rcpt_insu_car
+						, cd_bank_insu_car
+						, amt_loan_car
+						, cnt_total_loan_car
+						, cnt_rcpt_loan_car
+						, amt_bal_loan_car
+						, amt_delay_loan_car )
+				VALUES(   #{no_prepare, jdbcType=VARCHAR}                
+					    , #{no_reg_car, jdbcType=VARCHAR}                
+					    , #{no_id_car, jdbcType=VARCHAR}                  
+					    , #{nm_kind_car, jdbcType=VARCHAR}              
+					    , #{nm_car, jdbcType=VARCHAR}                        
+					    , #{nm_used_car, jdbcType=VARCHAR}              
+					    , #{year_car, jdbcType=VARCHAR}                    
+					    , #{nm_comp_car, jdbcType=VARCHAR}              
+					    , #{nm_model_car, jdbcType=VARCHAR}            
+					    , #{cd_fuel, jdbcType=VARCHAR}                      
+					    , #{cc_car, jdbcType=VARCHAR}                        
+					    , #{mile_car, jdbcType=VARCHAR}                    
+					    , #{cd_gear, jdbcType=VARCHAR}                      
+					    , #{nm_color_car, jdbcType=VARCHAR}            
+					    , #{amt_new_car, jdbcType=VARCHAR}              
+					    , #{amt_now_car, jdbcType=VARCHAR}              
+					    , #{yn_accident, jdbcType=VARCHAR}              
+					    , #{memo_car, jdbcType=VARCHAR}                    
+					    , #{nm_insu_car, jdbcType=VARCHAR}              
+					    , #{nm_sort_insu_car, jdbcType=VARCHAR}    
+					    , #{cnt_term_insu_car, jdbcType=VARCHAR}  
+					    , #{cnt_rcpt_insu_car, jdbcType=VARCHAR}  
+					    , #{cd_bank_insu_car, jdbcType=VARCHAR}    
+					    , #{amt_loan_car, jdbcType=VARCHAR}            
+					    , #{cnt_total_loan_car, jdbcType=VARCHAR}
+					    , #{cnt_rcpt_loan_car, jdbcType=VARCHAR}  
+					    , #{amt_bal_loan_car, jdbcType=VARCHAR}    
+					    , #{amt_delay_loan_car, jdbcType=VARCHAR} )
+	</update>
+	
+	<delete id="delCarInfo" parameterType="com.koscom.domain.CarInfo">
+		DELETE from car_info
+		 WHERE no_prepare = #{no_prepare}
+	</delete>  
+	        
+</mapper>

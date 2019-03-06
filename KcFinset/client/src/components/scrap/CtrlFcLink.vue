@@ -2,7 +2,7 @@
   <section @click="clickClear" v-if="seen">
     <div class="con-top cert-top">
       <p>공인인증서로<em> 한번에 등록하세요</em></p>
-      <!-- <a @click="checkExistCert(false, $event)">바로가기</a> -->
+      <a @click="checkExistCert(false, $event)">바로가기</a>
     </div>
 
     <div class="tab">
@@ -141,7 +141,7 @@ export default {
   components: {},
   beforeCreate() {
     this.$store.state.header.type = "sub";
-    this.$store.state.title = "금융사 연동";
+    this.$store.state.title = "금융사연동";
   },
   created() {
     // Native 연동 스크립트 등록

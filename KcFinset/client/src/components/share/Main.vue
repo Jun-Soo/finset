@@ -141,10 +141,10 @@ export default {
 
     this.$store.state.header.type = "sub";
     if ("01" == this.cd_share) {
-      this.$store.state.title = "신용정보 제공";
+      this.$store.state.title = "신용정보제공";
       this.$store.state.header.backPath = "/credit/main";
     } else if ("02" == this.cd_share) {
-      this.$store.state.title = "금융정보 공유";
+      this.$store.state.title = "금융정보공유";
       this.$store.state.header.backPath = "/main";
     }
 

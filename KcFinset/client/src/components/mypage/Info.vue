@@ -13,7 +13,7 @@
     <div class="mypage-links">
       <!-- <a @click="$router.push('')">개인설정</a> -->
       <a @click="$router.push('/mypage/regAlarm')">알림설정</a>
-      <a @click="$router.push('/mypage/cert')">인증/보안</a>
+      <a @click="$router.push('/mypage/cert')">인증보안</a>
       <a @click="$router.push('/share/main')">공유관리</a>
       <a @click="$router.push('/scrap/ctrlFcLink')">연동관리</a>
       <!-- <a @click="$router.push('/credit/counselMain')">신용상담</a> -->

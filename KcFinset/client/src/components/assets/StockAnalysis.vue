@@ -2,7 +2,7 @@
   <section>
     <!--     
     <div class="sub-top">
-      <a href="#" class="btn-back"></a>
+      <a class="btn-back"></a>
       <p class="title">포트폴리오 진단</p>
     </div> 
     -->
@@ -31,7 +31,7 @@
         <img src="../../assets/images/common/portfolio_star.png" width="31" alt="" />
         <img src="../../assets/images/common/portfolio_star.png" width="31" alt="" />
       </p>
-      <a href="#">목표수익률 수정하기</a>
+      <a>목표수익률 수정하기</a>
     </div>
 
     <div class="box-list pb90">
@@ -58,9 +58,9 @@
     </div>
     -->
     <div class="btn-wrap float">
-      <a href="#" class="blue box solid">내 계좌 불러오기</a>
-      <!-- case2 <a href="#" class="blue box solid">분석 시작하기</a> -->
-      <!-- case3 <a href="#" class="blue box solid">종목별 진단 결과 보기</a> -->
+      <a class="blue box solid">내 계좌 불러오기</a>
+      <!-- case2 <a class="blue box solid">분석 시작하기</a> -->
+      <!-- case3 <a class="blue box solid">종목별 진단 결과 보기</a> -->
     </div>
 
   </section>

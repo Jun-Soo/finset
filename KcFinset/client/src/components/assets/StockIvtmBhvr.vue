@@ -2,7 +2,7 @@
   <section>
     <!--
     <div class="sub-top">
-      <a href="#" class="btn-back"></a>
+      <a class="btn-back"></a>
       <p class="title">목표 수익률 설정</p>
     </div>
     -->
@@ -60,12 +60,12 @@
         <div class="gage"><input type="range"></div>
       </div>
       <div class="btn-wrap">
-        <a href="#" class="blue solid">나의 투자 성향 알아보기</a>
+        <a class="blue solid">나의 투자 성향 알아보기</a>
       </div>
     </div>
 
     <div class="btn-wrap float">
-      <a href="#" class="blue box solid">완료</a>
+      <a class="blue box solid">완료</a>
     </div>
 
   </section>

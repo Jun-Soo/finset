@@ -27,7 +27,7 @@
       <p class="mt20" style="text-align: center">직장명이 없을 경우 직접 입력이 가능합니다. (직접입력)</p>
 
       <div class="btn-wrap">
-        <a href="#" class="blue stroke" @click="clickInsJob()">직장명 직접 입력</a>
+        <a class="blue stroke" @click="clickInsJob()">직장명 직접 입력</a>
       </div>
     </div>
 

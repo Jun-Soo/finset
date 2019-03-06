@@ -35,7 +35,7 @@
     </dl>
 
     <div class="btn-wrap float">
-      <a href="#" class="solid blue box">저장하기</a>
+      <a class="solid blue box">저장하기</a>
     </div>
   </section>
 </template>

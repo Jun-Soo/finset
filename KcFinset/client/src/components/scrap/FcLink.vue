@@ -5,7 +5,7 @@
     </div>
 
     <!-- <div class="btn-wrap float">
-      <a href="#" class="solid box blue">확인</a>
+      <a class="solid box blue">확인</a>
     </div> -->
     <div class="btn-wrap col2">
       <a class="btn-stroke" @click="clickNo()">아니요</a>

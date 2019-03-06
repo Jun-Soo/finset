@@ -5,8 +5,8 @@
     </div>
 
     <div class="btn-wrap col2">
-      <a href="#" class="btn-solid">재전송</a>
-      <a href="#" class="btn-stroke">홈으로</a>
+      <a class="btn-solid">재전송</a>
+      <a class="btn-stroke">홈으로</a>
     </div>
   </section>
 </template>

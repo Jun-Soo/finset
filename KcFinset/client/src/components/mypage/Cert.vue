@@ -42,7 +42,7 @@ export default {
   computed: {},
   beforeCreate() {
     this.$store.state.header.type = "sub";
-    this.$store.state.title = "인증/보안";
+    this.$store.state.title = "인증보안";
   },
   created() {
     var _this = this;

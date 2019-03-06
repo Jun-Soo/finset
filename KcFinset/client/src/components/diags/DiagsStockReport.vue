@@ -3,8 +3,8 @@
 
     <div class="box-list list02 noMG">
 
-      <div class="item"  v-for="stockAnalysis in stockAnalysisList" :key="stockAnalysis.index">
-        <a href="#" class="block">
+      <div class="item" v-for="stockAnalysis in stockAnalysisList" :key="stockAnalysis.index">
+        <a class="block">
           <div class="flex">
             <p class="corp">{{stockAnalysis.isuKorNm}}</p>
             <p class="number">{{formatNumber(stockAnalysis.valAtCur)}}<em>원</em></p>
@@ -20,33 +20,33 @@
             <div class="list">
               <p class="total">Total</p>
               <p class="total">
-                <img src="./../../assets/images/common/star_list.png" width="11" alt="" v-for="i in stockAnalysis.factorAnalysis.avg" :key="i"/>
+                <img src="./../../assets/images/common/star_list.png" width="11" alt="" v-for="i in stockAnalysis.factorAnalysis.avg" :key="i" />
               </p>
             </div>
             <div class="list">
               <p>Value</p>
               <p>
-                <img src="./../../assets/images/common/star_list.png" width="11" alt="" v-for="i in stockAnalysis.factorAnalysis.value" :key="i"/>
+                <img src="./../../assets/images/common/star_list.png" width="11" alt="" v-for="i in stockAnalysis.factorAnalysis.value" :key="i" />
               </p>
               <p>Growth</p>
               <p>
-                <img src="./../../assets/images/common/star_list.png" width="11" alt="" v-for="i in stockAnalysis.factorAnalysis.growth" :key="i"/>
+                <img src="./../../assets/images/common/star_list.png" width="11" alt="" v-for="i in stockAnalysis.factorAnalysis.growth" :key="i" />
               </p>
             </div>
             <div class="list">
               <p>Momentum</p>
               <p>
-                <img src="./../../assets/images/common/star_list.png" width="11" alt="" v-for="i in stockAnalysis.factorAnalysis.momentum" :key="i"/>
+                <img src="./../../assets/images/common/star_list.png" width="11" alt="" v-for="i in stockAnalysis.factorAnalysis.momentum" :key="i" />
               </p>
               <p>Profitability</p>
               <p>
-                <img src="./../../assets/images/common/star_list.png" width="11" alt="" v-for="i in stockAnalysis.factorAnalysis.profitability" :key="i"/>
+                <img src="./../../assets/images/common/star_list.png" width="11" alt="" v-for="i in stockAnalysis.factorAnalysis.profitability" :key="i" />
               </p>
             </div>
             <div class="list">
               <p>Quality</p>
               <p>
-                <img src="./../../assets/images/common/star_list.png" width="11" alt="" v-for="i in stockAnalysis.factorAnalysis.quality" :key="i"/>
+                <img src="./../../assets/images/common/star_list.png" width="11" alt="" v-for="i in stockAnalysis.factorAnalysis.quality" :key="i" />
               </p>
               <p>Risk</p>
               <p>{{ parseFloat(parseInt(stockAnalysis.riskRate*100)/100) }} %

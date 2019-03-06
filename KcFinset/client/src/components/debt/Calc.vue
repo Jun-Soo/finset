@@ -23,7 +23,7 @@
       <div class="graph">
         <loanChart></loanChart>
       </div>
-      <a href="#" class="expand"></a>
+      <a class="expand"></a>
     </div>
 
     <div class="tab">
@@ -157,7 +157,7 @@
       </div>
     </div>
     <div class="btn-wrap noMG">
-      <a href="#" class="btn-next">계산하기</a>
+      <a class="btn-next">계산하기</a>
     </div>
   </section>
 </template>

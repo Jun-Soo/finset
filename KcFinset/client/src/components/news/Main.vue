@@ -14,9 +14,9 @@
       </div>
       <div v-if="newsList.length == 0" class="nodata">조회 내역이 없습니다</div>
       <div v-else class="board-list">
-        <div v-for="newsInfo in newsList" :key="newsInfo.index" class="list">
+        <div v-for="newsInfo in newsList" :key="newsInfo.index" class="list" @click="viewDetail(newsInfo.seq_news)">
           <div class="left">
-            <p class="title"><a @click="viewDetail(newsInfo.seq_news)" v-html="newsInfo.title"></a></p>
+            <p class="title"><a v-html="newsInfo.title"></a></p>
             <div class="sub">
               <p>{{newsInfo.news_company}}</p>
               <p>{{newsInfo.pub_date}}</p>
@@ -59,7 +59,7 @@ export default {
   beforeCreate() {},
   created() {
     this.$store.state.header.type = "sub";
-    this.$store.state.title = "뉴스";
+    this.$store.state.title = "금융뉴스";
     this.listSearchKeyword();
 
     //검색키워드 셋팅

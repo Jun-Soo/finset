@@ -3,7 +3,7 @@
     <div class="box-list list02 noMG">
 
       <div class="item">
-        <a href="#" class="block">
+        <a class="block">
           <div class="flex">
             <p class="corp">삼성전자</p>
             <p class="number">1,000,000<em>원</em></p>
@@ -74,7 +74,7 @@
         </a>
       </div>
       <div class="item">
-        <a href="#" class="block">
+        <a class="block">
           <div class="flex">
             <p class="corp">삼성전자</p>
             <p class="number">1,000,000<em>원</em></p>

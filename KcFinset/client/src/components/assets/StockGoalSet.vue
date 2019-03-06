@@ -2,7 +2,7 @@
   <section>
     <!--
     <div class="sub-top">
-      <a href="#" class="btn-back"></a>
+      <a class="btn-back"></a>
       <p class="title">투자 성향 알아보기</p>
     </div>
     -->
@@ -65,7 +65,7 @@
     </div>
 
     <div class="btn-wrap float">
-      <a href="#" class="blue box solid">다음</a>
+      <a class="blue box solid">다음</a>
     </div>
 
   </section>

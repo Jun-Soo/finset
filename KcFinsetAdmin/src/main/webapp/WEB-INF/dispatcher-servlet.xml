@@ -12,9 +12,8 @@
 
 	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
 	<context:component-scan base-package="com.koscom.*" >
- 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
-		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/>
-	</context:component-scan>
+ 		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"></context:include-filter>
+ 	</context:component-scan>
 	
 	<!-- Enables the Spring MVC @Controller programming model -->
 	<annotation-driven />
@@ -39,8 +38,9 @@
 	
 	<beans:bean id="multipartResolver"
  		class="org.springframework.web.multipart.commons.CommonsMultipartResolver"
- 		p:maxUploadSize="30720000">
+ 		p:maxUploadSize="73400320">
 	</beans:bean>
+	<!-- TEST 30720000 > 73400320 -->
 	
 	<!-- Excel Util Bean -->
 	<beans:bean id="beanNameViewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver">

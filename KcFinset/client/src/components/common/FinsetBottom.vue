@@ -1,5 +1,5 @@
 <template>
-  <aside :class="{on: this.eventShow}" v-if="this.$store.state.isLoggedIn && this.$store.state.header.type == 'main'">
+  <aside class="event" :class="{on: this.eventShow}" v-if="this.$store.state.isLoggedIn && this.$store.state.header.type == 'main'">
     <div class="top">
       <button @click="showListEvent()">이벤트</button>
     </div>

@@ -9,11 +9,13 @@ $(function () {
   $(document).on('click', 'header .open-menu', function () {
     $('.gnb-wrap').addClass('on')
     $('body').addClass('not-scroll')
+    $('.event').hide()
   })
 
   $(document).on('click', 'header .gnb-close', function () {
     $('.gnb-wrap').removeClass('on')
     $('body').removeClass('not-scroll')
+    $('.event').show()
   })
 
   $(document).on('click', '.btn-expand', function () {

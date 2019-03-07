@@ -822,7 +822,7 @@ header .gnb-wrap .top .right button {
 }
 
 header .gnb-wrap .scroll-wrap {
-  height: calc(100vh - 120px);
+  /* height: calc(100vh - 120px); */
   overflow: auto;
 }
 

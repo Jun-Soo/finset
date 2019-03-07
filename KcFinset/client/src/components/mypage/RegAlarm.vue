@@ -8,10 +8,13 @@
         </li>
       </ul>
       <ul id="pushes" name="pushes">
-        <li v-if="cdPush.yn_use=='Y'" v-for="cdPush in cdPushes" :key="cdPush.code_value">
-          <p><em>{{cdPush.nm_code}}</em>{{cdPush.etc}}</p>
-          <p><button v-bind:id='cdPush.code_value' v-bind:name='"each_push"+cdPush.code_value' v-for="pushSetting in pushSettings" :key="pushSetting.item_push" v-if="pushSetting.item_push===cdPush.code_value" :class="pushSetting.yn_push==='Y' ? btnOn:btnOff" @click="eachChkPush"></button></p>
-        </li>
+        <div v-for="cdPush in cdPushes" :key="cdPush.code_value">
+          <li v-if="cdPush.yn_use=='Y'">
+            <p><em>{{cdPush.nm_code}}</em>{{cdPush.etc}}</p>
+            <!-- <p><button v-bind:id='cdPush.code_value' v-for="pushSetting in pushSettings" :key="pushSetting.item_push" v-if="pushSetting.item_push===cdPush.code_value" :class="pushSetting.yn_push==='Y' ? btnOn:btnOff" @click="eachChkPush"></button></p> -->
+            <p><button v-bind:id='cdPush.code_value' :class="cdPush.yn_push==='Y' ? btnOn:btnOff" @click="eachChkPush"></button></p>
+          </li>
+        </div>
       </ul>
     </div>
   </section>
@@ -56,6 +59,13 @@ export default {
         _this.pushSettings = response.data.listPushSetting;
         _this.personVo = response.data.personVO;
         for (var i = 0; i < _this.cdPushes.length; i++) {
+          for (var j = 0; j < _this.pushSettings.length; j++) {
+            if (
+              _this.pushSettings[j].item_push === _this.cdPushes[i].code_value
+            ) {
+              _this.cdPushes[i].yn_push = _this.pushSettings[j].yn_push;
+            }
+          }
           _this.cList.push(_this.cdPushes[i].code_value);
         }
         _this.seen = true;
@@ -77,20 +87,21 @@ export default {
       let cnt = 0;
       _this.type_push = "each";
       //data 값 변경
-      for (var i = 0; i < _this.pushSettings.length; i++) {
-        if (_this.pushSettings[i].item_push == obj.target.id) {
+      for (var i = 0; i < _this.cdPushes.length; i++) {
+        if (_this.cdPushes[i].code_value == obj.target.id) {
           if (obj.target.className == _this.btnOff) {
             //킬때
             _this.stat_push = "Y";
-            _this.pushSettings[i].yn_push = "Y";
+            _this.cdPushes[i].yn_push = "Y";
           } else {
             //끌때
             _this.stat_push = "N";
-            _this.pushSettings[i].yn_push = "N";
+            _this.cdPushes[i].yn_push = "N";
           }
+          this.$set(_this.cdPushes, i, _this.cdPushes[i]);
         }
-        if (_this.pushSettings[i].yn_push == "Y") {
-          if (_this.cList.includes(_this.pushSettings[i].item_push)) {
+        if (_this.cdPushes[i].yn_push == "Y") {
+          if (_this.cList.includes(_this.cdPushes[i].code_value)) {
             cnt++;
           }
         }

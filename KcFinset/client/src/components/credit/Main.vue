@@ -21,7 +21,8 @@
     </div>
 
     <div class="banner-wrap owl-carousel">
-      <carousel :perPage=1 :autoplay=true :autoplayTimeout=4000 :speed=700 :loop=true>
+      <!-- <carousel :perPage=1 :autoplay=true :autoplayTimeout=4000 :speed=700 :loop=true> -->
+      <carousel :perPage=1>
         <slide class="item">
           <a @click="goMenu('raise')">
             <div class="banner">

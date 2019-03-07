@@ -1,6 +1,6 @@
 package com.koscom.comm;
 
-import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.google.gson.JsonArray;
 import com.koscom.env.model.CodeInfo;
 import com.koscom.env.service.CodeManager;
 import com.koscom.loanworker.LoanWorkerController;
@@ -61,10 +62,17 @@ public class CommController implements Constant {
 
    		String decValue = secureManager.getDecodedPassword(value);
    		//logger.debug("decValue : "+ decValue);
-   		String encValue ="";
+   		String encValue = "";
+   		JsonArray encList = new JsonArray();
+   		
    		try	{
    			AES256Util aes256 = new AES256Util(no_person+"."+hp);
-   			encValue = aes256.aesEncode(decValue);
+   			
+   			for(int i=0; i<decValue.length(); i++) {
+   				char ch = decValue.charAt(i);
+   				encList.add(aes256.aesEncode(String.valueOf(ch)));
+   			}
+   			
    		}
    		catch (Exception e) { 
    			logger.error("암호화 처리 에러 : " + e.getMessage());
@@ -73,7 +81,8 @@ public class CommController implements Constant {
    	   		return "jsonView";
    		}
    		//logger.debug("result : "+ encValue);    		
-		model.addAttribute("result", encValue);
+//		model.addAttribute("result", encValue);
+   		model.addAttribute("result", encList.toString());
    	   	return "jsonView";
    	}
 

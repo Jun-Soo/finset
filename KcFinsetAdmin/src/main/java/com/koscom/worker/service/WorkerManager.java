@@ -9,7 +9,6 @@ import com.koscom.env.model.ApprovalManageForm;
 import com.koscom.env.model.ApprovalManageVO;
 import com.koscom.env.model.ProgramManageForm;
 import com.koscom.env.model.ProgramManageVO;
-import com.koscom.fincorp.model.FincorpVO;
 import com.koscom.util.ReturnClass;
 import com.koscom.worker.model.WorkerForm;
 import com.koscom.worker.model.WorkerVO;

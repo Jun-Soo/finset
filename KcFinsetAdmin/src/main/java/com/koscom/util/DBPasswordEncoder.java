@@ -3,7 +3,6 @@ package com.koscom.util;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import com.koscom.login.service.LoginWebManager;
 import com.koscom.worker.service.WorkerManager;
 
 public class DBPasswordEncoder implements PasswordEncoder {

@@ -14,8 +14,6 @@ import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.koscom.person.model.PersonVO;
-
 public class FcmUtil {
 	
 	private static final Logger logger = LoggerFactory.getLogger(FcmUtil.class);

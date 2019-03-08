@@ -23,7 +23,6 @@ import com.koscom.env.model.ApprovalManageVO;
 import com.koscom.env.model.ProgramManage;
 import com.koscom.env.model.ProgramManageForm;
 import com.koscom.env.model.ProgramManageVO;
-import com.koscom.fincorp.model.FincorpVO;
 import com.koscom.util.Constant;
 import com.koscom.util.ReturnClass;
 import com.koscom.util.SecurityReqFilter;

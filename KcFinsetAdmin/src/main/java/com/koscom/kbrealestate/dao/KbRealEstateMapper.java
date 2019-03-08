@@ -2,7 +2,6 @@ package com.koscom.kbrealestate.dao;
 
 import java.util.List;
 
-import com.koscom.edoc.model.EdocForm;
 import com.koscom.kbrealestate.model.KbDongAptVO;
 import com.koscom.kbrealestate.model.KbRealEstateForm;
 import com.koscom.kbrealestate.model.KbSiGunGuVO;

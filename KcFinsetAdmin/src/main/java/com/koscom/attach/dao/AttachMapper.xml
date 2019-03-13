@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.attach.dao.AttachMapper">
+
+	<insert id="createAttach" parameterType="com.koscom.domain.AttachInfo">
+		INSERT INTO attach_info
+			(	  no_apply
+				, seq_attach
+				, cd_attach
+				, url_attach
+				, nm_ori_file
+				, path_save_file
+				, nm_save_file
+				, etc_attach
+				, yn_use
+				, yn_display
+				, id_frt
+				, dt_frt
+				, id_lst
+				, dt_lst
+			) VALUES (
+				  #{no_apply}
+				, (SELECT NVL(MAX(seq_attach),0)+1 FROM attach_info WHERE no_apply=#{no_apply, jdbcType=VARCHAR})
+				, #{cd_attach, jdbcType=VARCHAR}
+				, #{url_attach, jdbcType=VARCHAR}
+				, #{nm_ori_file, jdbcType=VARCHAR}
+				, #{path_save_file, jdbcType=VARCHAR}
+				, #{nm_save_file, jdbcType=VARCHAR}
+				, #{etc_attach, jdbcType=VARCHAR}
+				, 'Y'
+				, 'Y'
+				, #{id_frt, jdbcType=VARCHAR}
+				, SYSDATE
+				, #{id_frt, jdbcType=VARCHAR}
+				, SYSDATE
+			)
+	</insert>
+	
+	<select id="listAttach" parameterType="java.util.HashMap" resultType="com.koscom.attach.model.AttachVO">
+		SELECT no_apply
+			   , seq_attach
+			   , cd_attach
+			   , url_attach
+			   , nm_ori_file
+			   , path_save_file
+			   , nm_save_file
+			   , etc_attach
+			   , yn_use
+			   , yn_display
+			   , id_frt
+			   , dt_frt
+		  FROM attach_info
+		 WHERE no_apply = #{no_apply, jdbcType=VARCHAR}
+		   AND yn_use = 'Y'
+		<if test='@com.koscom.util.MybatisUtil@isNotEmpty(type)'>
+		   AND cd_attach = #{type, jdbcType=VARCHAR}
+		</if>
+	</select>
+	
+	<update id="delAttachInfo" parameterType="com.koscom.domain.AttachInfo" >
+		UPDATE attach_info 
+		SET	   yn_use = 'N'
+		   	  , id_lst = #{id_lst, jdbcType=VARCHAR}
+		      , dt_lst = SYSDATE
+		WHERE  no_apply = #{no_apply} AND seq_attach = #{seq_attach}
+	</update>
+	
+	<update id="delAttachAll" parameterType="com.koscom.domain.AttachInfo" >
+		UPDATE attach_info 
+		SET	   yn_use = 'N'
+		   	  , id_lst = #{id_lst, jdbcType=VARCHAR}
+		      , dt_lst = SYSDATE
+		WHERE  no_apply = #{no_apply}
+		  AND  yn_use = 'Y'
+	</update>
+	
+</mapper>

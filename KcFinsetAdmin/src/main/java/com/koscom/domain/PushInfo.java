@@ -23,6 +23,8 @@ public class PushInfo implements Serializable {
 	private String[] array_no_person; //발송 회원리스트
 	private String yn_os;
 	private String yn_push;
+	private String yn_send;
+	private String yn_display;
 	private String hp;
 	
 	private String id_lst = "";	//최종입력아이디
@@ -144,6 +146,22 @@ public class PushInfo implements Serializable {
 
 	public void setYn_push(String yn_push) {
 		this.yn_push = yn_push;
+	}
+
+	public String getYn_send() {
+		return yn_send;
+	}
+
+	public void setYn_send(String yn_send) {
+		this.yn_send = yn_send;
+	}
+	
+	public String getYn_display() {
+		return yn_display;
+	}
+
+	public void setYn_display(String yn_display) {
+		this.yn_display = yn_display;
 	}
 
 	public String getHp() {

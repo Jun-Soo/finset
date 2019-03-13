@@ -110,6 +110,7 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 //		// IP 주소 체크에서 통과하지 못했을 경우,
 		String cd_result = "";
 			logger.info("사용자 로그인 성공 : "+ authentication.getName() +" : "+ webDetail.getRemoteAddress());
+			logger.info("request.getContextPath() : "+ request.getContextPath());
 			cd_result = Constant.LOGIN_SUCCESS;
 		 
 			// ID와 PASS 가 같으면 강제로 비밀번호 변경 화면으로 이동

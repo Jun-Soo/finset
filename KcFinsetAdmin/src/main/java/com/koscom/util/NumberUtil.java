@@ -31,7 +31,7 @@ import java.util.regex.Pattern;
  * 
  * @author HyunJung Jeong
  */
-public final class NumberUtil {
+public class NumberUtil {
 
 	private NumberUtil() {
 		throw new AssertionError();
@@ -283,11 +283,15 @@ public final class NumberUtil {
 		return Double.parseDouble(df.format(number));
 	}
 	
-	public static String formatNumber(String number) throws ParseException  {
+	public static String formatNumber(String number) {
     	String rtn_num = null;
     	
-    	rtn_num = NumberUtil.formatNumber(""+NumberUtil.stringToInt(number),NumberUtil.CURRENCY_NO_DECIMALPOINT);
-
+    	try {
+    		rtn_num = NumberUtil.formatNumber(""+NumberUtil.stringToInt(number),NumberUtil.CURRENCY_NO_DECIMALPOINT);
+		} catch (Exception e) {
+			rtn_num = "0";
+		}
+    	
     	return rtn_num;
 	}
 	
@@ -860,69 +864,43 @@ public final class NumberUtil {
 	/**
 	 * 문자열을 long으로 파싱하고, null일 경우 0을 리턴한다.
 	 * 
-	 * @param pVal
+	 * @param parameterValue
 	 * @return
 	 */
-	public static long parseLong(String pVal) {
-		String val = pVal;
-		if (StringUtil.isEmpty(val))
-			return 0;
+	public static long parseLong(String val) {
+		try {
+			if (StringUtil.isEmpty(val))
+				return 0;
 
-		val = val.trim().replace(",", "");
+			val = val.trim().replace(",", "");
 
-		return Long.parseLong(val);
-	}
-	/**
-	 * 문자열을 long으로 파싱하고, null일 경우 0을 리턴한다.
-	 *
-	 * @param pVal
-	 * @return
-	 */
-	public static double parseDouble(String pVal) {
-		String val = pVal;
-		if (StringUtil.isEmpty(val))
-			return 0;
-
-		val = val.trim().replace(",", "");
-        double dblVal = Double.parseDouble(val);
-
-		return dblVal;
-	}
-	/**
-	 * 문자열을 long으로 파싱하고, null일 경우 0을 리턴한다.
-	 *
-	 * @param pVal
-	 * @return
-	 */
-	public static Object parseNumber(String pVal) {
-		String val = pVal;
-		if (StringUtil.isEmpty(val))
-			return 0;
-
-		val = val.trim().replace(",", "");
-		Object result = null;
-		if(val.contains(".")) {
-		    result = Double.parseDouble(val);
-        } else {
-            result = Long.parseLong(val);
-        }
-
-		return result;
+			return Long.parseLong(val);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return -1;
 	}
 	/**
 	 * 문자열을 Int로 파싱하고, null일 경우 0을 리턴한다.
 	 * 
-	 * @param pVal
+	 * @param parameterValue
 	 * @return
 	 */
-	public static int parseInt(String pVal) {
-		String val = pVal;
-		if (StringUtil.isEmpty(val))
-			return 0;
+	public static int parseInt(String val) {
+		try {
+			
+			if (StringUtil.isEmpty(val))
+				return 0;
 
-		val = val.trim().replace(",", "");
-
-		return Integer.parseInt(val);
+			val = val.trim().replace(",", "");
+			
+			return Integer.parseInt(val);	
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		return -1;
 
 	}
 	/**
@@ -950,45 +928,4 @@ public final class NumberUtil {
 	public static long stringToLong(String number) {
 		return stringToLong(number, 0);
 	}
-	
-	/**
-	 * Converts byte to long 
-	 * 
-	 * @param bytes
-	 * @param length
-	 *            the byte[] to convert
-	 * @return the converted long value
-	 */
-	public static long byteToInt(byte[] bytes, int length) throws FinsetException{
-        int val = 0;
-        if(length>4) throw new FinsetException("Too big to fit in int");
-        for (int i = 0; i < length; i++) {
-            val=val<<8;
-            val=val|(bytes[i] & 0xFF);
-        }
-        return val;
-    }
-	
-	/**
-     * 반올림 함수
-     * @param num - 실수형
-     * @param pos - 자릿수 : 반올림되어질 자리
-     * @return 반올림된 수
-     */
-    public static double doubleRound(double num, int pos){
-        //[1]
-        double result = 0.0;
-        double half = 0.5;
-        double factor = 1;
-       
-        //[2]
-        for (int i = 0; i< pos; i++){
-            half *= 0.1;
-            factor *= 10;
-        }
-        result = (int)((num+half)*factor)/(double)factor;
-       
-        //[3]      
-        return result;     
-    }
 }

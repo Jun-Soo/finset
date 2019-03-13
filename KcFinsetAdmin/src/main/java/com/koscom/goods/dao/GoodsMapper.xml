@@ -1,0 +1,3718 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.goods.dao.GoodsMapper">
+    <select id="listYnReApply" parameterType="com.koscom.goods.model.GoodsVO" resultType="com.koscom.goods.model.GoodsVO">
+        SELECT
+            A.CD_GOODS
+            , A.CD_FC
+            , TO_NUMBER(TO_CHAR(A.DT_FRT, 'YYYYMMDD')) AS DT_LAST_APPLY
+            , NVL(TO_CHAR(B.CNT_REAPPLY_MONTH), -1) AS CNT_REAPPLY_MONTH,
+        DECODE(NVL(B.CNT_REAPPLY_MONTH, 0), 0, 'E',
+            DECODE(
+                SIGN((TO_NUMBER(TO_CHAR(SYSDATE, 'YYYYMMDD')) - TO_NUMBER(TO_CHAR(A.DT_FRT, 'YYYYMMDD')))
+                - (TO_NUMBER(TO_CHAR(SYSDATE, 'YYYYMMDD')) - TO_NUMBER(TO_CHAR(ADD_MONTHS(SYSDATE, -B.CNT_REAPPLY_MONTH),'YYYYMMDD')))
+                ), 0, 'Y', 1, 'Y', 'N')) YN_REAPPLY
+        FROM (
+                SELECT CD_FC
+                    , CD_GOODS
+                    , MAX(DT_FRT) AS DT_FRT
+                FROM APPLY_INFO
+                WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                GROUP BY CD_GOODS, CD_FC) A
+            , GOODS_INFO B
+        WHERE A.CD_FC = B.CD_FC
+        AND A.CD_GOODS = B.CD_GOODS
+    </select>
+    <select id="getYnReApply" parameterType="com.koscom.goods.model.GoodsVO" resultType="com.koscom.goods.model.GoodsVO">
+        SELECT A.CD_GOODS
+            , A.CD_FC
+            , TO_NUMBER(TO_CHAR(A.DT_FRT, 'YYYYMMDD')) AS DT_LAST_APPLY
+            , NVL(TO_CHAR(B.CNT_REAPPLY_MONTH), -1) AS CNT_REAPPLY_MONTH,
+        DECODE(NVL(B.CNT_REAPPLY_MONTH, 0), 0, 'E',
+            DECODE(
+                SIGN((TO_NUMBER(TO_CHAR(SYSDATE, 'YYYYMMDD')) - TO_NUMBER(TO_CHAR(A.DT_FRT, 'YYYYMMDD')))
+                - (TO_NUMBER(TO_CHAR(SYSDATE, 'YYYYMMDD')) - TO_NUMBER(TO_CHAR(add_months(SYSDATE, -B.CNT_REAPPLY_MONTH),'YYYYMMDD')))
+                ), 0, 'Y', 1, 'Y', 'N')) AS YN_REAPPLY
+        FROM (
+                SELECT CD_FC
+                    , CD_GOODS
+                    , MAX(DT_FRT) AS DT_FRT
+                FROM APPLY_INFO
+                WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                    AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+                    AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+                GROUP BY CD_GOODS, CD_FC) A
+            , GOODS_INFO B
+        WHERE A.CD_FC = B.CD_FC
+            AND A.CD_GOODS = B.CD_GOODS
+    </select>
+
+    <!-- 상품 GOODS_INFO -->
+    <select id="getGoodsInfo" parameterType="com.koscom.domain.GoodsInfo" resultType="com.koscom.goods.model.GoodsVO">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.getGoodsInfo : 상품 GOODS_INFO */
+        SELECT
+        	CD_GOODS,
+			CD_FC,
+			NM_GOODS,
+			YN_USE,
+			YN_ZERO_RATIO,
+			CD_GOODS_CLASS_L,
+			CD_GOODS_CLASS_M,
+			CD_GOODS_CLASS_S,
+			CD_GOODS_TYPE,
+			CD_LOAN_TERM,
+			CD_TYPE_INTEREST,
+			RTO_INTEREST_FROM,
+			RTO_INTEREST_TO,
+			AMT_LIMIT,
+			CD_TYPE_PAY,
+			CD_EVENT,
+			YN_ONLINE,
+			YN_PROC_NOPAPERS,
+			DESC_TRADE_CLAUSE,
+			DESC_GOODS,
+			DESC_LOAN,
+			DESC_LIMIT,
+			DESC_PAYMETHOD,
+			DESC_PAPERS,
+			AGE_LOAN_FROM,
+			AGE_LOAN_TO,
+			AMT_APPLY_FROM,
+			AMT_APPLY_TO,
+			NO_MONTH_APPLY_FROM,
+			NO_MONTH_APPLY_TO,
+			CD_TYPE_INCOME,
+			CD_EMPLOY_TYPE,
+			CD_LOAN_USE,
+			AMT_YEAR_INCOME,
+			OU_YEAR_INCOME,
+			AMT_YEAR_SALE,
+			OU_SALE_INCOME,
+			YMD_START_COMP,
+			NO_JOB_YEAR,
+			CD_LIVE_TYPE,
+			CD_HOUSE_TYPE,
+			YN_PROOF_INCOME,
+			YN_4INSU,
+			YN_BAD_CREDIT,
+			YN_DELAY_CURRENT,
+			DAY_DELAY_6MONTH,
+			DAY_DELAY_12MONTH,
+			GRADE_KCB,
+			GRADE_NICE,
+			DTI_GRADE1,
+			DTI_GRADE2,
+			DTI_GRADE3,
+			DTI_GRADE4,
+			DTI_GRADE5,
+			DTI_GRADE6,
+			DTI_GRADE7,
+			DTI_GRADE8,
+			DTI_GRADE9,
+			DTI_GRADE10,
+			CHK_AGE_LOAN,
+			CHK_AMT_APPLY,
+			CHK_NO_MONTH_APPLY,
+			CHK_CD_TYPE_INCOME,
+			CHK_CD_EMPLOY_TYPE,
+			CHK_CD_LOAN_USE,
+			CHK_AMT_YEAR_INCOME,
+			CHK_AMT_YEAR_SALE,
+			CHK_YMD_START_COMP,
+			CHK_NO_JOB_YEAR,
+			CHK_CD_LIVE_TYPE,
+			CHK_CD_HOUSE_TYPE,
+			CHK_YN_PROOF_INCOME,
+			CHK_YN_4INSU,
+			CHK_YN_BAD_CREDIT,
+			CHK_YN_DELAY_CURRENT,
+			CHK_DAY_DELAY_6MONTH,
+			CHK_DAY_DELAY_12MONTH,
+			CHK_GRADE_KCB,
+			CHK_GRADE_NICE,
+			CHK_DTI_GRADE,
+			CHK_GRADE_LTV,
+			CHK_GRADE_DTI,
+			GRADE_LTV,
+			GRADE_DTI,
+			CD_SEX,
+			CD_OWNCAR_TYPE,
+			CD_CAR_TYPE,
+			CNT_CASH_SERVICE,
+			AMT_CASH_SERVICE,
+			AMT_CARPRICE_FROM,
+			AMT_CARPRICE_TO,
+			NO_CARYEAR_FROM,
+			NO_CARYEAR_TO,
+			CHK_CD_SEX,
+			CHK_CASH_SERVICE,
+			CHK_CD_OWNCAR_TYPE,
+			CHK_CD_CAR_TYPE,
+			CHK_AMT_CARPRICE,
+			CHK_NO_CARYEAR,
+			DESC_REPAYMETHOD,
+			DESC_COMMISSION,
+			DESC_INQUIRY,
+			CONTENT_INTEREST,
+			PREFER_INTEREST,
+			CD_APPLY_TYPE,
+			CD_TRADE_TYPE,
+			CD_TIME_EXEC,
+			YN_SEND_DOCU,
+			YN_VISIT,
+			YN_ERLY_RPAY_FEE,
+			YN_SRCH_RATIO_LIMIT,
+			CD_RATIO_TYPE,
+			CD_CATEGORY_GOODS,
+			CD_AREA,
+			CD_DEFER,
+			CD_OBJECT,
+			YN_POST_RANKING,
+			CD_COLLATERAL_HOUSE_TYPE,
+			CD_COLLATERAL_LOAN_USE,
+			DESC_FEATURE,
+			KEYWORD_LIST,
+			ID_FRT,
+			DT_FRT,
+			ID_LST,
+			DT_LST
+         FROM
+         	GOODS_INFO
+         <where>
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+                CD_FC = #{cd_fc}
+            </if>
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods)'>
+                AND CD_GOODS = #{cd_goods}
+            </if>
+         </where>
+    </select>
+    <!-- 상품 GOODS_INFO -->
+    <select id="listGoodsInfoBYType" parameterType="com.koscom.goods.model.GoodsForm" resultType="com.koscom.goods.model.GoodsVO">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.listGoodsInfoBYType :  */
+         SELECT
+         	CD_GOODS,
+			CD_FC,
+			NM_GOODS,
+			YN_USE,
+			YN_ZERO_RATIO,
+			CD_GOODS_CLASS_L,
+			CD_GOODS_CLASS_M,
+			CD_GOODS_CLASS_S,
+			CD_GOODS_TYPE,
+			CD_LOAN_TERM,
+			CD_TYPE_INTEREST,
+			RTO_INTEREST_FROM,
+			RTO_INTEREST_TO,
+			AMT_LIMIT,
+			CD_TYPE_PAY,
+			CD_EVENT,
+			YN_ONLINE,
+			YN_PROC_NOPAPERS,
+			DESC_TRADE_CLAUSE,
+			DESC_GOODS,
+			DESC_LOAN,
+			DESC_LIMIT,
+			DESC_PAYMETHOD,
+			DESC_PAPERS,
+			AGE_LOAN_FROM,
+			AGE_LOAN_TO,
+			AMT_APPLY_FROM,
+			AMT_APPLY_TO,
+			NO_MONTH_APPLY_FROM,
+			NO_MONTH_APPLY_TO,
+			CD_TYPE_INCOME,
+			CD_EMPLOY_TYPE,
+			CD_LOAN_USE,
+			AMT_YEAR_INCOME,
+			OU_YEAR_INCOME,
+			AMT_YEAR_SALE,
+			OU_SALE_INCOME,
+			YMD_START_COMP,
+			NO_JOB_YEAR,
+			CD_LIVE_TYPE,
+			CD_HOUSE_TYPE,
+			YN_PROOF_INCOME,
+			YN_4INSU,
+			YN_BAD_CREDIT,
+			YN_DELAY_CURRENT,
+			DAY_DELAY_6MONTH,
+			DAY_DELAY_12MONTH,
+			GRADE_KCB,
+			GRADE_NICE,
+			DTI_GRADE1,
+			DTI_GRADE2,
+			DTI_GRADE3,
+			DTI_GRADE4,
+			DTI_GRADE5,
+			DTI_GRADE6,
+			DTI_GRADE7,
+			DTI_GRADE8,
+			DTI_GRADE9,
+			DTI_GRADE10,
+			CHK_AGE_LOAN,
+			CHK_AMT_APPLY,
+			CHK_NO_MONTH_APPLY,
+			CHK_CD_TYPE_INCOME,
+			CHK_CD_EMPLOY_TYPE,
+			CHK_CD_LOAN_USE,
+			CHK_AMT_YEAR_INCOME,
+			CHK_AMT_YEAR_SALE,
+			CHK_YMD_START_COMP,
+			CHK_NO_JOB_YEAR,
+			CHK_CD_LIVE_TYPE,
+			CHK_CD_HOUSE_TYPE,
+			CHK_YN_PROOF_INCOME,
+			CHK_YN_4INSU,
+			CHK_YN_BAD_CREDIT,
+			CHK_YN_DELAY_CURRENT,
+			CHK_DAY_DELAY_6MONTH,
+			CHK_DAY_DELAY_12MONTH,
+			CHK_GRADE_KCB,
+			CHK_GRADE_NICE,
+			CHK_DTI_GRADE,
+			CHK_GRADE_LTV,
+			CHK_GRADE_DTI,
+			GRADE_LTV,
+			GRADE_DTI,
+			CD_SEX,
+			CD_OWNCAR_TYPE,
+			CD_CAR_TYPE,
+			CNT_CASH_SERVICE,
+			AMT_CASH_SERVICE,
+			AMT_CARPRICE_FROM,
+			AMT_CARPRICE_TO,
+			NO_CARYEAR_FROM,
+			NO_CARYEAR_TO,
+			CHK_CD_SEX,
+			CHK_CASH_SERVICE,
+			CHK_CD_OWNCAR_TYPE,
+			CHK_CD_CAR_TYPE,
+			CHK_AMT_CARPRICE,
+			CHK_NO_CARYEAR,
+			DESC_REPAYMETHOD,
+			DESC_COMMISSION,
+			DESC_INQUIRY,
+			CONTENT_INTEREST,
+			PREFER_INTEREST,
+			CD_APPLY_TYPE,
+			CD_TRADE_TYPE,
+			CD_TIME_EXEC,
+			YN_SEND_DOCU,
+			YN_VISIT,
+			YN_ERLY_RPAY_FEE,
+			YN_SRCH_RATIO_LIMIT,
+			CD_RATIO_TYPE,
+			CD_CATEGORY_GOODS,
+			CD_AREA,
+			CD_DEFER,
+			CD_OBJECT,
+			YN_POST_RANKING,
+			CD_COLLATERAL_HOUSE_TYPE,
+			CD_COLLATERAL_LOAN_USE,
+			DESC_FEATURE,
+			KEYWORD_LIST,
+			ID_FRT,
+			DT_FRT,
+			ID_LST,
+			DT_LST
+         FROM
+         	GOODS_INFO
+         WHERE
+         	YN_USE = 'Y'
+         	AND CD_GOODS_TYPE = #{cd_goods_type, jdbcType=VARCHAR}
+         ORDER BY YN_CHECK DESC NULLS LAST
+                , SEQ_ORDER DESC
+    </select>
+
+    <select id="listGoodsInfoBYComp" parameterType="com.koscom.goods.model.GoodsForm" resultType="com.koscom.goods.model.GoodsVO">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.listGoodsInfoBYComp :  */
+         SELECT
+         	CD_GOODS,
+			CD_FC,
+			NM_GOODS,
+			YN_USE,
+			YN_ZERO_RATIO,
+			CD_GOODS_CLASS_L,
+			CD_GOODS_CLASS_M,
+			CD_GOODS_CLASS_S,
+			CD_GOODS_TYPE,
+			CD_LOAN_TERM,
+			CD_TYPE_INTEREST,
+			RTO_INTEREST_FROM,
+			RTO_INTEREST_TO,
+			AMT_LIMIT,
+			CD_TYPE_PAY,
+			CD_EVENT,
+			YN_ONLINE,
+			YN_PROC_NOPAPERS,
+			DESC_TRADE_CLAUSE,
+			DESC_GOODS,
+			DESC_LOAN,
+			DESC_LIMIT,
+			DESC_PAYMETHOD,
+			DESC_PAPERS,
+			AGE_LOAN_FROM,
+			AGE_LOAN_TO,
+			AMT_APPLY_FROM,
+			AMT_APPLY_TO,
+			NO_MONTH_APPLY_FROM,
+			NO_MONTH_APPLY_TO,
+			CD_TYPE_INCOME,
+			CD_EMPLOY_TYPE,
+			CD_LOAN_USE,
+			AMT_YEAR_INCOME,
+			OU_YEAR_INCOME,
+			AMT_YEAR_SALE,
+			OU_SALE_INCOME,
+			YMD_START_COMP,
+			NO_JOB_YEAR,
+			CD_LIVE_TYPE,
+			CD_HOUSE_TYPE,
+			YN_PROOF_INCOME,
+			YN_4INSU,
+			YN_BAD_CREDIT,
+			YN_DELAY_CURRENT,
+			DAY_DELAY_6MONTH,
+			DAY_DELAY_12MONTH,
+			GRADE_KCB,
+			GRADE_NICE,
+			DTI_GRADE1,
+			DTI_GRADE2,
+			DTI_GRADE3,
+			DTI_GRADE4,
+			DTI_GRADE5,
+			DTI_GRADE6,
+			DTI_GRADE7,
+			DTI_GRADE8,
+			DTI_GRADE9,
+			DTI_GRADE10,
+			CHK_AGE_LOAN,
+			CHK_AMT_APPLY,
+			CHK_NO_MONTH_APPLY,
+			CHK_CD_TYPE_INCOME,
+			CHK_CD_EMPLOY_TYPE,
+			CHK_CD_LOAN_USE,
+			CHK_AMT_YEAR_INCOME,
+			CHK_AMT_YEAR_SALE,
+			CHK_YMD_START_COMP,
+			CHK_NO_JOB_YEAR,
+			CHK_CD_LIVE_TYPE,
+			CHK_CD_HOUSE_TYPE,
+			CHK_YN_PROOF_INCOME,
+			CHK_YN_4INSU,
+			CHK_YN_BAD_CREDIT,
+			CHK_YN_DELAY_CURRENT,
+			CHK_DAY_DELAY_6MONTH,
+			CHK_DAY_DELAY_12MONTH,
+			CHK_GRADE_KCB,
+			CHK_GRADE_NICE,
+			CHK_DTI_GRADE,
+			CHK_GRADE_LTV,
+			CHK_GRADE_DTI,
+			GRADE_LTV,
+			GRADE_DTI,
+			CD_SEX,
+			CD_OWNCAR_TYPE,
+			CD_CAR_TYPE,
+			CNT_CASH_SERVICE,
+			AMT_CASH_SERVICE,
+			AMT_CARPRICE_FROM,
+			AMT_CARPRICE_TO,
+			NO_CARYEAR_FROM,
+			NO_CARYEAR_TO,
+			CHK_CD_SEX,
+			CHK_CASH_SERVICE,
+			CHK_CD_OWNCAR_TYPE,
+			CHK_CD_CAR_TYPE,
+			CHK_AMT_CARPRICE,
+			CHK_NO_CARYEAR,
+			DESC_REPAYMETHOD,
+			DESC_COMMISSION,
+			DESC_INQUIRY,
+			CONTENT_INTEREST,
+			PREFER_INTEREST,
+			CD_APPLY_TYPE,
+			CD_TRADE_TYPE,
+			CD_TIME_EXEC,
+			YN_SEND_DOCU,
+			YN_VISIT,
+			YN_ERLY_RPAY_FEE,
+			YN_SRCH_RATIO_LIMIT,
+			CD_RATIO_TYPE,
+			CD_CATEGORY_GOODS,
+			CD_AREA,
+			CD_DEFER,
+			CD_OBJECT,
+			YN_POST_RANKING,
+			CD_COLLATERAL_HOUSE_TYPE,
+			CD_COLLATERAL_LOAN_USE,
+			DESC_FEATURE,
+			KEYWORD_LIST,
+			ID_FRT,
+			DT_FRT,
+			ID_LST,
+			DT_LST
+         FROM
+         	GOODS_INFO
+         WHERE
+         	YN_USE = 'Y'
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+               AND CD_FC = #{cd_fc}
+            </if>
+         ORDER BY YN_CHECK DESC NULLS LAST
+                , SEQ_ORDER DESC
+    </select>
+
+    <sql id="listGoodsInfo_WHERE">
+        <where>
+            <if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_detail)">
+                 AND ${sel_detail} LIKE '%'||#{txt_detail}||'%'
+            </if>
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_div_goods)'>
+                AND CD_DIV_GOODS = #{cd_div_goods, jdbcType=VARCHAR}
+            </if>
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+                AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            </if>
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods_type)'>
+                AND CD_GOODS_TYPE = #{cd_goods_type, jdbcType=VARCHAR}
+            </if>
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods)'>
+                AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+            </if>
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(yn_use)'>
+                AND YN_USE = #{yn_use, jdbcType=VARCHAR}
+            </if>
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+                AND CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            </if>
+        </where>
+    </sql>
+
+    <!--상품 GOODS_INFO  -->
+        <select id="listGoodsInfo" parameterType="com.koscom.goods.model.GoodsForm" resultType="com.koscom.goods.model.GoodsVO">
+            /* com.koscom.goodsbank.dao.GoodsbankMapper.listGoodsInfo :  */
+        SELECT
+        	CD_GOODS,
+			CD_FC,
+			NM_GOODS,
+			YN_USE,
+			YN_ZERO_RATIO,
+			CD_GOODS_CLASS_L,
+			CD_GOODS_CLASS_M,
+			CD_GOODS_CLASS_S,
+			CD_GOODS_TYPE,
+			CD_LOAN_TERM,
+			CD_TYPE_INTEREST,
+			RTO_INTEREST_FROM,
+			RTO_INTEREST_TO,
+			AMT_LIMIT,
+			CD_TYPE_PAY,
+			CD_EVENT,
+			YN_ONLINE,
+			YN_PROC_NOPAPERS,
+			DESC_TRADE_CLAUSE,
+			DESC_GOODS,
+			DESC_LOAN,
+			DESC_LIMIT,
+			DESC_PAYMETHOD,
+			DESC_PAPERS,
+			AGE_LOAN_FROM,
+			AGE_LOAN_TO,
+			AMT_APPLY_FROM,
+			AMT_APPLY_TO,
+			NO_MONTH_APPLY_FROM,
+			NO_MONTH_APPLY_TO,
+			CD_TYPE_INCOME,
+			CD_EMPLOY_TYPE,
+			CD_LOAN_USE,
+			AMT_YEAR_INCOME,
+			OU_YEAR_INCOME,
+			AMT_YEAR_SALE,
+			OU_SALE_INCOME,
+			YMD_START_COMP,
+			NO_JOB_YEAR,
+			CD_LIVE_TYPE,
+			CD_HOUSE_TYPE,
+			YN_PROOF_INCOME,
+			YN_4INSU,
+			YN_BAD_CREDIT,
+			YN_DELAY_CURRENT,
+			DAY_DELAY_6MONTH,
+			DAY_DELAY_12MONTH,
+			GRADE_KCB,
+			GRADE_NICE,
+			DTI_GRADE1,
+			DTI_GRADE2,
+			DTI_GRADE3,
+			DTI_GRADE4,
+			DTI_GRADE5,
+			DTI_GRADE6,
+			DTI_GRADE7,
+			DTI_GRADE8,
+			DTI_GRADE9,
+			DTI_GRADE10,
+			CHK_AGE_LOAN,
+			CHK_AMT_APPLY,
+			CHK_NO_MONTH_APPLY,
+			CHK_CD_TYPE_INCOME,
+			CHK_CD_EMPLOY_TYPE,
+			CHK_CD_LOAN_USE,
+			CHK_AMT_YEAR_INCOME,
+			CHK_AMT_YEAR_SALE,
+			CHK_YMD_START_COMP,
+			CHK_NO_JOB_YEAR,
+			CHK_CD_LIVE_TYPE,
+			CHK_CD_HOUSE_TYPE,
+			CHK_YN_PROOF_INCOME,
+			CHK_YN_4INSU,
+			CHK_YN_BAD_CREDIT,
+			CHK_YN_DELAY_CURRENT,
+			CHK_DAY_DELAY_6MONTH,
+			CHK_DAY_DELAY_12MONTH,
+			CHK_GRADE_KCB,
+			CHK_GRADE_NICE,
+			CHK_DTI_GRADE,
+			CHK_GRADE_LTV,
+			CHK_GRADE_DTI,
+			GRADE_LTV,
+			GRADE_DTI,
+			CD_SEX,
+			CD_OWNCAR_TYPE,
+			CD_CAR_TYPE,
+			CNT_CASH_SERVICE,
+			AMT_CASH_SERVICE,
+			AMT_CARPRICE_FROM,
+			AMT_CARPRICE_TO,
+			NO_CARYEAR_FROM,
+			NO_CARYEAR_TO,
+			CHK_CD_SEX,
+			CHK_CASH_SERVICE,
+			CHK_CD_OWNCAR_TYPE,
+			CHK_CD_CAR_TYPE,
+			CHK_AMT_CARPRICE,
+			CHK_NO_CARYEAR,
+			DESC_REPAYMETHOD,
+			DESC_COMMISSION,
+			DESC_INQUIRY,
+			CONTENT_INTEREST,
+			PREFER_INTEREST,
+			CD_APPLY_TYPE,
+			CD_TRADE_TYPE,
+			CD_TIME_EXEC,
+			YN_SEND_DOCU,
+			YN_VISIT,
+			YN_ERLY_RPAY_FEE,
+			YN_SRCH_RATIO_LIMIT,
+			CD_RATIO_TYPE,
+			CD_CATEGORY_GOODS,
+			CD_AREA,
+			CD_DEFER,
+			CD_OBJECT,
+			YN_POST_RANKING,
+			CD_COLLATERAL_HOUSE_TYPE,
+			CD_COLLATERAL_LOAN_USE,
+			DESC_FEATURE,
+			KEYWORD_LIST,
+			ID_FRT,
+			DT_FRT,
+			ID_LST,
+			DT_LST,
+            RNUM
+        FROM
+            (SELECT
+                LST.CD_GOODS,
+				LST.CD_FC,
+				LST.NM_GOODS,
+				LST.YN_USE,
+				LST.YN_ZERO_RATIO,
+				LST.CD_GOODS_CLASS_L,
+				LST.CD_GOODS_CLASS_M,
+				LST.CD_GOODS_CLASS_S,
+				LST.CD_GOODS_TYPE,
+				LST.CD_LOAN_TERM,
+				LST.CD_TYPE_INTEREST,
+				LST.RTO_INTEREST_FROM,
+				LST.RTO_INTEREST_TO,
+				LST.AMT_LIMIT,
+				LST.CD_TYPE_PAY,
+				LST.CD_EVENT,
+				LST.YN_ONLINE,
+				LST.YN_PROC_NOPAPERS,
+				LST.DESC_TRADE_CLAUSE,
+				LST.DESC_GOODS,
+				LST.DESC_LOAN,
+				LST.DESC_LIMIT,
+				LST.DESC_PAYMETHOD,
+				LST.DESC_PAPERS,
+				LST.AGE_LOAN_FROM,
+				LST.AGE_LOAN_TO,
+				LST.AMT_APPLY_FROM,
+				LST.AMT_APPLY_TO,
+				LST.NO_MONTH_APPLY_FROM,
+				LST.NO_MONTH_APPLY_TO,
+				LST.CD_TYPE_INCOME,
+				LST.CD_EMPLOY_TYPE,
+				LST.CD_LOAN_USE,
+				LST.AMT_YEAR_INCOME,
+				LST.OU_YEAR_INCOME,
+				LST.AMT_YEAR_SALE,
+				LST.OU_SALE_INCOME,
+				LST.YMD_START_COMP,
+				LST.NO_JOB_YEAR,
+				LST.CD_LIVE_TYPE,
+				LST.CD_HOUSE_TYPE,
+				LST.YN_PROOF_INCOME,
+				LST.YN_4INSU,
+				LST.YN_BAD_CREDIT,
+				LST.YN_DELAY_CURRENT,
+				LST.DAY_DELAY_6MONTH,
+				LST.DAY_DELAY_12MONTH,
+				LST.GRADE_KCB,
+				LST.GRADE_NICE,
+				LST.DTI_GRADE1,
+				LST.DTI_GRADE2,
+				LST.DTI_GRADE3,
+				LST.DTI_GRADE4,
+				LST.DTI_GRADE5,
+				LST.DTI_GRADE6,
+				LST.DTI_GRADE7,
+				LST.DTI_GRADE8,
+				LST.DTI_GRADE9,
+				LST.DTI_GRADE10,
+				LST.CHK_AGE_LOAN,
+				LST.CHK_AMT_APPLY,
+				LST.CHK_NO_MONTH_APPLY,
+				LST.CHK_CD_TYPE_INCOME,
+				LST.CHK_CD_EMPLOY_TYPE,
+				LST.CHK_CD_LOAN_USE,
+				LST.CHK_AMT_YEAR_INCOME,
+				LST.CHK_AMT_YEAR_SALE,
+				LST.CHK_YMD_START_COMP,
+				LST.CHK_NO_JOB_YEAR,
+				LST.CHK_CD_LIVE_TYPE,
+				LST.CHK_CD_HOUSE_TYPE,
+				LST.CHK_YN_PROOF_INCOME,
+				LST.CHK_YN_4INSU,
+				LST.CHK_YN_BAD_CREDIT,
+				LST.CHK_YN_DELAY_CURRENT,
+				LST.CHK_DAY_DELAY_6MONTH,
+				LST.CHK_DAY_DELAY_12MONTH,
+				LST.CHK_GRADE_KCB,
+				LST.CHK_GRADE_NICE,
+				LST.CHK_DTI_GRADE,
+				LST.CHK_GRADE_LTV,
+				LST.CHK_GRADE_DTI,
+				LST.GRADE_LTV,
+				LST.GRADE_DTI,
+				LST.CD_SEX,
+				LST.CD_OWNCAR_TYPE,
+				LST.CD_CAR_TYPE,
+				LST.CNT_CASH_SERVICE,
+				LST.AMT_CASH_SERVICE,
+				LST.AMT_CARPRICE_FROM,
+				LST.AMT_CARPRICE_TO,
+				LST.NO_CARYEAR_FROM,
+				LST.NO_CARYEAR_TO,
+				LST.CHK_CD_SEX,
+				LST.CHK_CASH_SERVICE,
+				LST.CHK_CD_OWNCAR_TYPE,
+				LST.CHK_CD_CAR_TYPE,
+				LST.CHK_AMT_CARPRICE,
+				LST.CHK_NO_CARYEAR,
+				LST.DESC_REPAYMETHOD,
+				LST.DESC_COMMISSION,
+				LST.DESC_INQUIRY,
+				LST.CONTENT_INTEREST,
+				LST.PREFER_INTEREST,
+				LST.CD_APPLY_TYPE,
+				LST.CD_TRADE_TYPE,
+				LST.CD_TIME_EXEC,
+				LST.YN_SEND_DOCU,
+				LST.YN_VISIT,
+				LST.YN_ERLY_RPAY_FEE,
+				LST.YN_SRCH_RATIO_LIMIT,
+				LST.CD_RATIO_TYPE,
+				LST.CD_CATEGORY_GOODS,
+				LST.CD_AREA,
+				LST.CD_DEFER,
+				LST.CD_OBJECT,
+				LST.YN_POST_RANKING,
+				LST.CD_COLLATERAL_HOUSE_TYPE,
+				LST.CD_COLLATERAL_LOAN_USE,
+				LST.DESC_FEATURE,
+				LST.KEYWORD_LIST,
+				LST.ID_FRT,
+				LST.DT_FRT,
+				LST.ID_LST,
+				LST.DT_LST,
+                ROWNUM RNUM
+             FROM
+                (SELECT
+                	CD_GOODS,
+					CD_FC,
+					NM_GOODS,
+					YN_USE,
+					YN_ZERO_RATIO,
+					CD_GOODS_CLASS_L,
+					CD_GOODS_CLASS_M,
+					CD_GOODS_CLASS_S,
+					CD_GOODS_TYPE,
+					CD_LOAN_TERM,
+					CD_TYPE_INTEREST,
+					RTO_INTEREST_FROM,
+					RTO_INTEREST_TO,
+					AMT_LIMIT,
+					CD_TYPE_PAY,
+					CD_EVENT,
+					YN_ONLINE,
+					YN_PROC_NOPAPERS,
+					DESC_TRADE_CLAUSE,
+					DESC_GOODS,
+					DESC_LOAN,
+					DESC_LIMIT,
+					DESC_PAYMETHOD,
+					DESC_PAPERS,
+					AGE_LOAN_FROM,
+					AGE_LOAN_TO,
+					AMT_APPLY_FROM,
+					AMT_APPLY_TO,
+					NO_MONTH_APPLY_FROM,
+					NO_MONTH_APPLY_TO,
+					CD_TYPE_INCOME,
+					CD_EMPLOY_TYPE,
+					CD_LOAN_USE,
+					AMT_YEAR_INCOME,
+					OU_YEAR_INCOME,
+					AMT_YEAR_SALE,
+					OU_SALE_INCOME,
+					YMD_START_COMP,
+					NO_JOB_YEAR,
+					CD_LIVE_TYPE,
+					CD_HOUSE_TYPE,
+					YN_PROOF_INCOME,
+					YN_4INSU,
+					YN_BAD_CREDIT,
+					YN_DELAY_CURRENT,
+					DAY_DELAY_6MONTH,
+					DAY_DELAY_12MONTH,
+					GRADE_KCB,
+					GRADE_NICE,
+					DTI_GRADE1,
+					DTI_GRADE2,
+					DTI_GRADE3,
+					DTI_GRADE4,
+					DTI_GRADE5,
+					DTI_GRADE6,
+					DTI_GRADE7,
+					DTI_GRADE8,
+					DTI_GRADE9,
+					DTI_GRADE10,
+					CHK_AGE_LOAN,
+					CHK_AMT_APPLY,
+					CHK_NO_MONTH_APPLY,
+					CHK_CD_TYPE_INCOME,
+					CHK_CD_EMPLOY_TYPE,
+					CHK_CD_LOAN_USE,
+					CHK_AMT_YEAR_INCOME,
+					CHK_AMT_YEAR_SALE,
+					CHK_YMD_START_COMP,
+					CHK_NO_JOB_YEAR,
+					CHK_CD_LIVE_TYPE,
+					CHK_CD_HOUSE_TYPE,
+					CHK_YN_PROOF_INCOME,
+					CHK_YN_4INSU,
+					CHK_YN_BAD_CREDIT,
+					CHK_YN_DELAY_CURRENT,
+					CHK_DAY_DELAY_6MONTH,
+					CHK_DAY_DELAY_12MONTH,
+					CHK_GRADE_KCB,
+					CHK_GRADE_NICE,
+					CHK_DTI_GRADE,
+					CHK_GRADE_LTV,
+					CHK_GRADE_DTI,
+					GRADE_LTV,
+					GRADE_DTI,
+					CD_SEX,
+					CD_OWNCAR_TYPE,
+					CD_CAR_TYPE,
+					CNT_CASH_SERVICE,
+					AMT_CASH_SERVICE,
+					AMT_CARPRICE_FROM,
+					AMT_CARPRICE_TO,
+					NO_CARYEAR_FROM,
+					NO_CARYEAR_TO,
+					CHK_CD_SEX,
+					CHK_CASH_SERVICE,
+					CHK_CD_OWNCAR_TYPE,
+					CHK_CD_CAR_TYPE,
+					CHK_AMT_CARPRICE,
+					CHK_NO_CARYEAR,
+					DESC_REPAYMETHOD,
+					DESC_COMMISSION,
+					DESC_INQUIRY,
+					CONTENT_INTEREST,
+					PREFER_INTEREST,
+					CD_APPLY_TYPE,
+					CD_TRADE_TYPE,
+					CD_TIME_EXEC,
+					YN_SEND_DOCU,
+					YN_VISIT,
+					YN_ERLY_RPAY_FEE,
+					YN_SRCH_RATIO_LIMIT,
+					CD_RATIO_TYPE,
+					CD_CATEGORY_GOODS,
+					CD_AREA,
+					CD_DEFER,
+					CD_OBJECT,
+					YN_POST_RANKING,
+					CD_COLLATERAL_HOUSE_TYPE,
+					CD_COLLATERAL_LOAN_USE,
+					DESC_FEATURE,
+					KEYWORD_LIST,
+					ID_FRT,
+					DT_FRT,
+					ID_LST,
+					DT_LST
+                 FROM GOODS_INFO
+                 <include refid="listGoodsInfo_WHERE"/>
+                 ) LST
+            WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+            )
+        WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+        ORDER BY DT_FRT DESC
+    </select>
+    <!--상품 GOODS_INFO  -->
+
+    <!--제휴사상품 GOODS_INFO  검색안함 -->
+    <select id="listGoodsAllianceCredit" parameterType="com.koscom.goods.model.GoodsForm" resultType="com.koscom.goods.model.GoodsVO">
+    /* com.koscom.goods.dao.GoodsMapper.listGoodsAllianceCredit  */
+    <![CDATA[
+      SELECT CD_GOODS
+             ,CD_FC
+             ,DESC_FEATURE
+             ,KEYWORD_LIST
+             ,CD_GOODS_CLASS_L
+             ,CD_GOODS_CLASS_M
+             ,NM_GOODS
+             ,CD_TYPE_INTEREST
+             ,RTO_INTEREST_FROM
+             ,RTO_INTEREST_TO
+             ,AMT_LIMIT
+             ,CD_LOAN_TERM
+             ,YN_FAVORITE
+             ,PATH_FILE1
+             ,RNUM
+        FROM(SELECT LST.CD_GOODS
+                    ,LST.CD_FC
+                    ,LST.DESC_FEATURE
+                    ,LST.KEYWORD_LIST
+                    ,LST.CD_GOODS_CLASS_L
+                    ,LST.CD_GOODS_CLASS_M
+                    ,LST.NM_GOODS
+                    ,LST.CD_TYPE_INTEREST
+                    ,LST.RTO_INTEREST_FROM
+                    ,LST.RTO_INTEREST_TO
+                    ,LST.AMT_LIMIT
+                    ,LST.CD_LOAN_TERM
+                    ,LST.YN_FAVORITE
+                    ,LST.PATH_FILE1
+                   ,ROWNUM RNUM
+               FROM (SELECT GI.CD_GOODS
+                            ,GI.CD_FC
+                            ,GI.DESC_FEATURE
+                            ,GI.KEYWORD_LIST
+                            ,GI.CD_GOODS_CLASS_L
+                            ,GI.CD_GOODS_CLASS_M
+                            ,GI.NM_GOODS
+                            ,GI.CD_TYPE_INTEREST
+                            ,GI.RTO_INTEREST_FROM
+                            ,GI.RTO_INTEREST_TO
+                            ,GI.AMT_LIMIT
+                            ,GI.CD_LOAN_TERM
+                           ,(CASE WHEN( SELECT COUNT(*)
+                                          FROM COOCON_GOODS_FAVORITE_INFO CGFI
+                                         WHERE CGFI.CD_FC = GI.CD_FC
+                                           AND CGFI.CD_NON_GOODS = GI.CD_GOODS
+                                           AND CGFI.YN_ALLIANCE = 'Y'
+                                           AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                      )> 0 THEN 'Y'
+                                  ELSE 'N' END) AS YN_FAVORITE
+                            ,FI.PATH_FILE AS PATH_FILE1
+                        FROM (SELECT A.CD_GOODS
+                                    ,A.CD_FC
+                                    ,A.DESC_FEATURE
+                                    ,A.KEYWORD_LIST
+                                    ,A.CD_GOODS_CLASS_L
+                                    ,A.CD_GOODS_CLASS_M
+                                    ,A.NM_GOODS
+                                    ,A.CD_TYPE_INTEREST
+                                    ,A.RTO_INTEREST_FROM
+                                    ,A.RTO_INTEREST_TO
+                                    ,A.AMT_LIMIT
+                                    ,A.CD_LOAN_TERM
+                                FROM GOODS_INFO A
+                               WHERE A.YN_USE = 'Y'
+                            ) GI
+                        LEFT OUTER JOIN FC_INFO FI ON
+                             GI.CD_FC = FI.CD_FC
+                       WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+				         AND GI.CD_GOODS_CLASS_M IN
+				      ]]>
+					  <foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
+			       		#{item, jdbcType=VARCHAR}
+				      </foreach>
+                        ORDER BY  <choose>
+                                      <when test="'01'.equals(orderby)">
+                                          RTO_INTEREST_FROM ASC/*금리낮은순*/,
+                                      </when>
+                                      <when test="'02'.equals(orderby)">
+                                          AMT_LIMIT DESC /*한도높은순*/,
+                                      </when>
+                                      <when test="'03'.equals(orderby)">
+                                          NVL(CD_LOAN_TERM,'-1') DESC/*기간높은순*/,
+                                      </when>
+                                  </choose>
+                                YN_FAVORITE       DESC
+
+        <![CDATA[
+                    ) LST
+                WHERE ROWNUM <= #{endPosition, jdbcType=NUMERIC}
+            )
+        WHERE RNUM >= #{startPosition, jdbcType=NUMERIC}
+        ]]>
+    </select>
+
+    <!--상품 GOODS_INFO  -->
+    <select id="listGoodsAllianceCreditCount" parameterType="com.koscom.goods.model.GoodsForm" resultType="int">
+        /* com.koscom.goods.dao.GoodsMapper.listGoodsAllianceCreditCount */
+        SELECT COUNT(*) AS recordCount
+               FROM (SELECT GI.CD_GOODS
+                            ,GI.CD_FC
+                            ,GI.DESC_FEATURE
+                            ,GI.KEYWORD_LIST
+                            ,GI.CD_GOODS_CLASS_L
+                            ,GI.CD_GOODS_CLASS_M
+                            ,GI.NM_GOODS
+                            ,GI.CD_TYPE_INTEREST
+                            ,GI.RTO_INTEREST_FROM
+                            ,GI.RTO_INTEREST_TO
+                            ,GI.AMT_LIMIT
+                            ,GI.CD_LOAN_TERM
+                           ,(CASE WHEN( SELECT COUNT(*)
+                                          FROM COOCON_GOODS_FAVORITE_INFO CGFI
+                                         WHERE CGFI.CD_FC = GI.CD_FC
+                                           AND CGFI.CD_NON_GOODS = GI.CD_GOODS
+                                           AND CGFI.YN_ALLIANCE = 'Y'
+                                           AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                      )> 0 THEN 'Y'
+                                  ELSE 'N' END) AS YN_FAVORITE
+                            ,FI.PATH_FILE AS PATH_FILE1
+                        FROM (SELECT A.CD_GOODS
+                                    ,A.CD_FC
+                                    ,A.DESC_FEATURE
+                                    ,A.KEYWORD_LIST
+                                    ,A.CD_GOODS_CLASS_L
+                                    ,A.CD_GOODS_CLASS_M
+                                    ,A.NM_GOODS
+                                    ,A.CD_TYPE_INTEREST
+                                    ,A.RTO_INTEREST_FROM
+                                    ,A.RTO_INTEREST_TO
+                                    ,A.AMT_LIMIT
+                                    ,A.CD_LOAN_TERM
+                                FROM GOODS_INFO A
+                               WHERE A.YN_USE = 'Y'
+                            ) GI
+                        LEFT OUTER JOIN fc_info FI ON
+                            GI.CD_FC = FI.CD_FC
+		       		   WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+				         AND GI.CD_GOODS_CLASS_M IN
+					  <foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
+			       		#{item, jdbcType=VARCHAR}
+				      </foreach>
+     			) LST
+    </select>
+
+    <!--제휴사상품 GOODS_INFO  -->
+    <select id="listGoodsAllianceBiz" parameterType="com.koscom.goods.model.GoodsForm" resultType="com.koscom.goods.model.GoodsVO">
+    <![CDATA[
+      /* com.koscom.goods.dao.GoodsMapper.listGoodsAllianceBiz  */
+      SELECT
+      		CD_GOODS
+            ,CD_FC
+            ,DESC_FEATURE
+            ,KEYWORD_LIST
+            ,CD_GOODS_CLASS_L
+            ,CD_GOODS_CLASS_M
+            ,NM_GOODS
+            ,CD_TYPE_INTEREST
+            ,RTO_INTEREST_FROM
+            ,RTO_INTEREST_TO
+            ,AMT_LIMIT
+            ,CD_LOAN_TERM
+            ,YN_FAVORITE
+            ,PATH_FILE1
+            ,RNUM
+        FROM(SELECT LST.CD_GOODS
+                    ,LST.CD_FC
+                    ,LST.DESC_FEATURE
+                    ,LST.KEYWORD_LIST
+                    ,LST.CD_GOODS_CLASS_L
+                    ,LST.CD_GOODS_CLASS_M
+                    ,LST.NM_GOODS
+                    ,LST.CD_TYPE_INTEREST
+                    ,LST.RTO_INTEREST_FROM
+                    ,LST.RTO_INTEREST_TO
+                    ,LST.AMT_LIMIT
+                    ,LST.CD_LOAN_TERM
+                    ,LST.YN_FAVORITE
+                    ,LST.PATH_FILE1
+                   ,ROWNUM RNUM
+               FROM (SELECT GI.CD_GOODS
+                            ,GI.CD_FC
+                            ,GI.DESC_FEATURE
+                            ,GI.KEYWORD_LIST
+                            ,GI.CD_GOODS_CLASS_L
+                            ,GI.CD_GOODS_CLASS_M
+                            ,GI.NM_GOODS
+                            ,GI.CD_TYPE_INTEREST
+                            ,GI.RTO_INTEREST_FROM
+                            ,GI.RTO_INTEREST_TO
+                            ,GI.AMT_LIMIT
+                            ,GI.CD_LOAN_TERM
+                           ,(CASE WHEN( SELECT COUNT(*)
+                                          FROM COOCON_GOODS_FAVORITE_INFO CGFI
+                                         WHERE CGFI.CD_FC = GI.CD_FC
+                                           AND CGFI.CD_NON_GOODS = GI.CD_GOODS
+                                           AND CGFI.YN_ALLIANCE = 'Y'
+                                           AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                      )> 0 THEN 'Y'
+                                  ELSE 'N' END) AS YN_FAVORITE
+                            ,FI.PATH_FILE AS PATH_FILE1
+                        FROM (SELECT
+                        			A.CD_GOODS
+                                     ,A.CD_FC
+                                     ,A.DESC_FEATURE
+                                     ,A.KEYWORD_LIST
+                                     ,A.CD_GOODS_CLASS_L
+                                     ,A.CD_GOODS_CLASS_M
+                                     ,A.NM_GOODS
+                                     ,A.CD_TYPE_INTEREST
+                                     ,A.RTO_INTEREST_FROM
+                                     ,A.RTO_INTEREST_TO
+                                     ,A.AMT_LIMIT
+                                     ,A.CD_LOAN_TERM
+                              FROM
+                              	GOODS_INFO A
+                              WHERE A.YN_USE = 'Y'
+                            ) GI
+                        LEFT OUTER JOIN FC_INFO FI
+                        ON GI.CD_FC = FI.CD_FC
+                        ]]>
+                        <choose>
+                            <when test="cd_goods_class_l.equals('01')">
+                                WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+                                  AND (    GI.CD_GOODS_CLASS_M = #{cd_goods_class_m, jdbcType=VARCHAR}
+                                        OR GI.CD_GOODS_CLASS_M = '03'
+                                      )
+                            </when>
+                            <when test="cd_goods_class_l.equals('02')">
+                                WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+                                  AND GI.CD_GOODS_CLASS_M = #{cd_goods_class_m, jdbcType=VARCHAR}
+                            </when>
+                        </choose>
+            ORDER BY  <choose>
+                            <when test="'01'.equals(orderby)">
+                                RTO_INTEREST_FROM ASC/*금리낮은순*/,
+                            </when>
+                            <when test="'02'.equals(orderby)">
+                                AMT_LIMIT DESC /*한도높은순*/,
+                            </when>
+                            <when test="'03'.equals(orderby)">
+                                NVL(CD_LOAN_TERM,'-1') DESC/*기간높은순*/,
+                            </when>
+                        </choose>
+                        YN_FAVORITE       DESC
+                        <![CDATA[
+                    ) LST
+                WHERE ROWNUM <= #{endPosition, jdbcType=NUMERIC}
+            )
+        WHERE RNUM >= #{startPosition, jdbcType=NUMERIC}
+     ]]>
+    </select>
+
+    <!--상품 GOODS_INFO  -->
+    <select id="listGoodsAllianceBizCount" parameterType="com.koscom.goods.model.GoodsForm" resultType="int">
+        <![CDATA[
+        /* com.koscom.goods.dao.GoodsMapper.listGoodsAllianceBizCount */
+        SELECT COUNT(*) AS recordCount
+          FROM (SELECT
+          				GI.CD_GOODS
+                        ,GI.CD_FC
+                        ,GI.DESC_FEATURE
+                        ,GI.KEYWORD_LIST
+                        ,GI.CD_GOODS_CLASS_L
+                        ,GI.CD_GOODS_CLASS_M
+                        ,GI.NM_GOODS
+                        ,GI.CD_TYPE_INTEREST
+                        ,GI.RTO_INTEREST_FROM
+                        ,GI.RTO_INTEREST_TO
+                        ,GI.AMT_LIMIT
+                        ,GI.CD_LOAN_TERM
+                        ,(CASE WHEN( SELECT COUNT(*)
+                                          FROM COOCON_GOODS_FAVORITE_INFO CGFI
+                                         WHERE CGFI.CD_FC = GI.CD_FC
+                                           AND CGFI.CD_NON_GOODS = GI.CD_GOODS
+                                           AND CGFI.YN_ALLIANCE = 'Y'
+                                           AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                      )> 0 THEN 'Y'
+                                  ELSE 'N' END) AS YN_FAVORITE
+                         ,FI.PATH_FILE AS PATH_FILE1
+                    FROM (SELECT
+                        		 A.CD_GOODS
+                                 ,A.CD_FC
+                                 ,A.DESC_FEATURE
+                                 ,A.KEYWORD_LIST
+                                 ,A.CD_GOODS_CLASS_L
+                                 ,A.CD_GOODS_CLASS_M
+                                 ,A.NM_GOODS
+                                 ,A.CD_TYPE_INTEREST
+                                 ,A.RTO_INTEREST_FROM
+                                 ,A.RTO_INTEREST_TO
+                                 ,A.AMT_LIMIT
+                                 ,A.CD_LOAN_TERM
+                          	FROM
+                            	GOODS_INFO A
+                            WHERE A.YN_USE = 'Y'
+                            ) GI
+                   LEFT OUTER JOIN FC_INFO FI
+                   ON GI.CD_FC = FI.CD_FC
+                   ]]>
+            <choose>
+                <when test="cd_goods_class_l.equals('01')">
+                    WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+                      AND (    GI.CD_GOODS_CLASS_M = #{cd_goods_class_m, jdbcType=VARCHAR}
+                            OR GI.CD_GOODS_CLASS_M = '03'
+                          )
+                </when>
+                <when test="cd_goods_class_l.equals('02')">
+                    WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+                      AND GI.CD_GOODS_CLASS_M = #{cd_goods_class_m, jdbcType=VARCHAR}
+                </when>
+            </choose>
+        ) LST
+        </select>
+
+        <!--제휴사상품 GOODS_INFO  -->
+        <select id="listGoodsAllianceHouse" parameterType="com.koscom.goods.model.GoodsForm" resultType="com.koscom.goods.model.GoodsVO">
+            /* com.koscom.goods.dao.GoodsMapper.listGoodsAllianceHouse  */
+            SELECT
+            	CD_GOODS,
+                CD_FC,
+                YN_SEND_DOCU,
+                YN_VISIT,
+                YN_ERLY_RPAY_FEE,
+                YN_SRCH_RATIO_LIMIT,
+                RTO_INTEREST_FROM,
+                RTO_INTEREST_TO,
+                CD_GOODS_CLASS_L,
+                CD_GOODS_CLASS_M,
+                NM_GOODS,
+                CD_TYPE_INTEREST,
+                AMT_LIMIT,
+                CD_LOAN_TERM,
+                CD_TERM_LOAN_01,
+                CD_TERM_LOAN_02,
+                CD_TERM_LOAN_03,
+                CD_TERM_LOAN_04,
+                YN_FAVORITE,
+                PATH_FILE1,
+                RNUM
+            FROM
+                (
+                    SELECT
+                        LST.CD_GOODS,
+                        LST.CD_FC,
+                        LST.YN_SEND_DOCU,
+                        LST.YN_VISIT,
+                        LST.YN_ERLY_RPAY_FEE,
+                        LST.YN_SRCH_RATIO_LIMIT,
+                        LST.RTO_INTEREST_FROM,
+                        LST.RTO_INTEREST_TO,
+                        LST.CD_GOODS_CLASS_L,
+                        LST.CD_GOODS_CLASS_M,
+                        LST.NM_GOODS,
+                        LST.CD_TYPE_INTEREST,
+                        LST.AMT_LIMIT,
+                        LST.CD_LOAN_TERM,
+                        LST.CD_TERM_LOAN_01,
+                        LST.CD_TERM_LOAN_02,
+                        LST.CD_TERM_LOAN_03,
+                        LST.CD_TERM_LOAN_04,
+                        LST.YN_FAVORITE,
+                        LST.PATH_FILE1,
+                        ROWNUM RNUM
+                    FROM
+                        (
+                            SELECT
+                                GI.CD_GOODS,
+                                GI.CD_FC,
+                                GI.YN_SEND_DOCU,
+                                GI.YN_VISIT,
+                                GI.YN_ERLY_RPAY_FEE,
+                                GI.YN_SRCH_RATIO_LIMIT,
+                                GI.RTO_INTEREST_FROM,
+                                GI.RTO_INTEREST_TO,
+                                GI.CD_GOODS_CLASS_L,
+                                GI.CD_GOODS_CLASS_M,
+                                GI.NM_GOODS,
+                                GI.CD_TYPE_INTEREST,
+                                GI.AMT_LIMIT,
+                                GI.CD_LOAN_TERM,
+                                GI.CD_TERM_LOAN_01,
+                                GI.CD_TERM_LOAN_02,
+                                GI.CD_TERM_LOAN_03,
+                                GI.CD_TERM_LOAN_04
+                                , (
+                                    CASE
+                                        WHEN(
+                                            SELECT
+                                                COUNT(*)
+                                            FROM
+                                                COOCON_GOODS_FAVORITE_INFO CGFI
+                                            WHERE
+                                                CGFI.CD_FC = GI.CD_FC
+                                                AND CGFI.CD_NON_GOODS = GI.CD_GOODS
+                                                AND CGFI.YN_ALLIANCE = 'Y'
+                                                AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                        )<![CDATA[>]]> 0 THEN 'Y'
+                                        ELSE 'N'
+                                    END
+                                ) AS YN_FAVORITE,
+                                FI.PATH_FILE AS PATH_FILE1
+                            FROM
+                                (
+                                    SELECT
+                                        IN_GI.CD_GOODS,
+                                        IN_GI.CD_FC,
+                                        IN_GI.YN_SEND_DOCU,
+                                        IN_GI.YN_VISIT,
+                                        IN_GI.YN_ERLY_RPAY_FEE,
+                                        IN_GI.YN_SRCH_RATIO_LIMIT,
+                                        IN_GI.RTO_INTEREST_FROM,
+                                        IN_GI.RTO_INTEREST_TO,
+                                        IN_GI.CD_GOODS_CLASS_L,
+                                        IN_GI.CD_GOODS_CLASS_M,
+                                        IN_GI.NM_GOODS,
+                                        IN_GI.CD_TYPE_INTEREST,
+                                        IN_GI.AMT_LIMIT,
+                                        IN_GI.CD_LOAN_TERM,
+                                        IN_GI.CD_TERM_LOAN_01,
+                                        IN_GI.CD_TERM_LOAN_02,
+                                        IN_GI.CD_TERM_LOAN_03,
+                                        IN_GI.CD_TERM_LOAN_04
+                                    FROM
+                                        (
+                                            SELECT
+                                                A.CD_GOODS,
+                                                A.CD_FC,
+                                                A.YN_SEND_DOCU,
+                                                A.YN_VISIT,
+                                                A.YN_ERLY_RPAY_FEE,
+                                                A.YN_SRCH_RATIO_LIMIT,
+                                                A.RTO_INTEREST_FROM,
+                                                A.RTO_INTEREST_TO,
+                                                A.CD_GOODS_CLASS_L,
+                                                A.CD_GOODS_CLASS_M,
+                                                A.NM_GOODS,
+                                                A.CD_TYPE_INTEREST,
+                                                A.AMT_LIMIT,
+                                                A.CD_LOAN_TERM,
+                                                B.CD_TERM_LOAN_01,
+                                                B.CD_TERM_LOAN_02,
+                                                B.CD_TERM_LOAN_03,
+                                                B.CD_TERM_LOAN_04
+                                            FROM
+                                                GOODS_INFO A,
+                                                (
+                                                    SELECT
+                                                        YN_SEND_DOCU,
+                                                        YN_VISIT,
+                                                        YN_ERLY_RPAY_FEE,
+                                                        YN_SRCH_RATIO_LIMIT,
+                                                        CD_TERM_LOAN_01,
+                                                        CD_TERM_LOAN_02,
+                                                        CD_TERM_LOAN_03,
+                                                        CD_TERM_LOAN_04
+                                                    FROM
+                                                        CONDITION_CREDIT_INFO
+                                                    WHERE
+                                                        NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                                ) B
+                                            WHERE
+                                                A.YN_SEND_DOCU = B.YN_SEND_DOCU
+                                                AND A.YN_USE = 'Y'
+                                                AND A.YN_VISIT = B.YN_VISIT
+                                                AND A.YN_ERLY_RPAY_FEE = B.YN_ERLY_RPAY_FEE
+                                                AND A.YN_SRCH_RATIO_LIMIT = B.YN_SRCH_RATIO_LIMIT
+                                                AND(
+                                                    DECODE( CD_TERM_LOAN_01, 'Y', A.CD_LOAN_TERM )<![CDATA[<]]> 12
+                                                    OR DECODE( CD_TERM_LOAN_02, 'Y', A.CD_LOAN_TERM ) BETWEEN 12 AND 36
+                                                    OR DECODE( CD_TERM_LOAN_03, 'Y', A.CD_LOAN_TERM ) BETWEEN 36 AND 60
+                                                    OR DECODE( CD_TERM_LOAN_04, 'Y', A.CD_LOAN_TERM )<![CDATA[>]]> 60
+                                                )
+                                        ) IN_GI,
+                                        (
+                                            SELECT
+                                                X.CD_FC,
+                                                X.CD_GOODS
+                                            FROM
+                                                V_GOODS_INFO_SPLIT X
+                                            WHERE
+                                                CD_APPLY_TYPE IN(
+                                                    SELECT
+                                                        DECODE( ROWNUM, 1, A, 2, B, 3, C, 4, D )
+                                                    FROM
+                                                        (
+                                                            SELECT
+                                                                DECODE( CD_APPLY_TYPE_01, 'Y', '01' ) A,
+                                                                DECODE( CD_APPLY_TYPE_02, 'Y', '02' ) B,
+                                                                DECODE( CD_APPLY_TYPE_03, 'Y', '03' ) C,
+                                                                DECODE( CD_APPLY_TYPE_04, 'Y', '04' ) D
+                                                            FROM
+                                                                CONDITION_CREDIT_INFO
+                                                            WHERE
+                                                                NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                                        )
+                                                    CONNECT BY
+                                                        LEVEL <![CDATA[<=]]> 4
+                                                )
+                                                AND CD_TRADE_TYPE IN(
+                                                    SELECT
+                                                        DECODE( ROWNUM, 1, A, 2, B )
+                                                    FROM
+                                                        (
+                                                            SELECT
+                                                                DECODE( CD_TRADE_TYPE_01, 'Y', '01' ) A,
+                                                                DECODE( CD_TRADE_TYPE_02, 'Y', '02' ) B
+                                                            FROM
+                                                                CONDITION_CREDIT_INFO
+                                                            WHERE
+                                                                NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                                        )
+                                                    CONNECT BY
+                                                        LEVEL <![CDATA[<=]]> 2
+                                                )
+                                                AND CD_TYPE_PAY IN(
+                                                    SELECT
+                                                        DECODE( ROWNUM, 1, A, 2, B, 3, C )
+                                                    FROM
+                                                        (
+                                                            SELECT
+                                                                DECODE( CD_TYPE_PAY_01, 'Y', '01' ) A,
+                                                                DECODE( CD_TYPE_PAY_02, 'N', '02' ) B,
+                                                                DECODE( CD_TYPE_PAY_03, 'Y', '03' ) C
+                                                            FROM
+                                                                CONDITION_CREDIT_INFO
+                                                            WHERE
+                                                                NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                                        )
+                                                    CONNECT BY
+                                                        LEVEL <![CDATA[<=]]> 3
+                                                )
+                                                AND CD_TIME_EXEC IN(
+                                                    SELECT
+                                                        DECODE( ROWNUM, 1, A, 2, B )
+                                                    FROM
+                                                        (
+                                                            SELECT
+                                                                DECODE( CD_TIME_EXEC_01, 'Y', '01' ) A,
+                                                                DECODE( CD_TIME_EXEC_02, 'Y', '02' ) B
+                                                            FROM
+                                                                CONDITION_CREDIT_INFO
+                                                            WHERE
+                                                                NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                                        )
+                                                    CONNECT BY
+                                                        LEVEL <![CDATA[<=]]> 4
+                                                )
+                                                AND CD_RATIO_TYPE IN(
+                                                    SELECT
+                                                        DECODE( ROWNUM, 1, A, 2, B )
+                                                    FROM
+                                                        (
+                                                            SELECT
+                                                                DECODE( CD_RATIO_TYPE_01, 'Y', '01' ) A,
+                                                                DECODE( CD_RATIO_TYPE_02, 'Y', '02' ) B
+                                                            FROM
+                                                                CONDITION_CREDIT_INFO
+                                                            WHERE
+                                                                NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                                        )
+                                                    CONNECT BY
+                                                        LEVEL <![CDATA[<=]]> 4
+                                                )
+                                            GROUP BY
+                                                X.CD_FC,
+                                                X.CD_GOODS
+                                        ) IN_X
+                                    WHERE
+                                        IN_GI.CD_FC = IN_X.CD_FC
+                                        AND IN_GI.CD_GOODS = IN_X.CD_GOODS
+                                ) GI
+                            LEFT OUTER JOIN FC_INFO FI
+                            ON GI.CD_FC = FI.CD_FC
+                            <choose>
+                                <when test="cd_goods_class_l.equals('01')">
+                                    WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+                                        AND (
+                                            GI.CD_GOODS_CLASS_M = #{cd_goods_class_m, jdbcType=VARCHAR}
+                                            OR GI.CD_GOODS_CLASS_M = '03'
+                                            )
+                                </when>
+                                <when test="cd_goods_class_l.equals('02')">
+                                    WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+                                        AND GI.CD_GOODS_CLASS_M = #{cd_goods_class_m, jdbcType=VARCHAR}
+                                </when>
+                            </choose>
+                        ) LST
+                    WHERE
+                        ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+                )
+            WHERE
+                RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+            ORDER BY
+                YN_FAVORITE DESC,
+                RTO_INTEREST_FROM ASC
+    </select>
+
+    <!--상품 GOODS_INFO  -->
+    <select id="listGoodsAllianceHouseCount" parameterType="com.koscom.goods.model.GoodsForm" resultType="int">
+        /* com.koscom.goods.dao.GoodsMapper.listGoodsAllianceHouseCount  */
+    SELECT
+        COUNT(*) AS recordCount
+    FROM
+        (
+            SELECT
+                IN_GI.CD_GOODS,
+                IN_GI.CD_FC,
+                IN_GI.YN_SEND_DOCU,
+                IN_GI.YN_VISIT,
+                IN_GI.YN_ERLY_RPAY_FEE,
+                IN_GI.YN_SRCH_RATIO_LIMIT,
+                IN_GI.RTO_INTEREST_FROM,
+                IN_GI.RTO_INTEREST_TO,
+                IN_GI.CD_GOODS_CLASS_L,
+                IN_GI.CD_GOODS_CLASS_M,
+                IN_GI.NM_GOODS,
+                IN_GI.CD_TYPE_INTEREST,
+                IN_GI.AMT_LIMIT,
+                IN_GI.CD_LOAN_TERM,
+                IN_GI.CD_TERM_LOAN_01,
+                IN_GI.CD_TERM_LOAN_02,
+                IN_GI.CD_TERM_LOAN_03,
+                IN_GI.CD_TERM_LOAN_04
+            FROM
+                (
+                    SELECT
+                        A.CD_GOODS,
+                        A.CD_FC,
+                        A.YN_SEND_DOCU,
+                        A.YN_VISIT,
+                        A.YN_ERLY_RPAY_FEE,
+                        A.YN_SRCH_RATIO_LIMIT,
+                        A.RTO_INTEREST_FROM,
+                        A.RTO_INTEREST_TO,
+                        A.CD_GOODS_CLASS_L,
+                        A.CD_GOODS_CLASS_M,
+                        A.NM_GOODS,
+                        A.CD_TYPE_INTEREST,
+                        A.AMT_LIMIT,
+                        A.CD_LOAN_TERM,
+                        B.CD_TERM_LOAN_01,
+                        B.CD_TERM_LOAN_02,
+                        B.CD_TERM_LOAN_03,
+                        B.CD_TERM_LOAN_04
+                    FROM
+                        GOODS_INFO A,
+                        (
+                            SELECT
+                                YN_SEND_DOCU,
+                                YN_VISIT,
+                                YN_ERLY_RPAY_FEE,
+                                YN_SRCH_RATIO_LIMIT,
+                                CD_TERM_LOAN_01,
+                                CD_TERM_LOAN_02,
+                                CD_TERM_LOAN_03,
+                                CD_TERM_LOAN_04
+                            FROM
+                                CONDITION_CREDIT_INFO
+                            WHERE
+                                NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                        ) B
+                    WHERE
+                        A.YN_USE = 'Y'
+                        AND A.YN_SEND_DOCU = B.YN_SEND_DOCU
+                        AND A.YN_VISIT = B.YN_VISIT
+                        AND A.YN_ERLY_RPAY_FEE = B.YN_ERLY_RPAY_FEE
+                        AND A.YN_SRCH_RATIO_LIMIT = B.YN_SRCH_RATIO_LIMIT
+                        AND(
+                            DECODE( CD_TERM_LOAN_01, 'Y', A.CD_LOAN_TERM )<![CDATA[<]]> 12
+                            OR DECODE( CD_TERM_LOAN_02, 'Y', A.CD_LOAN_TERM ) BETWEEN 12 AND 36
+                            OR DECODE( CD_TERM_LOAN_03, 'Y', A.CD_LOAN_TERM ) BETWEEN 36 AND 60
+                            OR DECODE( CD_TERM_LOAN_04, 'Y', A.CD_LOAN_TERM )<![CDATA[>]]> 60
+                        )
+                ) IN_GI,
+                (
+                    SELECT
+                        X.CD_FC,
+                        X.CD_GOODS
+                    FROM
+                        V_GOODS_INFO_SPLIT X
+                    WHERE
+                        CD_APPLY_TYPE IN(
+                            SELECT
+                                DECODE( ROWNUM, 1, A, 2, B, 3, C, 4, D )
+                            FROM
+                                (
+                                    SELECT
+                                        DECODE( CD_APPLY_TYPE_01, 'Y', '01' ) A,
+                                        DECODE( CD_APPLY_TYPE_02, 'Y', '02' ) B,
+                                        DECODE( CD_APPLY_TYPE_03, 'Y', '03' ) C,
+                                        DECODE( CD_APPLY_TYPE_04, 'Y', '04' ) D
+                                    FROM
+                                        CONDITION_CREDIT_INFO
+                                    WHERE
+                                        NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                )
+                            CONNECT BY
+                                LEVEL <![CDATA[<=]]> 4
+                        )
+                        AND CD_TRADE_TYPE IN(
+                            SELECT
+                                DECODE( ROWNUM, 1, A, 2, B )
+                            FROM
+                                (
+                                    SELECT
+                                        DECODE( CD_TRADE_TYPE_01, 'Y', '01' ) A,
+                                        DECODE( CD_TRADE_TYPE_02, 'Y', '02' ) B
+                                    FROM
+                                        CONDITION_CREDIT_INFO
+                                    WHERE
+                                        NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                )
+                            CONNECT BY
+                                LEVEL <![CDATA[<=]]> 2
+                        )
+                        AND CD_TYPE_PAY IN(
+                            SELECT
+                                DECODE( ROWNUM, 1, A, 2, B, 3, C )
+                            FROM
+                                (
+                                    SELECT
+                                        DECODE( CD_TYPE_PAY_01, 'Y', '01' ) A,
+                                        DECODE( CD_TYPE_PAY_02, 'N', '02' ) B,
+                                        DECODE( CD_TYPE_PAY_03, 'Y', '03' ) C
+                                    FROM
+                                        CONDITION_CREDIT_INFO
+                                    WHERE
+                                        NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                )
+                            CONNECT BY
+                                LEVEL <![CDATA[<=]]> 3
+                        )
+                        AND CD_TIME_EXEC IN(
+                            SELECT
+                                DECODE( ROWNUM, 1, A, 2, B )
+                            FROM
+                                (
+                                    SELECT
+                                        DECODE( CD_TIME_EXEC_01, 'Y', '01' ) A,
+                                        DECODE( CD_TIME_EXEC_02, 'Y', '02' ) B
+                                    FROM
+                                        CONDITION_CREDIT_INFO
+                                    WHERE
+                                        NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                )
+                            CONNECT BY
+                                LEVEL <![CDATA[<=]]> 4
+                        )
+                        AND CD_RATIO_TYPE IN(
+                            SELECT
+                                DECODE( ROWNUM, 1, A, 2, B )
+                            FROM
+                                (
+                                    SELECT
+                                        DECODE( CD_RATIO_TYPE_01, 'Y', '01' ) A,
+                                        DECODE( CD_RATIO_TYPE_02, 'Y', '02' ) B
+                                    FROM
+                                        CONDITION_CREDIT_INFO
+                                    WHERE
+                                        NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                )
+                            CONNECT BY
+                                LEVEL <![CDATA[<=]]> 4
+                        )
+                    GROUP BY
+                        X.CD_FC,
+                        X.CD_GOODS
+                ) IN_X
+            WHERE
+                IN_GI.CD_FC = IN_X.CD_FC
+                AND IN_GI.CD_GOODS = IN_X.CD_GOODS
+        )
+        <choose>
+            <when test="cd_goods_class_l.equals('01')">
+                WHERE CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+                    AND (
+                        CD_GOODS_CLASS_M = #{cd_goods_class_m, jdbcType=VARCHAR}
+                        OR CD_GOODS_CLASS_M = '03'
+                        )
+            </when>
+            <when test="cd_goods_class_l.equals('02')">
+                WHERE CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+                    AND CD_GOODS_CLASS_M = #{cd_goods_class_m, jdbcType=VARCHAR}
+            </when>
+         </choose>
+    </select>
+    <!--제휴사상품 GOODS_INFO  -->
+
+    <!--상품 GOODS_INFO  -->
+    <select id="listGoodsCount" parameterType="com.koscom.goods.model.GoodsForm" resultType="int">
+        /* com.koscom.goods.dao.GoodsMapper.listGoodsCount  */
+        SELECT COUNT(*) AS recordCount
+        FROM GOODS_INFO
+        <include refid="listGoodsInfo_WHERE"/>
+    </select>
+    <!--상품 GOODS_INFO  -->
+
+    <!--상품 GOODS_INFO  -->
+    <select id="listCodeGoods" resultType="com.koscom.goods.model.GoodsVO">
+        /* com.koscom.goods.dao.GoodsMapper.listCodeGoods  */
+        SELECT CD_FC, NM_GOODS, YN_USE
+        FROM GOODS_INFO
+    </select>
+    <!--상품 GOODS_INFO  -->
+
+    <!--상품 GOODS_INFO  -->
+        <select id="listGoods" parameterType="com.koscom.goods.model.GoodsForm" resultType="com.koscom.goods.model.GoodsVO">
+            /* com.koscom.goods.dao.GoodsMapper.listGoods  */
+        SELECT
+        	CD_GOODS,
+			CD_FC,
+			NM_GOODS,
+			YN_USE,
+			YN_ZERO_RATIO,
+			CD_GOODS_CLASS_L,
+			CD_GOODS_CLASS_M,
+			CD_GOODS_CLASS_S,
+			CD_GOODS_TYPE,
+			CD_LOAN_TERM,
+			CD_TYPE_INTEREST,
+			RTO_INTEREST_FROM,
+			RTO_INTEREST_TO,
+			AMT_LIMIT,
+			CD_TYPE_PAY,
+			CD_EVENT,
+			YN_ONLINE,
+			YN_PROC_NOPAPERS,
+			DESC_TRADE_CLAUSE,
+			DESC_GOODS,
+			DESC_LOAN,
+			DESC_LIMIT,
+			DESC_PAYMETHOD,
+			DESC_PAPERS,
+			AGE_LOAN_FROM,
+			AGE_LOAN_TO,
+			AMT_APPLY_FROM,
+			AMT_APPLY_TO,
+			NO_MONTH_APPLY_FROM,
+			NO_MONTH_APPLY_TO,
+			CD_TYPE_INCOME,
+			CD_EMPLOY_TYPE,
+			CD_LOAN_USE,
+			AMT_YEAR_INCOME,
+			OU_YEAR_INCOME,
+			AMT_YEAR_SALE,
+			OU_SALE_INCOME,
+			YMD_START_COMP,
+			NO_JOB_YEAR,
+			CD_LIVE_TYPE,
+			CD_HOUSE_TYPE,
+			YN_PROOF_INCOME,
+			YN_4INSU,
+			YN_BAD_CREDIT,
+			YN_DELAY_CURRENT,
+			DAY_DELAY_6MONTH,
+			DAY_DELAY_12MONTH,
+			GRADE_KCB,
+			GRADE_NICE,
+			DTI_GRADE1,
+			DTI_GRADE2,
+			DTI_GRADE3,
+			DTI_GRADE4,
+			DTI_GRADE5,
+			DTI_GRADE6,
+			DTI_GRADE7,
+			DTI_GRADE8,
+			DTI_GRADE9,
+			DTI_GRADE10,
+			CHK_AGE_LOAN,
+			CHK_AMT_APPLY,
+			CHK_NO_MONTH_APPLY,
+			CHK_CD_TYPE_INCOME,
+			CHK_CD_EMPLOY_TYPE,
+			CHK_CD_LOAN_USE,
+			CHK_AMT_YEAR_INCOME,
+			CHK_AMT_YEAR_SALE,
+			CHK_YMD_START_COMP,
+			CHK_NO_JOB_YEAR,
+			CHK_CD_LIVE_TYPE,
+			CHK_CD_HOUSE_TYPE,
+			CHK_YN_PROOF_INCOME,
+			CHK_YN_4INSU,
+			CHK_YN_BAD_CREDIT,
+			CHK_YN_DELAY_CURRENT,
+			CHK_DAY_DELAY_6MONTH,
+			CHK_DAY_DELAY_12MONTH,
+			CHK_GRADE_KCB,
+			CHK_GRADE_NICE,
+			CHK_DTI_GRADE,
+			CHK_GRADE_LTV,
+			CHK_GRADE_DTI,
+			GRADE_LTV,
+			GRADE_DTI,
+			CD_SEX,
+			CD_OWNCAR_TYPE,
+			CD_CAR_TYPE,
+			CNT_CASH_SERVICE,
+			AMT_CASH_SERVICE,
+			AMT_CARPRICE_FROM,
+			AMT_CARPRICE_TO,
+			NO_CARYEAR_FROM,
+			NO_CARYEAR_TO,
+			CHK_CD_SEX,
+			CHK_CASH_SERVICE,
+			CHK_CD_OWNCAR_TYPE,
+			CHK_CD_CAR_TYPE,
+			CHK_AMT_CARPRICE,
+			CHK_NO_CARYEAR,
+			DESC_REPAYMETHOD,
+			DESC_COMMISSION,
+			DESC_INQUIRY,
+			CONTENT_INTEREST,
+			PREFER_INTEREST,
+			CD_APPLY_TYPE,
+			CD_TRADE_TYPE,
+			CD_TIME_EXEC,
+			YN_SEND_DOCU,
+			YN_VISIT,
+			YN_ERLY_RPAY_FEE,
+			YN_SRCH_RATIO_LIMIT,
+			CD_RATIO_TYPE,
+			CD_CATEGORY_GOODS,
+			CD_AREA,
+			CD_DEFER,
+			CD_OBJECT,
+			YN_POST_RANKING,
+			CD_COLLATERAL_HOUSE_TYPE,
+			CD_COLLATERAL_LOAN_USE,
+			DESC_FEATURE,
+			KEYWORD_LIST,
+			ID_FRT,
+			DT_FRT,
+			ID_LST,
+			DT_LST
+        FROM
+        	GOODS_INFO
+        <if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_detail)">
+            AND ${sel_detail} LIKE '%'||#{txt_detail}||'%'
+        </if>
+        <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+            AND CD_FC = #{cd_fc}
+        </if>
+        <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods)'>
+            AND CD_GOODS= #{cd_goods}
+        </if>
+        ORDER BY CD_GOODS ASC
+            , SEQ_ORDER DESC
+    </select>
+    <!--상품 GOODS_INFO  -->
+
+    <!--상품 GOODS_INFO  -->
+    <update id="modifyGoodsDetails" parameterType="com.koscom.goods.model.GoodsVO">
+        /* com.koscom.goods.dao.GoodsMapper.modifyGoodsDetails  */
+       UPDATE GOODS_INFO
+        SET CD_FC = #{cd_fc,jdbcType=VARCHAR}
+            , NM_GOODS = #{nm_goods, jdbcType=VARCHAR}
+            , CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+            , YN_USE = #{yn_use, jdbcType=VARCHAR}
+            , YN_ZERO_RATIO = #{yn_zero_ratio, jdbcType=VARCHAR}
+            , CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+            , CD_GOODS_CLASS_M = #{cd_goods_class_m, jdbcType=VARCHAR}
+            , CD_GOODS_CLASS_S = #{cd_goods_class_s, jdbcType=VARCHAR}
+            , CD_GOODS_TYPE = #{cd_goods_type, jdbcType=VARCHAR}
+            , CD_LOAN_TERM = #{cd_loan_term, jdbcType=VARCHAR}
+            , CD_TYPE_INTEREST = #{cd_type_interest, jdbcType=VARCHAR}
+            , RTO_INTEREST_FROM = #{rto_interest_from, jdbcType=VARCHAR}
+            , RTO_INTEREST_TO = #{rto_interest_to, jdbcType=VARCHAR}
+            , AMT_LIMIT = #{amt_limit, jdbcType=VARCHAR}
+            , CD_TYPE_PAY = #{cd_type_pay, jdbcType=VARCHAR}
+            , CD_EVENT = #{cd_event, jdbcType=VARCHAR}
+            , YN_ONLINE = #{yn_online, jdbcType=VARCHAR}
+            , YN_PROC_NOPAPERS = #{yn_proc_nopapers, jdbcType=VARCHAR}
+            , DESC_TRADE_CLAUSE = #{desc_trade_clause, jdbcType=VARCHAR}
+            , DESC_GOODS = #{desc_goods, jdbcType=VARCHAR}
+            , DESC_LOAN = #{desc_loan, jdbcType=VARCHAR}
+            , DESC_LIMIT = #{desc_limit, jdbcType=VARCHAR}
+            , DESC_PAYMETHOD = #{desc_paymethod, jdbcType=VARCHAR}
+            , DESC_PAPERS = #{desc_papers, jdbcType=VARCHAR}
+            , DESC_REPAYMETHOD = #{desc_repaymethod, jdbcType=VARCHAR}
+            , DESC_COMMISSION = #{desc_commission, jdbcType=VARCHAR}
+            , DESC_INQUIRY = #{desc_inquiry, jdbcType=VARCHAR}
+            , CONTENT_INTEREST = #{content_interest, jdbcType=VARCHAR}
+            , PREFER_INTEREST = #{prefer_interest, jdbcType=VARCHAR}
+            , AGE_LOAN_FROM = #{age_loan_from, jdbcType=VARCHAR}
+            , AGE_LOAN_TO = #{age_loan_to, jdbcType=VARCHAR}
+            , AMT_APPLY_FROM = #{amt_apply_from, jdbcType=VARCHAR}
+            , AMT_APPLY_TO = #{amt_apply_to, jdbcType=VARCHAR}
+            , NO_MONTH_APPLY_FROM = #{no_month_apply_from, jdbcType=VARCHAR}
+            , NO_MONTH_APPLY_TO = #{no_month_apply_to, jdbcType=VARCHAR}
+            , CD_TYPE_INCOME = #{cd_type_income, jdbcType=VARCHAR}
+            , CD_EMPLOY_TYPE = #{cd_employ_type, jdbcType=VARCHAR}
+            , CD_LOAN_USE = #{cd_loan_use, jdbcType=VARCHAR}
+            , AMT_YEAR_INCOME = #{amt_year_income, jdbcType=VARCHAR}
+            , OU_YEAR_INCOME = #{ou_year_income, jdbcType=VARCHAR}
+            , AMT_YEAR_SALE = #{amt_year_sale, jdbcType=VARCHAR}
+            , OU_SALE_INCOME = #{ou_sale_income, jdbcType=VARCHAR}
+            , YMD_START_COMP = #{ymd_start_comp, jdbcType=VARCHAR}
+            , NO_JOB_YEAR = #{no_job_year, jdbcType=VARCHAR}
+            , CD_LIVE_TYPE = #{cd_live_type, jdbcType=VARCHAR}
+            , CD_HOUSE_TYPE = #{cd_house_type, jdbcType=VARCHAR}
+            , YN_PROOF_INCOME = #{yn_proof_income, jdbcType=VARCHAR}
+            , YN_4INSU = #{yn_4insu, jdbcType=VARCHAR}
+            , YN_BAD_CREDIT = #{yn_bad_credit, jdbcType=VARCHAR}
+            , YN_DELAY_CURRENT = #{yn_delay_current, jdbcType=VARCHAR}
+            , DAY_DELAY_6MONTH = #{day_delay_6month, jdbcType=VARCHAR}
+            , DAY_DELAY_12MONTH = #{day_delay_12month, jdbcType=VARCHAR}
+            , GRADE_KCB = #{grade_kcb, jdbcType=VARCHAR}
+            , GRADE_NICE = #{grade_nice, jdbcType=VARCHAR}
+            , GRADE_LTV = #{grade_ltv, jdbcType=VARCHAR}
+            , GRADE_DTI = #{grade_dti, jdbcType=VARCHAR}
+            , CD_SEX = #{cd_sex, jdbcType=VARCHAR}
+            , CD_OWNCAR_TYPE = #{cd_owncar_type, jdbcType=VARCHAR}
+            , CD_CAR_TYPE = #{cd_car_type, jdbcType=VARCHAR}
+            , CNT_CASH_SERVICE = #{cnt_cash_service, jdbcType=VARCHAR}
+            , AMT_CASH_SERVICE = #{amt_cash_service, jdbcType=VARCHAR}
+            , AMT_CARPRICE_FROM = #{amt_carprice_from, jdbcType=VARCHAR}
+            , AMT_CARPRICE_TO = #{amt_carprice_to, jdbcType=VARCHAR}
+            , NO_CARYEAR_FROM = #{no_caryear_from, jdbcType=VARCHAR}
+            , NO_CARYEAR_TO = #{no_caryear_to, jdbcType=VARCHAR}
+            , DTI_GRADE1 = #{dti_grade1, jdbcType=VARCHAR}
+            , DTI_GRADE2 = #{dti_grade2, jdbcType=VARCHAR}
+            , DTI_GRADE3 = #{dti_grade3, jdbcType=VARCHAR}
+            , DTI_GRADE4 = #{dti_grade4, jdbcType=VARCHAR}
+            , DTI_GRADE5 = #{dti_grade5, jdbcType=VARCHAR}
+            , DTI_GRADE6 = #{dti_grade6, jdbcType=VARCHAR}
+            , DTI_GRADE7 = #{dti_grade7, jdbcType=VARCHAR}
+            , DTI_GRADE8 = #{dti_grade8, jdbcType=VARCHAR}
+            , DTI_GRADE9 = #{dti_grade9, jdbcType=VARCHAR}
+            , DTI_GRADE10 = #{dti_grade10, jdbcType=VARCHAR}
+            , ID_LST = #{id_lst, jdbcType=VARCHAR}
+            , DT_LST = SYSDATE
+            , CHK_AGE_LOAN = #{chk_age_loan, jdbcType=VARCHAR}
+            , CHK_AMT_APPLY = #{chk_amt_apply, jdbcType=VARCHAR}
+            , CHK_NO_MONTH_APPLY = #{chk_no_month_apply, jdbcType=VARCHAR}
+            , CHK_CD_TYPE_INCOME = #{chk_cd_type_income, jdbcType=VARCHAR}
+            , CHK_CD_EMPLOY_TYPE = #{chk_cd_employ_type, jdbcType=VARCHAR}
+            , CHK_CD_LOAN_USE = #{chk_cd_loan_use, jdbcType=VARCHAR}
+            , CHK_AMT_YEAR_INCOME = #{chk_amt_year_income, jdbcType=VARCHAR}
+            , CHK_AMT_YEAR_SALE = #{chk_amt_year_sale, jdbcType=VARCHAR}
+            , CHK_YMD_START_COMP = #{chk_ymd_start_comp, jdbcType=VARCHAR}
+            , CHK_NO_JOB_YEAR = #{chk_no_job_year, jdbcType=VARCHAR}
+            , CHK_CD_LIVE_TYPE = #{chk_cd_live_type, jdbcType=VARCHAR}
+            , CHK_CD_HOUSE_TYPE = #{chk_cd_house_type, jdbcType=VARCHAR}
+            , CHK_YN_PROOF_INCOME = #{chk_yn_proof_income, jdbcType=VARCHAR}
+            , CHK_YN_4INSU = #{chk_yn_4insu, jdbcType=VARCHAR}
+            , CHK_YN_BAD_CREDIT = #{chk_yn_bad_credit, jdbcType=VARCHAR}
+            , CHK_YN_DELAY_CURRENT = #{chk_yn_delay_current, jdbcType=VARCHAR}
+            , CHK_DAY_DELAY_6MONTH = #{chk_day_delay_6month, jdbcType=VARCHAR}
+            , CHK_DAY_DELAY_12MONTH = #{chk_day_delay_12month, jdbcType=VARCHAR}
+            , CHK_GRADE_KCB = #{chk_grade_kcb, jdbcType=VARCHAR}
+            , CHK_GRADE_NICE = #{chk_grade_nice, jdbcType=VARCHAR}
+            , CHK_DTI_GRADE = #{chk_dti_grade, jdbcType=VARCHAR}
+            , CHK_GRADE_LTV = #{chk_grade_ltv, jdbcType=VARCHAR}
+            , CHK_GRADE_DTI = #{chk_grade_dti, jdbcType=VARCHAR}
+            , CHK_CD_SEX = #{chk_cd_sex, jdbcType=VARCHAR}
+            , CHK_CASH_SERVICE = #{chk_cash_service, jdbcType=VARCHAR}
+            , CHK_CD_OWNCAR_TYPE = #{chk_cd_owncar_type, jdbcType=VARCHAR}
+            , CHK_CD_CAR_TYPE = #{chk_cd_car_type, jdbcType=VARCHAR}
+            , CHK_AMT_CARPRICE = #{chk_amt_carprice, jdbcType=VARCHAR}
+            , CHK_NO_CARYEAR = #{chk_no_caryear, jdbcType=VARCHAR}
+            , DESC_FEATURE = #{desc_feature, jdbcType=VARCHAR}
+            , KEYWORD_LIST = #{keyword_list, jdbcType=VARCHAR}
+            , CD_APPLY_TYPE = #{cd_apply_type, jdbcType=VARCHAR}
+            , CD_TRADE_TYPE = #{cd_trade_type, jdbcType=VARCHAR}
+            , CD_TIME_EXEC = #{cd_time_exec, jdbcType=VARCHAR}
+            , CD_RATIO_TYPE = #{cd_ratio_type, jdbcType=VARCHAR}
+            , CD_CATEGORY_GOODS = #{cd_category_goods, jdbcType=VARCHAR}
+            , CD_COLLATERAL_HOUSE_TYPE = #{cd_collateral_house_type, jdbcType=VARCHAR}
+            , CD_COLLATERAL_LOAN_USE = #{cd_collateral_loan_use, jdbcType=VARCHAR}
+            , CD_AREA = #{cd_area, jdbcType=VARCHAR}
+            , CD_DEFER = #{cd_defer, jdbcType=VARCHAR}
+            , CD_OBJECT = #{cd_object, jdbcType=VARCHAR}
+            , YN_SEND_DOCU = #{yn_send_docu, jdbcType=VARCHAR}
+            , YN_VISIT = #{yn_visit, jdbcType=VARCHAR}
+            , YN_ERLY_RPAY_FEE = #{yn_erly_rpay_fee, jdbcType=VARCHAR}
+            , YN_SRCH_RATIO_LIMIT = #{yn_srch_ratio_limit, jdbcType=VARCHAR}
+            , YN_POST_RANKING = #{yn_post_ranking, jdbcType=VARCHAR}
+         WHERE CD_GOODS = #{cd_goods}
+    </update>
+    <!--상품 GOODS_INFO  -->
+
+    <update id="modifyGoodsForFincorp" parameterType="com.koscom.goods.model.GoodsVO">
+        UPDATE GOODS_INFO
+           SET CD_DIV_GOODS = #{cd_div_goods, jdbcType=VARCHAR}
+              , CNT_REAPPLY_MONTH = #{cnt_reapply_month, jdbcType=VARCHAR}
+              , CD_GOODS_TYPE = #{cd_goods_type, jdbcType=VARCHAR}
+              , NM_GOODS = #{nm_goods, jdbcType=VARCHAR}
+              , SUMMARY = #{summary, jdbcType=VARCHAR}
+              <if test="@com.koscom.util.MybatisUtil@isNotEmpty(path_file1)">
+              , PATH_FILE1 = #{path_file1, jdbcType=VARCHAR}
+              , NM_FILE1 = #{nm_file1, jdbcType=VARCHAR}
+              </if>
+              <if test="@com.koscom.util.MybatisUtil@isNotEmpty(path_file2)">
+              , PATH_FILE2 = #{path_file2, jdbcType=VARCHAR}
+              , NM_FILE2 = #{nm_file2, jdbcType=VARCHAR}
+              </if>
+              <if test="@com.koscom.util.MybatisUtil@isNotEmpty(path_fileCi)">
+              , PATH_FILECI = #{path_fileCi, jdbcType=VARCHAR}
+              , NM_FILECI = #{nm_fileCi, jdbcType=VARCHAR}
+              </if>
+              , NM_REQUEST_FORM = #{nm_request_form, jdbcType=VARCHAR}
+              , URL_REQUEST = #{url_request, jdbcType=VARCHAR}
+              , ID_REQUEST = #{id_request, jdbcType=VARCHAR}
+              , CONTENT = #{content, jdbcType=VARCHAR}
+              , C20_GOODS_COMP = #{c20_goods_comp, jdbcType=VARCHAR}
+              , YN_FIRST = #{yn_first, jdbcType=VARCHAR}
+              , YN_CHECK = #{yn_check, jdbcType=VARCHAR}
+              , YN_AUTO = #{yn_auto, jdbcType=VARCHAR}
+              , YN_USE = #{yn_use, jdbcType=VARCHAR}
+              , CD50_GOODS_JOB = #{cd50_goods_job, jdbcType=VARCHAR}
+              , ID_LST = #{id_lst, jdbcType=VARCHAR}
+              , DT_LST = SYSDATE
+              , AMT_LIMIT_LOAN_MIN = #{amt_limit_loan_min, jdbcType=VARCHAR}
+              , AMT_LIMIT_LOAN_MAX = #{amt_limit_loan_max, jdbcType=VARCHAR}
+              , SCORE_CB = #{score_cb, jdbcType=VARCHAR}
+              , GRADE_PI = #{grade_pi, jdbcType=VARCHAR}
+              , GRADE_SP = #{grade_sp, jdbcType=VARCHAR}
+              , GRADE_DEP = #{grade_dep, jdbcType=VARCHAR}
+              , METHOD_REPAY = #{method_repay, jdbcType=VARCHAR}
+              , METHOD_MID_REPAY = #{method_mid_repay, jdbcType=VARCHAR}
+              , AGE_MIN = #{age_min, jdbcType=VARCHAR}
+              , AGE_MAX = #{age_max, jdbcType=VARCHAR}
+              , AGE_DESC = #{age_desc, jdbcType=VARCHAR}
+              , DAY_PAYMENT = #{day_payment, jdbcType=VARCHAR}
+              , JOB_TERM_MONTH = #{job_term_month, jdbcType=VARCHAR}
+              , CD_EMPLOY_TYPE = #{cd_employ_type, jdbcType=VARCHAR}
+              , AMT_LIMIT_INCOME = #{amt_limit_income, jdbcType=VARCHAR}
+              , RTO_YEAR_INCOME_DEBT = #{rto_year_income_debt, jdbcType=VARCHAR}
+              , CNT_EXCEED_2ND = #{cnt_exceed_2nd, jdbcType=VARCHAR}
+              , CNT_EXCEED_ALL_CNT_LOAN = #{cnt_exceed_all_cnt_loan, jdbcType=VARCHAR}
+              , CNT_EXCEED_SAVING_BANK = #{cnt_exceed_saving_bank, jdbcType=VARCHAR}
+              , GRADE_LAST6MONTH = #{grade_last6month, jdbcType=VARCHAR}
+              , CNT_CASH_SERVICE = #{cnt_cash_service, jdbcType=VARCHAR}
+              , AMT_CASH_SERVICE = #{amt_cash_service, jdbcType=VARCHAR}
+              , CD_CHG_FACTOR = #{cd_chg_factor, jdbcType=VARCHAR}
+              , CNT_ARREARS_DAYS_IN1MONTH = #{cnt_arrears_days_in1month, jdbcType=VARCHAR}
+              , CNT_ARREARS_BTW3MONN6MON = #{cnt_arrears_btw3monn6mon, jdbcType=VARCHAR}
+              , YN_ARREARS_PUBLIC = #{yn_arrears_public, jdbcType=VARCHAR}
+              , YN_ARREARS_TEL = #{yn_arrears_tel, jdbcType=VARCHAR}
+              , CNT_LEND = #{cnt_lend, jdbcType=VARCHAR}
+              , AMT_LEND = #{amt_lend, jdbcType=VARCHAR}
+              , CNT_RECENT_2ND_IN6MON = #{cnt_recent_2nd_in6mon, jdbcType=VARCHAR}
+              , CNT_RECENT_ALL_IN12MON = #{cnt_recent_all_in12mon, jdbcType=VARCHAR}
+              , CNT_INSAMEYM = #{cnt_insameym, jdbcType=VARCHAR}
+         WHERE CD_GOODS = #{cd_goods}
+    </update>
+
+    <update id="modifyGoodsTransmit" parameterType="com.koscom.goods.model.GoodsVO">
+        UPDATE GOODS_INFO
+           SET  CD_DIV_GOODS = #{cd_div_goods, jdbcType=VARCHAR}
+              , CNT_REAPPLY_MONTH = #{cnt_reapply_month, jdbcType=VARCHAR}
+              , CD_GOODS_TYPE = #{cd_goods_type, jdbcType=VARCHAR}
+              , NM_GOODS = #{nm_goods, jdbcType=VARCHAR}
+              , CD_FC = #{cd_fc, jdbcType=VARCHAR}
+              , NM_REQUEST_FORM = #{nm_request_form, jdbcType=VARCHAR}
+              , URL_REQUEST = #{url_request, jdbcType=VARCHAR}
+              , ID_REQUEST = #{id_request, jdbcType=VARCHAR}
+              , C20_GOODS_COMP = #{c20_goods_comp, jdbcType=VARCHAR}
+              , YN_AUTO = #{yn_auto, jdbcType=VARCHAR}
+              , YN_USE = #{yn_use, jdbcType=VARCHAR}
+              , ID_LST = #{id_lst, jdbcType=VARCHAR}
+              , DT_LST = SYSDATE
+              , SCORE_CB = #{score_cb, jdbcType=VARCHAR}
+              , AMT_LIMIT_LOAN_MIN = #{amt_limit_loan_min, jdbcType=VARCHAR}
+              , AMT_LIMIT_LOAN_MAX = #{amt_limit_loan_max, jdbcType=VARCHAR}
+              , GRADE_PI = #{grade_pi, jdbcType=VARCHAR}
+              , GRADE_SP = #{grade_sp, jdbcType=VARCHAR}
+              , GRADE_DEP = #{grade_dep, jdbcType=VARCHAR}
+              , METHOD_REPAY = #{method_repay, jdbcType=VARCHAR}
+              , METHOD_MID_REPAY = #{method_mid_repay, jdbcType=VARCHAR}
+              , AGE_MIN = #{age_min, jdbcType=VARCHAR}
+              , AGE_MAX = #{age_max, jdbcType=VARCHAR}
+              , AGE_DESC = #{age_desc, jdbcType=VARCHAR}
+              , DAY_PAYMENT = #{day_payment, jdbcType=VARCHAR}
+              , JOB_TERM_MONTH = #{job_term_month, jdbcType=VARCHAR}
+              , CD_EMPLOY_TYPE = #{cd_employ_type, jdbcType=VARCHAR}
+              , AMT_LIMIT_INCOME = #{amt_limit_income, jdbcType=VARCHAR}
+              , RTO_YEAR_INCOME_DEBT = #{rto_year_income_debt, jdbcType=VARCHAR}
+              , RTO_CUTOFF_DTI = #{rto_cutoff_dti, jdbcType=VARCHAR}
+              , RTO_MID_REPAY = #{rto_mid_repay, jdbcType=VARCHAR}
+              , CNT_EXCEED_2ND = #{cnt_exceed_2nd, jdbcType=VARCHAR}
+              , CNT_EXCEED_ALL_CNT_LOAN = #{cnt_exceed_all_cnt_loan, jdbcType=VARCHAR}
+              , CNT_EXCEED_SAVING_BANK = #{cnt_exceed_saving_bank, jdbcType=VARCHAR}
+              , GRADE_LAST6MONTH = #{grade_last6month, jdbcType=VARCHAR}
+              , CNT_CASH_SERVICE = #{cnt_cash_service, jdbcType=VARCHAR}
+              , AMT_CASH_SERVICE = #{amt_cash_service, jdbcType=VARCHAR}
+              , CD_CHG_FACTOR = #{cd_chg_factor, jdbcType=VARCHAR}
+              , CNT_ARREARS_DAYS_IN1MONTH = #{cnt_arrears_days_in1month, jdbcType=VARCHAR}
+              , CNT_ARREARS_BTW3MONN6MON = #{cnt_arrears_btw3monn6mon, jdbcType=VARCHAR}
+              , YN_ARREARS_PUBLIC = #{yn_arrears_public, jdbcType=VARCHAR}
+              , YN_ARREARS_TEL = #{yn_arrears_tel, jdbcType=VARCHAR}
+              , CNT_LEND = #{cnt_lend, jdbcType=VARCHAR}
+              , AMT_LEND = #{amt_lend, jdbcType=VARCHAR}
+              , CNT_RECENT_2ND_IN6MON = #{cnt_recent_2nd_in6mon, jdbcType=VARCHAR}
+              , CNT_RECENT_ALL_IN12MON = #{cnt_recent_all_in12mon, jdbcType=VARCHAR}
+              , CNT_INSAMEYM = #{cnt_insameym, jdbcType=VARCHAR}
+         WHERE CD_GOODS = #{cd_goods}
+    </update>
+
+    <!--상품 GOODS_INFO  -->
+    <select id="getGoodsCode" parameterType="String" resultType="com.koscom.goods.model.GoodsVO">
+         SELECT
+         	CD_GOODS,
+			CD_FC,
+			NM_GOODS,
+			YN_USE,
+			YN_ZERO_RATIO,
+			CD_GOODS_CLASS_L,
+			CD_GOODS_CLASS_M,
+			CD_GOODS_CLASS_S,
+			CD_GOODS_TYPE,
+			CD_LOAN_TERM,
+			CD_TYPE_INTEREST,
+			RTO_INTEREST_FROM,
+			RTO_INTEREST_TO,
+			AMT_LIMIT,
+			CD_TYPE_PAY,
+			CD_EVENT,
+			YN_ONLINE,
+			YN_PROC_NOPAPERS,
+			DESC_TRADE_CLAUSE,
+			DESC_GOODS,
+			DESC_LOAN,
+			DESC_LIMIT,
+			DESC_PAYMETHOD,
+			DESC_PAPERS,
+			AGE_LOAN_FROM,
+			AGE_LOAN_TO,
+			AMT_APPLY_FROM,
+			AMT_APPLY_TO,
+			NO_MONTH_APPLY_FROM,
+			NO_MONTH_APPLY_TO,
+			CD_TYPE_INCOME,
+			CD_EMPLOY_TYPE,
+			CD_LOAN_USE,
+			AMT_YEAR_INCOME,
+			OU_YEAR_INCOME,
+			AMT_YEAR_SALE,
+			OU_SALE_INCOME,
+			YMD_START_COMP,
+			NO_JOB_YEAR,
+			CD_LIVE_TYPE,
+			CD_HOUSE_TYPE,
+			YN_PROOF_INCOME,
+			YN_4INSU,
+			YN_BAD_CREDIT,
+			YN_DELAY_CURRENT,
+			DAY_DELAY_6MONTH,
+			DAY_DELAY_12MONTH,
+			GRADE_KCB,
+			GRADE_NICE,
+			DTI_GRADE1,
+			DTI_GRADE2,
+			DTI_GRADE3,
+			DTI_GRADE4,
+			DTI_GRADE5,
+			DTI_GRADE6,
+			DTI_GRADE7,
+			DTI_GRADE8,
+			DTI_GRADE9,
+			DTI_GRADE10,
+			CHK_AGE_LOAN,
+			CHK_AMT_APPLY,
+			CHK_NO_MONTH_APPLY,
+			CHK_CD_TYPE_INCOME,
+			CHK_CD_EMPLOY_TYPE,
+			CHK_CD_LOAN_USE,
+			CHK_AMT_YEAR_INCOME,
+			CHK_AMT_YEAR_SALE,
+			CHK_YMD_START_COMP,
+			CHK_NO_JOB_YEAR,
+			CHK_CD_LIVE_TYPE,
+			CHK_CD_HOUSE_TYPE,
+			CHK_YN_PROOF_INCOME,
+			CHK_YN_4INSU,
+			CHK_YN_BAD_CREDIT,
+			CHK_YN_DELAY_CURRENT,
+			CHK_DAY_DELAY_6MONTH,
+			CHK_DAY_DELAY_12MONTH,
+			CHK_GRADE_KCB,
+			CHK_GRADE_NICE,
+			CHK_DTI_GRADE,
+			CHK_GRADE_LTV,
+			CHK_GRADE_DTI,
+			GRADE_LTV,
+			GRADE_DTI,
+			CD_SEX,
+			CD_OWNCAR_TYPE,
+			CD_CAR_TYPE,
+			CNT_CASH_SERVICE,
+			AMT_CASH_SERVICE,
+			AMT_CARPRICE_FROM,
+			AMT_CARPRICE_TO,
+			NO_CARYEAR_FROM,
+			NO_CARYEAR_TO,
+			CHK_CD_SEX,
+			CHK_CASH_SERVICE,
+			CHK_CD_OWNCAR_TYPE,
+			CHK_CD_CAR_TYPE,
+			CHK_AMT_CARPRICE,
+			CHK_NO_CARYEAR,
+			DESC_REPAYMETHOD,
+			DESC_COMMISSION,
+			DESC_INQUIRY,
+			CONTENT_INTEREST,
+			PREFER_INTEREST,
+			CD_APPLY_TYPE,
+			CD_TRADE_TYPE,
+			CD_TIME_EXEC,
+			YN_SEND_DOCU,
+			YN_VISIT,
+			YN_ERLY_RPAY_FEE,
+			YN_SRCH_RATIO_LIMIT,
+			CD_RATIO_TYPE,
+			CD_CATEGORY_GOODS,
+			CD_AREA,
+			CD_DEFER,
+			CD_OBJECT,
+			YN_POST_RANKING,
+			CD_COLLATERAL_HOUSE_TYPE,
+			CD_COLLATERAL_LOAN_USE,
+			DESC_FEATURE,
+			KEYWORD_LIST,
+			ID_FRT,
+			DT_FRT,
+			ID_LST,
+			DT_LST
+         FROM
+         	GOODS_INFO
+         WHERE CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <!--상품 GOODS_INFO  -->
+
+    <!--상품 GOODS_INFO  -->
+        <insert id="createGoods">
+        INSERT INTO GOODS_INFO
+            (
+                CD_FC
+                , NM_GOODS
+                , CD_GOODS
+                , YN_USE
+                , YN_ZERO_RATIO
+                , CD_GOODS_CLASS_L
+                , CD_GOODS_CLASS_M
+                , CD_GOODS_CLASS_S
+                , CD_GOODS_TYPE
+                , CD_LOAN_TERM
+                , CD_TYPE_INTEREST
+                , RTO_INTEREST_FROM
+                , RTO_INTEREST_TO
+                , AMT_LIMIT
+                , CD_TYPE_PAY
+                , CD_EVENT
+                , YN_ONLINE
+                , YN_PROC_NOPAPERS
+                , DESC_TRADE_CLAUSE
+                , DESC_GOODS
+                , DESC_LOAN
+                , DESC_LIMIT
+                , DESC_PAYMETHOD
+                , DESC_PAPERS
+                , DESC_REPAYMETHOD
+                , DESC_COMMISSION
+                , DESC_INQUIRY
+                , CONTENT_INTEREST
+                , PREFER_INTEREST
+                , AGE_LOAN_FROM
+                , AGE_LOAN_TO
+                , AMT_APPLY_FROM
+                , AMT_APPLY_TO
+                , NO_MONTH_APPLY_FROM
+                , NO_MONTH_APPLY_TO
+                , CD_TYPE_INCOME
+                , CD_EMPLOY_TYPE
+                , CD_LOAN_USE
+                , AMT_YEAR_INCOME
+                , OU_YEAR_INCOME
+                , AMT_YEAR_SALE
+                , OU_SALE_INCOME
+                , YMD_START_COMP
+                , NO_JOB_YEAR
+                , CD_LIVE_TYPE
+                , CD_HOUSE_TYPE
+                , YN_PROOF_INCOME
+                , YN_4INSU
+                , YN_BAD_CREDIT
+                , YN_DELAY_CURRENT
+                , DAY_DELAY_6MONTH
+                , DAY_DELAY_12MONTH
+                , GRADE_KCB
+                , GRADE_NICE
+                , GRADE_LTV
+                , GRADE_DTI
+                , CD_SEX
+                , CD_OWNCAR_TYPE
+                , CD_CAR_TYPE
+                , CNT_CASH_SERVICE
+                , AMT_CASH_SERVICE
+                , AMT_CARPRICE_FROM
+                , AMT_CARPRICE_TO
+                , NO_CARYEAR_FROM
+                , NO_CARYEAR_TO
+                , DTI_GRADE1
+                , DTI_GRADE2
+                , DTI_GRADE3
+                , DTI_GRADE4
+                , DTI_GRADE5
+                , DTI_GRADE6
+                , DTI_GRADE7
+                , DTI_GRADE8
+                , DTI_GRADE9
+                , DTI_GRADE10
+                , ID_FRT
+                , DT_FRT
+                , CHK_AGE_LOAN
+                , CHK_AMT_APPLY
+                , CHK_NO_MONTH_APPLY
+                , CHK_CD_TYPE_INCOME
+                , CHK_CD_EMPLOY_TYPE
+                , CHK_CD_LOAN_USE
+                , CHK_AMT_YEAR_INCOME
+                , CHK_AMT_YEAR_SALE
+                , CHK_YMD_START_COMP
+                , CHK_NO_JOB_YEAR
+                , CHK_CD_LIVE_TYPE
+                , CHK_CD_HOUSE_TYPE
+                , CHK_YN_PROOF_INCOME
+                , CHK_YN_4INSU
+                , CHK_YN_BAD_CREDIT
+                , CHK_YN_DELAY_CURRENT
+                , CHK_DAY_DELAY_6MONTH
+                , CHK_DAY_DELAY_12MONTH
+                , CHK_GRADE_KCB
+                , CHK_GRADE_NICE
+                , CHK_DTI_GRADE
+                , CHK_GRADE_LTV
+                , CHK_GRADE_DTI
+                , CHK_CD_SEX
+                , CHK_CASH_SERVICE
+                , CHK_CD_OWNCAR_TYPE
+                , CHK_CD_CAR_TYPE
+                , CHK_AMT_CARPRICE
+                , CHK_NO_CARYEAR
+                , DESC_FEATURE
+                , KEYWORD_LIST
+                , CD_APPLY_TYPE
+                , CD_TRADE_TYPE
+                , CD_TIME_EXEC
+                , CD_RATIO_TYPE
+                , CD_CATEGORY_GOODS
+                , CD_COLLATERAL_HOUSE_TYPE
+                , CD_COLLATERAL_LOAN_USE
+                , CD_AREA
+                , CD_DEFER
+                , CD_OBJECT
+                , YN_SEND_DOCU
+                , YN_VISIT
+                , YN_ERLY_RPAY_FEE
+                , YN_SRCH_RATIO_LIMIT
+                , YN_POST_RANKING
+            ) VALUES (
+                 #{cd_fc,jdbcType=VARCHAR}
+                , #{nm_goods, jdbcType=VARCHAR}
+                , #{cd_goods, jdbcType=VARCHAR}
+                , #{yn_use, jdbcType=VARCHAR}
+                , #{yn_zero_ratio, jdbcType=VARCHAR}
+                , #{cd_goods_class_l, jdbcType=VARCHAR}
+                , #{cd_goods_class_m, jdbcType=VARCHAR}
+                , #{cd_goods_class_s, jdbcType=VARCHAR}
+                , #{cd_goods_type, jdbcType=VARCHAR}
+                , #{cd_loan_term, jdbcType=VARCHAR}
+                , #{cd_type_interest, jdbcType=VARCHAR}
+                , #{rto_interest_from, jdbcType=VARCHAR}
+                , #{rto_interest_to, jdbcType=VARCHAR}
+                , #{amt_limit, jdbcType=VARCHAR}
+                , #{cd_type_pay, jdbcType=VARCHAR}
+                , #{cd_event, jdbcType=VARCHAR}
+                , #{yn_online, jdbcType=VARCHAR}
+                , #{yn_proc_nopapers, jdbcType=VARCHAR}
+                , #{desc_trade_clause, jdbcType=VARCHAR}
+                , #{desc_goods, jdbcType=VARCHAR}
+                , #{desc_loan, jdbcType=VARCHAR}
+                , #{desc_limit, jdbcType=VARCHAR}
+                , #{desc_paymethod, jdbcType=VARCHAR}
+                , #{desc_papers, jdbcType=VARCHAR}
+                , #{desc_repaymethod, jdbcType=VARCHAR}
+                , #{desc_commission, jdbcType=VARCHAR}
+                , #{desc_inquiry, jdbcType=VARCHAR}
+                , #{content_interest, jdbcType=VARCHAR}
+                , #{prefer_interest, jdbcType=VARCHAR}
+                , #{age_loan_from, jdbcType=VARCHAR}
+                , #{age_loan_to, jdbcType=VARCHAR}
+                , #{amt_apply_from, jdbcType=VARCHAR}
+                , #{amt_apply_to, jdbcType=VARCHAR}
+                , #{no_month_apply_from, jdbcType=VARCHAR}
+                , #{no_month_apply_to, jdbcType=VARCHAR}
+                , #{cd_type_income, jdbcType=VARCHAR}
+                , #{cd_employ_type, jdbcType=VARCHAR}
+                , #{cd_loan_use, jdbcType=VARCHAR}
+                , #{amt_year_income, jdbcType=VARCHAR}
+                , #{ou_year_income, jdbcType=VARCHAR}
+                , #{amt_year_sale, jdbcType=VARCHAR}
+                , #{ou_sale_income, jdbcType=VARCHAR}
+                , #{ymd_start_comp, jdbcType=VARCHAR}
+                , #{no_job_year, jdbcType=VARCHAR}
+                , #{cd_live_type, jdbcType=VARCHAR}
+                , #{cd_house_type, jdbcType=VARCHAR}
+                , #{yn_proof_income, jdbcType=VARCHAR}
+                , #{yn_4insu, jdbcType=VARCHAR}
+                , #{yn_bad_credit, jdbcType=VARCHAR}
+                , #{yn_delay_current, jdbcType=VARCHAR}
+                , #{day_delay_6month, jdbcType=VARCHAR}
+                , #{day_delay_12month, jdbcType=VARCHAR}
+                , #{grade_kcb, jdbcType=VARCHAR}
+                , #{grade_nice, jdbcType=VARCHAR}
+                , #{grade_ltv, jdbcType=VARCHAR}
+                , #{grade_dti, jdbcType=VARCHAR}
+                , #{cd_sex, jdbcType=VARCHAR}
+                , #{cd_owncar_type, jdbcType=VARCHAR}
+                , #{cd_car_type, jdbcType=VARCHAR}
+                , #{cnt_cash_service, jdbcType=VARCHAR}
+                , #{amt_cash_service, jdbcType=VARCHAR}
+                , #{amt_carprice_from, jdbcType=VARCHAR}
+                , #{amt_carprice_to, jdbcType=VARCHAR}
+                , #{no_caryear_from, jdbcType=VARCHAR}
+                , #{no_caryear_to, jdbcType=VARCHAR}
+                , #{dti_grade1, jdbcType=VARCHAR}
+                , #{dti_grade2, jdbcType=VARCHAR}
+                , #{dti_grade3, jdbcType=VARCHAR}
+                , #{dti_grade4, jdbcType=VARCHAR}
+                , #{dti_grade5, jdbcType=VARCHAR}
+                , #{dti_grade6, jdbcType=VARCHAR}
+                , #{dti_grade7, jdbcType=VARCHAR}
+                , #{dti_grade8, jdbcType=VARCHAR}
+                , #{dti_grade9, jdbcType=VARCHAR}
+                , #{dti_grade10, jdbcType=VARCHAR}
+                , #{id_frt, jdbcType=VARCHAR}
+                , SYSDATE
+                , #{chk_age_loan, jdbcType=VARCHAR}
+                , #{chk_amt_apply, jdbcType=VARCHAR}
+                , #{chk_no_month_apply, jdbcType=VARCHAR}
+                , #{chk_cd_type_income, jdbcType=VARCHAR}
+                , #{chk_cd_employ_type, jdbcType=VARCHAR}
+                , #{chk_cd_loan_use, jdbcType=VARCHAR}
+                , #{chk_amt_year_income, jdbcType=VARCHAR}
+                , #{chk_amt_year_sale, jdbcType=VARCHAR}
+                , #{chk_ymd_start_comp, jdbcType=VARCHAR}
+                , #{chk_no_job_year, jdbcType=VARCHAR}
+                , #{chk_cd_live_type, jdbcType=VARCHAR}
+                , #{chk_cd_house_type, jdbcType=VARCHAR}
+                , #{chk_yn_proof_income, jdbcType=VARCHAR}
+                , #{chk_yn_4insu, jdbcType=VARCHAR}
+                , #{chk_yn_bad_credit, jdbcType=VARCHAR}
+                , #{chk_yn_delay_current, jdbcType=VARCHAR}
+                , #{chk_day_delay_6month, jdbcType=VARCHAR}
+                , #{chk_day_delay_12month, jdbcType=VARCHAR}
+                , #{chk_grade_kcb, jdbcType=VARCHAR}
+                , #{chk_grade_nice, jdbcType=VARCHAR}
+                , #{chk_dti_grade, jdbcType=VARCHAR}
+                , #{chk_grade_ltv, jdbcType=VARCHAR}
+                , #{chk_grade_dti , jdbcType=VARCHAR}
+                , #{chk_cd_sex , jdbcType=VARCHAR}
+                , #{chk_cash_service , jdbcType=VARCHAR}
+                , #{chk_cd_owncar_type , jdbcType=VARCHAR}
+                , #{chk_cd_car_type , jdbcType=VARCHAR}
+                , #{chk_amt_carprice , jdbcType=VARCHAR}
+                , #{chk_no_caryear , jdbcType=VARCHAR}
+                , #{desc_feature , jdbcType=VARCHAR}
+                , #{keyword_list , jdbcType=VARCHAR}
+                , #{cd_apply_type, jdbcType=VARCHAR}
+                , #{cd_trade_type, jdbcType=VARCHAR}
+                , #{cd_time_exec, jdbcType=VARCHAR}
+                , #{cd_ratio_type, jdbcType=VARCHAR}
+                , #{cd_category_goods, jdbcType=VARCHAR}
+                , #{cd_collateral_house_type, jdbcType=VARCHAR}
+                , #{cd_collateral_loan_use, jdbcType=VARCHAR}
+                , #{cd_area, jdbcType=VARCHAR}
+                , #{cd_defer, jdbcType=VARCHAR}
+                , #{cd_object, jdbcType=VARCHAR}
+                , #{yn_send_docu, jdbcType=VARCHAR}
+                , #{yn_visit, jdbcType=VARCHAR}
+                , #{yn_erly_rpay_fee, jdbcType=VARCHAR}
+                , #{yn_srch_ratio_limit, jdbcType=VARCHAR}
+                , #{yn_post_ranking, jdbcType=VARCHAR}
+            )
+    </insert>
+    <!--상품 GOODS_INFO  -->
+
+    <insert id="createGoodsRto">
+    </insert>
+
+    <delete id="delGoodsRto" parameterType="com.koscom.goods.model.GoodsVO">
+    </delete>
+
+    <select id="getGoodsRtoInfo" parameterType="com.koscom.domain.GoodsInfo" resultType="com.koscom.goods.model.GoodsVO">
+    </select>
+
+    <select id="getGoodsCnt" parameterType="String" resultType="int">
+         SELECT COUNT(*)
+         FROM GOODS_INFO
+         WHERE CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+
+    <select id="listAgencyGoods" parameterType="com.koscom.domain.GoodsInfo" resultType="com.koscom.goods.model.GoodsVO">
+        SELECT *
+        FROM AGENCY_GOODS_MANAGE
+         <where>
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(id_agency)'>
+                ID_AGENCY = #{id_agency}
+            </if>
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods)'>
+                AND CD_GOODS = #{cd_goods}
+            </if>
+         </where>
+    </select>
+
+    <update id="procAgencyGoods" parameterType="com.koscom.goods.model.GoodsVO">
+        MERGE INTO AGENCY_GOODS_MANAGE
+           USING DUAL
+           ON (ID_AGENCY = #{id_agency}
+                AND CD_GOODS = #{cd_goods} )
+           WHEN MATCHED THEN
+              UPDATE
+                 SET YN_OPEN = #{yn_open, jdbcType=VARCHAR}
+                    , ID_LST = #{id_lst, jdbcType=VARCHAR}
+                    , DT_LST = SYSDATE
+           WHEN NOT MATCHED THEN
+              INSERT (
+                        ID_AGENCY
+                        , CD_GOODS
+                        , YN_OPEN
+                        , ID_FRT
+                        , DT_FRT
+                        , ID_LST
+                        , DT_LST
+                ) VALUES (
+                        #{id_agency, jdbcType=VARCHAR}
+                        , #{cd_goods, jdbcType=VARCHAR}
+                        , #{yn_open, jdbcType=VARCHAR}
+                        , #{id_frt, jdbcType=VARCHAR}
+                        , SYSDATE
+                        , #{id_frt, jdbcType=VARCHAR}
+                        , SYSDATE
+                )
+    </update>
+
+    <select id="listGoodsOpenBYType" parameterType="com.koscom.goods.model.GoodsForm" resultType="com.koscom.goods.model.GoodsVO">
+         SELECT *
+         FROM AGENCY_GOODS_MANAGE AG
+         INNER JOIN GOODS_INFO GI
+         ON AG.CD_GOODS=GI.CD_GOODS
+         WHERE GI.CD_GOODS_TYPE = #{cd_goods_type, jdbcType=VARCHAR}
+            AND AG.ID_AGENCY = #{id_agency}
+            AND GI.YN_USE = 'Y'
+            AND AG.YN_OPEN = 'Y'
+         ORDER BY GI.YN_CHECK DESC NULLS LAST
+                , GI.SEQ_ORDER DESC
+    </select>
+
+    <select id="listGoodsOpenBYComp" parameterType="com.koscom.goods.model.GoodsForm" resultType="com.koscom.goods.model.GoodsVO">
+         SELECT *
+         FROM agency_goods_manage AG
+         INNER JOIN GOODS_INFO GI
+         ON AG.cd_goods=GI.cd_goods
+         WHERE
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+                GI.cd_fc = #{cd_fc} AND
+            </if>
+             GI.yn_use = 'Y'
+            AND AG.id_agency = #{id_agency}
+            AND AG.yn_open = 'Y'
+         ORDER BY GI.yn_check DESC nulls last, GI.seq_order DESC
+    </select>
+
+
+    <select id="listGoodsAgency" parameterType="String" resultType="com.koscom.goods.model.GoodsVO">
+        SELECT GI.*
+        FROM agency_goods_manage AG
+        INNER JOIN goods_info GI
+        ON AG.cd_goods=GI.cd_goods
+        WHERE AG.ID_AGENCY = #{id_agency}
+            AND AG.YN_OPEN = 'Y'
+    </select>
+    <select id="listGoodsInfoForFinset" parameterType="com.koscom.goods.model.GoodsForm" resultType="com.koscom.goods.model.GoodsVO">
+        SELECT CD_GOODS                 /* 상품코드                                        */
+                ,CD_FC                    /* 금융사코드                                      */
+                ,NM_GOODS                 /* 상품명                                          */
+                ,YN_USE                   /* 판매여부                                        */
+                ,CD_GOODS_CLASS_L         /* 대분류                                          */
+                ,CD_GOODS_CLASS_M         /* 중분류                                          */
+                ,CD_GOODS_CLASS_S         /* 소분류                                          */
+                ,CD_GOODS_TYPE            /* 상품종류                                        */
+                ,CD_LOAN_TERM             /* 대출기간                                        */
+                ,CD_TYPE_INTEREST         /* 금리적용방식                                    */
+                ,RTO_INTEREST_FROM        /* 대출금리시작                                    */
+                ,RTO_INTEREST_TO          /* 대출금리종료                                    */
+                ,AMT_LIMIT                /* 한도                                            */
+                ,CD_TYPE_PAY              /* 상환방식                                        */
+                ,CD_EVENT                 /* 이벤트                                          */
+                ,YN_ONLINE                /* 비대면여부                                      */
+                ,YN_PROC_NOPAPERS         /* 무서류 진행 여부                                */
+                ,DESC_TRADE_CLAUSE        /* 금융거래약관                                    */
+                ,DESC_GOODS               /* 상세                                            */
+                ,DESC_LOAN                /* 대출대상상세                                    */
+                ,DESC_LIMIT               /* 대출한도상세                                    */
+                ,DESC_PAYMETHOD           /* 대출기간 및 상환방법                            */
+                ,DESC_PAPERS              /* 구비서류                                        */
+                ,AGE_LOAN_FROM            /* 대출 가능 연령FROM                              */
+                ,AGE_LOAN_TO              /* 대출 가능 연령 to                               */
+                ,AMT_APPLY_FROM           /* 신청금액(만원) from                             */
+                ,AMT_APPLY_TO             /* 신청금액(만원) to                               */
+                ,NO_MONTH_APPLY_FROM      /* 신청기간(개월) from                             */
+                ,NO_MONTH_APPLY_TO        /* 신청기간(개월) to                               */
+                ,CD_TYPE_INCOME           /* 소득 형태                                       */
+                ,CD_EMPLOY_TYPE           /* 고용 형태                                       */
+                ,CD_LOAN_USE              /* 자금 용도                                       */
+                ,AMT_YEAR_INCOME          /* 연소득                                          */
+                ,OU_YEAR_INCOME           /* 연소득 이상 이하                                */
+                ,AMT_YEAR_SALE            /* 연매출액(사업자)                                */
+                ,OU_SALE_INCOME           /* 연매출액이상 이하                               */
+                ,YMD_START_COMP           /* 입사일자                                        */
+                ,NO_JOB_YEAR              /* 근속 연수                                       */
+                ,CD_LIVE_TYPE             /* 주거소유형태                                    */
+                ,CD_HOUSE_TYPE            /* 주거종류                                        */
+                ,YN_PROOF_INCOME          /* 소득증빙여부                                    */
+                ,YN_4INSU                 /* 4대 보험 가입여부 (3개월 이상 납입)             */
+                ,YN_BAD_CREDIT            /* 은행연합회 신용관리정보(구 신용불량정보) 등재자 */
+                ,YN_DELAY_CURRENT         /* 연체 여부(현재)                                 */
+                ,DAY_DELAY_6MONTH         /* 연체 여부(최근 6개월)                           */
+                ,DAY_DELAY_12MONTH        /* 연체 여부(최근 1년)                             */
+                ,GRADE_KCB                /* 신용등급 (KCB )                                 */
+                ,GRADE_NICE               /* 신용등급 (NICE)                                 */
+                ,DTI_GRADE1               /* DTI_GRADE1                                      */
+                ,DTI_GRADE2               /* DTI_GRADE2                                      */
+                ,DTI_GRADE3               /* DTI_GRADE3                                      */
+                ,DTI_GRADE4               /* DTI_GRADE4                                      */
+                ,DTI_GRADE5               /* DTI_GRADE5                                      */
+                ,DTI_GRADE6               /* DTI_GRADE6                                      */
+                ,DTI_GRADE7               /* DTI_GRADE7                                      */
+                ,DTI_GRADE8               /* DTI_GRADE8                                      */
+                ,DTI_GRADE9               /* DTI_GRADE9                                      */
+                ,DTI_GRADE10              /* DTI_GRADE10                                     */
+                ,CHK_AGE_LOAN             /* 대출가능연령 사용여부                           */
+                ,CHK_AMT_APPLY            /* 신청금액 사용여부                               */
+                ,CHK_NO_MONTH_APPLY       /* 신청기간(개월) 사용여부                         */
+                ,CHK_CD_TYPE_INCOME       /* 소득형태 사용여부                               */
+                ,CHK_CD_EMPLOY_TYPE       /* 고용형태 사용여부                               */
+                ,CHK_CD_LOAN_USE          /* 자금용도 사용여부                               */
+                ,CHK_AMT_YEAR_INCOME      /* 연소득 사용여부                                 */
+                ,CHK_AMT_YEAR_SALE        /* 연매출액 사용여부                               */
+                ,CHK_YMD_START_COMP       /* 입사일자 사용여부                               */
+                ,CHK_NO_JOB_YEAR          /* 근속 연수 사용여부                              */
+                ,CHK_CD_LIVE_TYPE         /* 주거소유형태 사용여부                           */
+                ,CHK_CD_HOUSE_TYPE        /* 주거종류 사용여부                               */
+                ,CHK_YN_PROOF_INCOME      /* 소득증빙여부 사용여부                           */
+                ,CHK_YN_4INSU             /* 4대 보험 가입여부 사용여부                      */
+                ,CHK_YN_BAD_CREDIT        /* 신용관리정보등재자 사용여부                     */
+                ,CHK_YN_DELAY_CURRENT     /* 연체 여부(현재) 사용여부                        */
+                ,CHK_DAY_DELAY_6MONTH     /* 연체 여부(최근 6개월) 사용여부                  */
+                ,CHK_DAY_DELAY_12MONTH    /* 연체여부(최근1년) 사용여부                      */
+                ,CHK_GRADE_KCB            /* 신용등급 (KCB ) 사용여부                        */
+                ,CHK_GRADE_NICE           /* 신용등급 (NICE) 사용여부                        */
+                ,CHK_DTI_GRADE            /* DTI_GRADE 사용여부                              */
+                ,CHK_GRADE_LTV            /* LTV 사용여부                                    */
+                ,CHK_GRADE_DTI            /* DTI 사용여부                                    */
+                ,GRADE_LTV                /* 등급 (LTV)                                      */
+                ,GRADE_DTI                /* 등급 (DTI )                                     */
+                ,CD_SEX                   /* 성별                                            */
+                ,CD_OWNCAR_TYPE           /* 담보소유형태                                    */
+                ,CD_CAR_TYPE              /* 담보종류                                        */
+                ,CNT_CASH_SERVICE         /* 현금서비스 (건)                                 */
+                ,AMT_CASH_SERVICE         /* 현금서비스(만원)                                */
+                ,AMT_CARPRICE_FROM        /* 차량가격시작                                    */
+                ,AMT_CARPRICE_TO          /* 차량가격종료                                    */
+                ,NO_CARYEAR_FROM          /* 차량연식(년)시작                                */
+                ,NO_CARYEAR_TO            /* 차량연식(년)종료                                */
+                ,CHK_CD_SEX               /* 성별 사용여부                                   */
+                ,CHK_CASH_SERVICE         /* 현금서비스 사용여부                             */
+                ,CHK_CD_OWNCAR_TYPE       /* 담보소유형태 사용여부                           */
+                ,CHK_CD_CAR_TYPE          /* 담보종류 사용여부                               */
+                ,CHK_AMT_CARPRICE         /* 차량가격 사용여부                               */
+                ,CHK_NO_CARYEAR           /* 차량연식 사용여부                               */
+                ,DESC_REPAYMETHOD         /* 상환방식설명                                    */
+                ,DESC_COMMISSION          /* 중도상환수수료설명                              */
+                ,DESC_INQUIRY             /* 상품문의설명                                    */
+                ,CONTENT_INTEREST         /* 이자내용                                        */
+                ,PREFER_INTEREST          /* 우대금리                                        */
+                ,CD_APPLY_TYPE            /* 신청방식                                        */
+                ,CD_TRADE_TYPE            /* 거래방식                                        */
+                ,CD_TIME_EXEC             /* 실행시간                                        */
+                ,YN_SEND_DOCU             /* 서류제출                                        */
+                ,YN_VISIT                 /* 방문여부                                        */
+                ,YN_ERLY_RPAY_FEE         /* 중도상환수수료                                  */
+                ,YN_SRCH_RATIO_LIMIT      /* 금리한도조회                                    */
+                ,CD_RATIO_TYPE            /* 금리방식                                        */
+                ,CD_CATEGORY_GOODS        /* 상품군분류                                      */
+                ,CD_AREA                  /* 주택면적(전용면적)                              */
+                ,CD_DEFER                 /* 거치방식                                        */
+                ,CD_OBJECT                /* 대상구분                                        */
+                ,YN_POST_RANKING          /* 후순위가능                                      */
+                ,CD_COLLATERAL_HOUSE_TYPE /* 주택종류(담보)                                  */
+                ,CD_COLLATERAL_LOAN_USE   /* 자금용도(담보)                                  */
+                ,DESC_FEATURE             /* (요약)상품특징                                  */
+                ,KEYWORD_LIST             /* 키워드                                          */
+                ,ID_FRT                   /* 최초입력아이디                                  */
+                ,DT_FRT                   /* 최초입력시간                                    */
+                ,ID_LST                   /* 최종수정아이디                                  */
+                ,DT_LST                   /* 최종수정시간                                    */
+        FROM GOODS_INFO
+        <include refid="listGoodsInfo_WHERE"/>
+        ORDER BY
+         <choose>
+            <when test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_order_col)">
+                ${sel_order_col} ${sel_order_asc}
+                    <if test='!"seq_order".equals(sel_order_col)'>
+                    , seq_order DESC
+                </if>
+            </when>
+            <otherwise>
+                 seq_order DESC
+            </otherwise>
+         </choose>
+    </select>
+
+    <insert id="createMue">
+        INSERT INTO goods_mue_info
+            (
+                CD_FC
+                , CD_GOODS
+                , MIN_YEAR_INCOME
+                , MAX_YEAR_INCOME
+                , GRADE_YEAR_INCOME
+                , GRADE_MUE
+                , MUE
+            ) VALUES (
+                #{cd_fc, jdbcType=VARCHAR}
+                , #{cd_goods, jdbcType=VARCHAR}
+                , #{min_year_income}
+                , #{max_year_income}
+                , #{grade_year_income}
+                , #{grade_mue}
+                , #{mue}
+            )
+    </insert>
+
+    <delete id="delMue" parameterType="com.koscom.goods.model.MueVO">
+        DELETE GOODS_MUE_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </delete>
+    <select id="listGoodsMue" parameterType="com.koscom.domain.GoodsInfo" resultType="com.koscom.goods.model.MueVO">
+         SELECT * FROM GOODS_MUE_INFO
+         WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+         ORDER BY GRADE_YEAR_INCOME ASC, GRADE_MUE ASC
+    </select>
+
+    <!--수수료 부분  -->
+    <insert id="createRtoCommission">
+        INSERT INTO GOODS_RTO_COMMISSION_INFO
+        (
+            CD_FC
+            , CD_GOODS
+            , AMT_LIMIT_MIN
+            , AMT_LIMIT_MAX
+            , RTO_INTEREST_MIN
+            , RTO_INTEREST_MAX
+            , RTO_COMMISSION
+            , GRADE
+            , ID_FRT
+            , DT_FRT
+            , ID_LST
+            , DT_LST
+        )
+        VALUES (
+            #{cd_fc, jdbcType=VARCHAR}
+            , #{cd_goods, jdbcType=VARCHAR}
+            , #{amt_limit_min}
+            , #{amt_limit_max}
+            , #{rto_interest_min}
+            , #{rto_interest_max}
+            , #{rto_commission}
+            , #{grade}
+            , #{id_frt , jdbcType=VARCHAR}
+            , SYSDATE
+            , #{id_frt , jdbcType=VARCHAR}
+            , SYSDATE
+        )
+    </insert>
+    <delete id="deleteRtoCommission" parameterType="com.koscom.goods.model.RtoCommissionVO">
+        DELETE GOODS_RTO_COMMISSION_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </delete>
+    <select id="listGoodsRtoCommission" parameterType="com.koscom.domain.GoodsInfo" resultType="com.koscom.goods.model.RtoCommissionVO">
+         SELECT
+         	CD_GOODS,
+			CD_FC,
+			AMT_LIMIT_MIN,
+			AMT_LIMIT_MAX,
+			RTO_INTEREST_MIN,
+			RTO_INTEREST_MAX,
+			RTO_COMMISSION,
+			GRADE,
+			ID_FRT,
+			DT_FRT,
+			ID_LST,
+			DT_LST
+         FROM
+         	GOODS_RTO_COMMISSION_INFO
+         WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+         ORDER BY AMT_LIMIT_MIN ASC
+    </select>
+    <!--수수료 부분  -->
+
+    <!-- 대중소 분류 셀렉트박스 -->
+    <select id="ChangeSelectBoxLMS" parameterType="com.koscom.goods.model.GoodsForm" resultType="com.koscom.goods.model.GoodsForm">
+        SELECT NM_CODE, CODE_VALUE
+        FROM COMM_CD
+        <where>
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(code_group)'>
+                AND CODE_GROUP = #{code_group}
+            </if>
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(etc)'>
+                AND ETC LIKE '%' || #{etc} || '%'
+            </if>
+        </where>
+    </select>
+    <!-- 대중소 분류 셀렉트박스-->
+
+    <delete id="deleteGoods" parameterType="com.koscom.goods.model.GoodsVO">
+        DELETE FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </delete>
+
+        <select id="listGoodsInfoForCfs" parameterType="com.koscom.goods.model.GoodsForm" resultType="com.koscom.goods.model.GoodsVO">
+        SELECT *
+        FROM GOODS2_INFO
+<!--         <include refid="listGoodsInfo_WHERE"/> -->
+<!--         ORDER BY  -->
+<!--         <choose> -->
+<!--            <when test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_order_col)"> -->
+<!--                ${sel_order_col} ${sel_order_asc} -->
+<!--                    <if test='!"seq_order".equals(sel_order_col)'> -->
+<!--                    , seq_order DESC -->
+<!--                </if> -->
+<!--            </when> -->
+<!--            <otherwise> -->
+<!--                 seq_order DESC                  -->
+<!--            </otherwise> -->
+<!--         </choose> -->
+    </select>
+    <select id="getChkAgeLoan" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_AGE_LOAN
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <select id="getChkAmtApply" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_AMT_APPLY
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <select id="getChkNoMonthApply" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_NO_MONTH_APPLY
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <select id="getChkCdTypeIncome" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_CD_TYPE_INCOME
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <select id="getChkCdEmployType" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_CD_EMPLOY_TYPE
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <select id="getChkCdLoanUse" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_CD_LOAN_USE
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <select id="getChkAmtYearIncome" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_AMT_YEAR_INCOME
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <select id="getChkAmtYearSale" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_AMT_YEAR_SALE
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <select id="getChkYmdStartComp" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_YMD_START_COMP
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <select id="getChkNoJobYear" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_NO_JOB_YEAR
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <select id="getChkCdLiveType" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_CD_LIVE_TYPE
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <select id="getChkCdHouseType" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_CD_HOUSE_TYPE
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <select id="getChkYnProofIncome" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_YN_PROOF_INCOME
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <select id="getChkYn4Insu" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_YN_4INSU
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <select id="getChkYnBadCredit" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_YN_BAD_CREDIT
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <select id="getChkYnDelayCurrent" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_YN_DELAY_CURRENT
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <select id="getChkDayDelay6Month" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_DAY_DELAY_6MONTH
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <select id="getChkDayDelay12Month" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_DAY_DELAY_12MONTH
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <select id="getChkGradeKcb" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_GRADE_KCB
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <select id="getChkGradeNice" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_GRADE_NICE
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+    <select id="getChkDtiGrade" parameterType="com.koscom.goods.model.GoodsForm" resultType="java.lang.String">
+        SELECT CHK_DTI_GRADE
+        FROM GOODS_INFO
+        WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+            AND CD_GOODS = #{cd_goods, jdbcType=VARCHAR}
+    </select>
+
+    <!-- 상품 GOODS_INFO -->
+    <select id="getGoodsFavorite" parameterType="com.koscom.goods.model.GoodsVO" resultType="com.koscom.goods.model.GoodsVO">
+         SELECT
+             GI.CD_GOODS,
+			 GI.CD_FC,
+			 GI.NM_GOODS,
+			 GI.YN_USE,
+			 GI.YN_ZERO_RATIO,
+			 GI.CD_GOODS_CLASS_L,
+			 GI.CD_GOODS_CLASS_M,
+			 GI.CD_GOODS_CLASS_S,
+			 GI.CD_GOODS_TYPE,
+			 GI.CD_LOAN_TERM,
+			 GI.CD_TYPE_INTEREST,
+			 GI.RTO_INTEREST_FROM,
+			 GI.RTO_INTEREST_TO,
+			 GI.AMT_LIMIT,
+			 GI.CD_TYPE_PAY,
+			 GI.CD_EVENT,
+			 GI.YN_ONLINE,
+			 GI.YN_PROC_NOPAPERS,
+			 GI.DESC_TRADE_CLAUSE,
+			 GI.DESC_GOODS,
+			 GI.DESC_LOAN,
+			 GI.DESC_LIMIT,
+			 GI.DESC_PAYMETHOD,
+			 GI.DESC_PAPERS,
+			 GI.AGE_LOAN_FROM,
+			 GI.AGE_LOAN_TO,
+			 GI.AMT_APPLY_FROM,
+			 GI.AMT_APPLY_TO,
+			 GI.NO_MONTH_APPLY_FROM,
+			 GI.NO_MONTH_APPLY_TO,
+			 GI.CD_TYPE_INCOME,
+			 GI.CD_EMPLOY_TYPE,
+			 GI.CD_LOAN_USE,
+			 GI.AMT_YEAR_INCOME,
+			 GI.OU_YEAR_INCOME,
+			 GI.AMT_YEAR_SALE,
+			 GI.OU_SALE_INCOME,
+			 GI.YMD_START_COMP,
+			 GI.NO_JOB_YEAR,
+			 GI.CD_LIVE_TYPE,
+			 GI.CD_HOUSE_TYPE,
+			 GI.YN_PROOF_INCOME,
+			 GI.YN_4INSU,
+			 GI.YN_BAD_CREDIT,
+			 GI.YN_DELAY_CURRENT,
+			 GI.DAY_DELAY_6MONTH,
+			 GI.DAY_DELAY_12MONTH,
+			 GI.GRADE_KCB,
+			 GI.GRADE_NICE,
+			 GI.DTI_GRADE1,
+			 GI.DTI_GRADE2,
+			 GI.DTI_GRADE3,
+			 GI.DTI_GRADE4,
+			 GI.DTI_GRADE5,
+			 GI.DTI_GRADE6,
+			 GI.DTI_GRADE7,
+			 GI.DTI_GRADE8,
+			 GI.DTI_GRADE9,
+			 GI.DTI_GRADE10,
+			 GI.CHK_AGE_LOAN,
+			 GI.CHK_AMT_APPLY,
+			 GI.CHK_NO_MONTH_APPLY,
+			 GI.CHK_CD_TYPE_INCOME,
+			 GI.CHK_CD_EMPLOY_TYPE,
+			 GI.CHK_CD_LOAN_USE,
+			 GI.CHK_AMT_YEAR_INCOME,
+			 GI.CHK_AMT_YEAR_SALE,
+			 GI.CHK_YMD_START_COMP,
+			 GI.CHK_NO_JOB_YEAR,
+			 GI.CHK_CD_LIVE_TYPE,
+			 GI.CHK_CD_HOUSE_TYPE,
+			 GI.CHK_YN_PROOF_INCOME,
+			 GI.CHK_YN_4INSU,
+			 GI.CHK_YN_BAD_CREDIT,
+			 GI.CHK_YN_DELAY_CURRENT,
+			 GI.CHK_DAY_DELAY_6MONTH,
+			 GI.CHK_DAY_DELAY_12MONTH,
+			 GI.CHK_GRADE_KCB,
+			 GI.CHK_GRADE_NICE,
+			 GI.CHK_DTI_GRADE,
+			 GI.CHK_GRADE_LTV,
+			 GI.CHK_GRADE_DTI,
+			 GI.GRADE_LTV,
+			 GI.GRADE_DTI,
+			 GI.CD_SEX,
+			 GI.CD_OWNCAR_TYPE,
+			 GI.CD_CAR_TYPE,
+			 GI.CNT_CASH_SERVICE,
+			 GI.AMT_CASH_SERVICE,
+			 GI.AMT_CARPRICE_FROM,
+			 GI.AMT_CARPRICE_TO,
+			 GI.NO_CARYEAR_FROM,
+			 GI.NO_CARYEAR_TO,
+			 GI.CHK_CD_SEX,
+			 GI.CHK_CASH_SERVICE,
+			 GI.CHK_CD_OWNCAR_TYPE,
+			 GI.CHK_CD_CAR_TYPE,
+			 GI.CHK_AMT_CARPRICE,
+			 GI.CHK_NO_CARYEAR,
+			 GI.DESC_REPAYMETHOD,
+			 GI.DESC_COMMISSION,
+			 GI.DESC_INQUIRY,
+			 GI.CONTENT_INTEREST,
+			 GI.PREFER_INTEREST,
+			 GI.CD_APPLY_TYPE,
+			 GI.CD_TRADE_TYPE,
+			 GI.CD_TIME_EXEC,
+			 GI.YN_SEND_DOCU,
+			 GI.YN_VISIT,
+			 GI.YN_ERLY_RPAY_FEE,
+			 GI.YN_SRCH_RATIO_LIMIT,
+			 GI.CD_RATIO_TYPE,
+			 GI.CD_CATEGORY_GOODS,
+			 GI.CD_AREA,
+			 GI.CD_DEFER,
+			 GI.CD_OBJECT,
+			 GI.YN_POST_RANKING,
+			 GI.CD_COLLATERAL_HOUSE_TYPE,
+			 GI.CD_COLLATERAL_LOAN_USE,
+			 GI.DESC_FEATURE,
+			 GI.KEYWORD_LIST,
+			 GI.ID_FRT,
+			 GI.DT_FRT,
+			 GI.ID_LST,
+			 GI.DT_LST
+             , (CASE WHEN (
+                            SELECT COUNT(*)
+                            FROM COOCON_GOODS_FAVORITE_INFO CGFI
+                            WHERE CGFI.CD_FC = GI.CD_FC
+                                AND CGFI.CD_NON_GOODS = GI.CD_GOODS
+                                AND CGFI.YN_ALLIANCE = 'Y'
+                                AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                            ) <![CDATA[>]]> 0 THEN 'Y'
+                ELSE 'N'
+                END ) AS YN_FAVORITE
+             , FI.PATH_FILE AS PATH_FILE1
+             , FI.NM_FC
+         FROM GOODS_INFO GI
+         LEFT OUTER JOIN FC_INFO FI
+         ON GI.CD_FC = FI.CD_FC
+         <where>
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+                GI.CD_FC = #{cd_fc}
+            </if>
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods)'>
+                AND GI.CD_GOODS = #{cd_goods}
+            </if>
+         </where>
+    </select>
+
+    <!--관심상품 조회 (제휴상품) -->
+    <select id="listGoodsFavoriteAlliance" parameterType="com.koscom.goods.model.GoodsForm" resultType="com.koscom.goods.model.GoodsVO">
+        SELECT
+        	NO_PERSON
+            , YN_ALLIANCE
+            , CD_FC
+            , NM_GOODS
+            , CD_GOODS
+            , YN_USE
+            , CD_GOODS_CLASS_L
+            , CD_GOODS_CLASS_M
+            , CD_TYPE_PAY
+            --, DESC_GOODS
+            , DESC_LOAN
+            , DESC_LIMIT
+            --, DESC_PAPERS
+            , ID_FRT
+            , DT_FRT
+            , ID_LST
+            , DT_LST
+            , DESC_REPAYMETHOD
+            , DESC_COMMISSION
+            , CD_LOAN_TERM
+            , CD_APPLY_TYPE
+            , CD_TRADE_TYPE
+            , CD_TIME_EXEC
+            , YN_SEND_DOCU
+            , YN_VISIT
+            , YN_ERLY_RPAY_FEE
+            , YN_SRCH_RATIO_LIMIT
+            , CD_RATIO_TYPE
+            , CD_CATEGORY_GOODS
+            , CD_AREA
+            , CD_DEFER
+            , CD_OBJECT
+            , YN_POST_RANKING
+            , CD_COLLATERAL_HOUSE_TYPE
+            , CD_COLLATERAL_LOAN_USE
+            , CONTENT_INTEREST
+            , PREFER_INTEREST
+            , RTO_INTEREST_FROM
+            , RTO_INTEREST_TO
+            , AMT_LIMIT
+            , CD_TYPE_INTEREST
+            , DESC_FEATURE
+            , PATH_FILE1
+            , YN_FAVORITE
+            , KEYWORD_LIST
+            , RNUM
+        FROM (
+                SELECT LST.NO_PERSON
+                       , LST.YN_ALLIANCE
+                       , LST.CD_FC
+                       , LST.NM_GOODS
+                       , LST.CD_GOODS
+                       , LST.YN_USE
+                       , LST.CD_GOODS_CLASS_L
+                       , LST.CD_GOODS_CLASS_M
+                       , LST.CD_TYPE_PAY
+                       --, LST.DESC_GOODS
+                       , LST.DESC_LOAN
+                       , LST.DESC_LIMIT
+                       --, LST.DESC_PAPERS
+                       , LST.ID_FRT
+                       , LST.DT_FRT
+                       , LST.ID_LST
+                       , LST.DT_LST
+                       , LST.DESC_REPAYMETHOD
+                       , LST.DESC_COMMISSION
+                       , LST.CD_LOAN_TERM
+                       , LST.CD_APPLY_TYPE
+                       , LST.CD_TRADE_TYPE
+                       , LST.CD_TIME_EXEC
+                       , LST.YN_SEND_DOCU
+                       , LST.YN_VISIT
+                       , LST.YN_ERLY_RPAY_FEE
+                       , LST.YN_SRCH_RATIO_LIMIT
+                       , LST.CD_RATIO_TYPE
+                       , LST.CD_CATEGORY_GOODS
+                       , LST.CD_AREA
+                       , LST.CD_DEFER
+                       , LST.CD_OBJECT
+                       , LST.YN_POST_RANKING
+                       , LST.CD_COLLATERAL_HOUSE_TYPE
+                       , LST.CD_COLLATERAL_LOAN_USE
+                       , LST.CONTENT_INTEREST
+                       , LST.PREFER_INTEREST
+                       , LST.RTO_INTEREST_FROM
+                       , LST.RTO_INTEREST_TO
+                       , LST.AMT_LIMIT
+                       , LST.CD_TYPE_INTEREST
+                       , LST.DESC_FEATURE
+                       , LST.PATH_FILE1
+                       , LST.YN_FAVORITE
+                       , LST.KEYWORD_LIST
+                       , ROWNUM RNUM
+                FROM (
+                        SELECT CGFI.NO_PERSON
+                                , CGFI.YN_ALLIANCE
+                                , GI.CD_FC
+                                , GI.NM_GOODS
+                                , GI.CD_GOODS
+                                , GI.YN_USE
+                                , GI.CD_GOODS_CLASS_L
+                                , GI.CD_GOODS_CLASS_M
+                                , GI.CD_TYPE_PAY
+                                --, GI.DESC_GOODS
+                                , GI.DESC_LOAN
+                                , GI.DESC_LIMIT
+                                --, GI.DESC_PAPERS
+                                , GI.ID_FRT
+                                , GI.DT_FRT
+                                , GI.ID_LST
+                                , GI.DT_LST
+                                , GI.DESC_REPAYMETHOD
+                                , GI.DESC_COMMISSION
+                                , GI.CD_LOAN_TERM
+                                , GI.CD_APPLY_TYPE
+                                , GI.CD_TRADE_TYPE
+                                , GI.CD_TIME_EXEC
+                                , GI.YN_SEND_DOCU
+                                , GI.YN_VISIT
+                                , GI.YN_ERLY_RPAY_FEE
+                                , GI.YN_SRCH_RATIO_LIMIT
+                                , GI.CD_RATIO_TYPE
+                                , GI.CD_CATEGORY_GOODS
+                                , GI.CD_AREA
+                                , GI.CD_DEFER
+                                , GI.CD_OBJECT
+                                , GI.YN_POST_RANKING
+                                , GI.CD_COLLATERAL_HOUSE_TYPE
+                                , GI.CD_COLLATERAL_LOAN_USE
+                                , GI.CONTENT_INTEREST
+                                , GI.PREFER_INTEREST
+                                , GI.RTO_INTEREST_FROM
+                                , GI.RTO_INTEREST_TO
+                                , GI.AMT_LIMIT
+                                , GI.CD_TYPE_INTEREST
+                                , GI.DESC_FEATURE
+                                , FI.PATH_FILE AS PATH_FILE1
+                                , 'Y' AS YN_FAVORITE
+                                , GI.KEYWORD_LIST
+                        FROM COOCON_GOODS_FAVORITE_INFO CGFI
+                        INNER JOIN FC_INFO FI
+                        ON CGFI.CD_FC = FI.CD_FC
+                        INNER JOIN GOODS_INFO GI
+                        ON CGFI.CD_FC = GI.CD_FC
+                            AND CGFI.CD_NON_GOODS = GI.CD_GOODS
+                        WHERE 1=1
+                            AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods_class)'>
+                                <choose>
+                                	<when test="cd_goods_class.equals('01')">
+                                		AND GI.CD_GOODS_CLASS_L = '01'
+                                		AND (    GI.CD_GOODS_CLASS_M = '01'
+                               		         OR GI.CD_GOODS_CLASS_M = '03'
+                                	    	)
+                            		</when>
+                                	<when test="cd_goods_class.equals('02')">
+                                  		AND GI.CD_GOODS_CLASS_L = '01'
+                                  		AND (    GI.CD_GOODS_CLASS_M = '02'
+                                    		OR GI.CD_GOODS_CLASS_M = '03'
+                                      		)
+                            		</when>
+                            		<when test="cd_goods_class.equals('03')">
+                                  		AND GI.CD_GOODS_CLASS_L = '02'
+                                  		AND GI.CD_GOODS_CLASS_M = '05'
+                                	</when>
+                                </choose>
+                            </if>
+                    ) LST
+                WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+            )
+        WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+        ORDER BY NM_GOODS ASC
+    </select>
+
+    <!--관심상품 건수(제휴상품)  -->
+    <select id="getGoodsFavoriteAllianceCount" parameterType="com.koscom.goods.model.GoodsForm" resultType="int">
+        SELECT COUNT(*)
+        FROM (
+                SELECT CGFI.NO_PERSON
+                    , CGFI.YN_ALLIANCE
+                    , GI.CD_FC
+                    , GI.NM_GOODS
+                    , GI.CD_GOODS
+                    , GI.YN_USE
+                    , GI.CD_GOODS_CLASS_L
+                    , GI.CD_GOODS_CLASS_M
+                    , GI.CD_TYPE_PAY
+                    --, GI.DESC_GOODS
+                    --, GI.DESC_LOAN
+                    --, GI.DESC_LIMIT
+                    --, GI.DESC_PAPERS
+                    , GI.ID_FRT
+                    , GI.DT_FRT
+                    , GI.ID_LST
+                    , GI.DT_LST
+                    --, GI.DESC_REPAYMETHOD
+                    --, GI.DESC_COMMISSION
+                    , GI.CD_APPLY_TYPE
+                    , GI.CD_TRADE_TYPE
+                    , GI.CD_TIME_EXEC
+                    , GI.YN_SEND_DOCU
+                    , GI.YN_VISIT
+                    , GI.YN_ERLY_RPAY_FEE
+                    , GI.YN_SRCH_RATIO_LIMIT
+                    , GI.CD_RATIO_TYPE
+                    , GI.CD_CATEGORY_GOODS
+                    , GI.CD_AREA
+                    , GI.CD_DEFER
+                    , GI.CD_OBJECT
+                    , GI.YN_POST_RANKING
+                    , GI.CD_COLLATERAL_HOUSE_TYPE
+                    , GI.CD_COLLATERAL_LOAN_USE
+                    , FI.PATH_FILE AS PATH_FILE1
+                    , 'Y' AS YN_FAVORITE
+                    , GI.KEYWORD_LIST
+                FROM COOCON_GOODS_FAVORITE_INFO CGFI
+                INNER JOIN FC_INFO FI
+                ON CGFI.CD_FC = FI.CD_FC
+                INNER JOIN GOODS_INFO GI
+                ON CGFI.CD_FC = GI.CD_FC
+                    AND CGFI.CD_NON_GOODS = GI.CD_GOODS
+                WHERE 1=1
+                    AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                    <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods_class)'>
+                    	<choose>
+                            <when test="cd_goods_class.equals('01')">
+                            	AND GI.CD_GOODS_CLASS_L = '01'
+                           		AND (    GI.CD_GOODS_CLASS_M = '01'
+                            		OR GI.CD_GOODS_CLASS_M = '03'
+                            		)
+                            </when>
+                            <when test="cd_goods_class.equals('02')">
+                                AND GI.CD_GOODS_CLASS_L = '01'
+                                AND (    GI.CD_GOODS_CLASS_M = '02'
+                            		OR GI.CD_GOODS_CLASS_M = '03'
+                            		)
+                            </when>
+                           	<when test="cd_goods_class.equals('03')">
+                                AND GI.CD_GOODS_CLASS_L = '02'
+                            	AND GI.CD_GOODS_CLASS_M = '05'
+                        	</when>
+                    	</choose>
+                    </if>
+            ) LST
+    </select>
+
+    <!--관심상품 조회 (비제휴상품) -->
+    <select id="listGoodsFavoriteNoAlliance" parameterType="com.koscom.goods.model.GoodsForm" resultType="com.koscom.goods.model.GoodsVO">
+        SELECT
+        	NO_PERSON
+            , YN_ALLIANCE
+            , CD_FC
+            , NM_GOODS
+            , CD_GOODS
+            , YN_USE
+            , CD_GOODS_CLASS_L
+            , CD_GOODS_CLASS_M
+            , CD_TYPE_PAY
+            --, DESC_GOODS
+            , DESC_LOAN
+            , DESC_LIMIT
+            --, DESC_PAPERS
+            , ID_FRT
+            , DT_FRT
+            , ID_LST
+            , DT_LST
+            , DESC_REPAYMETHOD
+            , DESC_COMMISSION
+            --, CD_LOAN_TERM
+            , CD_APPLY_TYPE
+            , CD_TRADE_TYPE
+            , CD_TIME_EXEC
+            , YN_SEND_DOCU
+            , YN_ERLY_RPAY_FEE
+            --, CD_RATIO_TYPE
+            , CD_AREA
+            , CD_DEFER
+            , CD_OBJECT
+            , YN_POST_RANKING
+            , CD_COLLATERAL_HOUSE_TYPE
+            , CD_COLLATERAL_LOAN_USE
+            , DESC_TERM
+            , DESC_RATIO
+            , DESC_PREFER_YIELD
+            , RTO_INTEREST_FROM
+            , RTO_INTEREST_TO
+            , AMT_LIMIT
+            , CD_TYPE_INTEREST
+            , CD_LOAN_TERM
+            , DESC_FEATURE
+            --, PATH_FILE1
+            , YN_FAVORITE
+            , KEYWORD_LIST
+            , FC_LINK
+            , TIME_INTEREST
+            , RNUM
+        FROM (SELECT
+        			LST.NO_PERSON
+                    , LST.YN_ALLIANCE
+                    , LST.CD_FC
+                    , LST.NM_GOODS
+                    , LST.CD_GOODS
+                    , LST.YN_USE
+                    , LST.CD_GOODS_CLASS_L
+                    , LST.CD_GOODS_CLASS_M
+                    , LST.CD_TYPE_PAY
+                    --, LST.DESC_GOODS
+                    , LST.DESC_LOAN
+                    , LST.DESC_LIMIT
+                    --, LST.DESC_PAPERS
+                    , LST.ID_FRT
+                    , LST.DT_FRT
+                    , LST.ID_LST
+                    , LST.DT_LST
+                    , LST.DESC_REPAYMETHOD
+                    , LST.DESC_COMMISSION
+                    --, LST.CD_LOAN_TERM
+                    , LST.CD_APPLY_TYPE
+                    , LST.CD_TRADE_TYPE
+                    , LST.CD_TIME_EXEC
+                    , LST.YN_SEND_DOCU
+                    , LST.YN_ERLY_RPAY_FEE
+                    --, LST.CD_RATIO_TYPE
+                    , LST.CD_AREA
+                    , LST.CD_DEFER
+                    , LST.CD_OBJECT
+                    , LST.YN_POST_RANKING
+                    , LST.CD_COLLATERAL_HOUSE_TYPE
+                    , LST.CD_COLLATERAL_LOAN_USE
+                    , LST.DESC_TERM
+                    , LST.DESC_RATIO
+                    , LST.DESC_PREFER_YIELD
+                    , LST.RTO_INTEREST_FROM
+                    , LST.RTO_INTEREST_TO
+                    , LST.AMT_LIMIT
+                    , LST.CD_TYPE_INTEREST
+                    , LST.CD_LOAN_TERM
+                    , LST.DESC_FEATURE
+                    --, LST.PATH_FILE1
+                    , LST.YN_FAVORITE
+                    , LST.KEYWORD_LIST
+                    , LST.FC_LINK
+                    , LST.TIME_INTEREST
+                    , ROWNUM RNUM
+                FROM (
+                        SELECT CGFI.NO_PERSON
+                            , CGFI.YN_ALLIANCE
+                            , GI.CD_FC
+                            , GI.NM_GOODS
+                            , GI.CD_NON_GOODS AS CD_GOODS
+                            , GI.YN_USE
+                            , GI.CD_GOODS_CLASS_L
+                            , GI.CD_GOODS_CLASS_M
+                            , GI.CD_TYPE_PAY
+                            --, GI.DESC_GOODS
+                            , GI.DESC_LOAN
+                            , GI.DESC_LIMIT
+                            --, GI.DESC_PAPERS
+                            , GI.ID_FRT
+                            , GI.DT_FRT
+                            , GI.ID_LST
+                            , GI.DT_LST
+                            , GI.DESC_REPAYMETHOD
+                            , GI.DESC_REPAYMENT_FEE AS DESC_COMMISSION
+                            --, GI.CD_MAX_LOAN_TERM AS CD_LOAN_TERM
+                            , GI.CD_APPLY_TYPE
+                            , GI.CD_TRADE_TYPE
+                            , GI.CD_TIME_EXEC
+                            , GI.YN_SEND_DOCU
+                            , GI.RTO_CANCEL AS YN_ERLY_RPAY_FEE
+                            --, GI.CD_RATIO_TYPE
+                            , GI.CD_AREA
+                            , GI.CD_DEFER
+                            , GI.CD_OBJECT
+                            , GI.YN_POST_RANKING
+                            , GI.CD_COLLATERAL_HOUSE_TYPE
+                            , GI.CD_COLLATERAL_LOAN_USE
+                            , GI.DESC_TERM
+                            , GI.DESC_RATIO
+                            , GI.DESC_PREFER_YIELD
+                            , GI.RTO_INTEREST_FROM
+                            , GI.RTO_INTEREST_TO
+                            , GI.DESC_MAX_LIMIT AS AMT_LIMIT
+                            , GI.CD_RATIO_TYPE AS CD_TYPE_INTEREST
+                            , GI.MAX_LOAN_TERM AS CD_LOAN_TERM
+                            , GI.DESC_FEATURE
+                            --, FI.PATH_FILE1
+                            , 'Y' AS YN_FAVORITE
+                            , GI.KEYWORD_LIST
+                            , GI.FC_LINK
+                            , GI.TIME_INTEREST
+                        FROM COOCON_GOODS_FAVORITE_INFO CGFI
+                        --INNER JOIN FC_INFO FI ON CGFI.CD_FC = FI.CD_FC
+                        INNER JOIN GOODSBANK_INFO GI
+                        ON CGFI.CD_FC = GI.CD_FC
+                            AND CGFI.CD_NON_GOODS = GI.CD_NON_GOODS
+                        WHERE 1=1
+                            AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods_class)'>
+                                <choose>
+                                	<when test="cd_goods_class.equals('01')">
+                                		AND GI.CD_GOODS_CLASS_L = '01'
+                                		AND (    GI.CD_GOODS_CLASS_M = '01'
+                               		         OR GI.CD_GOODS_CLASS_M = '03'
+                                	    	)
+                            		</when>
+                                	<when test="cd_goods_class.equals('02')">
+                                  		AND GI.CD_GOODS_CLASS_L = '01'
+                                  		AND (    GI.CD_GOODS_CLASS_M = '02'
+                                    		OR GI.CD_GOODS_CLASS_M = '03'
+                                      		)
+                            		</when>
+                            		<when test="cd_goods_class.equals('03')">
+                                  		AND GI.CD_GOODS_CLASS_L = '02'
+                                  		AND GI.CD_GOODS_CLASS_M = '05'
+                                	</when>
+                                </choose>
+                            </if>
+                    ) LST
+                WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+        )
+        WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+        ORDER BY NM_GOODS ASC
+    </select>
+
+    <!--관심상품 건수(비제휴상품)  -->
+    <select id="getGoodsFavoriteNoAllianceCount" parameterType="com.koscom.goods.model.GoodsForm" resultType="int">
+        SELECT COUNT(*)
+        FROM (
+                SELECT CGFI.NO_PERSON
+                    , CGFI.YN_ALLIANCE
+                    , GI.CD_FC
+                    , GI.NM_GOODS
+                    , GI.CD_NON_GOODS AS CD_GOODS
+                    , GI.YN_USE
+                    , GI.CD_GOODS_CLASS_L
+                    , GI.CD_GOODS_CLASS_M
+                    , GI.CD_TYPE_PAY
+                    --, GI.DESC_GOODS
+                    , GI.DESC_LOAN
+                    , GI.DESC_LIMIT
+                    --, GI.DESC_PAPERS
+                    , GI.ID_FRT
+                    , GI.DT_FRT
+                    , GI.ID_LST
+                    , GI.DT_LST
+                    , GI.DESC_REPAYMETHOD
+                    , GI.DESC_REPAYMENT_FEE AS DESC_COMMISSION
+                    --, GI.CD_MAX_LOAN_TERM AS CD_LOAN_TERM
+                    , GI.CD_APPLY_TYPE
+                    , GI.CD_TRADE_TYPE
+                    , GI.CD_TIME_EXEC
+                    , GI.YN_SEND_DOCU
+                    , GI.RTO_CANCEL AS YN_ERLY_RPAY_FEE
+                    --, GI.CD_RATIO_TYPE
+                    , GI.CD_AREA
+                    , GI.CD_DEFER
+                    , GI.CD_OBJECT
+                    , GI.YN_POST_RANKING
+                    , GI.CD_COLLATERAL_HOUSE_TYPE
+                    , GI.CD_COLLATERAL_LOAN_USE
+                    , GI.DESC_TERM
+                    , GI.DESC_RATIO
+                    , GI.DESC_PREFER_YIELD
+                    , GI.RTO_INTEREST_FROM
+                    , GI.RTO_INTEREST_TO
+                    , GI.DESC_MAX_LIMIT AS AMT_LIMIT
+                    , GI.CD_RATIO_TYPE AS CD_TYPE_INTEREST
+                    , GI.MAX_LOAN_TERM AS CD_LOAN_TERM
+                    , GI.DESC_FEATURE
+                    --, FI.PATH_FILE1
+                    , 'Y' AS YN_FAVORITE
+                    , GI.KEYWORD_LIST
+                    , GI.FC_LINK
+                    , GI.TIME_INTEREST
+                FROM COOCON_GOODS_FAVORITE_INFO CGFI
+                --INNER JOIN FC_INFO FI ON CGFI.CD_FC = FI.CD_FC
+                INNER JOIN GOODSBANK_INFO GI
+                ON CGFI.CD_FC = GI.CD_FC
+                    AND CGFI.CD_NON_GOODS = GI.CD_NON_GOODS
+                WHERE 1=1
+                    AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                    <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods_class)'>
+                    	<choose>
+                            <when test="cd_goods_class.equals('01')">
+                            	AND GI.CD_GOODS_CLASS_L = '01'
+                           		AND (    GI.CD_GOODS_CLASS_M = '01'
+                            		OR GI.CD_GOODS_CLASS_M = '03'
+                            		)
+                            </when>
+                            <when test="cd_goods_class.equals('02')">
+                                AND GI.CD_GOODS_CLASS_L = '01'
+                                AND (    GI.CD_GOODS_CLASS_M = '02'
+                            		OR GI.CD_GOODS_CLASS_M = '03'
+                            		)
+                            </when>
+                           	<when test="cd_goods_class.equals('03')">
+                                AND GI.CD_GOODS_CLASS_L = '02'
+                            	AND GI.CD_GOODS_CLASS_M = '05'
+                        	</when>
+                    	</choose>
+                    </if>
+        ) LST
+    </select>
+    <!-- 제휴사상품 GOODS_INFO -->
+
+    <!-- 쿠콘상품 GOODS_INFO -->
+    <select id="getCooconGoodsFavorite" parameterType="com.koscom.goods.model.GoodsVO" resultType="com.koscom.goods.model.GoodsVO">
+         SELECT GI.CD_FC
+                , GI.CD_GOODS_CLASS_L
+                , GI.CD_GOODS_CLASS_M
+                , GI.CD_NON_GOODS AS CD_GOODS
+                , GI.CD_GOODS_FC
+                , GI.NM_GOODS
+                , GI.DESC_GOODS
+                , GI.DESC_LOAN
+                , GI.DESC_LIMIT
+                , GI.DESC_TERM AS DESC_PAYMETHOD
+                , GI.MIN_LOAN_TERM
+                , GI.MAX_LOAN_TERM
+                , GI.RENEW_MAX_TERM
+                , GI.DESC_RATIO AS CONTENT_INTEREST
+                , GI.DESC_PREFER_YIELD AS PREFER_INTEREST
+                , GI.DESC_REPAYMETHOD
+                , GI.DESC_REPAYMENT_FEE AS DESC_COMMISSION
+                , GI.RTO_CANCEL
+                , GI.YEAR_COMMISSION
+                , GI.DESC_CONTACT
+                , GI.DESC_PAPERS
+                , GI.DESC_ETC
+                , GI.YN_USE
+                , GI.ID_FRT
+                , GI.DT_FRT
+                , GI.ID_LST
+                , GI.DT_LST
+                , GI.CD_APPLY_TYPE
+                , GI.CD_TRADE_TYPE
+                , GI.DESC_TERM
+                , GI.CD_TIME_EXEC
+                , GI.YN_SEND_DOCU
+                , GI.RTO_CANCEL AS YN_ERLY_RPAY_FEE
+                , GI.CD_RATIO_TYPE
+                , GI.CD_COLLATERAL_HOUSE_TYPE
+                , GI.CD_COLLATERAL_LOAN_USE
+                , GI.CD_AREA
+                , GI.CD_DEFER
+                , GI.CD_OBJECT
+                , GI.YN_POST_RANKING
+                , GI.CD_TYPE_PAY
+                , FI.CD_FIN
+                , GI.NM_FC
+                , GI.DESC_FEATURE
+                , GI.MAX_LOAN_TERM AS CD_LOAN_TERM
+                , GI.DESC_COLLATERAL
+                , GI.DESC_MAX_LIMIT AS AMT_LIMIT
+                , GI.RTO_INTEREST_FROM
+                , GI.RTO_INTEREST_TO
+                , GI.KEYWORD_LIST
+                , GI.FC_LINK
+                , GI.DESC_OVERDUE_INTEREST
+                , GI.DESC_LOAN_COST
+                , GI.TIME_INTEREST
+                , (CASE WHEN (
+						SELECT COUNT(*)
+						FROM COOCON_GOODS_FAVORITE_INFO CGFI
+						WHERE CGFI.CD_FC = GI.CD_FC
+							AND CGFI.CD_NON_GOODS = GI.CD_NON_GOODS
+							AND CGFI.YN_ALLIANCE = 'N'
+							AND CGFI.no_person = #{no_person, jdbcType=VARCHAR}
+						) <![CDATA[>]]> 0 THEN 'Y'
+				ELSE 'N'
+				END
+				) AS YN_FAVORITE
+         FROM GOODSBANK_INFO GI
+         LEFT OUTER JOIN FC_INFO FI
+         ON GI.CD_FC = FI.CD_FC
+         <where>
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+                GI.CD_FC = #{cd_fc}
+            </if>
+            <if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods)'>
+                AND GI.CD_NON_GOODS = #{cd_goods}
+            </if>
+         </where>
+    </select>
+
+</mapper>

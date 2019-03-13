@@ -789,9 +789,9 @@ public class JSTLFunction {
     	return StringUtil.getTelNo(telNo, idx);
     }
     
-//    public static String formatNumber(String number) {
-//    	return NumberUtil.formatNumber(number);
-//	}
+    public static String formatNumber(String number) {
+    	return NumberUtil.formatNumber(number);
+	}
     
     public static String formatDate(String date) {
     	return DateUtil.formatDate(date,DateUtil.DATE_PATTERN_DASH);
@@ -811,9 +811,9 @@ public class JSTLFunction {
 		return DateUtil.getFormattedTime(frForm, toForm, thisDate);
 	}
 	
-//    public static String formatTime(String time) {
-//    	return DateUtil.formatTime(time);
-//    }
+    public static String formatTime(String time) {
+    	return DateUtil.formatTime(time);
+    }
     
     public static boolean isApprAuth(String id_appr_target, String str_apprs) {
     	

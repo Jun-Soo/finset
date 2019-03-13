@@ -31,6 +31,7 @@ import java.util.TimeZone;
 
 import org.joda.time.DateTime;
 import org.joda.time.DurationFieldType;
+import org.joda.time.LocalDateTime;
 import org.joda.time.Period;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -42,7 +43,7 @@ import org.springframework.util.Assert;
 /**
  * Date Utility Class <br>
  * This is used to manage Date Object.
- * <br> org.anyframe.util   패키지 클래스를 목적에 맞게 수정하여 사용합니다.
+ * <br> org.anyframe.util 패키지 클래스를 목적에 맞게 수정하여 사용합니다.
  * 
  * @author SoYon Lim
  * @author JongHoon Kim
@@ -51,11 +52,10 @@ import org.springframework.util.Assert;
  * @author DoHyung Kim
  */
 public class DateUtil {
+	private static final Logger logger = LoggerFactory.getLogger(DateUtil.class);
 
 	// ~ Static fields/initializers
 	// =============================================
-	private static final Logger logger = LoggerFactory.getLogger(DateUtil.class);
-
 
 	/** Date pattern */
 	public static final String DATE_PATTERN_DASH = "yyyy-MM-dd"; 
@@ -246,53 +246,53 @@ public class DateUtil {
 		return endDay - startDay;
 	}
 
-//	/**
-//	 * Compares two dates for equality.
-//	 *
-//	 * @param date1
-//	 *            the Date to compare with.
-//	 * @param date2
-//	 *            the other Date String to compare with. (yyyyMMdd)
-//	 * @return <code>true</code> if the Dates are the same; <code>false</code>
-//	 *         otherwise.
-//	 */
-//	public static boolean equals(Date date1, String date2) {
-//		return equals(date1, date2, DATE_PATTERN);
-//	}
+	/**
+	 * Compares two dates for equality.
+	 * 
+	 * @param date1
+	 *            the Date to compare with.
+	 * @param date2
+	 *            the other Date String to compare with. (yyyyMMdd)
+	 * @return <code>true</code> if the Dates are the same; <code>false</code>
+	 *         otherwise.
+	 */
+	public static boolean equals(Date date1, String date2) {
+		return equals(date1, date2, DATE_PATTERN);
+	}
 
-//	/**
-//	 * Compares two dates for equality.
-//	 *
-//	 * @param date1
-//	 *            the Date to compare with.
-//	 * @param date2
-//	 *            the other Date String to compare with. (The pattern equals
-//	 *            date2pattern that input argument)
-//	 * @param date2pattern
-//	 *            Date pattern of the other Date String
-//	 * @return <code>true</code> if the Dates are the same; <code>false</code>
-//	 *         otherwise.
-//	 */
-//	public static boolean equals(Date date1, String date2, String date2pattern) {
-//		Date date = stringToDate(date2, date2pattern);
-//		return equals(date1, date);
-//	}
+	/**
+	 * Compares two dates for equality.
+	 * 
+	 * @param date1
+	 *            the Date to compare with.
+	 * @param date2
+	 *            the other Date String to compare with. (The pattern equals
+	 *            date2pattern that input argument)
+	 * @param date2pattern
+	 *            Date pattern of the other Date String
+	 * @return <code>true</code> if the Dates are the same; <code>false</code>
+	 *         otherwise.
+	 */
+	public static boolean equals(Date date1, String date2, String date2pattern) {
+		Date date = stringToDate(date2, date2pattern);
+		return equals(date1, date);
+	}
 
-//	/**
-//	 * Compares two dates for equality.
-//	 *
-//	 * @param date1
-//	 *            the Date to compare with.
-//	 * @param date2
-//	 *            the other Date to compare with.
-//	 * @return true if the Dates are the same; false otherwise.
-//	 */
-//	public static boolean equals(Date date1, Date date2) {
-//		if (date1.getTime() == date2.getTime()) {
-//			return true;
-//		}
-//		return false;
-//	}
+	/**
+	 * Compares two dates for equality.
+	 * 
+	 * @param date1
+	 *            the Date to compare with.
+	 * @param date2
+	 *            the other Date to compare with.
+	 * @return true if the Dates are the same; false otherwise.
+	 */
+	public static boolean equals(Date date1, Date date2) {
+		if (date1.getTime() == date2.getTime()) {
+			return true;
+		}
+		return false;
+	}
 
 	/**
 	 * Compares two Dates for ordering.
@@ -621,7 +621,6 @@ public class DateUtil {
 		return fmt.print(dt);
 	}
 
-
 	/**
 	 * get the last day of the previous month based on the input date.
 	 * 
@@ -763,7 +762,7 @@ public class DateUtil {
 	/**
 	 * convert <code>Date</code> to <code>String</code>
 	 * 
-	 * @param date
+	 * @param Date
 	 *            date
 	 * @return result String (yyyyMMdd)
 	 * @deprecated Use {@link #dateToString(Date)}
@@ -863,6 +862,7 @@ public class DateUtil {
 		DateTime dt = basefmt.parseDateTime(date);
 		return wantedfmt.print(dt);
 	}
+
 
 	/**
 	 * convert String to <code>java.sql.Date</code> type
@@ -1523,12 +1523,11 @@ public class DateUtil {
    	 }
     }
 
-	public static String formatDate(String pDate, String pFormat) {
-        String format = pFormat;
-        String date = pDate;
+	public static String formatDate(String date, String format) {
     	if ( "".equals(StringUtil.nullToString(format)) ) {
     		format = DATE_PATTERN_DASH;
     	}
+    	
     	date = StringUtil.nullToString(date);
     	
     	if ( date == null || date.equals("") ) return "";
@@ -1538,8 +1537,12 @@ public class DateUtil {
     	SimpleDateFormat formatter = new SimpleDateFormat(format);
     	
     	String formatString = date;
-        formatString = formatter.format(chkDate(date, DATE_PATTERN));
-
+    	try {
+    		formatString = formatter.format(chkDate(date, DATE_PATTERN));
+		} catch (Exception e) {			
+			formatString = date;
+		}
+    	
     	return formatString;
     }
 	
@@ -1547,12 +1550,11 @@ public class DateUtil {
 		return formatDate(date, DATE_PATTERN_DASH);
 	}
 	
-	public static String formatTime(String pTime, String pFormat) throws ParseException {
-        String time = pTime;
-        String format = pFormat;
+	public static String formatTime(String time, String format) {
 		if ( "".equals(StringUtil.nullToString(format)) ) {
 			format = TIME_HMS_PATTERN_COLONE;
 		}
+		
 		time = StringUtil.nullToString(time);
 		
 		if ( time == null || time.equals("") ) return "";
@@ -1563,7 +1565,7 @@ public class DateUtil {
 		return fmt.print(dt);
 	}
 	
-	public static String formatTime(String time) throws ParseException {
+	public static String formatTime(String time) {
 		return formatTime(time, TIME_HMS_PATTERN_COLONE);
 	}
 
@@ -1599,17 +1601,17 @@ public class DateUtil {
      * @return Date
      * Method Desc : Date 스트링문자를 Date로 변환하여 리턴한다.
      */
-    public static Date convertDateTo(String inputDate) throws ParseException {
+    public static Date convertDateTo(String inputDate) {
     	return convertDate(inputDate + "235959", "yyyyMMddHHmmss");
     }
     
-    public static Date convertDateTo(String inputDate, String inputTime) throws ParseException {
+    public static Date convertDateTo(String inputDate, String inputTime) {
     	return convertDate(inputDate + inputTime, "yyyyMMddHHmmss");
     }
     
-	public static Date convertDate(String pInputDate, String format) throws ParseException {
+	public static Date convertDate(String inputDate, String format) {
     	Date date = null;
-        String inputDate = pInputDate;
+    	
     	if ( inputDate == null ) return null;
     	else {
     		inputDate = StringUtil.deleteAny(inputDate, "-");
@@ -1618,9 +1620,13 @@ public class DateUtil {
     		inputDate = StringUtil.deleteAny(inputDate, ":");
     	}
     	
-        SimpleDateFormat formatter = new SimpleDateFormat(format, java.util.Locale.KOREA);
-        date = formatter.parse(inputDate);
-
+    	try {
+    		SimpleDateFormat formatter = new SimpleDateFormat(format, java.util.Locale.KOREA);
+    		date = formatter.parse(inputDate);
+    	}
+    	catch ( Exception e ) {
+    		return null;
+    	}
     	return date;
     }
 	
@@ -1629,7 +1635,7 @@ public class DateUtil {
  	 * @return
  	 * Method Desc : 시분초에 대한 포맷을 맞춰 리턴한다.(HH:mm:ss)
  	 */
-     public static String formatHhmmss(String hhmmss)  throws ParseException {
+     public static String formatHhmmss(String hhmmss) {
      	if ( hhmmss == null || "".equals(hhmmss) ) return "";
      	
  		SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
@@ -1643,9 +1649,13 @@ public class DateUtil {
       * @param endDate
       * @return
       */
-     public static int getDiffDayCount(String startDate, String endDate) throws ParseException {
+     public static int getDiffDayCount(String startDate, String endDate) {
     	 SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-         return (int) ((sdf.parse(endDate).getTime() - sdf.parse(startDate).getTime()) / 1000 / 60 / 60 / 24);
+    	 try {
+    		 return (int) ((sdf.parse(endDate).getTime() - sdf.parse(startDate).getTime()) / 1000 / 60 / 60 / 24);
+    	 } catch (Exception e) {
+    		 return 0;
+    	 }
      }
 
      /**
@@ -1655,30 +1665,21 @@ public class DateUtil {
       * @return
       */
      public static long getDiffMin(String start, String end) {
-		 long min = 0L;
-		 SimpleDateFormat sSdf = null;
-		 Date startday = null;
-		 long startTime = 0L;
-		 SimpleDateFormat eSdf = null;
-         Date endDate = null;
-         long endTime = 0;
-    	 if(    start != null
-             && end   != null
-             && start.length() == 14
-             && end  .length() == 14) {
-             sSdf = new SimpleDateFormat("yyyyMMddHHmmss");
-             startday = sSdf.parse(start, new ParsePosition(0));
-             startTime = startday.getTime();
 
-             eSdf = new SimpleDateFormat("yyyyMMddHHmmss");
-             endDate = eSdf.parse(end, new ParsePosition(0));
-             if (endDate != null) {
-                 endTime = endDate.getTime();
-             }
-             // 분으로 변환
-             min = (endTime - startTime) / 60000;
-		 }
-		 return min;
+    	 if(start.length() != 14 || start.length() != 14) return 0;
+
+    	 SimpleDateFormat sSdf = new SimpleDateFormat("yyyyMMddHHmmss");
+    	 Date startday = sSdf.parse(start, new ParsePosition(0));
+    	 long startTime = startday.getTime();
+
+    	 SimpleDateFormat eSdf = new SimpleDateFormat("yyyyMMddHHmmss");
+    	 Date endDate = eSdf.parse(end, new ParsePosition(0));
+    	 long endTime = endDate.getTime();
+
+    	 // 분으로 변환
+    	 long min = (endTime - startTime) / 60000;
+
+    	 return min;
      }
 	public static int getManAge(String bgn) {
 		logger.debug(bgn);//bgn은 이미 1991011 4자리연도포함 성별까지 들어가있다
@@ -1698,31 +1699,21 @@ public class DateUtil {
 		return manAge;
 	}
 	public static int getCntMonthFromCurDate(String startDt){
-		
-		String curDate = DateUtil.getCurrentDateTime("yyyyMMdd");
-		int returnValue = 0;
-		
-        if(startDt == null || curDate == null){
-            returnValue = 0;
-        }else {
-            returnValue = (NumberUtil.stringToInt(curDate.substring(0, 4)) * 12 + NumberUtil.stringToInt(curDate.substring(4, 6)))
-                    - (NumberUtil.stringToInt(startDt.substring(0, 4)) * 12 + NumberUtil.stringToInt(startDt.substring(4, 6)));
-        }
-
-		return returnValue;
-	}
-
-	public static int getCntMonth(String startDt, String curDate){
-		int returnValue = 0;
-		
-		if(startDt == null || curDate == null) {
-			returnValue = 0;
-		}else {
-			returnValue= (NumberUtil.stringToInt(curDate.substring(0, 4)) * 12 + NumberUtil.stringToInt(curDate.substring(4, 6)))
+		try {
+			String curDate = DateUtil.getCurrentDateTime("yyyyMMdd");
+			return (NumberUtil.stringToInt(curDate.substring(0, 4)) * 12 + NumberUtil.stringToInt(curDate.substring(4, 6)))
 					- (NumberUtil.stringToInt(startDt.substring(0, 4)) * 12 + NumberUtil.stringToInt(startDt.substring(4, 6)));
+		} catch (Exception e) {
+			return 0;
 		}
-
-		return returnValue;
+	}
+	public static int getCntMonth(String startDt, String curDate){
+		try {
+			return (NumberUtil.stringToInt(curDate.substring(0, 4)) * 12 + NumberUtil.stringToInt(curDate.substring(4, 6)))
+			- (NumberUtil.stringToInt(startDt.substring(0, 4)) * 12 + NumberUtil.stringToInt(startDt.substring(4, 6)));
+		} catch (Exception e) {
+			return 0;
+		}
 	}
 	//현재 월 가져오기
 	public static String getMonth(){
@@ -1733,13 +1724,13 @@ public class DateUtil {
 		return MON;
 	}
 	public static String getTime(){ //년-월-일 시:분:초
-		java.text.SimpleDateFormat formatter = new java.text.SimpleDateFormat("yyyyMMdd HH:mm:ss");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd HH:mm:ss");
 		return  formatter.format(new java.util.Date());
 	}
-	public static String getLastMonth() {
+	public static String getLastMonthDate() {
 		Calendar cal = new GregorianCalendar();
 	
-		String sDay = getTime().substring(0,10);
+		String sDay = getTime().substring(0,8);
 		String sMM = "1";
 	
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
@@ -1750,31 +1741,48 @@ public class DateUtil {
 	
 		return df.format(cal.getTime());
 	}
+	
+	/**
+	 * 시간을 더해 준다
+	 * @param date 더해질 시간
+	 * @param hour 더할 시간
+	 * @return
+	 */
+	public static String addHours(String date, int hour) {
+		if (hour == 0) {
+			return date;
+		}
+		DateTimeFormatter fmt = DateTimeFormat.forPattern(DATE_HMS_PATTERN);
+		LocalDateTime dt = fmt.parseLocalDateTime(date);
+		LocalDateTime subtracted = dt.withFieldAdded(DurationFieldType.hours(), hour);
+		return fmt.print(subtracted);
+	}
+	
 	//6개월전 cntMonth = 6 ==> 6개월 후 = -6
-	public static String getAddMonth(int cntMonth) {
-		Calendar cal = new GregorianCalendar();
+		public static String getAddMonth(int cntMonth) {
+			Calendar cal = new GregorianCalendar();
+			
+			String sDay = getTime().substring(0,10);
+//			String sMM = "1";
+			
+			SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
+			Date d = df.parse(sDay, new ParsePosition(0));
+			
+			cal.setTime(d);
+			cal.add(Calendar.MONTH, -(cntMonth));
+			
+			return df.format(cal.getTime());
+		}
 		
-		String sDay = getTime().substring(0,10);
-//		String sMM = "1";
+		public static String getCurrentYMD(){
+			Date d =new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+			return sdf.format(d);
+		}
 		
-		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd");
-		Date d = df.parse(sDay, new ParsePosition(0));
-		
-		cal.setTime(d);
-		cal.add(Calendar.MONTH, -(cntMonth));
-		
-		return df.format(cal.getTime());
-	}
-	
-	public static String getCurrentYMD(){
-		Date d =new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-		return sdf.format(d);
-	}
-	
-	public static String getCurrentHIS(){
-		Date d =new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("HHmmss");
-		return sdf.format(d);
-	}
+		public static String getCurrentHIS(){
+			Date d =new Date();
+			SimpleDateFormat sdf = new SimpleDateFormat("HHmmss");
+			return sdf.format(d);
+		}
 }

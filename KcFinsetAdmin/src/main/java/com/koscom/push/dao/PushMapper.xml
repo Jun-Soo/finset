@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.push.dao.PushMapper">
+
+    <!-- 푸시 등록-->
+	<insert id="createPushInfo" parameterType="com.koscom.push.model.PushVO">
+		
+		<selectKey keyProperty="seq_push" resultType="int" order="BEFORE">
+			(SELECT NVL(MAX(seq_push),0)+1 FROM push_info)
+		</selectKey>
+	
+		INSERT INTO push_info (
+			seq_push
+			, title
+			, body
+			, link_addr
+			, id_frt
+			, dt_frt
+			, id_lst
+			, dt_lst
+			)
+		VALUES (
+			  #{seq_push}
+			, #{title, jdbcType=VARCHAR}
+			, #{body, jdbcType=VARCHAR}
+			, #{link_addr, jdbcType=VARCHAR}
+			, #{id_frt, jdbcType=VARCHAR}
+			, SYSDATE
+			, #{id_frt, jdbcType=VARCHAR}
+			, SYSDATE
+			)
+	</insert>
+	
+	 <!-- 푸시 목록-->
+    <select id="listPushInfo"  parameterType="com.koscom.push.model.PushForm" resultType="com.koscom.push.model.PushVO">  
+	    SELECT	  RNUM
+	    		, SEQ_PUSH
+	    		, PUSH_DIVCD
+	            , TITLE
+				, BODY
+				, LINK_ADDR
+				, ID_FRT
+				, DT_FRT
+		    FROM 
+				(
+				SELECT  ROW_NUMBER() OVER(ORDER BY DT_FRT DESC) AS RNUM 
+		                , A.SEQ_PUSH
+		                , A.PUSH_DIVCD
+		                , A.TITLE
+		                , SUBSTRB(A.BODY,1,100) ||CASE WHEN LENGTHB(A.BODY) > 100 THEN ' ...' ELSE '' END AS BODY
+		                , A.LINK_ADDR
+		                , A.ID_FRT
+		                , A.DT_FRT
+		        FROM    (
+		                SELECT    A.SEQ_PUSH
+		                        , A.PUSH_DIVCD
+		                        , A.TITLE
+		                        , A.BODY
+		                        , A.LINK_ADDR
+		                        , A.ID_FRT
+		                        , MAX(A.DT_FRT)   AS DT_FRT
+		                FROM    PUSH_EACH_INFO A
+						<include refid="listPushInfo_WHERE"/>
+						GROUP BY  A.SEQ_PUSH
+		                        , A.PUSH_DIVCD
+		                        , A.TITLE
+		                        , A.BODY
+		                        , A.LINK_ADDR
+		                        , A.ID_FRT
+	        			) A
+	        	) A
+	        WHERE   1=1
+			AND RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+			AND RNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+    </select>
+    
+    <select id="listPushInfoCount" parameterType="com.koscom.push.model.PushForm" resultType="int">
+		SELECT
+            COUNT(*) AS recordCount
+         FROM (
+                SELECT    A.SEQ_PUSH
+                        , A.PUSH_DIVCD
+                        , A.TITLE
+                        , A.BODY
+                        , A.LINK_ADDR
+                        , A.ID_FRT
+                FROM    PUSH_EACH_INFO A
+				<include refid="listPushInfo_WHERE"/>
+				GROUP BY  A.SEQ_PUSH
+                        , A.PUSH_DIVCD
+                        , A.TITLE
+                        , A.BODY
+                        , A.LINK_ADDR
+                        , A.ID_FRT
+				)
+	</select>
+	
+	<sql id="listPushInfo_WHERE">
+		<where>
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_detail)">
+				<if test='"title".equals(sel_detail)'>AND title LIKE '%'||#{txt_detail}||'%'</if>
+			</if>
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
+				AND TO_CHAR(dt_frt,'yyyyMMdd') <![CDATA[>=]]> #{txt_dt_from}
+			</if>
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_to)">
+				AND TO_CHAR(dt_frt,'yyyyMMdd') <![CDATA[<=]]> #{txt_dt_to}
+			</if>
+		</where>
+	</sql>
+
+	<!-- 푸시발송정보조회 -->
+    <select id="viewPushInfo" parameterType="com.koscom.push.model.PushVO" resultType="com.koscom.push.model.PushVO">
+         SELECT    A.SEQ_PUSH
+                , A.PUSH_DIVCD
+                , A.TITLE
+                , A.BODY
+                , A.LINK_ADDR
+                , A.ID_FRT
+                , MAX(A.DT_FRT)	AS DT_FRT
+         FROM   PUSH_EACH_INFO A
+         WHERE A.SEQ_PUSH = #{seq_push, jdbcType=NUMERIC}
+         GROUP BY A.SEQ_PUSH
+                , A.PUSH_DIVCD
+                , A.TITLE
+                , A.BODY
+                , A.LINK_ADDR
+                , A.ID_FRT
+	</select>
+    
+    <!-- 개별푸시발송조회 시 발송고객 리스트 조회 -->
+    <select id="viewPushEachInfoPerson" parameterType="com.koscom.push.model.PushVO" resultType="com.koscom.push.model.PushVO">
+         SELECT   A.SEQ_PUSH
+                , A.NO_PERSON
+                , B.NM_PERSON
+                , B.HP
+                , CASE
+                	WHEN B.YN_OS = '1' THEN 'Android'
+                	ELSE 'iOS'
+                  END			AS YN_OS
+                , B.YN_PUSH
+         FROM   PUSH_EACH_INFO A
+                INNER JOIN PERSON_INFO B
+                ON  (
+                    B.NO_PERSON = A.NO_PERSON
+                )
+         WHERE SEQ_PUSH = #{seq_push, jdbcType=NUMERIC}
+	</select>
+	
+    <!-- SEQ_PUSH 채번 -->
+    <select id="getNewSeqPush" parameterType="com.koscom.push.model.PushForm" resultType="int">
+        SELECT NVL(MAX(seq_push),0)+1 AS new_seq_push
+        FROM push_each_info
+    </select>
+	
+    <!-- 푸시 등록-->
+	<insert id="createPushEachInfo" parameterType="com.koscom.push.model.PushVO">
+	
+		<selectKey keyProperty="seq_push" resultType="int" order="BEFORE">
+			(SELECT #{seq_push} FROM dual)
+		</selectKey>
+		
+		INSERT INTO push_each_info (
+			seq_push
+			, no_person
+			, push_divcd
+			, title
+			, body
+			, link_addr
+			, dt_reserv
+			, id_frt
+			, dt_frt
+			, id_lst
+			, dt_lst
+			, yn_send
+            , yn_display
+			)
+		VALUES (
+			  #{seq_push}
+			, #{no_person, jdbcType=VARCHAR}
+			, #{push_divcd, jdbcType=VARCHAR}
+			, #{title, jdbcType=VARCHAR}
+			, #{body, jdbcType=VARCHAR}
+			, #{link_addr, jdbcType=VARCHAR}
+			, SYSDATE
+			, #{id_frt, jdbcType=VARCHAR}
+			, SYSDATE
+			, #{id_frt, jdbcType=VARCHAR}
+			, SYSDATE
+			, NVL(#{yn_send   , jdbcType=VARCHAR},'Y')
+		    , NVL(#{yn_display, jdbcType=VARCHAR},'Y')
+			)
+	</insert>
+	
+</mapper>

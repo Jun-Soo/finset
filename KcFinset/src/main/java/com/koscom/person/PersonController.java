@@ -78,7 +78,7 @@ public class PersonController {
 		if(sYnOs != "" && sYnOs.equals("android")){
 			personVO.setYn_os("1");
 		} else {
-			personVO.setYn_os("");
+			personVO.setYn_os("2");
 		}
 
 		ReturnClass returnClass = personManager.modifyFcmToken(personVO);

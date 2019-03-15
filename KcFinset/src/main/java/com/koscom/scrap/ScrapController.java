@@ -154,8 +154,16 @@ public class ScrapController {
 		
 		String financeTerms = scrapManager.getFinanceTerms(no_person, cd_fc, uuid, dn, email);
 		
-		logger.debug("financeTerms : " + financeTerms);
-		model.addAttribute("financeTerms", financeTerms);
+		if(financeTerms != null)	{
+			logger.debug("financeTerms : " + financeTerms);
+			model.addAttribute("financeTerms", financeTerms);
+			model.addAttribute("result", Constant.SUCCESS);
+			
+		}
+		else	{
+			model.addAttribute("result", Constant.FAILED);
+		}
+		
 		return "jsonView";
 	}
 	

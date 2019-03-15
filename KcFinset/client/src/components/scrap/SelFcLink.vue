@@ -147,9 +147,9 @@ export default {
           if (!_this.isGetCertContent) {
             _this.getTermsContent(false);
           }
-          this.isCheckCert = !this.isCheckCert;
+          _this.isCheckCert = !_this.isCheckCert;
         } else {
-          this.$toast.center(ko.messages.require);
+          _this.$toast.center(ko.messages.require);
         }
       });
     },
@@ -163,7 +163,7 @@ export default {
             _this.openPop();
           }
         } else {
-          this.$toast.center(ko.messages.require);
+          _this.$toast.center(ko.messages.require);
         }
       });
     },
@@ -185,13 +185,13 @@ export default {
             if (_this.isGetCertContent) {
               _this.getCertSignInfo();
             } else {
-              this.$toast.center("금융정보 제공동의서를 가져오지 못했습니다.");
+              _this.$toast.center("금융정보 제공동의서를 가져오지 못했습니다.");
             }
           } else {
-            this.$toast.center("금융정보 제공동의서를 체크해주세요.");
+            _this.$toast.center("금융정보 제공동의서를 체크해주세요.");
           }
         } else {
-          this.$toast.center(ko.messages.require);
+          _this.$toast.center(ko.messages.require);
         }
       });
     },
@@ -223,7 +223,7 @@ export default {
         .post("/m/scrap/getTermsContent.json", formData)
         .then(function(response) {
           _this.$store.state.isLoading = false;
-          if (response.data) {
+          if (response.data && response.data.result == "00") {
             _this.isGetCertContent = true;
             _this.financeTerms = response.data.financeTerms;
             var financeTerms = JSON.parse(_this.financeTerms);
@@ -233,12 +233,12 @@ export default {
               _this.openPop();
             }
           } else {
-            this.$toast.center("금융정보제공동의서 조회를 실패하였습니다.");
+            _this.$toast.center("금융정보제공동의서 조회를 실패하였습니다.");
           }
         })
         .catch(e => {
           _this.$store.state.isLoading = false;
-          this.$toast.center(ko.messages.error);
+          _this.$toast.center(ko.messages.error);
         });
     },
     sendTermsContent: function(jwsInfo) {
@@ -248,16 +248,21 @@ export default {
       formData.append("dn", this.$route.params.dn);
       formData.append("email", this.emailtext);
       formData.append("financeTerms", this.financeTerms);
-      console.log("financeTerms  : ", this.financeTerms);
-
       formData.append("jwsInfo", jwsInfo);
+      //formData.append("jwsInfo", '{"jwsinfo" : ""}');
       _this.$store.state.isLoading = true; // 시작시 Spinner 보여주기
       this.$http
         .post("/m/scrap/sendTermsContent.json", formData)
         .then(function(response) {
           //console.log(response.data);
           _this.$store.state.isLoading = false;
-          _this.nextStep();
+          if (response.data && response.data.result == "00") {
+            _this.nextStep();
+          } else {
+            _this.$toast.center(
+              "금융정보제공동의서 전자서명을 실패하였습니다."
+            );
+          }
         })
         .catch(e => {
           _this.$store.state.isLoading = false;

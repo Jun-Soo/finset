@@ -277,7 +277,7 @@ public class ScrapManagerImpl implements ScrapManager {
 		
 		// 금보원 증권연동 html entity 치환
 		financeTerms = StringEscapeUtils.unescapeHtml(financeTerms);
-		jwsInfo = StringEscapeUtils.unescapeHtml(financeTerms);
+		jwsInfo = StringEscapeUtils.unescapeHtml(jwsInfo);
 		
 		JsonObject jsonSendRoot = new JsonObject();
 		
@@ -365,8 +365,11 @@ public class ScrapManagerImpl implements ScrapManager {
 				personMapper.createPersonAgreedtHist(personAgreedtHistVO);
 				
 			}
+			return Constant.SUCCESS;
 		}
-		return null;
+		else	{
+			return Constant.FAILED;
+		}
 	}
 	
 	public String getAccessToken()	{

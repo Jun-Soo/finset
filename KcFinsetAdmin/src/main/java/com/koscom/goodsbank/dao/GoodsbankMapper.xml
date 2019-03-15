@@ -1,0 +1,2808 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.goodsbank.dao.GoodsbankMapper">
+	<select id="listGoodsbankInfo" parameterType="com.koscom.goodsbank.model.GoodsbankForm" resultType="com.koscom.goodsbank.model.GoodsbankVO">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.listGoodsbankInfo */
+	SELECT
+		CD_NON_GOODS,
+		CD_FC,
+		NM_FC,
+		CD_GOODS_CLASS_L,
+		CD_GOODS_CLASS_M,
+		CD_GOODS_CLASS_S,
+		CD_GOODS_FC,
+		NM_GOODS,
+		YN_USE,
+		RTO_INTEREST_FROM,
+		RTO_INTEREST_TO,
+		DESC_MAX_LIMIT,
+		MIN_LOAN_TERM,
+		MAX_LOAN_TERM,
+		RENEW_MAX_TERM,
+		RTO_CANCEL,
+		YEAR_COMMISSION,
+		DESC_FEATURE,
+		KEYWORD_LIST,
+		CD_APPLY_TYPE,
+		CD_TYPE_PAY,
+		CD_TRADE_TYPE,
+		YN_SEND_DOCU,
+		CD_TARGET_CUST,
+		CD_RATIO_TYPE,
+		CD_COLLATERAL_HOUSE_TYPE,
+		CD_COLLATERAL_LOAN_USE,
+		CD_AREA,
+		CD_DEFER,
+		CD_OBJECT,
+		YN_POST_RANKING,
+		CD_TIME_EXEC,
+		DESC_GOODS,
+		DESC_LOAN,
+		DESC_LIMIT,
+		DESC_RATIO,
+		DESC_PREFER_YIELD,
+		DESC_TERM,
+		DESC_REPAYMETHOD,
+		DESC_LOAN_COST,
+		DESC_PAPERS,
+		DESC_OVERDUE_INTEREST,
+		DESC_REPAYMENT_FEE,
+		DESC_LOAN_PERIOD,
+		DESC_LOAN_PROVIDE,
+		DESC_CONTACT,
+		DESC_COLLATERAL,
+		DESC_ETC,
+		YN_VISIT,
+		YN_ERLY_RPAY_FEE,
+		YN_SRCH_RATIO_LIMIT,
+		FC_LINK,
+		TIME_INTEREST,
+		ID_FRT,
+		DT_FRT,
+		ID_LST,
+		DT_LST,
+	    RNUM
+	   FROM
+	       (SELECT
+	           LST.CD_NON_GOODS,
+				LST.CD_FC,
+				LST.NM_FC,
+				LST.CD_GOODS_CLASS_L,
+				LST.CD_GOODS_CLASS_M,
+				LST.CD_GOODS_CLASS_S,
+				LST.CD_GOODS_FC,
+				LST.NM_GOODS,
+				LST.YN_USE,
+				LST.RTO_INTEREST_FROM,
+				LST.RTO_INTEREST_TO,
+				LST.DESC_MAX_LIMIT,
+				LST.MIN_LOAN_TERM,
+				LST.MAX_LOAN_TERM,
+				LST.RENEW_MAX_TERM,
+				LST.RTO_CANCEL,
+				LST.YEAR_COMMISSION,
+				LST.DESC_FEATURE,
+				LST.KEYWORD_LIST,
+				LST.CD_APPLY_TYPE,
+				LST.CD_TYPE_PAY,
+				LST.CD_TRADE_TYPE,
+				LST.YN_SEND_DOCU,
+				LST.CD_TARGET_CUST,
+				LST.CD_RATIO_TYPE,
+				LST.CD_COLLATERAL_HOUSE_TYPE,
+				LST.CD_COLLATERAL_LOAN_USE,
+				LST.CD_AREA,
+				LST.CD_DEFER,
+				LST.CD_OBJECT,
+				LST.YN_POST_RANKING,
+				LST.CD_TIME_EXEC,
+				LST.DESC_GOODS,
+				LST.DESC_LOAN,
+				LST.DESC_LIMIT,
+				LST.DESC_RATIO,
+				LST.DESC_PREFER_YIELD,
+				LST.DESC_TERM,
+				LST.DESC_REPAYMETHOD,
+				LST.DESC_LOAN_COST,
+				LST.DESC_PAPERS,
+				LST.DESC_OVERDUE_INTEREST,
+				LST.DESC_REPAYMENT_FEE,
+				LST.DESC_LOAN_PERIOD,
+				LST.DESC_LOAN_PROVIDE,
+				LST.DESC_CONTACT,
+				LST.DESC_COLLATERAL,
+				LST.DESC_ETC,
+				LST.YN_VISIT,
+				LST.YN_ERLY_RPAY_FEE,
+				LST.YN_SRCH_RATIO_LIMIT,
+				LST.FC_LINK,
+				LST.TIME_INTEREST,
+				LST.ID_FRT,
+				LST.DT_FRT,
+				LST.ID_LST,
+				LST.DT_LST,
+	           ROWNUM RNUM
+	        FROM
+	           (SELECT
+	                CD_NON_GOODS,
+					CD_FC,
+					NM_FC,
+					CD_GOODS_CLASS_L,
+					CD_GOODS_CLASS_M,
+					CD_GOODS_CLASS_S,
+					CD_GOODS_FC,
+					NM_GOODS,
+					YN_USE,
+					RTO_INTEREST_FROM,
+					RTO_INTEREST_TO,
+					DESC_MAX_LIMIT,
+					MIN_LOAN_TERM,
+					MAX_LOAN_TERM,
+					RENEW_MAX_TERM,
+					RTO_CANCEL,
+					YEAR_COMMISSION,
+					DESC_FEATURE,
+					KEYWORD_LIST,
+					CD_APPLY_TYPE,
+					CD_TYPE_PAY,
+					CD_TRADE_TYPE,
+					YN_SEND_DOCU,
+					CD_TARGET_CUST,
+					CD_RATIO_TYPE,
+					CD_COLLATERAL_HOUSE_TYPE,
+					CD_COLLATERAL_LOAN_USE,
+					CD_AREA,
+					CD_DEFER,
+					CD_OBJECT,
+					YN_POST_RANKING,
+					CD_TIME_EXEC,
+					DESC_GOODS,
+					DESC_LOAN,
+					DESC_LIMIT,
+					DESC_RATIO,
+					DESC_PREFER_YIELD,
+					DESC_TERM,
+					DESC_REPAYMETHOD,
+					DESC_LOAN_COST,
+					DESC_PAPERS,
+					DESC_OVERDUE_INTEREST,
+					DESC_REPAYMENT_FEE,
+					DESC_LOAN_PERIOD,
+					DESC_LOAN_PROVIDE,
+					DESC_CONTACT,
+					DESC_COLLATERAL,
+					DESC_ETC,
+					YN_VISIT,
+					YN_ERLY_RPAY_FEE,
+					YN_SRCH_RATIO_LIMIT,
+					FC_LINK,
+					TIME_INTEREST,
+					ID_FRT,
+					DT_FRT,
+					ID_LST,
+					DT_LST
+	            FROM
+	            	GOODSBANK_INFO
+			 <include refid="listGoodsbankInfo_WHERE"/>
+	            ) LST
+	       WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	        )
+	    WHERE RNUM >= #{startPosition, jdbcType=NUMERIC}
+	    ORDER BY
+	           DT_FRT DESC
+	</select>
+	<select id="listGoodsbankCount" parameterType="com.koscom.goodsbank.model.GoodsbankForm" resultType="int">
+		SELECT
+               COUNT(*) AS recordCount
+            FROM GOODSBANK_INFO
+        <include refid="listGoodsbankInfo_WHERE"/>
+	</select>
+	<sql id="listGoodsbankInfo_WHERE">
+		<where>
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_detail)">
+				 AND ${sel_detail} LIKE '%'||#{txt_detail}||'%'
+			</if>
+	     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_div_goodsbank)'>
+				AND cd_div_goodsbank = #{cd_div_goodsbank, jdbcType=VARCHAR}
+			</if>
+	     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+				AND cd_fc = #{cd_fc, jdbcType=VARCHAR}
+			</if>
+	     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goodsbank_type)'>
+				AND cd_goodsbank_type = #{cd_goodsbank_type, jdbcType=VARCHAR}
+			</if>
+	     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods)'>
+				AND cd_non_goods = #{cd_non_goods, jdbcType=VARCHAR}
+			</if>
+	     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(yn_use)'>
+				AND yn_use = #{yn_use, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</sql>
+
+	<select id="getGoodsbankInfo" parameterType="com.koscom.domain.GoodsbankInfo" resultType="com.koscom.goodsbank.model.GoodsbankVO">
+	     SELECT
+	     	CD_NON_GOODS,
+			CD_FC,
+			NM_FC,
+			CD_GOODS_CLASS_L,
+			CD_GOODS_CLASS_M,
+			CD_GOODS_CLASS_S,
+			CD_GOODS_FC,
+			NM_GOODS,
+			YN_USE,
+			RTO_INTEREST_FROM,
+			RTO_INTEREST_TO,
+			DESC_MAX_LIMIT,
+			MIN_LOAN_TERM,
+			MAX_LOAN_TERM,
+			RENEW_MAX_TERM,
+			RTO_CANCEL,
+			YEAR_COMMISSION,
+			DESC_FEATURE,
+			KEYWORD_LIST,
+			CD_APPLY_TYPE,
+			CD_TYPE_PAY,
+			CD_TRADE_TYPE,
+			YN_SEND_DOCU,
+			CD_TARGET_CUST,
+			CD_RATIO_TYPE,
+			CD_COLLATERAL_HOUSE_TYPE,
+			CD_COLLATERAL_LOAN_USE,
+			CD_AREA,
+			CD_DEFER,
+			CD_OBJECT,
+			YN_POST_RANKING,
+			CD_TIME_EXEC,
+			DESC_GOODS,
+			DESC_LOAN,
+			DESC_LIMIT,
+			DESC_RATIO,
+			DESC_PREFER_YIELD,
+			DESC_TERM,
+			DESC_REPAYMETHOD,
+			DESC_LOAN_COST,
+			DESC_PAPERS,
+			DESC_OVERDUE_INTEREST,
+			DESC_REPAYMENT_FEE,
+			DESC_LOAN_PERIOD,
+			DESC_LOAN_PROVIDE,
+			DESC_CONTACT,
+			DESC_COLLATERAL,
+			DESC_ETC,
+			YN_VISIT,
+			YN_ERLY_RPAY_FEE,
+			YN_SRCH_RATIO_LIMIT,
+			FC_LINK,
+			TIME_INTEREST,
+			ID_FRT,
+			DT_FRT,
+			ID_LST,
+			DT_LST
+	     FROM
+	     	GOODSBANK_INFO
+	     <where>
+	     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+				cd_fc = #{cd_fc}
+			</if>
+	     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods)'>
+				AND cd_non_goods = #{cd_goods}
+			</if>
+	     </where>
+	</select>
+
+	<!-- 대중소 분류 셀렉트박스 -->
+	<select id="ChangeSelectBoxLMS" parameterType="com.koscom.goodsbank.model.GoodsbankForm" resultType="com.koscom.goodsbank.model.GoodsbankForm">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.ChangeSelectBoxLMS */
+		SELECT
+			NM_CODE,
+			CODE_VALUE
+		FROM COMM_CD
+		<where>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(code_group)'>
+				AND code_group = #{code_group}
+			</if>
+			<if test='@com.koscom.util.MybatisUtil@isNotEmpty(etc)'>
+				AND etc like '%' || #{etc} || '%'
+			</if>
+		</where>
+	</select>
+	<!-- 대중소 분류 셀렉트박스-->
+
+	<!--비제휴사상품 GOODS_INFO  -->
+	<select id="listGoodsNoAllianceCredit" parameterType="com.koscom.goodsbank.model.GoodsbankForm" resultType="com.koscom.goodsbank.model.GoodsbankVO">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.listGoodsNoAllianceCredit : 비제휴사상품 GOODS_INFO*/
+		SELECT
+	        CD_NON_GOODS             /* 상품코드                  */
+            /* ,CD_FC     */               /* 금융사코드                */
+            ,NM_FC                    /* 금융사명                  */
+            ,CD_GOODS_CLASS_L         /* 대분류                    */
+            ,CD_GOODS_CLASS_M         /* 중분류                    */
+            ,CD_GOODS_CLASS_S         /* 소분류                    */
+            ,CD_GOODS_FC              /* 상품코드(금융사 상품코드) */
+            ,NM_GOODS                 /* 상품명                    */
+            ,YN_USE                   /* 표시여부                  */
+            ,RTO_INTEREST_FROM        /* 최대금리                  */
+            ,RTO_INTEREST_TO          /* 최소금리                  */
+            ,DESC_MAX_LIMIT           /* 최대한도                  */
+            ,MIN_LOAN_TERM            /* 최소기간                  */
+            ,MAX_LOAN_TERM            /* 최대기간                  */
+            ,RENEW_MAX_TERM           /* 연장기간                  */
+            ,RTO_CANCEL               /* 중도상환해약금율          */
+            ,YEAR_COMMISSION          /* 수수료 적용 기간          */
+            ,DESC_FEATURE             /* 상품특징                  */
+            ,KEYWORD_LIST             /* 키워드                    */
+            ,CD_APPLY_TYPE            /* 신청방식                  */
+            ,CD_TYPE_PAY              /* 상환방식                  */
+            ,CD_TRADE_TYPE            /* 거래방식                  */
+            ,YN_SEND_DOCU             /* 서류제출                  */
+            ,CD_TARGET_CUST           /* 대상고객                  */
+            ,CD_RATIO_TYPE            /* 금리방식                  */
+            ,CD_COLLATERAL_HOUSE_TYPE /* 주택종류                  */
+            ,CD_COLLATERAL_LOAN_USE   /* 자금용도                  */
+            ,CD_AREA                  /* 주택면적(전용면적)        */
+            ,CD_DEFER                 /* 거치방식                  */
+            ,CD_OBJECT                /* 대상구분                  */
+            ,YN_POST_RANKING          /* 후순위가능여부            */
+            ,CD_TIME_EXEC             /* 실행시간                  */
+            ,DESC_GOODS               /* 상품상세                  */
+            ,DESC_LOAN                /* 대출대상상세              */
+            ,DESC_LIMIT               /* 대출한도상세              */
+            ,DESC_RATIO               /* 대출금리상세              */
+            ,DESC_PREFER_YIELD        /* 우대금리상세              */
+            ,DESC_TERM                /* 대출기간상세              */
+            ,DESC_REPAYMETHOD         /* 상환방식상세              */
+            ,DESC_LOAN_COST           /* 대출비용상세              */
+            ,DESC_PAPERS              /* 구비서류상세              */
+            ,DESC_OVERDUE_INTEREST    /* 연체이자상세              */
+            ,DESC_REPAYMENT_FEE       /* 중도상환수수료상세        */
+            ,DESC_LOAN_PERIOD         /* 대출신청시기              */
+            ,DESC_LOAN_PROVIDE        /* 대출지급시기              */
+            ,DESC_CONTACT             /* 연락처                    */
+            ,DESC_COLLATERAL          /* 대상담보                  */
+            ,DESC_ETC                 /* 기타 유의 사항            */
+			,FC_LINK				  /* 금융사링크 */
+			,TIME_INTEREST			  /* 이자부과시기 */
+			,YN_FAVORITE
+			,PATH_FILE1
+			,CD_FC
+			,YN_ALLIANCE
+			,RNUM
+	    FROM
+	        (SELECT
+	            LST.CD_NON_GOODS             /* 상품코드                  */
+                /* ,LST.CD_FC     */               /* 금융사코드                */
+                ,LST.NM_FC                    /* 금융사명                  */
+                ,LST.CD_GOODS_CLASS_L         /* 대분류                    */
+                ,LST.CD_GOODS_CLASS_M         /* 중분류                    */
+                ,LST.CD_GOODS_CLASS_S         /* 소분류                    */
+                ,LST.CD_GOODS_FC              /* 상품코드(금융사 상품코드) */
+                ,LST.NM_GOODS                 /* 상품명                    */
+                ,LST.YN_USE                   /* 표시여부                  */
+                ,LST.RTO_INTEREST_FROM        /* 최대금리                  */
+                ,LST.RTO_INTEREST_TO          /* 최소금리                  */
+                ,LST.DESC_MAX_LIMIT           /* 최대한도                  */
+                ,LST.MIN_LOAN_TERM            /* 최소기간                  */
+                ,LST.MAX_LOAN_TERM            /* 최대기간                  */
+                ,LST.RENEW_MAX_TERM           /* 연장기간                  */
+                ,LST.RTO_CANCEL               /* 중도상환해약금율          */
+                ,LST.YEAR_COMMISSION          /* 수수료 적용 기간          */
+                ,LST.DESC_FEATURE             /* 상품특징                  */
+                ,LST.KEYWORD_LIST             /* 키워드                    */
+                ,LST.CD_APPLY_TYPE            /* 신청방식                  */
+                ,LST.CD_TYPE_PAY              /* 상환방식                  */
+                ,LST.CD_TRADE_TYPE            /* 거래방식                  */
+                ,LST.YN_SEND_DOCU             /* 서류제출                  */
+                ,LST.CD_TARGET_CUST           /* 대상고객                  */
+                ,LST.CD_RATIO_TYPE            /* 금리방식                  */
+                ,LST.CD_COLLATERAL_HOUSE_TYPE /* 주택종류                  */
+                ,LST.CD_COLLATERAL_LOAN_USE   /* 자금용도                  */
+                ,LST.CD_AREA                  /* 주택면적(전용면적)        */
+                ,LST.CD_DEFER                 /* 거치방식                  */
+                ,LST.CD_OBJECT                /* 대상구분                  */
+                ,LST.YN_POST_RANKING          /* 후순위가능여부            */
+                ,LST.CD_TIME_EXEC             /* 실행시간                  */
+                ,LST.DESC_GOODS               /* 상품상세                  */
+                ,LST.DESC_LOAN                /* 대출대상상세              */
+                ,LST.DESC_LIMIT               /* 대출한도상세              */
+                ,LST.DESC_RATIO               /* 대출금리상세              */
+                ,LST.DESC_PREFER_YIELD        /* 우대금리상세              */
+                ,LST.DESC_TERM                /* 대출기간상세              */
+                ,LST.DESC_REPAYMETHOD         /* 상환방식상세              */
+                ,LST.DESC_LOAN_COST           /* 대출비용상세              */
+                ,LST.DESC_PAPERS              /* 구비서류상세              */
+                ,LST.DESC_OVERDUE_INTEREST    /* 연체이자상세              */
+                ,LST.DESC_REPAYMENT_FEE       /* 중도상환수수료상세        */
+                ,LST.DESC_LOAN_PERIOD         /* 대출신청시기              */
+                ,LST.DESC_LOAN_PROVIDE        /* 대출지급시기              */
+                ,LST.DESC_CONTACT             /* 연락처                    */
+                ,LST.DESC_COLLATERAL          /* 대상담보                  */
+                ,LST.DESC_ETC                 /* 기타 유의 사항            */
+                ,LST.FC_LINK				  /* 금융사링크 */
+                ,LST.TIME_INTEREST			  /* 이자부과시기 */
+				,LST.YN_FAVORITE
+			    ,LST.PATH_FILE1
+			    ,LST.CD_FC
+			    ,LST.YN_ALLIANCE
+	            ,ROWNUM RNUM
+	         FROM
+	            (select GI.CD_NON_GOODS             /* 상품코드                  */
+                     /* ,GI.CD_FC     */               /* 금융사코드                */
+                      ,FI.NM_FC                    /* 금융사명                  */
+                      ,GI.CD_GOODS_CLASS_L         /* 대분류                    */
+                      ,GI.CD_GOODS_CLASS_M         /* 중분류                    */
+                      ,GI.CD_GOODS_CLASS_S         /* 소분류                    */
+                      ,GI.CD_GOODS_FC              /* 상품코드(금융사 상품코드) */
+                      ,GI.NM_GOODS                 /* 상품명                    */
+                      ,GI.YN_USE                   /* 표시여부                  */
+                      ,GI.RTO_INTEREST_FROM        /* 최대금리                  */
+                      ,GI.RTO_INTEREST_TO          /* 최소금리                  */
+                      ,GI.DESC_MAX_LIMIT           /* 최대한도                  */
+                      ,GI.MIN_LOAN_TERM            /* 최소기간                  */
+                      ,GI.MAX_LOAN_TERM            /* 최대기간                  */
+                      ,GI.RENEW_MAX_TERM           /* 연장기간                  */
+                      ,GI.RTO_CANCEL               /* 중도상환해약금율          */
+                      ,GI.YEAR_COMMISSION          /* 수수료 적용 기간          */
+                      ,GI.DESC_FEATURE             /* 상품특징                  */
+                      ,GI.KEYWORD_LIST             /* 키워드                    */
+                      ,GI.CD_APPLY_TYPE            /* 신청방식                  */
+                      ,GI.CD_TYPE_PAY              /* 상환방식                  */
+                      ,GI.CD_TRADE_TYPE            /* 거래방식                  */
+                      ,GI.YN_SEND_DOCU             /* 서류제출                  */
+                      ,GI.CD_TARGET_CUST           /* 대상고객                  */
+                      ,GI.CD_RATIO_TYPE            /* 금리방식                  */
+                      ,GI.CD_COLLATERAL_HOUSE_TYPE /* 주택종류                  */
+                      ,GI.CD_COLLATERAL_LOAN_USE   /* 자금용도                  */
+                      ,GI.CD_AREA                  /* 주택면적(전용면적)        */
+                      ,GI.CD_DEFER                 /* 거치방식                  */
+                      ,GI.CD_OBJECT                /* 대상구분                  */
+                      ,GI.YN_POST_RANKING          /* 후순위가능여부            */
+                      ,GI.CD_TIME_EXEC             /* 실행시간                  */
+                      ,GI.DESC_GOODS               /* 상품상세                  */
+                      ,GI.DESC_LOAN                /* 대출대상상세              */
+                      ,GI.DESC_LIMIT               /* 대출한도상세              */
+                      ,GI.DESC_RATIO               /* 대출금리상세              */
+                      ,GI.DESC_PREFER_YIELD        /* 우대금리상세              */
+                      ,GI.DESC_TERM                /* 대출기간상세              */
+                      ,GI.DESC_REPAYMETHOD         /* 상환방식상세              */
+                      ,GI.DESC_LOAN_COST           /* 대출비용상세              */
+                      ,GI.DESC_PAPERS              /* 구비서류상세              */
+                      ,GI.DESC_OVERDUE_INTEREST    /* 연체이자상세              */
+                      ,GI.DESC_REPAYMENT_FEE       /* 중도상환수수료상세        */
+                      ,GI.DESC_LOAN_PERIOD         /* 대출신청시기              */
+                      ,GI.DESC_LOAN_PROVIDE        /* 대출지급시기              */
+                      ,GI.DESC_CONTACT             /* 연락처                    */
+                      ,GI.DESC_COLLATERAL          /* 대상담보                  */
+                      ,GI.DESC_ETC                 /* 기타 유의 사항            */
+                      ,GI.FC_LINK				   /* 금융사링크 */
+                      ,GI.TIME_INTEREST			   /* 이자부과시기 */
+					  ,(CASE WHEN (
+					  				SELECT COUNT(*)
+					  				FROM COOCON_GOODS_FAVORITE_INFO CGFI
+					  				WHERE CGFI.CD_FC = GI.CD_FC
+					  					AND CGFI.CD_NON_GOODS = GI.CD_NON_GOODS
+					  					AND CGFI.YN_ALLIANCE = 'N'
+					  					AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  			 ) <![CDATA[>]]> 0 THEN 'Y'
+					  	ELSE 'N'
+					  	END
+					  	) AS YN_FAVORITE
+			     	  ,FI.PATH_FILE AS PATH_FILE1
+			     	  ,FI.CD_FC
+			     	  ,FI.YN_ALLIANCE
+				 	FROM GOODSBANK_INFO GI
+				 	    ,FC_INFO FI
+					WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+				      AND GI.CD_FC = FI.CD_FC
+				      AND GI.CD_GOODS_CLASS_M IN
+				    <foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
+			        	#{item, jdbcType=VARCHAR}
+				    </foreach>
+                      AND (    (     #{cd_fin, jdbcType=VARCHAR} = 'C'
+                                 AND FI.CD_FIN IN ('C','D')
+                               )
+                            OR FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
+                          )
+                	  AND GI.YN_USE = 'Y'
+					  AND (    /*GI.MAX_LOAN_TERM IS NULL*/
+							/* 대출기간(상환기간) 검색사용안함 */
+							/*OR*/ 1 = (SELECT (CASE WHEN CD_TERM_LOAN_01 = 'N'
+												  AND CD_TERM_LOAN_02 = 'N'
+												  AND CD_TERM_LOAN_03 = 'N'
+												  AND CD_TERM_LOAN_04 = 'N'
+												 THEN 1
+												 ELSE 0 END)
+									  FROM CONDITION_CREDIT_INFO
+									 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+									)
+							/* 대출기간(상환기간) 검색 */
+							OR 1 = (SELECT (CASE WHEN (CD_TERM_LOAN_01 = 'Y' AND GI.MAX_LOAN_TERM <![CDATA[<=]]> '1')/* ~1년 */
+												   OR (CD_TERM_LOAN_02 = 'Y' AND GI.MAX_LOAN_TERM <![CDATA[>=]]> '1'
+																			 AND GI.MAX_LOAN_TERM <![CDATA[<=]]> '3')/* 1~3년 */
+												   OR (CD_TERM_LOAN_03 = 'Y' AND GI.MAX_LOAN_TERM <![CDATA[>=]]> '3'
+																			 AND GI.MAX_LOAN_TERM <![CDATA[<=]]> '5')/* 3~5년 */
+												   OR (CD_TERM_LOAN_04 = 'Y' AND GI.MAX_LOAN_TERM <![CDATA[>=]]> '5')/* 5년~ */
+												 THEN 1
+												 ELSE 0 END)
+									  FROM CONDITION_CREDIT_INFO /* 조건검색신용 */
+									 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+								   )
+						  )
+					  /* 기타 검색 조건 */
+					  AND (   /* 기타조건 사용안함 */
+							  1 = (SELECT (CASE WHEN YN_SEND_DOCU        = 'N'
+												 /*AND YN_VISIT            = 'N'
+												 AND YN_ERLY_RPAY_FEE    = 'N'
+												 AND YN_SRCH_RATIO_LIMIT = 'N'*/
+												THEN 1
+												ELSE 0 END)
+										 FROM CONDITION_CREDIT_INFO
+										WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+								  )
+						   OR (/* 조건 선택 반영*/
+								GI.YN_SEND_DOCU         IS NULL OR GI.YN_SEND_DOCU  = (SELECT YN_SEND_DOCU
+								                                                         FROM CONDITION_CREDIT_INFO
+									                                                    WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR})       /*무서류*/
+								/*AND (GI.YN_VISIT             IS NULL OR GI.YN_VISIT            = B.YN_VISIT           )*//*무방문*/
+								/*AND (GI.YN_ERLY_RPAY_FEE     IS NULL OR GI.YN_ERLY_RPAY_FEE    = B.YN_ERLY_RPAY_FEE   )*//*중도상환수수료*/
+								/*AND (GI.YN_SRCH_RATIO_LIMIT  IS NULL OR GI.YN_SRCH_RATIO_LIMIT = B.YN_SRCH_RATIO_LIMIT)*//*금리/한도*/
+							  )
+						  )
+<![CDATA[
+					  AND (    /*GI.CD_APPLY_TYPE IS NULL*/
+					  		/* 신청방식 검색사용안함 */
+					  		/*OR */1 = (SELECT (CASE WHEN CD_APPLY_TYPE_01 = 'N'
+					  							  AND CD_APPLY_TYPE_02 = 'N'
+					  							  AND CD_APPLY_TYPE_03 = 'N'
+					  							  AND CD_APPLY_TYPE_04 = 'N'
+					  							 THEN 1
+					  							 ELSE 0 END)
+					  				  FROM CONDITION_CREDIT_INFO
+					  				 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  			   )
+					  		OR 0 < (
+					  		      SELECT COUNT(*)
+					  		        FROM (
+                                          SELECT DECODE( ROWNUM, 1, A, 2, B, 3, C, 4, D ) CD
+                                            FROM(
+                                              SELECT DECODE( CD_APPLY_TYPE_01, 'Y', '01' ) A/*신청방식 인터넷*/
+                                                  ,DECODE( CD_APPLY_TYPE_02, 'Y', '02' ) B/*신청방식 모바일*/
+                                                  ,DECODE( CD_APPLY_TYPE_03, 'Y', '03' ) C/*신청방식 콜센터*/
+                                                  ,DECODE( CD_APPLY_TYPE_04, 'Y', '04' ) D/*신청방식 영업점*/
+                                                FROM CONDITION_CREDIT_INFO
+                                               WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                               )
+                                          CONNECT BY LEVEL  <=  4
+                                        )
+                                   WHERE GI.CD_APPLY_TYPE LIKE '%'||CD||'%'
+                                     AND CD IS NOT NULL
+					  			   )
+					  	  )
+					  AND (   /* GI.CD_TRADE_TYPE IS NULL*/
+					  	    /* 거래방식 검색사용안함 */
+					  	    /*OR*/ 1 = (SELECT (CASE WHEN CD_TRADE_TYPE_01 = 'N'
+					  	    					  AND CD_TRADE_TYPE_02 = 'N'
+					  	    					 THEN 1
+					  	    					 ELSE 0 END)
+					  	    		  FROM CONDITION_CREDIT_INFO
+					  	    		 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  	    	   )
+					  		  OR 0 < (
+					  		        SELECT COUNT(*)
+					  		          FROM (
+					  	      				  SELECT DECODE( ROWNUM, 1, A, 2, B ) CD
+					  	    		    			FROM (
+					  	    		    				  SELECT DECODE( CD_TRADE_TYPE_01, 'Y', '01' ) A/*거래방식 건별대출        */
+					  	    		    						,DECODE( CD_TRADE_TYPE_02, 'Y', '02' ) B/*거래방식 마이너스한도대출*/
+					  	    		    					FROM CONDITION_CREDIT_INFO
+					  	    		    				   WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  	    		    				 )
+					  	    		    		  CONNECT BY LEVEL  <=  2
+                                            )
+                                       WHERE GI.CD_TRADE_TYPE LIKE '%'||CD||'%'
+                                         AND CD IS NOT NULL
+                                    )
+					  	  )
+					  AND (    /*GI.CD_RATIO_TYPE IS NULL*/
+					  	    /* 금리방식 검색사용안함 */
+					  	    /*OR */1 = (SELECT (CASE WHEN CD_RATIO_TYPE_01 = 'N'
+					  	    					  AND CD_RATIO_TYPE_02 = 'N'
+					  	    					 THEN 1
+					  	    					 ELSE 0 END)
+					  	    		  FROM CONDITION_CREDIT_INFO
+					  	    		 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  	    	   )
+					  		OR 0 < (
+					  		      SELECT COUNT(*)
+					  		        FROM (
+					  	    			  SELECT DECODE( ROWNUM, 1, A, 2, B ) CD
+					  	    				FROM (
+					  	    					  SELECT DECODE( CD_RATIO_TYPE_01, 'Y', '01' ) A/*금리방식 고정금리*/
+					  	    							,DECODE( CD_RATIO_TYPE_02, 'Y', '02' ) B/*금리방식 변동금리*/
+					  	    						FROM CONDITION_CREDIT_INFO
+					  	    					   WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  	    					 )
+					  	    			  CONNECT BY LEVEL  <=  4
+					  	    			 )
+                                  WHERE GI.CD_RATIO_TYPE LIKE '%'||CD||'%'
+                                    AND CD IS NOT NULL
+					  			  )
+					  	  )
+					  AND (    /*GI.CD_TYPE_PAY IS NULL*/
+					  	/* 상환방식 검색사용안함 */
+					  	/*OR*/ 1 = (SELECT (CASE WHEN CD_TYPE_PAY_01 = 'N'
+					  						  AND CD_TYPE_PAY_02 = 'N'
+					  						  AND CD_TYPE_PAY_03 = 'N'
+					  						 THEN 1
+					  						 ELSE 0 END)
+					  			  FROM CONDITION_CREDIT_INFO
+					  			 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  		   )
+					  	OR 0 < (
+					  		      SELECT COUNT(*)
+					  		        FROM (
+					  					SELECT DECODE( ROWNUM, 1, A, 2, B, 3, C ) CD
+					  					  FROM ( SELECT DECODE( CD_TYPE_PAY_01, 'Y', '01' ) A/*상환방식 만기일시상환  */
+					  								   ,DECODE( CD_TYPE_PAY_02, 'Y', '02' ) B/*상환방식 원리금균등상환*/
+					  								   ,DECODE( CD_TYPE_PAY_03, 'Y', '03' ) C/*상환방식 원금균등상환  */
+					  							   FROM CONDITION_CREDIT_INFO
+					  							  WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  						   )
+					  					CONNECT BY LEVEL  <=  3
+                                        )
+                                   WHERE GI.CD_TYPE_PAY LIKE '%'||CD||'%'
+                                     AND CD IS NOT NULL
+					  		   )
+					  	  )
+]]>
+						ORDER BY NVL(FI.YN_ALLIANCE, 'N') DESC, <choose>
+									<when test="'01'.equals(orderby)">
+										GI.RTO_INTEREST_FROM ASC/*금리낮은순*/,
+									</when>
+									<when test="'02'.equals(orderby)">
+										GI.DESC_MAX_LIMIT DESC/*한도높은순*/,
+									</when>
+									<when test="'03'.equals(orderby)">
+										NVL(GI.MAX_LOAN_TERM,'-1') DESC/*기간높은순*/,
+									</when>
+								</choose>
+		                      YN_FAVORITE DESC
+	             ) LST
+	        WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	        )
+	    WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+	</select>
+
+	<!--상품 GOODS_INFO  -->
+	<select id="listGoodsNoAllianceCreditCount" parameterType="com.koscom.goodsbank.model.GoodsbankForm" resultType="int">
+		SELECT
+               COUNT(*) AS recordCount
+            FROM
+                (select GI.CD_NON_GOODS             /* 상품코드                  */
+				 	FROM GOODSBANK_INFO GI
+				 	    ,FC_INFO FI
+					WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+				      AND GI.CD_FC = FI.CD_FC
+				      AND GI.CD_GOODS_CLASS_M IN
+					  <foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
+			       		#{item, jdbcType=VARCHAR}
+				      </foreach>
+                      AND (    (     #{cd_fin, jdbcType=VARCHAR} = 'C'
+                                 AND FI.CD_FIN IN ('C','D')
+                               )
+                            OR FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
+                          )
+					  AND GI.YN_USE = 'Y'
+					  AND (    /*GI.MAX_LOAN_TERM IS NULL*/
+							/* 대출기간(상환기간) 검색사용안함 */
+							/*OR*/ 1 = (SELECT (CASE WHEN CD_TERM_LOAN_01 = 'N'
+												  AND CD_TERM_LOAN_02 = 'N'
+												  AND CD_TERM_LOAN_03 = 'N'
+												  AND CD_TERM_LOAN_04 = 'N'
+												 THEN 1
+												 ELSE 0 END)
+									  FROM CONDITION_CREDIT_INFO
+									 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+									)
+							/* 대출기간(상환기간) 검색 */
+							OR 1 = (SELECT (CASE WHEN (CD_TERM_LOAN_01 = 'Y' AND GI.MAX_LOAN_TERM <![CDATA[<=]]> '1')/* ~1년 */
+												   OR (CD_TERM_LOAN_02 = 'Y' AND GI.MAX_LOAN_TERM <![CDATA[>=]]> '1'
+																			 AND GI.MAX_LOAN_TERM <![CDATA[<=]]> '3')/* 1~3년 */
+												   OR (CD_TERM_LOAN_03 = 'Y' AND GI.MAX_LOAN_TERM <![CDATA[>=]]> '3'
+																			 AND GI.MAX_LOAN_TERM <![CDATA[<=]]> '5')/* 3~5년 */
+												   OR (CD_TERM_LOAN_04 = 'Y' AND GI.MAX_LOAN_TERM <![CDATA[>=]]> '5')/* 5년~ */
+												 THEN 1
+												 ELSE 0 END)
+									  FROM CONDITION_CREDIT_INFO /* 조건검색신용 */
+									 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+								   )
+						  )
+					  /* 기타 검색 조건 */
+					  AND (   /*GI.YN_SEND_DOCU         IS NULL*/
+					       /* OR*//* 기타조건 사용안함 */
+							  1 = (SELECT (CASE WHEN YN_SEND_DOCU        = 'N'
+												 /*AND YN_VISIT            = 'N'
+												 AND YN_ERLY_RPAY_FEE    = 'N'
+												 AND YN_SRCH_RATIO_LIMIT = 'N'*/
+												THEN 1
+												ELSE 0 END)
+										 FROM CONDITION_CREDIT_INFO
+										WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+								  )
+						   OR (/* 조건 선택 반영*/
+								GI.YN_SEND_DOCU         IS NULL OR GI.YN_SEND_DOCU  = (SELECT YN_SEND_DOCU
+								                                                         FROM CONDITION_CREDIT_INFO
+									                                                    WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR})       /*무서류*/
+								/*AND (GI.YN_VISIT             IS NULL OR GI.YN_VISIT            = B.YN_VISIT           )*//*무방문*/
+								/*AND (GI.YN_ERLY_RPAY_FEE     IS NULL OR GI.YN_ERLY_RPAY_FEE    = B.YN_ERLY_RPAY_FEE   )*//*중도상환수수료*/
+								/*AND (GI.YN_SRCH_RATIO_LIMIT  IS NULL OR GI.YN_SRCH_RATIO_LIMIT = B.YN_SRCH_RATIO_LIMIT)*//*금리/한도*/
+							  )
+						  )
+<![CDATA[
+					  AND (   /* GI.CD_APPLY_TYPE IS NULL*/
+					  		/* 신청방식 검색사용안함 */
+					  		/*OR*/ 1 = (SELECT (CASE WHEN CD_APPLY_TYPE_01 = 'N'
+					  							  AND CD_APPLY_TYPE_02 = 'N'
+					  							  AND CD_APPLY_TYPE_03 = 'N'
+					  							  AND CD_APPLY_TYPE_04 = 'N'
+					  							 THEN 1
+					  							 ELSE 0 END)
+					  				  FROM CONDITION_CREDIT_INFO
+					  				 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  			   )
+					  		OR 0 < (
+					  		      SELECT COUNT(*)
+					  		        FROM (
+                                          SELECT DECODE( ROWNUM, 1, A, 2, B, 3, C, 4, D ) CD
+                                            FROM(
+                                              SELECT DECODE( CD_APPLY_TYPE_01, 'Y', '01' ) A/*신청방식 인터넷*/
+                                                  ,DECODE( CD_APPLY_TYPE_02, 'Y', '02' ) B/*신청방식 모바일*/
+                                                  ,DECODE( CD_APPLY_TYPE_03, 'Y', '03' ) C/*신청방식 콜센터*/
+                                                  ,DECODE( CD_APPLY_TYPE_04, 'Y', '04' ) D/*신청방식 영업점*/
+                                                FROM CONDITION_CREDIT_INFO
+                                               WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                               )
+                                          CONNECT BY LEVEL  <=  4
+                                        )
+                                  WHERE GI.CD_APPLY_TYPE LIKE '%'||CD||'%'
+					                AND CD IS NOT NULL
+  					             )
+					  	  )
+					  AND (   /* GI.CD_TRADE_TYPE IS NULL*/
+					  	    /* 거래방식 검색사용안함 */
+					  	    /*OR */1 = (SELECT (CASE WHEN CD_TRADE_TYPE_01 = 'N'
+					  	    					  AND CD_TRADE_TYPE_02 = 'N'
+					  	    					 THEN 1
+					  	    					 ELSE 0 END)
+					  	    		  FROM CONDITION_CREDIT_INFO
+					  	    		 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  	    	   )
+					  		  OR 0 < (
+					  		        SELECT COUNT(*)
+					  		          FROM (
+					  	      				  SELECT DECODE( ROWNUM, 1, A, 2, B ) CD
+					  	    		    			FROM (
+					  	    		    				  SELECT DECODE( CD_TRADE_TYPE_01, 'Y', '01' ) A/*거래방식 건별대출        */
+					  	    		    						,DECODE( CD_TRADE_TYPE_02, 'Y', '02' ) B/*거래방식 마이너스한도대출*/
+					  	    		    					FROM CONDITION_CREDIT_INFO
+					  	    		    				   WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  	    		    				 )
+					  	    		    		  CONNECT BY LEVEL  <=  2
+                                           )
+                                       WHERE GI.CD_TRADE_TYPE LIKE '%'||CD||'%'
+                                         AND CD IS NOT NULL
+                                     )
+					  	  )
+					  AND (    /*GI.CD_RATIO_TYPE IS NULL*/
+					  	    /* 금리방식 검색사용안함 */
+					  	    /*OR */1 = (SELECT (CASE WHEN CD_RATIO_TYPE_01 = 'N'
+					  	    					  AND CD_RATIO_TYPE_02 = 'N'
+					  	    					 THEN 1
+					  	    					 ELSE 0 END)
+					  	    		  FROM CONDITION_CREDIT_INFO
+					  	    		 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  	    	   )
+					  		OR 0 < (
+					  		      SELECT COUNT(*)
+					  		        FROM (
+					  	    			  SELECT DECODE( ROWNUM, 1, A, 2, B ) CD
+					  	    				FROM (
+					  	    					  SELECT DECODE( CD_RATIO_TYPE_01, 'Y', '01' ) A/*금리방식 고정금리*/
+					  	    							,DECODE( CD_RATIO_TYPE_02, 'Y', '02' ) B/*금리방식 변동금리*/
+					  	    						FROM CONDITION_CREDIT_INFO
+					  	    					   WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  	    					 )
+					  	    			  CONNECT BY LEVEL  <=  4
+					  	    			 )
+                                  WHERE GI.CD_RATIO_TYPE LIKE '%'||CD||'%'
+                                    AND CD IS NOT NULL
+					  			  )
+					  	  )
+					  AND (    /*GI.CD_TYPE_PAY IS NULL*/
+					  	/* 상환방식 검색사용안함 */
+					  	/*OR */1 = (SELECT (CASE WHEN CD_TYPE_PAY_01 = 'N'
+					  						  AND CD_TYPE_PAY_02 = 'N'
+					  						  AND CD_TYPE_PAY_03 = 'N'
+					  						 THEN 1
+					  						 ELSE 0 END)
+					  			  FROM CONDITION_CREDIT_INFO
+					  			 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  		   )
+					  	OR 0 < (
+					  		      SELECT COUNT(*)
+					  		        FROM (
+					  					SELECT DECODE( ROWNUM, 1, A, 2, B, 3, C ) CD
+					  					  FROM ( SELECT DECODE( CD_TYPE_PAY_01, 'Y', '01' ) A/*상환방식 만기일시상환  */
+					  								   ,DECODE( CD_TYPE_PAY_02, 'Y', '02' ) B/*상환방식 원리금균등상환*/
+					  								   ,DECODE( CD_TYPE_PAY_03, 'Y', '03' ) C/*상환방식 원금균등상환  */
+					  							   FROM CONDITION_CREDIT_INFO
+					  							  WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  						   )
+					  					CONNECT BY LEVEL  <=  3
+                                        )
+                                  WHERE GI.CD_TYPE_PAY LIKE '%'||CD||'%'
+                                    AND CD IS NOT NULL
+					  			 )
+					  	  )
+	             ) LST
+]]>
+	</select>
+
+	<!--비제휴사상품 GOODS_INFO  -->
+	<select id="listGoodsNoAllianceBiz" parameterType="com.koscom.goodsbank.model.GoodsbankForm" resultType="com.koscom.goodsbank.model.GoodsbankVO">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.listGoodsNoAllianceBiz */
+		SELECT
+	        CD_NON_GOODS,
+			CD_FC,
+			NM_FC,
+			CD_GOODS_CLASS_L,
+			CD_GOODS_CLASS_M,
+			CD_GOODS_CLASS_S,
+			CD_GOODS_FC,
+			NM_GOODS,
+			YN_USE,
+			RTO_INTEREST_FROM,
+			RTO_INTEREST_TO,
+			DESC_MAX_LIMIT,
+			MIN_LOAN_TERM,
+			MAX_LOAN_TERM,
+			RENEW_MAX_TERM,
+			RTO_CANCEL,
+			YEAR_COMMISSION,
+			DESC_FEATURE,
+			KEYWORD_LIST,
+			CD_APPLY_TYPE,
+			CD_TYPE_PAY,
+			CD_TRADE_TYPE,
+			YN_SEND_DOCU,
+			CD_TARGET_CUST,
+			CD_RATIO_TYPE,
+			CD_COLLATERAL_HOUSE_TYPE,
+			CD_COLLATERAL_LOAN_USE,
+			CD_AREA,
+			CD_DEFER,
+			CD_OBJECT,
+			YN_POST_RANKING,
+			CD_TIME_EXEC,
+			DESC_GOODS,
+			DESC_LOAN,
+			DESC_LIMIT,
+			DESC_RATIO,
+			DESC_PREFER_YIELD,
+			DESC_TERM,
+			DESC_REPAYMETHOD,
+			DESC_LOAN_COST,
+			DESC_PAPERS,
+			DESC_OVERDUE_INTEREST,
+			DESC_REPAYMENT_FEE,
+			DESC_LOAN_PERIOD,
+			DESC_LOAN_PROVIDE,
+			DESC_CONTACT,
+			DESC_COLLATERAL,
+			DESC_ETC,
+			YN_VISIT,
+			YN_ERLY_RPAY_FEE,
+			YN_SRCH_RATIO_LIMIT,
+			FC_LINK,
+			TIME_INTEREST,
+			ID_FRT,
+			DT_FRT,
+			ID_LST,
+			DT_LST,
+			YN_FAVORITE,
+			PATH_FILE1,
+			YN_ALLIANCE,
+	        ROWNUM RNUM
+	    FROM
+	        (SELECT
+	            LST.CD_NON_GOODS,
+				LST.CD_FC,
+				LST.NM_FC,
+				LST.CD_GOODS_CLASS_L,
+				LST.CD_GOODS_CLASS_M,
+				LST.CD_GOODS_CLASS_S,
+				LST.CD_GOODS_FC,
+				LST.NM_GOODS,
+				LST.YN_USE,
+				LST.RTO_INTEREST_FROM,
+				LST.RTO_INTEREST_TO,
+				LST.DESC_MAX_LIMIT,
+				LST.MIN_LOAN_TERM,
+				LST.MAX_LOAN_TERM,
+				LST.RENEW_MAX_TERM,
+				LST.RTO_CANCEL,
+				LST.YEAR_COMMISSION,
+				LST.DESC_FEATURE,
+				LST.KEYWORD_LIST,
+				LST.CD_APPLY_TYPE,
+				LST.CD_TYPE_PAY,
+				LST.CD_TRADE_TYPE,
+				LST.YN_SEND_DOCU,
+				LST.CD_TARGET_CUST,
+				LST.CD_RATIO_TYPE,
+				LST.CD_COLLATERAL_HOUSE_TYPE,
+				LST.CD_COLLATERAL_LOAN_USE,
+				LST.CD_AREA,
+				LST.CD_DEFER,
+				LST.CD_OBJECT,
+				LST.YN_POST_RANKING,
+				LST.CD_TIME_EXEC,
+				LST.DESC_GOODS,
+				LST.DESC_LOAN,
+				LST.DESC_LIMIT,
+				LST.DESC_RATIO,
+				LST.DESC_PREFER_YIELD,
+				LST.DESC_TERM,
+				LST.DESC_REPAYMETHOD,
+				LST.DESC_LOAN_COST,
+				LST.DESC_PAPERS,
+				LST.DESC_OVERDUE_INTEREST,
+				LST.DESC_REPAYMENT_FEE,
+				LST.DESC_LOAN_PERIOD,
+				LST.DESC_LOAN_PROVIDE,
+				LST.DESC_CONTACT,
+				LST.DESC_COLLATERAL,
+				LST.DESC_ETC,
+				LST.YN_VISIT,
+				LST.YN_ERLY_RPAY_FEE,
+				LST.YN_SRCH_RATIO_LIMIT,
+				LST.FC_LINK,
+				LST.TIME_INTEREST,
+				LST.ID_FRT,
+				LST.DT_FRT,
+				LST.ID_LST,
+				LST.DT_LST,
+			    LST.YN_FAVORITE,
+			    LST.PATH_FILE1,
+			    LST.YN_ALLIANCE,
+	            ROWNUM RNUM
+	         FROM
+	            (SELECT
+	            	GI.CD_NON_GOODS,
+					GI.CD_FC,
+					GI.NM_FC,
+					GI.CD_GOODS_CLASS_L,
+					GI.CD_GOODS_CLASS_M,
+					GI.CD_GOODS_CLASS_S,
+					GI.CD_GOODS_FC,
+					GI.NM_GOODS,
+					GI.YN_USE,
+					GI.RTO_INTEREST_FROM,
+					GI.RTO_INTEREST_TO,
+					GI.DESC_MAX_LIMIT,
+					GI.MIN_LOAN_TERM,
+					GI.MAX_LOAN_TERM,
+					GI.RENEW_MAX_TERM,
+					GI.RTO_CANCEL,
+					GI.YEAR_COMMISSION,
+					GI.DESC_FEATURE,
+					GI.KEYWORD_LIST,
+					GI.CD_APPLY_TYPE,
+					GI.CD_TYPE_PAY,
+					GI.CD_TRADE_TYPE,
+					GI.YN_SEND_DOCU,
+					GI.CD_TARGET_CUST,
+					GI.CD_RATIO_TYPE,
+					GI.CD_COLLATERAL_HOUSE_TYPE,
+					GI.CD_COLLATERAL_LOAN_USE,
+					GI.CD_AREA,
+					GI.CD_DEFER,
+					GI.CD_OBJECT,
+					GI.YN_POST_RANKING,
+					GI.CD_TIME_EXEC,
+					GI.DESC_GOODS,
+					GI.DESC_LOAN,
+					GI.DESC_LIMIT,
+					GI.DESC_RATIO,
+					GI.DESC_PREFER_YIELD,
+					GI.DESC_TERM,
+					GI.DESC_REPAYMETHOD,
+					GI.DESC_LOAN_COST,
+					GI.DESC_PAPERS,
+					GI.DESC_OVERDUE_INTEREST,
+					GI.DESC_REPAYMENT_FEE,
+					GI.DESC_LOAN_PERIOD,
+					GI.DESC_LOAN_PROVIDE,
+					GI.DESC_CONTACT,
+					GI.DESC_COLLATERAL,
+					GI.DESC_ETC,
+					GI.YN_VISIT,
+					GI.YN_ERLY_RPAY_FEE,
+					GI.YN_SRCH_RATIO_LIMIT,
+					GI.FC_LINK,
+					GI.TIME_INTEREST,
+					GI.ID_FRT,
+					GI.DT_FRT,
+					GI.ID_LST,
+					GI.DT_LST,
+			     	(CASE WHEN (
+			     					SELECT COUNT(*)
+			     					FROM COOCON_GOODS_FAVORITE_INFO CGFI
+			     					WHERE CGFI.CD_FC = GI.CD_FC
+			     						AND CGFI.CD_NON_GOODS = GI.CD_NON_GOODS
+			     						AND CGFI.YN_ALLIANCE = 'N'
+			     						AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			     				 ) <![CDATA[>]]> 0 THEN 'Y'
+			     		ELSE 'N'
+			     		END
+			     		) AS YN_FAVORITE
+			     		, FI.PATH_FILE AS PATH_FILE1
+			     		,FI.YN_ALLIANCE
+				 	FROM GOODSBANK_INFO GI
+				 	LEFT OUTER JOIN FC_INFO FI
+				 	ON GI.CD_FC = FI.CD_FC
+					WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+					  AND GI.CD_GOODS_CLASS_M IN
+					<foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
+			        	#{item, jdbcType=VARCHAR}
+				    </foreach>
+
+                    AND (    (     #{cd_fin, jdbcType=VARCHAR} = 'C'
+                              AND FI.CD_FIN IN ('C','D')
+                             )
+                          OR FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
+                        )
+					AND GI.YN_USE = 'Y'
+					  AND (    /*GI.MAX_LOAN_TERM IS NULL*/
+							/* 대출기간(상환기간) 검색사용안함 */
+							/*OR*/ 1 = (SELECT (CASE WHEN CD_TERM_LOAN_01 = 'N'
+												  AND CD_TERM_LOAN_02 = 'N'
+												  AND CD_TERM_LOAN_03 = 'N'
+												  AND CD_TERM_LOAN_04 = 'N'
+												 THEN 1
+												 ELSE 0 END)
+									  FROM CONDITION_BIZ_INFO
+									 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+									)
+							/* 대출기간(상환기간) 검색 */
+							OR 1 = (SELECT (CASE WHEN (CD_TERM_LOAN_01 = 'Y' AND GI.MAX_LOAN_TERM <![CDATA[<=]]> '1')/* ~1년 */
+												   OR (CD_TERM_LOAN_02 = 'Y' AND GI.MAX_LOAN_TERM <![CDATA[>=]]> '1'
+																			 AND GI.MAX_LOAN_TERM <![CDATA[<=]]> '3')/* 1~3년 */
+												   OR (CD_TERM_LOAN_03 = 'Y' AND GI.MAX_LOAN_TERM <![CDATA[>=]]> '3'
+																			 AND GI.MAX_LOAN_TERM <![CDATA[<=]]> '5')/* 3~5년 */
+												   OR (CD_TERM_LOAN_04 = 'Y' AND GI.MAX_LOAN_TERM <![CDATA[>=]]> '5')/* 5년~ */
+												 THEN 1
+												 ELSE 0 END)
+									  FROM CONDITION_BIZ_INFO /* 조건검색신용 */
+									 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+								   )
+						  )
+					  /* 기타 검색 조건 */
+					  AND (   /* 기타조건 사용안함 */
+							  1 = (SELECT (CASE WHEN YN_SEND_DOCU        = 'N'
+												 /*AND YN_VISIT          = 'N'
+												 AND YN_ERLY_RPAY_FEE    = 'N'
+												 AND YN_SRCH_RATIO_LIMIT = 'N'*/
+												THEN 1
+												ELSE 0 END)
+										 FROM CONDITION_BIZ_INFO
+										WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+								  )
+						   OR (/* 조건 선택 반영*/
+								GI.YN_SEND_DOCU         IS NULL OR GI.YN_SEND_DOCU  = (SELECT YN_SEND_DOCU
+								                                                         FROM CONDITION_BIZ_INFO
+									                                                    WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR})       /*무서류*/
+								/*AND (GI.YN_VISIT             IS NULL OR GI.YN_VISIT            = B.YN_VISIT           )*//*무방문*/
+								/*AND (GI.YN_ERLY_RPAY_FEE     IS NULL OR GI.YN_ERLY_RPAY_FEE    = B.YN_ERLY_RPAY_FEE   )*//*중도상환수수료*/
+								/*AND (GI.YN_SRCH_RATIO_LIMIT  IS NULL OR GI.YN_SRCH_RATIO_LIMIT = B.YN_SRCH_RATIO_LIMIT)*//*금리/한도*/
+							  )
+						  )
+<![CDATA[
+					  AND (    /*GI.CD_APPLY_TYPE IS NULL*/
+					  		/* 신청방식 검색사용안함 */
+					  		/*OR */1 = (SELECT (CASE WHEN CD_APPLY_TYPE_01 = 'N'
+					  							  AND CD_APPLY_TYPE_02 = 'N'
+					  							  AND CD_APPLY_TYPE_03 = 'N'
+					  							  AND CD_APPLY_TYPE_04 = 'N'
+					  							 THEN 1
+					  							 ELSE 0 END)
+					  				  FROM CONDITION_BIZ_INFO
+					  				 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  			   )
+					  		OR 0 < (
+					  		      SELECT COUNT(*)
+					  		        FROM (
+                                          SELECT DECODE( ROWNUM, 1, A, 2, B, 3, C, 4, D ) CD
+                                            FROM(
+                                              SELECT DECODE( CD_APPLY_TYPE_01, 'Y', '01' ) A/*신청방식 인터넷*/
+                                                  ,DECODE( CD_APPLY_TYPE_02, 'Y', '02' ) B/*신청방식 모바일*/
+                                                  ,DECODE( CD_APPLY_TYPE_03, 'Y', '03' ) C/*신청방식 콜센터*/
+                                                  ,DECODE( CD_APPLY_TYPE_04, 'Y', '04' ) D/*신청방식 영업점*/
+                                                FROM CONDITION_BIZ_INFO
+                                               WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                               )
+                                          CONNECT BY LEVEL  <=  4
+                                        )
+                                   WHERE GI.CD_APPLY_TYPE LIKE '%'||CD||'%'
+                                     AND CD IS NOT NULL
+					  			   )
+					  	  )
+					  AND (   /* GI.CD_TRADE_TYPE IS NULL*/
+					  	    /* 거래방식 검색사용안함 */
+					  	    /*OR*/ 1 = (SELECT (CASE WHEN CD_TRADE_TYPE_01 = 'N'
+					  	    					  AND CD_TRADE_TYPE_02 = 'N'
+					  	    					 THEN 1
+					  	    					 ELSE 0 END)
+					  	    		  FROM CONDITION_BIZ_INFO
+					  	    		 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  	    	   )
+					  		  OR 0 < (
+					  		        SELECT COUNT(*)
+					  		          FROM (
+					  	      				  SELECT DECODE( ROWNUM, 1, A, 2, B ) CD
+					  	    		    			FROM (
+					  	    		    				  SELECT DECODE( CD_TRADE_TYPE_01, 'Y', '01' ) A/*거래방식 건별대출        */
+					  	    		    						,DECODE( CD_TRADE_TYPE_02, 'Y', '02' ) B/*거래방식 마이너스한도대출*/
+					  	    		    					FROM CONDITION_BIZ_INFO
+					  	    		    				   WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  	    		    				 )
+					  	    		    		  CONNECT BY LEVEL  <=  2
+                                            )
+                                       WHERE GI.CD_TRADE_TYPE LIKE '%'||CD||'%'
+                                         AND CD IS NOT NULL
+                                    )
+					  	  )
+					  AND (    /*GI.CD_RATIO_TYPE IS NULL*/
+					  	    /* 금리방식 검색사용안함 */
+					  	    /*OR */1 = (SELECT (CASE WHEN CD_RATIO_TYPE_01 = 'N'
+					  	    					  AND CD_RATIO_TYPE_02 = 'N'
+					  	    					 THEN 1
+					  	    					 ELSE 0 END)
+					  	    		  FROM CONDITION_BIZ_INFO
+					  	    		 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  	    	   )
+					  		OR 0 < (
+					  		      SELECT COUNT(*)
+					  		        FROM (
+					  	    			  SELECT DECODE( ROWNUM, 1, A, 2, B ) CD
+					  	    				FROM (
+					  	    					  SELECT DECODE( CD_RATIO_TYPE_01, 'Y', '01' ) A/*금리방식 고정금리*/
+					  	    							,DECODE( CD_RATIO_TYPE_02, 'Y', '02' ) B/*금리방식 변동금리*/
+					  	    						FROM CONDITION_BIZ_INFO
+					  	    					   WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  	    					 )
+					  	    			  CONNECT BY LEVEL  <=  4
+					  	    			 )
+                                  WHERE GI.CD_RATIO_TYPE LIKE '%'||CD||'%'
+                                    AND CD IS NOT NULL
+					  			  )
+					  	  )
+					  AND (    /*GI.CD_TYPE_PAY IS NULL*/
+					  	/* 상환방식 검색사용안함 */
+					  	/*OR*/ 1 = (SELECT (CASE WHEN CD_TYPE_PAY_01 = 'N'
+					  						  AND CD_TYPE_PAY_02 = 'N'
+					  						  AND CD_TYPE_PAY_03 = 'N'
+					  						 THEN 1
+					  						 ELSE 0 END)
+					  			  FROM CONDITION_BIZ_INFO
+					  			 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  		   )
+					  	OR 0 < (
+					  		      SELECT COUNT(*)
+					  		        FROM (
+					  					SELECT DECODE( ROWNUM, 1, A, 2, B, 3, C ) CD
+					  					  FROM ( SELECT DECODE( CD_TYPE_PAY_01, 'Y', '01' ) A/*상환방식 만기일시상환  */
+					  								   ,DECODE( CD_TYPE_PAY_02, 'Y', '02' ) B/*상환방식 원리금균등상환*/
+					  								   ,DECODE( CD_TYPE_PAY_03, 'Y', '03' ) C/*상환방식 원금균등상환  */
+					  							   FROM CONDITION_BIZ_INFO
+					  							  WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  						   )
+					  					CONNECT BY LEVEL  <=  3
+                                        )
+                                   WHERE GI.CD_TYPE_PAY LIKE '%'||CD||'%'
+                                     AND CD IS NOT NULL
+					  		   )
+					  	  )
+]]>
+				ORDER BY NVL(FI.YN_ALLIANCE, 'N') DESC, <choose>
+                            <when test="'01'.equals(orderby)">
+                                GI.RTO_INTEREST_FROM ASC/*금리낮은순*/,
+                            </when>
+                            <when test="'02'.equals(orderby)">
+                                GI.DESC_MAX_LIMIT DESC/*한도높은순*/,
+                            </when>
+                            <when test="'03'.equals(orderby)">
+								NVL(GI.MAX_LOAN_TERM,'-1') DESC/*기간높은순*/,
+                            </when>
+						</choose>
+					    YN_FAVORITE DESC
+	             ) LST
+	        WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	        )
+	    WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+	</select>
+
+	<!--상품 GOODS_INFO  -->
+	<select id="listGoodsNoAllianceBizCount" parameterType="com.koscom.goodsbank.model.GoodsbankForm" resultType="int">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.listGoodsNoAllianceBizCount */
+		SELECT
+               COUNT(*) AS recordCount
+        FROM    (SELECT
+        			GI.CD_NON_GOODS,
+					GI.CD_FC,
+					GI.NM_FC,
+					GI.CD_GOODS_CLASS_L,
+					GI.CD_GOODS_CLASS_M,
+					GI.CD_GOODS_CLASS_S,
+					GI.CD_GOODS_FC,
+					GI.NM_GOODS,
+					GI.YN_USE,
+					GI.RTO_INTEREST_FROM,
+					GI.RTO_INTEREST_TO,
+					GI.DESC_MAX_LIMIT,
+					GI.MIN_LOAN_TERM,
+					GI.MAX_LOAN_TERM,
+					GI.RENEW_MAX_TERM,
+					GI.RTO_CANCEL,
+					GI.YEAR_COMMISSION,
+					GI.DESC_FEATURE,
+					GI.KEYWORD_LIST,
+					GI.CD_APPLY_TYPE,
+					GI.CD_TYPE_PAY,
+					GI.CD_TRADE_TYPE,
+					GI.YN_SEND_DOCU,
+					GI.CD_TARGET_CUST,
+					GI.CD_RATIO_TYPE,
+					GI.CD_COLLATERAL_HOUSE_TYPE,
+					GI.CD_COLLATERAL_LOAN_USE,
+					GI.CD_AREA,
+					GI.CD_DEFER,
+					GI.CD_OBJECT,
+					GI.YN_POST_RANKING,
+					GI.CD_TIME_EXEC,
+					GI.DESC_GOODS,
+					GI.DESC_LOAN,
+					GI.DESC_LIMIT,
+					GI.DESC_RATIO,
+					GI.DESC_PREFER_YIELD,
+					GI.DESC_TERM,
+					GI.DESC_REPAYMETHOD,
+					GI.DESC_LOAN_COST,
+					GI.DESC_PAPERS,
+					GI.DESC_OVERDUE_INTEREST,
+					GI.DESC_REPAYMENT_FEE,
+					GI.DESC_LOAN_PERIOD,
+					GI.DESC_LOAN_PROVIDE,
+					GI.DESC_CONTACT,
+					GI.DESC_COLLATERAL,
+					GI.DESC_ETC,
+					GI.YN_VISIT,
+					GI.YN_ERLY_RPAY_FEE,
+					GI.YN_SRCH_RATIO_LIMIT,
+					GI.FC_LINK,
+					GI.TIME_INTEREST,
+					GI.ID_FRT,
+					GI.DT_FRT,
+					GI.ID_LST,
+					GI.DT_LST,
+			     	(CASE WHEN (
+			     					SELECT COUNT(*)
+			     					FROM COOCON_GOODS_FAVORITE_INFO CGFI
+			     					WHERE CGFI.CD_FC = GI.CD_FC
+			     						AND CGFI.CD_NON_GOODS = GI.CD_NON_GOODS
+			     						AND CGFI.YN_ALLIANCE = 'N'
+			     						AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			     				 ) <![CDATA[>]]> 0 THEN 'Y'
+			     		ELSE 'N'
+			     		END
+			     		) AS YN_FAVORITE
+			     		, FI.PATH_FILE AS PATH_FILE1
+				 	FROM GOODSBANK_INFO GI
+				 	LEFT OUTER JOIN FC_INFO FI
+				 	ON GI.CD_FC = FI.CD_FC
+					WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+					  AND GI.CD_GOODS_CLASS_M IN
+					<foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
+			        	#{item, jdbcType=VARCHAR}
+				    </foreach>
+                    AND (    (     #{cd_fin, jdbcType=VARCHAR} = 'C'
+                               AND FI.CD_FIN IN ('C','D')
+                             )
+                          OR FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
+                        )
+					AND GI.YN_USE = 'Y'
+					  AND (    /*GI.MAX_LOAN_TERM IS NULL*/
+							/* 대출기간(상환기간) 검색사용안함 */
+							/*OR*/ 1 = (SELECT (CASE WHEN CD_TERM_LOAN_01 = 'N'
+												  AND CD_TERM_LOAN_02 = 'N'
+												  AND CD_TERM_LOAN_03 = 'N'
+												  AND CD_TERM_LOAN_04 = 'N'
+												 THEN 1
+												 ELSE 0 END)
+									  FROM CONDITION_BIZ_INFO
+									 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+									)
+							/* 대출기간(상환기간) 검색 */
+							OR 1 = (SELECT (CASE WHEN (CD_TERM_LOAN_01 = 'Y' AND GI.MAX_LOAN_TERM <![CDATA[<=]]> '1')/* ~1년 */
+												   OR (CD_TERM_LOAN_02 = 'Y' AND GI.MAX_LOAN_TERM <![CDATA[>=]]> '1'
+																			 AND GI.MAX_LOAN_TERM <![CDATA[<=]]> '3')/* 1~3년 */
+												   OR (CD_TERM_LOAN_03 = 'Y' AND GI.MAX_LOAN_TERM <![CDATA[>=]]> '3'
+																			 AND GI.MAX_LOAN_TERM <![CDATA[<=]]> '5')/* 3~5년 */
+												   OR (CD_TERM_LOAN_04 = 'Y' AND GI.MAX_LOAN_TERM <![CDATA[>=]]> '5')/* 5년~ */
+												 THEN 1
+												 ELSE 0 END)
+									  FROM CONDITION_BIZ_INFO /* 조건검색신용 */
+									 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+								   )
+						  )
+					  /* 기타 검색 조건 */
+					  AND (   /* 기타조건 사용안함 */
+							  1 = (SELECT (CASE WHEN YN_SEND_DOCU        = 'N'
+												 /*AND YN_VISIT            = 'N'
+												 AND YN_ERLY_RPAY_FEE    = 'N'
+												 AND YN_SRCH_RATIO_LIMIT = 'N'*/
+												THEN 1
+												ELSE 0 END)
+										 FROM CONDITION_BIZ_INFO
+										WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+								  )
+						   OR (/* 조건 선택 반영*/
+								GI.YN_SEND_DOCU         IS NULL OR GI.YN_SEND_DOCU  = (SELECT YN_SEND_DOCU
+								                                                         FROM CONDITION_BIZ_INFO
+									                                                    WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR})       /*무서류*/
+								/*AND (GI.YN_VISIT             IS NULL OR GI.YN_VISIT            = B.YN_VISIT           )*//*무방문*/
+								/*AND (GI.YN_ERLY_RPAY_FEE     IS NULL OR GI.YN_ERLY_RPAY_FEE    = B.YN_ERLY_RPAY_FEE   )*//*중도상환수수료*/
+								/*AND (GI.YN_SRCH_RATIO_LIMIT  IS NULL OR GI.YN_SRCH_RATIO_LIMIT = B.YN_SRCH_RATIO_LIMIT)*//*금리/한도*/
+							  )
+						  )
+<![CDATA[
+					  AND (    /*GI.CD_APPLY_TYPE IS NULL*/
+					  		/* 신청방식 검색사용안함 */
+					  		/*OR */1 = (SELECT (CASE WHEN CD_APPLY_TYPE_01 = 'N'
+					  							  AND CD_APPLY_TYPE_02 = 'N'
+					  							  AND CD_APPLY_TYPE_03 = 'N'
+					  							  AND CD_APPLY_TYPE_04 = 'N'
+					  							 THEN 1
+					  							 ELSE 0 END)
+					  				  FROM CONDITION_BIZ_INFO
+					  				 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  			   )
+					  		OR 0 < (
+					  		      SELECT COUNT(*)
+					  		        FROM (
+                                          SELECT DECODE( ROWNUM, 1, A, 2, B, 3, C, 4, D ) CD
+                                            FROM(
+                                              SELECT DECODE( CD_APPLY_TYPE_01, 'Y', '01' ) A/*신청방식 인터넷*/
+                                                  ,DECODE( CD_APPLY_TYPE_02, 'Y', '02' ) B/*신청방식 모바일*/
+                                                  ,DECODE( CD_APPLY_TYPE_03, 'Y', '03' ) C/*신청방식 콜센터*/
+                                                  ,DECODE( CD_APPLY_TYPE_04, 'Y', '04' ) D/*신청방식 영업점*/
+                                                FROM CONDITION_BIZ_INFO
+                                               WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+                                               )
+                                          CONNECT BY LEVEL  <=  4
+                                        )
+                                   WHERE GI.CD_APPLY_TYPE LIKE '%'||CD||'%'
+                                     AND CD IS NOT NULL
+					  			   )
+					  	  )
+					  AND (   /* GI.CD_TRADE_TYPE IS NULL*/
+					  	    /* 거래방식 검색사용안함 */
+					  	    /*OR*/ 1 = (SELECT (CASE WHEN CD_TRADE_TYPE_01 = 'N'
+					  	    					  AND CD_TRADE_TYPE_02 = 'N'
+					  	    					 THEN 1
+					  	    					 ELSE 0 END)
+					  	    		  FROM CONDITION_BIZ_INFO
+					  	    		 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  	    	   )
+					  		  OR 0 < (
+					  		        SELECT COUNT(*)
+					  		          FROM (
+					  	      				  SELECT DECODE( ROWNUM, 1, A, 2, B ) CD
+					  	    		    			FROM (
+					  	    		    				  SELECT DECODE( CD_TRADE_TYPE_01, 'Y', '01' ) A/*거래방식 건별대출        */
+					  	    		    						,DECODE( CD_TRADE_TYPE_02, 'Y', '02' ) B/*거래방식 마이너스한도대출*/
+					  	    		    					FROM CONDITION_BIZ_INFO
+					  	    		    				   WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  	    		    				 )
+					  	    		    		  CONNECT BY LEVEL  <=  2
+                                            )
+                                       WHERE GI.CD_TRADE_TYPE LIKE '%'||CD||'%'
+                                         AND CD IS NOT NULL
+                                    )
+					  	  )
+					  AND (    /*GI.CD_RATIO_TYPE IS NULL*/
+					  	    /* 금리방식 검색사용안함 */
+					  	    /*OR */1 = (SELECT (CASE WHEN CD_RATIO_TYPE_01 = 'N'
+					  	    					  AND CD_RATIO_TYPE_02 = 'N'
+					  	    					 THEN 1
+					  	    					 ELSE 0 END)
+					  	    		  FROM CONDITION_BIZ_INFO
+					  	    		 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  	    	   )
+					  		OR 0 < (
+					  		      SELECT COUNT(*)
+					  		        FROM (
+					  	    			  SELECT DECODE( ROWNUM, 1, A, 2, B ) CD
+					  	    				FROM (
+					  	    					  SELECT DECODE( CD_RATIO_TYPE_01, 'Y', '01' ) A/*금리방식 고정금리*/
+					  	    							,DECODE( CD_RATIO_TYPE_02, 'Y', '02' ) B/*금리방식 변동금리*/
+					  	    						FROM CONDITION_BIZ_INFO
+					  	    					   WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  	    					 )
+					  	    			  CONNECT BY LEVEL  <=  4
+					  	    			 )
+                                  WHERE GI.CD_RATIO_TYPE LIKE '%'||CD||'%'
+                                    AND CD IS NOT NULL
+					  			  )
+					  	  )
+					  AND (    /*GI.CD_TYPE_PAY IS NULL*/
+					  	/* 상환방식 검색사용안함 */
+					  	/*OR*/ 1 = (SELECT (CASE WHEN CD_TYPE_PAY_01 = 'N'
+					  						  AND CD_TYPE_PAY_02 = 'N'
+					  						  AND CD_TYPE_PAY_03 = 'N'
+					  						 THEN 1
+					  						 ELSE 0 END)
+					  			  FROM CONDITION_BIZ_INFO
+					  			 WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  		   )
+					  	OR 0 < (
+					  		      SELECT COUNT(*)
+					  		        FROM (
+					  					SELECT DECODE( ROWNUM, 1, A, 2, B, 3, C ) CD
+					  					  FROM ( SELECT DECODE( CD_TYPE_PAY_01, 'Y', '01' ) A/*상환방식 만기일시상환  */
+					  								   ,DECODE( CD_TYPE_PAY_02, 'Y', '02' ) B/*상환방식 원리금균등상환*/
+					  								   ,DECODE( CD_TYPE_PAY_03, 'Y', '03' ) C/*상환방식 원금균등상환  */
+					  							   FROM CONDITION_BIZ_INFO
+					  							  WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}
+					  						   )
+					  					CONNECT BY LEVEL  <=  3
+                                        )
+                                   WHERE GI.CD_TYPE_PAY LIKE '%'||CD||'%'
+                                     AND CD IS NOT NULL
+					  		   )
+					  	  )
+	             ) LST
+]]>
+	</select>
+
+	<!-- 비제휴사상품 주택담보 GOODS_INFO  -->
+	<select id="listGoodsNoAllianceHouse" parameterType="com.koscom.goodsbank.model.GoodsbankForm" resultType="com.koscom.goodsbank.model.GoodsbankVO">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.listGoodsNoAllianceHouse */
+		SELECT
+	        CD_NON_GOODS             /* 상품코드                  */
+            , CD_FC                    /* 금융사코드                */
+            , NM_FC                    /* 금융사명                  */
+            , CD_GOODS_CLASS_L         /* 대분류                    */
+            , CD_GOODS_CLASS_M         /* 중분류                    */
+            , CD_GOODS_CLASS_S         /* 소분류                    */
+            , CD_GOODS_FC              /* 상품코드(금융사 상품코드) */
+            , NM_GOODS                 /* 상품명                    */
+            , YN_USE                   /* 표시여부                  */
+            , RTO_INTEREST_FROM        /* 최대금리                  */
+            , RTO_INTEREST_TO          /* 최소금리                  */
+            , DESC_MAX_LIMIT           /* 최대한도                  */
+            , DESC_MAX_LIMIT_VIEW /* 최대한도                  */
+            , MIN_LOAN_TERM            /* 최소기간                  */
+            , MAX_LOAN_TERM            /* 최대기간                  */
+            , RENEW_MAX_TERM           /* 연장기간                  */
+            , RTO_CANCEL               /* 중도상환해약금율          */
+            , YEAR_COMMISSION          /* 수수료 적용 기간          */
+            , DESC_FEATURE             /* 상품특징                  */
+            , KEYWORD_LIST             /* 키워드                    */
+            , CD_APPLY_TYPE            /* 신청방식                  */
+            , CD_TYPE_PAY              /* 상환방식                  */
+            , CD_TRADE_TYPE            /* 거래방식                  */
+            , YN_SEND_DOCU             /* 서류제출                  */
+            , CD_TARGET_CUST           /* 대상고객                  */
+            , CD_RATIO_TYPE            /* 금리방식                  */
+            , CD_COLLATERAL_HOUSE_TYPE /* 주택종류                  */
+            , CD_COLLATERAL_LOAN_USE   /* 자금용도                  */
+            , CD_AREA                  /* 주택면적(전용면적)        */
+            , CD_DEFER                 /* 거치방식                  */
+            , CD_OBJECT                /* 대상구분                  */
+            , YN_POST_RANKING          /* 후순위가능여부            */
+            , CD_TIME_EXEC             /* 실행시간                  */
+            , DESC_GOODS               /* 상품상세                  */
+            , DESC_LOAN                /* 대출대상상세              */
+            , DESC_LIMIT               /* 대출한도상세              */
+            , DESC_RATIO               /* 대출금리상세              */
+            , DESC_PREFER_YIELD        /* 우대금리상세              */
+            , DESC_TERM                /* 대출기간상세              */
+            , DESC_REPAYMETHOD         /* 상환방식상세              */
+            , DESC_LOAN_COST           /* 대출비용상세              */
+            , DESC_PAPERS              /* 구비서류상세              */
+            , DESC_OVERDUE_INTEREST    /* 연체이자상세              */
+            , DESC_REPAYMENT_FEE       /* 중도상환수수료상세        */
+            , DESC_LOAN_PERIOD         /* 대출신청시기              */
+            , DESC_LOAN_PROVIDE        /* 대출지급시기              */
+            , DESC_CONTACT             /* 연락처                    */
+            , DESC_COLLATERAL          /* 대상담보                  */
+            , DESC_ETC                 /* 기타 유의 사항            */
+            , FC_LINK                  /* 금융사링크            */
+            , TIME_INTEREST  		   /* 이자부과시기            */
+            , YN_FAVORITE
+			, PATH_FILE1
+			, YN_ALLIANCE
+	        , RNUM
+	    FROM
+	        (SELECT
+	            LST.CD_NON_GOODS             /* 상품코드                  */
+                , LST.CD_FC                    /* 금융사코드                */
+                , LST.NM_FC                    /* 금융사명                  */
+                , LST.CD_GOODS_CLASS_L         /* 대분류                    */
+                , LST.CD_GOODS_CLASS_M         /* 중분류                    */
+                , LST.CD_GOODS_CLASS_S         /* 소분류                    */
+                , LST.CD_GOODS_FC              /* 상품코드(금융사 상품코드) */
+                , LST.NM_GOODS                 /* 상품명                    */
+                , LST.YN_USE                   /* 표시여부                  */
+                , LST.RTO_INTEREST_FROM        /* 최대금리                  */
+                , LST.RTO_INTEREST_TO          /* 최소금리                  */
+                , LST.DESC_MAX_LIMIT           /* 최대한도                  */
+                , LST.DESC_MAX_LIMIT_VIEW /* 최대한도                  */
+                , LST.MIN_LOAN_TERM            /* 최소기간                  */
+                , LST.MAX_LOAN_TERM            /* 최대기간                  */
+                , LST.RENEW_MAX_TERM           /* 연장기간                  */
+                , LST.RTO_CANCEL               /* 중도상환해약금율          */
+                , LST.YEAR_COMMISSION          /* 수수료 적용 기간          */
+                , LST.DESC_FEATURE             /* 상품특징                  */
+                , LST.KEYWORD_LIST             /* 키워드                    */
+                , LST.CD_APPLY_TYPE            /* 신청방식                  */
+                , LST.CD_TYPE_PAY              /* 상환방식                  */
+                , LST.CD_TRADE_TYPE            /* 거래방식                  */
+                , LST.YN_SEND_DOCU             /* 서류제출                  */
+                , LST.CD_TARGET_CUST           /* 대상고객                  */
+                , LST.CD_RATIO_TYPE            /* 금리방식                  */
+                , LST.CD_COLLATERAL_HOUSE_TYPE /* 주택종류                  */
+                , LST.CD_COLLATERAL_LOAN_USE   /* 자금용도                  */
+                , LST.CD_AREA                  /* 주택면적(전용면적)        */
+                , LST.CD_DEFER                 /* 거치방식                  */
+                , LST.CD_OBJECT                /* 대상구분                  */
+                , LST.YN_POST_RANKING          /* 후순위가능여부            */
+                , LST.CD_TIME_EXEC             /* 실행시간                  */
+                , LST.DESC_GOODS               /* 상품상세                  */
+                , LST.DESC_LOAN                /* 대출대상상세              */
+                , LST.DESC_LIMIT               /* 대출한도상세              */
+                , LST.DESC_RATIO               /* 대출금리상세              */
+                , LST.DESC_PREFER_YIELD        /* 우대금리상세              */
+                , LST.DESC_TERM                /* 대출기간상세              */
+                , LST.DESC_REPAYMETHOD         /* 상환방식상세              */
+                , LST.DESC_LOAN_COST           /* 대출비용상세              */
+                , LST.DESC_PAPERS              /* 구비서류상세              */
+                , LST.DESC_OVERDUE_INTEREST    /* 연체이자상세              */
+                , LST.DESC_REPAYMENT_FEE       /* 중도상환수수료상세        */
+                , LST.DESC_LOAN_PERIOD         /* 대출신청시기              */
+                , LST.DESC_LOAN_PROVIDE        /* 대출지급시기              */
+                , LST.DESC_CONTACT             /* 연락처                    */
+                , LST.DESC_COLLATERAL          /* 대상담보                  */
+                , LST.DESC_ETC                 /* 기타 유의 사항            */
+                , LST.FC_LINK                  /* 금융사링크            */
+                , LST.TIME_INTEREST  		   /* 이자부과시기            */
+			    , LST.YN_FAVORITE
+			    , LST.PATH_FILE1
+			    , LST.YN_ALLIANCE
+	            , ROWNUM RNUM
+	         FROM
+	            (select GI.CD_NON_GOODS             /* 상품코드                  */
+                      ,GI.CD_FC                    /* 금융사코드                */
+                      ,FI.NM_FC                    /* 금융사명                  */
+                      ,GI.CD_GOODS_CLASS_L         /* 대분류                    */
+                      ,GI.CD_GOODS_CLASS_M         /* 중분류                    */
+                      ,GI.CD_GOODS_CLASS_S         /* 소분류                    */
+                      ,GI.CD_GOODS_FC              /* 상품코드(금융사 상품코드) */
+                      ,GI.NM_GOODS                 /* 상품명                    */
+                      ,GI.YN_USE                   /* 표시여부                  */
+                      ,GI.RTO_INTEREST_FROM        /* 최대금리                  */
+                      ,GI.RTO_INTEREST_TO          /* 최소금리                  */
+                      ,GI.DESC_MAX_LIMIT           /* 최대한도                  */
+                      ,FN_AMT_VIEW(GI.DESC_MAX_LIMIT) DESC_MAX_LIMIT_VIEW /* 최대한도                  */
+                      ,GI.MIN_LOAN_TERM            /* 최소기간                  */
+                      ,GI.MAX_LOAN_TERM            /* 최대기간                  */
+                      ,GI.RENEW_MAX_TERM           /* 연장기간                  */
+                      ,GI.RTO_CANCEL               /* 중도상환해약금율          */
+                      ,GI.YEAR_COMMISSION          /* 수수료 적용 기간          */
+                      ,GI.DESC_FEATURE             /* 상품특징                  */
+                      ,GI.KEYWORD_LIST             /* 키워드                    */
+                      ,GI.CD_APPLY_TYPE            /* 신청방식                  */
+                      ,GI.CD_TYPE_PAY              /* 상환방식                  */
+                      ,GI.CD_TRADE_TYPE            /* 거래방식                  */
+                      ,GI.YN_SEND_DOCU             /* 서류제출                  */
+                      ,GI.CD_TARGET_CUST           /* 대상고객                  */
+                      ,GI.CD_RATIO_TYPE            /* 금리방식                  */
+                      ,GI.CD_COLLATERAL_HOUSE_TYPE /* 주택종류                  */
+                      ,GI.CD_COLLATERAL_LOAN_USE   /* 자금용도                  */
+                      ,GI.CD_AREA                  /* 주택면적(전용면적)        */
+                      ,GI.CD_DEFER                 /* 거치방식                  */
+                      ,GI.CD_OBJECT                /* 대상구분                  */
+                      ,GI.YN_POST_RANKING          /* 후순위가능여부            */
+                      ,GI.CD_TIME_EXEC             /* 실행시간                  */
+                      ,GI.DESC_GOODS               /* 상품상세                  */
+                      ,GI.DESC_LOAN                /* 대출대상상세              */
+                      ,GI.DESC_LIMIT               /* 대출한도상세              */
+                      ,GI.DESC_RATIO               /* 대출금리상세              */
+                      ,GI.DESC_PREFER_YIELD        /* 우대금리상세              */
+                      ,GI.DESC_TERM                /* 대출기간상세              */
+                      ,GI.DESC_REPAYMETHOD         /* 상환방식상세              */
+                      ,GI.DESC_LOAN_COST           /* 대출비용상세              */
+                      ,GI.DESC_PAPERS              /* 구비서류상세              */
+                      ,GI.DESC_OVERDUE_INTEREST    /* 연체이자상세              */
+                      ,GI.DESC_REPAYMENT_FEE       /* 중도상환수수료상세        */
+                      ,GI.DESC_LOAN_PERIOD         /* 대출신청시기              */
+                      ,GI.DESC_LOAN_PROVIDE        /* 대출지급시기              */
+                      ,GI.DESC_CONTACT             /* 연락처                    */
+                      ,GI.DESC_COLLATERAL          /* 대상담보                  */
+                      ,GI.DESC_ETC                 /* 기타 유의 사항            */
+                      , GI.FC_LINK                 /* 금융사링크            */
+                      , GI.TIME_INTEREST  			/* 이자부과시기            */
+			     	, (CASE WHEN (
+			     					SELECT COUNT(*)
+			     					FROM COOCON_GOODS_FAVORITE_INFO CGFI
+			     					WHERE CGFI.CD_FC = GI.CD_FC
+			     						AND CGFI.CD_NON_GOODS = GI.CD_NON_GOODS
+			     						AND CGFI.YN_ALLIANCE = 'N'
+			     						AND CGFI.NO_PERSON = #{no_person, jdbcType=VARCHAR}
+			     				 ) <![CDATA[>]]> 0 THEN 'Y'
+			     		ELSE 'N'
+			     		END
+			     		) AS YN_FAVORITE
+			     		, FI.PATH_FILE AS PATH_FILE1
+			     		, FI.YN_ALLIANCE
+				 	FROM GOODSBANK_INFO GI
+				 	LEFT OUTER JOIN FC_INFO FI
+				 	ON GI.CD_FC = FI.CD_FC
+					WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+					AND GI.YN_USE = 'Y'
+					AND GI.CD_GOODS_CLASS_M IN
+					<foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
+			        	#{item, jdbcType=VARCHAR}
+				    </foreach>
+                      AND (    (     #{cd_fin, jdbcType=VARCHAR} = 'C'
+                                 AND FI.CD_FIN IN ('C','D')
+                               )
+                            OR FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
+                          )
+                   ORDER BY NVL(FI.YN_ALLIANCE, 'N') DESC, <choose>
+                            <when test="'01'.equals(orderby)">
+                                GI.RTO_INTEREST_FROM ASC/*금리낮은순*/,
+                            </when>
+                            <when test="'02'.equals(orderby)">
+                                GI.DESC_MAX_LIMIT DESC/*한도높은순*/,
+                            </when>
+                            <when test="'03'.equals(orderby)">
+								NVL(GI.MAX_LOAN_TERM,'-1') DESC/*기간높은순*/,
+                            </when>
+						</choose>
+					    YN_FAVORITE DESC
+	             ) LST
+	        WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+	        )
+	    WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+
+	</select>
+
+	<!--상품 GOODS_INFO  -->
+	<select id="listGoodsNoAllianceHouseCount" parameterType="com.koscom.goodsbank.model.GoodsbankForm" resultType="int">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.listGoodsNoAllianceHouseCount */
+		SELECT
+               COUNT(*) AS recordCount
+            FROM GOODSBANK_INFO GI
+            LEFT OUTER JOIN FC_INFO FI
+			ON GI.CD_FC = FI.CD_FC
+	 	WHERE GI.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+	 	  AND GI.CD_GOODS_CLASS_M IN
+	 	  <foreach item="item" collection="cd_goods_array_m" index="index" open="(" separator="," close=")">
+		  	#{item, jdbcType=VARCHAR}
+		  </foreach>
+          AND (    (     #{cd_fin, jdbcType=VARCHAR} = 'C'
+                     AND FI.CD_FIN IN ('C','D')
+                   )
+                OR FI.CD_FIN = #{cd_fin, jdbcType=VARCHAR}
+              )
+	</select>
+
+	<!-- 상품 GOODS_INFO -->
+	<select id="getGoodsBankFavorite" parameterType="com.koscom.goodsbank.model.GoodsbankVO" resultType="com.koscom.goodsbank.model.GoodsbankVO">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.getGoodsBankFavorite */
+	     SELECT GI.CD_NON_GOODS
+			   ,GI.CD_FC
+			   ,GI.CD_GOODS_CLASS_L
+			   ,GI.CD_GOODS_CLASS_M
+			   ,GI.CD_GOODS_CLASS_S
+			   ,GI.CD_GOODS_FC
+			   ,GI.NM_GOODS
+			   ,GI.YN_USE
+			   ,GI.RTO_INTEREST_FROM
+			   ,GI.RTO_INTEREST_TO
+			   ,GI.DESC_MAX_LIMIT
+			   ,GI.MIN_LOAN_TERM
+			   ,GI.MAX_LOAN_TERM
+			   ,GI.RENEW_MAX_TERM
+			   ,GI.RTO_CANCEL
+			   ,GI.YEAR_COMMISSION
+			   ,GI.DESC_FEATURE
+			   ,GI.KEYWORD_LIST
+			   ,GI.CD_APPLY_TYPE
+			   ,GI.CD_TYPE_PAY
+			   ,GI.CD_TRADE_TYPE
+			   ,GI.YN_SEND_DOCU
+			   ,GI.CD_TARGET_CUST
+			   ,GI.CD_RATIO_TYPE
+			   ,GI.CD_COLLATERAL_HOUSE_TYPE
+			   ,GI.CD_COLLATERAL_LOAN_USE
+			   ,GI.CD_AREA
+			   ,GI.CD_DEFER
+			   ,GI.CD_OBJECT
+			   ,GI.YN_POST_RANKING
+			   ,GI.CD_TIME_EXEC
+			   ,GI.DESC_GOODS
+			   ,GI.DESC_LOAN
+			   ,GI.DESC_LIMIT
+			   ,GI.DESC_RATIO
+			   ,GI.DESC_PREFER_YIELD
+			   ,GI.DESC_TERM
+			   ,GI.DESC_REPAYMETHOD
+			   ,GI.DESC_LOAN_COST
+			   ,GI.DESC_PAPERS
+			   ,GI.DESC_OVERDUE_INTEREST
+			   ,GI.DESC_REPAYMENT_FEE
+			   ,GI.DESC_LOAN_PERIOD
+			   ,GI.DESC_LOAN_PROVIDE
+			   ,GI.DESC_CONTACT
+			   ,GI.DESC_COLLATERAL
+			   ,GI.DESC_ETC
+			   ,GI.YN_VISIT
+			   ,GI.YN_ERLY_RPAY_FEE
+			   ,GI.YN_SRCH_RATIO_LIMIT
+			   ,GI.FC_LINK
+			   ,GI.TIME_INTEREST
+			   ,FI.YN_ALLIANCE
+			, (CASE WHEN (
+						SELECT COUNT(*)
+						FROM COOCON_GOODS_FAVORITE_INFO CGFI
+						WHERE CGFI.CD_FC = GI.CD_FC
+							AND CGFI.CD_NON_GOODS = GI.CD_NON_GOODS
+							AND CGFI.YN_ALLIANCE = 'N'
+							AND CGFI.no_person = #{no_person, jdbcType=VARCHAR}
+						) <![CDATA[>]]> 0 THEN 'Y'
+			ELSE 'N'
+			END
+			) AS YN_FAVORITE
+			, FI.PATH_FILE AS PATH_FILE1
+			, FI.NM_FC
+		 FROM GOODSBANK_INFO GI
+		 LEFT OUTER JOIN FC_INFO FI
+		 ON GI.CD_FC = FI.CD_FC
+	     <where>
+	     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+				GI.CD_FC = #{cd_fc}
+			</if>
+	     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods)'>
+				AND GI.CD_NON_GOODS = #{cd_goods}
+			</if>
+	     </where>
+	</select>
+
+	<!-- srchou -->
+
+	<!-- 금융사코드, 대분류, 중분류로 cd_non_goods seq값 조회-->
+	<select id="getGoodsbankCdNonGoodsSeq" parameterType="com.koscom.goodsbank.model.CooconGoodsBankInfoForm" resultType="String">
+		/* com.koscom.goodsbank.dao.GoodsbankMapper.getGoodsbankCdNonGoodsSeq */
+		WITH FC_DATA AS
+        (
+            SELECT CD_FC, CASE WHEN YN_ALLIANCE = 'Y' THEN '1' ELSE '0' END AS YN_ALLIANCE
+              FROM FC_INFO
+             WHERE CD_FC = #{cd_fc, jdbcType=VARCHAR}
+        )
+	    SELECT A.CD_FC ||
+	           B.YN_ALLIANCE ||
+	           #{cd_goods_class_l, jdbcType=VARCHAR} ||
+	           #{cd_goods_class_m, jdbcType=VARCHAR} ||
+	           NVL(SUBSTR(MAX(CD_NON_GOODS)+1,-3),'001') AS SEQ
+	       FROM GOODSBANK_INFO A INNER JOIN FC_DATA B ON
+	            A.CD_FC = B.CD_FC
+	      WHERE A.CD_FC = #{cd_fc, jdbcType=VARCHAR}
+	    	AND SUBSTR(A.CD_NON_GOODS, 9, 2) = #{cd_goods_class_l, jdbcType=VARCHAR}
+	    	AND SUBSTR(A.CD_NON_GOODS, 11, 2) = #{cd_goods_class_m, jdbcType=VARCHAR}
+	    	AND SUBSTR(A.CD_NON_GOODS, 8, 1) = B.YN_ALLIANCE
+	      GROUP BY A.CD_FC, B.YN_ALLIANCE
+	</select>
+
+	<!-- 상품관리 / 상품상세정보 등록시 중복여부 CHECK -->
+	<select id="getGoodsbankCnt" parameterType="String" resultType="int">
+		/* com.koscom.goodsbank.dao.GoodsbankMapper.getGoodsbankCnt */
+	    SELECT count(*) FROM GOODSBANK_INFO
+	     WHERE cd_non_goods = #{cd_non_goods, jdbcType=VARCHAR}		/*	상품코드	*/
+	</select>
+
+	<!-- 상품관리 / 상품상세정보 입력 -->
+	<insert id="createGoodsbank" parameterType="com.koscom.goodsbank.model.CooconGoodsBankInfoForm" >
+	/* com.koscom.goodsbank.dao.GoodsbankMapper.createGoodsbank */
+	INSERT INTO GOODSBANK_INFO
+		(
+			 CD_NON_GOODS				/*	상품코드	*/
+			,CD_FC						/*	금융사코드	*/
+			,NM_FC						/*	금융사명	*/
+			,CD_GOODS_CLASS_L			/*	대분류		*/
+			,CD_GOODS_CLASS_M			/*	중분류		*/
+			,CD_GOODS_CLASS_S			/*	소분류		*/
+			,CD_GOODS_FC				/*	상품코드(금융사 상품코드)	*/
+			,NM_GOODS					/*	상품명		*/
+			,YN_USE						/*	표시여부	*/
+			,RTO_INTEREST_FROM			/*	최소금리	*/
+			,RTO_INTEREST_TO			/*	최대금리	*/
+			,DESC_MAX_LIMIT				/*	최대한도	*/
+			,MIN_LOAN_TERM				/*	최소기간	*/
+			,MAX_LOAN_TERM				/*	최대기간	*/
+			,RENEW_MAX_TERM				/*	연장기간	*/
+			,RTO_CANCEL					/*	중도상환해약금율	*/
+			,YEAR_COMMISSION			/*	수수료 적용 기간	*/
+			,DESC_FEATURE				/*	상품특징	*/
+			,KEYWORD_LIST				/*	키워드		*/
+			,CD_APPLY_TYPE				/*	신청방식	*/
+			,CD_TYPE_PAY				/*	상환방식	*/
+			,CD_TRADE_TYPE				/*	거래방식	*/
+			,YN_SEND_DOCU				/*	서류제출(무서류)	*/
+			,CD_TARGET_CUST				/*	대상고객	*/
+			,CD_RATIO_TYPE				/*	금리방식	*/
+			,CD_COLLATERAL_HOUSE_TYPE	/*	주택종류	*/
+			,CD_COLLATERAL_LOAN_USE		/*	자금용도	*/
+			,CD_AREA					/*	주택면적(전용면적)	*/
+			,CD_DEFER					/*	거치방식	*/
+			,CD_OBJECT					/*	대상구분	*/
+			,YN_POST_RANKING			/*	후순위가능여부	*/
+			,CD_TIME_EXEC				/*	실행시간	*/
+			,DESC_GOODS					/*	상품상세	*/
+			,DESC_LOAN					/*	대출대상상세	*/
+			,DESC_LIMIT					/*	대출한도상세	*/
+			,DESC_RATIO					/*	대출금리상세	*/
+			,DESC_PREFER_YIELD			/*	우대금리상세	*/
+			,DESC_TERM					/*	대출기간상세	*/
+			,DESC_REPAYMETHOD			/*	상환방식상세	*/
+			,DESC_LOAN_COST				/*	대출비용상세	*/
+			,DESC_PAPERS				/*	구비서류상세	*/
+			,DESC_OVERDUE_INTEREST		/*	연체이자상세	*/
+			,DESC_REPAYMENT_FEE			/*	중도상환수수료상세	*/
+			,DESC_LOAN_PERIOD			/*	대출신청시기	*/
+			,DESC_LOAN_PROVIDE			/*	대출지급시기	*/
+			,DESC_CONTACT				/*	연락처		*/
+			,DESC_COLLATERAL			/*	대상담보	*/
+			,DESC_ETC					/*	기타유의사항	*/
+			,YN_VISIT					/*	무방문		*/
+			,YN_ERLY_RPAY_FEE			/*	중도상환수수료없음	*/
+			,YN_SRCH_RATIO_LIMIT		/*	금리 한동 확인가능	*/
+			,FC_LINK					/*	금융사링크	*/
+			,TIME_INTEREST				/*	이자부과시기	*/
+			,ID_FRT						/*	최초입력아이디	*/
+			,DT_FRT						/*	최초입력시간	*/
+			,ID_LST						/*	최종수정아이디	*/
+			,DT_LST						/*	최종수정시간	*/
+		) VALUES (
+			#{cd_non_goods, jdbcType=VARCHAR}                      /*	상품코드	*/
+			,#{cd_fc, jdbcType=VARCHAR}                            /*	금융사코드	*/
+			,#{nm_fc, jdbcType=VARCHAR}                            /*	금융사명	*/
+			,#{cd_goods_class_l, jdbcType=VARCHAR}                 /*	대분류		*/
+			,#{cd_goods_class_m, jdbcType=VARCHAR}                 /*	중분류		*/
+			,#{cd_goods_class_s, jdbcType=VARCHAR}                 /*	소분류		*/
+			,#{cd_goods_fc, jdbcType=VARCHAR}                      /*	상품코드(금융사 상품코드)	*/
+			,#{nm_goods, jdbcType=VARCHAR}                         /*	상품명		*/
+			,#{yn_use, jdbcType=VARCHAR}                           /*	표시여부	*/
+			,#{rto_interest_from, jdbcType=VARCHAR}                /*	최소금리	*/
+			,#{rto_interest_to, jdbcType=VARCHAR}                  /*	최대금리	*/
+			,#{desc_max_limit, jdbcType=VARCHAR}                   /*	최대한도	*/
+			,#{min_loan_term, jdbcType=VARCHAR}                    /*	최소기간	*/
+			,#{max_loan_term, jdbcType=VARCHAR}                    /*	최대기간	*/
+			,#{renew_max_term, jdbcType=VARCHAR}                   /*	연장기간	*/
+			,#{rto_cancel, jdbcType=VARCHAR}                       /*	중도상환해약금율	*/
+			,#{year_commission, jdbcType=VARCHAR}                  /*	수수료 적용 기간	*/
+			,#{desc_feature, jdbcType=VARCHAR}                     /*	상품특징	*/
+			,#{keyword_list, jdbcType=VARCHAR}                     /*	키워드		*/
+			,#{cd_apply_type, jdbcType=VARCHAR}                    /*	신청방식	*/
+			,#{cd_type_pay, jdbcType=VARCHAR}                      /*	상환방식	*/
+			,#{cd_trade_type, jdbcType=VARCHAR}                    /*	거래방식	*/
+			,#{yn_send_docu, jdbcType=VARCHAR}                     /*	서류제출(무서류)	*/
+			,#{cd_target_cust, jdbcType=VARCHAR}                   /*	대상고객	*/
+			,#{cd_ratio_type, jdbcType=VARCHAR}                    /*	금리방식	*/
+			,#{cd_collateral_house_type, jdbcType=VARCHAR}         /*	주택종류	*/
+			,#{cd_collateral_loan_use, jdbcType=VARCHAR}           /*	자금용도	*/
+			,#{cd_area, jdbcType=VARCHAR}                          /*	주택면적(전용면적)	*/
+			,#{cd_defer, jdbcType=VARCHAR}                         /*	거치방식	*/
+			,#{cd_object, jdbcType=VARCHAR}                        /*	대상구분	*/
+			,#{yn_post_ranking, jdbcType=VARCHAR}                  /*	후순위가능여부	*/
+			,#{cd_time_exec, jdbcType=VARCHAR}                     /*	실행시간	*/
+			,#{desc_goods, jdbcType=VARCHAR}                       /*	상품상세	*/
+			,#{desc_loan, jdbcType=VARCHAR}                        /*	대출대상상세	*/
+			,#{desc_limit, jdbcType=VARCHAR}                       /*	대출한도상세	*/
+			,#{desc_ratio, jdbcType=VARCHAR}                       /*	대출금리상세	*/
+			,#{desc_prefer_yield, jdbcType=VARCHAR}                /*	우대금리상세	*/
+			,#{desc_term, jdbcType=VARCHAR}                        /*	대출기간상세	*/
+			,#{desc_repaymethod, jdbcType=VARCHAR}                 /*	상환방식상세	*/
+			,#{desc_loan_cost, jdbcType=VARCHAR}                   /*	대출비용상세	*/
+			,#{desc_papers, jdbcType=VARCHAR}                      /*	구비서류상세	*/
+			,#{desc_overdue_interest, jdbcType=VARCHAR}            /*	연체이자상세	*/
+			,#{desc_repayment_fee, jdbcType=VARCHAR}               /*	중도상환수수료상세	*/
+			,#{desc_loan_period, jdbcType=VARCHAR}                 /*	대출신청시기	*/
+			,#{desc_loan_provide, jdbcType=VARCHAR}                /*	대출지급시기	*/
+			,#{desc_contact, jdbcType=VARCHAR}                     /*	연락처		*/
+			,#{desc_collateral, jdbcType=VARCHAR}                  /*	대상담보	*/
+			,#{desc_etc, jdbcType=VARCHAR}                         /*	기타유의사항	*/
+			,#{yn_visit, jdbcType=VARCHAR}                         /*	무방문		*/
+			,#{yn_erly_rpay_fee, jdbcType=VARCHAR}                 /*	중도상환수수료없음	*/
+			,#{yn_srch_ratio_limit, jdbcType=VARCHAR}              /*	금리 한도 확인가능	*/
+			,#{fc_link, jdbcType=VARCHAR}              			   /*	금융사링크	*/
+			,#{time_interest, jdbcType=VARCHAR}					   /*	이자부과시기	*/
+			,#{id_frt, jdbcType=VARCHAR}                           /*	최초입력아이디	*/
+			,SYSDATE                                          	   /*	최초입력시간	*/
+			,#{id_lst, jdbcType=VARCHAR}                           /*	최종수정아이디	*/
+			,SYSDATE                                          	   /*	최종수정시간	*/
+		)
+	</insert>
+
+	<update id="addLinkCount" parameterType="com.koscom.goodsbank.model.GoodsbankVO">
+	/* com.koscom.goodsbank.dao.GoodsbankMapper.addLinkCount */
+		UPDATE GOODSBANK_INFO
+		   SET CNT_LINK = NVL(CNT_LINK, 0) + 1
+			  ,ID_LST = #{id_lst, jdbcType=VARCHAR}                 /*	최종수정아이디	*/
+			  ,DT_LST = SYSDATE                                     /*	최종수정시간	*/
+		 WHERE CD_NON_GOODS = #{cd_non_goods , jdbcType=VARCHAR}	/*	상품코드		*/
+	</update>
+	
+	<!-- 상품관리 / 상품상세정보 수정 -->
+	<update id="modifyGoodsbankDetails" parameterType="com.koscom.goodsbank.model.CooconGoodsBankInfoForm" >
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.modifyGoodsbankDetails */
+		UPDATE GOODSBANK_INFO
+		   SET 	CD_FC = #{ cd_fc, jdbcType=VARCHAR}                                                     /*	금융사코드	*/
+				,NM_FC = #{ nm_fc, jdbcType=VARCHAR}                                                    /*	금융사명	*/
+				,CD_GOODS_CLASS_L = #{ cd_goods_class_l, jdbcType=VARCHAR}                              /*	대분류		*/
+				,CD_GOODS_CLASS_M = #{ cd_goods_class_m, jdbcType=VARCHAR}                              /*	중분류		*/
+				,CD_GOODS_CLASS_S = #{ cd_goods_class_s, jdbcType=VARCHAR}                              /*	소분류		*/
+				,CD_GOODS_FC = #{ cd_goods_fc, jdbcType=VARCHAR}                                        /*	상품코드(금융사 상품코드)	*/
+				,NM_GOODS = #{ nm_goods, jdbcType=VARCHAR}                                              /*	상품명		*/
+				,YN_USE = #{ yn_use, jdbcType=VARCHAR}                                                  /*	표시여부	*/
+				,RTO_INTEREST_FROM = #{ rto_interest_from, jdbcType=VARCHAR}                            /*	최소금리	*/
+				,RTO_INTEREST_TO = #{ rto_interest_to, jdbcType=VARCHAR}                                /*	최대금리	*/
+				,DESC_MAX_LIMIT = #{ desc_max_limit, jdbcType=VARCHAR}                                  /*	최대한도	*/
+				,MIN_LOAN_TERM = #{ min_loan_term, jdbcType=VARCHAR}                                    /*	최소기간	*/
+				,MAX_LOAN_TERM = #{ max_loan_term, jdbcType=VARCHAR}                                    /*	최대기간	*/
+				,RENEW_MAX_TERM = #{ renew_max_term, jdbcType=VARCHAR}                                  /*	연장기간	*/
+				,RTO_CANCEL = #{ rto_cancel, jdbcType=VARCHAR}                                          /*	중도상환해약금율	*/
+				,YEAR_COMMISSION = #{ year_commission, jdbcType=VARCHAR}                                /*	수수료 적용 기간	*/
+				,DESC_FEATURE = #{ desc_feature, jdbcType=VARCHAR}                                      /*	상품특징	*/
+				,KEYWORD_LIST = #{ keyword_list, jdbcType=VARCHAR}                                      /*	키워드		*/
+				,CD_APPLY_TYPE = #{ cd_apply_type, jdbcType=VARCHAR}                                    /*	신청방식	*/
+				,CD_TYPE_PAY = #{ cd_type_pay, jdbcType=VARCHAR}                                        /*	상환방식	*/
+				,CD_TRADE_TYPE = #{ cd_trade_type, jdbcType=VARCHAR}                                    /*	거래방식	*/
+				,YN_SEND_DOCU = #{ yn_send_docu, jdbcType=VARCHAR}                                      /*	서류제출(무서류)	*/
+				,CD_TARGET_CUST = #{ cd_target_cust, jdbcType=VARCHAR}                                  /*	대상고객	*/
+				,CD_RATIO_TYPE = #{ cd_ratio_type, jdbcType=VARCHAR}                                    /*	금리방식	*/
+				,CD_COLLATERAL_HOUSE_TYPE = #{ cd_collateral_house_type, jdbcType=VARCHAR}              /*	주택종류	*/
+				,CD_COLLATERAL_LOAN_USE = #{ cd_collateral_loan_use, jdbcType=VARCHAR}                  /*	자금용도	*/
+				,CD_AREA = #{ cd_area, jdbcType=VARCHAR}                                                /*	주택면적(전용면적)	*/
+				,CD_DEFER = #{ cd_defer, jdbcType=VARCHAR}                                              /*	거치방식	*/
+				,CD_OBJECT = #{ cd_object, jdbcType=VARCHAR}                                            /*	대상구분	*/
+				,YN_POST_RANKING = #{ yn_post_ranking, jdbcType=VARCHAR}                                /*	후순위가능여부	*/
+				,CD_TIME_EXEC = #{ cd_time_exec, jdbcType=VARCHAR}                                      /*	실행시간	*/
+				,DESC_GOODS = #{ desc_goods, jdbcType=VARCHAR}                                          /*	상품상세	*/
+				,DESC_LOAN = #{ desc_loan, jdbcType=VARCHAR}                                            /*	대출대상상세	*/
+				,DESC_LIMIT = #{ desc_limit, jdbcType=VARCHAR}                                          /*	대출한도상세	*/
+				,DESC_RATIO = #{ desc_ratio, jdbcType=VARCHAR}                                          /*	대출금리상세	*/
+				,DESC_PREFER_YIELD = #{ desc_prefer_yield, jdbcType=VARCHAR}                            /*	우대금리상세	*/
+				,DESC_TERM = #{ desc_term, jdbcType=VARCHAR}                                            /*	대출기간상세	*/
+				,DESC_REPAYMETHOD = #{ desc_repaymethod, jdbcType=VARCHAR}                              /*	상환방식상세	*/
+				,DESC_LOAN_COST = #{ desc_loan_cost, jdbcType=VARCHAR}                                  /*	대출비용상세	*/
+				,DESC_PAPERS = #{ desc_papers, jdbcType=VARCHAR}                                        /*	구비서류상세	*/
+				,DESC_OVERDUE_INTEREST = #{ desc_overdue_interest, jdbcType=VARCHAR}                    /*	연체이자상세	*/
+				,DESC_REPAYMENT_FEE = #{ desc_repayment_fee, jdbcType=VARCHAR}                          /*	중도상환수수료상세	*/
+				,DESC_LOAN_PERIOD = #{ desc_loan_period, jdbcType=VARCHAR}                              /*	대출신청시기	*/
+				,DESC_LOAN_PROVIDE = #{ desc_loan_provide, jdbcType=VARCHAR}                            /*	대출지급시기	*/
+				,DESC_CONTACT = #{ desc_contact, jdbcType=VARCHAR}                                      /*	연락처		*/
+				,DESC_COLLATERAL = #{ desc_collateral, jdbcType=VARCHAR}                                /*	대상담보	*/
+				,DESC_ETC = #{ desc_etc, jdbcType=VARCHAR}                                              /*	기타유의사항	*/
+				,YN_VISIT = #{yn_visit, jdbcType=VARCHAR}                                               /*	무방문		*/
+				,YN_ERLY_RPAY_FEE = #{yn_erly_rpay_fee, jdbcType=VARCHAR}                               /*	중도상환수수료없음	*/
+				,YN_SRCH_RATIO_LIMIT = #{yn_srch_ratio_limit, jdbcType=VARCHAR}                            /*	금리 한도 확인가능	*/
+				,FC_LINK = #{fc_link, jdbcType=VARCHAR}                            						/*	금융사링크	*/
+				,TIME_INTEREST = #{time_interest, jdbcType=VARCHAR}                            			/*	이자부과시기	*/
+				,ID_LST = #{ id_lst, jdbcType=VARCHAR}                                                  /*	최종수정아이디	*/
+				,DT_LST = SYSDATE                                                                  /*	최종수정시간	*/
+		 WHERE CD_NON_GOODS = #{ cd_non_goods , jdbcType=VARCHAR}                     									/*	상품코드	*/
+	</update>
+
+	<!-- 상품관리 / 상품상세정보 삭제 - 판매여부 N으로 변경 -->
+	<update id="delGoodsbankDetails" parameterType="com.koscom.goodsbank.model.CooconGoodsBankInfoForm" >
+		/* com.koscom.goodsbank.dao.GoodsbankMapper.delGoodsbankDetails */
+		UPDATE GOODSBANK_INFO
+		SET YN_USE = #{ yn_use, jdbcType=VARCHAR}
+			, ID_LST = #{id_lst, jdbcType=VARCHAR}
+			, DT_LST = SYSDATE
+		WHERE CD_NON_GOODS = #{cd_non_goods, jdbcType=VARCHAR}			/*	상품코드	*/
+	</update>
+
+	<!-- 상품관리 / 상품상세정보 등록, 수정, 삭제시 cd_coocon_goods값 조회 -->
+	<select id="getCooconGoodsInfoByCdNonGoods" parameterType="String" resultType="com.koscom.goodsbank.model.CooconGoodsBankInfoVO">
+		SELECT DISTINCT CD_COOCON_GOODS, NM_COOCON_GOODS
+		FROM COOCON_GOODS_INFO
+		WHERE CD_NON_GOODS = #{cd_non_goods, jdbcType=VARCHAR}
+	</select>
+
+	<!-- 상품관리 / 상품상세정보 등록, 삭제시 COOCON_GOODS_INFO 의 CD_NON_GOODS 값 UPDATE -->
+	<update id="updateCdnongoods" parameterType="com.koscom.goodsbank.model.CooconGoodsBankInfoForm" >
+		/* com.koscom.goodsbank.dao.GoodsbankMapper.updateCdnongoods */
+		UPDATE COOCON_GOODS_INFO
+			SET CD_NON_GOODS = #{cd_non_goods, jdbcType=VARCHAR}		/*	상품코드	*/
+			    , ID_LST = #{id_lst, jdbcType=VARCHAR}
+			    , DT_LST = SYSDATE
+			WHERE
+				CD_COOCON_GOODS = #{cd_coocon_goods, jdbcType=VARCHAR}	/*	쿠콘상품코드	*/
+				AND SEQ = #{seq, jdbcType=VARCHAR}
+	</update>
+
+	<!-- 상품관리 / 상품상세정보 삭제, 등록, 수정시 COOCON_GOODS_CHANGE_INFO 의 YN_REG 값 UPDATE -->
+	<update id="updateYnuse" parameterType="com.koscom.goodsbank.model.CooconGoodsBankInfoForm" >
+		/* com.koscom.goodsbank.dao.GoodsbankMapper.updateYnuse */
+		UPDATE COOCON_GOODS_CHANGE_INFO
+			SET YN_REG = #{yn_use, jdbcType=VARCHAR}						/*	등록여부	*/
+			    , ID_LST = #{id_lst, jdbcType=VARCHAR}
+			    , DT_LST = SYSDATE
+			WHERE
+				CD_COOCON_GOODS = #{cd_coocon_goods, jdbcType=VARCHAR}		/*	쿠콘상품코드	*/
+				AND NM_COOCON_GOODS = #{nm_coocon_goods, jdbcType=VARCHAR}		/*	쿠콘상품명	*/
+	</update>
+
+	<!-- 상품관리 / 상품별 현황 -->
+	<select id="listcooconChangeInfo" parameterType="com.koscom.goodsbank.model.CooconChangeInfoFormVO" resultType="com.koscom.goodsbank.model.CooconChangeInfoVO">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.listcooconChangeInfo */
+		SELECT
+				ROWNUM AS RNUM						/* 순번				*/
+				,CD_COOCON_GOODS				/* 쿠콘상품코드		*/
+				,NM_COOCON_GOODS				/* 쿠콘상품명		*/
+				,CD_NON_GOODS      				/* 상품코드			*/
+				,NM_GOODS          				/* 상품명			*/
+				,CD_TYPE_REQ       				/* 조회구분			*/
+				,SEQ               				/* 일련번호			*/
+				,YN_REG            				/* 등록여부			*/
+				,STATUS            				/* 상태(1:신규,2:변경,3:삭제,4:변경없음			*/
+				,YN_GOODS          				/* 상품개요 변경여부 	*/
+				,YN_TARGET_CUST    				/* 대상고객 변경여부 	*/
+				,YN_COLLATERAL     				/* 대상담보 변경여부 	*/
+				,YN_LIMIT          				/* 대출한도 변경여부 	*/
+				,YN_YIELD_RATE     				/* 대출금리 변경여부 	*/
+				,YN_PREFER_YIELD   				/* 우대금리 변경여부 	*/
+				,YN_TERM           				/* 대출기간 변경여부 	*/
+				,YN_REPAYMETHOD    				/* 상환방식 변경여부 	*/
+				,YN_CONTRACTFEE    				/* 수수료 변경여부 	*/
+				,YN_PAPER          				/* 필요서류 변경여부 	*/
+				,YN_OVERDUE        				/* 연체이자 변경여부 	*/
+				,YN_REPAYMENT_FEE  				/* 중도상환해약금 변경여부 	*/
+				,YN_LOAN_COST      				/* 대출비용 변경여부 	*/
+				,YN_LOAN_PERIOD    				/* 대출신청시기 변경여부 	*/
+				,YN_LOAN_PROVIDE   				/* 대출지급기간 변경여부 	*/
+				,YN_GOODS_INQUIRY  				/* 상품문의 변경여부 	*/
+				,YN_ETC            				/* 기타 변경여부 	*/
+				,CD_FC             				/* 금융사코드 	*/
+				FROM
+				(SELECT
+					ROWNUM RNUM                  /* 순번				*/
+					,LST.CD_COOCON_GOODS         /* 쿠콘상품코드		*/
+					,LST.NM_COOCON_GOODS         /* 쿠콘상품명		*/
+					,LST.CD_NON_GOODS            /* 상품코드			*/
+					,LST.NM_GOODS                /* 상품명			*/
+					,LST.CD_TYPE_REQ             /* 조회구분			*/
+					,LST.SEQ                     /* 일련번호			*/
+					,LST.YN_REG                  /* 등록여부			*/
+					,LST.STATUS                  /* 상태(1:신규,2:변경,3:삭제,4:변경없음			*/
+					,LST.YN_GOODS                /* 상품개요 변경여부 	*/
+					,LST.YN_TARGET_CUST          /* 대상고객 변경여부 	*/
+					,LST.YN_COLLATERAL           /* 대상담보 변경여부 	*/
+					,LST.YN_LIMIT                /* 대출한도 변경여부 	*/
+					,LST.YN_YIELD_RATE           /* 대출금리 변경여부 	*/
+					,LST.YN_PREFER_YIELD         /* 우대금리 변경여부 	*/
+					,LST.YN_TERM                 /* 대출기간 변경여부 	*/
+					,LST.YN_REPAYMETHOD          /* 상환방식 변경여부 	*/
+					,LST.YN_CONTRACTFEE          /* 수수료 변경여부 	*/
+					,LST.YN_PAPER                /* 필요서류 변경여부 	*/
+					,LST.YN_OVERDUE              /* 연체이자 변경여부 	*/
+					,LST.YN_REPAYMENT_FEE        /* 중도상환해약금 변경여부 	*/
+					,LST.YN_LOAN_COST            /* 대출비용 변경여부 	*/
+					,LST.YN_LOAN_PERIOD          /* 대출신청시기 변경여부 	*/
+					,LST.YN_LOAN_PROVIDE         /* 대출지급기간 변경여부 	*/
+					,LST.YN_GOODS_INQUIRY        /* 상품문의 변경여부 	*/
+					,LST.YN_ETC                  /* 기타 변경여부 	*/
+					,LST.CD_FC                   /* 금융사코드 	*/
+					FROM
+						(SELECT
+							A.CD_COOCON_GOODS		        /* 쿠콘상품코드		*/
+							,A.NM_COOCON_GOODS              /* 쿠콘상품명		*/
+							,A.CD_NON_GOODS                 /* 상품코드			*/
+							,A.NM_GOODS                     /* 상품명			*/
+							,A.CD_TYPE_REQ                  /* 조회구분			*/
+							,A.SEQ                          /* 일련번호			*/
+							,B.YN_REG                       /* 등록여부			*/
+							,B.STATUS                       /* 상태(1:신규,2:변경,3:삭제,4:변경없음			*/
+							,B.YN_GOODS                     /* 상품개요 변경여부 	*/
+							,B.YN_TARGET_CUST               /* 대상고객 변경여부 	*/
+							,B.YN_COLLATERAL                /* 대상담보 변경여부 	*/
+							,B.YN_LIMIT                     /* 대출한도 변경여부 	*/
+							,B.YN_YIELD_RATE                /* 대출금리 변경여부 	*/
+							,B.YN_PREFER_YIELD              /* 우대금리 변경여부 	*/
+							,B.YN_TERM                      /* 대출기간 변경여부 	*/
+							,B.YN_REPAYMETHOD               /* 상환방식 변경여부 	*/
+							,B.YN_CONTRACTFEE               /* 수수료 변경여부 	*/
+							,B.YN_PAPER                     /* 필요서류 변경여부 	*/
+							,B.YN_OVERDUE                   /* 연체이자 변경여부 	*/
+							,B.YN_REPAYMENT_FEE             /* 중도상환해약금 변경여부 	*/
+							,B.YN_LOAN_COST                 /* 대출비용 변경여부 	*/
+							,B.YN_LOAN_PERIOD               /* 대출신청시기 변경여부 	*/
+							,B.YN_LOAN_PROVIDE              /* 대출지급기간 변경여부 	*/
+							,B.YN_GOODS_INQUIRY             /* 상품문의 변경여부 	*/
+							,B.YN_ETC                       /* 기타 변경여부 	*/
+							,C.CD_FC                        /* 금융사코드 	*/
+							FROM
+								COOCON_GOODS_INFO A					/* 쿠콘 API상품정보 	*/
+								,COOCON_GOODS_CHANGE_INFO B			/* 쿠콘 상품별 변경정보 	*/
+								,COOCON_API_INFO C					/* 쿠콘 API관리 	*/
+							WHERE
+								A.CD_COOCON_GOODS = B.CD_COOCON_GOODS
+								AND A.NM_COOCON_GOODS = B.NM_COOCON_GOODS
+								AND A.CD_ORG = C.CD_ORG
+								AND A.CD_TYPE_REQ = C.GUBUN
+								AND A.SEQ = (SELECT MAX(SEQ) FROM COOCON_GOODS_INFO
+										WHERE CD_COOCON_GOODS = A.CD_COOCON_GOODS
+										AND NM_COOCON_GOODS = A.NM_COOCON_GOODS)
+								AND C.CD_FC = DECODE(#{cd_fc, jdbcType=VARCHAR},NULL,C.CD_FC,#{cd_fc, jdbcType=VARCHAR})
+								AND C.GUBUN = DECODE(#{gubun, jdbcType=VARCHAR},NULL,C.CD_FC,#{gubun, jdbcType=VARCHAR})
+								AND C.YN_USE = 'Y'
+								AND B.STATUS = DECODE(#{status, jdbcType=VARCHAR},NULL,B.STATUS,#{status, jdbcType=VARCHAR})
+								ORDER BY A.CD_COOCON_GOODS
+						) LST
+
+				)
+	</select>
+
+	<!-- 상품관리 / 상품별 현황 수 -->
+	<select id="listcooconChangeInfoCount" parameterType="com.koscom.goodsbank.model.CooconChangeInfoFormVO" resultType="int">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.listcooconChangeInfoCount */
+		SELECT
+			COUNT(*) AS recordCount
+			FROM (
+			SELECT
+					ROWNUM AS RNUM                             /* 순번				*/
+					,LST.CD_COOCON_GOODS                       /* 쿠콘상품코드		*/
+					,LST.NM_COOCON_GOODS                       /* 쿠콘상품명		*/
+					,LST.CD_NON_GOODS                          /* 상품코드			*/
+					,LST.NM_GOODS                              /* 상품명			*/
+					,LST.CD_TYPE_REQ                           /* 조회구분			*/
+					,LST.SEQ                                   /* 일련번호			*/
+					,LST.YN_REG                                /* 등록여부			*/
+					,LST.STATUS                                /* 상태(1:신규,2:변경,3:삭제,4:변경없음			*/
+					,LST.YN_GOODS                              /* 상품개요 변경여부 	*/
+					,LST.YN_TARGET_CUST                        /* 대상고객 변경여부 	*/
+					,LST.YN_COLLATERAL                         /* 대상담보 변경여부 	*/
+					,LST.YN_LIMIT                              /* 대출한도 변경여부 	*/
+					,LST.YN_YIELD_RATE                         /* 대출금리 변경여부 	*/
+					,LST.YN_PREFER_YIELD                       /* 우대금리 변경여부 	*/
+					,LST.YN_TERM                               /* 대출기간 변경여부 	*/
+					,LST.YN_REPAYMETHOD                        /* 상환방식 변경여부 	*/
+					,LST.YN_CONTRACTFEE                        /* 수수료 변경여부 	*/
+					,LST.YN_PAPER                              /* 필요서류 변경여부 	*/
+					,LST.YN_OVERDUE                            /* 연체이자 변경여부 	*/
+					,LST.YN_REPAYMENT_FEE                      /* 중도상환해약금 변경여부 	*/
+					,LST.YN_LOAN_COST                          /* 대출비용 변경여부 	*/
+					,LST.YN_LOAN_PERIOD                        /* 대출신청시기 변경여부 	*/
+					,LST.YN_LOAN_PROVIDE                       /* 대출지급기간 변경여부 	*/
+					,LST.YN_GOODS_INQUIRY                      /* 상품문의 변경여부 	*/
+					,LST.YN_ETC                                /* 기타 변경여부 	*/
+					,LST.CD_FC                                 /* 금융사코드 	*/
+					FROM
+						(SELECT
+							A.CD_COOCON_GOODS                   /* 쿠콘상품코드		*/
+							,A.NM_COOCON_GOODS                  /* 쿠콘상품명		*/
+							,A.NM_GOODS                         /* 상품코드			*/
+							,A.CD_NON_GOODS                     /* 상품명			*/
+							,A.SEQ                              /* 조회구분			*/
+							,A.CD_TYPE_REQ                      /* 일련번호			*/
+							,B.YN_REG                           /* 등록여부			*/
+							,B.STATUS                           /* 상태(1:신규,2:변경,3:삭제,4:변경없음			*/
+							,B.YN_GOODS                         /* 상품개요 변경여부 	*/
+							,B.YN_TARGET_CUST                   /* 대상고객 변경여부 	*/
+							,B.YN_COLLATERAL                    /* 대상담보 변경여부 	*/
+							,B.YN_LIMIT                         /* 대출한도 변경여부 	*/
+							,B.YN_YIELD_RATE                    /* 대출금리 변경여부 	*/
+							,B.YN_PREFER_YIELD                  /* 우대금리 변경여부 	*/
+							,B.YN_TERM                          /* 대출기간 변경여부 	*/
+							,B.YN_REPAYMETHOD                   /* 상환방식 변경여부 	*/
+							,B.YN_CONTRACTFEE                   /* 수수료 변경여부 	*/
+							,B.YN_PAPER                         /* 필요서류 변경여부 	*/
+							,B.YN_OVERDUE                       /* 연체이자 변경여부 	*/
+							,B.YN_REPAYMENT_FEE                 /* 중도상환해약금 변경여부 	*/
+							,B.YN_LOAN_COST                     /* 대출비용 변경여부 	*/
+							,B.YN_LOAN_PERIOD                   /* 대출신청시기 변경여부 	*/
+							,B.YN_LOAN_PROVIDE                  /* 대출지급기간 변경여부 	*/
+							,B.YN_GOODS_INQUIRY                 /* 상품문의 변경여부 	*/
+							,B.YN_ETC                           /* 기타 변경여부 	*/
+							,C.CD_FC                            /* 금융사코드 	*/
+							FROM
+								COOCON_GOODS_INFO A
+								,COOCON_GOODS_CHANGE_INFO B
+								,COOCON_API_INFO C
+							WHERE
+								A.CD_COOCON_GOODS = B.CD_COOCON_GOODS
+								AND A.NM_COOCON_GOODS = B.NM_COOCON_GOODS
+								AND A.CD_ORG = C.CD_ORG
+								AND A.CD_TYPE_REQ = C.GUBUN
+								AND A.SEQ = (SELECT MAX(SEQ) FROM COOCON_GOODS_INFO
+										WHERE CD_COOCON_GOODS = A.CD_COOCON_GOODS
+										AND NM_COOCON_GOODS = A.NM_COOCON_GOODS)
+								AND C.CD_FC = DECODE(#{cd_fc, jdbcType=VARCHAR},NULL,C.CD_FC,#{cd_fc, jdbcType=VARCHAR})
+								AND C.GUBUN = DECODE(#{gubun, jdbcType=VARCHAR},NULL,C.CD_FC,#{gubun, jdbcType=VARCHAR})
+								AND C.YN_USE = 'Y'
+								AND B.STATUS = DECODE(#{status, jdbcType=VARCHAR},NULL,B.STATUS,#{status, jdbcType=VARCHAR})
+								ORDER BY A.CD_COOCON_GOODS
+						  ) LST
+					)
+	</select>
+
+	<!-- 상품관리 / 전체 현황 -->
+	<select id="listGoodsStats" parameterType="com.koscom.goodsbank.model.GoodsStatsFormVO" resultType="com.koscom.goodsbank.model.GoodsStatsVO">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.listGoodsStats */
+		SELECT
+				RNUM					/* 순번			*/
+				,CD_FC					/* 금융사코드			*/
+				,GUBUN					/* 조회구분코드			*/
+				,CNT_GOODS				/* 상품 수 		*/
+				,NEW_GOODS				/* 신규 상품 수 */
+				,CHANGE_GOODS			/* 변경 상품 수 */
+				,DELETE_GOODS			/* 삭제 상품 수 */
+				,NOCHANGE_GOODS			/* 변경없음 상품 수 */
+				,DT_FRT					/* 최초 변경 시간 */
+				,DT_LST					/* 최종 변경 시간 */
+				FROM(
+					SELECT
+							ROWNUM AS RNUM              /* 순번			*/
+							,GOODS.CD_FC                /* 금융사코드			*/
+							,GOODS.GUBUN                /* 조회구분코드			*/
+							,GOODS.CNT_GOODS            /* 상품 수 		*/
+							,GOODS.NEW_GOODS            /* 신규 상품 수 */
+							,GOODS.CHANGE_GOODS         /* 변경 상품 수 */
+							,GOODS.DELETE_GOODS         /* 삭제 상품 수 */
+							,GOODS.NOCHANGE_GOODS       /* 변경없음 상품 수 */
+							,GOODS.DT_FRT				/* 최초 변경 시간 */
+							,GOODS.DT_LST				/* 최종 변경 시간 */
+							FROM
+							(
+								SELECT
+									  B.CD_FC
+									  ,B.GUBUN
+									  ,COUNT(A.CD_COOCON_GOODS) AS CNT_GOODS
+								      ,SUM(CASE STATUS WHEN '1' THEN 1 ELSE  0 END) AS NEW_GOODS
+								      ,SUM(CASE STATUS WHEN '2' THEN 1 ELSE  0 END) AS CHANGE_GOODS
+								      ,SUM(CASE STATUS WHEN '3' THEN 1 ELSE  0 END) AS DELETE_GOODS
+								      ,SUM(CASE STATUS WHEN '4' THEN 1 ELSE  0 END) AS NOCHANGE_GOODS
+								      ,TO_CHAR(MAX(B.DT_FRT),'YYYY-MM-DD') AS DT_FRT
+								      ,TO_CHAR(MAX(B.DT_LST),'YYYY-MM-DD') AS DT_LST
+								  FROM COOCON_GOODS_CHANGE_INFO A,
+								  	   (SELECT A.CD_COOCON_GOODS, B.GUBUN, B.CD_FC, MAX(A.DT_FRT) AS DT_FRT, MAX(A.DT_LST) AS DT_LST
+								  	   		   FROM COOCON_GOODS_INFO A, COOCON_API_INFO B
+								  	   		   WHERE A.CD_ORG = B.CD_ORG
+								  	   		   AND A.CD_TYPE_REQ = B.GUBUN
+								  	   		   GROUP BY B.CD_FC,B.GUBUN, A.CD_COOCON_GOODS ORDER BY CD_FC ASC) B
+								  WHERE A.CD_COOCON_GOODS = B.CD_COOCON_GOODS
+								  AND B.CD_FC = DECODE(#{cd_fc, jdbcType=VARCHAR},NULL,B.CD_FC,#{cd_fc, jdbcType=VARCHAR})
+								 GROUP BY B.CD_FC,B.GUBUN
+								 ORDER BY B.GUBUN
+							 ) GOODS
+					)
+		WHERE RNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+		AND RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+	</select>
+
+	<!-- 상품관리 / 전체 현황 수-->
+	<select id="listGoodsStatsCount" parameterType="com.koscom.goodsbank.model.GoodsStatsFormVO" resultType="int">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.listGoodsStatsCount */
+		SELECT
+			COUNT(RNUM) AS recordCount
+			FROM (
+					SELECT
+							ROWNUM AS RNUM            /* 순번			*/
+							,CNT.CD_FC                /* 금융사코드			*/
+							,CNT.GUBUN                /* 조회구분코드			*/
+							,CNT.CNT_GOODS            /* 상품 수 		*/
+							,CNT.NEW_GOODS            /* 신규 상품 수 */
+							,CNT.CHANGE_GOODS         /* 변경 상품 수 */
+							,CNT.DELETE_GOODS         /* 삭제 상품 수 */
+							,CNT.NOCHANGE_GOODS     /* 변경없음 상품 수 */
+							,DT_FRT					/* 최초 변경 시간 */
+							,DT_LST					/* 최종 변경 시간 */
+							FROM
+							(
+							SELECT
+								  B.CD_FC
+								  ,B.GUBUN
+								  ,COUNT(A.CD_COOCON_GOODS) AS CNT_GOODS
+							      ,SUM(CASE STATUS WHEN '1' THEN 1 ELSE  0 END) AS NEW_GOODS
+							      ,SUM(CASE STATUS WHEN '2' THEN 1 ELSE  0 END) AS CHANGE_GOODS
+							      ,SUM(CASE STATUS WHEN '3' THEN 1 ELSE  0 END) AS DELETE_GOODS
+								  ,SUM(CASE STATUS WHEN '4' THEN 1 ELSE  0 END) AS NOCHANGE_GOODS
+								  ,TO_CHAR(MAX(B.DT_FRT),'YYYY-MM-DD') AS DT_FRT
+								  ,TO_CHAR(MAX(B.DT_LST),'YYYY-MM-DD') AS DT_LST
+									  FROM COOCON_GOODS_CHANGE_INFO A,
+								  	    (SELECT A.CD_COOCON_GOODS, B.GUBUN, B.CD_FC, MAX(A.DT_FRT) AS DT_FRT, MAX(A.DT_LST) AS DT_LST
+								  	   		   FROM COOCON_GOODS_INFO A, COOCON_API_INFO B
+								  	   		   WHERE A.CD_ORG = B.CD_ORG
+								  	   		   AND A.CD_TYPE_REQ = B.GUBUN
+								  	   		   GROUP BY B.CD_FC,B.GUBUN, A.CD_COOCON_GOODS, A.DT_FRT, A.DT_LST ORDER BY CD_FC ASC) B
+									  WHERE A.CD_COOCON_GOODS = B.CD_COOCON_GOODS
+									  AND B.CD_FC = DECODE(#{cd_fc, jdbcType=VARCHAR},NULL,B.CD_FC,#{cd_fc, jdbcType=VARCHAR})
+									 GROUP BY B.CD_FC,B.GUBUN
+									 ORDER BY B.GUBUN
+							) CNT
+					)
+	</select>
+
+	<!-- 상품관리 / 변경된 정보 / 변경 전 -->
+	<select id="pastChangeData" parameterType="com.koscom.goodsbank.model.CooconChangeInfoFormVO" resultType="com.koscom.goodsbank.model.CooconChangeInfoVO">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.pastChangeData 과거 데이타 */
+		SELECT
+			A.${column_name} AS COLUMN_NAME			/* 유동적 컬럼의 컬럼명 가져오기	*/
+			FROM
+				COOCON_GOODS_INFO A
+				,COOCON_GOODS_CHANGE_INFO B
+				,COOCON_API_INFO C
+			WHERE
+				A.CD_COOCON_GOODS = B.CD_COOCON_GOODS
+				AND A.NM_COOCON_GOODS = B.NM_COOCON_GOODS
+				AND A.CD_ORG = C.CD_ORG
+				AND A.CD_TYPE_REQ = C.GUBUN
+				AND C.CD_FC = #{cd_fc, jdbcType=VARCHAR}
+				AND C.GUBUN = #{gubun, jdbcType=VARCHAR}
+				AND A.CD_COOCON_GOODS = #{cd_coocon_goods, jdbcType=VARCHAR}
+				AND A.SEQ = (SELECT MAX(SEQ)-1 FROM COOCON_GOODS_INFO
+								WHERE CD_COOCON_GOODS = #{cd_coocon_goods, jdbcType=VARCHAR}
+								AND NM_COOCON_GOODS = #{nm_coocon_goods, jdbcType=VARCHAR})
+	</select>
+
+	<!-- 상품관리 / 변경된 정보 / 변경 후 -->
+	<select id="currentChangeData" parameterType="com.koscom.goodsbank.model.CooconChangeInfoFormVO" resultType="com.koscom.goodsbank.model.CooconChangeInfoVO">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.currentChangeData 현재 데이타 */
+		SELECT
+			A.${column_name} AS COLUMN_NAME			/* 유동적 컬럼의 컬럼명 가져오기	*/
+			FROM
+				COOCON_GOODS_INFO A
+				,COOCON_GOODS_CHANGE_INFO B
+				,COOCON_API_INFO C
+			WHERE
+				A.CD_COOCON_GOODS = B.CD_COOCON_GOODS
+				AND A.NM_COOCON_GOODS = B.NM_COOCON_GOODS
+				AND A.CD_ORG = C.CD_ORG
+				AND A.CD_TYPE_REQ = C.GUBUN
+				AND C.CD_FC = #{cd_fc, jdbcType=VARCHAR}
+				AND C.GUBUN = #{gubun, jdbcType=VARCHAR}
+				AND A.CD_COOCON_GOODS = #{cd_coocon_goods, jdbcType=VARCHAR}
+				AND A.NM_COOCON_GOODS = #{nm_coocon_goods, jdbcType=VARCHAR}
+				AND A.SEQ = (SELECT MAX(SEQ) FROM COOCON_GOODS_INFO
+								WHERE CD_COOCON_GOODS = #{cd_coocon_goods, jdbcType=VARCHAR}
+								AND NM_COOCON_GOODS = #{nm_coocon_goods, jdbcType=VARCHAR})
+	</select>
+
+	<!-- 상품관리 / 상품상세정보 가져오는 기준(cd_non_goods) -->
+	<select id="chkcdNongoods" parameterType="com.koscom.goodsbank.model.CooconGoodsBankInfoForm" resultType="String">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.chkcdNongoods */
+		SELECT
+				CD_NON_GOODS
+			FROM GOODSBANK_INFO
+			WHERE CD_NON_GOODS = (SELECT DISTINCT CD_NON_GOODS
+								  FROM COOCON_GOODS_INFO
+								  WHERE CD_NON_GOODS IS NOT NULL
+								  	AND CD_COOCON_GOODS = #{cd_coocon_goods, jdbcType=VARCHAR}
+									AND NM_COOCON_GOODS = #{nm_coocon_goods, jdbcType=VARCHAR})
+	</select>
+
+	<!-- 상품관리 / 상품상세정보 GOODSBANK_INFO 가져오기 -->
+	<select id="getGoodsbankDetailInfo" parameterType="com.koscom.goodsbank.model.CooconGoodsBankInfoForm" resultType="com.koscom.goodsbank.model.CooconGoodsBankInfoVO">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.getGoodsbankDetailInfo */
+	      SELECT
+			A.CD_NON_GOODS						/* 상품코드			*/
+			,A.CD_FC							/* 금융사코드		*/
+			,A.NM_FC							/* 금융사명			*/
+			,A.CD_GOODS_CLASS_L					/* 대분류			*/
+			,A.CD_GOODS_CLASS_M					/* 중분류			*/
+			,A.CD_GOODS_CLASS_S					/* 소분류			*/
+			,A.CD_GOODS_FC						/* 상품코드(금융사 상품코드)			*/
+			,A.NM_GOODS							/* 상품명			*/
+			,A.YN_USE							/* 표시여부			*/
+			,A.RTO_INTEREST_FROM				/* 최소금리			*/
+			,A.RTO_INTEREST_TO					/* 최대금리			*/
+			,A.DESC_MAX_LIMIT					/* 최대한도			*/
+			,A.MIN_LOAN_TERM					/* 최소기간			*/
+			,A.MAX_LOAN_TERM					/* 최대기간			*/
+			,A.RENEW_MAX_TERM					/* 연장기간			*/
+			,A.RTO_CANCEL						/* 중도상환해약금율			*/
+			,A.YEAR_COMMISSION					/* 수수료적용기간			*/
+			,A.DESC_FEATURE						/* 상품특징			*/
+			,A.KEYWORD_LIST						/* 키워드			*/
+			,A.CD_APPLY_TYPE					/* 신청방식			*/
+			,A.CD_TYPE_PAY						/* 상환방식			*/
+			,A.CD_TRADE_TYPE					/* 거래방식			*/
+			,A.YN_SEND_DOCU						/* 필요서류(화면상 무서류)			*/
+			,A.CD_TARGET_CUST					/* 대상고객			*/
+			,A.CD_RATIO_TYPE					/* 금리방식			*/
+			,A.CD_COLLATERAL_HOUSE_TYPE			/* 주택종류			*/
+			,A.CD_COLLATERAL_LOAN_USE			/* 자금용도			*/
+			,A.CD_AREA							/* 주택면적(전용면적)			*/
+			,A.CD_DEFER							/* 거치방식			*/
+			,A.CD_OBJECT						/* 대상구분			*/
+			,A.YN_POST_RANKING					/* 후순위가능여부			*/
+			,A.CD_TIME_EXEC						/* 실행시간			*/
+			,A.DESC_GOODS						/* 상품상세			*/
+			,A.DESC_LOAN						/* 대출대상상세			*/
+			,A.DESC_LIMIT						/* 대출한도상세			*/
+			,A.DESC_RATIO						/* 대출금리상세			*/
+			,A.DESC_PREFER_YIELD				/* 우대금리상세			*/
+			,A.DESC_TERM						/* 대출기간상세			*/
+			,A.DESC_REPAYMETHOD					/* 상환방식상세			*/
+			,A.DESC_LOAN_COST					/* 대출비용상세			*/
+			,A.DESC_PAPERS						/* 필요서류상세			*/
+			,A.DESC_OVERDUE_INTEREST			/* 연체이자상세			*/
+			,A.DESC_REPAYMENT_FEE				/* 중도상환수수료상세			*/
+			,A.DESC_LOAN_PERIOD					/* 대출신청시기			*/
+			,A.DESC_LOAN_PROVIDE				/* 대출지급시기			*/
+			,A.DESC_CONTACT						/* 연락처			*/
+			,A.DESC_COLLATERAL					/* 대상담보			*/
+			,A.DESC_ETC							/* 기타			*/
+			,(SELECT CD_FIN
+			    FROM FC_INFO
+			   WHERE CD_FC =A.CD_FC) AS CD_FIN		/* 금융기관업권 코드	*/
+			,A.YN_VISIT							/* 무방문			*/
+			,A.YN_ERLY_RPAY_FEE					/* 중도상환수수료없음			*/
+			,A.YN_SRCH_RATIO_LIMIT				/* 금리 한도 확인 가능			*/
+			,A.FC_LINK						/* 금융사링크			*/
+			,A.TIME_INTEREST						/* 이자부과시기			*/
+			FROM
+			GOODSBANK_INFO A
+			WHERE CD_NON_GOODS = #{cd_non_goods, jdbcType=VARCHAR}
+	</select>
+
+	<!-- 상품관리 / 상품상세정보 COOCON_GOODS_INFO 가져오기 -->
+	<select id="getCoocongoodsDetailInfo" parameterType="com.koscom.goodsbank.model.CooconGoodsBankInfoForm" resultType="com.koscom.goodsbank.model.CooconGoodsBankInfoVO">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.getCoocongoodsDetailInfo */
+	      SELECT
+			A.CD_COOCON_GOODS						/* 쿠콘상품코드		*/
+			,A.SEQ									/* 일련번호			*/
+			,A.NM_COOCON_GOODS						/* 상품명 */
+			,A.CD_NON_GOODS							/* 상품코드			*/
+			,A.CD_TYPE_FC							/* 금융기관코드			*/
+			,A.CD_ORG								/* 쿠콘은행코드			*/
+			,A.CD_TYPE_GOODS						/* 상품코드			*/
+			,A.CD_TYPE_REQ AS CD_GOODS_CLASS_L		/* 조회구분			*/
+			,A.NM_GOODS								/* 상품명			*/
+			,A.DESC_GOODS							/* 상품개요			*/
+			,A.DESC_TARGET_CUST AS DESC_LOAN		/* 대상고객			*/
+			,A.DESC_COLLATERAL						/* 대상담보			*/
+			,A.DESC_LIMIT							/* 대출한도			*/
+			,A.DESC_YIELD_RATE AS DESC_RATIO		/* 대출금리			*/
+			,A.DESC_PREFER_YIELD					/* 우대금리			*/
+			,A.DESC_TERM							/* 대출기간			*/
+			,A.DESC_REPAYMETHOD						/* 상환방식			*/
+			,A.DESC_CONTRACTFEE						/* 수수료			*/
+			,A.DESC_PAPERS							/* 필요서류			*/
+			,A.DESC_OVERDUE_INTEREST				/* 연체이자			*/
+			,A.DESC_REPAYMENT_FEE					/* 중도상환해약금			*/
+			,A.DESC_LOAN_COST						/* 대출비용			*/
+			,A.DESC_LOAN_PERIOD						/* 대출신청시기			*/
+			,A.DESC_LOAN_PROVIDE					/* 대출지급시기			*/
+			,A.DESC_GOODS_INQUIRY					/* 상품문의			*/
+			,A.DESC_ETC								/* 기타			*/
+			,(SELECT CD_FIN
+			    FROM FC_INFO
+			   WHERE CD_FC = (SELECT DISTINCT CD_FC FROM COOCON_API_INFO WHERE GUBUN = A.CD_TYPE_REQ AND CD_ORG = A.CD_ORG)) AS CD_FIN		/* 금융기관업권 코드	*/
+			,(SELECT CD_FC
+			    FROM FC_INFO
+			   WHERE CD_FC = (SELECT DISTINCT CD_FC FROM COOCON_API_INFO WHERE GUBUN = A.CD_TYPE_REQ AND CD_ORG = A.CD_ORG)) AS CD_FC		/* 금융사 코드	*/
+			FROM
+			COOCON_GOODS_INFO A
+			WHERE 1=1
+			AND A.CD_COOCON_GOODS = #{cd_coocon_goods, jdbcType=VARCHAR}
+			AND A.NM_COOCON_GOODS = #{nm_coocon_goods, jdbcType=VARCHAR}
+			AND A.SEQ = (SELECT MAX(SEQ) FROM COOCON_GOODS_INFO
+													WHERE 1=1
+														AND CD_COOCON_GOODS = #{cd_coocon_goods, jdbcType=VARCHAR}
+														AND NM_COOCON_GOODS = #{nm_coocon_goods, jdbcType=VARCHAR})
+			ORDER BY A.SEQ
+	</select>
+
+	<!-- 상품관리 / 상품상세정보 GOODSBANK_INFO 등록된 상품 -->
+	<sql id="listGoodsbankInfoUse_WHERE">
+		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods_class_l)">
+			AND A.CD_GOODS_CLASS_L = #{cd_goods_class_l, jdbcType=VARCHAR}
+		</if>
+		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(cd_goods_class_m)">
+			AND A.CD_GOODS_CLASS_M = #{cd_goods_class_m, jdbcType=VARCHAR}
+		</if>
+		<if test="@com.koscom.util.MybatisUtil@isNotEmpty(yn_use)">
+			AND A.YN_USE = #{yn_use, jdbcType=VARCHAR}
+		</if>
+    </sql>
+	<select id="listGoodsbankInfoUse" parameterType="com.koscom.goodsbank.model.CooconGoodsBankInfoForm" resultType="com.koscom.goodsbank.model.CooconGoodsBankInfoVO">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.listGoodsbankInfoUse */
+	    SELECT
+				RNUM						/* RNUM 	*/
+				,CD_NON_GOODS
+				,CD_FC
+				,NM_FC
+				,CD_GOODS_CLASS_L
+				,CD_GOODS_CLASS_M
+				,CD_GOODS_CLASS_S
+				,CD_GOODS_FC
+				,NM_GOODS
+				,YN_USE
+				,RTO_INTEREST_FROM
+				,RTO_INTEREST_TO
+				,DESC_MAX_LIMIT
+				,MIN_LOAN_TERM
+				,MAX_LOAN_TERM
+				,RENEW_MAX_TERM
+				,RTO_CANCEL
+				,YEAR_COMMISSION
+				,DESC_FEATURE
+				,KEYWORD_LIST
+				,CD_APPLY_TYPE
+				,CD_TYPE_PAY
+				,CD_TRADE_TYPE
+				,YN_SEND_DOCU
+				,CD_TARGET_CUST
+				,CD_RATIO_TYPE
+				,CD_COLLATERAL_HOUSE_TYPE
+				,CD_COLLATERAL_LOAN_USE
+				,CD_AREA
+				,CD_DEFER
+				,CD_OBJECT
+				,YN_POST_RANKING
+				,CD_TIME_EXEC
+				,DESC_GOODS
+				,DESC_LOAN
+				,DESC_LIMIT
+				,DESC_RATIO
+				,DESC_PREFER_YIELD
+				,DESC_TERM
+				,DESC_REPAYMETHOD
+				,DESC_LOAN_COST
+				,DESC_PAPERS
+				,DESC_OVERDUE_INTEREST
+				,DESC_REPAYMENT_FEE
+				,DESC_LOAN_PERIOD
+				,DESC_LOAN_PROVIDE
+				,DESC_CONTACT
+				,DESC_COLLATERAL
+				,DESC_ETC
+				,YN_VISIT
+				,YN_ERLY_RPAY_FEE
+				,YN_SRCH_RATIO_LIMIT
+				,FC_LINK
+				,TIME_INTEREST
+				,ID_FRT
+				,DT_FRT
+				,ID_LST
+				,DT_LST
+				,CD_FIN
+				FROM
+				(
+					SELECT
+						ROWNUM AS RNUM
+						,LIST.CD_NON_GOODS
+						,LIST.CD_FC
+						,LIST.NM_FC
+						,LIST.CD_GOODS_CLASS_L
+						,LIST.CD_GOODS_CLASS_M
+						,LIST.CD_GOODS_CLASS_S
+						,LIST.CD_GOODS_FC
+						,LIST.NM_GOODS
+						,LIST.YN_USE
+						,LIST.RTO_INTEREST_FROM
+						,LIST.RTO_INTEREST_TO
+						,LIST.DESC_MAX_LIMIT
+						,LIST.MIN_LOAN_TERM
+						,LIST.MAX_LOAN_TERM
+						,LIST.RENEW_MAX_TERM
+						,LIST.RTO_CANCEL
+						,LIST.YEAR_COMMISSION
+						,LIST.DESC_FEATURE
+						,LIST.KEYWORD_LIST
+						,LIST.CD_APPLY_TYPE
+						,LIST.CD_TYPE_PAY
+						,LIST.CD_TRADE_TYPE
+						,LIST.YN_SEND_DOCU
+						,LIST.CD_TARGET_CUST
+						,LIST.CD_RATIO_TYPE
+						,LIST.CD_COLLATERAL_HOUSE_TYPE
+						,LIST.CD_COLLATERAL_LOAN_USE
+						,LIST.CD_AREA
+						,LIST.CD_DEFER
+						,LIST.CD_OBJECT
+						,LIST.YN_POST_RANKING
+						,LIST.CD_TIME_EXEC
+						,LIST.DESC_GOODS
+						,LIST.DESC_LOAN
+						,LIST.DESC_LIMIT
+						,LIST.DESC_RATIO
+						,LIST.DESC_PREFER_YIELD
+						,LIST.DESC_TERM
+						,LIST.DESC_REPAYMETHOD
+						,LIST.DESC_LOAN_COST
+						,LIST.DESC_PAPERS
+						,LIST.DESC_OVERDUE_INTEREST
+						,LIST.DESC_REPAYMENT_FEE
+						,LIST.DESC_LOAN_PERIOD
+						,LIST.DESC_LOAN_PROVIDE
+						,LIST.DESC_CONTACT
+						,LIST.DESC_COLLATERAL
+						,LIST.DESC_ETC
+						,LIST.YN_VISIT
+						,LIST.YN_ERLY_RPAY_FEE
+						,LIST.YN_SRCH_RATIO_LIMIT
+						,LIST.FC_LINK
+						,LIST.TIME_INTEREST
+						,LIST.ID_FRT
+						,LIST.DT_FRT
+						,LIST.ID_LST
+						,LIST.DT_LST
+						,LIST.CD_FIN
+						FROM
+					 	(
+					 		SELECT
+								A.CD_NON_GOODS
+								,A.CD_FC
+								,A.NM_FC
+								,A.CD_GOODS_CLASS_L
+								,A.CD_GOODS_CLASS_M
+								,A.CD_GOODS_CLASS_S
+								,A.CD_GOODS_FC
+								,A.NM_GOODS
+								,A.YN_USE
+								,A.RTO_INTEREST_FROM
+								,A.RTO_INTEREST_TO
+								,A.DESC_MAX_LIMIT
+								,A.MIN_LOAN_TERM
+								,A.MAX_LOAN_TERM
+								,A.RENEW_MAX_TERM
+								,A.RTO_CANCEL
+								,A.YEAR_COMMISSION
+								,A.DESC_FEATURE
+								,A.KEYWORD_LIST
+								,A.CD_APPLY_TYPE
+								,A.CD_TYPE_PAY
+								,A.CD_TRADE_TYPE
+								,A.YN_SEND_DOCU
+								,A.CD_TARGET_CUST
+								,A.CD_RATIO_TYPE
+								,A.CD_COLLATERAL_HOUSE_TYPE
+								,A.CD_COLLATERAL_LOAN_USE
+								,A.CD_AREA
+								,A.CD_DEFER
+								,A.CD_OBJECT
+								,A.YN_POST_RANKING
+								,A.CD_TIME_EXEC
+								,A.DESC_GOODS
+								,A.DESC_LOAN
+								,A.DESC_LIMIT
+								,A.DESC_RATIO
+								,A.DESC_PREFER_YIELD
+								,A.DESC_TERM
+								,A.DESC_REPAYMETHOD
+								,A.DESC_LOAN_COST
+								,A.DESC_PAPERS
+								,A.DESC_OVERDUE_INTEREST
+								,A.DESC_REPAYMENT_FEE
+								,A.DESC_LOAN_PERIOD
+								,A.DESC_LOAN_PROVIDE
+								,A.DESC_CONTACT
+								,A.DESC_COLLATERAL
+								,A.DESC_ETC
+								,A.YN_VISIT
+								,A.YN_ERLY_RPAY_FEE
+								,A.YN_SRCH_RATIO_LIMIT
+								,A.FC_LINK
+								,A.TIME_INTEREST
+								,A.ID_FRT
+								,A.DT_FRT
+								,A.ID_LST
+								,A.DT_LST
+								,B.CD_FIN
+							FROM GOODSBANK_INFO A
+							INNER JOIN FC_INFO B
+							ON (A.CD_FC = B.CD_FC)
+							WHERE A.CD_FC = DECODE(#{cd_fc, jdbcType=VARCHAR},NULL,A.CD_FC,#{cd_fc, jdbcType=VARCHAR})
+								<include refid="listGoodsbankInfoUse_WHERE"/>
+							ORDER BY CD_NON_GOODS
+						) LIST
+					WHERE ROWNUM <![CDATA[<=]]> #{endPosition, jdbcType=NUMERIC}
+				)
+		WHERE RNUM <![CDATA[>=]]> #{startPosition, jdbcType=NUMERIC}
+	</select>
+	<select id="listGoodsbankInfoUseCount" parameterType="com.koscom.goodsbank.model.CooconGoodsBankInfoForm" resultType="int">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.listGoodsbankInfoUseCount */
+		SELECT
+			COUNT(*) AS recordCount
+		FROM GOODSBANK_INFO A
+		INNER JOIN FC_INFO B
+		ON (A.CD_FC = B.CD_FC)
+		WHERE A.CD_FC = DECODE(#{cd_fc, jdbcType=VARCHAR},NULL,A.CD_FC,#{cd_fc, jdbcType=VARCHAR})
+			<include refid="listGoodsbankInfoUse_WHERE"/>
+	</select>
+
+	<!-- 금융사리스트 / 상품관리 / 상품 상세정보 가져오기 -->
+	<select id="setGoodsbankInfoUse" parameterType="com.koscom.goodsbank.model.CooconGoodsBankInfoForm" resultType="com.koscom.goodsbank.model.CooconGoodsBankInfoVO">
+        /* com.koscom.goodsbank.dao.GoodsbankMapper.setGoodsbankInfoUse */
+		SELECT
+				A.CD_NON_GOODS
+				,A.CD_FC
+				,A.NM_FC
+				,A.CD_GOODS_CLASS_L
+				,A.CD_GOODS_CLASS_M
+				,A.CD_GOODS_CLASS_S
+				,A.CD_GOODS_FC
+				,A.NM_GOODS
+				,A.YN_USE
+				,A.RTO_INTEREST_FROM
+				,A.RTO_INTEREST_TO
+				,A.DESC_MAX_LIMIT
+				,A.MIN_LOAN_TERM
+				,A.MAX_LOAN_TERM
+				,A.RENEW_MAX_TERM
+				,A.RTO_CANCEL
+				,A.YEAR_COMMISSION
+				,A.DESC_FEATURE
+				,A.KEYWORD_LIST
+				,A.CD_APPLY_TYPE
+				,A.CD_TYPE_PAY
+				,A.CD_TRADE_TYPE
+				,A.YN_SEND_DOCU
+				,A.CD_TARGET_CUST
+				,A.CD_RATIO_TYPE
+				,A.CD_COLLATERAL_HOUSE_TYPE
+				,A.CD_COLLATERAL_LOAN_USE
+				,A.CD_AREA
+				,A.CD_DEFER
+				,A.CD_OBJECT
+				,A.YN_POST_RANKING
+				,A.CD_TIME_EXEC
+				,A.DESC_GOODS
+				,A.DESC_LOAN
+				,A.DESC_LIMIT
+				,A.DESC_RATIO
+				,A.DESC_PREFER_YIELD
+				,A.DESC_TERM
+				,A.DESC_REPAYMETHOD
+				,A.DESC_LOAN_COST
+				,A.DESC_PAPERS
+				,A.DESC_OVERDUE_INTEREST
+				,A.DESC_REPAYMENT_FEE
+				,A.DESC_LOAN_PERIOD
+				,A.DESC_LOAN_PROVIDE
+				,A.DESC_CONTACT
+				,A.DESC_COLLATERAL
+				,A.DESC_ETC
+				,A.YN_VISIT
+				,A.YN_ERLY_RPAY_FEE
+				,A.YN_SRCH_RATIO_LIMIT
+				,A.FC_LINK
+				,A.TIME_INTEREST
+				,A.ID_FRT
+				,A.DT_FRT
+				,A.ID_LST
+				,A.DT_LST
+				,B.CD_FIN
+				FROM GOODSBANK_INFO A INNER JOIN FC_INFO B ON(A.CD_FC = B.CD_FC)
+				WHERE CD_NON_GOODS = #{cd_non_goods, jdbcType=VARCHAR}
+	</select>
+
+</mapper>

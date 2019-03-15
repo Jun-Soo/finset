@@ -9,6 +9,7 @@ import com.koscom.domain.PersonNice12MonthCbScoreInfo;
 import com.koscom.domain.PersonShareInfo;
 import com.koscom.domain.PersonShareMessageInfo;
 import com.koscom.domain.PersonalViewHist;
+import com.koscom.kcb.model.KcbCreditInfoVO;
 import com.koscom.person.model.PersonActiveHistVO;
 import com.koscom.person.model.PersonAgreeHistVO;
 import com.koscom.person.model.PersonCertificateInfoVO;
@@ -653,6 +654,13 @@ public interface PersonMapper {
 	 * @return List<PersonShareInfoVO>
 	 */
 	List<PersonShareInfoVO> listPersonShareInfoReqUpdate(PersonShareInfoVO personShareInfoVO);
+	
+	/**
+	 * KCB ID UPDATE
+	 * @param KcbCreditInfoVO
+	 * @return void
+	 */
+	void updatePersonKcbID(KcbCreditInfoVO infoVO);
 
 	
 

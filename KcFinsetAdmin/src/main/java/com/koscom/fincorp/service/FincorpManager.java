@@ -175,5 +175,13 @@ public interface FincorpManager {
 	 * @return List<String>
 	 */
 	List<String> getCooconFcCd(String type_fc);
+	
+	
+	/**
+	 * 파일 업로드
+	 * @param FincorpVO
+	 * @return void
+	 */
+	void uploadFile(FincorpVO fincorpVO);
 
 }

@@ -1,6 +1,7 @@
 package com.koscom.fincorp.service.impl;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -14,6 +15,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.koscom.domain.FincorpInfo;
 import com.koscom.fincorp.dao.FincorpMapper;
@@ -381,5 +383,58 @@ public class FincorpManagerImpl implements FincorpManager {
 
 		return fincorpMapper.getCooconFcCd(type_fc);
 
+	}
+	
+	/**
+	 * @param fincorpVO
+	 * @return String
+	 */
+	@Override
+	public void uploadFile(FincorpVO fincorpVO) {
+        MultipartFile file1 = null;
+		FileOutputStream fos = null;
+		byte[] fileArray = null;
+        try {
+			if (fincorpVO != null) {
+				file1 = fincorpVO.getFile1();
+				String file_name = fincorpVO.getFile_name();
+				File file = new File(file_name);
+				LogUtil.debugLn(logger,"존재하는지 file="+file);
+				if(file.exists() == true){
+                    file.delete();
+                }
+				file = new File(file_name);
+				LogUtil.debugLn(logger,"새로 만든 file="+file);
+				if (file1 != null) {
+					fileArray = file1.getBytes();
+					LogUtil.debugLn(logger,"저장할 fileArray="+fileArray);
+					if (fileArray != null) {
+						LogUtil.debugLn(logger,"저장할 fileArray.length="+fileArray.length);
+					}
+				}
+				if (file != null) {
+					fos = new FileOutputStream(file);
+				}
+				fos.write(fileArray);
+			}
+//                org.apache.commons.io.FileUtils.writeByteArrayToFile(file,fileArray);
+		} catch (IOException e) {
+			LogUtil.error(logger,e);
+		} finally {
+			if (fos != null) {
+				try {
+					fos.flush();
+				} catch (IOException e) {
+					LogUtil.error(logger,e);
+				}
+			}
+			if (fos != null) {
+				try {
+					fos.close();
+				} catch (IOException e) {
+					LogUtil.error(logger,e);
+				}
+			}
+		}
 	}
 }

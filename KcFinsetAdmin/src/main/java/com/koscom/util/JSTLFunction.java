@@ -18,6 +18,16 @@ import com.koscom.env.model.ApprovalManageVO;
 import com.koscom.env.model.CodeInfo;
 import com.koscom.env.model.ProgramManage;
 import com.koscom.env.service.CodeManager;
+import com.koscom.fccode.model.FcCodeForm;
+import com.koscom.fccode.model.FcCodeVO;
+import com.koscom.fccode.service.FcCodeManager;
+import com.koscom.fincorp.model.FincorpVO;
+import com.koscom.fincorp.service.FincorpManager;
+import com.koscom.goods.service.GoodsManager;
+import com.koscom.stdcode.model.StdCodeForm;
+import com.koscom.stdcode.model.StdCodeInfo;
+import com.koscom.stdcode.model.StdCodeVO;
+import com.koscom.stdcode.service.StdCodeManager;
 //import com.koscom.fccode.model.FcCodeForm;
 //import com.koscom.fccode.model.FcCodeInfo;
 //import com.koscom.fccode.model.FcCodeVO;
@@ -64,12 +74,12 @@ public class JSTLFunction {
 	 * @param id
 	 * @return
 	 */
-//	public static String getStdCodeName(String group, String id){
-//		StdCodeManager stdCodeManager = (StdCodeManager)getBean("stdCodeManager");
-//		StdCodeInfo stdCodeInfo = stdCodeManager.getStdCodeInfo(group, id);
-//		if(stdCodeInfo  == null) return id;
-//		return stdCodeInfo.getNm_code();
-//	}
+	public static String getStdCodeName(String group, String id){
+		StdCodeManager stdCodeManager = (StdCodeManager)getBean("stdCodeManager");
+		StdCodeInfo stdCodeInfo = stdCodeManager.getStdCodeInfo(group, id);
+		if(stdCodeInfo  == null) return id;
+		return stdCodeInfo.getNm_code();
+	}
 	/**
 	 * 설명을 반환합니다
 	 * @param group
@@ -836,11 +846,11 @@ public class JSTLFunction {
 	 * @param id
 	 * @return
 	 */
-//	public static String getGoodsDetail(String cd_goods, String type)
-//	{
-//		GoodsManager goodsManager = (GoodsManager)getBean("goodsManager");
-//		return goodsManager.getGoodsDetail(cd_goods, type);
-//	}
+	public static String getGoodsDetail(String cd_goods, String type)
+	{
+		GoodsManager goodsManager = (GoodsManager)getBean("goodsManager");
+		return goodsManager.getGoodsDetail(cd_goods, type);
+	}
  
 	public static List<String> getApplyPath(String path) {
 		return StringUtil.getApplyPath(path);
@@ -1010,50 +1020,50 @@ public class JSTLFunction {
 	 * @param 
 	 * @return
 	 */
-//	public static String makeFincorpOptions(String defaultText,String selectValue, String type, String ynAlliance) {
-//		FincorpManager fincorpManager = (FincorpManager)getBean("fincorpManager");
-//		StringBuffer data = new StringBuffer();
-//		
-//		FincorpVO fincorpVO = new FincorpVO();
-//		fincorpVO.setYn_alliance(ynAlliance);
-//		List<FincorpVO> list = fincorpManager.listCodeFincorp(fincorpVO);
-//		
-//		data.append("<option value=''>" + defaultText + "</option>");
-//		data.append("<option data-divider='true'></option>");
-//		
-//		boolean isALL = false;
-//		if(type != null && type.indexOf("ALL_") ==0)
-//		{
-//			isALL = true;
-//			type = type.substring(4);
-//		}
-//		
-//		for (FincorpVO fvo : list) {
-//			String val = fvo.getCd_fc();
-//			String nm = fvo.getNm_fc();
-//			String str_select = "";
-//			
-//			if(!isALL && "N".equals(fvo.getYn_use()))
-//				continue;
-//			
-//			if(StringUtil.isEmpty(val)){
-//				continue;
-//			}
-//			
-//			if( !StringUtil.isEmpty(val) && val.equals(selectValue)) {
-//				str_select = "selected='selected'";
-//			}
-//			
-//			if(type.equals("ID.NM"))
-//				data.append("<option value='" + val + "' "+str_select+">" + val +"." + nm + "</option>");
-//			else 
-//				data.append("<option value='" + val + "' "+str_select+">" + nm + "</option>");
-//			
-//		}
-//		
-//		return data.toString();
-//		
-//	}
+	public static String makeFincorpOptions(String defaultText,String selectValue, String type, String ynAlliance) {
+		FincorpManager fincorpManager = (FincorpManager)getBean("fincorpManager");
+		StringBuffer data = new StringBuffer();
+		
+		FincorpVO fincorpVO = new FincorpVO();
+		fincorpVO.setYn_alliance(ynAlliance);
+		List<FincorpVO> list = fincorpManager.listCodeFincorp(fincorpVO);
+		
+		data.append("<option value=''>" + defaultText + "</option>");
+		data.append("<option data-divider='true'></option>");
+		
+		boolean isALL = false;
+		if(type != null && type.indexOf("ALL_") ==0)
+		{
+			isALL = true;
+			type = type.substring(4);
+		}
+		
+		for (FincorpVO fvo : list) {
+			String val = fvo.getCd_fc();
+			String nm = fvo.getNm_fc();
+			String str_select = "";
+			
+			if(!isALL && "N".equals(fvo.getYn_use()))
+				continue;
+			
+			if(StringUtil.isEmpty(val)){
+				continue;
+			}
+			
+			if( !StringUtil.isEmpty(val) && val.equals(selectValue)) {
+				str_select = "selected='selected'";
+			}
+			
+			if(type.equals("ID.NM"))
+				data.append("<option value='" + val + "' "+str_select+">" + val +"." + nm + "</option>");
+			else 
+				data.append("<option value='" + val + "' "+str_select+">" + nm + "</option>");
+			
+		}
+		
+		return data.toString();
+		
+	}
 	
 	public static String makeEdocOptions(String defaultText,String selectValue, String type) {
 		EdocManager edocManager = (EdocManager)getBean("edocManager");
@@ -1094,97 +1104,97 @@ public class JSTLFunction {
 		}
 		return data.toString();
 	}
-// 	public static String getNmFc(String cd_fc){
-// 		FincorpManager fincorpManager = (FincorpManager)getBean("fincorpManager");
-//		return StringUtil.nullToString(fincorpManager.getNmFc(cd_fc));
-// 	}
-// 	public static String getNmEdoc(String cd_fc, String no_edoc){
-// 		EdocManager edocManager = (EdocManager)getBean("edocManager");
-// 		EdocForm edocForm = new EdocForm();
-// 		edocForm.setCd_fc(cd_fc);
-// 		edocForm.setNo_edoc(no_edoc);
-// 		return StringUtil.nullToString(edocManager.getNmEdoc(edocForm));
-// 	}
-//	public static String makeFcCodeOptions(String defaultText,String selectValue, String type) {
-//		FcCodeManager fcCodeManager = (FcCodeManager)getBean("fcCodeManager");
-//		StringBuffer data = new StringBuffer();
-//		FcCodeForm fcCodeForm = new FcCodeForm(); 
-//		fcCodeForm.setCd_fc(selectValue);
-//		List<FcCodeVO> list = fcCodeManager.listFcCode(fcCodeForm);
-//		
-//		data.append("<option value=''>" + defaultText + "</option>");
-//		data.append("<option data-divider='true'></option>");
-//		
-//		boolean isALL = false;
-//		if(type != null && type.indexOf("ALL_") ==0)
-//		{
-//			isALL = true;
-//			type = type.substring(4);
-//		}
-//		
-//		for (FcCodeVO fvo : list) {
-//			String val = fvo.getCode_group();
-//			String nm = fvo.getNm_code();
-//			String str_select = "";
-//			
-//			if(!isALL && "N".equals(fvo.getYn_use()))
-//				continue;
-//			
-//			if(StringUtil.isEmpty(val)){
-//				continue;
-//			}
-//			
-//			if( !StringUtil.isEmpty(val) && val.equals(selectValue)) {
-//				str_select = "selected='selected'";
-//			}
-//			if(type.equals("ID.NM"))
-//				data.append("<option value='" + val + "' "+str_select+">" + val +"." + nm + "</option>");
-//			else 
-//				data.append("<option value='" + val + "' "+str_select+">" + nm + "</option>");
-//		}
-//		return data.toString();
-//	}
-//	public static String makeStdCodeOptions(String defaultText,String code_group, String selectValue, String type) {
-//		StdCodeManager stdCodeManager = (StdCodeManager)getBean("stdCodeManager");
-//		StringBuffer data = new StringBuffer();
-//		StdCodeForm stdCodeForm = new StdCodeForm(); 
-//		stdCodeForm.setYn_code_group("N");
-//		stdCodeForm.setCode_group(code_group);
-//		List<StdCodeVO> list = stdCodeManager.listStdCode(stdCodeForm);
-//		
-//		data.append("<option value=''>" + defaultText + "</option>");
-//		data.append("<option data-divider='true'></option>");
-//		
-//		boolean isALL = false;
-//		if(type != null && type.indexOf("ALL_") ==0)
-//		{
-//			isALL = true;
-//			type = type.substring(4);
-//		}
-//		
-//		for (StdCodeVO fvo : list) {
-//			String val = fvo.getCode_value();
-//			String nm = fvo.getNm_code();
-//			String str_select = "";
-//			
-//			if(!isALL && "N".equals(fvo.getYn_use()))
-//				continue;
-//			
-//			if(StringUtil.isEmpty(val)){
-//				continue;
-//			}
-//			
-//			if( !StringUtil.isEmpty(val) && val.equals(selectValue)) {
-//				str_select = "selected='selected'";
-//			}
-//			if(type.equals("ID.NM"))
-//				data.append("<option value='" + val + "' "+str_select+">" + val +"." + nm + "</option>");
-//			else 
-//				data.append("<option value='" + val + "' "+str_select+">" + nm + "</option>");
-//		}
-//		return data.toString();
-//		
-//	}
+ 	public static String getNmFc(String cd_fc){
+ 		FincorpManager fincorpManager = (FincorpManager)getBean("fincorpManager");
+		return StringUtil.nullToString(fincorpManager.getNmFc(cd_fc));
+ 	}
+ 	public static String getNmEdoc(String cd_fc, String no_edoc){
+ 		EdocManager edocManager = (EdocManager)getBean("edocManager");
+ 		EdocForm edocForm = new EdocForm();
+ 		edocForm.setCd_fc(cd_fc);
+ 		edocForm.setNo_edoc(no_edoc);
+ 		return StringUtil.nullToString(edocManager.getNmEdoc(edocForm));
+ 	}
+	public static String makeFcCodeOptions(String defaultText,String selectValue, String type) {
+		FcCodeManager fcCodeManager = (FcCodeManager)getBean("fcCodeManager");
+		StringBuffer data = new StringBuffer();
+		FcCodeForm fcCodeForm = new FcCodeForm(); 
+		fcCodeForm.setCd_fc(selectValue);
+		List<FcCodeVO> list = fcCodeManager.listFcCode(fcCodeForm);
+		
+		data.append("<option value=''>" + defaultText + "</option>");
+		data.append("<option data-divider='true'></option>");
+		
+		boolean isALL = false;
+		if(type != null && type.indexOf("ALL_") ==0)
+		{
+			isALL = true;
+			type = type.substring(4);
+		}
+		
+		for (FcCodeVO fvo : list) {
+			String val = fvo.getCode_group();
+			String nm = fvo.getNm_code();
+			String str_select = "";
+			
+			if(!isALL && "N".equals(fvo.getYn_use()))
+				continue;
+			
+			if(StringUtil.isEmpty(val)){
+				continue;
+			}
+			
+			if( !StringUtil.isEmpty(val) && val.equals(selectValue)) {
+				str_select = "selected='selected'";
+			}
+			if(type.equals("ID.NM"))
+				data.append("<option value='" + val + "' "+str_select+">" + val +"." + nm + "</option>");
+			else 
+				data.append("<option value='" + val + "' "+str_select+">" + nm + "</option>");
+		}
+		return data.toString();
+	}
+	public static String makeStdCodeOptions(String defaultText,String code_group, String selectValue, String type) {
+		StdCodeManager stdCodeManager = (StdCodeManager)getBean("stdCodeManager");
+		StringBuffer data = new StringBuffer();
+		StdCodeForm stdCodeForm = new StdCodeForm(); 
+		stdCodeForm.setYn_code_group("N");
+		stdCodeForm.setCode_group(code_group);
+		List<StdCodeVO> list = stdCodeManager.listStdCode(stdCodeForm);
+		
+		data.append("<option value=''>" + defaultText + "</option>");
+		data.append("<option data-divider='true'></option>");
+		
+		boolean isALL = false;
+		if(type != null && type.indexOf("ALL_") ==0)
+		{
+			isALL = true;
+			type = type.substring(4);
+		}
+		
+		for (StdCodeVO fvo : list) {
+			String val = fvo.getCode_value();
+			String nm = fvo.getNm_code();
+			String str_select = "";
+			
+			if(!isALL && "N".equals(fvo.getYn_use()))
+				continue;
+			
+			if(StringUtil.isEmpty(val)){
+				continue;
+			}
+			
+			if( !StringUtil.isEmpty(val) && val.equals(selectValue)) {
+				str_select = "selected='selected'";
+			}
+			if(type.equals("ID.NM"))
+				data.append("<option value='" + val + "' "+str_select+">" + val +"." + nm + "</option>");
+			else 
+				data.append("<option value='" + val + "' "+str_select+">" + nm + "</option>");
+		}
+		return data.toString();
+		
+	}
 	/**
 	 * 노출 상품 리스트
 	 * @param cd_goods

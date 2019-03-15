@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.koscom.env.model.BusinessDayForm;
 import com.koscom.env.model.BusinessDayVO;
 import com.koscom.env.service.BusinessManager;
+import com.koscom.fincorp.model.FincorpVO;
+import com.koscom.fincorp.service.FincorpManager;
 //import com.koscom.fincorp.model.FincorpVO;
 //import com.koscom.fincorp.service.FincorpManager;
 import com.koscom.util.DateUtil;
@@ -30,8 +32,8 @@ public class BusinessController {
 	@Autowired
 	BusinessManager businessManager;
 	
-//	@Autowired
-//	private FincorpManager fincorpManager;
+	@Autowired
+	private FincorpManager fincorpManager;
 	
 	/**
 	 * datepicker 영업일 목록 조회 
@@ -153,13 +155,13 @@ public class BusinessController {
 		return "jsonView";
 	}
 	
-//	@RequestMapping("/listFcBusinessDay.crz")
-//	public String listBusinessDay(BusinessDayForm businessDayForm,Model model) {
-//		FincorpVO fincorpVO = fincorpManager.getFincorpInfo(businessDayForm.getCd_fc());
-//		model.addAttribute("fincorpInfo", fincorpVO);
-//		
-//		return "/fincorp/listBusinessDay";
-//	}
+	@RequestMapping("/listFcBusinessDay.crz")
+	public String listBusinessDay(BusinessDayForm businessDayForm,Model model) {
+		FincorpVO fincorpVO = fincorpManager.getFincorpInfo(businessDayForm.getCd_fc());
+		model.addAttribute("fincorpInfo", fincorpVO);
+		
+		return "/fincorp/listBusinessDay";
+	}
 	@RequestMapping("/listBusinessFullDay.crz")
 	public String listBusinessFullDay(BusinessDayForm businessDayForm,Model model) {
 		

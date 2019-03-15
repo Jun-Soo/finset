@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.koscom.commission.dao.CommissionMapper">
+
+
+<select id="getCommissionInfo" parameterType="java.lang.String" resultType="com.koscom.commission.model.CommissionVO">       
+	    SELECT * FROM COMMISSION_INFO
+		WHERE	     
+		no_apply = #{no_apply, jdbcType=VARCHAR}
+	</select>
+
+
+	<sql id="listCommissionInfo_WHERE">
+		<where>
+				AND  A.CD_APPLY_DOC_BOX = '50'
+				AND A.NO_APPLY = B.NO_APPLY(+)
+			<!-- 일자구분 -->
+			<if test="@com.koscom.util.MybatisUtil@isNotEmpty(sel_dt_kind)">
+				<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_from)">
+					<if test='"A.YMD_APPROVAL".equals(sel_dt_kind)'>AND A.YMD_APPROVAL                     <![CDATA[>=]]> #{txt_dt_from}</if>
+					<if test='"B.DT_EXE"      .equals(sel_dt_kind)'>AND TO_CHAR(B.DT_EXE      ,'yyyyMMdd') <![CDATA[>=]]> #{txt_dt_from}</if>
+				</if>
+				<if test="@com.koscom.util.MybatisUtil@isNotEmpty(txt_dt_to)">
+					<if test='"A.YMD_APPROVAL".equals(sel_dt_kind)'>AND A.YMD_APPROVAL                     <![CDATA[<=]]> #{txt_dt_to}</if>
+					<if test='"B.DT_EXE"      .equals(sel_dt_kind)'>AND TO_CHAR(B.DT_EXE      ,'yyyyMMdd') <![CDATA[<=]]> #{txt_dt_to}</if>
+				</if>
+			</if>
+	     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(cd_fc)'>
+				AND cd_fc = #{cd_fc, jdbcType=VARCHAR}
+			</if>
+	     	<if test='@com.koscom.util.MybatisUtil@isNotEmpty(yn_exe)'>
+				AND yn_exe = #{yn_exe, jdbcType=VARCHAR}
+			</if>
+		</where>
+	</sql>
+	
+	
+		<select id="listCommissionInfo" parameterType="com.koscom.commission.model.CommissionForm" resultType="com.koscom.commission.model.CommissionVO">
+	    SELECT  
+			A.NO_APPLY, A.CD_APPLY_DOC_BOX,
+			A.CD_FC, A.CD_GOODS, 
+			A.RTO_LOAN, A.AMT_APPROVAL, A.YMD_APPROVAL, 
+			B.RTO_EXP_LOAN, B.AMT_EXP_COMMISSION,
+			B.RTO_REAL_LOAN, B.AMT_REAL_COMMISSION,
+			B.YN_EXE,B.DT_EXE
+		FROM APPLY_INFO A, COMMISSION_INFO B
+		<include refid="listCommissionInfo_WHERE"/>
+<!-- 		WHERE A.CD_APPLY_DOC_BOX = '50' -->
+<!-- 		AND A.NO_APPLY = B.NO_APPLY(+) -->
+	</select>
+	
+	
+	
+	<select id="listCommissionCount" parameterType="com.koscom.commission.model.CommissionForm" resultType="int">
+		SELECT
+               COUNT(*) AS recordCount
+            FROM APPLY_INFO A, COMMISSION_INFO B
+            <include refid="listCommissionInfo_WHERE"/>
+<!-- 		WHERE A.CD_APPLY_DOC_BOX = '50' -->
+<!-- 		AND A.NO_APPLY = B.NO_APPLY(+) -->
+	</select>
+	
+
+		<update id="procCommissionDetails"  parameterType="com.koscom.domain.CommissionInfo">
+		MERGE INTO commission_info
+		   USING DUAL
+		   ON (no_apply = #{no_apply})
+		   WHEN MATCHED THEN
+		      UPDATE 
+		         SET   rto_exp_loan = #{rto_exp_loan, jdbcType=NUMERIC}
+					, amt_exp_commission = #{amt_exp_commission, jdbcType=VARCHAR}
+					, rto_real_loan = #{rto_real_loan, jdbcType=NUMERIC}
+					, amt_real_commission = #{amt_real_commission, jdbcType=VARCHAR}
+					, yn_exe = #{yn_exe, jdbcType=VARCHAR}
+					, dt_exe = SYSDATE
+					, memo = #{memo, jdbcType=VARCHAR}
+			        , id_lst = #{id_lst, jdbcType=VARCHAR}
+			        , dt_lst = SYSDATE
+			WHEN NOT MATCHED THEN
+			  INSERT (
+				 no_apply 			
+				, rto_exp_loan 		
+				, amt_exp_commission 	
+				, rto_real_loan 		
+				, amt_real_commission 
+				, yn_exe 				
+				, dt_exe 				
+				, memo 				
+				, id_frt 
+				, dt_frt
+				, id_lst
+				, dt_lst 	
+				
+			) VALUES (
+				 #{no_apply, jdbcType=VARCHAR}
+				,#{rto_exp_loan, jdbcType=NUMERIC}
+				,#{amt_exp_commission, jdbcType=VARCHAR}
+				,#{rto_real_loan, jdbcType=NUMERIC}
+				,#{amt_real_commission, jdbcType=VARCHAR}
+				,#{yn_exe, jdbcType=VARCHAR}
+				, SYSDATE
+				,#{memo, jdbcType=VARCHAR}
+				,#{id_frt, jdbcType=VARCHAR}
+				, SYSDATE
+				,#{id_frt, jdbcType=VARCHAR}
+				, SYSDATE
+			)
+	</update>
+	<delete id="delCommissionDetails" parameterType="com.koscom.commission.model.CommissionVO">
+		DELETE from commission_info
+		WHERE no_apply = #{no_apply}
+	</delete>
+</mapper>

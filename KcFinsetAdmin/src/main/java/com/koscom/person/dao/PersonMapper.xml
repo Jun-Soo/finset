@@ -3487,5 +3487,12 @@
 			AND SMI.REQ_STATUS = '01'
 			AND SI.OFFER_NO_PERSON = #{offer_no_person, jdbcType=VARCHAR}
 	</select>
-
+	
+	<update id="updatePersonKcbID" parameterType="com.koscom.kcb.model.KcbCreditInfoVO">
+        UPDATE PERSON_INFO
+           SET KCB_ID = #{kcb_id, jdbcType=VARCHAR}
+			  ,ID_LST = #{noPerson, jdbcType=VARCHAR}
+			  ,DT_LST = SYSDATE
+         WHERE NO_PERSON = #{noPerson}
+    </update>
 </mapper>

@@ -51,7 +51,7 @@ public class FcmUtil {
 		post.setHeader("Authorization", Constant.FCM_SERVER_KEY);
 		
 		if(StringUtil.isEmpty(sendTo)) {
-			if(os.equals("1")){
+			if(os != null && os.equals("1")){
 				sendTo = Constant.FCM_TOPIC_ANDROID;
 			}else{
 				sendTo = Constant.FCM_TOPIC_IOS;

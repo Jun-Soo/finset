@@ -7,7 +7,10 @@ import java.util.List;
 
 import com.koscom.board.dao.BoardMapper;
 import com.koscom.domain.BoardInfo;
+import com.koscom.fincorp.model.FincorpVO;
+import com.koscom.fincorp.service.FincorpManager;
 import com.koscom.util.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,8 +27,12 @@ public class AttachManagerImpl implements AttachManager {
 	
 	@Autowired
 	private AttachMapper attachMapper;
+	
 	@Autowired
 	private BoardMapper boardMapper;
+	
+	@Autowired
+	private FincorpManager fincorpManager;
 
 	@Override
 	public ReturnClass createAttach(AttachVO attachVO) throws IOException, FinsetException {
@@ -142,4 +149,22 @@ public class AttachManagerImpl implements AttachManager {
         File file = new File(orgFileName);
         return file;
     }
+    
+    /**
+	 * 이미지 파일 다운로드
+	 */
+	@Override
+	public byte[] getBytesAttachFileC(String filename) throws Exception {
+        FincorpVO vo = new FincorpVO();
+        vo.setPath_file1(filename);
+		File file = null;
+		byte readByte[] = null;
+		if( !StringUtil.isEmpty(filename) ){
+			readByte = fincorpManager.getImgBi(filename);
+		}else{
+			return null;
+		}
+
+		return readByte;
+	}
 }

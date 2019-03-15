@@ -54,6 +54,7 @@ public interface AttachManager {
 	 * @throws Exception 
 	 */
 	File getOrgFile(String fileName);
+	
 	/**
 	 * 첨부파일 추가
 	 * @param attachVO
@@ -61,4 +62,12 @@ public interface AttachManager {
 	 * @throws Exception
 	 */
 	ReturnClass downloadUrlFile(AttachVO attachVO) throws FinsetException;
+	
+	/**
+	 * 이미지 파일 다운로드
+	 * @param filename
+	 * @return
+	 * @throws Exception
+	 */
+	byte[] getBytesAttachFileC(String filename) throws Exception;
 }

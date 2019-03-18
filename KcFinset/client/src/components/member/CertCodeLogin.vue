@@ -342,6 +342,7 @@ export default {
                 window.Android.setNoPerson(_this.username, _this.hp);
                 window.Android.loginFlag("Y");
                 window.Android.loginKeypadClose();
+                window.Android.registerAdbrix(_this.username);
               }
               _this.$store.state.user.authToken = null;
               _this.$store.state.user.cntFailPwd = 0;

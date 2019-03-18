@@ -288,6 +288,8 @@ export default {
               });
             } else if (Constant.userAgent == "Android") {
               window.Android.setNoPerson(noPerson, this.hp);
+              window.Android.registerAdbrix(noPerson);
+              window.Android.loginAdbrix(noPerson);
             }
             _this.$router.push("/member/certCode");
           } else if (result.result == "11") {

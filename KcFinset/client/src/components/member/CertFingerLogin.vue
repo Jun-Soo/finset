@@ -172,6 +172,7 @@ export default {
               });
             } else if (Constant.userAgent == "Android") {
               window.Android.setNoPerson(_this.username, _this.hp);
+              window.Android.registerAdbrix(_this.username);
             }
             _this.$store.state.user.cntFailFinger = 0;
             _this.$store.state.user.cntFailPwd = 0;

@@ -170,7 +170,7 @@ export default {
           var result = response.data;
 
           if (result.result == "00") {
-            localStorage.setItem("tempPwd", this.password);
+            localStorage.setItem("tempPwd", _this.password);
           } else {
             type = "reload";
             _this.password = "";

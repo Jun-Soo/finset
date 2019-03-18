@@ -149,6 +149,8 @@ public class BaseController {
 			
 		} else {
 			rtnUrl = "intro";
+			// 가입 되어 있지 않을 경우 로그인 시퀀스 0으로 셋팅
+			model.addAttribute("seq_login",			"0");
 		}
 		model.addAttribute("rtnPath", rtnUrl);
 		

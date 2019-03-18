@@ -39,6 +39,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	
 		String username = authentication.getName();
 		String password = (String) authentication.getCredentials();
+		logger.info("password    : " + password);
 		String seq_login = password.substring(0, 24);
 		password = password.substring(24);
 		logger.info("seq_login   : " + seq_login);

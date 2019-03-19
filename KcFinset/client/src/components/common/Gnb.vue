@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button class="open-menu">메뉴열기</button>
+    <button v-if="this.$store.state.header.type != 'sub'" class="open-menu">메뉴열기</button>
     <div class="gnb-wrap">
       <div class="top">
         <div class="left">
@@ -23,34 +23,34 @@
           <a @click="clickButton('/etc/noticeMain', '/main')">공지/이벤트</a>
           <a @click="clickButton('/news/main', '/main')">금융뉴스</a>
           <a @click="clickButton('/scrap/ctrlFcLink', '/main')">금융사연동</a>
-          <a @click="clickButton('/share/main?cd_share=02', '/credit/main')">금융정보공유</a>
+          <!-- <a @click="clickButton('/share/main?cd_share=02', '/credit/main')">금융정보공유</a> -->
           <a @click="clickButton('/common/monthCal', '/main')">금융달력</a>
           <!-- <a @click="clickButton('/debt/calc', '/main')">금융계산기</a> -->
         </div>
         <dl id="gnb">
           <dt>신용</dt>
-          <dd><a @click="clickButton('/credit/main', '')">신용정보</a></dd>
+          <!-- <dd><a @click="clickButton('/credit/main', '')">신용정보</a></dd> -->
           <dd><a @click="clickButton('/credit/raiseMain', '/credit/main')">신용등급올리기</a></dd>
-          <dd><a @click="clickButton('/credit/smartReport', '/credit/main')">신용통계분석</a></dd>
+          <dd><a @click="clickButton('/credit/smartReport', '/credit/main')">신용스마트리포트</a></dd>
           <!-- <dd><a @click="clickButton('/credit/counselMain', '/credit/main')">신용상담</a></dd> -->
           <dd><a @click="clickButton('/share/main?cd_share=01', '/credit/main')">신용정보제공</a></dd>
 
           <dt>부채</dt>
-          <dd><a @click="clickButton('/debt/main', '')">부채현황</a></dd>
+          <!-- <dd><a @click="clickButton('/debt/main', '')">부채현황</a></dd> -->
           <!-- <dd><a @click="clickButton('/debt/calc', '/debt/main')">계산기</a></dd> -->
           <dd><a @click="clickButton('/debt/reqIntrCut', '/debt/main')">금리인하요구</a></dd>
           <dd><a @click="clickButton('/goods/list', '/debt/main')">추천상품</a></dd>
 
           <dt>소비지출</dt>
-          <dd><a @click="clickButton('/consume/main', '')">소비현황</a></dd>
-          <dd><a @click="clickButton('/common/monthCal', '/consume/main')">지출캘린더</a></dd>
+          <!-- <dd><a @click="clickButton('/consume/main', '')">소비현황</a></dd> -->
+          <!-- <dd><a @click="clickButton('/common/monthCal', '/consume/main')">지출캘린더</a></dd> -->
           <dd><a @click="clickButton('/consume/payment', '/consume/main')">카드대금조회</a></dd>
 
-          <dt>자산</dt>
-          <dd><a @click="clickButton('/assets/main', '')">자산현황</a></dd>
-          <dd><a @click="clickButton('/assets/bankMain', '/assets/main')">은행</a></dd>
+          <!-- <dt>자산</dt> -->
+          <!-- <dd><a @click="clickButton('/assets/main', '')">자산현황</a></dd> -->
+          <!-- <dd><a @click="clickButton('/assets/bankMain', '/assets/main')">은행</a></dd> -->
           <!-- <dd><a @click="clickButton('/assets/stockMain', '/assets/main')">증권</a></dd> -->
-          <dd><a @click="clickButton('/assets/etcMain', '/assets/main')">기타</a></dd>
+          <!-- <dd><a @click="clickButton('/assets/etcMain', '/assets/main')">기타</a></dd> -->
           <!-- <dd><a @click="clickButton('/assets/diagsMain', '/assets/main')">자산진단</a></dd> -->
         </dl>
       </div>
@@ -111,6 +111,15 @@ export default {
         });
     },
     clickButton: function(page, back) {
+      if (Constant.userAgent == "iOS") {
+        if (page === "/scrap/ctrlFcLink" || page === "/consume/payment") {
+          this.$dialogs.alert(
+            "서비스 점검중 입니다. 이용에 불편을 드려 죄송합니다.",
+            Constant.options
+          );
+          return false;
+        }
+      }
       // GNB Close Event
       if (
         page === "/debt/calc" ||

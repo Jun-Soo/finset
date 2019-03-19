@@ -90,8 +90,8 @@ export default {
   beforeMount() {},
   mounted() {
     if (
-      (Constant.userAgent == "iOS" && Constant.userAppVersion == "1.1.7") ||
-      (Constant.userAgent == "Android" && Constant.userAppVersion == "1.1.4")
+      (Constant.userAgent == "iOS" && Constant.userAppVersion >= "1.1.7") ||
+      (Constant.userAgent == "Android" && Constant.userAppVersion >= "1.1.4")
     ) {
       this.showLoginKeypad();
     } else {
@@ -280,8 +280,8 @@ export default {
     },
     nextPage: function(type) {
       if (
-        (Constant.userAgent == "iOS" && Constant.userAppVersion == "1.1.7") ||
-        (Constant.userAgent == "Android" && Constant.userAppVersion == "1.1.4")
+        (Constant.userAgent == "iOS" && Constant.userAppVersion >= "1.1.7") ||
+        (Constant.userAgent == "Android" && Constant.userAppVersion >= "1.1.4")
       ) {
         var _this = this;
         // 보안키보드 닫기

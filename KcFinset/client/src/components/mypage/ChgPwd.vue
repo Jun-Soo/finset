@@ -90,8 +90,8 @@ export default {
       this.tempPwd = localStorage.getItem("_tempPwd");
     }
     if (
-      (Constant.userAgent == "iOS" && Constant.userAppVersion == "1.1.7") ||
-      (Constant.userAgent == "Android" && Constant.userAppVersion == "1.1.4")
+      (Constant.userAgent == "iOS" && Constant.userAppVersion >= "1.1.7") ||
+      (Constant.userAgent == "Android" && Constant.userAppVersion >= "1.1.4")
     ) {
       this.showLoginKeypad();
     } else {
@@ -262,8 +262,8 @@ export default {
     nextPage: function(type) {
       var _this = this;
       if (
-        (Constant.userAgent == "iOS" && Constant.userAppVersion == "1.1.7") ||
-        (Constant.userAgent == "Android" && Constant.userAppVersion == "1.1.4")
+        (Constant.userAgent == "iOS" && Constant.userAppVersion >= "1.1.7") ||
+        (Constant.userAgent == "Android" && Constant.userAppVersion >= "1.1.4")
       ) {
         // 보안키보드 닫기
         console.log("nextPage :: ", type);

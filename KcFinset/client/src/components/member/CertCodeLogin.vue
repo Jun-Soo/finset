@@ -87,8 +87,8 @@ export default {
   mounted() {
     var _this = this;
     if (
-      (Constant.userAgent == "iOS" && Constant.userAppVersion == "1.1.7") ||
-      (Constant.userAgent == "Android" && Constant.userAppVersion == "1.1.4")
+      (Constant.userAgent == "iOS" && Constant.userAppVersion >= "1.1.7") ||
+      (Constant.userAgent == "Android" && Constant.userAppVersion >= "1.1.4")
     ) {
       this.errMsg = "";
       if (this.cntFailPwd) {
@@ -226,8 +226,8 @@ export default {
       var _this = this;
       //console.log("gotoFingerPrint called");
       if (
-        (Constant.userAgent == "iOS" && Constant.userAppVersion == "1.1.7") ||
-        (Constant.userAgent == "Android" && Constant.userAppVersion == "1.1.4")
+        (Constant.userAgent == "iOS" && Constant.userAppVersion >= "1.1.7") ||
+        (Constant.userAgent == "Android" && Constant.userAppVersion >= "1.1.4")
       ) {
         if (Constant.userAgent == "iOS") {
           Jockey.send("loginKeypadClose");
@@ -323,9 +323,9 @@ export default {
           //console.log("login: " + response.data);
           if (
             (Constant.userAgent == "iOS" &&
-              Constant.userAppVersion == "1.1.7") ||
+              Constant.userAppVersion >= "1.1.7") ||
             (Constant.userAgent == "Android" &&
-              Constant.userAppVersion == "1.1.4")
+              Constant.userAppVersion >= "1.1.4")
           ) {
             if (response.data.result == "10") {
               //정상
@@ -372,9 +372,9 @@ export default {
                 } else if (Constant.userAgent == "Android") {
                   if (
                     (Constant.userAgent == "iOS" &&
-                      Constant.userAppVersion == "1.1.7") ||
+                      Constant.userAppVersion >= "1.1.7") ||
                     (Constant.userAgent == "Android" &&
-                      Constant.userAppVersion == "1.1.4")
+                      Constant.userAppVersion >= "1.1.4")
                   ) {
                     window.Android.loginKeypadFailure(_this.errMsg);
                   }

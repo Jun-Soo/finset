@@ -152,10 +152,12 @@ export default {
             //정상
             localStorage.removeItem("tempPwd");
             _this.$store.commit("LOGIN", response.data);
-            if (
-              Constant.userAgent == "Android" ||
-              Constant.userAgent == "iOS"
-            ) {
+            if (Constant.userAgent == "Android") {
+              //_this.checkExistCert();
+              console.log("certFinger Login");
+              window.Android.loginAdbrix(noPerson);
+              _this.$router.push("/scrap/fcLink");
+            } else if(Constant.userAgent == "iOS") {
               //_this.checkExistCert();
               _this.$router.push("/scrap/fcLink");
             } else {

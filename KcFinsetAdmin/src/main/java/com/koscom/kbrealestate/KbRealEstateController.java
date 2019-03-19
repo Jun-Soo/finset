@@ -72,7 +72,8 @@ public class KbRealEstateController {
 			String postString = "REQ_DATA="+URLEncoder.encode(URLEncoder.encode(jsonObject.toString(), "UTF-8"), "UTF-8");
 			
 			Gson gson = new Gson();
-			String apiUrl = environment.getProperty("coocon.apiUrl") + "gateway.jsp";
+			//String apiUrl = environment.getProperty("coocon.apiUrl") + "gateway.jsp";
+			String apiUrl = environment.getProperty("coocon.napiUrl") + "gateway.jsp";
 			
 			KbSiGunGuInfo kbSiGunGuInfo = gson.fromJson(JSONObject.fromObject(JSONSerializer.toJSON(url.sendReqPOST_KB(apiUrl, postString).getDes_message())).toString(), KbSiGunGuInfo.class);
 			if(kbSiGunGuInfo != null  && kbSiGunGuInfo.getRESULT_CD().equals("00000000") && kbSiGunGuInfo.getRESP_DATA() != null){
@@ -119,7 +120,8 @@ public class KbRealEstateController {
 				String postString = "REQ_DATA="+URLEncoder.encode(URLEncoder.encode(jsonObject.toString(), "UTF-8"), "UTF-8");
 				
 				Gson gson = new Gson();
-				String apiUrl = environment.getProperty("coocon.apiUrl") + "gateway.jsp";
+				//String apiUrl = environment.getProperty("coocon.apiUrl") + "gateway.jsp";
+				String apiUrl = environment.getProperty("coocon.napiUrl") + "gateway.jsp";
 				
 				KbDongAptInfo kbDongAptInfo = gson.fromJson(JSONObject.fromObject(JSONSerializer.toJSON(url.sendReqPOST_KB(apiUrl, postString).getDes_message())).toString(), KbDongAptInfo.class);
 				if(kbDongAptInfo != null  && kbDongAptInfo.getRESULT_CD().equals("00000000") && kbDongAptInfo.getRESP_DATA() != null){

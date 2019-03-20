@@ -312,12 +312,12 @@ export default {
         )
         .then(function(response) {
           var result = response.data;
-          if (Constant.userAgent == "Android") {
-            var smsStartDate = result.smsStartDate;
-            var smsInclude = result.smsInclude;
-            var smsExclude = result.smsExclude;
-            window.Android.getSmsList(smsStartDate, smsInclude, smsExclude);
-          }
+          // if (Constant.userAgent == "Android") {
+          //   var smsStartDate = result.smsStartDate;
+          //   var smsInclude = result.smsInclude;
+          //   var smsExclude = result.smsExclude;
+          //   window.Android.getSmsList(smsStartDate, smsInclude, smsExclude);
+          // }
 
           var bankInfo = "";
           var cardInfo = "";

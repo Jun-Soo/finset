@@ -915,7 +915,7 @@ header .gnb-wrap .scroll-wrap .links a:nth-child(8) {
 
 header .gnb-wrap.on {
   transform: translateX(0);
-  width: 100%;
+  width:100%;
   overflow: auto;
 }
 

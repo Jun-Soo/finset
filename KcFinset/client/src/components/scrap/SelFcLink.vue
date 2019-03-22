@@ -46,7 +46,7 @@ export default {
     return {
       isCheckBank: true,
       isCheckCard: true,
-      isCheckStock: true, //증권은 추후 서비스 제공시에 true로 변경 필요
+      isCheckStock: false, //증권은 추후 서비스 제공시에 true로 변경 필요
       isCheckNts: true,
       isCheckCert: false,
       showButton: true,

@@ -111,18 +111,6 @@ export default {
         });
     },
     clickButton: function(page, back) {
-      if (Constant.userAgent == "iOS") {
-        if (Constant.tester.indexOf(this.$store.state.user.hp) > -1) {
-        } else {
-          if (page === "/scrap/ctrlFcLink" || page === "/consume/payment") {
-            this.$dialogs.alert(
-              "서비스 점검중 입니다. 이용에 불편을 드려 죄송합니다.",
-              Constant.options
-            );
-            return false;
-          }
-        }
-      }
       // GNB Close Event
       if (
         page === "/debt/calc" ||

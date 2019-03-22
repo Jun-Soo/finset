@@ -1472,11 +1472,11 @@ public class CreditController {
 			String npsStartYm = DateUtil.getFirstDateOfPrevMonth(currentDate,12).substring(0,6);
 			String npsEndYm = DateUtil.getFirstDateOfPrevMonth(currentDate,1).substring(0,6);
 
-			//  1월~2월 : 직직전년(*), 직직전년-1
-		    //  3월~12월 : 직전년(*), 직전년-1
+			//  1월~4월 : 직직전년(*), 직직전년-1
+		    //  5월~12월 : 직전년(*), 직전년-1
 			List<String> inquiryYears = new ArrayList<String>();
 
-			if( Integer.parseInt(currentDate.substring(4,6)) < 03)	{
+			if( Integer.parseInt(currentDate.substring(4,6)) < 05)	{
 				inquiryYears.add(DateUtil.addYears(currentDate, -2).substring(0,4));
 				inquiryYears.add(DateUtil.addYears(currentDate, -3).substring(0,4));
 			}
@@ -1719,7 +1719,7 @@ public class CreditController {
 		scrRespIncomeDtlVO.setNo_person(no_person);
 
         List<ScrRespIncomeDtlVO> scrRespIncomeDtlList = scrapManager.getScrRespIncomeDtl(scrRespIncomeDtlVO);
-        if(scrRespIncomeDtlList != null)	{
+        if(scrRespIncomeDtlList != null  && scrRespIncomeDtlList.size() > 0)	{
         	ScrRespIncomeDtlVO scrRespIncomeDtl = scrRespIncomeDtlList.get(0);
         	model.addAttribute("year", scrRespIncomeDtl.getReversion_year());
         	model.addAttribute("income_div", Integer.parseInt(scrRespIncomeDtl.getAmt_income())/10000);

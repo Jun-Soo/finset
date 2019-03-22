@@ -33,7 +33,7 @@
     	<filter-name>EuckrEncodingFilter</filter-name>
     	<url-pattern>/apply/*</url-pattern>
   	</filter-mapping>
-  <!---->
+  <!--
   <filter>
 	<filter-name>xssEscapeServletFilter</filter-name>
 	<filter-class>com.navercorp.lucy.security.xss.servletfilter.XssEscapeServletFilter</filter-class>
@@ -42,7 +42,7 @@
 	<filter-name>xssEscapeServletFilter</filter-name>
 	<url-pattern>/*</url-pattern>
   </filter-mapping>
-
+  -->
   
   <context-param>
     <param-name>contextConfigLocation</param-name>

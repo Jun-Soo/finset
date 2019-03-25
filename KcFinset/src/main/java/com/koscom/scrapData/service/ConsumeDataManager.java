@@ -5,7 +5,6 @@
 package com.koscom.scrapData.service;
 
 import com.koscom.scrapData.model.ConsumeDataForm;
-import com.koscom.scrapData.model.ConsumeDataVO;
 
 
 public interface ConsumeDataManager {
@@ -17,10 +16,4 @@ public interface ConsumeDataManager {
 	 */
 	void saveConsumeData(ConsumeDataForm consumeForm) throws Exception ;
 	
-	/**
-	 * 소비지출 테이블에 추가
-	 * @param consumeVO
-	 * @return
-	 */
-	int createConsumeInfo(ConsumeDataVO consumeVO);
 }

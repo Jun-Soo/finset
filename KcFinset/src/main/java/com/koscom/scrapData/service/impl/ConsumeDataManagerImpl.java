@@ -10,7 +10,6 @@ package com.koscom.scrapData.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,7 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.koscom.contents.model.ContentsVO;
 import com.koscom.scrapData.dao.ConsumeDataMapper;
 import com.koscom.scrapData.model.BusinessTypeInfoVO;
 import com.koscom.scrapData.model.ConsumeDataForm;
@@ -73,6 +71,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 						String no_approval = scrCardMap.get("NO_APPROVAL");
 //						String type_card = scrCardMap.get("TYPE_CARD");
 						String no_card = scrCardMap.get("NO_CARD");
+						String nm_card = scrCardMap.get("NM_CARD");
 						String nm_member = scrCardMap.get("NM_MEMBER");
 						String type_sales = scrCardMap.get("TYPE_SALES"); //0: 기타, 1: 일시불, 2:할부, 3:현금서비스, 4: 포인트 일시불, 5: 포인트 할부
 						String period_installment = scrCardMap.get("PERIOD_INSTALLMENT");
@@ -85,43 +84,38 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 						//String cd_currency = scrCardMap.get("CD_CURRENCY");
 						//String cd_in_out = scrCardMap.get("CD_IN_OUT");
 						//String dt_frt = scrCardMap.get("DT_FRT");
+						String cd_consume_class = scrCardMap.get("CD_CONSUME_CLASS");
 						
 						if(type_sales.equals("0")||type_sales.equals("4")||type_sales.equals("5")) {
 							continue;
+						}
+						if("00000".equals(cd_consume_class) ) {
+							if(null != type_biz_member && !"".equals(type_biz_member) && null != cd_fc && !"".equals(cd_fc)) {
+								BusinessTypeInfoVO businessTypeInfoVO =
+												new BusinessTypeInfoVO(
+													cd_fc,
+													type_biz_member,
+													"99999",
+													"NEW",
+													null,
+													"NEW",
+													null
+												);
+								consumeDataMapper.createBusinessTypeInfo(businessTypeInfoVO);
+							}
+							cd_consume_class = "99999";
 						}
 						
 						//실제 사용될 변수
 						String type_in_out = "02";		//01:수입, 02:지출
 						String means_consume = "01";	//디폴트는 카드
-						String nm_card = null;
 						String type_card = null;
 						String dt_trd = dt_approval;
 						String tm_trd = tm_approval;
 						String no_biz = no_biz_member;
 						String nm_biz = type_biz_member;
-						ContentsVO contentsVO = getCodeByNmBusiness(cd_fc, type_biz_member, no_person);
-						String cd_class="";
-						String cd_type="";
-						if(contentsVO==null){
-							cd_class = "99";			//기타
-							cd_type = "999";			//기타
-							
-							BusinessTypeInfoVO businessTypeInfoVO =
-									new BusinessTypeInfoVO(
-											cd_fc,
-											nm_biz,
-											"99999",
-											"NEW",
-											null,
-											"NEW",
-											null
-									);
-							consumeDataMapper.createNewBusinessTypeInfo(businessTypeInfoVO);
-						} else {
-							cd_class = contentsVO.getCd_class();
-							cd_type = contentsVO.getCd_type();
-						}
-						String cd_consume_class = null;
+						String cd_class = cd_consume_class.substring(0,2);
+						String cd_type = cd_consume_class.substring(2,5);
 						String contents = nm_member;
 						String memo = null;
 						String grade = null;
@@ -184,7 +178,6 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 										id_lst,
 										dt_lst
 										);
-						logger.debug(consumeVO.toString());
 						if(type_sales.equals("2")) {
 							List<ConsumeDataVO> installmentList = getInstallmentList(consumeVO);
 							consumeList.addAll(installmentList);
@@ -200,7 +193,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 		}
 		try{
 			for(ConsumeDataVO consumeVO:consumeList) {
-				insertCnt+= createConsumeInfo(consumeVO);
+				insertCnt+= consumeDataMapper.createConsumeInfo(consumeVO);
 			}
 		} catch(Exception e) {
 			logger.error("카드승인내역 스크래핑 데이터를 DB에 집어넣는 도중 에러가 발생했습니다.");
@@ -220,7 +213,6 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 		List<Map<String, String>> scrCashReceiptList = new ArrayList<Map<String,String>>();
 		List<ConsumeDataVO> consumeList = new ArrayList<ConsumeDataVO>();
 		int insertCnt = 0;
-		String nts = getNtsCode();
 		try{
 			scrCashReceiptList = consumeDataMapper.listScrRespCashReceipt(consumeForm);
 			if(scrCashReceiptList!=null) {
@@ -228,6 +220,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 					for(Map<String, String> scrCashReceiptMap:scrCashReceiptList) {
 						//raw데이터
 						String no_person = scrCashReceiptMap.get("NO_PERSON");
+						String cd_fc = scrCashReceiptMap.get("CD_FC");
 						String ymd_deal = scrCashReceiptMap.get("YMD_DEAL");
 						String time_deal = scrCashReceiptMap.get("TIME_DEAL");
 						String nm_affiliate = scrCashReceiptMap.get("NM_AFFILIATE");
@@ -238,28 +231,30 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 						//String yn_deduction = scrCashReceiptMap.get("YN_DEDUCTION"); //공제여부
 						//String type_issue = scrCashReceiptMap.get("TYPE_ISSUE"); //발행구분
 						//String dt_frt = scrCashReceiptMap.get("DT_FRT");
+						String cd_consume_class = scrCashReceiptMap.get("CD_CONSUME_CLASS");
+						if("00000".equals(cd_consume_class)) {
+							cd_consume_class = "99999";
+						}
 						
 						//실제 사용할 변수들
 						String type_in_out = "02";
 						String means_consume = "03";	//01:카드, 02:현금, 03:현금영수증, 04:입출금내역
-						String cd_fc = nts;		//국세청 
-						String nm_card = null;
+						String nm_card = "현금영수증";
 						String no_card = null;
 						String type_card = null;
 						String dt_trd = ymd_deal;
 						String tm_trd = time_deal;
 						String no_biz = null;
 						String nm_biz = "현금영수증";
-						String cd_class = "99";		//기타
-						String cd_type = "999";		//기타
-						String cd_consume_class = null;
+						String cd_class = cd_consume_class.substring(0,2);
+						String cd_type = cd_consume_class.substring(2,5);
 						String contents = nm_affiliate;
 						String memo = null;
 						String grade = null;
 						String amt_in_out = amt_use;
 						String mon_installment = "0";
 						String mon_remaining = "0";
-						String yn_pay_installment = null;
+						String yn_pay_installment = "N";
 						String yn_delete = "N";
 						String yn_cancel = "N";
 						String yn_auto = "N";
@@ -274,7 +269,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 						ConsumeDataVO consumeVO = new ConsumeDataVO(
 								no_person,
 								0,
-								type_in_out,
+								type_in_out,                                                                                                                                                                                                                                                   
 								means_consume,
 								cd_fc,
 								nm_card,
@@ -317,7 +312,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 		}
 		try{
 			for(ConsumeDataVO consumeVO:consumeList) {
-				insertCnt+=createConsumeInfo(consumeVO);
+				insertCnt+=consumeDataMapper.createConsumeInfo(consumeVO);
 			}
 		} catch(Exception e) {
 			logger.error("현금영수증 스크래핑 데이터를 DB에 집어넣는 도중 에러가 발생했습니다.");
@@ -466,7 +461,7 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 		}
 		try{
 			for(ConsumeDataVO consumeVO:consumeList) {
-				insertCnt+= consumeDataMapper.createConsumeInfoTransaction(consumeVO);
+				insertCnt+= consumeDataMapper.createConsumeInfo(consumeVO);
 			}
 		} catch(Exception e) {
 			logger.error("계좌 입출금 내역(자동등록)을 DB에 집어넣는 도중 에러가 발생했습니다.");
@@ -606,69 +601,14 @@ public class ConsumeDataManagerImpl implements ConsumeDataManager {
 		}
 		try{
 			for(ConsumeDataVO consumeVO:consumeList) {
-				insertCnt+= consumeDataMapper.createConsumeInfoTransaction(consumeVO);
+				insertCnt+= consumeDataMapper.createConsumeInfo(consumeVO);
 			}
 		} catch(Exception e) {
 			logger.error("계좌 입출금 내역(급여)을 DB에 집어넣는 도중 에러가 발생했습니다.");
 			e.printStackTrace();
-			throw new Exception("계좌 입출금 내역(급여)을 DB에 집어넣는 도중 에러가 발생했습니다."); 
+			throw new Exception("계좌 입출금 내역(급여)을 DB에 집어넣는 도중 에러가 발생했습니다.");
 		}
 		return insertCnt;
-	}
-	
-	/**
-	 * 소비지출 테이블에 추가
-	 * @param consumeVO
-	 * @return
-	 */
-	@Override
-	public int createConsumeInfo(ConsumeDataVO consumeVO) {
-		logger.debug("createConsumeInfo");
-		return consumeDataMapper.createConsumeInfo(consumeVO);
-	}
-	
-	/**
-	 * 업종명으로 코드 조회
-	 * @param cd_fc
-	 * @param nm_business
-	 * @return
-	 */
-	private ContentsVO getCodeByNmBusiness(String cd_fc, String nm_business, String no_person){
-		Map<String, String> paramMap = new HashMap<String, String>();
-		paramMap.put("cd_fc", cd_fc);
-		paramMap.put("nm_business", nm_business);
-		
-		String cd_consume_class = consumeDataMapper.getCdConsumeClass(paramMap);
-		if(cd_consume_class==null) {
-			return null;
-		} else if(cd_consume_class.equals("")) {
-			return null;
-		}
-		
-		paramMap = new HashMap<>();
-		paramMap.put("cd_consume_class", cd_consume_class);
-		paramMap.put("no_person", no_person);
-		ContentsVO contentsVO = consumeDataMapper.getCodeByCdConsumeClass(paramMap);
-		return contentsVO;
-	}
-	
-	/**
-	 * 국세청 코드 조회
-	 * @return
-	 */
-	private String getNtsCode() {
-		String nts = ""; 
-		try{
-			nts = consumeDataMapper.getNtsCode();
-			if(nts!=null) {
-				if(nts.equals("")) {
-					nts = null;
-				}
-			}
-		} catch (Exception e) {
-			nts = null;
-		}
-		return nts;
 	}
 	
 	/**

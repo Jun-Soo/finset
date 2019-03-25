@@ -10,7 +10,6 @@ import java.util.Map;
 import com.koscom.scrapData.model.BusinessTypeInfoVO;
 import com.koscom.scrapData.model.ConsumeDataForm;
 import com.koscom.scrapData.model.ConsumeDataVO;
-import com.koscom.contents.model.ContentsVO;
 
 
 public interface ConsumeDataMapper {
@@ -56,20 +55,6 @@ public interface ConsumeDataMapper {
 	List<Map<String, String>> listScrTransactionDetailIncome(ConsumeDataForm consumeForm);
 	
 	/**
-	 * 업종명으로 소비항목코드를 조회
-	 * @param nm_business
-	 * @return
-	 */
-	String getCdConsumeClass(Map<String, String> paramMap);
-	
-	/**
-	 * cd_consume_class로 cd_class와 cd_type을 조회
-	 * @param cd_consume_class
-	 * @return
-	 */
-	ContentsVO getCodeByCdConsumeClass(Map<String, String> paramMap);
-	
-	/**
 	 * 소비지출 테이블에 추가
 	 * @param consumeVO
 	 * @return
@@ -77,22 +62,9 @@ public interface ConsumeDataMapper {
 	int createConsumeInfo(ConsumeDataVO consumeVO);
 
 	/**
-	 * 소비지출 테이블에 추가(계좌 입출금)
-	 * @param consumeVO
-	 * @return
-	 */
-	int createConsumeInfoTransaction(ConsumeDataVO consumeVO);
-	
-	/**
-	 * 국세청 코드 조회
-	 * @return
-	 */
-	String getNtsCode();
-	
-	/**
 	 * BUSINESS_TYPE_INFO에 해당하는 업종 명이 없을 경우 신규로 등록
 	 * @param businessTypeInfoVO
 	 * @return
 	 */
-	int createNewBusinessTypeInfo(BusinessTypeInfoVO businessTypeInfoVO);
+	int createBusinessTypeInfo(BusinessTypeInfoVO businessTypeInfoVO);
 }

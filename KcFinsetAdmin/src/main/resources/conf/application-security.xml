@@ -55,7 +55,7 @@
 	 -->
  	<authentication-manager alias="authenticationManager">
 		<authentication-provider>
-			<!-- <password-encoder ref="passwordEncoder"/> -->
+			<password-encoder ref="passwordEncoder"/>
 			<jdbc-user-service data-source-ref="dataSource"
 							   role-prefix="ROLE_"
 							   users-by-username-query="SELECT id_emp as userid, pass_emp as password, 1 as enabled FROM worker_info WHERE id_emp = ? AND cd_status_emp = '01'"

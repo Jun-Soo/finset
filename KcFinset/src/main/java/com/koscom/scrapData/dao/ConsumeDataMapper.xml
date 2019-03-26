@@ -44,7 +44,7 @@
 			,A.CD_CURRENCY
 			,A.CD_IN_OUT
 			,A.DT_FRT
-			,FN_CD_CONSUME_CLASS_TMP
+			,FN_CD_CONSUME_CLASS
 				(
 					A.NO_PERSON,
 					A.CD_FC,
@@ -92,7 +92,7 @@
 			,YN_DEDUCTION
 			,TYPE_ISSUE
 			,DT_FRT
-			,FN_CD_CONSUME_CLASS_TMP
+			,FN_CD_CONSUME_CLASS
 				(
 					NO_PERSON,
 					CD_FC,

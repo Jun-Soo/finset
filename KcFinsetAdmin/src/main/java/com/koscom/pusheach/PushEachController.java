@@ -2,12 +2,14 @@ package com.koscom.pusheach;
 
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +37,10 @@ public class PushEachController {
 	
 	@Autowired
 	PersonManager personManager;
+	
+	@Resource
+	Environment environment;
+	
 	/**
 	 * 푸시 보내기
 	 * @param request
@@ -83,7 +89,8 @@ public class PushEachController {
                                            , pushEachVO.getBody()
                                            , pushEachVO.getLink_addr()
                                 , StringUtil.nullToString(personVO.getYn_os(), "1")
-                                , StringUtil.nullToString(personVO.getCd_push(), ""))){
+                                , StringUtil.nullToString(personVO.getCd_push(), "")
+                                , environment.getProperty("push.fcm"))){
                             pushEachManager.modifyYnPushAD01(pushEachVO);
                         }
                     }
@@ -161,7 +168,7 @@ public class PushEachController {
 		
 		logger.info("푸시 보내기  pushVO :   {}", pushEachVO.toString());
 		pushEachVO.setSendTo(personVO.getFcm_token());
-		boolean isSendPushResult = FcmUtil.sendFcm(pushEachVO.getSendTo(), pushEachVO.getTitle(), pushEachVO.getLink_addr(), pushEachVO.getBody(), os, type);
+		boolean isSendPushResult = FcmUtil.sendFcm(pushEachVO.getSendTo(), pushEachVO.getTitle(), pushEachVO.getLink_addr(), pushEachVO.getBody(), os, type, environment.getProperty("push.fcm"));
 		logger.info("푸시 보내기 isSendPushResult  : " + isSendPushResult);
 		
 		pushEachVO.setId_frt(sessionUtil.getUserId());

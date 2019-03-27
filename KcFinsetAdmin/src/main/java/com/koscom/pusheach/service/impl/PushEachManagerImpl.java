@@ -2,7 +2,10 @@ package com.koscom.pusheach.service.impl;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 import com.koscom.pusheach.model.PushEachVO;
@@ -21,6 +24,9 @@ public class PushEachManagerImpl implements PushEachManager {
 	
 	@Autowired
 	private PushEachMapper pushEachMapper;
+	
+	@Resource
+	Environment environment;
 
 	@Override
 	public List<PushEachVO> listPushAD01Info(PushEachForm eventEachForm) {
@@ -135,7 +141,7 @@ public class PushEachManagerImpl implements PushEachManager {
 					if("2".equals(push_divcd) && "Y".equals(yn_push2)
 							|| "3".equals(push_divcd) && "Y".equals(yn_push3)
 							|| "23".equals(push_divcd) && ("Y".equals(yn_push2)||"Y".equals(yn_push3))) {
-						isPushSendResult = FcmUtil.sendFcm(sendTo, title, body, linkAddr, yn_os, cd_push);
+						isPushSendResult = FcmUtil.sendFcm(sendTo, title, body, linkAddr, yn_os, cd_push, environment.getProperty("push.fcm"));
 					}
 					if(isPushSendResult == true) {
 						modifyYnPushAD01(pushEachVO);

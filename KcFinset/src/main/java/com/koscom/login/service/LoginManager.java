@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+//import org.slf4j.Logger;
+//import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
@@ -45,10 +45,13 @@ import com.koscom.person.service.PersonManager;
 import com.koscom.util.Constant;
 import com.koscom.util.FcmUtil;
 import com.koscom.util.FinsetException;
-import com.koscom.util.LogUtil;
+//import com.koscom.util.LogUtil;
 import com.koscom.util.ResUtil;
 import com.koscom.util.ReturnClass;
 import com.koscom.util.StringUtil;
+
+import kr.co.everspin.eversafe.EversafeClient;
+import kr.co.everspin.eversafe.EversafeResponse;
 
 import net.sf.json.JSONObject;
 
@@ -75,7 +78,7 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 	@Resource
 	Environment environment;
 	
-	private static final Logger logger = LoggerFactory.getLogger(LoginManager.class);
+	//private static final Logger logger = LoggerFactory.getLogger(LoginManager.class);
 
 	
 	public UserDetails loadUserByUsername(String no_person) throws UsernameNotFoundException {
@@ -220,6 +223,17 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 			
 			// 로그인 성공시 로그인 시퀀스 증가
 			personManager.modifySeqLogin(personVO.getNo_person());
+			
+			
+			// eversafe token
+//			EversafeClient eversafeClient = EversafeClient.getInstance();
+//			
+//			
+//			String eversafeClientBase = "prop";
+//			if(eversafeClient.getInitialized() == false) {
+//				eversafeClient.initialize(eversafeClientBase);
+//			}
+			
 		}
 	}
 
@@ -258,7 +272,7 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 			personVO.setCnt_fail(0);
 			personVO.setId_lst(no_person);
 			ReturnClass modifyPwdFailCntReturnClass = personManager.modifyPwdFailCnt(personVO);
-			logger.info("cd_result : {},  message : {}", modifyPwdFailCntReturnClass.getCd_result(), modifyPwdFailCntReturnClass.getMessage());
+//			logger.info("cd_result : {},  message : {}", modifyPwdFailCntReturnClass.getCd_result(), modifyPwdFailCntReturnClass.getMessage());
 
 	        //마이페이지 - 공유관리 업데이트요청
 	        PersonShareInfo personShareInfo = new PersonShareInfo();
@@ -314,7 +328,7 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 	        }
 	        consumeManager.autoRegisterGoal(no_person);
 		} catch (Exception e) {
-			LogUtil.error(logger, e);
+//			LogUtil.error(logger, e);
 			cd_result = Constant.FAILED;
 		}
 		return cd_result;

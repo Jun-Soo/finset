@@ -133,7 +133,7 @@ export default {
           break;
       }
 
-      if (status == "대기") {
+      if (status == "대기" || status == "전송실패") {
         this.$router.push(url);
       } else if (button == "false") {
         //do nothing

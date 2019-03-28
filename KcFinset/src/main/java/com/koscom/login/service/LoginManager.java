@@ -50,9 +50,6 @@ import com.koscom.util.ResUtil;
 import com.koscom.util.ReturnClass;
 import com.koscom.util.StringUtil;
 
-import kr.co.everspin.eversafe.EversafeClient;
-import kr.co.everspin.eversafe.EversafeResponse;
-
 import net.sf.json.JSONObject;
 
 public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler implements UserDetailsService,AuthenticationSuccessHandler,AuthenticationFailureHandler {

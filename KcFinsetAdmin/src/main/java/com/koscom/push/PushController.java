@@ -3,12 +3,14 @@ package com.koscom.push;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -33,8 +35,12 @@ public class PushController {
 	
 	@Autowired
 	private PushManager pushManager;
+	
 	@Autowired
 	private PersonManager personManager;
+	
+	@Resource
+	Environment environment;
 	
 	/**
 	 * push 목록
@@ -112,7 +118,7 @@ public class PushController {
 				pushVO.setNo_person(allpersoninfo.get(i).getNo_person());
 				pushVO.setSendTo(sFcmToken);
 				
-				isSendPushResult = FcmUtil.sendFcm(pushVO.getSendTo(), pushVO.getTitle(), pushVO.getBody(), pushVO.getLink_addr(), os, type);
+				isSendPushResult = FcmUtil.sendFcm(pushVO.getSendTo(), pushVO.getTitle(), pushVO.getBody(), pushVO.getLink_addr(), os, type, environment.getProperty("push.fcm"));
 				logger.info("푸시 보내기 isSendPushResult  : " + isSendPushResult);
 				
 				//seq_push 채번
@@ -243,7 +249,7 @@ public class PushController {
 			pushVO.setSendTo(sFcmToken);
 			
 			//push 발송
-			isSendPushResult = FcmUtil.sendFcm(pushVO.getSendTo(), pushVO.getTitle(), pushVO.getBody(), pushVO.getLink_addr(), os, type);
+			isSendPushResult = FcmUtil.sendFcm(pushVO.getSendTo(), pushVO.getTitle(), pushVO.getBody(), pushVO.getLink_addr(), os, type, environment.getProperty("push.fcm"));
 			logger.info("푸시 보내기 isSendPushResult  : " + isSendPushResult);
 			
 			

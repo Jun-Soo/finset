@@ -42,10 +42,12 @@ public class FcmUtil {
 	 * @param type2 
 	 */
 	@SuppressWarnings("unchecked")
-	public static boolean sendFcm(String sendTo, String title, String msg, String linkAddr, String os, String type) {
+	//public static boolean sendFcm(String sendTo, String title, String msg, String linkAddr, String os, String type) {
+	public static boolean sendFcm(String sendTo, String title, String msg, String linkAddr, String os, String type, String fcmUrl) {
 		
 		HttpClient 	client 	= HttpClientBuilder.create().build();
-		HttpPost 	post 	= new HttpPost("https://fcm.googleapis.com/fcm/send");
+		//HttpPost 	post 	= new HttpPost("https://fcm.googleapis.com/fcm/send");
+		HttpPost 	post 	= new HttpPost(fcmUrl);
 		
 		post.setHeader("Content-type", "application/json");
 		post.setHeader("Authorization", Constant.FCM_SERVER_KEY);

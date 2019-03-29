@@ -422,6 +422,10 @@ export default {
             //정상
             localStorage.removeItem("tempPwd");
             _this.$store.commit("LOGIN", response.data);
+
+            // eversafe token setting
+            _this.$parent.$parent.setEversafeToken();
+
             // 핸드폰으로 접속시 공인인증서 등록 화면으로 이동
             if (Constant.userAgent == "Android") {
               //_this.checkExistCert();

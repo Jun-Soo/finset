@@ -54,7 +54,8 @@ const store = new Vuex.Store({
     ajaxState: true,
     certAddCnt: 1,
     userAgent: '',
-    userAppVersion: ''
+    userAppVersion: '',
+    eversafeToken: ''
   },
   mutations: {
     INIT (state, data) {

@@ -42,6 +42,10 @@ public class SecurityReqFilter extends OncePerRequestFilter {
       UrlPathHelper urlPathHelper = new UrlPathHelper();
       String requestUri = urlPathHelper.getRequestUri(request);
       
+      String eversafeToken = request.getHeader("TOKEN");
+      logger.debug("requestUri : "+ requestUri);
+      logger.debug("eversafeToken : "+ eversafeToken);
+      
       //requestUri 는 /m/board/getBoardImg.json와 같은 형태
       String [] uriArr = requestUri.split("/");
       if(uriArr.length != 4) {

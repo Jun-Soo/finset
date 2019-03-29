@@ -12,6 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import kr.co.everspin.eversafe.EversafeClient;
+import kr.co.everspin.eversafe.EversafeResponse;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -635,4 +638,44 @@ public class LoginController {
 					
 		return "jsonView";
 	}
+	
+	
+	/** VUE
+     * 본인인증 인증번호 요청
+     * @param request
+     * @param response
+     * @param session
+     * @param model
+     * @param personVO
+     * @return
+     */
+    @SkipLoginCheck
+    @RequestMapping("/checkEversafeToken.json")
+    public String checkEversafeToken(HttpServletRequest request, HttpServletResponse response, HttpSession session, Model model, String eversafeToken) throws Exception {
+    	
+    	logger.info("eversafeToken : "+eversafeToken);
+    	
+    	EversafeClient eversafeClient = EversafeClient.getInstance();
+    	
+    	if(eversafeClient == null)	{
+    		model.addAttribute("result", Constant.FAILED);
+    		return "jsonView";
+    	}
+;
+		if(eversafeToken != null) {
+			EversafeResponse esResponse = eversafeClient.verify(eversafeToken);
+			boolean approval = esResponse .getResult();
+			logger.debug("eversafeClient.verify result : " + approval);
+			if(approval == false) {
+				String rejectMsg = esResponse.getContent();
+				String contentType = esResponse.getContentType();
+				logger.debug("eversafeClient.verify rejectMsg : " + rejectMsg);
+				logger.debug("eversafeClient.verify contentType : " + contentType);
+			}
+		}
+    	
+    		
+    	model.addAttribute("result", Constant.SUCCESS);
+    	return "jsonView";
+    }
 }

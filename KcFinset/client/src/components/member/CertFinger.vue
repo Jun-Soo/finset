@@ -152,12 +152,16 @@ export default {
             //정상
             localStorage.removeItem("tempPwd");
             _this.$store.commit("LOGIN", response.data);
+
+            // eversafe token setting
+            _this.$parent.$parent.setEversafeToken();
+
             if (Constant.userAgent == "Android") {
               //_this.checkExistCert();
               console.log("certFinger Login");
               window.Android.loginAdbrix(noPerson);
               _this.$router.push("/scrap/fcLink");
-            } else if(Constant.userAgent == "iOS") {
+            } else if (Constant.userAgent == "iOS") {
               //_this.checkExistCert();
               _this.$router.push("/scrap/fcLink");
             } else {

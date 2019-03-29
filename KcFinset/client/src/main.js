@@ -82,6 +82,7 @@ Vue.config.productionTip = false
 
 axios.interceptors.request.use(function (config) {
   config.headers.AJAX = true
+  config.headers.TOKEN = store.state.eversafeToken
   return config
 })
 axios.interceptors.response.use((response) => {

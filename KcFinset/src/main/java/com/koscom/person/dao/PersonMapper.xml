@@ -403,7 +403,7 @@
         UPDATE PERSON_INFO
         SET
           YN_LOGOUT 	= #{yn_logout, jdbcType=VARCHAR}
-         , YN_USE 		= #{yn_use, jdbcType=VARCHAR}
+         , YN_USE 		= NVL(#{yn_use, jdbcType=VARCHAR}, 'Y')
 		 , ID_LST  		= #{id_lst, jdbcType=VARCHAR}
 		 , DT_LST  		= SYSDATE
         WHERE NO_PERSON = #{no_person, jdbcType=VARCHAR}

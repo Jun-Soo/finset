@@ -270,7 +270,8 @@ export default {
         this.$store.state.user.isEventPush ? "Y" : "N"
       );
       formData.append("yn_logout", _this.yn_logout);
-      formData.append("yn_use", _this.yn_use);
+      //formData.append("yn_use", _this.yn_use);
+      formData.append("yn_use", "Y");
 
       this.$http
         .post("/m/person/insertPerson.json", formData)

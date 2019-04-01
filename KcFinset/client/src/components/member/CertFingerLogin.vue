@@ -184,7 +184,7 @@ export default {
             // eversafe token setting
             _this.$parent.$parent.setEversafeToken();
 
-            _this.changeLoginDB();
+            //_this.changeLoginDB();
             _this.chkYNagreement();
           } else {
             _this.$store.state.isLoading = false;

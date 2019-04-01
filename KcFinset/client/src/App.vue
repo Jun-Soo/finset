@@ -389,6 +389,8 @@ export default {
       }
     },
     setEversafeToken: function() {
+      return;
+
       var _this = this;
       if (Constant.userAgent == "iOS") {
         Jockey.on("resultGetVerificationToken", function(param) {
@@ -412,8 +414,6 @@ export default {
       //   .post("/m/login/checkEversafeToken.json", formData)
       //   .then(function(response) {
       //     var result = response.data;
-      //     if (result.result == "00") {
-      //     }
       //   });
     }
   }

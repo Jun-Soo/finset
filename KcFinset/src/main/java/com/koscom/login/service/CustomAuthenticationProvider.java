@@ -38,12 +38,11 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 	
 		String username = authentication.getName();
-		String password = (String) authentication.getCredentials();
-		logger.info("password    : " + password);
-		String seq_login = password.substring(0, 24);
-		password = password.substring(24);
-		logger.info("seq_login   : " + seq_login);
-		logger.info("password    : " + password);
+		String orgPassword = (String) authentication.getCredentials();
+		
+		String seq_login = orgPassword.substring(0, 24);
+		String password = orgPassword.substring(24);
+		
 		
 		PersonVO personVO = personManager.getPersonInfo(username);
 		
@@ -57,6 +56,9 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
 		}
 		catch (Exception e) { 
 			logger.error("복호화 처리 에러 : " + e.getMessage());
+			logger.info("orgPassword    : " + orgPassword);
+			logger.error("seq_login   : " + seq_login);
+			logger.error("password    : " + password);
 			e.printStackTrace();
 			throw new BadCredentialsException("복호화 처리 에러");
 		}

@@ -23,13 +23,13 @@ public class CodeManagerImpl implements CodeManager {
 	private CodeManager codeManager;
 	
 	@Override
-	@Cacheable(value="CacheCode" , key="#codeInfo.code_group + #codeInfo.code_value")
+	//@Cacheable(value="CacheCode" , key="#codeInfo.code_group + #codeInfo.code_value")
 	public CodeInfo getCodeInfo(CodeInfo codeInfo) {
 		return codeMapper.getCodeInfo(codeInfo);
 	}
 	
 	@Override
-	@Cacheable("CacheCode")
+	//@Cacheable("CacheCode")
 	public CodeInfo getCodeInfo(String group, String id) {
 		CodeInfo codeInfo = new CodeInfo();
 		codeInfo.setCode_group(group);
@@ -39,7 +39,7 @@ public class CodeManagerImpl implements CodeManager {
 	}
 	
 	@Override
-	@Cacheable(value="CacheListCode" , key="#codeInfo.code_group")
+	//@Cacheable(value="CacheListCode" , key="#codeInfo.code_group")
 	public List<CodeInfo> listCodeInfo(CodeInfo codeInfo) {
 		return codeMapper.listCodeInfo(codeInfo);
 	}

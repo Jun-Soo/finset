@@ -47,13 +47,10 @@ import com.koscom.person.service.PersonManager;
 import com.koscom.util.Constant;
 import com.koscom.util.FcmUtil;
 import com.koscom.util.FinsetException;
-import com.koscom.util.LogUtil;
 import com.koscom.util.ResUtil;
 import com.koscom.util.ReturnClass;
 import com.koscom.util.StringUtil;
 
-import kr.co.everspin.eversafe.EversafeClient;
-import kr.co.everspin.eversafe.EversafeResponse;
 import net.sf.json.JSONObject;
 
 public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler implements UserDetailsService,AuthenticationSuccessHandler,AuthenticationFailureHandler {
@@ -231,13 +228,13 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 			URI resPath = res.getURI();
 			
 			// eversafe token
-			EversafeClient eversafeClient = EversafeClient.getInstance();
-			
-			logger.debug("eversafeClient.getInitialized() :" + eversafeClient.getInitialized());
-			String eversafeClientBase = resPath.toString().substring(6);
-			if(eversafeClient.getInitialized() == false) {
-				eversafeClient.initialize(eversafeClientBase);
-			}
+//			EversafeClient eversafeClient = EversafeClient.getInstance();
+//			
+//			logger.debug("eversafeClient.getInitialized() :" + eversafeClient.getInitialized());
+//			String eversafeClientBase = resPath.toString().substring(6);
+//			if(eversafeClient.getInitialized() == false) {
+//				eversafeClient.initialize(eversafeClientBase);
+//			}
 		}
 	}
 

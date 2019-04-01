@@ -429,7 +429,7 @@ export default {
             // 핸드폰으로 접속시 공인인증서 등록 화면으로 이동
             if (Constant.userAgent == "Android") {
               //_this.checkExistCert();
-              window.Android.loginAdbrix(noPerson);
+              window.Android.loginAdbrix(_this.noPerson);
               console.log("certCode Login");
               _this.$router.push("/scrap/fcLink");
             } else if (Constant.userAgent == "iOS") {

@@ -159,7 +159,7 @@ export default {
             if (Constant.userAgent == "Android") {
               //_this.checkExistCert();
               console.log("certFinger Login");
-              window.Android.loginAdbrix(noPerson);
+              window.Android.loginAdbrix(_this.noPerson);
               _this.$router.push("/scrap/fcLink");
             } else if (Constant.userAgent == "iOS") {
               //_this.checkExistCert();

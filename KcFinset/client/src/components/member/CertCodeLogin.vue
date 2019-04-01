@@ -351,6 +351,9 @@ export default {
               // _this.$store.state.user.cntFailFinger = 0;
               _this.$store.commit("LOGIN", response.data);
 
+              // eversafe token setting
+              _this.$parent.$parent.setEversafeToken();
+
               _this.changeLoginDB();
               _this.chkYNagreement();
             } else {

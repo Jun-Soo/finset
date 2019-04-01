@@ -147,6 +147,11 @@ public class BaseController {
 			}
 			model.addAttribute("app_version", 	codeInfo.getNm_code());	
 			
+			// tester phone number
+			CodeInfo tester = codeManager.getCodeInfo("_CONF_SYSTEM", "TESTER");
+			logger.debug("tester ::: " + tester.getNm_code());
+			model.addAttribute("tester", 	tester.getNm_code());
+			
 		} else {
 			rtnUrl = "intro";
 			// 가입 되어 있지 않을 경우 로그인 시퀀스 0으로 셋팅

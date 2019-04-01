@@ -60,6 +60,7 @@ export default {
     window.resultCheckDevicesUUID = this.resultCheckDevicesUUID;
     window.pushUrlLink = this.pushUrlLink;
     window.resultHasCertPassword = this.resultHasCertPassword;
+    window.resultGetVerificationToken = this.resultGetVerificationToken;
   },
   mounted() {
     this.sortCssFile();
@@ -386,6 +387,34 @@ export default {
         this.updateFcLinkInfoAll();
         this.autoScrapCallback(false);
       }
+    },
+    setEversafeToken: function() {
+      return;
+
+      var _this = this;
+      if (Constant.userAgent == "iOS") {
+        Jockey.on("resultGetVerificationToken", function(param) {
+          _this.resultGetVerificationToken(param.eversafeToken);
+          Jockey.off("resultGetVerificationToken");
+        });
+        Jockey.send("getVerificationToken");
+      } else if (Constant.userAgent == "Android") {
+        window.Android.getVerificationToken();
+      }
+    },
+    //Native Call Function
+    resultGetVerificationToken: function(eversafeToken) {
+      this.$store.state.eversafeToken = eversafeToken;
+
+      console.log("eversafe Token : ", this.$store.state.eversafeToken);
+      // var formData = new FormData();
+      // // formData.append("no_person", this.$store.state.user.noPerson);
+      // formData.append("eversafeToken", this.$store.state.eversafeToken);
+      // this.$http
+      //   .post("/m/login/checkEversafeToken.json", formData)
+      //   .then(function(response) {
+      //     var result = response.data;
+      //   });
     }
   }
 };

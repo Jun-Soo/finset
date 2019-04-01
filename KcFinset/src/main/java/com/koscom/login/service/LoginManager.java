@@ -2,6 +2,7 @@ package com.koscom.login.service;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -14,9 +15,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-//import org.slf4j.Logger;
-//import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.env.Environment;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
@@ -45,7 +47,6 @@ import com.koscom.person.service.PersonManager;
 import com.koscom.util.Constant;
 import com.koscom.util.FcmUtil;
 import com.koscom.util.FinsetException;
-//import com.koscom.util.LogUtil;
 import com.koscom.util.ResUtil;
 import com.koscom.util.ReturnClass;
 import com.koscom.util.StringUtil;
@@ -75,7 +76,10 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 	@Resource
 	Environment environment;
 	
-	//private static final Logger logger = LoggerFactory.getLogger(LoginManager.class);
+	@Value("classpath:prop")
+	org.springframework.core.io.Resource res;
+	
+	private static final Logger logger = LoggerFactory.getLogger(LoginManager.class);
 
 	
 	public UserDetails loadUserByUsername(String no_person) throws UsernameNotFoundException {
@@ -156,7 +160,6 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 		PersonVO personVO = personManager.getPersonInfo(authentication.getName());
 
 		if(personVO != null){
-
 			String ynAgreeUsing = personManager.getYnAgreeUsingInfo(personVO.getNo_person());
 
 			session.setAttribute("no_person", 		personVO.getNo_person());
@@ -189,12 +192,13 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 			} catch (FinsetException e) {
 				cd_result = Constant.FAILED;
 			}
-
+	
 			// 자동스크래핑 여부 관련 설정
 			session.setAttribute("AutoScrap", "true");
 
 			UrlPathHelper urlPathHelper = new UrlPathHelper();
 			String requestUri = urlPathHelper.getRequestUri(request);
+
 			if(requestUri.indexOf(".crz") > -1) {
 
 				String linkUrl = (String)session.getAttribute("linkUrl");
@@ -221,16 +225,16 @@ public class LoginManager extends SavedRequestAwareAuthenticationSuccessHandler 
 			// 로그인 성공시 로그인 시퀀스 증가
 			personManager.modifySeqLogin(personVO.getNo_person());
 			
+			URI resPath = res.getURI();
 			
 			// eversafe token
 //			EversafeClient eversafeClient = EversafeClient.getInstance();
 //			
-//			
-//			String eversafeClientBase = "prop";
+//			logger.debug("eversafeClient.getInitialized() :" + eversafeClient.getInitialized());
+//			String eversafeClientBase = resPath.toString().substring(6);
 //			if(eversafeClient.getInitialized() == false) {
 //				eversafeClient.initialize(eversafeClientBase);
 //			}
-			
 		}
 	}
 

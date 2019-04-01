@@ -119,6 +119,8 @@ export default {
               return;
             }
           }
+          // setting tester phone number
+          Constant.tester = response.data.tester;
 
           if (Constant.userAgent == "Android") {
             window.Android.setBackKeyUse("Y");

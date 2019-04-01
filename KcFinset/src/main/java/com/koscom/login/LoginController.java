@@ -166,8 +166,8 @@ public class LoginController {
 
         if (personVO != null) {
         	
-            logger.info("본인인증 인증번호 요청 이름 : " + personVO.toString());
-            logger.info("본인인증 인증번호 요청 이름 : " + personVO.getNm_person());
+//            logger.info("본인인증 인증번호 요청 이름 : " + personVO.toString());
+//            logger.info("본인인증 인증번호 요청 이름 : " + personVO.getNm_person());
 
             if(personVO.getSex().equals("2")){
                 personVO.setSex("0");
@@ -635,4 +635,44 @@ public class LoginController {
 					
 		return "jsonView";
 	}
+	
+	
+	/** VUE
+     * 본인인증 인증번호 요청
+     * @param request
+     * @param response
+     * @param session
+     * @param model
+     * @param personVO
+     * @return
+     */
+//    @SkipLoginCheck
+//    @RequestMapping("/checkEversafeToken.json")
+//    public String checkEversafeToken(HttpServletRequest request, HttpServletResponse response, HttpSession session, Model model, String eversafeToken) throws Exception {
+//    	
+//    	logger.info("eversafeToken : "+eversafeToken);
+//    	
+//    	EversafeClient eversafeClient = EversafeClient.getInstance();
+//    	
+//    	if(eversafeClient == null)	{
+//    		model.addAttribute("result", Constant.FAILED);
+//    		return "jsonView";
+//    	}
+//;
+//		if(eversafeToken != null) {
+//			EversafeResponse esResponse = eversafeClient.verify(eversafeToken);
+//			boolean approval = esResponse .getResult();
+//			logger.debug("eversafeClient.verify result : " + approval);
+//			if(approval == false) {
+//				String rejectMsg = esResponse.getContent();
+//				String contentType = esResponse.getContentType();
+//				logger.debug("eversafeClient.verify rejectMsg : " + rejectMsg);
+//				logger.debug("eversafeClient.verify contentType : " + contentType);
+//			}
+//		}
+//    	
+//    		
+//    	model.addAttribute("result", Constant.SUCCESS);
+//    	return "jsonView";
+//    }
 }

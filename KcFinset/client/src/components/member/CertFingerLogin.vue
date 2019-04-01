@@ -180,6 +180,10 @@ export default {
             _this.$store.state.user.authToken = null;
             _this.$store.state.isLoading = false;
             _this.$store.commit("LOGIN", response.data);
+
+            // eversafe token setting
+            _this.$parent.$parent.setEversafeToken();
+
             _this.changeLoginDB();
             _this.chkYNagreement();
           } else {

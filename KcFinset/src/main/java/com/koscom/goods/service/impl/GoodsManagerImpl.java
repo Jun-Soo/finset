@@ -77,7 +77,7 @@ public class GoodsManagerImpl implements GoodsManager {
 	}
 	
 	@Override
-	@Cacheable(value="CacheGoods" , key="#goodsInfo.cd_goods")
+//	@Cacheable(value="CacheGoods" , key="#goodsInfo.cd_goods")
 	public GoodsVO getGoodsInfo(GoodsInfo goodsInfo) {
 
 		if(goodsInfo == null || StringUtil.isEmpty(goodsInfo.getCd_goods()))

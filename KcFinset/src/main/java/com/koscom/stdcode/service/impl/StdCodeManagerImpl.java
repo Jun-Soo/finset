@@ -41,7 +41,7 @@ public class StdCodeManagerImpl implements StdCodeManager {
 	}
 	
 	@Override
-	@Cacheable("CacheStdCode")
+//	@Cacheable("CacheStdCode")
 	public StdCodeInfo getStdCodeInfo(String group, String id) {
 		LogUtil.debugLn(logger,"getStdCodeInfo" + group + ":" + id);
 		logger.debug("id" + group + ":" + id);

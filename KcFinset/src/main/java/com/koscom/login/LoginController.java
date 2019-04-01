@@ -169,8 +169,8 @@ public class LoginController {
 
         if (personVO != null) {
         	
-            logger.info("본인인증 인증번호 요청 이름 : " + personVO.toString());
-            logger.info("본인인증 인증번호 요청 이름 : " + personVO.getNm_person());
+//            logger.info("본인인증 인증번호 요청 이름 : " + personVO.toString());
+//            logger.info("본인인증 인증번호 요청 이름 : " + personVO.getNm_person());
 
             if(personVO.getSex().equals("2")){
                 personVO.setSex("0");

@@ -2,15 +2,17 @@
   <section @click="clickClear" v-if="seen">
     <div class="con-top cert-top">
       <p>공인인증서로<em> 한번에 등록하세요</em></p>
-      <a @click="checkExistCert(false, $event)">바로가기</a>
+      <!-- <a @click="checkExistCert(false, $event)">바로가기</a> -->
     </div>
 
     <div class="tab">
       <div class="wrap">
-        <a :class="{'on':curTab === 'bank'}" @click="tabOnClick('bank', $event)">은행</a>
-        <a :class="{'on':curTab === 'card'}" @click="tabOnClick('card', $event)">카드</a>
-        <a v-if="showStock" :class="{'on':curTab === 'stock'}" @click="tabOnClick('stock', $event)">증권</a>
-        <a :class="{'on':curTab === 'etc'}" @click="tabOnClick('etc', $event)">기타</a>
+        <!-- 금보원 관련 수정 -->
+        <!-- <a :class="{'on':curTab === 'bank'}" @click="tabOnClick('bank', $event)">은행</a> -->
+        <!-- <a :class="{'on':curTab === 'card'}" @click="tabOnClick('card', $event)">카드</a> -->
+        <!-- <a v-if="showStock" :class="{'on':curTab === 'stock'}" @click="tabOnClick('stock', $event)">증권</a> -->
+        <a :class="{'on':curTab === 'stock'}" @click="tabOnClick('stock', $event)">증권</a>
+        <!-- <a :class="{'on':curTab === 'etc'}" @click="tabOnClick('etc', $event)">기타</a> -->
       </div>
     </div>
 
@@ -124,7 +126,7 @@ export default {
   data() {
     return {
       seen: false,
-      curTab: "bank",
+      curTab: "stock", // 금보원 관련 수정
       bankList: [],
       cardList: [],
       stockList: [],

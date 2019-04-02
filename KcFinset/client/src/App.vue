@@ -304,6 +304,8 @@ export default {
     },
     getAutoScrapInfo: function() {
       console.log("getAutoScrapInfo");
+      // 금보원 관련  수정
+      return;
       var _this = this;
       // 스크래핑 대상 내역 조회
       this.$http

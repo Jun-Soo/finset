@@ -76,12 +76,13 @@
 
     <div class="list02 box-list pb90">
 
-      <div @click="goMenu('bank')" class="item">
+      <!-- 금보원 관련 수정 -->
+      <!-- <div @click="goMenu('bank')" class="item">
         <div class="flex">
           <p class="corp big">은행<em>{{assetsBankInfo.cnt_account}}건</em></p>
           <p class="number big">{{(assetsBankInfo.sum_amt_balance == null)? '-' : formatNumber(assetsBankInfo.sum_amt_balance)}}<em>원</em></p>
         </div>
-      </div>
+      </div> -->
 
       <div v-if="showStock" @click="goMenu('stock')" class="item">
         <div class="flex">

@@ -64,7 +64,7 @@
 		SELECT A.NO_PERSON
 			, A.NM_PERSON                                  AS nm_person       /* 회원명             */
             , A.PASS_PERSON                                AS pass_person     /* 패스워드           */
-            , A.YN_USE                                     AS yn_use          /* 사용여부           */
+            , NVL(A.YN_USE, 'Y')                           AS yn_use          /* 사용여부           */
             , A.YN_FINGERPRINT                             AS yn_fingerprint  /* 지문사용여부       */
             , A.CD_PUSH                                    AS cd_push         /* push msg여부       */
             , A.YN_PUSH                                    AS yn_push         /* 푸쉬메세지사용여부 */
@@ -92,7 +92,7 @@
                ,KCB_CP                                     AS kcb_cp          /* KCBCP              */
                ,PBL_CERT_CI                                AS pbl_cert_ci     /* 공인인증CI         */
                ,PBL_CERT_DI                                AS pbl_cert_di     /* 공인인증DI         */
-               ,YN_USE                                     AS yn_use          /* 사용여부           */
+               ,NVL(YN_USE, 'Y')                           AS yn_use          /* 사용여부           */
                ,YN_AGREE_USING                             AS yn_agree_using  /* 약관동의           */
                ,DT_AGREE_USING                             AS dt_agree_using  /* 약관동의일자       */
                ,DT_INSTALL                                 AS dt_install      /* 설치일자           */
@@ -1243,7 +1243,7 @@
 	<select id="getPersonInfoDup" parameterType="com.koscom.person.model.PersonVO" resultType="com.koscom.person.model.PersonVO">
         SELECT
         	NO_PERSON
-			, YN_USE
+			, NVL(YN_USE, 'Y')
         FROM PERSON_INFO
          WHERE NM_PERSON = #{nm_person, jdbcType=VARCHAR} AND HP = #{hp, jdbcType=VARCHAR}
     </select>

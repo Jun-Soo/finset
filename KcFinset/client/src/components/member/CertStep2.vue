@@ -79,10 +79,10 @@ export default {
       secondes: 0,
       time: 0,
       /* class */
-      isDisabled: false,
+      isDisabled: false
       /* changeLoginDB 함수 사용시 필요 */
-      yn_logout: "",
-      yn_use: ""
+      // yn_logout: "",
+      // yn_use: ""
     };
   },
   watch: {
@@ -269,7 +269,7 @@ export default {
         "yn_eventPush",
         this.$store.state.user.isEventPush ? "Y" : "N"
       );
-      formData.append("yn_logout", _this.yn_logout);
+      // formData.append("yn_logout", _this.yn_logout);
 
       this.$http
         .post("/m/person/insertPerson.json", formData)

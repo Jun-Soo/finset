@@ -99,7 +99,7 @@
       <div class="wrap">
         <!-- <a @click="$router.push('/credit/raiseMain')">신용 등급<br>올리기</a> -->
         <a @click="$router.push('/credit/smartReport')">신용 스마트<br>리포트</a>
-        <a @click="$router.push('/credit/smartReport')">추천<br>상품</a>
+        <a @click="$router.push('/goods/list')">추천<br>상품</a>
         <a @click="$router.push('/news/main')">금융<br>뉴스</a>
         <!-- <a @click="goMenu('share');">정보<br>공유하기</a> -->
       </div>

@@ -68,14 +68,21 @@ export default {
     // } else {
     //   this.showStock = false;
     // }
-  },
-  beforeUpdate() {},
-  updated() {
     if (Constant.userAgent == "Android") {
+      debugger;
       let ynEnd = "N";
       if (this.$store.state.header.type !== "sub") ynEnd = "Y";
       window.Android.setEndApp(ynEnd);
     }
+  },
+  beforeUpdate() {},
+  updated() {
+    // if (Constant.userAgent == "Android") {
+    //   debugger;
+    //   let ynEnd = "N";
+    //   if (this.$store.state.header.type !== "sub") ynEnd = "Y";
+    //   window.Android.setEndApp(ynEnd);
+    // }
   },
   beforeDestroy() {},
   destroyed() {},

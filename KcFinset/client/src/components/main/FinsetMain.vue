@@ -22,7 +22,7 @@
 
     <div class="my-main-list">
       <!-- 지출  -->
-      <div v-if="cardScrapCnt != 0" class="list">
+      <!-- <div v-if="cardScrapCnt != 0" class="list">
         <div class="item">
           <div class="left">
             <a @click="$router.push('/consume/main')">지출</a>
@@ -43,7 +43,7 @@
             <a @click="$router.push('/scrap/ctrlFcLink')">금융사 연동하기</a>
           </div>
         </div>
-      </div>
+      </div> -->
 
       <!--자산-->
       <div v-if="bankScrapCnt != 0 || stockScrapCnt != 0" class="list">
@@ -97,8 +97,9 @@
     </div>
     <div class="my-links">
       <div class="wrap">
-        <a @click="$router.push('/credit/raiseMain')">신용 등급<br>올리기</a>
+        <!-- <a @click="$router.push('/credit/raiseMain')">신용 등급<br>올리기</a> -->
         <a @click="$router.push('/credit/smartReport')">신용 스마트<br>리포트</a>
+        <a @click="$router.push('/credit/smartReport')">추천<br>상품</a>
         <a @click="$router.push('/news/main')">금융<br>뉴스</a>
         <!-- <a @click="goMenu('share');">정보<br>공유하기</a> -->
       </div>

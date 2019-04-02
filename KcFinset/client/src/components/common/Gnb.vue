@@ -30,7 +30,7 @@
         <dl id="gnb">
           <dt>신용</dt>
           <!-- <dd><a @click="clickButton('/credit/main', '')">신용정보</a></dd> -->
-          <dd><a @click="clickButton('/credit/raiseMain', '/credit/main')">신용등급올리기</a></dd>
+          <!-- <dd><a @click="clickButton('/credit/raiseMain', '/credit/main')">신용등급올리기</a></dd> -->
           <dd><a @click="clickButton('/credit/smartReport', '/credit/main')">신용스마트리포트</a></dd>
           <!-- <dd><a @click="clickButton('/credit/counselMain', '/credit/main')">신용상담</a></dd> -->
           <dd><a @click="clickButton('/share/main?cd_share=01', '/credit/main')">신용정보제공</a></dd>

@@ -112,13 +112,13 @@ export default {
         .then(response => {
           _this.$store.commit("INIT", response.data);
 
-          if (response.data.site == "REAL") {
-            // 브라우저 차단
-            if (Constant.isBrowser) {
-              this.$toast.center("웹 브라우저 접근은 허용되지 않습니다.");
-              return;
-            }
-          }
+          // if (response.data.site == "REAL") {
+          //   // 브라우저 차단
+          //   if (Constant.isBrowser) {
+          //     this.$toast.center("웹 브라우저 접근은 허용되지 않습니다.");
+          //     return;
+          //   }
+          // }
           // setting tester phone number
           Constant.tester = response.data.tester;
 

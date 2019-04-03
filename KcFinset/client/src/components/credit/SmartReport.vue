@@ -11,7 +11,7 @@
     </div>
     <!-- Content -->
     <div id="content" class="ifm-content" style="overflow-x:hidden;overflow-y:scroll;width:100%;height:1400px;">
-      <iframe id="ifrContents" name="ifrContents" scrolling="no" frameborder="0" style="width:100%;height:100%;"></iframe>
+      <iframe id="ifrContents" name="ifrContents" scrolling="no" frameborder="0"></iframe>
     </div>
   </section>
 </template>
@@ -130,5 +130,10 @@ export default {
   font-weight: 600;
   text-align: center;
   line-height: 20px;
+}
+#ifrContents {
+  width: 1px;
+  min-width: 100%;
+  *width: 100%;
 }
 </style>

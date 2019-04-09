@@ -35,7 +35,7 @@
 	<http auto-config="true">
 		<access-denied-handler error-page="/login/403.crz"/>
 		<custom-filter ref="securityReqFilter" before="FILTER_SECURITY_INTERCEPTOR"/>
-		<intercept-url pattern="/**" access="ROLE_USER,ROLE_ADMIN,ROLE_ANONYMOUS"/>
+		<intercept-url pattern="/**" access="ROLE_USER,ROLE_ADMIN"/>
 		<form-login login-page="/login/login.crz"
 					always-use-default-target="true"
 					default-target-url="/"

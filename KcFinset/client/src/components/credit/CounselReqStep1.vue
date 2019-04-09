@@ -152,7 +152,7 @@ export default {
 
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
-      window.Android.reqSMSPermission();
+      //window.Android.reqSMSPermission();
     }
     this.$store.state.header.type = "sub";
     this.$store.state.title = "약관동의";

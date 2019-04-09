@@ -114,9 +114,9 @@ export default {
 
     window.setCertNumber = this.setCertNumber;
     window.setRequestPhoneNumber = this.setRequestPhoneNumber;
-    if (Constant.userAgent == "Android") {
-      window.Android.reqSMSPermission();
-    }
+    // if (Constant.userAgent == "Android") {
+    //   window.Android.reqSMSPermission();
+    // }
     this.$store.state.title = "본인확인";
     this.time = this.minutes * 60;
   },

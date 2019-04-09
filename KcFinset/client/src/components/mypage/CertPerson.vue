@@ -163,7 +163,7 @@ export default {
 
     if (Constant.userAgent == "Android") {
       window.Android.setEndApp("Y");
-      window.Android.reqSMSPermission();
+      //window.Android.reqSMSPermission();
     }
     this.$store.state.title = "본인확인";
     this.time = this.minutes * 60;

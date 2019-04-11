@@ -4,7 +4,7 @@
     <section id="content">
       <div class="cert-wrap">
         <p class="title">회원정보</p>
-        <input type="text" class="form-control" name="nm_person" id="nm_person" ref="nmperson" v-model="nm_person" v-validate="'required|max:8'" v-bind:disabled="isDisabled" autocomplete="off" placeholder="이름을 입력하세요" data-vv-name='이름' />
+        <input type="text" class="form-control" name="nm_person" id="nm_person" ref="nmperson" v-model="nm_person" v-validate="'required|max:30'" v-bind:disabled="isDisabled" autocomplete="off" placeholder="이름을 입력하세요" data-vv-name='이름' />
         <p class="warn" v-if="errors.has('이름')">{{errors.first('이름')}}</p>
         <div class="grid">
           <div class="number"><input type="number" placeholder="생년월일6자리" name="ssn_birth" id="ssn_birth" v-model="ssn_birth" v-validate="'required|length:6|max:6'" v-bind:disabled="isDisabled" autocomplete="off" data-vv-name='생년월일'></div>

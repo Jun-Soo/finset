@@ -147,10 +147,19 @@ export default {
       var _this = this;
       this.$validator.validateAll().then(res => {
         if (res) {
-          if (_this.sex == "1" || _this.sex == "2") {
+          if (_this.sex == "1" || _this.sex == "2" || _this.sex == "5" || _this.sex == "6") {
             _this.birthday = "19" + _this.ssn_birth;
           } else {
             _this.birthday = "20" + _this.ssn_birth;
+          }
+          if (_this.sex == "5" || _this.sex == "6" || _this.sex == "7" || _this.sex == "8") {
+            _this.nation = "2"
+            if (_this.sex == "5" || _this.sex == "7") {
+              _this.sex = "1";
+            }
+            if (_this.sex == "6" || _this.sex == "8") {
+              _this.sex = "2";
+            }
           }
 
           var formData = new FormData();
